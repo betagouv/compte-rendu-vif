@@ -149,7 +149,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/generator@npm:^7.22.7, @babel/generator@npm:^7.22.9, @babel/generator@npm:^7.7.2":
+"@babel/generator@npm:^7.22.9, @babel/generator@npm:^7.7.2":
   version: 7.22.9
   resolution: "@babel/generator@npm:7.22.9"
   dependencies:
@@ -1884,43 +1884,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/traverse@npm:^7.18.9, @babel/traverse@npm:^7.23.2, @babel/traverse@npm:^7.23.7":
-  version: 7.23.7
-  resolution: "@babel/traverse@npm:7.23.7"
-  dependencies:
-    "@babel/code-frame": "npm:^7.23.5"
-    "@babel/generator": "npm:^7.23.6"
-    "@babel/helper-environment-visitor": "npm:^7.22.20"
-    "@babel/helper-function-name": "npm:^7.23.0"
-    "@babel/helper-hoist-variables": "npm:^7.22.5"
-    "@babel/helper-split-export-declaration": "npm:^7.22.6"
-    "@babel/parser": "npm:^7.23.6"
-    "@babel/types": "npm:^7.23.6"
-    debug: "npm:^4.3.1"
-    globals: "npm:^11.1.0"
-  checksum: 3215e59429963c8dac85c26933372cdd322952aa9930e4bc5ef2d0e4bd7a1510d1ecf8f8fd860ace5d4d9fe496d23805a1ea019a86410aee4111de5f63ee84f9
-  languageName: node
-  linkType: hard
-
-"@babel/traverse@npm:^7.22.6, @babel/traverse@npm:^7.22.8":
-  version: 7.22.8
-  resolution: "@babel/traverse@npm:7.22.8"
-  dependencies:
-    "@babel/code-frame": "npm:^7.22.5"
-    "@babel/generator": "npm:^7.22.7"
-    "@babel/helper-environment-visitor": "npm:^7.22.5"
-    "@babel/helper-function-name": "npm:^7.22.5"
-    "@babel/helper-hoist-variables": "npm:^7.22.5"
-    "@babel/helper-split-export-declaration": "npm:^7.22.6"
-    "@babel/parser": "npm:^7.22.7"
-    "@babel/types": "npm:^7.22.5"
-    debug: "npm:^4.1.0"
-    globals: "npm:^11.1.0"
-  checksum: a2c2157c854a10f64bd8e2ac30e76723a4ee948572158962d102ba4d694abdb47c9cb7f0ede7d662ce083cd1940b631a6ad9ec55e86f4bbe1a1960cbf692078a
-  languageName: node
-  linkType: hard
-
-"@babel/traverse@npm:^7.24.0":
+"@babel/traverse@npm:^7.18.9, @babel/traverse@npm:^7.22.6, @babel/traverse@npm:^7.22.8, @babel/traverse@npm:^7.23.2, @babel/traverse@npm:^7.23.7, @babel/traverse@npm:^7.24.0":
   version: 7.24.0
   resolution: "@babel/traverse@npm:7.24.0"
   dependencies:
