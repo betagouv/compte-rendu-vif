@@ -24,25 +24,7 @@
     /* If your code doesn't run in the DOM: */
     "strictBindCallApply": false,
     "lib": ["es2022"],
-    "types": ["node", "vite-node/client"]
-
-    // "module": "commonjs",
-    // "declaration": true,
-    // "removeComments": true,
-    // "emitDecoratorMetadata": true,
-    // "experimentalDecorators": true,
-    // "allowSyntheticDefaultImports": true,
-    // "target": "ES2021",
-    // "sourceMap": true,
-    // "outDir": "./dist",
-    // "baseUrl": "./",
-    // "incremental": true,
-    // "skipLibCheck": true,
-    // "strictNullChecks": false,
-    // "noImplicitAny": false,
-    // "strictBindCallApply": false,
-    // "forceConsistentCasingInFileNames": false,
-    // "noFallthroughCasesInSwitch": false
+    "types": ["node"]
   },
   "include": ["src"]
 }

@@ -1,10 +1,11 @@
 import { defineConfig } from "vite";
-import circleDependency from "vite-plugin-circular-dependency";
 
+console.log("config");
+// https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [
-    circleDependency({
-      outputFilePath: "circle-dependency.txt",
-    }),
-  ],
+  optimizeDeps: {
+    esbuildOptions: {
+      tsconfig: "packages/backend/tsconfig.json",
+    },
+  },
 });

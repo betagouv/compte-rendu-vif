@@ -1,13 +1,11 @@
-import { makeRouter } from "./features/router/router";
+import "./envVars";
 import { onHmr, registerViteHmrServerRestart } from "./hmr";
-
-console.log("Hello, world!");
-
+import "./db/db";
 const start = async () => {
   await registerViteHmrServerRestart();
   console.log("Starting...");
 
-  await makeRouter({ port: 3000 });
+  // await makeRouter({ port: 3000 });
 };
 
 start();

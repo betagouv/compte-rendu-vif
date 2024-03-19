@@ -12,17 +12,26 @@ export const onHmr = (callback: () => Awaitable<any>) => {
 export async function registerViteHmrServerRestart() {
   const hot = (import.meta as any).hot;
   if (hot) {
-    const callbacks = hot.data.callbacks || [];
+    await hot.data.stopping;
+    // This is executed on file changed
+    let reload = async () => {
+      const callbacks = hot.data.callbacks || [];
 
-    console.clear();
-    console.log(
-      `########## HMR (${callbacks.length} callbacks) ############\n`
-    );
+      console.clear();
+      console.log(
+        `########## HMR (${callbacks.length} callbacks) ############\n`
+      );
 
-    for (const callback of callbacks) {
-      await callback();
-    }
+      for (const callback of callbacks) {
+        await callback();
+      }
 
-    callbacks.length = 0;
+      callbacks.length = 0;
+    };
+    hot.on("vite:beforeFullReload", async () => {
+      const stopping = reload();
+      reload = () => Promise.resolve();
+      if (hot) hot.data.stopping = stopping;
+    });
   }
 }
