@@ -1,0 +1,34 @@
+{
+  "name": "@cr-vif/backend",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsup ./src/index.ts --format esm",
+    "start": "node ./dist/index.js",
+    "dev": "vite-node --watch ./src/index.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.11.28",
+    "drizzle-kit": "^0.20.14",
+    "tsup": "^8.0.2",
+    "typescript": "^5.2.2",
+    "vite": "^5.1.6",
+    "vite-node": "^1.4.0"
+  },
+  "dependencies": {
+    "@nestjs/common": "^10.3.4",
+    "@nestjs/core": "^10.3.4",
+    "@nestjs/platform-fastify": "^10.3.4",
+    "dotenv": "^16.4.5",
+    "drizzle-orm": "^0.30.2",
+    "postgres": "^3.4.3",
+    "reflect-metadata": "^0.2.1",
+    "rxjs": "^7.8.1",
+    "zod": "^3.22.4"
+  }
+}

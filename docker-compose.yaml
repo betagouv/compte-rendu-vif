@@ -1,0 +1,30 @@
+version: "3.4"
+services:
+  postgresql:
+    image: postgres:12.5
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgresql:/var/lib/postgresql/data:delegated
+
+    networks:
+      - vif-network
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "${ADMINER_PORT:-8081}:8080"
+    networks:
+      - vif-network
+
+volumes:
+  postgresql:
+
+networks:
+  vif-network:
+    driver: bridge
