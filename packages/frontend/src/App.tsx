@@ -1,13 +1,19 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
+import reactLogo from "./assets/react.svg";
+import viteLogo from "/vite.svg";
+import "./App.css";
+import Header from "@codegouvfr/react-dsfr/Header/Header";
+import { MuiDsfrThemeProvider } from "@codegouvfr/react-dsfr/mui";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
 
   return (
-    <>
+    <MuiDsfrThemeProvider>
+      <Header
+        brandTop={<div>oui</div>}
+        homeLinkProps={{ title: "Compte rendu vif" }}
+      />
       <div>
         <a href="https://vitejs.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
@@ -28,8 +34,8 @@ function App() {
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p>
-    </>
-  )
+    </MuiDsfrThemeProvider>
+  );
 }
 
-export default App
+export default App;
