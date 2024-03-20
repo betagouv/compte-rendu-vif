@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "../styled-system/styles.css";
@@ -6,8 +6,18 @@ import Header from "@codegouvfr/react-dsfr/Header/Header";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { MuiDsfrThemeProvider } from "@codegouvfr/react-dsfr/mui";
 import { css } from "#styled-system/css";
+import { rep } from "./replicache";
 function App() {
   const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    const s = rep.subscribe(
+      async (tx) => await tx.scan({ prefix: "task/" }).values().toArray(),
+      (task) => console.log(task)
+    );
+
+    return () => s();
+  }, []);
 
   return (
     <MuiDsfrThemeProvider>
@@ -20,7 +30,17 @@ function App() {
         }
         homeLinkProps={{ title: "Compte rendu vif", href: "/" }}
       />
-      <Button iconId="fr-icon-add-line">Créer un CR</Button>
+      <Button
+        iconId="fr-icon-add-line"
+        onClick={() =>
+          rep.mutate.createTask({
+            id: Math.round(Math.random() * 1000000),
+            text: "Hello",
+          })
+        }
+      >
+        Créer un CR
+      </Button>
       <div>
         <a href="https://vitejs.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
