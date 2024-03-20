@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
 import { startReactDsfr } from "@codegouvfr/react-dsfr/spa";
+
 startReactDsfr({ defaultColorScheme: "system" });
 
 ReactDOM.createRoot(document.getElementById("root")!).render(

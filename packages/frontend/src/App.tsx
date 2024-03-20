@@ -6,8 +6,11 @@ import Header from "@codegouvfr/react-dsfr/Header/Header";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { MuiDsfrThemeProvider } from "@codegouvfr/react-dsfr/mui";
 import { css } from "#styled-system/css";
+import { provider } from "./hocuspocus";
 function App() {
   const [count, setCount] = useState(0);
+  const yTasks = provider.document.getArray("tasks");
+  yTasks.observe((t) => console.log("tasks changed", yTasks.toArray()));
 
   return (
     <MuiDsfrThemeProvider>

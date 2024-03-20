@@ -20,9 +20,11 @@
     "@emotion/server": "^11.11.0",
     "@emotion/styled": "^11.11.0",
     "@gouvfr/dsfr-chart": "^1.0.0",
+    "@hocuspocus/provider": "^2.11.3",
     "@mui/material": "^5.15.14",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "yjs": "^13.6.14"
   },
   "imports": {
     "#styled-system/*": "./styled-system/*"
