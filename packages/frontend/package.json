@@ -15,6 +15,12 @@
     "prebuild": "only-include-used-icons"
   },
   "dependencies": {
+    "@automerge/automerge": "^2.1.11",
+    "@automerge/automerge-repo": "^1.1.4",
+    "@automerge/automerge-repo-network-broadcastchannel": "^1.1.4",
+    "@automerge/automerge-repo-network-websocket": "^1.1.4",
+    "@automerge/automerge-repo-react-hooks": "^1.1.4",
+    "@automerge/automerge-repo-storage-indexeddb": "^1.1.4",
     "@codegouvfr/react-dsfr": "^1.9.2",
     "@emotion/react": "^11.11.4",
     "@emotion/server": "^11.11.0",
@@ -22,7 +28,8 @@
     "@gouvfr/dsfr-chart": "^1.0.0",
     "@mui/material": "^5.15.14",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "vite-plugin-wasm": "^3.3.0"
   },
   "imports": {
     "#styled-system/*": "./styled-system/*"
