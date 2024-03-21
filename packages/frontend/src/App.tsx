@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "../styled-system/styles.css";
@@ -7,10 +7,10 @@ import Button from "@codegouvfr/react-dsfr/Button";
 import { MuiDsfrThemeProvider } from "@codegouvfr/react-dsfr/mui";
 import { css } from "#styled-system/css";
 import { provider } from "./hocuspocus";
+
 function App() {
   const [count, setCount] = useState(0);
-  const yTasks = provider.document.getArray("tasks");
-  yTasks.observe((t) => console.log("tasks changed", yTasks.toArray()));
+  const crs = useCrs();
 
   return (
     <MuiDsfrThemeProvider>
@@ -23,7 +23,13 @@ function App() {
         }
         homeLinkProps={{ title: "Compte rendu vif", href: "/" }}
       />
-      <Button iconId="fr-icon-add-line">Créer un CR</Button>
+      <Button
+        iconId="fr-icon-add-line"
+        onClick={() => crs.set("3", { name: "CR3" })}
+      >
+        Créer un CR
+      </Button>
+      <Cr id="2" />
       <div>
         <a href="https://vitejs.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
@@ -47,5 +53,37 @@ function App() {
     </MuiDsfrThemeProvider>
   );
 }
+
+const Cr = ({ id }: { id: string }) => {
+  const cr = useCr(id);
+
+  if (!cr) return null;
+
+  return <div>{cr.name}</div>;
+};
+
+const useCrs = () => {
+  const map = provider.document.getMap<{ name: string }>("crs");
+  const forceUpdate = useForceUpdate();
+
+  useEffect(() => {
+    map.observe(() => forceUpdate());
+  }, []);
+
+  return map;
+};
+
+const useCr = (id: string) => {
+  const map = useCrs();
+  const cr = map.get(id);
+
+  return cr;
+};
+
+export const useForceUpdate = (): (() => void) => {
+  const [, dispatch] = useState<{}>(Object.create(null));
+
+  return useCallback(() => dispatch(Object.create(null)), [dispatch]);
+};
 
 export default App;

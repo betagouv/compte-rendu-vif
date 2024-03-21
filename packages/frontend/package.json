@@ -11,8 +11,7 @@
     "panda": "panda",
     "panda-dev": "panda --watch",
     "postinstall": "copy-dsfr-to-public",
-    "predev": "only-include-used-icons",
-    "prebuild": "only-include-used-icons"
+    "icons": "only-include-used-icons"
   },
   "dependencies": {
     "@codegouvfr/react-dsfr": "^1.9.2",
