@@ -6,8 +6,33 @@ import Header from "@codegouvfr/react-dsfr/Header/Header";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { MuiDsfrThemeProvider } from "@codegouvfr/react-dsfr/mui";
 import { css } from "#styled-system/css";
+import { TriplitClient } from "@triplit/client";
+import { useQuery } from "@triplit/react";
+
+const mockToken =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ4LXRyaXBsaXQtdXNlci1pZCI6ImxlZG91eG0iLCJ4LXRyaXBsaXQtcHJvamVjdC1pZCI6ImNydmlmIiwieC10cmlwbGl0LXRva2VuLXR5cGUiOiJleHRlcm5hbCIsImlhdCI6MTcxMTAzNTIwNH0.xeGN84suho6GDZevver4IDLc8_8MFODMF2uADjDBsaM";
+
+const client = new TriplitClient({
+  storage: "indexeddb",
+  serverUrl: "http://localhost:3000",
+  token: mockToken,
+  autoConnect: true,
+});
+const query = client.query("todos");
+
 function App() {
-  const [count, setCount] = useState(0);
+  const [str, setStr] = useState("0");
+
+  const insertInto = async () => {
+    await client.insert("todos", {
+      title: "My first todo",
+      description: str,
+      completed: false,
+    });
+  };
+
+  const todos = useQuery(client, query);
+  console.log(todos);
 
   return (
     <MuiDsfrThemeProvider>
@@ -20,27 +45,10 @@ function App() {
         }
         homeLinkProps={{ title: "Compte rendu vif", href: "/" }}
       />
-      <Button iconId="fr-icon-add-line">Créer un CR</Button>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <input value={str} onChange={(e) => setStr(e.target.value)} />
+      <Button iconId="fr-icon-add-line" onClick={insertInto}>
+        Créer un CR
+      </Button>
     </MuiDsfrThemeProvider>
   );
 }
