@@ -29,9 +29,12 @@ const initHocuspocus = async () => {
         const sharedRoot = data.document.getMap("crs");
         crs.forEach((cr: any) => {
           const crDoc = new Y.Doc();
-          crDoc.get;
+          const map = crDoc.getMap("cr");
+          Object.entries(cr).forEach(([k, v]) => {
+            map.set(k, v);
+          });
 
-          sharedRoot.set(cr.id, cr);
+          sharedRoot.set(cr.id, crDoc);
         });
       }
       console.log("onLoadDocument", [...data.document.getMap("crs").entries()]);
