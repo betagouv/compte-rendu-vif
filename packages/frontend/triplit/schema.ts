@@ -15,4 +15,11 @@ export const schema = {
       description: S.String(),
     }),
   },
+  users: {
+    schema: S.Schema({
+      id: S.Id(),
+      name: S.String(),
+      email: S.String(),
+    }),
+  },
 };

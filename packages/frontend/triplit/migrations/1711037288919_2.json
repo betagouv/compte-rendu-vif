@@ -1,0 +1,41 @@
+{
+  "up": [
+    [
+      "create_collection",
+      {
+        "name": "users",
+        "schema": {
+          "id": {
+            "type": "string",
+            "options": {
+              "nullable": false,
+              "default": {
+                "func": "uuid",
+                "args": null
+              }
+            }
+          },
+          "name": {
+            "type": "string",
+            "options": {}
+          },
+          "email": {
+            "type": "string",
+            "options": {}
+          }
+        }
+      }
+    ]
+  ],
+  "down": [
+    [
+      "drop_collection",
+      {
+        "name": "users"
+      }
+    ]
+  ],
+  "version": 1711037288919,
+  "parent": 1711037022568,
+  "name": "2"
+}

@@ -8,6 +8,7 @@ import { MuiDsfrThemeProvider } from "@codegouvfr/react-dsfr/mui";
 import { css } from "#styled-system/css";
 import { TriplitClient } from "@triplit/client";
 import { useQuery } from "@triplit/react";
+import { migrations } from "../triplit/migrations";
 
 const mockToken =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ4LXRyaXBsaXQtdXNlci1pZCI6ImxlZG91eG0iLCJ4LXRyaXBsaXQtcHJvamVjdC1pZCI6ImNydmlmIiwieC10cmlwbGl0LXRva2VuLXR5cGUiOiJleHRlcm5hbCIsImlhdCI6MTcxMTAzNTIwNH0.xeGN84suho6GDZevver4IDLc8_8MFODMF2uADjDBsaM";
@@ -15,6 +16,7 @@ const mockToken =
 const client = new TriplitClient({
   storage: "indexeddb",
   serverUrl: "http://localhost:3000",
+  migrations: migrations,
   token: mockToken,
   autoConnect: true,
 });

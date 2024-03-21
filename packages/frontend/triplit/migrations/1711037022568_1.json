@@ -1,0 +1,41 @@
+{
+  "up": [
+    [
+      "create_collection",
+      {
+        "name": "todos",
+        "schema": {
+          "id": {
+            "type": "string",
+            "options": {
+              "nullable": false,
+              "default": {
+                "func": "uuid",
+                "args": null
+              }
+            }
+          },
+          "title": {
+            "type": "string",
+            "options": {}
+          },
+          "description": {
+            "type": "string",
+            "options": {}
+          }
+        }
+      }
+    ]
+  ],
+  "down": [
+    [
+      "drop_collection",
+      {
+        "name": "todos"
+      }
+    ]
+  ],
+  "version": 1711037022568,
+  "parent": 0,
+  "name": "1"
+}
