@@ -1,6 +1,5 @@
 import "./envVars";
 import { onHmr, registerViteHmrServerRestart } from "./hmr";
-// import "./db/db";
 
 import { createServer } from "@triplit/server";
 import { migrations } from "../../frontend/triplit/migrations";
