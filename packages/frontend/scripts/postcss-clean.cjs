@@ -4,8 +4,7 @@ module.exports = plugin('postcss-clean', () => {
   const variableMap = {}
 
   return (root) => {
-    // First pass: collect variable declarations
-    const time = Date.now()
+    // First pass: collect variable declarations and remove them
     root.walkDecls((decl) => {
       if (decl.prop.startsWith('--') && decl.value.startsWith('var(')) {
         const variableName = decl.prop
@@ -13,6 +12,7 @@ module.exports = plugin('postcss-clean', () => {
 
         if (variableValue) {
           variableMap[variableName] = variableValue
+          decl.remove()
         }
       }
     })
@@ -21,22 +21,11 @@ module.exports = plugin('postcss-clean', () => {
     root.walkDecls((decl) => {
       if (decl.value.startsWith('var(')) {
         const replacedValue = decl.value.replace(/var\((.*?)\)/g, (match, varName) => {
-          return `var(${variableMap[varName.trim()]})` || match
+          const name = variableMap[varName.trim()]
+          return name ? `var(${name})` : match
         })
-
         decl.value = replacedValue
       }
     })
-
-    // Remove variable declarations
-    Object.keys(variableMap).forEach((variableName) => {
-      root.walkDecls((decl) => {
-        if (decl.prop === variableName) {
-          decl.remove()
-        }
-      })
-    })
-
-    console.log('Time:', Date.now() - time)
   }
 })
