@@ -4,11 +4,5 @@ import { TanStackRouterVite } from "@tanstack/router-vite-plugin";
 import { unplugin } from "@pandabox/unplugin";
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [
-    react(),
-    TanStackRouterVite({}),
-    unplugin.vite({
-      outfile: "./src/panda.css",
-    }),
-  ],
+  plugins: [react(), TanStackRouterVite({})],
 });
