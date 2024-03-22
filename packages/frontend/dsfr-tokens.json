@@ -1,0 +1,2124 @@
+{
+  "theme": {
+    "extend": {
+      "tokens": {
+        "colors": {
+          "background.default.grey": {
+            "value": "var(--background-default-grey)"
+          },
+          "background.default.grey.hover": {
+            "value": "var(--background-default-grey-hover)"
+          },
+          "background.default.grey.active": {
+            "value": "var(--background-default-grey-active)"
+          },
+          "background.alt.grey": {
+            "value": "var(--background-alt-grey)"
+          },
+          "background.alt.grey.hover": {
+            "value": "var(--background-alt-grey-hover)"
+          },
+          "background.alt.grey.active": {
+            "value": "var(--background-alt-grey-active)"
+          },
+          "background.alt.blueFrance": {
+            "value": "var(--background-alt-blue-france)"
+          },
+          "background.alt.blueFrance.hover": {
+            "value": "var(--background-alt-blue-france-hover)"
+          },
+          "background.alt.blueFrance.active": {
+            "value": "var(--background-alt-blue-france-active)"
+          },
+          "background.alt.redMarianne": {
+            "value": "var(--background-alt-red-marianne)"
+          },
+          "background.alt.redMarianne.hover": {
+            "value": "var(--background-alt-red-marianne-hover)"
+          },
+          "background.alt.redMarianne.active": {
+            "value": "var(--background-alt-red-marianne-active)"
+          },
+          "background.alt.greenTilleulVerveine": {
+            "value": "var(--background-alt-green-tilleul-verveine)"
+          },
+          "background.alt.greenTilleulVerveine.hover": {
+            "value": "var(--background-alt-green-tilleul-verveine-hover)"
+          },
+          "background.alt.greenTilleulVerveine.active": {
+            "value": "var(--background-alt-green-tilleul-verveine-active)"
+          },
+          "background.alt.greenBourgeon": {
+            "value": "var(--background-alt-green-bourgeon)"
+          },
+          "background.alt.greenBourgeon.hover": {
+            "value": "var(--background-alt-green-bourgeon-hover)"
+          },
+          "background.alt.greenBourgeon.active": {
+            "value": "var(--background-alt-green-bourgeon-active)"
+          },
+          "background.alt.greenEmeraude": {
+            "value": "var(--background-alt-green-emeraude)"
+          },
+          "background.alt.greenEmeraude.hover": {
+            "value": "var(--background-alt-green-emeraude-hover)"
+          },
+          "background.alt.greenEmeraude.active": {
+            "value": "var(--background-alt-green-emeraude-active)"
+          },
+          "background.alt.greenMenthe": {
+            "value": "var(--background-alt-green-menthe)"
+          },
+          "background.alt.greenMenthe.hover": {
+            "value": "var(--background-alt-green-menthe-hover)"
+          },
+          "background.alt.greenMenthe.active": {
+            "value": "var(--background-alt-green-menthe-active)"
+          },
+          "background.alt.greenArchipel": {
+            "value": "var(--background-alt-green-archipel)"
+          },
+          "background.alt.greenArchipel.hover": {
+            "value": "var(--background-alt-green-archipel-hover)"
+          },
+          "background.alt.greenArchipel.active": {
+            "value": "var(--background-alt-green-archipel-active)"
+          },
+          "background.alt.blueEcume": {
+            "value": "var(--background-alt-blue-ecume)"
+          },
+          "background.alt.blueEcume.hover": {
+            "value": "var(--background-alt-blue-ecume-hover)"
+          },
+          "background.alt.blueEcume.active": {
+            "value": "var(--background-alt-blue-ecume-active)"
+          },
+          "background.alt.blueCumulus": {
+            "value": "var(--background-alt-blue-cumulus)"
+          },
+          "background.alt.blueCumulus.hover": {
+            "value": "var(--background-alt-blue-cumulus-hover)"
+          },
+          "background.alt.blueCumulus.active": {
+            "value": "var(--background-alt-blue-cumulus-active)"
+          },
+          "background.alt.purpleGlycine": {
+            "value": "var(--background-alt-purple-glycine)"
+          },
+          "background.alt.purpleGlycine.hover": {
+            "value": "var(--background-alt-purple-glycine-hover)"
+          },
+          "background.alt.purpleGlycine.active": {
+            "value": "var(--background-alt-purple-glycine-active)"
+          },
+          "background.alt.pinkMacaron": {
+            "value": "var(--background-alt-pink-macaron)"
+          },
+          "background.alt.pinkMacaron.hover": {
+            "value": "var(--background-alt-pink-macaron-hover)"
+          },
+          "background.alt.pinkMacaron.active": {
+            "value": "var(--background-alt-pink-macaron-active)"
+          },
+          "background.alt.pinkTuile": {
+            "value": "var(--background-alt-pink-tuile)"
+          },
+          "background.alt.pinkTuile.hover": {
+            "value": "var(--background-alt-pink-tuile-hover)"
+          },
+          "background.alt.pinkTuile.active": {
+            "value": "var(--background-alt-pink-tuile-active)"
+          },
+          "background.alt.yellowTournesol": {
+            "value": "var(--background-alt-yellow-tournesol)"
+          },
+          "background.alt.yellowTournesol.hover": {
+            "value": "var(--background-alt-yellow-tournesol-hover)"
+          },
+          "background.alt.yellowTournesol.active": {
+            "value": "var(--background-alt-yellow-tournesol-active)"
+          },
+          "background.alt.yellowMoutarde": {
+            "value": "var(--background-alt-yellow-moutarde)"
+          },
+          "background.alt.yellowMoutarde.hover": {
+            "value": "var(--background-alt-yellow-moutarde-hover)"
+          },
+          "background.alt.yellowMoutarde.active": {
+            "value": "var(--background-alt-yellow-moutarde-active)"
+          },
+          "background.alt.orangeTerreBattue": {
+            "value": "var(--background-alt-orange-terre-battue)"
+          },
+          "background.alt.orangeTerreBattue.hover": {
+            "value": "var(--background-alt-orange-terre-battue-hover)"
+          },
+          "background.alt.orangeTerreBattue.active": {
+            "value": "var(--background-alt-orange-terre-battue-active)"
+          },
+          "background.alt.brownCafeCreme": {
+            "value": "var(--background-alt-brown-cafe-creme)"
+          },
+          "background.alt.brownCafeCreme.hover": {
+            "value": "var(--background-alt-brown-cafe-creme-hover)"
+          },
+          "background.alt.brownCafeCreme.active": {
+            "value": "var(--background-alt-brown-cafe-creme-active)"
+          },
+          "background.alt.brownCaramel": {
+            "value": "var(--background-alt-brown-caramel)"
+          },
+          "background.alt.brownCaramel.hover": {
+            "value": "var(--background-alt-brown-caramel-hover)"
+          },
+          "background.alt.brownCaramel.active": {
+            "value": "var(--background-alt-brown-caramel-active)"
+          },
+          "background.alt.brownOpera": {
+            "value": "var(--background-alt-brown-opera)"
+          },
+          "background.alt.brownOpera.hover": {
+            "value": "var(--background-alt-brown-opera-hover)"
+          },
+          "background.alt.brownOpera.active": {
+            "value": "var(--background-alt-brown-opera-active)"
+          },
+          "background.alt.beigeGrisGalet": {
+            "value": "var(--background-alt-beige-gris-galet)"
+          },
+          "background.alt.beigeGrisGalet.hover": {
+            "value": "var(--background-alt-beige-gris-galet-hover)"
+          },
+          "background.alt.beigeGrisGalet.active": {
+            "value": "var(--background-alt-beige-gris-galet-active)"
+          },
+          "background.contrast.grey": {
+            "value": "var(--background-contrast-grey)"
+          },
+          "background.contrast.grey.hover": {
+            "value": "var(--background-contrast-grey-hover)"
+          },
+          "background.contrast.grey.active": {
+            "value": "var(--background-contrast-grey-active)"
+          },
+          "background.contrast.blueFrance": {
+            "value": "var(--background-contrast-blue-france)"
+          },
+          "background.contrast.blueFrance.hover": {
+            "value": "var(--background-contrast-blue-france-hover)"
+          },
+          "background.contrast.blueFrance.active": {
+            "value": "var(--background-contrast-blue-france-active)"
+          },
+          "background.contrast.redMarianne": {
+            "value": "var(--background-contrast-red-marianne)"
+          },
+          "background.contrast.redMarianne.hover": {
+            "value": "var(--background-contrast-red-marianne-hover)"
+          },
+          "background.contrast.redMarianne.active": {
+            "value": "var(--background-contrast-red-marianne-active)"
+          },
+          "background.contrast.greenTilleulVerveine": {
+            "value": "var(--background-contrast-green-tilleul-verveine)"
+          },
+          "background.contrast.greenTilleulVerveine.hover": {
+            "value": "var(--background-contrast-green-tilleul-verveine-hover)"
+          },
+          "background.contrast.greenTilleulVerveine.active": {
+            "value": "var(--background-contrast-green-tilleul-verveine-active)"
+          },
+          "background.contrast.greenBourgeon": {
+            "value": "var(--background-contrast-green-bourgeon)"
+          },
+          "background.contrast.greenBourgeon.hover": {
+            "value": "var(--background-contrast-green-bourgeon-hover)"
+          },
+          "background.contrast.greenBourgeon.active": {
+            "value": "var(--background-contrast-green-bourgeon-active)"
+          },
+          "background.contrast.greenEmeraude": {
+            "value": "var(--background-contrast-green-emeraude)"
+          },
+          "background.contrast.greenEmeraude.hover": {
+            "value": "var(--background-contrast-green-emeraude-hover)"
+          },
+          "background.contrast.greenEmeraude.active": {
+            "value": "var(--background-contrast-green-emeraude-active)"
+          },
+          "background.contrast.greenMenthe": {
+            "value": "var(--background-contrast-green-menthe)"
+          },
+          "background.contrast.greenMenthe.hover": {
+            "value": "var(--background-contrast-green-menthe-hover)"
+          },
+          "background.contrast.greenMenthe.active": {
+            "value": "var(--background-contrast-green-menthe-active)"
+          },
+          "background.contrast.greenArchipel": {
+            "value": "var(--background-contrast-green-archipel)"
+          },
+          "background.contrast.greenArchipel.hover": {
+            "value": "var(--background-contrast-green-archipel-hover)"
+          },
+          "background.contrast.greenArchipel.active": {
+            "value": "var(--background-contrast-green-archipel-active)"
+          },
+          "background.contrast.blueEcume": {
+            "value": "var(--background-contrast-blue-ecume)"
+          },
+          "background.contrast.blueEcume.hover": {
+            "value": "var(--background-contrast-blue-ecume-hover)"
+          },
+          "background.contrast.blueEcume.active": {
+            "value": "var(--background-contrast-blue-ecume-active)"
+          },
+          "background.contrast.blueCumulus": {
+            "value": "var(--background-contrast-blue-cumulus)"
+          },
+          "background.contrast.blueCumulus.hover": {
+            "value": "var(--background-contrast-blue-cumulus-hover)"
+          },
+          "background.contrast.blueCumulus.active": {
+            "value": "var(--background-contrast-blue-cumulus-active)"
+          },
+          "background.contrast.purpleGlycine": {
+            "value": "var(--background-contrast-purple-glycine)"
+          },
+          "background.contrast.purpleGlycine.hover": {
+            "value": "var(--background-contrast-purple-glycine-hover)"
+          },
+          "background.contrast.purpleGlycine.active": {
+            "value": "var(--background-contrast-purple-glycine-active)"
+          },
+          "background.contrast.pinkMacaron": {
+            "value": "var(--background-contrast-pink-macaron)"
+          },
+          "background.contrast.pinkMacaron.hover": {
+            "value": "var(--background-contrast-pink-macaron-hover)"
+          },
+          "background.contrast.pinkMacaron.active": {
+            "value": "var(--background-contrast-pink-macaron-active)"
+          },
+          "background.contrast.pinkTuile": {
+            "value": "var(--background-contrast-pink-tuile)"
+          },
+          "background.contrast.pinkTuile.hover": {
+            "value": "var(--background-contrast-pink-tuile-hover)"
+          },
+          "background.contrast.pinkTuile.active": {
+            "value": "var(--background-contrast-pink-tuile-active)"
+          },
+          "background.contrast.yellowTournesol": {
+            "value": "var(--background-contrast-yellow-tournesol)"
+          },
+          "background.contrast.yellowTournesol.hover": {
+            "value": "var(--background-contrast-yellow-tournesol-hover)"
+          },
+          "background.contrast.yellowTournesol.active": {
+            "value": "var(--background-contrast-yellow-tournesol-active)"
+          },
+          "background.contrast.yellowMoutarde": {
+            "value": "var(--background-contrast-yellow-moutarde)"
+          },
+          "background.contrast.yellowMoutarde.hover": {
+            "value": "var(--background-contrast-yellow-moutarde-hover)"
+          },
+          "background.contrast.yellowMoutarde.active": {
+            "value": "var(--background-contrast-yellow-moutarde-active)"
+          },
+          "background.contrast.orangeTerreBattue": {
+            "value": "var(--background-contrast-orange-terre-battue)"
+          },
+          "background.contrast.orangeTerreBattue.hover": {
+            "value": "var(--background-contrast-orange-terre-battue-hover)"
+          },
+          "background.contrast.orangeTerreBattue.active": {
+            "value": "var(--background-contrast-orange-terre-battue-active)"
+          },
+          "background.contrast.brownCafeCreme": {
+            "value": "var(--background-contrast-brown-cafe-creme)"
+          },
+          "background.contrast.brownCafeCreme.hover": {
+            "value": "var(--background-contrast-brown-cafe-creme-hover)"
+          },
+          "background.contrast.brownCafeCreme.active": {
+            "value": "var(--background-contrast-brown-cafe-creme-active)"
+          },
+          "background.contrast.brownCaramel": {
+            "value": "var(--background-contrast-brown-caramel)"
+          },
+          "background.contrast.brownCaramel.hover": {
+            "value": "var(--background-contrast-brown-caramel-hover)"
+          },
+          "background.contrast.brownCaramel.active": {
+            "value": "var(--background-contrast-brown-caramel-active)"
+          },
+          "background.contrast.brownOpera": {
+            "value": "var(--background-contrast-brown-opera)"
+          },
+          "background.contrast.brownOpera.hover": {
+            "value": "var(--background-contrast-brown-opera-hover)"
+          },
+          "background.contrast.brownOpera.active": {
+            "value": "var(--background-contrast-brown-opera-active)"
+          },
+          "background.contrast.beigeGrisGalet": {
+            "value": "var(--background-contrast-beige-gris-galet)"
+          },
+          "background.contrast.beigeGrisGalet.hover": {
+            "value": "var(--background-contrast-beige-gris-galet-hover)"
+          },
+          "background.contrast.beigeGrisGalet.active": {
+            "value": "var(--background-contrast-beige-gris-galet-active)"
+          },
+          "background.contrast.info": {
+            "value": "var(--background-contrast-info)"
+          },
+          "background.contrast.info.hover": {
+            "value": "var(--background-contrast-info-hover)"
+          },
+          "background.contrast.info.active": {
+            "value": "var(--background-contrast-info-active)"
+          },
+          "background.contrast.success": {
+            "value": "var(--background-contrast-success)"
+          },
+          "background.contrast.success.hover": {
+            "value": "var(--background-contrast-success-hover)"
+          },
+          "background.contrast.success.active": {
+            "value": "var(--background-contrast-success-active)"
+          },
+          "background.contrast.warning": {
+            "value": "var(--background-contrast-warning)"
+          },
+          "background.contrast.warning.hover": {
+            "value": "var(--background-contrast-warning-hover)"
+          },
+          "background.contrast.warning.active": {
+            "value": "var(--background-contrast-warning-active)"
+          },
+          "background.contrast.error": {
+            "value": "var(--background-contrast-error)"
+          },
+          "background.contrast.error.hover": {
+            "value": "var(--background-contrast-error-hover)"
+          },
+          "background.contrast.error.active": {
+            "value": "var(--background-contrast-error-active)"
+          },
+          "background.flat.grey": {
+            "value": "var(--background-flat-grey)"
+          },
+          "background.flat.blueFrance": {
+            "value": "var(--background-flat-blue-france)"
+          },
+          "background.flat.redMarianne": {
+            "value": "var(--background-flat-red-marianne)"
+          },
+          "background.flat.greenTilleulVerveine": {
+            "value": "var(--background-flat-green-tilleul-verveine)"
+          },
+          "background.flat.greenBourgeon": {
+            "value": "var(--background-flat-green-bourgeon)"
+          },
+          "background.flat.greenEmeraude": {
+            "value": "var(--background-flat-green-emeraude)"
+          },
+          "background.flat.greenMenthe": {
+            "value": "var(--background-flat-green-menthe)"
+          },
+          "background.flat.greenArchipel": {
+            "value": "var(--background-flat-green-archipel)"
+          },
+          "background.flat.blueEcume": {
+            "value": "var(--background-flat-blue-ecume)"
+          },
+          "background.flat.blueCumulus": {
+            "value": "var(--background-flat-blue-cumulus)"
+          },
+          "background.flat.purpleGlycine": {
+            "value": "var(--background-flat-purple-glycine)"
+          },
+          "background.flat.pinkMacaron": {
+            "value": "var(--background-flat-pink-macaron)"
+          },
+          "background.flat.pinkTuile": {
+            "value": "var(--background-flat-pink-tuile)"
+          },
+          "background.flat.yellowTournesol": {
+            "value": "var(--background-flat-yellow-tournesol)"
+          },
+          "background.flat.yellowMoutarde": {
+            "value": "var(--background-flat-yellow-moutarde)"
+          },
+          "background.flat.orangeTerreBattue": {
+            "value": "var(--background-flat-orange-terre-battue)"
+          },
+          "background.flat.brownCafeCreme": {
+            "value": "var(--background-flat-brown-cafe-creme)"
+          },
+          "background.flat.brownCaramel": {
+            "value": "var(--background-flat-brown-caramel)"
+          },
+          "background.flat.brownOpera": {
+            "value": "var(--background-flat-brown-opera)"
+          },
+          "background.flat.beigeGrisGalet": {
+            "value": "var(--background-flat-beige-gris-galet)"
+          },
+          "background.flat.info": {
+            "value": "var(--background-flat-info)"
+          },
+          "background.flat.success": {
+            "value": "var(--background-flat-success)"
+          },
+          "background.flat.warning": {
+            "value": "var(--background-flat-warning)"
+          },
+          "background.flat.error": {
+            "value": "var(--background-flat-error)"
+          },
+          "background.actionHigh.blueFrance": {
+            "value": "var(--background-action-high-blue-france)"
+          },
+          "background.actionHigh.blueFrance.hover": {
+            "value": "var(--background-action-high-blue-france-hover)"
+          },
+          "background.actionHigh.blueFrance.active": {
+            "value": "var(--background-action-high-blue-france-active)"
+          },
+          "background.actionHigh.redMarianne": {
+            "value": "var(--background-action-high-red-marianne)"
+          },
+          "background.actionHigh.redMarianne.hover": {
+            "value": "var(--background-action-high-red-marianne-hover)"
+          },
+          "background.actionHigh.redMarianne.active": {
+            "value": "var(--background-action-high-red-marianne-active)"
+          },
+          "background.actionHigh.greenTilleulVerveine": {
+            "value": "var(--background-action-high-green-tilleul-verveine)"
+          },
+          "background.actionHigh.greenTilleulVerveine.hover": {
+            "value": "var(--background-action-high-green-tilleul-verveine-hover)"
+          },
+          "background.actionHigh.greenTilleulVerveine.active": {
+            "value": "var(--background-action-high-green-tilleul-verveine-active)"
+          },
+          "background.actionHigh.greenBourgeon": {
+            "value": "var(--background-action-high-green-bourgeon)"
+          },
+          "background.actionHigh.greenBourgeon.hover": {
+            "value": "var(--background-action-high-green-bourgeon-hover)"
+          },
+          "background.actionHigh.greenBourgeon.active": {
+            "value": "var(--background-action-high-green-bourgeon-active)"
+          },
+          "background.actionHigh.greenEmeraude": {
+            "value": "var(--background-action-high-green-emeraude)"
+          },
+          "background.actionHigh.greenEmeraude.hover": {
+            "value": "var(--background-action-high-green-emeraude-hover)"
+          },
+          "background.actionHigh.greenEmeraude.active": {
+            "value": "var(--background-action-high-green-emeraude-active)"
+          },
+          "background.actionHigh.greenMenthe": {
+            "value": "var(--background-action-high-green-menthe)"
+          },
+          "background.actionHigh.greenMenthe.hover": {
+            "value": "var(--background-action-high-green-menthe-hover)"
+          },
+          "background.actionHigh.greenMenthe.active": {
+            "value": "var(--background-action-high-green-menthe-active)"
+          },
+          "background.actionHigh.greenArchipel": {
+            "value": "var(--background-action-high-green-archipel)"
+          },
+          "background.actionHigh.greenArchipel.hover": {
+            "value": "var(--background-action-high-green-archipel-hover)"
+          },
+          "background.actionHigh.greenArchipel.active": {
+            "value": "var(--background-action-high-green-archipel-active)"
+          },
+          "background.actionHigh.blueEcume": {
+            "value": "var(--background-action-high-blue-ecume)"
+          },
+          "background.actionHigh.blueEcume.hover": {
+            "value": "var(--background-action-high-blue-ecume-hover)"
+          },
+          "background.actionHigh.blueEcume.active": {
+            "value": "var(--background-action-high-blue-ecume-active)"
+          },
+          "background.actionHigh.blueCumulus": {
+            "value": "var(--background-action-high-blue-cumulus)"
+          },
+          "background.actionHigh.blueCumulus.hover": {
+            "value": "var(--background-action-high-blue-cumulus-hover)"
+          },
+          "background.actionHigh.blueCumulus.active": {
+            "value": "var(--background-action-high-blue-cumulus-active)"
+          },
+          "background.actionHigh.purpleGlycine": {
+            "value": "var(--background-action-high-purple-glycine)"
+          },
+          "background.actionHigh.purpleGlycine.hover": {
+            "value": "var(--background-action-high-purple-glycine-hover)"
+          },
+          "background.actionHigh.purpleGlycine.active": {
+            "value": "var(--background-action-high-purple-glycine-active)"
+          },
+          "background.actionHigh.pinkMacaron": {
+            "value": "var(--background-action-high-pink-macaron)"
+          },
+          "background.actionHigh.pinkMacaron.hover": {
+            "value": "var(--background-action-high-pink-macaron-hover)"
+          },
+          "background.actionHigh.pinkMacaron.active": {
+            "value": "var(--background-action-high-pink-macaron-active)"
+          },
+          "background.actionHigh.pinkTuile": {
+            "value": "var(--background-action-high-pink-tuile)"
+          },
+          "background.actionHigh.pinkTuile.hover": {
+            "value": "var(--background-action-high-pink-tuile-hover)"
+          },
+          "background.actionHigh.pinkTuile.active": {
+            "value": "var(--background-action-high-pink-tuile-active)"
+          },
+          "background.actionHigh.yellowTournesol": {
+            "value": "var(--background-action-high-yellow-tournesol)"
+          },
+          "background.actionHigh.yellowTournesol.hover": {
+            "value": "var(--background-action-high-yellow-tournesol-hover)"
+          },
+          "background.actionHigh.yellowTournesol.active": {
+            "value": "var(--background-action-high-yellow-tournesol-active)"
+          },
+          "background.actionHigh.yellowMoutarde": {
+            "value": "var(--background-action-high-yellow-moutarde)"
+          },
+          "background.actionHigh.yellowMoutarde.hover": {
+            "value": "var(--background-action-high-yellow-moutarde-hover)"
+          },
+          "background.actionHigh.yellowMoutarde.active": {
+            "value": "var(--background-action-high-yellow-moutarde-active)"
+          },
+          "background.actionHigh.orangeTerreBattue": {
+            "value": "var(--background-action-high-orange-terre-battue)"
+          },
+          "background.actionHigh.orangeTerreBattue.hover": {
+            "value": "var(--background-action-high-orange-terre-battue-hover)"
+          },
+          "background.actionHigh.orangeTerreBattue.active": {
+            "value": "var(--background-action-high-orange-terre-battue-active)"
+          },
+          "background.actionHigh.brownCafeCreme": {
+            "value": "var(--background-action-high-brown-cafe-creme)"
+          },
+          "background.actionHigh.brownCafeCreme.hover": {
+            "value": "var(--background-action-high-brown-cafe-creme-hover)"
+          },
+          "background.actionHigh.brownCafeCreme.active": {
+            "value": "var(--background-action-high-brown-cafe-creme-active)"
+          },
+          "background.actionHigh.brownCaramel": {
+            "value": "var(--background-action-high-brown-caramel)"
+          },
+          "background.actionHigh.brownCaramel.hover": {
+            "value": "var(--background-action-high-brown-caramel-hover)"
+          },
+          "background.actionHigh.brownCaramel.active": {
+            "value": "var(--background-action-high-brown-caramel-active)"
+          },
+          "background.actionHigh.brownOpera": {
+            "value": "var(--background-action-high-brown-opera)"
+          },
+          "background.actionHigh.brownOpera.hover": {
+            "value": "var(--background-action-high-brown-opera-hover)"
+          },
+          "background.actionHigh.brownOpera.active": {
+            "value": "var(--background-action-high-brown-opera-active)"
+          },
+          "background.actionHigh.beigeGrisGalet": {
+            "value": "var(--background-action-high-beige-gris-galet)"
+          },
+          "background.actionHigh.beigeGrisGalet.hover": {
+            "value": "var(--background-action-high-beige-gris-galet-hover)"
+          },
+          "background.actionHigh.beigeGrisGalet.active": {
+            "value": "var(--background-action-high-beige-gris-galet-active)"
+          },
+          "background.actionHigh.info": {
+            "value": "var(--background-action-high-info)"
+          },
+          "background.actionHigh.info.hover": {
+            "value": "var(--background-action-high-info-hover)"
+          },
+          "background.actionHigh.info.active": {
+            "value": "var(--background-action-high-info-active)"
+          },
+          "background.actionHigh.success": {
+            "value": "var(--background-action-high-success)"
+          },
+          "background.actionHigh.success.hover": {
+            "value": "var(--background-action-high-success-hover)"
+          },
+          "background.actionHigh.success.active": {
+            "value": "var(--background-action-high-success-active)"
+          },
+          "background.actionHigh.warning": {
+            "value": "var(--background-action-high-warning)"
+          },
+          "background.actionHigh.warning.hover": {
+            "value": "var(--background-action-high-warning-hover)"
+          },
+          "background.actionHigh.warning.active": {
+            "value": "var(--background-action-high-warning-active)"
+          },
+          "background.actionHigh.error": {
+            "value": "var(--background-action-high-error)"
+          },
+          "background.actionHigh.error.hover": {
+            "value": "var(--background-action-high-error-hover)"
+          },
+          "background.actionHigh.error.active": {
+            "value": "var(--background-action-high-error-active)"
+          },
+          "background.actionLow.blueFrance": {
+            "value": "var(--background-action-low-blue-france)"
+          },
+          "background.actionLow.blueFrance.hover": {
+            "value": "var(--background-action-low-blue-france-hover)"
+          },
+          "background.actionLow.blueFrance.active": {
+            "value": "var(--background-action-low-blue-france-active)"
+          },
+          "background.actionLow.redMarianne": {
+            "value": "var(--background-action-low-red-marianne)"
+          },
+          "background.actionLow.redMarianne.hover": {
+            "value": "var(--background-action-low-red-marianne-hover)"
+          },
+          "background.actionLow.redMarianne.active": {
+            "value": "var(--background-action-low-red-marianne-active)"
+          },
+          "background.actionLow.greenTilleulVerveine": {
+            "value": "var(--background-action-low-green-tilleul-verveine)"
+          },
+          "background.actionLow.greenTilleulVerveine.hover": {
+            "value": "var(--background-action-low-green-tilleul-verveine-hover)"
+          },
+          "background.actionLow.greenTilleulVerveine.active": {
+            "value": "var(--background-action-low-green-tilleul-verveine-active)"
+          },
+          "background.actionLow.greenBourgeon": {
+            "value": "var(--background-action-low-green-bourgeon)"
+          },
+          "background.actionLow.greenBourgeon.hover": {
+            "value": "var(--background-action-low-green-bourgeon-hover)"
+          },
+          "background.actionLow.greenBourgeon.active": {
+            "value": "var(--background-action-low-green-bourgeon-active)"
+          },
+          "background.actionLow.greenEmeraude": {
+            "value": "var(--background-action-low-green-emeraude)"
+          },
+          "background.actionLow.greenEmeraude.hover": {
+            "value": "var(--background-action-low-green-emeraude-hover)"
+          },
+          "background.actionLow.greenEmeraude.active": {
+            "value": "var(--background-action-low-green-emeraude-active)"
+          },
+          "background.actionLow.greenMenthe": {
+            "value": "var(--background-action-low-green-menthe)"
+          },
+          "background.actionLow.greenMenthe.hover": {
+            "value": "var(--background-action-low-green-menthe-hover)"
+          },
+          "background.actionLow.greenMenthe.active": {
+            "value": "var(--background-action-low-green-menthe-active)"
+          },
+          "background.actionLow.greenArchipel": {
+            "value": "var(--background-action-low-green-archipel)"
+          },
+          "background.actionLow.greenArchipel.hover": {
+            "value": "var(--background-action-low-green-archipel-hover)"
+          },
+          "background.actionLow.greenArchipel.active": {
+            "value": "var(--background-action-low-green-archipel-active)"
+          },
+          "background.actionLow.blueEcume": {
+            "value": "var(--background-action-low-blue-ecume)"
+          },
+          "background.actionLow.blueEcume.hover": {
+            "value": "var(--background-action-low-blue-ecume-hover)"
+          },
+          "background.actionLow.blueEcume.active": {
+            "value": "var(--background-action-low-blue-ecume-active)"
+          },
+          "background.actionLow.blueCumulus": {
+            "value": "var(--background-action-low-blue-cumulus)"
+          },
+          "background.actionLow.blueCumulus.hover": {
+            "value": "var(--background-action-low-blue-cumulus-hover)"
+          },
+          "background.actionLow.blueCumulus.active": {
+            "value": "var(--background-action-low-blue-cumulus-active)"
+          },
+          "background.actionLow.purpleGlycine": {
+            "value": "var(--background-action-low-purple-glycine)"
+          },
+          "background.actionLow.purpleGlycine.hover": {
+            "value": "var(--background-action-low-purple-glycine-hover)"
+          },
+          "background.actionLow.purpleGlycine.active": {
+            "value": "var(--background-action-low-purple-glycine-active)"
+          },
+          "background.actionLow.pinkMacaron": {
+            "value": "var(--background-action-low-pink-macaron)"
+          },
+          "background.actionLow.pinkMacaron.hover": {
+            "value": "var(--background-action-low-pink-macaron-hover)"
+          },
+          "background.actionLow.pinkMacaron.active": {
+            "value": "var(--background-action-low-pink-macaron-active)"
+          },
+          "background.actionLow.pinkTuile": {
+            "value": "var(--background-action-low-pink-tuile)"
+          },
+          "background.actionLow.pinkTuile.hover": {
+            "value": "var(--background-action-low-pink-tuile-hover)"
+          },
+          "background.actionLow.pinkTuile.active": {
+            "value": "var(--background-action-low-pink-tuile-active)"
+          },
+          "background.actionLow.yellowTournesol": {
+            "value": "var(--background-action-low-yellow-tournesol)"
+          },
+          "background.actionLow.yellowTournesol.hover": {
+            "value": "var(--background-action-low-yellow-tournesol-hover)"
+          },
+          "background.actionLow.yellowTournesol.active": {
+            "value": "var(--background-action-low-yellow-tournesol-active)"
+          },
+          "background.actionLow.yellowMoutarde": {
+            "value": "var(--background-action-low-yellow-moutarde)"
+          },
+          "background.actionLow.yellowMoutarde.hover": {
+            "value": "var(--background-action-low-yellow-moutarde-hover)"
+          },
+          "background.actionLow.yellowMoutarde.active": {
+            "value": "var(--background-action-low-yellow-moutarde-active)"
+          },
+          "background.actionLow.orangeTerreBattue": {
+            "value": "var(--background-action-low-orange-terre-battue)"
+          },
+          "background.actionLow.orangeTerreBattue.hover": {
+            "value": "var(--background-action-low-orange-terre-battue-hover)"
+          },
+          "background.actionLow.orangeTerreBattue.active": {
+            "value": "var(--background-action-low-orange-terre-battue-active)"
+          },
+          "background.actionLow.brownCafeCreme": {
+            "value": "var(--background-action-low-brown-cafe-creme)"
+          },
+          "background.actionLow.brownCafeCreme.hover": {
+            "value": "var(--background-action-low-brown-cafe-creme-hover)"
+          },
+          "background.actionLow.brownCafeCreme.active": {
+            "value": "var(--background-action-low-brown-cafe-creme-active)"
+          },
+          "background.actionLow.brownCaramel": {
+            "value": "var(--background-action-low-brown-caramel)"
+          },
+          "background.actionLow.brownCaramel.hover": {
+            "value": "var(--background-action-low-brown-caramel-hover)"
+          },
+          "background.actionLow.brownCaramel.active": {
+            "value": "var(--background-action-low-brown-caramel-active)"
+          },
+          "background.actionLow.brownOpera": {
+            "value": "var(--background-action-low-brown-opera)"
+          },
+          "background.actionLow.brownOpera.hover": {
+            "value": "var(--background-action-low-brown-opera-hover)"
+          },
+          "background.actionLow.brownOpera.active": {
+            "value": "var(--background-action-low-brown-opera-active)"
+          },
+          "background.actionLow.beigeGrisGalet": {
+            "value": "var(--background-action-low-beige-gris-galet)"
+          },
+          "background.actionLow.beigeGrisGalet.hover": {
+            "value": "var(--background-action-low-beige-gris-galet-hover)"
+          },
+          "background.actionLow.beigeGrisGalet.active": {
+            "value": "var(--background-action-low-beige-gris-galet-active)"
+          },
+          "background.active.blueFrance": {
+            "value": "var(--background-active-blue-france)"
+          },
+          "background.active.blueFrance.hover": {
+            "value": "var(--background-active-blue-france-hover)"
+          },
+          "background.active.blueFrance.active": {
+            "value": "var(--background-active-blue-france-active)"
+          },
+          "background.active.redMarianne": {
+            "value": "var(--background-active-red-marianne)"
+          },
+          "background.active.redMarianne.hover": {
+            "value": "var(--background-active-red-marianne-hover)"
+          },
+          "background.active.redMarianne.active": {
+            "value": "var(--background-active-red-marianne-active)"
+          },
+          "background.open.blueFrance": {
+            "value": "var(--background-open-blue-france)"
+          },
+          "background.open.blueFrance.hover": {
+            "value": "var(--background-open-blue-france-hover)"
+          },
+          "background.open.blueFrance.active": {
+            "value": "var(--background-open-blue-france-active)"
+          },
+          "background.open.redMarianne": {
+            "value": "var(--background-open-red-marianne)"
+          },
+          "background.open.redMarianne.hover": {
+            "value": "var(--background-open-red-marianne-hover)"
+          },
+          "background.open.redMarianne.active": {
+            "value": "var(--background-open-red-marianne-active)"
+          },
+          "background.disabled.grey": {
+            "value": "var(--background-disabled-grey)"
+          },
+          "background.raised.grey": {
+            "value": "var(--background-raised-grey)"
+          },
+          "background.raised.grey.hover": {
+            "value": "var(--background-raised-grey-hover)"
+          },
+          "background.raised.grey.active": {
+            "value": "var(--background-raised-grey-active)"
+          },
+          "background.overlap.grey": {
+            "value": "var(--background-overlap-grey)"
+          },
+          "background.overlap.grey.hover": {
+            "value": "var(--background-overlap-grey-hover)"
+          },
+          "background.overlap.grey.active": {
+            "value": "var(--background-overlap-grey-active)"
+          },
+          "background.lifted.grey": {
+            "value": "var(--background-lifted-grey)"
+          },
+          "background.lifted.grey.hover": {
+            "value": "var(--background-lifted-grey-hover)"
+          },
+          "background.lifted.grey.active": {
+            "value": "var(--background-lifted-grey-active)"
+          },
+          "background.altRaised.grey": {
+            "value": "var(--background-alt-raised-grey)"
+          },
+          "background.altRaised.grey.hover": {
+            "value": "var(--background-alt-raised-grey-hover)"
+          },
+          "background.altRaised.grey.active": {
+            "value": "var(--background-alt-raised-grey-active)"
+          },
+          "background.altOverlap.grey": {
+            "value": "var(--background-alt-overlap-grey)"
+          },
+          "background.altOverlap.grey.hover": {
+            "value": "var(--background-alt-overlap-grey-hover)"
+          },
+          "background.altOverlap.grey.active": {
+            "value": "var(--background-alt-overlap-grey-active)"
+          },
+          "background.contrastRaised.grey": {
+            "value": "var(--background-contrast-raised-grey)"
+          },
+          "background.contrastRaised.grey.hover": {
+            "value": "var(--background-contrast-raised-grey-hover)"
+          },
+          "background.contrastRaised.grey.active": {
+            "value": "var(--background-contrast-raised-grey-active)"
+          },
+          "background.contrastOverlap.grey": {
+            "value": "var(--background-contrast-overlap-grey)"
+          },
+          "background.contrastOverlap.grey.hover": {
+            "value": "var(--background-contrast-overlap-grey-hover)"
+          },
+          "background.contrastOverlap.grey.active": {
+            "value": "var(--background-contrast-overlap-grey-active)"
+          },
+          "text.default.grey": {
+            "value": "var(--text-default-grey)"
+          },
+          "text.default.info": {
+            "value": "var(--text-default-info)"
+          },
+          "text.default.success": {
+            "value": "var(--text-default-success)"
+          },
+          "text.default.warning": {
+            "value": "var(--text-default-warning)"
+          },
+          "text.default.error": {
+            "value": "var(--text-default-error)"
+          },
+          "text.actionHigh.grey": {
+            "value": "var(--text-action-high-grey)"
+          },
+          "text.actionHigh.blueFrance": {
+            "value": "var(--text-action-high-blue-france)"
+          },
+          "text.actionHigh.redMarianne": {
+            "value": "var(--text-action-high-red-marianne)"
+          },
+          "text.actionHigh.greenTilleulVerveine": {
+            "value": "var(--text-action-high-green-tilleul-verveine)"
+          },
+          "text.actionHigh.greenBourgeon": {
+            "value": "var(--text-action-high-green-bourgeon)"
+          },
+          "text.actionHigh.greenEmeraude": {
+            "value": "var(--text-action-high-green-emeraude)"
+          },
+          "text.actionHigh.greenMenthe": {
+            "value": "var(--text-action-high-green-menthe)"
+          },
+          "text.actionHigh.greenArchipel": {
+            "value": "var(--text-action-high-green-archipel)"
+          },
+          "text.actionHigh.blueEcume": {
+            "value": "var(--text-action-high-blue-ecume)"
+          },
+          "text.actionHigh.blueCumulus": {
+            "value": "var(--text-action-high-blue-cumulus)"
+          },
+          "text.actionHigh.purpleGlycine": {
+            "value": "var(--text-action-high-purple-glycine)"
+          },
+          "text.actionHigh.pinkMacaron": {
+            "value": "var(--text-action-high-pink-macaron)"
+          },
+          "text.actionHigh.pinkTuile": {
+            "value": "var(--text-action-high-pink-tuile)"
+          },
+          "text.actionHigh.yellowTournesol": {
+            "value": "var(--text-action-high-yellow-tournesol)"
+          },
+          "text.actionHigh.yellowMoutarde": {
+            "value": "var(--text-action-high-yellow-moutarde)"
+          },
+          "text.actionHigh.orangeTerreBattue": {
+            "value": "var(--text-action-high-orange-terre-battue)"
+          },
+          "text.actionHigh.brownCafeCreme": {
+            "value": "var(--text-action-high-brown-cafe-creme)"
+          },
+          "text.actionHigh.brownCaramel": {
+            "value": "var(--text-action-high-brown-caramel)"
+          },
+          "text.actionHigh.brownOpera": {
+            "value": "var(--text-action-high-brown-opera)"
+          },
+          "text.actionHigh.beigeGrisGalet": {
+            "value": "var(--text-action-high-beige-gris-galet)"
+          },
+          "text.title.grey": {
+            "value": "var(--text-title-grey)"
+          },
+          "text.title.blueFrance": {
+            "value": "var(--text-title-blue-france)"
+          },
+          "text.title.redMarianne": {
+            "value": "var(--text-title-red-marianne)"
+          },
+          "text.label.grey": {
+            "value": "var(--text-label-grey)"
+          },
+          "text.label.blueFrance": {
+            "value": "var(--text-label-blue-france)"
+          },
+          "text.label.redMarianne": {
+            "value": "var(--text-label-red-marianne)"
+          },
+          "text.label.greenTilleulVerveine": {
+            "value": "var(--text-label-green-tilleul-verveine)"
+          },
+          "text.label.greenBourgeon": {
+            "value": "var(--text-label-green-bourgeon)"
+          },
+          "text.label.greenEmeraude": {
+            "value": "var(--text-label-green-emeraude)"
+          },
+          "text.label.greenMenthe": {
+            "value": "var(--text-label-green-menthe)"
+          },
+          "text.label.greenArchipel": {
+            "value": "var(--text-label-green-archipel)"
+          },
+          "text.label.blueEcume": {
+            "value": "var(--text-label-blue-ecume)"
+          },
+          "text.label.blueCumulus": {
+            "value": "var(--text-label-blue-cumulus)"
+          },
+          "text.label.purpleGlycine": {
+            "value": "var(--text-label-purple-glycine)"
+          },
+          "text.label.pinkMacaron": {
+            "value": "var(--text-label-pink-macaron)"
+          },
+          "text.label.pinkTuile": {
+            "value": "var(--text-label-pink-tuile)"
+          },
+          "text.label.yellowTournesol": {
+            "value": "var(--text-label-yellow-tournesol)"
+          },
+          "text.label.yellowMoutarde": {
+            "value": "var(--text-label-yellow-moutarde)"
+          },
+          "text.label.orangeTerreBattue": {
+            "value": "var(--text-label-orange-terre-battue)"
+          },
+          "text.label.brownCafeCreme": {
+            "value": "var(--text-label-brown-cafe-creme)"
+          },
+          "text.label.brownCaramel": {
+            "value": "var(--text-label-brown-caramel)"
+          },
+          "text.label.brownOpera": {
+            "value": "var(--text-label-brown-opera)"
+          },
+          "text.label.beigeGrisGalet": {
+            "value": "var(--text-label-beige-gris-galet)"
+          },
+          "text.active.grey": {
+            "value": "var(--text-active-grey)"
+          },
+          "text.active.blueFrance": {
+            "value": "var(--text-active-blue-france)"
+          },
+          "text.active.redMarianne": {
+            "value": "var(--text-active-red-marianne)"
+          },
+          "text.mention.grey": {
+            "value": "var(--text-mention-grey)"
+          },
+          "text.inverted.grey": {
+            "value": "var(--text-inverted-grey)"
+          },
+          "text.inverted.blueFrance": {
+            "value": "var(--text-inverted-blue-france)"
+          },
+          "text.inverted.redMarianne": {
+            "value": "var(--text-inverted-red-marianne)"
+          },
+          "text.inverted.info": {
+            "value": "var(--text-inverted-info)"
+          },
+          "text.inverted.success": {
+            "value": "var(--text-inverted-success)"
+          },
+          "text.inverted.warning": {
+            "value": "var(--text-inverted-warning)"
+          },
+          "text.inverted.error": {
+            "value": "var(--text-inverted-error)"
+          },
+          "text.inverted.greenTilleulVerveine": {
+            "value": "var(--text-inverted-green-tilleul-verveine)"
+          },
+          "text.inverted.greenBourgeon": {
+            "value": "var(--text-inverted-green-bourgeon)"
+          },
+          "text.inverted.greenEmeraude": {
+            "value": "var(--text-inverted-green-emeraude)"
+          },
+          "text.inverted.greenMenthe": {
+            "value": "var(--text-inverted-green-menthe)"
+          },
+          "text.inverted.greenArchipel": {
+            "value": "var(--text-inverted-green-archipel)"
+          },
+          "text.inverted.blueEcume": {
+            "value": "var(--text-inverted-blue-ecume)"
+          },
+          "text.inverted.blueCumulus": {
+            "value": "var(--text-inverted-blue-cumulus)"
+          },
+          "text.inverted.purpleGlycine": {
+            "value": "var(--text-inverted-purple-glycine)"
+          },
+          "text.inverted.pinkMacaron": {
+            "value": "var(--text-inverted-pink-macaron)"
+          },
+          "text.inverted.pinkTuile": {
+            "value": "var(--text-inverted-pink-tuile)"
+          },
+          "text.inverted.yellowTournesol": {
+            "value": "var(--text-inverted-yellow-tournesol)"
+          },
+          "text.inverted.yellowMoutarde": {
+            "value": "var(--text-inverted-yellow-moutarde)"
+          },
+          "text.inverted.orangeTerreBattue": {
+            "value": "var(--text-inverted-orange-terre-battue)"
+          },
+          "text.inverted.brownCafeCreme": {
+            "value": "var(--text-inverted-brown-cafe-creme)"
+          },
+          "text.inverted.brownCaramel": {
+            "value": "var(--text-inverted-brown-caramel)"
+          },
+          "text.inverted.brownOpera": {
+            "value": "var(--text-inverted-brown-opera)"
+          },
+          "text.inverted.beigeGrisGalet": {
+            "value": "var(--text-inverted-beige-gris-galet)"
+          },
+          "text.disabled.grey": {
+            "value": "var(--text-disabled-grey)"
+          },
+          "text.blackWhite.grey": {
+            "value": "var(--text-black-white-grey)"
+          },
+          "border.default.grey": {
+            "value": "var(--border-default-grey)"
+          },
+          "border.default.blueFrance": {
+            "value": "var(--border-default-blue-france)"
+          },
+          "border.default.redMarianne": {
+            "value": "var(--border-default-red-marianne)"
+          },
+          "border.default.greenTilleulVerveine": {
+            "value": "var(--border-default-green-tilleul-verveine)"
+          },
+          "border.default.greenBourgeon": {
+            "value": "var(--border-default-green-bourgeon)"
+          },
+          "border.default.greenEmeraude": {
+            "value": "var(--border-default-green-emeraude)"
+          },
+          "border.default.greenMenthe": {
+            "value": "var(--border-default-green-menthe)"
+          },
+          "border.default.greenArchipel": {
+            "value": "var(--border-default-green-archipel)"
+          },
+          "border.default.blueEcume": {
+            "value": "var(--border-default-blue-ecume)"
+          },
+          "border.default.blueCumulus": {
+            "value": "var(--border-default-blue-cumulus)"
+          },
+          "border.default.purpleGlycine": {
+            "value": "var(--border-default-purple-glycine)"
+          },
+          "border.default.pinkMacaron": {
+            "value": "var(--border-default-pink-macaron)"
+          },
+          "border.default.pinkTuile": {
+            "value": "var(--border-default-pink-tuile)"
+          },
+          "border.default.yellowTournesol": {
+            "value": "var(--border-default-yellow-tournesol)"
+          },
+          "border.default.yellowMoutarde": {
+            "value": "var(--border-default-yellow-moutarde)"
+          },
+          "border.default.orangeTerreBattue": {
+            "value": "var(--border-default-orange-terre-battue)"
+          },
+          "border.default.brownCafeCreme": {
+            "value": "var(--border-default-brown-cafe-creme)"
+          },
+          "border.default.brownCaramel": {
+            "value": "var(--border-default-brown-caramel)"
+          },
+          "border.default.brownOpera": {
+            "value": "var(--border-default-brown-opera)"
+          },
+          "border.default.beigeGrisGalet": {
+            "value": "var(--border-default-beige-gris-galet)"
+          },
+          "border.active.blueFrance": {
+            "value": "var(--border-active-blue-france)"
+          },
+          "border.active.redMarianne": {
+            "value": "var(--border-active-red-marianne)"
+          },
+          "border.actionHigh.grey": {
+            "value": "var(--border-action-high-grey)"
+          },
+          "border.actionHigh.blueFrance": {
+            "value": "var(--border-action-high-blue-france)"
+          },
+          "border.actionHigh.redMarianne": {
+            "value": "var(--border-action-high-red-marianne)"
+          },
+          "border.actionHigh.info": {
+            "value": "var(--border-action-high-info)"
+          },
+          "border.actionHigh.success": {
+            "value": "var(--border-action-high-success)"
+          },
+          "border.actionHigh.warning": {
+            "value": "var(--border-action-high-warning)"
+          },
+          "border.actionHigh.error": {
+            "value": "var(--border-action-high-error)"
+          },
+          "border.actionLow.blueFrance": {
+            "value": "var(--border-action-low-blue-france)"
+          },
+          "border.actionLow.redMarianne": {
+            "value": "var(--border-action-low-red-marianne)"
+          },
+          "border.actionLow.greenTilleulVerveine": {
+            "value": "var(--border-action-low-green-tilleul-verveine)"
+          },
+          "border.actionLow.greenBourgeon": {
+            "value": "var(--border-action-low-green-bourgeon)"
+          },
+          "border.actionLow.greenEmeraude": {
+            "value": "var(--border-action-low-green-emeraude)"
+          },
+          "border.actionLow.greenMenthe": {
+            "value": "var(--border-action-low-green-menthe)"
+          },
+          "border.actionLow.greenArchipel": {
+            "value": "var(--border-action-low-green-archipel)"
+          },
+          "border.actionLow.blueEcume": {
+            "value": "var(--border-action-low-blue-ecume)"
+          },
+          "border.actionLow.blueCumulus": {
+            "value": "var(--border-action-low-blue-cumulus)"
+          },
+          "border.actionLow.purpleGlycine": {
+            "value": "var(--border-action-low-purple-glycine)"
+          },
+          "border.actionLow.pinkMacaron": {
+            "value": "var(--border-action-low-pink-macaron)"
+          },
+          "border.actionLow.pinkTuile": {
+            "value": "var(--border-action-low-pink-tuile)"
+          },
+          "border.actionLow.yellowTournesol": {
+            "value": "var(--border-action-low-yellow-tournesol)"
+          },
+          "border.actionLow.yellowMoutarde": {
+            "value": "var(--border-action-low-yellow-moutarde)"
+          },
+          "border.actionLow.orangeTerreBattue": {
+            "value": "var(--border-action-low-orange-terre-battue)"
+          },
+          "border.actionLow.brownCafeCreme": {
+            "value": "var(--border-action-low-brown-cafe-creme)"
+          },
+          "border.actionLow.brownCaramel": {
+            "value": "var(--border-action-low-brown-caramel)"
+          },
+          "border.actionLow.brownOpera": {
+            "value": "var(--border-action-low-brown-opera)"
+          },
+          "border.actionLow.beigeGrisGalet": {
+            "value": "var(--border-action-low-beige-gris-galet)"
+          },
+          "border.open.blueFrance": {
+            "value": "var(--border-open-blue-france)"
+          },
+          "border.open.redMarianne": {
+            "value": "var(--border-open-red-marianne)"
+          },
+          "border.plain.grey": {
+            "value": "var(--border-plain-grey)"
+          },
+          "border.plain.blueFrance": {
+            "value": "var(--border-plain-blue-france)"
+          },
+          "border.plain.redMarianne": {
+            "value": "var(--border-plain-red-marianne)"
+          },
+          "border.plain.info": {
+            "value": "var(--border-plain-info)"
+          },
+          "border.plain.success": {
+            "value": "var(--border-plain-success)"
+          },
+          "border.plain.warning": {
+            "value": "var(--border-plain-warning)"
+          },
+          "border.plain.error": {
+            "value": "var(--border-plain-error)"
+          },
+          "border.plain.greenTilleulVerveine": {
+            "value": "var(--border-plain-green-tilleul-verveine)"
+          },
+          "border.plain.greenBourgeon": {
+            "value": "var(--border-plain-green-bourgeon)"
+          },
+          "border.plain.greenEmeraude": {
+            "value": "var(--border-plain-green-emeraude)"
+          },
+          "border.plain.greenMenthe": {
+            "value": "var(--border-plain-green-menthe)"
+          },
+          "border.plain.greenArchipel": {
+            "value": "var(--border-plain-green-archipel)"
+          },
+          "border.plain.blueEcume": {
+            "value": "var(--border-plain-blue-ecume)"
+          },
+          "border.plain.blueCumulus": {
+            "value": "var(--border-plain-blue-cumulus)"
+          },
+          "border.plain.purpleGlycine": {
+            "value": "var(--border-plain-purple-glycine)"
+          },
+          "border.plain.pinkMacaron": {
+            "value": "var(--border-plain-pink-macaron)"
+          },
+          "border.plain.pinkTuile": {
+            "value": "var(--border-plain-pink-tuile)"
+          },
+          "border.plain.yellowTournesol": {
+            "value": "var(--border-plain-yellow-tournesol)"
+          },
+          "border.plain.yellowMoutarde": {
+            "value": "var(--border-plain-yellow-moutarde)"
+          },
+          "border.plain.orangeTerreBattue": {
+            "value": "var(--border-plain-orange-terre-battue)"
+          },
+          "border.plain.brownCafeCreme": {
+            "value": "var(--border-plain-brown-cafe-creme)"
+          },
+          "border.plain.brownCaramel": {
+            "value": "var(--border-plain-brown-caramel)"
+          },
+          "border.plain.brownOpera": {
+            "value": "var(--border-plain-brown-opera)"
+          },
+          "border.plain.beigeGrisGalet": {
+            "value": "var(--border-plain-beige-gris-galet)"
+          },
+          "border.disabled.grey": {
+            "value": "var(--border-disabled-grey)"
+          },
+          "artwork.major.blueFrance": {
+            "value": "var(--artwork-major-blue-france)"
+          },
+          "artwork.major.blueFrance.hover": {
+            "value": "var(--artwork-major-blue-france-hover)"
+          },
+          "artwork.major.blueFrance.active": {
+            "value": "var(--artwork-major-blue-france-active)"
+          },
+          "artwork.major.redMarianne": {
+            "value": "var(--artwork-major-red-marianne)"
+          },
+          "artwork.major.redMarianne.hover": {
+            "value": "var(--artwork-major-red-marianne-hover)"
+          },
+          "artwork.major.redMarianne.active": {
+            "value": "var(--artwork-major-red-marianne-active)"
+          },
+          "artwork.major.greenTilleulVerveine": {
+            "value": "var(--artwork-major-green-tilleul-verveine)"
+          },
+          "artwork.major.greenTilleulVerveine.hover": {
+            "value": "var(--artwork-major-green-tilleul-verveine-hover)"
+          },
+          "artwork.major.greenTilleulVerveine.active": {
+            "value": "var(--artwork-major-green-tilleul-verveine-active)"
+          },
+          "artwork.major.greenBourgeon": {
+            "value": "var(--artwork-major-green-bourgeon)"
+          },
+          "artwork.major.greenBourgeon.hover": {
+            "value": "var(--artwork-major-green-bourgeon-hover)"
+          },
+          "artwork.major.greenBourgeon.active": {
+            "value": "var(--artwork-major-green-bourgeon-active)"
+          },
+          "artwork.major.greenEmeraude": {
+            "value": "var(--artwork-major-green-emeraude)"
+          },
+          "artwork.major.greenEmeraude.hover": {
+            "value": "var(--artwork-major-green-emeraude-hover)"
+          },
+          "artwork.major.greenEmeraude.active": {
+            "value": "var(--artwork-major-green-emeraude-active)"
+          },
+          "artwork.major.greenMenthe": {
+            "value": "var(--artwork-major-green-menthe)"
+          },
+          "artwork.major.greenMenthe.hover": {
+            "value": "var(--artwork-major-green-menthe-hover)"
+          },
+          "artwork.major.greenMenthe.active": {
+            "value": "var(--artwork-major-green-menthe-active)"
+          },
+          "artwork.major.greenArchipel": {
+            "value": "var(--artwork-major-green-archipel)"
+          },
+          "artwork.major.greenArchipel.hover": {
+            "value": "var(--artwork-major-green-archipel-hover)"
+          },
+          "artwork.major.greenArchipel.active": {
+            "value": "var(--artwork-major-green-archipel-active)"
+          },
+          "artwork.major.blueEcume": {
+            "value": "var(--artwork-major-blue-ecume)"
+          },
+          "artwork.major.blueEcume.hover": {
+            "value": "var(--artwork-major-blue-ecume-hover)"
+          },
+          "artwork.major.blueEcume.active": {
+            "value": "var(--artwork-major-blue-ecume-active)"
+          },
+          "artwork.major.blueCumulus": {
+            "value": "var(--artwork-major-blue-cumulus)"
+          },
+          "artwork.major.blueCumulus.hover": {
+            "value": "var(--artwork-major-blue-cumulus-hover)"
+          },
+          "artwork.major.blueCumulus.active": {
+            "value": "var(--artwork-major-blue-cumulus-active)"
+          },
+          "artwork.major.purpleGlycine": {
+            "value": "var(--artwork-major-purple-glycine)"
+          },
+          "artwork.major.purpleGlycine.hover": {
+            "value": "var(--artwork-major-purple-glycine-hover)"
+          },
+          "artwork.major.purpleGlycine.active": {
+            "value": "var(--artwork-major-purple-glycine-active)"
+          },
+          "artwork.major.pinkMacaron": {
+            "value": "var(--artwork-major-pink-macaron)"
+          },
+          "artwork.major.pinkMacaron.hover": {
+            "value": "var(--artwork-major-pink-macaron-hover)"
+          },
+          "artwork.major.pinkMacaron.active": {
+            "value": "var(--artwork-major-pink-macaron-active)"
+          },
+          "artwork.major.pinkTuile": {
+            "value": "var(--artwork-major-pink-tuile)"
+          },
+          "artwork.major.pinkTuile.hover": {
+            "value": "var(--artwork-major-pink-tuile-hover)"
+          },
+          "artwork.major.pinkTuile.active": {
+            "value": "var(--artwork-major-pink-tuile-active)"
+          },
+          "artwork.major.yellowTournesol": {
+            "value": "var(--artwork-major-yellow-tournesol)"
+          },
+          "artwork.major.yellowTournesol.hover": {
+            "value": "var(--artwork-major-yellow-tournesol-hover)"
+          },
+          "artwork.major.yellowTournesol.active": {
+            "value": "var(--artwork-major-yellow-tournesol-active)"
+          },
+          "artwork.major.yellowMoutarde": {
+            "value": "var(--artwork-major-yellow-moutarde)"
+          },
+          "artwork.major.yellowMoutarde.hover": {
+            "value": "var(--artwork-major-yellow-moutarde-hover)"
+          },
+          "artwork.major.yellowMoutarde.active": {
+            "value": "var(--artwork-major-yellow-moutarde-active)"
+          },
+          "artwork.major.orangeTerreBattue": {
+            "value": "var(--artwork-major-orange-terre-battue)"
+          },
+          "artwork.major.orangeTerreBattue.hover": {
+            "value": "var(--artwork-major-orange-terre-battue-hover)"
+          },
+          "artwork.major.orangeTerreBattue.active": {
+            "value": "var(--artwork-major-orange-terre-battue-active)"
+          },
+          "artwork.major.brownCafeCreme": {
+            "value": "var(--artwork-major-brown-cafe-creme)"
+          },
+          "artwork.major.brownCafeCreme.hover": {
+            "value": "var(--artwork-major-brown-cafe-creme-hover)"
+          },
+          "artwork.major.brownCafeCreme.active": {
+            "value": "var(--artwork-major-brown-cafe-creme-active)"
+          },
+          "artwork.major.brownCaramel": {
+            "value": "var(--artwork-major-brown-caramel)"
+          },
+          "artwork.major.brownCaramel.hover": {
+            "value": "var(--artwork-major-brown-caramel-hover)"
+          },
+          "artwork.major.brownCaramel.active": {
+            "value": "var(--artwork-major-brown-caramel-active)"
+          },
+          "artwork.major.brownOpera": {
+            "value": "var(--artwork-major-brown-opera)"
+          },
+          "artwork.major.brownOpera.hover": {
+            "value": "var(--artwork-major-brown-opera-hover)"
+          },
+          "artwork.major.brownOpera.active": {
+            "value": "var(--artwork-major-brown-opera-active)"
+          },
+          "artwork.major.beigeGrisGalet": {
+            "value": "var(--artwork-major-beige-gris-galet)"
+          },
+          "artwork.major.beigeGrisGalet.hover": {
+            "value": "var(--artwork-major-beige-gris-galet-hover)"
+          },
+          "artwork.major.beigeGrisGalet.active": {
+            "value": "var(--artwork-major-beige-gris-galet-active)"
+          },
+          "artwork.minor.blueFrance": {
+            "value": "var(--artwork-minor-blue-france)"
+          },
+          "artwork.minor.redMarianne": {
+            "value": "var(--artwork-minor-red-marianne)"
+          },
+          "artwork.minor.greenTilleulVerveine": {
+            "value": "var(--artwork-minor-green-tilleul-verveine)"
+          },
+          "artwork.minor.greenBourgeon": {
+            "value": "var(--artwork-minor-green-bourgeon)"
+          },
+          "artwork.minor.greenEmeraude": {
+            "value": "var(--artwork-minor-green-emeraude)"
+          },
+          "artwork.minor.greenMenthe": {
+            "value": "var(--artwork-minor-green-menthe)"
+          },
+          "artwork.minor.greenArchipel": {
+            "value": "var(--artwork-minor-green-archipel)"
+          },
+          "artwork.minor.blueEcume": {
+            "value": "var(--artwork-minor-blue-ecume)"
+          },
+          "artwork.minor.blueCumulus": {
+            "value": "var(--artwork-minor-blue-cumulus)"
+          },
+          "artwork.minor.purpleGlycine": {
+            "value": "var(--artwork-minor-purple-glycine)"
+          },
+          "artwork.minor.pinkMacaron": {
+            "value": "var(--artwork-minor-pink-macaron)"
+          },
+          "artwork.minor.pinkTuile": {
+            "value": "var(--artwork-minor-pink-tuile)"
+          },
+          "artwork.minor.yellowTournesol": {
+            "value": "var(--artwork-minor-yellow-tournesol)"
+          },
+          "artwork.minor.yellowMoutarde": {
+            "value": "var(--artwork-minor-yellow-moutarde)"
+          },
+          "artwork.minor.orangeTerreBattue": {
+            "value": "var(--artwork-minor-orange-terre-battue)"
+          },
+          "artwork.minor.brownCafeCreme": {
+            "value": "var(--artwork-minor-brown-cafe-creme)"
+          },
+          "artwork.minor.brownCaramel": {
+            "value": "var(--artwork-minor-brown-caramel)"
+          },
+          "artwork.minor.brownOpera": {
+            "value": "var(--artwork-minor-brown-opera)"
+          },
+          "artwork.minor.beigeGrisGalet": {
+            "value": "var(--artwork-minor-beige-gris-galet)"
+          },
+          "artwork.decorative.grey": {
+            "value": "var(--artwork-decorative-grey)"
+          },
+          "artwork.decorative.blueFrance": {
+            "value": "var(--artwork-decorative-blue-france)"
+          },
+          "artwork.decorative.redMarianne": {
+            "value": "var(--artwork-decorative-red-marianne)"
+          },
+          "artwork.decorative.greenTilleulVerveine": {
+            "value": "var(--artwork-decorative-green-tilleul-verveine)"
+          },
+          "artwork.decorative.greenBourgeon": {
+            "value": "var(--artwork-decorative-green-bourgeon)"
+          },
+          "artwork.decorative.greenEmeraude": {
+            "value": "var(--artwork-decorative-green-emeraude)"
+          },
+          "artwork.decorative.greenMenthe": {
+            "value": "var(--artwork-decorative-green-menthe)"
+          },
+          "artwork.decorative.greenArchipel": {
+            "value": "var(--artwork-decorative-green-archipel)"
+          },
+          "artwork.decorative.blueEcume": {
+            "value": "var(--artwork-decorative-blue-ecume)"
+          },
+          "artwork.decorative.blueCumulus": {
+            "value": "var(--artwork-decorative-blue-cumulus)"
+          },
+          "artwork.decorative.purpleGlycine": {
+            "value": "var(--artwork-decorative-purple-glycine)"
+          },
+          "artwork.decorative.pinkMacaron": {
+            "value": "var(--artwork-decorative-pink-macaron)"
+          },
+          "artwork.decorative.pinkTuile": {
+            "value": "var(--artwork-decorative-pink-tuile)"
+          },
+          "artwork.decorative.yellowTournesol": {
+            "value": "var(--artwork-decorative-yellow-tournesol)"
+          },
+          "artwork.decorative.yellowMoutarde": {
+            "value": "var(--artwork-decorative-yellow-moutarde)"
+          },
+          "artwork.decorative.orangeTerreBattue": {
+            "value": "var(--artwork-decorative-orange-terre-battue)"
+          },
+          "artwork.decorative.brownCafeCreme": {
+            "value": "var(--artwork-decorative-brown-cafe-creme)"
+          },
+          "artwork.decorative.brownCaramel": {
+            "value": "var(--artwork-decorative-brown-caramel)"
+          },
+          "artwork.decorative.brownOpera": {
+            "value": "var(--artwork-decorative-brown-opera)"
+          },
+          "artwork.decorative.beigeGrisGalet": {
+            "value": "var(--artwork-decorative-beige-gris-galet)"
+          },
+          "artwork.background.grey": {
+            "value": "var(--artwork-background-grey)"
+          },
+          "artwork.background.blueFrance": {
+            "value": "var(--artwork-background-blue-france)"
+          },
+          "artwork.background.redMarianne": {
+            "value": "var(--artwork-background-red-marianne)"
+          },
+          "artwork.background.greenTilleulVerveine": {
+            "value": "var(--artwork-background-green-tilleul-verveine)"
+          },
+          "artwork.background.greenBourgeon": {
+            "value": "var(--artwork-background-green-bourgeon)"
+          },
+          "artwork.background.greenEmeraude": {
+            "value": "var(--artwork-background-green-emeraude)"
+          },
+          "artwork.background.greenMenthe": {
+            "value": "var(--artwork-background-green-menthe)"
+          },
+          "artwork.background.greenArchipel": {
+            "value": "var(--artwork-background-green-archipel)"
+          },
+          "artwork.background.blueEcume": {
+            "value": "var(--artwork-background-blue-ecume)"
+          },
+          "artwork.background.blueCumulus": {
+            "value": "var(--artwork-background-blue-cumulus)"
+          },
+          "artwork.background.purpleGlycine": {
+            "value": "var(--artwork-background-purple-glycine)"
+          },
+          "artwork.background.pinkMacaron": {
+            "value": "var(--artwork-background-pink-macaron)"
+          },
+          "artwork.background.pinkTuile": {
+            "value": "var(--artwork-background-pink-tuile)"
+          },
+          "artwork.background.yellowTournesol": {
+            "value": "var(--artwork-background-yellow-tournesol)"
+          },
+          "artwork.background.yellowMoutarde": {
+            "value": "var(--artwork-background-yellow-moutarde)"
+          },
+          "artwork.background.orangeTerreBattue": {
+            "value": "var(--artwork-background-orange-terre-battue)"
+          },
+          "artwork.background.brownCafeCreme": {
+            "value": "var(--artwork-background-brown-cafe-creme)"
+          },
+          "artwork.background.brownCaramel": {
+            "value": "var(--artwork-background-brown-caramel)"
+          },
+          "artwork.background.brownOpera": {
+            "value": "var(--artwork-background-brown-opera)"
+          },
+          "artwork.background.beigeGrisGalet": {
+            "value": "var(--artwork-background-beige-gris-galet)"
+          },
+          "artwork.motif.grey": {
+            "value": "var(--artwork-motif-grey)"
+          },
+          "artwork.motif.blueFrance": {
+            "value": "var(--artwork-motif-blue-france)"
+          },
+          "artwork.motif.redMarianne": {
+            "value": "var(--artwork-motif-red-marianne)"
+          },
+          "artwork.motif.greenTilleulVerveine": {
+            "value": "var(--artwork-motif-green-tilleul-verveine)"
+          },
+          "artwork.motif.greenBourgeon": {
+            "value": "var(--artwork-motif-green-bourgeon)"
+          },
+          "artwork.motif.greenEmeraude": {
+            "value": "var(--artwork-motif-green-emeraude)"
+          },
+          "artwork.motif.greenMenthe": {
+            "value": "var(--artwork-motif-green-menthe)"
+          },
+          "artwork.motif.greenArchipel": {
+            "value": "var(--artwork-motif-green-archipel)"
+          },
+          "artwork.motif.blueEcume": {
+            "value": "var(--artwork-motif-blue-ecume)"
+          },
+          "artwork.motif.blueCumulus": {
+            "value": "var(--artwork-motif-blue-cumulus)"
+          },
+          "artwork.motif.purpleGlycine": {
+            "value": "var(--artwork-motif-purple-glycine)"
+          },
+          "artwork.motif.pinkMacaron": {
+            "value": "var(--artwork-motif-pink-macaron)"
+          },
+          "artwork.motif.pinkTuile": {
+            "value": "var(--artwork-motif-pink-tuile)"
+          },
+          "artwork.motif.yellowTournesol": {
+            "value": "var(--artwork-motif-yellow-tournesol)"
+          },
+          "artwork.motif.yellowMoutarde": {
+            "value": "var(--artwork-motif-yellow-moutarde)"
+          },
+          "artwork.motif.orangeTerreBattue": {
+            "value": "var(--artwork-motif-orange-terre-battue)"
+          },
+          "artwork.motif.brownCafeCreme": {
+            "value": "var(--artwork-motif-brown-cafe-creme)"
+          },
+          "artwork.motif.brownCaramel": {
+            "value": "var(--artwork-motif-brown-caramel)"
+          },
+          "artwork.motif.brownOpera": {
+            "value": "var(--artwork-motif-brown-opera)"
+          },
+          "artwork.motif.beigeGrisGalet": {
+            "value": "var(--artwork-motif-beige-gris-galet)"
+          }
+        },
+        "spacing": {
+          "1v": {
+            "value": "0.25rem"
+          },
+          "1w": {
+            "value": "0.5rem"
+          },
+          "2v": {
+            "value": "0.5rem"
+          },
+          "3v": {
+            "value": "0.75rem"
+          },
+          "2w": {
+            "value": "1rem"
+          },
+          "4v": {
+            "value": "1rem"
+          },
+          "5v": {
+            "value": "1.25rem"
+          },
+          "3w": {
+            "value": "1.5rem"
+          },
+          "6v": {
+            "value": "1.5rem"
+          },
+          "7v": {
+            "value": "1.75rem"
+          },
+          "4w": {
+            "value": "2rem"
+          },
+          "8v": {
+            "value": "2rem"
+          },
+          "9v": {
+            "value": "2.25rem"
+          },
+          "10v": {
+            "value": "2.5rem"
+          },
+          "5w": {
+            "value": "2.5rem"
+          },
+          "11v": {
+            "value": "2.75rem"
+          },
+          "12v": {
+            "value": "3rem"
+          },
+          "6w": {
+            "value": "3rem"
+          },
+          "13v": {
+            "value": "3.25rem"
+          },
+          "14v": {
+            "value": "3.5rem"
+          },
+          "7w": {
+            "value": "3.5rem"
+          },
+          "15v": {
+            "value": "3.75rem"
+          },
+          "16v": {
+            "value": "4rem"
+          },
+          "8w": {
+            "value": "4rem"
+          },
+          "17v": {
+            "value": "4.25rem"
+          },
+          "18v": {
+            "value": "4.5rem"
+          },
+          "9w": {
+            "value": "4.5rem"
+          },
+          "19v": {
+            "value": "4.75rem"
+          },
+          "10w": {
+            "value": "5rem"
+          },
+          "20v": {
+            "value": "5rem"
+          },
+          "21v": {
+            "value": "5.25rem"
+          },
+          "11w": {
+            "value": "5.5rem"
+          },
+          "22v": {
+            "value": "5.5rem"
+          },
+          "23v": {
+            "value": "5.75rem"
+          },
+          "12w": {
+            "value": "6rem"
+          },
+          "24v": {
+            "value": "6rem"
+          },
+          "25v": {
+            "value": "6.25rem"
+          },
+          "13w": {
+            "value": "6.5rem"
+          },
+          "26v": {
+            "value": "6.5rem"
+          },
+          "27v": {
+            "value": "6.75rem"
+          },
+          "14w": {
+            "value": "7rem"
+          },
+          "28v": {
+            "value": "7rem"
+          },
+          "29v": {
+            "value": "7.25rem"
+          },
+          "15w": {
+            "value": "7.5rem"
+          },
+          "30v": {
+            "value": "7.5rem"
+          },
+          "31v": {
+            "value": "7.75rem"
+          },
+          "16w": {
+            "value": "8rem"
+          },
+          "32v": {
+            "value": "8rem"
+          }
+        },
+        "fontWeights": {
+          "light": {
+            "value": "300 !important"
+          },
+          "regular": {
+            "value": "400 !important"
+          },
+          "bold": {
+            "value": "700 !important"
+          },
+          "heavy": {
+            "value": "900 !important"
+          }
+        }
+      },
+      "breakpoints": {
+        "xs": "0em",
+        "sm": "36em",
+        "md": "48em",
+        "lg": "62em",
+        "xl": "78em",
+        "2xl": "96em"
+      },
+      "textStyles": {
+        "display-xs": {
+          "value": {
+            "base": {
+              "fontSize": "2.5rem !important",
+              "fontWeight": "700 !important",
+              "lineHeight": "3rem !important"
+            },
+            "md": {
+              "fontSize": "3rem !important",
+              "lineHeight": "3.5rem !important"
+            }
+          }
+        },
+        "display-sm": {
+          "value": {
+            "base": {
+              "fontSize": "3rem !important",
+              "fontWeight": "700 !important",
+              "lineHeight": "3.5rem !important"
+            },
+            "md": {
+              "fontSize": "3.5rem !important",
+              "lineHeight": "4rem !important"
+            }
+          }
+        },
+        "display-md": {
+          "value": {
+            "base": {
+              "fontSize": "3.5rem !important",
+              "fontWeight": "700 !important",
+              "lineHeight": "4rem !important"
+            },
+            "md": {
+              "fontSize": "4rem !important",
+              "lineHeight": "4.5rem !important"
+            }
+          }
+        },
+        "display-lg": {
+          "value": {
+            "base": {
+              "fontSize": "4rem !important",
+              "fontWeight": "700 !important",
+              "lineHeight": "4.5rem !important"
+            },
+            "md": {
+              "fontSize": "4.5rem !important",
+              "lineHeight": "5rem !important"
+            }
+          }
+        },
+        "display-xl": {
+          "value": {
+            "base": {
+              "fontSize": "4.5rem !important",
+              "fontWeight": "700 !important",
+              "lineHeight": "5rem !important"
+            },
+            "md": {
+              "fontSize": "5rem !important",
+              "lineHeight": "5.5rem !important"
+            }
+          }
+        },
+        "text-alt": {
+          "value": {
+            "base": {
+              "fontFamily": "\"Spectral\", georgia, serif !important"
+            }
+          }
+        },
+        "text-xs": {
+          "value": {
+            "base": {
+              "fontSize": "0.75rem !important",
+              "lineHeight": "1.25rem !important"
+            }
+          }
+        },
+        "text-sm": {
+          "value": {
+            "base": {
+              "fontSize": "0.875rem !important",
+              "lineHeight": "1.5rem !important"
+            }
+          }
+        },
+        "text-md": {
+          "value": {
+            "base": {
+              "fontSize": "1rem !important",
+              "lineHeight": "1.5rem !important"
+            }
+          }
+        },
+        "text-lg": {
+          "value": {
+            "base": {
+              "fontSize": "1.125rem !important",
+              "lineHeight": "1.75rem !important"
+            }
+          }
+        },
+        "text-xl": {
+          "value": {
+            "base": {
+              "fontSize": "1.25rem !important",
+              "lineHeight": "2rem !important"
+            }
+          }
+        },
+        "text-lead": {
+          "value": {
+            "base": {
+              "fontSize": "1.25rem !important",
+              "lineHeight": "2rem !important"
+            }
+          }
+        }
+      }
+    }
+  }
+}

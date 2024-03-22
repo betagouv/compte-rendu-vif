@@ -11,8 +11,8 @@
     "panda": "panda",
     "panda-dev": "panda --watch",
     "postinstall": "copy-dsfr-to-public",
-    "predev": "only-include-used-icons",
-    "prebuild": "only-include-used-icons"
+    "icons": "only-include-used-icons",
+    "panda-ds": "vite-node ./scripts/generatePandaDS.ts"
   },
   "dependencies": {
     "@codegouvfr/react-dsfr": "^1.9.2",
@@ -21,6 +21,11 @@
     "@emotion/styled": "^11.11.0",
     "@gouvfr/dsfr-chart": "^1.0.0",
     "@mui/material": "^5.15.14",
+    "@tanstack/react-router": "^1.22.2",
+    "@tanstack/router-devtools": "^1.22.2",
+    "@triplit/client": "^0.3.28",
+    "@triplit/db": "^0.3.24",
+    "@triplit/react": "^0.3.28",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
@@ -28,7 +33,12 @@
     "#styled-system/*": "./styled-system/*"
   },
   "devDependencies": {
+    "@pandabox/prettier-plugin": "^0.1.0",
+    "@pandabox/unplugin": "^0.0.1",
     "@pandacss/dev": "^0.35.0",
+    "@tanstack/router-vite-plugin": "^1.20.5",
+    "@triplit/cli": "^0.3.33",
+    "@types/node": "^20.11.28",
     "@types/react": "^18.2.64",
     "@types/react-dom": "^18.2.21",
     "@typescript-eslint/eslint-plugin": "^7.1.1",
@@ -37,7 +47,10 @@
     "eslint": "^8.57.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
+    "postcss": "^8.4.38",
+    "prettier": "^3.2.5",
     "typescript": "^5.2.2",
-    "vite": "^5.1.6"
+    "vite": "^5.1.6",
+    "vite-node": "^1.4.0"
   }
 }

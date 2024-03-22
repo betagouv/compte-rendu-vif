@@ -1,11 +1,28 @@
 import "./envVars";
 import { onHmr, registerViteHmrServerRestart } from "./hmr";
-import "./db/db";
+
+import { createServer } from "@triplit/server";
+import { migrations } from "../../frontend/triplit/migrations";
+
+const server = createServer({
+  storage: "memory",
+  dbOptions: {
+    migrations: migrations,
+  },
+})(3000);
+
 const start = async () => {
   await registerViteHmrServerRestart();
   console.log("Starting...");
 
-  // await makeRouter({ port: 3000 });
+  onHmr(server.close);
 };
 
 start();
+process.on("SIGINT", function () {
+  server.close(() => {
+    console.log("Shut down server");
+    // some cleanup code
+    process.exit();
+  });
+});
