@@ -1,5 +1,5 @@
 import { Schema as S } from "@triplit/db";
-
+import type { ClientSchema, Entity } from "@triplit/client";
 /**
  * Define your schema here. To use your schema, you can either:
  * - Directly import your schema into your app
@@ -8,18 +8,40 @@ import { Schema as S } from "@triplit/db";
  * For more information on schemas, see the docs: https://www.triplit.dev/docs/schemas
  */
 export const schema = {
-  todos: {
+  reports: {
     schema: S.Schema({
       id: S.Id(),
       title: S.String(),
-      description: S.String(),
+      createdBy: S.String(),
+      meetDate: S.Date(),
+      meetLink: S.Optional(S.String()),
+      applicantName: S.String(),
+      applicantType: S.String(),
+      projectStatus: S.String(),
+      projectCadastralRef: S.String(),
+      projectLandContact: S.String(),
+      projectSpaceType: S.String(),
+      projectNature: S.String(),
+      projectDescription: S.String(),
+      decision: S.String(),
+      decisionComment: S.Optional(S.String()),
+      goodPractices: S.Set(S.String()),
+      contacts: S.Set(S.String()),
+      clauseIds: S.Set(S.String()),
+      clauses: S.Query({
+        collectionName: "clauses",
+        where: [["id", "in", "$clauseIds"]],
+      }),
     }),
   },
-  users: {
+  clauses: {
     schema: S.Schema({
       id: S.Id(),
-      name: S.String(),
-      email: S.String(),
+      label: S.String(),
+      value: S.String(),
     }),
   },
-};
+} satisfies ClientSchema;
+
+export type Report = Entity<typeof schema, "reports">;
+export type Clause = Entity<typeof schema, "clauses">;
