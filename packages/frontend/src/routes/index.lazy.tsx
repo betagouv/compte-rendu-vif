@@ -1,8 +1,14 @@
 import { createLazyFileRoute } from '@tanstack/react-router'
 import { Flex, styled } from '#styled-system/jsx'
 import { css } from '#styled-system/css'
+import { useEffect } from 'react'
+import { db } from '../model/db'
 
 const Index = () => {
+  useEffect(() => {
+    console.log(db.get('reports'))
+  }, [])
+
   return (
     <div>
       <Flex

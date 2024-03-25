@@ -10,6 +10,9 @@ importers:
 
   packages/backend:
     dependencies:
+      '@nozbe/watermelondb':
+        specifier: ^0.27.1
+        version: 0.27.1
       '@triplit/server':
         specifier: ^0.3.27
         version: 0.3.27(react@18.2.0)
@@ -62,6 +65,9 @@ importers:
       '@mui/material':
         specifier: ^5.15.14
         version: 5.15.14(@emotion/react@11.11.4)(@emotion/styled@11.11.0)(@types/react@18.2.66)(react-dom@18.2.0)(react@18.2.0)
+      '@nozbe/watermelondb':
+        specifier: ^0.27.1
+        version: 0.27.1
       '@tanstack/react-router':
         specifier: ^1.22.2
         version: 1.22.2(react-dom@18.2.0)(react@18.2.0)
@@ -351,6 +357,13 @@ packages:
       '@babel/core': 7.24.0
       '@babel/helper-plugin-utils': 7.24.0
     dev: true
+
+  /@babel/runtime@7.21.0:
+    resolution: {integrity: sha512-xwII0//EObnq89Ji5AKYQaRYiW/nZ3llSv29d49IuxPhKbtJoLP+9QUUZ4nVragQVtaVGeZrpB+ZtG/Pdy/POw==}
+    engines: {node: '>=6.9.0'}
+    dependencies:
+      regenerator-runtime: 0.13.11
+    dev: false
 
   /@babel/runtime@7.24.1:
     resolution: {integrity: sha512-+BIznRzyqBf+2wCTxcKE3wDjfGeCoVE61KSHGpkzqrLi8qxqFwBeUFyId2cxkTmm55fzDGnm0+yCxaxygrLUnQ==}
@@ -1556,6 +1569,30 @@ packages:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.17.1
     dev: true
+
+  /@nozbe/lokijs@1.5.12-wmelon6:
+    resolution: {integrity: sha512-GXsaqY8qTJ6xdCrGyno2t+ON2aj6PrUDdvhbrkxK/0Fp12C4FGvDg1wS+voLU9BANYHEnr7KRWfItDZnQkjoAg==}
+    dev: false
+
+  /@nozbe/simdjson@3.1.0-wmelon1:
+    resolution: {integrity: sha512-PQaHHQyvASrcrfzqkZ4ona43m0UjN81NuTWt6rJkOUePGDjxc8MNp2Q7jcod1CIdTsXJ13wRWeFbquwNfhpIQQ==}
+    dev: false
+
+  /@nozbe/sqlite@3.40.1:
+    resolution: {integrity: sha512-uKJOW4sQi3neCmgKhqLr0IJKlb2y5q2p05U5CEDJrCxSyD2uVYvSdh7IMrPjF4sWtzc/Lnk462M4vde7Dn5NSw==}
+    dev: false
+
+  /@nozbe/watermelondb@0.27.1:
+    resolution: {integrity: sha512-41Nlq0FMGkcr2CUgtPRQRVAbA8VYI6fpeGlX4eoiLhoh3nbPIlX4RIcjLIEoyGgkCUSNSnNvXrv0RMIJRl4nZQ==}
+    dependencies:
+      '@babel/runtime': 7.21.0
+      '@nozbe/simdjson': 3.1.0-wmelon1
+      '@nozbe/sqlite': 3.40.1
+      hoist-non-react-statics: 3.3.2
+      lokijs: /@nozbe/lokijs@1.5.12-wmelon6
+      rxjs: 7.8.1
+      sql-escape-string: 1.1.0
+    dev: false
 
   /@pandabox/postcss-plugins@0.0.2(postcss@8.4.38):
     resolution: {integrity: sha512-sOhfLohVcjPmA6mgYElLiNwnolEiM7Wqk4OBPSYC/k1Rpx2QyNenwBuB4mRtN9oV21N29fgfNZfTqMbT/fwQpw==}
@@ -6191,6 +6228,10 @@ packages:
     resolution: {integrity: sha512-i5lLI6iw9AU3Uu4szRNPPEkomnkjRTaVt9hy/bn5g/oSzekBSMeLZblcjP74AW0vBabqERLLIrz+gR8QYR54Tw==}
     dev: false
 
+  /regenerator-runtime@0.13.11:
+    resolution: {integrity: sha512-kY1AZVr2Ra+t+piVaJ4gxaFaReZVH40AKNo7UCX6W+dEwBo/2oZJzqfuN1qLq1oL45o56cPaTXELwrTh8Fpggg==}
+    dev: false
+
   /regenerator-runtime@0.14.1:
     resolution: {integrity: sha512-dYnhHh0nJoMfnkZs6GmmhFknAGRrLznOu5nc9ML+EJxGvrx6H7teuevqVqCuPcPK//3eDrrjQhehXVx9cnkGdw==}
 
@@ -6532,6 +6573,10 @@ packages:
   /sprintf-js@1.0.3:
     resolution: {integrity: sha512-D9cPgkvLlV3t3IzL0D0YLvGA9Ahk4PcvVwUbN0dSGr1aP0Nrt4AEnTUbuGvquEC0mA64Gqt1fzirlRs5ibXx8g==}
     dev: true
+
+  /sql-escape-string@1.1.0:
+    resolution: {integrity: sha512-/kqO4pLZSLfV0KsBM2xkVh2S3GbjJJone37d7gYwLyP0c+REh3vnmkhQ7VwNrX76igC0OhJWpTg0ukkdef9vvA==}
+    dev: false
 
   /stack-utils@2.0.6:
     resolution: {integrity: sha512-XlkWvfIm6RmsWtNJx+uqtKLS8eqFbxUg0ZzLXqY0caEy9l7hruX8IpiDnjsLavoBgqCCR71TqWO8MaXYheJ3RQ==}

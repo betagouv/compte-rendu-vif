@@ -21,6 +21,7 @@
     "@emotion/styled": "^11.11.0",
     "@gouvfr/dsfr-chart": "^1.0.0",
     "@mui/material": "^5.15.14",
+    "@nozbe/watermelondb": "^0.27.1",
     "@tanstack/react-router": "^1.22.2",
     "@tanstack/router-devtools": "^1.22.2",
     "@triplit/client": "^0.3.28",

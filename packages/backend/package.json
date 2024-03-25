@@ -21,6 +21,7 @@
     "vite-node": "^1.4.0"
   },
   "dependencies": {
+    "@nozbe/watermelondb": "^0.27.1",
     "@triplit/server": "^0.3.27",
     "dotenv": "^16.4.5",
     "reflect-metadata": "^0.2.1",
