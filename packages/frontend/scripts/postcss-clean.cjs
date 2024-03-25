@@ -1,5 +1,34 @@
 const { plugin } = require('postcss')
 
+/**
+ * This PostCSS plugin aims to replace CSS variables referencing other variables with the actual value.
+* 
+* Example:
+* ```css
+* :root {
+*   --primary-color: #ff0000;
+*   --secondary-color: var(--primary-color);
+* }
+* 
+* body {
+*   color: var(--secondary-color);
+* }
+* ```
+* 
+* After running this plugin, the CSS will be transformed to:
+* ```css
+* :root {
+*   --primary-color: #ff0000;
+*   --secondary-color: #ff0000;
+* }
+*
+* body {
+*   color: #ff0000;
+* }
+* ```
+}
+ */
+
 module.exports = plugin('postcss-clean', () => {
   const variableMap = {}
 
