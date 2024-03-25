@@ -4,7 +4,7 @@ CREATE TABLE "User" (
     "email" TEXT NOT NULL,
     "name" TEXT,
     "password" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "createdAt" TIMESTAMP(3) NOT NULL,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
@@ -26,7 +26,7 @@ CREATE TABLE "Report" (
     "decision" TEXT NOT NULL,
     "decisionComment" TEXT NOT NULL,
     "contacts" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "createdAt" TIMESTAMP(3) NOT NULL,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     CONSTRAINT "Report_pkey" PRIMARY KEY ("id")
 );
@@ -57,3 +57,4 @@ ADD CONSTRAINT "ReportToClause_clauseId_fkey" FOREIGN KEY ("clauseId") REFERENCE
 ALTER TABLE "User" ENABLE ELECTRIC;
 ALTER TABLE "Report" ENABLE ELECTRIC;
 ALTER TABLE "ReportToClause" ENABLE ELECTRIC;
+ALTER TABLE "Clause" ENABLE ELECTRIC;

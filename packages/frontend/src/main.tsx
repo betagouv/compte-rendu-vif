@@ -1,14 +1,17 @@
+import '#styled-system/styles.css'
+import { startReactDsfr } from '@codegouvfr/react-dsfr/spa'
+import { createRouter, RouterProvider } from '@tanstack/react-router'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
+import './db'
 import './index.css'
-import { createRouter, RouterProvider } from '@tanstack/react-router'
 import { routeTree } from './routeTree.gen'
-import { startReactDsfr } from '@codegouvfr/react-dsfr/spa'
-import '#styled-system/styles.css'
-
 startReactDsfr({ defaultColorScheme: 'system' })
 
 const router = createRouter({ routeTree })
+
+
+
 
 declare module '@tanstack/react-router' {
   interface Register {

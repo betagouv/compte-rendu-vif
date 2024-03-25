@@ -5,11 +5,15 @@
   "main": "index.js",
   "scripts": {
     "frontend": "pnpm --filter @cr-vif/frontend",
-    "backend": "pnpm --filter @cr-vif/backend"
+    "backend": "pnpm --filter @cr-vif/backend",
+    "migration:create": "prisma migrate dev --create-only",
+    "migration:up": "electric-sql with-config \"npx pg-migrations apply --database {{ELECTRIC_PROXY}} --directory ./prisma/migrations\"",
+    "client:generate": "electric-sql generate --client-path ./packages/frontend/src/generated/client"
   },
   "keywords": [],
   "author": "",
   "devDependencies": {
+    "@databases/pg-migrations": "^5.0.3",
     "electric-sql": "^0.9.6",
     "prisma": "^5.11.0"
   }

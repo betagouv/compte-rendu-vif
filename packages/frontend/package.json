@@ -27,9 +27,13 @@
     "@triplit/client": "^0.3.28",
     "@triplit/db": "^0.3.24",
     "@triplit/react": "^0.3.28",
+    "electric-query": "^0.0.14",
     "electric-sql": "^0.9.6",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "uuid": "^9.0.1",
+    "wa-sqlite": "github:rhashimoto/wa-sqlite",
+    "zod": "^3.22.4"
   },
   "imports": {
     "#styled-system/*": "./styled-system/*"
@@ -50,9 +54,10 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
     "postcss": "^8.4.38",
-    "prettier": "^3.2.5",
     "typescript": "^5.2.2",
     "vite": "^5.1.6",
-    "vite-node": "^1.4.0"
+    "vite-node": "^1.4.0",
+    "vite-plugin-top-level-await": "^1.4.1",
+    "vite-plugin-wasm": "^3.3.0"
   }
 }

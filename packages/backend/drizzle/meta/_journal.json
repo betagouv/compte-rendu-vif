@@ -5,15 +5,8 @@
     {
       "idx": 0,
       "version": "5",
-      "when": 1711363344736,
-      "tag": "0000_absent_carnage",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "5",
-      "when": 1711364066254,
-      "tag": "0001_brainy_rocket_racer",
+      "when": 1711386594749,
+      "tag": "0000_awesome_ghost_rider",
       "breakpoints": true
     }
   ]

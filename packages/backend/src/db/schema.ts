@@ -1,9 +1,9 @@
 import { relations } from "drizzle-orm";
-import { date, pgTable, serial, text } from "drizzle-orm/pg-core";
+import { date, pgTable, primaryKey, text } from "drizzle-orm/pg-core";
 
 // Tables
 export const reports = pgTable("reports", {
-  id: serial("id").primaryKey(),
+  id: text("id").primaryKey(),
   title: text("title").notNull(),
   createdBy: text("createdBy").notNull(),
   meetDate: date("meetDate").notNull(),
@@ -22,19 +22,27 @@ export const reports = pgTable("reports", {
 });
 
 export const clauses = pgTable("clauses", {
-  id: serial("id").primaryKey(),
+  id: text("id").primaryKey(),
   label: text("label").notNull(),
   value: text("value").notNull(),
 });
 
-export const reportsToClauses = pgTable("reports_to_clauses", {
-  reportId: serial("report_id")
-    .notNull()
-    .references(() => reports.id),
-  clauseId: serial("clause_id")
-    .notNull()
-    .references(() => clauses.id),
-});
+export const reportsToClauses = pgTable(
+  "reports_to_clauses",
+  {
+    reportId: text("report_id")
+      .notNull()
+      .references(() => reports.id),
+    clauseId: text("clause_id")
+      .notNull()
+      .references(() => clauses.id),
+  },
+  (table) => {
+    return {
+      pk: primaryKey({ columns: [table.reportId, table.clauseId] }),
+    };
+  }
+);
 
 // Relations
 export const reportRelations = relations(reports, ({ many }) => {

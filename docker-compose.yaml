@@ -10,6 +10,7 @@ services:
       POSTGRES_PASSWORD: ${PG_PASSWORD}
       POSTGRES_DB: ${PG_DB}
       POSTGRES_USER: ${PG_USER}
+      POSTGRES_PORT: ${PG_PORT}
     command:
       - -c
       - wal_level=logical
@@ -28,6 +29,7 @@ services:
       DATABASE_URL: postgresql://${PG_USER}:${PG_PASSWORD}@pg:${PG_PORT}/${PG_DB}
       DATABASE_REQUIRE_SSL: false
       LOGICAL_PUBLISHER_HOST: electric
+      LOGICAL_PUBLISHER_PORT: 5433
       PG_PROXY_PASSWORD: ${PG_PROXY_PASSWORD}
       PG_PROXY_PORT: ${PG_PROXY_PORT}
       AUTH_MODE: insecure
