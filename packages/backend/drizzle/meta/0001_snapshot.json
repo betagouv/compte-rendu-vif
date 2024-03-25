@@ -1,0 +1,198 @@
+{
+  "id": "f94f75c6-ce97-461f-a099-9032efd1e786",
+  "prevId": "d14ac02b-66b6-45a0-a5b8-ac35b70313b6",
+  "version": "5",
+  "dialect": "pg",
+  "tables": {
+    "clauses": {
+      "name": "clauses",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "label": {
+          "name": "label",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "value": {
+          "name": "value",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "reports": {
+      "name": "reports",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdBy": {
+          "name": "createdBy",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "meetDate": {
+          "name": "meetDate",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "meetLink": {
+          "name": "meetLink",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "applicantName": {
+          "name": "applicantName",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "applicantType": {
+          "name": "applicantType",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "projectStatus": {
+          "name": "projectStatus",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "projectCadastralRef": {
+          "name": "projectCadastralRef",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "projectLandContact": {
+          "name": "projectLandContact",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "projectSpaceType": {
+          "name": "projectSpaceType",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "projectNature": {
+          "name": "projectNature",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "projectDescription": {
+          "name": "projectDescription",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "decision": {
+          "name": "decision",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "decisionComment": {
+          "name": "decisionComment",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "contacts": {
+          "name": "contacts",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "reports_to_clauses": {
+      "name": "reports_to_clauses",
+      "schema": "",
+      "columns": {
+        "report_id": {
+          "name": "report_id",
+          "type": "serial",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "clause_id": {
+          "name": "clause_id",
+          "type": "serial",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "reports_to_clauses_report_id_reports_id_fk": {
+          "name": "reports_to_clauses_report_id_reports_id_fk",
+          "tableFrom": "reports_to_clauses",
+          "tableTo": "reports",
+          "columnsFrom": [
+            "report_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "reports_to_clauses_clause_id_clauses_id_fk": {
+          "name": "reports_to_clauses_clause_id_clauses_id_fk",
+          "tableFrom": "reports_to_clauses",
+          "tableTo": "clauses",
+          "columnsFrom": [
+            "clause_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

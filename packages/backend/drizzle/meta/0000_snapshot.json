@@ -1,0 +1,149 @@
+{
+  "id": "d14ac02b-66b6-45a0-a5b8-ac35b70313b6",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "version": "5",
+  "dialect": "pg",
+  "tables": {
+    "clauses": {
+      "name": "clauses",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "label": {
+          "name": "label",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "value": {
+          "name": "value",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "reports": {
+      "name": "reports",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdBy": {
+          "name": "createdBy",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "meetDate": {
+          "name": "meetDate",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "meetLink": {
+          "name": "meetLink",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "applicantName": {
+          "name": "applicantName",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "applicantType": {
+          "name": "applicantType",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "projectStatus": {
+          "name": "projectStatus",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "projectCadastralRef": {
+          "name": "projectCadastralRef",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "projectLandContact": {
+          "name": "projectLandContact",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "projectSpaceType": {
+          "name": "projectSpaceType",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "projectNature": {
+          "name": "projectNature",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "projectDescription": {
+          "name": "projectDescription",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "decision": {
+          "name": "decision",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "decisionComment": {
+          "name": "decisionComment",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "contacts": {
+          "name": "contacts",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

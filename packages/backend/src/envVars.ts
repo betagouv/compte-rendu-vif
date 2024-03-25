@@ -2,13 +2,17 @@ import { config } from "dotenv";
 import { z, ZodTypeAny } from "zod";
 
 config({ path: "../../.env" });
+export const stringOrNumberAsNb = z.string().or(z.number()).transform(Number);
 
 const envSchema = z.object({
-  POSTGRES_PORT: z.string(),
-  POSTGRES_DB: z.string(),
-  POSTGRES_USER: z.string(),
-  POSTGRES_HOST: z.string().default("0.0.0.0"),
-  POSTGRES_PASSWORD: z.string(),
+  PG_PORT: stringOrNumberAsNb.default(5432),
+  PG_DB: z.string(),
+  PG_USER: z.string(),
+  PG_HOST: z.string().default("0.0.0.0"),
+  PG_PASSWORD: z.string(),
+  PG_PROXY_PORT: stringOrNumberAsNb.default(65432),
+  PG_PROXY_PASSWORD: z.string(),
 });
 
 export const ENV = envSchema.parse(process.env);
+console.log(ENV);

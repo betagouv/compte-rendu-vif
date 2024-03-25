@@ -12,6 +12,7 @@
     "panda-dev": "panda --watch",
     "postinstall": "copy-dsfr-to-public",
     "icons": "only-include-used-icons",
+    "electric": "electric-sql generate",
     "panda-ds": "vite-node ./scripts/generatePandaDS.ts"
   },
   "dependencies": {
@@ -26,6 +27,7 @@
     "@triplit/client": "^0.3.28",
     "@triplit/db": "^0.3.24",
     "@triplit/react": "^0.3.28",
+    "electric-sql": "^0.9.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

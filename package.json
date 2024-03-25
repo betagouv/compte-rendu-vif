@@ -8,5 +8,9 @@
     "backend": "pnpm --filter @cr-vif/backend"
   },
   "keywords": [],
-  "author": ""
+  "author": "",
+  "devDependencies": {
+    "electric-sql": "^0.9.6",
+    "prisma": "^5.11.0"
+  }
 }

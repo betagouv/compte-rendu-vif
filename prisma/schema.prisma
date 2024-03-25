@@ -1,0 +1,129 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("PROXY_DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  reports   Report[]
+}
+
+model Report {
+  id                  String   @id @default(cuid())
+  title               String
+  authorId            String
+  meetDate            DateTime
+  meetLink            String
+  applicantName       String
+  applicantType       String
+  projectStatus       String
+  projectCadastralRef String
+  projectLandContact  String
+  projectSpaceType    String
+  projectNature       String
+  projectDescription  String
+  decision            String
+  decisionComment     String
+  contacts            String
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  author         User             @relation(fields: [authorId], references: [id])
+  ReportToClause ReportToClause[]
+}
+
+model ReportToClause {
+  reportId String
+  clauseId String
+  report   Report @relation(fields: [reportId], references: [id])
+  clause   Clause @relation(fields: [clauseId], references: [id])
+
+  @@id([reportId, clauseId])
+}
+
+model Clause {
+  id    String @id @default(cuid())
+  label String
+  value String
+
+  ReportToClause ReportToClause[]
+}
+
+// Tables
+// export const reports = pgTable("reports", {
+//   id: serial("id").primaryKey(),
+//   title: text("title").notNull(),
+//   createdBy: text("createdBy").notNull(),
+//   meetDate: date("meetDate").notNull(),
+//   meetLink: text("meetLink"),
+//   applicantName: text("applicantName").notNull(),
+//   applicantType: text("applicantType").notNull(),
+//   projectStatus: text("projectStatus").notNull(),
+//   projectCadastralRef: text("projectCadastralRef").notNull(),
+//   projectLandContact: text("projectLandContact").notNull(),
+//   projectSpaceType: text("projectSpaceType").notNull(),
+//   projectNature: text("projectNature").notNull(),
+//   projectDescription: text("projectDescription").notNull(),
+//   decision: text("decision").notNull(),
+//   decisionComment: text("decisionComment"),
+//   contacts: text("contacts").notNull(),
+// });
+
+// export const clauses = pgTable("clauses", {
+//   id: serial("id").primaryKey(),
+//   label: text("label").notNull(),
+//   value: text("value").notNull(),
+// });
+
+// export const reportsToClauses = pgTable("reports_to_clauses", {
+//   reportId: serial("report_id")
+//     .notNull()
+//     .references(() => reports.id),
+//   clauseId: serial("clause_id")
+//     .notNull()
+//     .references(() => clauses.id),
+// });
+
+// // Relations
+// export const reportRelations = relations(reports, ({ many }) => {
+//   return {
+//     clauses: many(clauses),
+//   };
+// });
+
+// export const clauseRelations = relations(clauses, ({ many }) => {
+//   return {
+//     reports: many(reports),
+//   };
+// });
+
+// export const reportsToClausesRelations = relations(
+//   reportsToClauses,
+//   ({ one }) => {
+//     return {
+//       report: one(reports, {
+//         fields: [reportsToClauses.reportId],
+//         references: [reports.id],
+//       }),
+//       clause: one(clauses, {
+//         fields: [reportsToClauses.clauseId],
+//         references: [clauses.id],
+//       }),
+//     };
+//   }
+// );
