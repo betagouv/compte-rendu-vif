@@ -1,16 +1,18 @@
-import { TriplitClient } from "@triplit/client";
+import { ElectricConfig } from "electric-sql";
+import { schema } from "./generated/client";
+import { insecureAuthToken } from "electric-sql/auth";
+import { electrify, ElectricDatabase } from "electric-sql/wa-sqlite";
 
-const mockToken =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ4LXRyaXBsaXQtdXNlci1pZCI6ImxlZG91eG0iLCJ4LXRyaXBsaXQtcHJvamVjdC1pZCI6ImNydmlmIiwieC10cmlwbGl0LXRva2VuLXR5cGUiOiJleHRlcm5hbCIsImlhdCI6MTcxMTAzNTIwNH0.xeGN84suho6GDZevver4IDLc8_8MFODMF2uADjDBsaM";
+const config = {
+  url: "http://localhost:5133",
+} satisfies ElectricConfig;
 
-export const db = new TriplitClient({
-  storage: "indexeddb",
-  serverUrl: "http://localhost:3000",
-  migrations: migrations,
-  token: mockToken,
-  schema: schema,
-  autoConnect: true,
-});
+export const initElectric = async () => {
+  const conn = await ElectricDatabase.init("electric.db", "/");
+  const electric = await electrify(conn, schema, config);
+  await electric.connect(insecureAuthToken({ sub: "salut" }));
 
-import { migrations } from "../triplit/migrations";
-import { schema } from "../triplit/schema";
+  await electric.db.Clause.sync();
+
+  return electric;
+};
