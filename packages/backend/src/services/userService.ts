@@ -48,7 +48,7 @@ export class UserService {
     assertUserExists(user);
     await assertPasswordsMatch(payload.password, user!.password);
 
-    return serializeUser(user!);
+    return { user: serializeUser(user!), token: this.generateJWT(user!) };
   }
 
   verifyJWT(token: string) {

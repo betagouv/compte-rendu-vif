@@ -1,11 +1,10 @@
+import { Flex } from '#styled-system/jsx'
 import { createLazyFileRoute } from '@tanstack/react-router'
-import { Flex, styled } from '#styled-system/jsx'
-import { css } from '#styled-system/css'
-import { db } from '../db'
-import { useEffect } from 'react'
 import { useQuery } from '@triplit/react'
-import { RouterInputs, trpc } from '../api'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { RouterInputs, trpc } from '../api'
+import { db } from '../db'
 
 const query = db.query('clauses')
 
@@ -22,15 +21,21 @@ const Index = () => {
     </Flex>
   )
 }
+
 const LoginForm = () => {
+  const [token, setToken] = useState('')
   const form = useForm<RouterInputs['login']>()
 
   const mutation = trpc.login.useMutation()
 
   const login = async (values: RouterInputs['login']) => {
     const response = await mutation.mutateAsync(values)
-    console.log(response)
+    console.log(response.token)
+    setToken(response.token)
   }
+
+  const query = trpc.verifyToken.useQuery({ token }, { enabled: !!token })
+  console.log(query.data)
 
   return (
     <Flex direction="column">
