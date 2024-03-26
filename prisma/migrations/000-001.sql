@@ -6,8 +6,10 @@ CREATE TABLE "User" (
     "password" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
+
 -- CreateTable
 CREATE TABLE "Report" (
     "id" TEXT NOT NULL,
@@ -28,33 +30,39 @@ CREATE TABLE "Report" (
     "contacts" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+
     CONSTRAINT "Report_pkey" PRIMARY KEY ("id")
 );
+
 -- CreateTable
 CREATE TABLE "ReportToClause" (
     "reportId" TEXT NOT NULL,
     "clauseId" TEXT NOT NULL,
-    CONSTRAINT "ReportToClause_pkey" PRIMARY KEY ("reportId", "clauseId")
+
+    CONSTRAINT "ReportToClause_pkey" PRIMARY KEY ("reportId","clauseId")
 );
+
 -- CreateTable
 CREATE TABLE "Clause" (
     "id" TEXT NOT NULL,
     "label" TEXT NOT NULL,
     "value" TEXT NOT NULL,
+
     CONSTRAINT "Clause_pkey" PRIMARY KEY ("id")
 );
+
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+
 -- AddForeignKey
-ALTER TABLE "Report"
-ADD CONSTRAINT "Report_authorId_fkey" FOREIGN KEY ("authorId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Report" ADD CONSTRAINT "Report_authorId_fkey" FOREIGN KEY ("authorId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
 -- AddForeignKey
-ALTER TABLE "ReportToClause"
-ADD CONSTRAINT "ReportToClause_reportId_fkey" FOREIGN KEY ("reportId") REFERENCES "Report"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "ReportToClause" ADD CONSTRAINT "ReportToClause_reportId_fkey" FOREIGN KEY ("reportId") REFERENCES "Report"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
 -- AddForeignKey
-ALTER TABLE "ReportToClause"
-ADD CONSTRAINT "ReportToClause_clauseId_fkey" FOREIGN KEY ("clauseId") REFERENCES "Clause"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-ALTER TABLE "User" ENABLE ELECTRIC;
+ALTER TABLE "ReportToClause" ADD CONSTRAINT "ReportToClause_clauseId_fkey" FOREIGN KEY ("clauseId") REFERENCES "Clause"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 ALTER TABLE "Report" ENABLE ELECTRIC;
 ALTER TABLE "ReportToClause" ENABLE ELECTRIC;
 ALTER TABLE "Clause" ENABLE ELECTRIC;
+ALTER TABLE "User" ENABLE ELECTRIC;

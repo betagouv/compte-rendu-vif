@@ -14,6 +14,9 @@ importers:
       '@pandabox/prettier-plugin':
         specifier: ^0.1.0
         version: 0.1.0(@pandacss/config@0.36.0)(@pandacss/core@0.36.0)(@pandacss/is-valid-prop@0.36.0)(@pandacss/node@0.36.0)(@pandacss/preset-base@0.36.0)(@pandacss/shared@0.36.0)
+      '@types/node':
+        specifier: ^20.11.28
+        version: 20.11.28
       electric-sql:
         specifier: ^0.9.6
         version: 0.9.6(@tauri-apps/plugin-sql@2.0.0-alpha.5)(react-dom@18.2.0)(react@18.2.0)(vue@2.7.16)(wa-sqlite@0.9.12)
@@ -23,6 +26,12 @@ importers:
       prisma:
         specifier: ^5.11.0
         version: 5.11.0
+      typescript:
+        specifier: ^5.2.2
+        version: 5.4.2
+      vite-node:
+        specifier: ^1.4.0
+        version: 1.4.0(@types/node@20.11.28)
 
   packages/backend:
     dependencies:
