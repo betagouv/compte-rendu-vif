@@ -16,16 +16,13 @@
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^20.11.28",
-    "drizzle-kit": "^0.20.14",
     "tsup": "^8.0.2",
     "typescript": "^5.2.2",
     "vite": "^5.1.6",
     "vite-node": "^1.4.0"
   },
   "dependencies": {
-    "@triplit/server": "^0.3.27",
     "dotenv": "^16.4.5",
-    "drizzle-orm": "^0.30.4",
     "postgres": "^3.4.4",
     "prisma": "^5.11.0",
     "reflect-metadata": "^0.2.1",
