@@ -4,6 +4,8 @@ import { css } from '#styled-system/css'
 import { db } from '../db'
 import { useEffect } from 'react'
 import { useQuery } from '@triplit/react'
+import { RouterInputs, trpc } from '../api'
+import { useForm } from 'react-hook-form'
 
 const query = db.query('clauses')
 
@@ -13,36 +15,64 @@ const Index = () => {
   console.log(results, fetching, error)
 
   return (
-    <div>
-      <button
-        onClick={() =>
-          db.insert('clauses', {
-            label: 'Clause 1',
-            value: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
-          })
-        }
-      >
-        Add
-      </button>
-      <Flex
-        className={css({
-          textStyle: 'display-md',
-          color: 'artwork.background.blueCumulus',
-          bgColor: 'artwork.decorative.blueFrance',
-        })}
-        flexDirection="column"
-      >
-        <a
-          href=""
-          className={css({ color: 'background.actionHigh.beigeGrisGalet', bgColor: 'background.actionHigh.blueEcume' })}
-        >
-          salut
-        </a>
-        <styled.h1 color="blue">Compte rendu vif</styled.h1>
-        <p>Le compte rendu vif est un outil de prise de note collaborative et en temps réel.</p>
-        <p>Il permet de rédiger des notes, de les commenter et de les partager.</p>
-      </Flex>
-    </div>
+    <Flex direction="column">
+      <h1>Index</h1>
+      <LoginForm />
+      <SignupForm />
+    </Flex>
+  )
+}
+const LoginForm = () => {
+  const form = useForm<RouterInputs['login']>()
+
+  const mutation = trpc.login.useMutation()
+
+  const login = async (values: RouterInputs['login']) => {
+    const response = await mutation.mutateAsync(values)
+    console.log(response)
+  }
+
+  return (
+    <Flex direction="column">
+      <div>
+        <label htmlFor="email">email</label>
+        <input {...form.register('email')} />
+      </div>
+      <div>
+        <label htmlFor="password">password</label>
+        <input {...form.register('password')} />
+      </div>
+      <button onClick={form.handleSubmit(login)}>Login</button>
+    </Flex>
+  )
+}
+
+const SignupForm = () => {
+  const form = useForm<RouterInputs['createUser']>()
+
+  const mutation = trpc.createUser.useMutation()
+
+  const signup = async (values: RouterInputs['createUser']) => {
+    const response = await mutation.mutateAsync(values)
+    console.log(response)
+  }
+
+  return (
+    <Flex direction="column">
+      <div>
+        <label htmlFor="name">name</label>
+        <input {...form.register('name')} />
+      </div>
+      <div>
+        <label htmlFor="email">email</label>
+        <input {...form.register('email')} />
+      </div>
+      <div>
+        <label htmlFor="password">password</label>
+        <input {...form.register('password')} />
+      </div>
+      <button onClick={form.handleSubmit(signup)}>Signup</button>
+    </Flex>
   )
 }
 

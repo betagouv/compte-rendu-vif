@@ -7,12 +7,15 @@
   "scripts": {
     "build": "tsup ./src/index.ts --format esm",
     "start": "node ./dist/index.js",
-    "dev": "vite-node --watch ./src/index.ts"
+    "dev": "vite-node --watch ./src/index.ts",
+    "migration:create": "pnpm drizzle-kit generate:sqlite"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/better-sqlite3": "^7.6.9",
+    "@types/jsonwebtoken": "^9.0.6",
     "@types/node": "^20.11.28",
     "drizzle-kit": "^0.20.14",
     "tsup": "^8.0.2",
@@ -21,9 +24,18 @@
     "vite-node": "^1.4.0"
   },
   "dependencies": {
+    "@fastify/cors": "^9.0.1",
     "@triplit/db": "^0.3.24",
     "@triplit/server": "^0.3.27",
+    "@trpc/client": "11.0.0-next.320",
+    "@trpc/server": "11.0.0-next.320",
+    "better-sqlite3": "^9.4.3",
     "dotenv": "^16.4.5",
+    "drizzle-orm": "^0.30.4",
+    "drizzle-zod": "^0.5.1",
+    "fastify": "^4.26.2",
+    "jsonwebtoken": "^9.0.2",
+    "pastable": "^2.2.1",
     "reflect-metadata": "^0.2.1",
     "zod": "^3.22.4"
   }

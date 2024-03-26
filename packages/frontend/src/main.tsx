@@ -5,6 +5,7 @@ import { createRouter, RouterProvider } from '@tanstack/react-router'
 import { routeTree } from './routeTree.gen'
 import { startReactDsfr } from '@codegouvfr/react-dsfr/spa'
 import '#styled-system/styles.css'
+import { TRPCProvider } from './TrpcProvider'
 
 startReactDsfr({ defaultColorScheme: 'system' })
 
@@ -17,6 +18,8 @@ declare module '@tanstack/react-router' {
 }
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <TRPCProvider>
+      <RouterProvider router={router} />
+    </TRPCProvider>
   </React.StrictMode>,
 )

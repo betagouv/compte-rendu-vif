@@ -3,6 +3,9 @@ import { onHmr, registerViteHmrServerRestart } from "./hmr";
 
 import { createServer } from "@triplit/server";
 import { migrations } from "../../frontend/triplit/migrations";
+import { fastifyInstance } from "./router";
+import { db } from "./db/db";
+import { migrate } from "drizzle-orm/better-sqlite3/migrator";
 
 const server = createServer({
   storage: "sqlite",
@@ -15,7 +18,13 @@ const start = async () => {
   await registerViteHmrServerRestart();
   console.log("Starting...");
 
-  onHmr(server.close);
+  migrate(db, { migrationsFolder: "./drizzle" });
+  console.log(await fastifyInstance.listen({ port: 3001 }));
+
+  onHmr(() => {
+    server.close();
+    fastifyInstance.close();
+  });
 };
 
 start();
