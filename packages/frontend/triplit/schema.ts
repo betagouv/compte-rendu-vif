@@ -1,5 +1,5 @@
-import { Schema as S } from "@triplit/db";
-import type { ClientSchema, Entity } from "@triplit/client";
+import { Schema as S } from '@triplit/db'
+import type { ClientSchema, Entity } from '@triplit/client'
 /**
  * Define your schema here. To use your schema, you can either:
  * - Directly import your schema into your app
@@ -29,8 +29,8 @@ export const schema = {
       contacts: S.Set(S.String()),
       clauseIds: S.Set(S.String()),
       clauses: S.Query({
-        collectionName: "clauses",
-        where: [["id", "in", "$clauseIds"]],
+        collectionName: 'clauses',
+        where: [['id', 'in', '$clauseIds']],
       }),
     }),
   },
@@ -41,7 +41,7 @@ export const schema = {
       value: S.String(),
     }),
   },
-} satisfies ClientSchema;
+} satisfies ClientSchema
 
-export type Report = Entity<typeof schema, "reports">;
-export type Clause = Entity<typeof schema, "clauses">;
+export type Report = Entity<typeof schema, 'reports'>
+export type Clause = Entity<typeof schema, 'clauses'>

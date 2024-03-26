@@ -54,3 +54,5 @@ robots.txt
 
 # storybook
 /.out
+
+local_db/*

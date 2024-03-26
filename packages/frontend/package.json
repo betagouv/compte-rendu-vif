@@ -12,7 +12,8 @@
     "panda-dev": "panda --watch",
     "postinstall": "copy-dsfr-to-public",
     "icons": "only-include-used-icons",
-    "panda-ds": "vite-node ./scripts/generatePandaDS.ts"
+    "panda-ds": "vite-node ./scripts/generatePandaDS.ts",
+    "migration:create": "triplit migrate create"
   },
   "dependencies": {
     "@codegouvfr/react-dsfr": "^1.9.2",

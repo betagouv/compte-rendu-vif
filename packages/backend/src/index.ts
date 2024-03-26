@@ -5,7 +5,7 @@ import { createServer } from "@triplit/server";
 import { migrations } from "../../frontend/triplit/migrations";
 
 const server = createServer({
-  storage: "memory",
+  storage: "sqlite",
   dbOptions: {
     migrations: migrations,
   },

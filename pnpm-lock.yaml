@@ -10,6 +10,9 @@ importers:
 
   packages/backend:
     dependencies:
+      '@triplit/db':
+        specifier: ^0.3.24
+        version: 0.3.24(react@18.2.0)
       '@triplit/server':
         specifier: ^0.3.27
         version: 0.3.27(react@18.2.0)
