@@ -10,8 +10,6 @@ const envSchema = z.object({
   PG_USER: z.string(),
   PG_HOST: z.string().default("0.0.0.0"),
   PG_PASSWORD: z.string(),
-  PG_PROXY_PORT: stringOrNumberAsNb.default(65432),
-  PG_PROXY_PASSWORD: z.string(),
 });
 
 export const ENV = envSchema.parse(process.env);
