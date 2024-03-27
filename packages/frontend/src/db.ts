@@ -1,15 +1,15 @@
-import { TriplitClient } from '@triplit/client'
-import { migrations } from '../triplit/migrations'
-import { schema } from '../triplit/schema'
+import { TriplitClient } from "@triplit/client";
+import { migrations } from "../triplit/migrations";
+import { schema } from "../triplit/schema";
 
 const mockToken =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ4LXRyaXBsaXQtdXNlci1pZCI6ImxlZG91eG0iLCJ4LXRyaXBsaXQtcHJvamVjdC1pZCI6ImNydmlmIiwieC10cmlwbGl0LXRva2VuLXR5cGUiOiJleHRlcm5hbCIsImlhdCI6MTcxMTAzNTIwNH0.xeGN84suho6GDZevver4IDLc8_8MFODMF2uADjDBsaM'
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImQ3OWE1YjU3LTBmNTEtNDhkNS1iMGZmLTk0YmRiOGU0NTlkNCIsIngtdHJpcGxpdC11c2VyLWlkIjoiZDc5YTViNTctMGY1MS00OGQ1LWIwZmYtOTRiZGI4ZTQ1OWQ0IiwieC10cmlwbGl0LXByb2plY3QtaWQiOiJjcnZpZiIsIngtdHJpcGxpdC10b2tlbi10eXBlIjoiZXh0ZXJuYWwiLCJpYXQiOjE3MTE1MzA4ODQsImV4cCI6MTcxMjEzNTY4NH0.hbOxcbL60CLoworrkdX4emra4HzB9zdG_nqkYLrbGyw";
 
-export const db = new TriplitClient({
-  storage: 'indexeddb',
-  serverUrl: 'http://localhost:3000',
-  migrations: migrations,
+export const db = new TriplitClient<typeof schema>({
+  storage: "indexeddb",
+  serverUrl: "http://localhost:3000",
+  // migrations: migrations,
   token: mockToken,
-  schema: undefined as any as typeof schema,
+  schema: schema,
   autoConnect: true,
-})
+});

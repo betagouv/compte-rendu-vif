@@ -1,0 +1,286 @@
+{
+  "up": [
+    [
+      "create_collection",
+      {
+        "name": "clauses",
+        "schema": {
+          "id": {
+            "type": "string",
+            "options": {
+              "default": {
+                "args": null,
+                "func": "uuid"
+              },
+              "nullable": false
+            }
+          },
+          "label": {
+            "type": "string",
+            "options": {}
+          },
+          "value": {
+            "type": "string",
+            "options": {}
+          }
+        }
+      }
+    ],
+    [
+      "create_collection",
+      {
+        "name": "delegations",
+        "rules": {
+          "read": {
+            "is-created-by-or-delegated-to": {
+              "description": "A delegation can be read by the user who created it or by the user it's been delegated to",
+              "filter": [
+                {
+                  "mod": "or",
+                  "filters": [
+                    [
+                      "createdBy",
+                      "=",
+                      "$SESSION_USER_ID"
+                    ],
+                    [
+                      "delegatedTo",
+                      "=",
+                      "$SESSION_USER_ID"
+                    ]
+                  ]
+                }
+              ]
+            }
+          },
+          "write": {
+            "is-created-by": {
+              "description": "A delegation can be written by the user who created it",
+              "filter": [
+                [
+                  "createdBy",
+                  "=",
+                  "$SESSION_USER_ID"
+                ]
+              ]
+            }
+          }
+        },
+        "schema": {
+          "createdBy": {
+            "type": "string",
+            "options": {}
+          },
+          "delegatedTo": {
+            "type": "string",
+            "options": {}
+          },
+          "id": {
+            "type": "string",
+            "options": {
+              "default": {
+                "args": null,
+                "func": "uuid"
+              },
+              "nullable": false
+            }
+          }
+        }
+      }
+    ],
+    [
+      "create_collection",
+      {
+        "name": "reports",
+        "rules": {
+          "read": {
+            "is-allowed": {
+              "description": "A report can be edited by the user who created it and people he gave access to",
+              "filter": [
+                {
+                  "mod": "or",
+                  "filters": [
+                    [
+                      "createdBy",
+                      "=",
+                      "$SESSION_USER_ID"
+                    ],
+                    {
+                      "exists": {
+                        "collectionName": "delegations",
+                        "where": [
+                          {
+                            "mod": "and",
+                            "filters": [
+                              [
+                                "createdBy",
+                                "=",
+                                "$createdBy"
+                              ],
+                              [
+                                "delegatedTo",
+                                "=",
+                                "$SESSION_USER_ID"
+                              ]
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "schema": {
+          "applicantName": {
+            "type": "string",
+            "options": {}
+          },
+          "applicantType": {
+            "type": "string",
+            "options": {}
+          },
+          "clauseIds": {
+            "type": "set",
+            "items": {
+              "type": "string",
+              "options": {}
+            },
+            "options": {}
+          },
+          "clauses": {
+            "type": "query",
+            "query": {
+              "collectionName": "clauses",
+              "where": [
+                [
+                  "id",
+                  "in",
+                  "$clauseIds"
+                ]
+              ]
+            },
+            "cardinality": "many"
+          },
+          "contacts": {
+            "type": "set",
+            "items": {
+              "type": "string",
+              "options": {}
+            },
+            "options": {}
+          },
+          "createdBy": {
+            "type": "string",
+            "options": {}
+          },
+          "decision": {
+            "type": "string",
+            "options": {}
+          },
+          "decisionComment": {
+            "type": "string",
+            "options": {}
+          },
+          "delegations": {
+            "type": "query",
+            "query": {
+              "collectionName": "delegations",
+              "where": [
+                [
+                  "createdBy",
+                  "=",
+                  "$createdBy"
+                ]
+              ]
+            },
+            "cardinality": "many"
+          },
+          "goodPractices": {
+            "type": "set",
+            "items": {
+              "type": "string",
+              "options": {}
+            },
+            "options": {}
+          },
+          "id": {
+            "type": "string",
+            "options": {
+              "default": {
+                "args": null,
+                "func": "uuid"
+              },
+              "nullable": false
+            }
+          },
+          "meetDate": {
+            "type": "date",
+            "options": {}
+          },
+          "meetLink": {
+            "type": "string",
+            "options": {}
+          },
+          "projectCadastralRef": {
+            "type": "string",
+            "options": {}
+          },
+          "projectDescription": {
+            "type": "string",
+            "options": {}
+          },
+          "projectLandContact": {
+            "type": "string",
+            "options": {}
+          },
+          "projectNature": {
+            "type": "string",
+            "options": {}
+          },
+          "projectSpaceType": {
+            "type": "string",
+            "options": {}
+          },
+          "projectStatus": {
+            "type": "string",
+            "options": {}
+          },
+          "title": {
+            "type": "string",
+            "options": {}
+          }
+        },
+        "optional": [
+          "decisionComment",
+          "meetLink"
+        ]
+      }
+    ]
+  ],
+  "down": [
+    [
+      "drop_collection",
+      {
+        "name": "reports"
+      }
+    ],
+    [
+      "drop_collection",
+      {
+        "name": "delegations"
+      }
+    ],
+    [
+      "drop_collection",
+      {
+        "name": "clauses"
+      }
+    ]
+  ],
+  "version": 1711533152295,
+  "parent": 0,
+  "name": "sync_with_remote"
+}

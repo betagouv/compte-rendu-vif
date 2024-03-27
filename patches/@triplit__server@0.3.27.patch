@@ -1,0 +1,18 @@
+diff --git a/CHANGELOG.md b/CHANGELOG.md
+deleted file mode 100644
+index c5e383c8b5ae6a253523e0200c50a96ff444f03f..0000000000000000000000000000000000000000
+diff --git a/package.json b/package.json
+index 8d211af23a104c5193ff3742708329b7c3c44fef..ea6226f64fde0e6a0394d02edada74e7fa4596b8 100644
+--- a/package.json
++++ b/package.json
+@@ -47,5 +47,10 @@
+     "esbuild": "^0.19.3",
+     "tsx": "^3.12.10",
+     "typescript": "^5.2.2"
++  },
++  "pnpm": {
++    "patchedDependencies": {
++      "@triplit/server-core@0.3.29": "patches/@triplit__server-core@0.3.29.patch"
++    }
+   }
+ }

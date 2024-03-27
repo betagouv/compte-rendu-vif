@@ -8,5 +8,15 @@
     "backend": "pnpm --filter @cr-vif/backend"
   },
   "keywords": [],
-  "author": ""
+  "author": "",
+  "devDependencies": {
+    "@pandabox/prettier-plugin": "^0.1.0",
+    "prettier": "^3.2.5"
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "@triplit/server-core@0.3.27": "patches/@triplit__server-core@0.3.27.patch",
+      "@triplit/server@0.3.27": "patches/@triplit__server@0.3.27.patch"
+    }
+  }
 }

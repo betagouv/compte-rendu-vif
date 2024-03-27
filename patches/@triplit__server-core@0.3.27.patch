@@ -1,0 +1,1269 @@
+diff --git a/CHANGELOG.md b/CHANGELOG.md
+deleted file mode 100644
+index 8c12f951f9dbe3ba257edaece46ca9c7cdb08f71..0000000000000000000000000000000000000000
+diff --git a/dist/session.js b/dist/session.js
+index 49a7187c6c2faa61e8380094ef98f84fa5488a2e..0b6d513aee6f1b41a7e4a4b37da09bf5960860ac 100644
+--- a/dist/session.js
++++ b/dist/session.js
+@@ -1,581 +1,732 @@
+-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
++var __awaiter =
++  (this && this.__awaiter) ||
++  function (thisArg, _arguments, P, generator) {
++    function adopt(value) {
++      return value instanceof P
++        ? value
++        : new P(function (resolve) {
++            resolve(value);
++          });
++    }
+     return new (P || (P = Promise))(function (resolve, reject) {
+-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+-        step((generator = generator.apply(thisArg, _arguments || [])).next());
++      function fulfilled(value) {
++        try {
++          step(generator.next(value));
++        } catch (e) {
++          reject(e);
++        }
++      }
++      function rejected(value) {
++        try {
++          step(generator["throw"](value));
++        } catch (e) {
++          reject(e);
++        }
++      }
++      function step(result) {
++        result.done
++          ? resolve(result.value)
++          : adopt(result.value).then(fulfilled, rejected);
++      }
++      step((generator = generator.apply(thisArg, _arguments || [])).next());
+     });
+-};
+-var __rest = (this && this.__rest) || function (s, e) {
++  };
++var __rest =
++  (this && this.__rest) ||
++  function (s, e) {
+     var t = {};
+-    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
++    for (var p in s)
++      if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+         t[p] = s[p];
+     if (s != null && typeof Object.getOwnPropertySymbols === "function")
+-        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+-            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+-                t[p[i]] = s[p[i]];
+-        }
++      for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
++        if (
++          e.indexOf(p[i]) < 0 &&
++          Object.prototype.propertyIsEnumerable.call(s, p[i])
++        )
++          t[p[i]] = s[p[i]];
++      }
+     return t;
+-};
+-import { TriplitError, schemaToJSON, hashSchemaJSON, appendCollectionToId, } from '@triplit/db';
+-import { QuerySyncError, RouteNotFoundError, ServiceKeyRequiredError, TriplesInsertError, UnrecognizedMessageTypeError, } from './errors.js';
+-import { groupTriplesByTimestamp, insertTriplesByTransaction, isTriplitError, } from './utils.js';
++  };
++import {
++  TriplitError,
++  schemaToJSON,
++  hashSchemaJSON,
++  appendCollectionToId,
++} from "@triplit/db";
++import {
++  QuerySyncError,
++  RouteNotFoundError,
++  ServiceKeyRequiredError,
++  TriplesInsertError,
++  UnrecognizedMessageTypeError,
++} from "./errors.js";
++import {
++  groupTriplesByTimestamp,
++  insertTriplesByTransaction,
++  isTriplitError,
++} from "./utils.js";
+ export class Connection {
+-    constructor(session, options) {
+-        this.session = session;
+-        this.options = options;
+-        this.chunkedMessages = new Map();
+-        // in case TRIPLES_PENDING requests pile up, throttle them
+-        // Or figure out a better way to tap into queue of pending requests
+-        this.throttledTriplesRequest = throttle(() => this.sendResponse('TRIPLES_REQUEST', {}), 10);
+-        this.connectedQueries = new Map();
+-        this.listeners = new Set();
+-    }
+-    sendResponse(messageType, payload) {
+-        this.session.server.logger.log('Sending message', { messageType, payload });
+-        for (const listener of this.listeners) {
+-            listener(messageType, payload);
+-        }
++  constructor(session, options) {
++    this.session = session;
++    this.options = options;
++    this.chunkedMessages = new Map();
++    // in case TRIPLES_PENDING requests pile up, throttle them
++    // Or figure out a better way to tap into queue of pending requests
++    this.throttledTriplesRequest = throttle(
++      () => this.sendResponse("TRIPLES_REQUEST", {}),
++      10,
++    );
++    this.connectedQueries = new Map();
++    this.listeners = new Set();
++  }
++  sendResponse(messageType, payload) {
++    this.session.server.logger.log("Sending message", { messageType, payload });
++    for (const listener of this.listeners) {
++      listener(messageType, payload);
+     }
+-    addListener(listener) {
+-        this.listeners.add(listener);
+-        return () => {
+-            this.listeners.delete(listener);
+-        };
+-    }
+-    close() {
+-        for (const unsubscribe of this.connectedQueries.values()) {
+-            unsubscribe();
+-        }
+-    }
+-    sendErrorResponse(originalMessageType, error, metadata) {
+-        const messageType = originalMessageType;
+-        let payload = {
+-            messageType,
+-            error: error.toJSON(),
+-            metadata,
+-        };
+-        this.sendResponse('ERROR', payload);
++  }
++  addListener(listener) {
++    this.listeners.add(listener);
++    return () => {
++      this.listeners.delete(listener);
++    };
++  }
++  close() {
++    for (const unsubscribe of this.connectedQueries.values()) {
++      unsubscribe();
+     }
+-    handleConnectQueryMessage(msgParams) {
+-        const { id: queryKey, params, state } = msgParams;
+-        const { collectionName } = params, parsedQuery = __rest(params, ["collectionName"]);
+-        const clientStates = new Map((state !== null && state !== void 0 ? state : []).map(([sequence, client]) => [client, sequence]));
+-        const unsubscribe = this.session.db.subscribeTriples(this.session.db.query(collectionName, parsedQuery).build(), (results) => {
+-            const triples = results !== null && results !== void 0 ? results : [];
+-            const triplesForClient = triples.filter(({ timestamp: [_t, client] }) => client !== this.options.clientId);
+-            // We should always send triples to client even if there are none
+-            // so that the client knows that the query has been fulfilled by the remote
+-            this.sendResponse('TRIPLES', {
+-                triples: triplesForClient,
+-                forQueries: [queryKey],
+-            });
+-        }, (error) => {
+-            console.error(error);
+-            const innerError = isTriplitError(error)
+-                ? error
+-                : new TriplitError('An unknown error occurred while processing your request.');
+-            this.sendErrorResponse('CONNECT_QUERY', new QuerySyncError(params), {
+-                queryKey,
+-                innerError,
+-            });
+-            return;
+-        }, {
+-            skipRules: this.session.token.type === 'secret',
+-            stateVector: clientStates,
++  }
++  sendErrorResponse(originalMessageType, error, metadata) {
++    const messageType = originalMessageType;
++    let payload = {
++      messageType,
++      error: error.toJSON(),
++      metadata,
++    };
++    this.sendResponse("ERROR", payload);
++  }
++  handleConnectQueryMessage(msgParams) {
++    const { id: queryKey, params, state } = msgParams;
++    const { collectionName } = params,
++      parsedQuery = __rest(params, ["collectionName"]);
++    const clientStates = new Map(
++      (state !== null && state !== void 0 ? state : []).map(
++        ([sequence, client]) => [client, sequence],
++      ),
++    );
++    const unsubscribe = this.session.db.subscribeTriples(
++      this.session.db.query(collectionName, parsedQuery).build(),
++      (results) => {
++        const triples = results !== null && results !== void 0 ? results : [];
++        const triplesForClient = triples.filter(
++          ({ timestamp: [_t, client] }) => client !== this.options.clientId,
++        );
++        // We should always send triples to client even if there are none
++        // so that the client knows that the query has been fulfilled by the remote
++        this.sendResponse("TRIPLES", {
++          triples: triplesForClient,
++          forQueries: [queryKey],
+         });
+-        if (this.connectedQueries.has(queryKey)) {
+-            // unsubscribe from previous query instance
+-            this.connectedQueries.get(queryKey)();
+-        }
+-        this.connectedQueries.set(queryKey, unsubscribe);
+-    }
+-    handleDisconnectQueryMessage(msgParams) {
+-        var _a;
+-        const { id: queryKey } = msgParams;
+-        if (this.connectedQueries.has(queryKey)) {
+-            (_a = this.connectedQueries.get(queryKey)) === null || _a === void 0 ? void 0 : _a();
+-            this.connectedQueries.delete(queryKey);
+-        }
+-    }
+-    handleTriplesPendingMessage() {
+-        this.throttledTriplesRequest();
+-    }
+-    handleTriplesMessage(msgParams) {
+-        return __awaiter(this, void 0, void 0, function* () {
+-            const { triples } = msgParams;
+-            if (!(triples === null || triples === void 0 ? void 0 : triples.length))
+-                return;
+-            let successes = [];
+-            let failures = [];
+-            const txTriples = Object.fromEntries(Object.entries(groupTriplesByTimestamp(triples)).filter(([txId, triples]) => {
+-                if (hasAdminAccess(this.session.token))
+-                    return true;
+-                const anySchemaTriples = triples.some((trip) => trip.attribute[0] === '_metadata');
+-                if (anySchemaTriples) {
+-                    failures.push([
+-                        txId,
+-                        new TriplitError('Invalid permissions to modify schema. Must use Service Token.'),
+-                    ]);
+-                    return false;
+-                }
+-                return true;
+-            }));
+-            try {
+-                // If we fail here handle individual failures
+-                const resp = yield insertTriplesByTransaction(this.session.db, txTriples);
+-                successes = resp.successes;
+-                failures.push(...resp.failures);
+-                if (failures.length > 0) {
+-                    this.sendErrorResponse('TRIPLES', new TriplesInsertError(), {
+-                        failures: failures.map(([txId, error]) => ({
+-                            txId,
+-                            error: error.toJSON(),
+-                        })),
+-                    });
+-                }
+-                this.sendResponse('TRIPLES_ACK', {
+-                    txIds: successes,
+-                    failedTxIds: failures.map(([txId]) => txId),
+-                });
+-            }
+-            catch (e) {
+-                const error = isTriplitError(e)
+-                    ? e
+-                    : new TriplitError('An unknown error occurred while processing your request.');
+-                this.sendErrorResponse('TRIPLES', new TriplesInsertError(), {
+-                    failures: Object.keys(txTriples).map((txId) => ({
+-                        txId,
+-                        error: error.toJSON(),
+-                    })),
+-                });
+-            }
++      },
++      (error) => {
++        console.error(error);
++        const innerError = isTriplitError(error)
++          ? error
++          : new TriplitError(
++              "An unknown error occurred while processing your request.",
++            );
++        this.sendErrorResponse("CONNECT_QUERY", new QuerySyncError(params), {
++          queryKey,
++          innerError,
+         });
++        return;
++      },
++      {
++        skipRules: this.session.token.type === "secret",
++        stateVector: clientStates,
++      },
++    );
++    if (this.connectedQueries.has(queryKey)) {
++      // unsubscribe from previous query instance
++      this.connectedQueries.get(queryKey)();
+     }
+-    handleChunkMessage(msgParams) {
+-        const { data, total, index, id } = msgParams;
+-        if (!this.chunkedMessages.has(id)) {
+-            this.chunkedMessages.set(id, []);
+-        }
+-        const chunks = this.chunkedMessages.get(id);
+-        chunks[index] = data;
+-        if (isChunkedMessageComplete(chunks, total)) {
+-            const message = JSON.parse(this.chunkedMessages.get(id).join(''));
+-            this.chunkedMessages.delete(id);
+-            this.dispatchCommand(message);
+-        }
++    this.connectedQueries.set(queryKey, unsubscribe);
++  }
++  handleDisconnectQueryMessage(msgParams) {
++    var _a;
++    const { id: queryKey } = msgParams;
++    if (this.connectedQueries.has(queryKey)) {
++      (_a = this.connectedQueries.get(queryKey)) === null || _a === void 0
++        ? void 0
++        : _a();
++      this.connectedQueries.delete(queryKey);
+     }
+-    dispatchCommand(message) {
+-        this.session.server.logger.log('Received message', message);
+-        try {
+-            switch (message.type) {
+-                case 'CONNECT_QUERY':
+-                    return this.handleConnectQueryMessage(message.payload);
+-                case 'DISCONNECT_QUERY':
+-                    return this.handleDisconnectQueryMessage(message.payload);
+-                case 'TRIPLES_PENDING':
+-                    return this.handleTriplesPendingMessage();
+-                case 'TRIPLES':
+-                    return this.handleTriplesMessage(message.payload);
+-                case 'CHUNK':
+-                    return this.handleChunkMessage(message.payload);
+-                default:
+-                    return this.sendErrorResponse(
+-                    // @ts-ignore
+-                    message.type, 
+-                    // @ts-ignore
+-                    new UnrecognizedMessageTypeError(message.type));
++  }
++  handleTriplesPendingMessage() {
++    this.throttledTriplesRequest();
++  }
++  handleTriplesMessage(msgParams) {
++    return __awaiter(this, void 0, void 0, function* () {
++      const { triples } = msgParams;
++      if (!(triples === null || triples === void 0 ? void 0 : triples.length))
++        return;
++      let successes = [];
++      let failures = [];
++      const txTriples = Object.fromEntries(
++        Object.entries(groupTriplesByTimestamp(triples)).filter(
++          ([txId, triples]) => {
++            if (hasAdminAccess(this.session.token)) return true;
++            const anySchemaTriples = triples.some(
++              (trip) => trip.attribute[0] === "_metadata",
++            );
++            if (anySchemaTriples) {
++              failures.push([
++                txId,
++                new TriplitError(
++                  "Invalid permissions to modify schema. Must use Service Token.",
++                ),
++              ]);
++              return false;
+             }
++            return true;
++          },
++        ),
++      );
++      try {
++        // If we fail here handle individual failures
++        const resp = yield insertTriplesByTransaction(
++          this.session.db,
++          txTriples,
++        );
++        successes = resp.successes;
++        failures.push(...resp.failures);
++        if (failures.length > 0) {
++          this.sendErrorResponse("TRIPLES", new TriplesInsertError(), {
++            failures: failures.map(([txId, error]) => ({
++              txId,
++              error: error.toJSON(),
++            })),
++          });
+         }
+-        catch (e) {
+-            return this.sendErrorResponse(message.type, isTriplitError(e)
+-                ? e
+-                : new TriplitError('An unknown error occurred while processing your request.'));
+-        }
+-    }
+-    // used?
+-    insert(collectionName, entity) {
+-        return __awaiter(this, void 0, void 0, function* () {
+-            return this.session.db.insert(collectionName, entity);
++        this.sendResponse("TRIPLES_ACK", {
++          txIds: successes,
++          failedTxIds: failures.map(([txId]) => txId),
+         });
+-    }
+-    isClientSchemaCompatible() {
+-        var _a;
+-        return __awaiter(this, void 0, void 0, function* () {
+-            const serverSchema = yield this.session.db.getSchema();
+-            const serverHash = hashSchemaJSON((_a = schemaToJSON(serverSchema)) === null || _a === void 0 ? void 0 : _a.collections);
+-            if (serverHash &&
+-                serverHash !== this.options.clientSchemaHash &&
+-                !this.options.syncSchema)
+-                return {
+-                    type: 'SCHEMA_MISMATCH',
+-                    retry: false,
+-                    message: 'Client schema does not match server schema.',
+-                };
+-            return undefined;
++      } catch (e) {
++        const error = isTriplitError(e)
++          ? e
++          : new TriplitError(
++              "An unknown error occurred while processing your request.",
++            );
++        this.sendErrorResponse("TRIPLES", new TriplesInsertError(), {
++          failures: Object.keys(txTriples).map((txId) => ({
++            txId,
++            error: error.toJSON(),
++          })),
+         });
++      }
++    });
++  }
++  handleChunkMessage(msgParams) {
++    const { data, total, index, id } = msgParams;
++    if (!this.chunkedMessages.has(id)) {
++      this.chunkedMessages.set(id, []);
++    }
++    const chunks = this.chunkedMessages.get(id);
++    chunks[index] = data;
++    if (isChunkedMessageComplete(chunks, total)) {
++      const message = JSON.parse(this.chunkedMessages.get(id).join(""));
++      this.chunkedMessages.delete(id);
++      this.dispatchCommand(message);
++    }
++  }
++  dispatchCommand(message) {
++    this.session.server.logger.log("Received message", message);
++    try {
++      switch (message.type) {
++        case "CONNECT_QUERY":
++          return this.handleConnectQueryMessage(message.payload);
++        case "DISCONNECT_QUERY":
++          return this.handleDisconnectQueryMessage(message.payload);
++        case "TRIPLES_PENDING":
++          return this.handleTriplesPendingMessage();
++        case "TRIPLES":
++          return this.handleTriplesMessage(message.payload);
++        case "CHUNK":
++          return this.handleChunkMessage(message.payload);
++        default:
++          return this.sendErrorResponse(
++            // @ts-ignore
++            message.type,
++            // @ts-ignore
++            new UnrecognizedMessageTypeError(message.type),
++          );
++      }
++    } catch (e) {
++      return this.sendErrorResponse(
++        message.type,
++        isTriplitError(e)
++          ? e
++          : new TriplitError(
++              "An unknown error occurred while processing your request.",
++            ),
++      );
+     }
++  }
++  // used?
++  insert(collectionName, entity) {
++    return __awaiter(this, void 0, void 0, function* () {
++      return this.session.db.insert(collectionName, entity);
++    });
++  }
++  isClientSchemaCompatible() {
++    var _a;
++    return __awaiter(this, void 0, void 0, function* () {
++      const serverSchema = yield this.session.db.getSchema();
++      const serverHash = hashSchemaJSON(
++        (_a = schemaToJSON(serverSchema)) === null || _a === void 0
++          ? void 0
++          : _a.collections,
++      );
++      if (
++        serverHash &&
++        serverHash !== this.options.clientSchemaHash &&
++        !this.options.syncSchema
++      )
++        return {
++          type: "SCHEMA_MISMATCH",
++          retry: false,
++          message: "Client schema does not match server schema.",
++        };
++      return undefined;
++    });
++  }
+ }
+ function isChunkedMessageComplete(message, total) {
+-    if (message.length !== total)
+-        return false;
+-    for (let i = 0; i < total; i++) {
+-        if (!message[i])
+-            return false;
+-    }
+-    return true;
++  if (message.length !== total) return false;
++  for (let i = 0; i < total; i++) {
++    if (!message[i]) return false;
++  }
++  return true;
+ }
+ export function ServerResponse(statusCode = 200, payload) {
+-    return {
+-        payload,
+-        statusCode,
+-    };
++  return {
++    payload,
++    statusCode,
++  };
+ }
+ function NotAdminResponse() {
+-    const error = new ServiceKeyRequiredError();
+-    return ServerResponse(error.status, error.toJSON());
++  const error = new ServiceKeyRequiredError();
++  return ServerResponse(error.status, error.toJSON());
+ }
+ export function routeNotFoundResponse(route) {
+-    const error = new RouteNotFoundError(route);
+-    return ServerResponse(error.status, error.toJSON());
++  const error = new RouteNotFoundError(route);
++  return ServerResponse(error.status, error.toJSON());
+ }
+ function hasAdminAccess(token) {
+-    return token && token.type === 'secret';
++  return token && token.type === "secret";
+ }
+ export class Session {
+-    constructor(server, token) {
+-        this.server = server;
+-        this.token = token;
+-        if (!token)
+-            throw new Error('Token is required');
+-        // TODO: figure out admin middleware
+-        const variables = {};
+-        if (token.userId)
+-            // @ts-expect-error
+-            variables['SESSION_USER_ID'] = token.userId;
+-        this.db = server.db.withVars(variables);
+-    }
+-    createConnection(connectionParams) {
+-        return new Connection(this, connectionParams);
+-    }
+-    // TODO: ensure data that we store in memory is invalidated when the db is "cleared"
+-    clearDB({ full }) {
+-        return __awaiter(this, void 0, void 0, function* () {
+-            if (!hasAdminAccess(this.token))
+-                return NotAdminResponse();
+-            try {
+-                if (full) {
+-                    // Delete all data associated with this tenant
+-                    yield this.db.clear();
+-                }
+-                else {
+-                    // Just delete triples
+-                    yield this.db.tripleStore.transact((tx) => __awaiter(this, void 0, void 0, function* () {
+-                        const allTriples = yield tx.findByEntity();
+-                        // Filter out synced metadata
+-                        const dataTriples = allTriples.filter(({ id }) => !id.includes('_metadata'));
+-                        yield tx.deleteTriples(dataTriples);
+-                    }));
+-                }
+-                return ServerResponse(200);
+-            }
+-            catch (e) {
+-                if (isTriplitError(e))
+-                    return errorResponse(e);
+-                return errorResponse(e, {
+-                    fallbackMessage: 'An unknown error occurred clearing the database.',
+-                });
+-            }
++  constructor(server, token) {
++    this.server = server;
++    this.token = token;
++    if (!token) throw new Error("Token is required");
++    // TODO: figure out admin middleware
++    const variables = {};
++    if (token.userId)
++      // @ts-expect-error
++      variables["SESSION_USER_ID"] = token.userId;
++    this.db = server.db.withVars(variables);
++    console.log(this.db);
++  }
++  createConnection(connectionParams) {
++    return new Connection(this, connectionParams);
++  }
++  // TODO: ensure data that we store in memory is invalidated when the db is "cleared"
++  clearDB({ full }) {
++    return __awaiter(this, void 0, void 0, function* () {
++      if (!hasAdminAccess(this.token)) return NotAdminResponse();
++      try {
++        if (full) {
++          // Delete all data associated with this tenant
++          yield this.db.clear();
++        } else {
++          // Just delete triples
++          yield this.db.tripleStore.transact((tx) =>
++            __awaiter(this, void 0, void 0, function* () {
++              const allTriples = yield tx.findByEntity();
++              // Filter out synced metadata
++              const dataTriples = allTriples.filter(
++                ({ id }) => !id.includes("_metadata"),
++              );
++              yield tx.deleteTriples(dataTriples);
++            }),
++          );
++        }
++        return ServerResponse(200);
++      } catch (e) {
++        if (isTriplitError(e)) return errorResponse(e);
++        return errorResponse(e, {
++          fallbackMessage: "An unknown error occurred clearing the database.",
+         });
+-    }
+-    getMigrationStatus() {
+-        var _a;
+-        return __awaiter(this, void 0, void 0, function* () {
+-            if (!hasAdminAccess(this.token))
+-                return NotAdminResponse();
+-            const schema = yield this.db.getSchema();
+-            if (!schema) {
+-                return ServerResponse(200, { type: 'schemaless' });
+-            }
+-            const migrations = Object.values(yield this.db.getAppliedMigrations()).sort((a, b) => a.id - b.id);
+-            const hash = hashSchemaJSON((_a = schemaToJSON(schema)) === null || _a === void 0 ? void 0 : _a.collections);
+-            return ServerResponse(200, {
+-                type: 'schema',
+-                migrations,
+-                schemaHash: hash,
+-                schema,
+-            });
++      }
++    });
++  }
++  getMigrationStatus() {
++    var _a;
++    return __awaiter(this, void 0, void 0, function* () {
++      if (!hasAdminAccess(this.token)) return NotAdminResponse();
++      const schema = yield this.db.getSchema();
++      if (!schema) {
++        return ServerResponse(200, { type: "schemaless" });
++      }
++      const migrations = Object.values(
++        yield this.db.getAppliedMigrations(),
++      ).sort((a, b) => a.id - b.id);
++      const hash = hashSchemaJSON(
++        (_a = schemaToJSON(schema)) === null || _a === void 0
++          ? void 0
++          : _a.collections,
++      );
++      return ServerResponse(200, {
++        type: "schema",
++        migrations,
++        schemaHash: hash,
++        schema,
++      });
++    });
++  }
++  applyMigration({ migration, direction }) {
++    return __awaiter(this, void 0, void 0, function* () {
++      if (!hasAdminAccess(this.token)) return NotAdminResponse();
++      try {
++        if (!migration || !direction)
++          return errorResponse(
++            new TriplitError("Missing migration or direction"),
++          );
++        yield this.db.migrate([migration], direction);
++      } catch (e) {
++        if (isTriplitError(e)) return errorResponse(e);
++        return errorResponse(new TriplitError("Error applying migration"));
++      }
++      return ServerResponse(200);
++    });
++  }
++  getCollectionStats() {
++    return __awaiter(this, void 0, void 0, function* () {
++      if (!hasAdminAccess(this.token)) return NotAdminResponse();
++      const stats = yield this.db.getCollectionStats();
++      const payload = Array.from(stats)
++        .filter(([collection]) => collection !== "_metadata")
++        .map(([collection, numEntities]) => ({
++          collection,
++          numEntities,
++        }));
++      return ServerResponse(200, payload);
++    });
++  }
++  getSchema(params) {
++    var _a;
++    return __awaiter(this, void 0, void 0, function* () {
++      if (!hasAdminAccess(this.token)) return NotAdminResponse();
++      const format =
++        (_a = params === null || params === void 0 ? void 0 : params.format) !==
++          null && _a !== void 0
++          ? _a
++          : "triples";
++      const schema = yield this.db.getSchema();
++      if (!schema) return ServerResponse(200, { type: "schemaless" });
++      if (format === "triples") {
++        // TODO: rename schemaTriples to schema
++        return ServerResponse(200, {
++          type: "schema",
++          schemaTriples: schemaToJSON(schema),
+         });
+-    }
+-    applyMigration({ migration, direction, }) {
+-        return __awaiter(this, void 0, void 0, function* () {
+-            if (!hasAdminAccess(this.token))
+-                return NotAdminResponse();
+-            try {
+-                if (!migration || !direction)
+-                    return errorResponse(new TriplitError('Missing migration or direction'));
+-                yield this.db.migrate([migration], direction);
+-            }
+-            catch (e) {
+-                if (isTriplitError(e))
+-                    return errorResponse(e);
+-                return errorResponse(new TriplitError('Error applying migration'));
+-            }
+-            return ServerResponse(200);
++      } else if (format === "json") {
++        return ServerResponse(200, {
++          type: "schema",
++          schema: schemaToJSON(schema),
+         });
+-    }
+-    getCollectionStats() {
+-        return __awaiter(this, void 0, void 0, function* () {
+-            if (!hasAdminAccess(this.token))
+-                return NotAdminResponse();
+-            const stats = yield this.db.getCollectionStats();
+-            const payload = Array.from(stats)
+-                .filter(([collection]) => collection !== '_metadata')
+-                .map(([collection, numEntities]) => ({
+-                collection,
+-                numEntities,
+-            }));
+-            return ServerResponse(200, payload);
++      }
++      // TODO: better message (maybe error about invalid parameters?)
++      return ServerResponse(400, new TriplitError("Invalid format").toJSON());
++    });
++  }
++  queryTriples({ query }) {
++    return __awaiter(this, void 0, void 0, function* () {
++      if (!query)
++        return errorResponse(
++          new TriplitError(
++            "{ query: CollectionQuery } missing from request body",
++          ),
++        );
++      try {
++        return ServerResponse(
++          200,
++          yield this.db.fetchTriples(query, {
++            skipRules: hasAdminAccess(this.token),
++          }),
++        );
++      } catch (e) {
++        return errorResponse(e);
++      }
++    });
++  }
++  fetch(query) {
++    var _a, _b;
++    return __awaiter(this, void 0, void 0, function* () {
++      try {
++        const result = yield this.db.fetch(query, {
++          skipRules: hasAdminAccess(this.token),
+         });
+-    }
+-    getSchema(params) {
+-        var _a;
+-        return __awaiter(this, void 0, void 0, function* () {
+-            if (!hasAdminAccess(this.token))
+-                return NotAdminResponse();
+-            const format = (_a = params === null || params === void 0 ? void 0 : params.format) !== null && _a !== void 0 ? _a : 'triples';
+-            const schema = yield this.db.getSchema();
+-            if (!schema)
+-                return ServerResponse(200, { type: 'schemaless' });
+-            if (format === 'triples') {
+-                // TODO: rename schemaTriples to schema
+-                return ServerResponse(200, {
+-                    type: 'schema',
+-                    schemaTriples: schemaToJSON(schema),
+-                });
+-            }
+-            else if (format === 'json') {
+-                return ServerResponse(200, {
+-                    type: 'schema',
+-                    schema: schemaToJSON(schema),
+-                });
+-            }
+-            // TODO: better message (maybe error about invalid parameters?)
+-            return ServerResponse(400, new TriplitError('Invalid format').toJSON());
++        const schema =
++          (_a = yield this.db.getSchema()) === null || _a === void 0
++            ? void 0
++            : _a.collections;
++        const { collectionName } = query;
++        const collectionSchema =
++          (_b =
++            schema === null || schema === void 0
++              ? void 0
++              : schema[collectionName]) === null || _b === void 0
++            ? void 0
++            : _b.schema;
++        const data = new Map(
++          [...result.entries()].map(([id, entity]) => [
++            id,
++            collectionSchema
++              ? collectionSchema.convertJSToJSON(entity, schema)
++              : entity,
++          ]),
++        );
++        return ServerResponse(200, {
++          result: [...data.entries()],
+         });
+-    }
+-    queryTriples({ query }) {
+-        return __awaiter(this, void 0, void 0, function* () {
+-            if (!query)
+-                return errorResponse(new TriplitError('{ query: CollectionQuery } missing from request body'));
+-            try {
+-                return ServerResponse(200, yield this.db.fetchTriples(query, {
+-                    skipRules: hasAdminAccess(this.token),
+-                }));
+-            }
+-            catch (e) {
+-                return errorResponse(e);
+-            }
++      } catch (e) {
++        return errorResponse(e);
++      }
++    });
++  }
++  insert(collectionName, entity) {
++    var _a, _b;
++    return __awaiter(this, void 0, void 0, function* () {
++      try {
++        const schema =
++          (_a = yield this.db.getSchema()) === null || _a === void 0
++            ? void 0
++            : _a.collections;
++        const collectionSchema =
++          (_b =
++            schema === null || schema === void 0
++              ? void 0
++              : schema[collectionName]) === null || _b === void 0
++            ? void 0
++            : _b.schema;
++        const insertEntity = collectionSchema
++          ? collectionSchema.convertJSONToJS(entity, schema)
++          : entity;
++        const txResult = yield this.db.insert(collectionName, insertEntity, {
++          skipRules: hasAdminAccess(this.token),
+         });
+-    }
+-    fetch(query) {
+-        var _a, _b;
+-        return __awaiter(this, void 0, void 0, function* () {
+-            try {
+-                const result = yield this.db.fetch(query, {
+-                    skipRules: hasAdminAccess(this.token),
+-                });
+-                const schema = (_a = (yield this.db.getSchema())) === null || _a === void 0 ? void 0 : _a.collections;
+-                const { collectionName } = query;
+-                const collectionSchema = (_b = schema === null || schema === void 0 ? void 0 : schema[collectionName]) === null || _b === void 0 ? void 0 : _b.schema;
+-                const data = new Map([...result.entries()].map(([id, entity]) => [
+-                    id,
+-                    collectionSchema
+-                        ? collectionSchema.convertJSToJSON(entity, schema)
+-                        : entity,
+-                ]));
+-                return ServerResponse(200, {
+-                    result: [...data.entries()],
+-                });
+-            }
+-            catch (e) {
+-                return errorResponse(e);
+-            }
++        const serializableResult = Object.assign(Object.assign({}, txResult), {
++          output: collectionSchema
++            ? collectionSchema.convertJSToJSON(txResult.output, schema)
++            : txResult.output,
+         });
+-    }
+-    insert(collectionName, entity) {
+-        var _a, _b;
+-        return __awaiter(this, void 0, void 0, function* () {
+-            try {
+-                const schema = (_a = (yield this.db.getSchema())) === null || _a === void 0 ? void 0 : _a.collections;
+-                const collectionSchema = (_b = schema === null || schema === void 0 ? void 0 : schema[collectionName]) === null || _b === void 0 ? void 0 : _b.schema;
+-                const insertEntity = collectionSchema
++        return ServerResponse(200, serializableResult);
++      } catch (e) {
++        return errorResponse(e, {
++          fallbackMessage:
++            "Could not insert entity. An unknown error occurred.",
++        });
++      }
++    });
++  }
++  bulkInsert(inserts) {
++    var _a;
++    return __awaiter(this, void 0, void 0, function* () {
++      try {
++        const schema =
++          (_a = yield this.db.getSchema()) === null || _a === void 0
++            ? void 0
++            : _a.collections;
++        const txResult = yield this.db.transact(
++          (tx) =>
++            __awaiter(this, void 0, void 0, function* () {
++              var _b;
++              const output = Object.keys(inserts).reduce(
++                (acc, collectionName) =>
++                  Object.assign(Object.assign({}, acc), {
++                    [collectionName]: [],
++                  }),
++                {},
++              );
++              for (const [collectionName, entities] of Object.entries(
++                inserts,
++              )) {
++                const collectionSchema =
++                  (_b =
++                    schema === null || schema === void 0
++                      ? void 0
++                      : schema[collectionName]) === null || _b === void 0
++                    ? void 0
++                    : _b.schema;
++                for (const entity of entities) {
++                  const insertEntity = collectionSchema
+                     ? collectionSchema.convertJSONToJS(entity, schema)
+                     : entity;
+-                const txResult = yield this.db.insert(collectionName, insertEntity, {
+-                    skipRules: hasAdminAccess(this.token),
+-                });
+-                const serializableResult = Object.assign(Object.assign({}, txResult), { output: collectionSchema
+-                        ? collectionSchema.convertJSToJSON(txResult.output, schema)
+-                        : txResult.output });
+-                return ServerResponse(200, serializableResult);
+-            }
+-            catch (e) {
+-                return errorResponse(e, {
+-                    fallbackMessage: 'Could not insert entity. An unknown error occurred.',
+-                });
+-            }
++                  const insertedEntity = yield tx.insert(
++                    collectionName,
++                    insertEntity,
++                  );
++                  output[collectionName].push(
++                    collectionSchema
++                      ? collectionSchema.convertJSToJSON(insertedEntity, schema)
++                      : insertedEntity,
++                  );
++                }
++              }
++              return output;
++            }),
++          { skipRules: hasAdminAccess(this.token) },
++        );
++        const serializableResult = Object.assign({}, txResult);
++        return ServerResponse(200, serializableResult);
++      } catch (e) {
++        return errorResponse(e, {
++          fallbackMessage:
++            "Could not insert entity. An unknown error occurred.",
+         });
+-    }
+-    bulkInsert(inserts) {
+-        var _a;
+-        return __awaiter(this, void 0, void 0, function* () {
+-            try {
+-                const schema = (_a = (yield this.db.getSchema())) === null || _a === void 0 ? void 0 : _a.collections;
+-                const txResult = yield this.db.transact((tx) => __awaiter(this, void 0, void 0, function* () {
+-                    var _b;
+-                    const output = Object.keys(inserts).reduce((acc, collectionName) => (Object.assign(Object.assign({}, acc), { [collectionName]: [] })), {});
+-                    for (const [collectionName, entities] of Object.entries(inserts)) {
+-                        const collectionSchema = (_b = schema === null || schema === void 0 ? void 0 : schema[collectionName]) === null || _b === void 0 ? void 0 : _b.schema;
+-                        for (const entity of entities) {
+-                            const insertEntity = collectionSchema
+-                                ? collectionSchema.convertJSONToJS(entity, schema)
+-                                : entity;
+-                            const insertedEntity = yield tx.insert(collectionName, insertEntity);
+-                            output[collectionName].push(collectionSchema
+-                                ? collectionSchema.convertJSToJSON(insertedEntity, schema)
+-                                : insertedEntity);
+-                        }
+-                    }
+-                    return output;
+-                }), { skipRules: hasAdminAccess(this.token) });
+-                const serializableResult = Object.assign({}, txResult);
+-                return ServerResponse(200, serializableResult);
+-            }
+-            catch (e) {
+-                return errorResponse(e, {
+-                    fallbackMessage: 'Could not insert entity. An unknown error occurred.',
+-                });
+-            }
++      }
++    });
++  }
++  insertTriples(triples) {
++    return __awaiter(this, void 0, void 0, function* () {
++      try {
++        if (!hasAdminAccess(this.token)) return NotAdminResponse();
++        yield this.db.tripleStore.insertTriples(triples);
++        return ServerResponse(200, {});
++      } catch (e) {
++        return errorResponse(e, {
++          fallbackMessage:
++            "Could not insert triples. An unknown error occurred.",
+         });
+-    }
+-    insertTriples(triples) {
+-        return __awaiter(this, void 0, void 0, function* () {
+-            try {
+-                if (!hasAdminAccess(this.token))
+-                    return NotAdminResponse();
+-                yield this.db.tripleStore.insertTriples(triples);
+-                return ServerResponse(200, {});
+-            }
+-            catch (e) {
+-                return errorResponse(e, {
+-                    fallbackMessage: 'Could not insert triples. An unknown error occurred.',
+-                });
++      }
++    });
++  }
++  deleteTriples(entityAttributes) {
++    return __awaiter(this, void 0, void 0, function* () {
++      try {
++        if (!hasAdminAccess(this.token)) return NotAdminResponse();
++        yield this.db.tripleStore.transact((tx) =>
++          __awaiter(this, void 0, void 0, function* () {
++            for (const [entityId, attribute] of entityAttributes) {
++              yield tx.deleteTriples(
++                yield tx.findByEntityAttribute(entityId, attribute),
++              );
+             }
++          }),
++        );
++        return ServerResponse(200, {});
++      } catch (e) {
++        return errorResponse(e, {
++          fallbackMessage:
++            "Could not delete triples. An unknown error occurred.",
+         });
+-    }
+-    deleteTriples(entityAttributes) {
+-        return __awaiter(this, void 0, void 0, function* () {
+-            try {
+-                if (!hasAdminAccess(this.token))
+-                    return NotAdminResponse();
+-                yield this.db.tripleStore.transact((tx) => __awaiter(this, void 0, void 0, function* () {
+-                    for (const [entityId, attribute] of entityAttributes) {
+-                        yield tx.deleteTriples(yield tx.findByEntityAttribute(entityId, attribute));
+-                    }
+-                }));
+-                return ServerResponse(200, {});
+-            }
+-            catch (e) {
+-                return errorResponse(e, {
+-                    fallbackMessage: 'Could not delete triples. An unknown error occurred.',
+-                });
+-            }
++      }
++    });
++  }
++  update(collectionName, entityId, patches) {
++    return __awaiter(this, void 0, void 0, function* () {
++      try {
++        const txResult = yield this.db.transact(
++          (tx) =>
++            __awaiter(this, void 0, void 0, function* () {
++              const id = appendCollectionToId(collectionName, entityId);
++              const timestamp = yield tx.storeTx.getTransactionTimestamp();
++              for (const patch of patches) {
++                if (patch[0] === "delete") {
++                  tx.storeTx.insertTriple({
++                    id,
++                    attribute: [collectionName, ...patch[1]],
++                    value: null,
++                    timestamp,
++                    expired: true,
++                  });
++                } else if (patch[0] === "set") {
++                  tx.storeTx.insertTriple({
++                    id,
++                    attribute: [collectionName, ...patch[1]],
++                    value: patch[2],
++                    timestamp,
++                    expired: false,
++                  });
++                }
++              }
++            }),
++          { skipRules: hasAdminAccess(this.token) },
++        );
++        return ServerResponse(200, txResult);
++      } catch (e) {
++        return errorResponse(e, {
++          fallbackMessage:
++            "Could not update entity. An unknown error occurred.",
+         });
+-    }
+-    update(collectionName, entityId, patches) {
+-        return __awaiter(this, void 0, void 0, function* () {
+-            try {
+-                const txResult = yield this.db.transact((tx) => __awaiter(this, void 0, void 0, function* () {
+-                    const id = appendCollectionToId(collectionName, entityId);
+-                    const timestamp = yield tx.storeTx.getTransactionTimestamp();
+-                    for (const patch of patches) {
+-                        if (patch[0] === 'delete') {
+-                            tx.storeTx.insertTriple({
+-                                id,
+-                                attribute: [collectionName, ...patch[1]],
+-                                value: null,
+-                                timestamp,
+-                                expired: true,
+-                            });
+-                        }
+-                        else if (patch[0] === 'set') {
+-                            tx.storeTx.insertTriple({
+-                                id,
+-                                attribute: [collectionName, ...patch[1]],
+-                                value: patch[2],
+-                                timestamp,
+-                                expired: false,
+-                            });
+-                        }
+-                    }
+-                }), { skipRules: hasAdminAccess(this.token) });
+-                return ServerResponse(200, txResult);
+-            }
+-            catch (e) {
+-                return errorResponse(e, {
+-                    fallbackMessage: 'Could not update entity. An unknown error occurred.',
+-                });
+-            }
++      }
++    });
++  }
++  delete(collectionName, entityId) {
++    return __awaiter(this, void 0, void 0, function* () {
++      try {
++        const txResult = yield this.db.delete(collectionName, entityId, {
++          skipRules: hasAdminAccess(this.token),
+         });
+-    }
+-    delete(collectionName, entityId) {
+-        return __awaiter(this, void 0, void 0, function* () {
+-            try {
+-                const txResult = yield this.db.delete(collectionName, entityId, {
+-                    skipRules: hasAdminAccess(this.token),
+-                });
+-                return ServerResponse(200, txResult);
+-            }
+-            catch (e) {
+-                return errorResponse(e, {
+-                    fallbackMessage: 'Could not delete entity. An unknown error occurred.',
+-                });
+-            }
++        return ServerResponse(200, txResult);
++      } catch (e) {
++        return errorResponse(e, {
++          fallbackMessage:
++            "Could not delete entity. An unknown error occurred.",
+         });
+-    }
++      }
++    });
++  }
+ }
+ function errorResponse(e, options) {
+-    var _a;
+-    if (isTriplitError(e)) {
+-        return ServerResponse(e.status, e.toJSON());
+-    }
+-    const generalError = new TriplitError((_a = options === null || options === void 0 ? void 0 : options.fallbackMessage) !== null && _a !== void 0 ? _a : 'An unknown error occurred processing your request.');
+-    console.log(e);
+-    return ServerResponse(generalError.status, generalError.toJSON());
++  var _a;
++  if (isTriplitError(e)) {
++    return ServerResponse(e.status, e.toJSON());
++  }
++  const generalError = new TriplitError(
++    (_a =
++      options === null || options === void 0
++        ? void 0
++        : options.fallbackMessage) !== null && _a !== void 0
++      ? _a
++      : "An unknown error occurred processing your request.",
++  );
++  console.log(e);
++  return ServerResponse(generalError.status, generalError.toJSON());
+ }
+ function throttle(callback, delay) {
+-    let wait = false;
+-    let refire = false;
+-    function refireOrReset() {
+-        if (refire) {
+-            callback();
+-            refire = false;
+-            setTimeout(refireOrReset, delay);
+-        }
+-        else {
+-            wait = false;
+-        }
++  let wait = false;
++  let refire = false;
++  function refireOrReset() {
++    if (refire) {
++      callback();
++      refire = false;
++      setTimeout(refireOrReset, delay);
++    } else {
++      wait = false;
+     }
+-    return function () {
+-        if (!wait) {
+-            callback();
+-            wait = true;
+-            setTimeout(refireOrReset, delay);
+-        }
+-        else {
+-            refire = true;
+-        }
+-    };
++  }
++  return function () {
++    if (!wait) {
++      callback();
++      wait = true;
++      setTimeout(refireOrReset, delay);
++    } else {
++      refire = true;
++    }
++  };
+ }

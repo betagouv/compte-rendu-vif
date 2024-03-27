@@ -4,9 +4,24 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  '@triplit/server-core@0.3.27':
+    hash: e2mrrfbbgvfj46tgimzyhz64xa
+    path: patches/@triplit__server-core@0.3.27.patch
+  '@triplit/server@0.3.27':
+    hash: 6xrghrtmzi5gzmwadkjlalwtwe
+    path: patches/@triplit__server@0.3.27.patch
+
 importers:
 
-  .: {}
+  .:
+    devDependencies:
+      '@pandabox/prettier-plugin':
+        specifier: ^0.1.0
+        version: 0.1.0(@pandacss/config@0.36.0)(@pandacss/core@0.36.0)(@pandacss/is-valid-prop@0.36.0)(@pandacss/node@0.36.0)(@pandacss/preset-base@0.36.0)(@pandacss/shared@0.36.0)
+      prettier:
+        specifier: ^3.2.5
+        version: 3.2.5
 
   packages/backend:
     dependencies:
@@ -18,7 +33,10 @@ importers:
         version: 0.3.24(react@18.2.0)
       '@triplit/server':
         specifier: ^0.3.27
-        version: 0.3.27(react@18.2.0)
+        version: 0.3.27(patch_hash=6xrghrtmzi5gzmwadkjlalwtwe)(react@18.2.0)
+      '@triplit/server-core':
+        specifier: ^0.3.27
+        version: 0.3.27(patch_hash=e2mrrfbbgvfj46tgimzyhz64xa)(react@18.2.0)
       '@trpc/client':
         specifier: 11.0.0-next.320
         version: 11.0.0-next.320(@trpc/server@11.0.0-next.320)
@@ -67,7 +85,7 @@ importers:
         version: 0.20.14
       tsup:
         specifier: ^8.0.2
-        version: 8.0.2(typescript@5.4.2)
+        version: 8.0.2(postcss@8.4.38)(typescript@5.4.2)
       typescript:
         specifier: ^5.2.2
         version: 5.4.2
@@ -138,9 +156,6 @@ importers:
         specifier: ^3.22.4
         version: 3.22.4
     devDependencies:
-      '@pandabox/prettier-plugin':
-        specifier: ^0.1.0
-        version: 0.1.0(@pandacss/config@0.36.0)(@pandacss/core@0.36.0)(@pandacss/is-valid-prop@0.36.0)(@pandacss/node@0.36.0)(@pandacss/preset-base@0.36.0)(@pandacss/shared@0.36.0)
       '@pandabox/unplugin':
         specifier: ^0.0.1
         version: 0.0.1(@pandacss/config@0.36.0)(@pandacss/core@0.36.0)(@pandacss/node@0.36.0)(vite@5.1.6)(webpack@5.90.3)
@@ -183,9 +198,6 @@ importers:
       postcss:
         specifier: ^8.4.38
         version: 8.4.38
-      prettier:
-        specifier: ^3.2.5
-        version: 3.2.5
       typescript:
         specifier: ^5.2.2
         version: 5.4.2
@@ -2358,8 +2370,8 @@ packages:
       '@triplit/client': 0.3.28(react@18.2.0)
       '@triplit/console': 0.3.31(@types/react@18.2.66)(react-router@6.22.3)
       '@triplit/db': 0.3.24(react@18.2.0)
-      '@triplit/server': 0.3.27(react@18.2.0)
-      '@triplit/server-core': 0.3.27(react@18.2.0)
+      '@triplit/server': 0.3.27(patch_hash=6xrghrtmzi5gzmwadkjlalwtwe)(react@18.2.0)
+      '@triplit/server-core': 0.3.27(patch_hash=e2mrrfbbgvfj46tgimzyhz64xa)(react@18.2.0)
       ansis: 1.5.6
       axios: 1.6.8
       better-sqlite3: 8.7.0
@@ -2414,7 +2426,7 @@ packages:
       '@triplit/client': 0.3.28(react@18.2.0)
       '@triplit/db': 0.3.24(react@18.2.0)
       '@triplit/react': 0.3.28(react-dom@18.2.0)(react@18.2.0)
-      '@triplit/server-core': 0.3.27(react@18.2.0)
+      '@triplit/server-core': 0.3.27(patch_hash=e2mrrfbbgvfj46tgimzyhz64xa)(react@18.2.0)
       class-variance-authority: 0.7.0
       dayjs: 1.11.10
       jotai: 2.7.1(@types/react@18.2.66)(react@18.2.0)
@@ -2459,19 +2471,20 @@ packages:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
 
-  /@triplit/server-core@0.3.27(react@18.2.0):
+  /@triplit/server-core@0.3.27(patch_hash=e2mrrfbbgvfj46tgimzyhz64xa)(react@18.2.0):
     resolution: {integrity: sha512-NR8XTCI3dH9YXnc7bvWHxPq+bfhOEEFzsuHN7ViiH6UhjavC3DhUqkj8vdWT+ro2iEIe4FOwy5mZnMaTtqXrdA==}
     dependencies:
       '@triplit/db': 0.3.24(react@18.2.0)
       jose: 4.15.5
     transitivePeerDependencies:
       - react
+    patched: true
 
-  /@triplit/server@0.3.27(react@18.2.0):
+  /@triplit/server@0.3.27(patch_hash=6xrghrtmzi5gzmwadkjlalwtwe)(react@18.2.0):
     resolution: {integrity: sha512-M5V+A2ja7iMsGCsXQVYLSZ60/M39YsoVdbynNtnZldGyS0gvA0Xg5L6vyqeEnUJKsDa5bphOGOPuTUNG86oWzA==}
     dependencies:
       '@triplit/db': 0.3.24(react@18.2.0)
-      '@triplit/server-core': 0.3.27(react@18.2.0)
+      '@triplit/server-core': 0.3.27(patch_hash=e2mrrfbbgvfj46tgimzyhz64xa)(react@18.2.0)
       better-sqlite3: 8.7.0
       consola: 3.2.3
       cors: 2.8.5
@@ -2486,6 +2499,7 @@ packages:
       - react
       - supports-color
       - utf-8-validate
+    patched: true
 
   /@triplit/tuple-database@2.2.12(react@18.2.0):
     resolution: {integrity: sha512-xYjQi056PETcEq3nZTofCUWx1YshKq8K+q5hKSlRjGPGX00xTfM9BTreTStjYCN8kxjx0Ib1zZZ68xgRr5e3kg==}
@@ -6145,7 +6159,7 @@ packages:
       postcss: 8.4.35
     dev: true
 
-  /postcss-load-config@4.0.2:
+  /postcss-load-config@4.0.2(postcss@8.4.38):
     resolution: {integrity: sha512-bSVhyJGL00wMVoPUzAVAnbEoWyqRxkjv64tUl427SKnPrENtq6hJwUojroMz2VB+Q1edmi4IfrAPpami5VVgMQ==}
     engines: {node: '>= 14'}
     peerDependencies:
@@ -6158,6 +6172,7 @@ packages:
         optional: true
     dependencies:
       lilconfig: 3.1.1
+      postcss: 8.4.38
       yaml: 2.4.1
     dev: true
 
@@ -7266,7 +7281,7 @@ packages:
   /tslib@2.6.2:
     resolution: {integrity: sha512-AEYxH93jGFPn/a2iVAwW87VuUIkR1FVUKB77NwMF7nBTDkDrrT/Hpt/IrCJ0QXhW27jTBDcf5ZY7w6RiqTMw2Q==}
 
-  /tsup@8.0.2(typescript@5.4.2):
+  /tsup@8.0.2(postcss@8.4.38)(typescript@5.4.2):
     resolution: {integrity: sha512-NY8xtQXdH7hDUAZwcQdY/Vzlw9johQsaqf7iwZ6g1DOUlFYQ5/AtVAjTvihhEyeRlGo4dLRVHtrRaL35M1daqQ==}
     engines: {node: '>=18'}
     hasBin: true
@@ -7293,7 +7308,8 @@ packages:
       execa: 5.1.1
       globby: 11.1.0
       joycon: 3.1.1
-      postcss-load-config: 4.0.2
+      postcss: 8.4.38
+      postcss-load-config: 4.0.2(postcss@8.4.38)
       resolve-from: 5.0.0
       rollup: 4.13.0
       source-map: 0.8.0-beta.0

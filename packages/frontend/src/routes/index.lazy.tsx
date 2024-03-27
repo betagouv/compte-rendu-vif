@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form'
 import { RouterInputs, trpc } from '../api'
 import { db } from '../db'
 
-const query = db.query('clauses')
+const query = db.query('reports')
 
 const Index = () => {
   const { results, fetching, error } = useQuery(db, query)
