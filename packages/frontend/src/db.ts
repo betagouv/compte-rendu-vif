@@ -8,4 +8,5 @@ export const db = new TriplitClient({
   serverUrl: "http://localhost:3000",
   token: mockToken,
   schema: schema,
+  storage: "indexeddb",
 });

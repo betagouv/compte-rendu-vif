@@ -5,6 +5,8 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { RouterInputs, trpc } from "../api";
 import { db } from "../db";
+import Input from "@codegouvfr/react-dsfr/Input";
+import Button from "@codegouvfr/react-dsfr/Button";
 
 const query = db.query("delegations");
 
@@ -15,29 +17,13 @@ const Index = () => {
 
   const onClick = async () => {
     await db.insert("delegations", {
-      createdBy: "d79a5b57-0f51-48d5-b0ff-94bdb8e459d4aaaa",
+      createdBy: "d79a5b57-0f51-48d5-b0ff-94bdb8e459d4",
       delegatedTo: "random2",
     });
-    // await db.insert("reports", {
-    //   applicantName: "test",
-    //   applicantType: "test",
-    //   createdBy: "ledouxsssm",
-    //   decision: "ok",
-    //   meetDate: new Date(),
-    //   projectCadastralRef: "ok",
-    //   projectDescription: "opk",
-    //   projectLandContact: "ok",
-    //   projectNature: "ok",
-    //   projectSpaceType: "ok",
-    //   projectStatus: "ok",
-    //   title: "ok",
-    // });
   };
 
   return (
     <Flex direction="column">
-      <h1>Index</h1>
-      <button onClick={onClick}>AAAAAAAAAAAA</button>
       <LoginForm />
       <SignupForm />
     </Flex>
@@ -61,15 +47,10 @@ const LoginForm = () => {
 
   return (
     <Flex direction="column">
-      <div>
-        <label htmlFor="email">email</label>
-        <input {...form.register("email")} />
-      </div>
-      <div>
-        <label htmlFor="password">password</label>
-        <input {...form.register("password")} />
-      </div>
-      <button onClick={form.handleSubmit(login)}>Login</button>
+      <Input label="Email" {...form.register("email")} />
+      <Input label="Mot de passe" nativeInputProps={{ type: "password" }} {...form.register("password")} />
+
+      <Button onClick={form.handleSubmit(login)}>Login</Button>
     </Flex>
   );
 };

@@ -1,3 +1,6 @@
 module.exports = {
-  plugins: [require('./scripts/postcss-clean.cjs')({ preserve: false })],
-}
+  plugins: {
+    "./scripts/postcss-clean.cjs": {},
+    "@pandacss/dev/postcss": {},
+  },
+};
