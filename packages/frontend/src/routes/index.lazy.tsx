@@ -5,6 +5,9 @@ import { useElectric } from "../ElectricWrapper";
 import { css } from "#styled-system/css";
 import { Clause } from "../generated/client";
 import { Flex } from "#styled-system/jsx";
+import { useForm } from "react-hook-form";
+import { RouterInputs, trpc } from "../api";
+import { useState } from "react";
 
 const Index = () => {
   const { db } = useElectric()!;
@@ -56,6 +59,65 @@ const ClauseCard = ({ clause, onDelete }: { clause: Clause; onDelete: (c: Clause
       <div>{clause.label}</div>
       <button onClick={() => onDelete(clause)}>X</button>
     </div>
+  );
+};
+
+const LoginForm = () => {
+  const [token, setToken] = useState("");
+  const form = useForm<RouterInputs["login"]>();
+
+  const mutation = trpc.login.useMutation();
+
+  const login = async (values: RouterInputs["login"]) => {
+    const response = await mutation.mutateAsync(values);
+    console.log(response.token);
+    setToken(response.token);
+  };
+
+  const query = trpc.verifyToken.useQuery({ token }, { enabled: !!token });
+  console.log(query.data);
+
+  return (
+    <Flex direction="column">
+      <div>
+        <label htmlFor="email">email</label>
+        <input {...form.register("email")} />
+      </div>
+      <div>
+        <label htmlFor="password">password</label>
+        <input {...form.register("password")} />
+      </div>
+      <button onClick={form.handleSubmit(login)}>Login</button>
+    </Flex>
+  );
+};
+
+const SignupForm = () => {
+  const form = useForm<RouterInputs["createUser"]>();
+
+  const mutation = trpc.createUser.useMutation();
+
+  const signup = async (values: RouterInputs["createUser"]) => {
+    const response = await mutation.mutateAsync(values);
+    console.log(response);
+  };
+
+  return (
+    <Flex direction="column">
+      <div>
+        <label htmlFor="name">name</label>
+        <input {...form.register("name")} />
+      </div>
+      <div>
+        <label htmlFor="email">email</label>
+        <input {...form.register("email")} />
+      </div>
+      <div>
+        <label htmlFor="password">password</label>
+        <input {...form.register("password")} />
+      </div>
+      <button onClick={form.handleSubmit(signup)}>Signup</button>
+    </Flex>
   );
 };
 

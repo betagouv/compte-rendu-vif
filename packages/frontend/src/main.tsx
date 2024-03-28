@@ -6,6 +6,8 @@ import ReactDOM from "react-dom/client";
 import "./db";
 import "./index.css";
 import { routeTree } from "./routeTree.gen";
+import { TRPCProvider } from "./TrpcProvider";
+
 startReactDsfr({ defaultColorScheme: "system" });
 
 const router = createRouter({ routeTree });
@@ -17,6 +19,8 @@ declare module "@tanstack/react-router" {
 }
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <TRPCProvider>
+      <RouterProvider router={router} />
+    </TRPCProvider>
   </React.StrictMode>
 );

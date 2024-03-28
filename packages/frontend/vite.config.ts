@@ -9,4 +9,5 @@ export default defineConfig({
     exclude: ["wa-sqlite"],
   },
   assetsInclude: [`**/*.wasm`],
+  envDir: "../..",
 });

@@ -26,7 +26,8 @@ model User {
 model Report {
     id                  String   @id @default(cuid())
     title               String
-    authorId            String
+    redactedBy          String
+    createdById         String
     meetDate            DateTime
     meetLink            String
     applicantName       String
@@ -43,7 +44,7 @@ model Report {
     createdAt           DateTime
     updatedAt           DateTime @updatedAt
 
-    author         User             @relation(fields: [authorId], references: [id])
+    createdBy      User             @relation(fields: [createdById], references: [id])
     ReportToClause ReportToClause[]
 }
 
