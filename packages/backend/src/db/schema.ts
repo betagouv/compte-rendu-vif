@@ -4,7 +4,7 @@ export const userTable = sqliteTable("users", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),
   email: text("email").notNull().unique(),
-  temporaryPassword: text("temporaryPassword"),
-  temporaryPasswordExpiresAt: text("temporaryPasswordExpiresAt"),
+  temporaryLink: text("temporaryLink"),
+  temporaryLinkExpiresAt: text("temporaryLinkExpiresAt"),
   password: text("password").notNull(),
 });

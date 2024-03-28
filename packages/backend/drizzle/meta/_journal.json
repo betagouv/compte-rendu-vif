@@ -8,6 +8,13 @@
       "when": 1711462972209,
       "tag": "0000_bent_gorilla_man",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1711650727283,
+      "tag": "0001_goofy_psynapse",
+      "breakpoints": true
     }
   ]
 }

@@ -15,6 +15,14 @@ const appRouter = router({
   verifyToken: procedure.input(z.object({ token: z.string() })).query(({ input, ctx }) => {
     return ctx.services.user.verifyJWT(input.token);
   }),
+  generateResetLink: procedure.input(z.object({ email: z.string() })).mutation(({ input, ctx }) => {
+    return ctx.services.user.generateResetLink(input.email);
+  }),
+  resetPassword: procedure
+    .input(z.object({ temporaryLink: z.string(), newPassword: z.string() }))
+    .mutation(({ input, ctx }) => {
+      return ctx.services.user.resetPassword(input);
+    }),
 });
 
 export type AppRouter = typeof appRouter;

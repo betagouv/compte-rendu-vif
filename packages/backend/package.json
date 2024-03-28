@@ -17,6 +17,7 @@
     "@types/better-sqlite3": "^7.6.9",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/node": "^20.11.28",
+    "@types/nodemailer": "^6.4.14",
     "drizzle-kit": "^0.20.14",
     "tsup": "^8.0.2",
     "typescript": "^5.2.2",
@@ -36,8 +37,10 @@
     "drizzle-zod": "^0.5.1",
     "fastify": "^4.26.2",
     "jsonwebtoken": "^9.0.2",
+    "nodemailer": "^6.9.13",
     "pastable": "^2.2.1",
     "reflect-metadata": "^0.2.1",
+    "xoauth2": "^1.2.0",
     "zod": "^3.22.4"
   }
 }

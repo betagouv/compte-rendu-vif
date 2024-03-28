@@ -1,14 +1,15 @@
 import { z } from "zod";
 import { userTable } from "../db/schema";
 import { db } from "../db/db";
-import { eq } from "drizzle-orm";
+import { and, eq, gt } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 import { pick } from "pastable";
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
+import { addDays } from "date-fns";
 
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
-import { ENV } from "../envVars";
+import { ENV, isDev } from "../envVars";
 
 export const insertUserSchema = createInsertSchema(userTable);
 export const selectUserSchema = createSelectSchema(userTable);
@@ -52,6 +53,36 @@ export class UserService {
     await assertPasswordsMatch(payload.password, user!.password);
 
     return { user: serializeUser(user!), token: this.generateJWT(user!) };
+  }
+
+  async generateResetLink(email: string) {
+    const user = db.select().from(userTable).where(eq(userTable.email, email)).get();
+    assertUserExists(user);
+
+    const temporaryLink = crypto.randomUUID();
+    const temporaryLinkExpiresAt = addDays(new Date(), 1).toISOString();
+
+    db.update(userTable).set({ temporaryLink, temporaryLinkExpiresAt }).where(eq(userTable.email, email)).run();
+
+    return isDev ? temporaryLink : null;
+  }
+
+  async resetPassword({ temporaryLink, newPassword }: { temporaryLink: string; newPassword: string }) {
+    const user = db
+      .select()
+      .from(userTable)
+      .where(
+        and(eq(userTable.temporaryLink, temporaryLink), gt(userTable.temporaryLinkExpiresAt, new Date().toISOString())),
+      )
+      .get();
+
+    assertLinkIsValid(user);
+    const password = await encryptPassword(newPassword);
+
+    db.update(userTable)
+      .set({ password, temporaryLink: null, temporaryLinkExpiresAt: null })
+      .where(eq(userTable.temporaryLink, temporaryLink))
+      .run();
   }
 
   verifyJWT(token: string) {
@@ -109,6 +140,15 @@ const verifyPassword = (password: string, hash: string) => {
       resolve(key === derivedKey.toString("hex"));
     });
   });
+};
+
+const assertLinkIsValid = (user?: SelectUser) => {
+  if (!user) {
+    throw new TRPCError({
+      code: "UNAUTHORIZED",
+      message: "Le lien est invalide",
+    });
+  }
 };
 
 const assertUserExists = (user?: SelectUser) => {

@@ -17,9 +17,10 @@ import { Route as rootRoute } from './routes/__root'
 // Create Virtual Routes
 
 const SignupLazyImport = createFileRoute('/signup')()
-const ResetPasswordLazyImport = createFileRoute('/reset-password')()
 const LoginLazyImport = createFileRoute('/login')()
 const IndexLazyImport = createFileRoute('/')()
+const ResetPasswordIndexLazyImport = createFileRoute('/reset-password/')()
+const ResetPasswordLinkLazyImport = createFileRoute('/reset-password/$link')()
 
 // Create/Update Routes
 
@@ -27,13 +28,6 @@ const SignupLazyRoute = SignupLazyImport.update({
   path: '/signup',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/signup.lazy').then((d) => d.Route))
-
-const ResetPasswordLazyRoute = ResetPasswordLazyImport.update({
-  path: '/reset-password',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() =>
-  import('./routes/reset-password.lazy').then((d) => d.Route),
-)
 
 const LoginLazyRoute = LoginLazyImport.update({
   path: '/login',
@@ -44,6 +38,20 @@ const IndexLazyRoute = IndexLazyImport.update({
   path: '/',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
+
+const ResetPasswordIndexLazyRoute = ResetPasswordIndexLazyImport.update({
+  path: '/reset-password/',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/reset-password.index.lazy').then((d) => d.Route),
+)
+
+const ResetPasswordLinkLazyRoute = ResetPasswordLinkLazyImport.update({
+  path: '/reset-password/$link',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/reset-password.$link.lazy').then((d) => d.Route),
+)
 
 // Populate the FileRoutesByPath interface
 
@@ -57,12 +65,16 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginLazyImport
       parentRoute: typeof rootRoute
     }
-    '/reset-password': {
-      preLoaderRoute: typeof ResetPasswordLazyImport
-      parentRoute: typeof rootRoute
-    }
     '/signup': {
       preLoaderRoute: typeof SignupLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/reset-password/$link': {
+      preLoaderRoute: typeof ResetPasswordLinkLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/reset-password/': {
+      preLoaderRoute: typeof ResetPasswordIndexLazyImport
       parentRoute: typeof rootRoute
     }
   }
@@ -73,8 +85,9 @@ declare module '@tanstack/react-router' {
 export const routeTree = rootRoute.addChildren([
   IndexLazyRoute,
   LoginLazyRoute,
-  ResetPasswordLazyRoute,
   SignupLazyRoute,
+  ResetPasswordLinkLazyRoute,
+  ResetPasswordIndexLazyRoute,
 ])
 
 /* prettier-ignore-end */
