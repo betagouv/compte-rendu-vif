@@ -1,11 +1,12 @@
 import Badge from "@codegouvfr/react-dsfr/Badge";
 import Footer from "@codegouvfr/react-dsfr/Footer";
-import Header, { HeaderProps } from "@codegouvfr/react-dsfr/Header/Header";
+import Header from "@codegouvfr/react-dsfr/Header/Header";
 import MuiDsfrThemeProvider from "@codegouvfr/react-dsfr/mui";
 import { createRootRoute, Outlet } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import { PropsWithChildren } from "react";
-import { useAuthContext, useIsLoggedIn, useLogout } from "../contexts/AuthContext";
+import { useIsLoggedIn, useLogout } from "../contexts/AuthContext";
+import { Box, Flex } from "#styled-system/jsx";
 
 export const Route = createRootRoute({
   component: () => (
@@ -24,7 +25,7 @@ const Layout = ({ children }: PropsWithChildren) => {
   const logout = useLogout();
 
   return (
-    <>
+    <Flex flexDir={"column"} h="100vh">
       <Header
         brandTop={
           <>
@@ -56,9 +57,9 @@ const Layout = ({ children }: PropsWithChildren) => {
               ]),
         ]}
       />
-      {children}
+      <Box flex="1">{children}</Box>
       <TanStackRouterDevtools />
       <Footer accessibility="partially compliant" />
-    </>
+    </Flex>
   );
 };
