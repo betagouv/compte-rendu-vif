@@ -1,30 +1,45 @@
-version: "3.4"
-services:
-  postgresql:
-    image: postgres:12.5
-    ports:
-      - "${POSTGRES_PORT:-5432}:5432"
-    environment:
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-    volumes:
-      - postgresql:/var/lib/postgresql/data:delegated
+version: "3.1"
 
-    networks:
-      - vif-network
+volumes:
+  pg_data:
+
+services:
+  pg:
+    image: postgres:14-alpine
+    environment:
+      POSTGRES_PASSWORD: ${PG_PASSWORD}
+      POSTGRES_DB: ${PG_DB}
+      POSTGRES_USER: ${PG_USER}
+      POSTGRES_PORT: ${PG_PORT}
+    command:
+      - -c
+      - wal_level=logical
+    ports:
+      - 5432:5432
+    restart: always
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+      # - ./prisma/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  electric:
+    image: electricsql/electric:canary
+    depends_on:
+      - pg
+    environment:
+      DATABASE_URL: postgresql://${PG_USER}:${PG_PASSWORD}@pg:${PG_PORT}/${PG_DB}
+      DATABASE_REQUIRE_SSL: false
+      LOGICAL_PUBLISHER_HOST: electric
+      LOGICAL_PUBLISHER_PORT: 5433
+      PG_PROXY_PASSWORD: ${PG_PROXY_PASSWORD}
+      PG_PROXY_PORT: ${PG_PROXY_PORT}
+      AUTH_MODE: insecure
+    ports:
+      - 5133:5133
+      - 65432:65432
+    restart: always
 
   adminer:
     image: adminer
     restart: always
     ports:
       - "${ADMINER_PORT:-8081}:8080"
-    networks:
-      - vif-network
-
-volumes:
-  postgresql:
-
-networks:
-  vif-network:
-    driver: bridge
