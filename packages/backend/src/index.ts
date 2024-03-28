@@ -11,10 +11,9 @@ import { schema } from "../../frontend/triplit/schema";
 
 const server = createServer({
   storage: "sqlite",
+  verboseLogs: true,
   dbOptions: {
-    // migrations: migrations,
-    schema: { collections: schema },
-    // schema: { collections: schema, version: 1711473960705 },
+    schema: { collections: schema, version: 0 },
   },
 })(3000);
 

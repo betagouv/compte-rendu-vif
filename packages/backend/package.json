@@ -25,9 +25,8 @@
   },
   "dependencies": {
     "@fastify/cors": "^9.0.1",
-    "@triplit/db": "^0.3.24",
-    "@triplit/server": "^0.3.27",
-    "@triplit/server-core": "^0.3.27",
+    "@triplit/db": "^0.3.27",
+    "@triplit/server": "^0.3.30",
     "@trpc/client": "11.0.0-next.320",
     "@trpc/server": "11.0.0-next.320",
     "better-sqlite3": "^9.4.3",
