@@ -1,4 +1,5 @@
-@layer reset, base, tokens, recipes, utilities;
+@layer reset, base, tokens, dsfr, recipes, utilities;
+@import url("/dsfr/dsfr-patched.css");
 
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;

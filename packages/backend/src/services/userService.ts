@@ -28,11 +28,14 @@ export class UserService {
       .returning()
       .get();
 
-    return serializeUser(user);
+    return { user: serializeUser(user)!, token: this.generateJWT(user) };
   }
 
   async getUserById(id: string) {
-    return serializeUser(db.select().from(userTable).where(eq(userTable.id, id)).get());
+    const user = db.select().from(userTable).where(eq(userTable.id, id)).get();
+    assertUserExists(user);
+
+    return serializeUser(user!);
   }
 
   async updateUser(id: string, payload: Partial<InsertUser>) {
@@ -76,8 +79,7 @@ export class UserService {
   }
 }
 
-const serializeUser = (user?: SelectUser) => {
-  if (!user) return null;
+const serializeUser = (user: SelectUser) => {
   return pick(user, ["id", "name", "email"]);
 };
 
@@ -112,8 +114,8 @@ const verifyPassword = (password: string, hash: string) => {
 const assertUserExists = (user?: SelectUser) => {
   if (!user) {
     throw new TRPCError({
-      code: "NOT_FOUND",
-      message: "User not found",
+      code: "UNAUTHORIZED",
+      message: "Le courriel ou le mot de passe est incorrect",
     });
   }
 };
@@ -124,7 +126,7 @@ const assertPasswordsMatch = async (password: string, hash: string) => {
   if (!match) {
     throw new TRPCError({
       code: "UNAUTHORIZED",
-      message: "Invalid email or password",
+      message: "Le courriel ou le mot de passe est incorrect",
     });
   }
 };
@@ -135,7 +137,7 @@ const assertEmailDoesNotAlreadyExist = (user: Omit<InsertUser, "id">) => {
   if (userExists) {
     throw new TRPCError({
       code: "CONFLICT",
-      message: "User already exists",
+      message: "Un utilisateur avec ce courriel existe déjà",
     });
   }
 };

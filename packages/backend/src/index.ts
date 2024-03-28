@@ -3,7 +3,6 @@ import { onHmr, registerViteHmrServerRestart } from "./hmr";
 import { Schema as S, and, or } from "@triplit/db";
 
 import { createServer } from "@triplit/server";
-import { migrations } from "../../frontend/triplit/migrations";
 import { fastifyInstance } from "./router";
 import { db } from "./db/db";
 import { migrate } from "drizzle-orm/better-sqlite3/migrator";

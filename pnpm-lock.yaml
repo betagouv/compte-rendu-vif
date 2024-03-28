@@ -35,6 +35,9 @@ importers:
       better-sqlite3:
         specifier: ^9.4.3
         version: 9.4.3
+      date-fns:
+        specifier: ^3.6.0
+        version: 3.6.0
       dotenv:
         specifier: ^16.4.5
         version: 16.4.5
@@ -52,7 +55,7 @@ importers:
         version: 9.0.2
       pastable:
         specifier: ^2.2.1
-        version: 2.2.1
+        version: 2.2.1(react@18.2.0)
       reflect-metadata:
         specifier: ^0.2.1
         version: 0.2.1
@@ -132,6 +135,9 @@ importers:
       '@trpc/server':
         specifier: 11.0.0-next.320
         version: 11.0.0-next.320
+      pastable:
+        specifier: ^2.2.1
+        version: 2.2.1(react@18.2.0)
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -3824,6 +3830,10 @@ packages:
       '@babel/runtime': 7.24.1
     dev: false
 
+  /date-fns@3.6.0:
+    resolution: {integrity: sha512-fRHTG8g/Gif+kSh50gaGEdToemgfj74aRX3swtiouboip5JDLAyDE9F11nHMIcvOaXeOC6D7SpNhi7uFyB7Uww==}
+    dev: false
+
   /dayjs@1.11.10:
     resolution: {integrity: sha512-vjAczensTgRcqDERK0SR2XMwsF/tSvnvlv6VcF2GIhg6Sx4yOIt/irsr1RDJsKiIyBzJDpCoXiWWq28MqH2cnQ==}
     dev: true
@@ -6073,7 +6083,7 @@ packages:
     resolution: {integrity: sha512-CiyeOxFT/JZyN5m0z9PfXw4SCBJ6Sygz1Dpl0wqjlhDEGGBP1GnsUVEL0p63hoG1fcj3fHynXi9NYO4nWOL+qQ==}
     engines: {node: '>= 0.8'}
 
-  /pastable@2.2.1:
+  /pastable@2.2.1(react@18.2.0):
     resolution: {integrity: sha512-K4ClMxRKpgN4sXj6VIPPrvor/TMp2yPNCGtfhvV106C73SwefQ3FuegURsH7AQHpqu0WwbvKXRl1HQxF6qax9w==}
     engines: {node: '>=14.x'}
     peerDependencies:
@@ -6086,6 +6096,7 @@ packages:
         optional: true
     dependencies:
       '@babel/core': 7.24.0
+      react: 18.2.0
       ts-toolbelt: 9.6.0
       type-fest: 3.13.1
     transitivePeerDependencies:

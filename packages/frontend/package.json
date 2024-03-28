@@ -5,10 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "postinstall": "copy-dsfr-to-public",
+    "postinstall": "copy-dsfr-to-public && pnpm panda-ds",
     "icons": "only-include-used-icons",
     "panda-ds": "vite-node ./scripts/generatePandaDS.ts",
     "migration:create": "triplit migrate create"
@@ -29,6 +29,7 @@
     "@trpc/client": "11.0.0-next.320",
     "@trpc/react-query": "11.0.0-next.320",
     "@trpc/server": "11.0.0-next.320",
+    "pastable": "^2.2.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.51.1",
