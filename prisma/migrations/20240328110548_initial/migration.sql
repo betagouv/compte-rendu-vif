@@ -14,7 +14,8 @@ CREATE TABLE "User" (
 CREATE TABLE "Report" (
     "id" TEXT NOT NULL,
     "title" TEXT NOT NULL,
-    "authorId" TEXT NOT NULL,
+    "redactedBy" TEXT NOT NULL,
+    "createdById" TEXT NOT NULL,
     "meetDate" TIMESTAMP(3) NOT NULL,
     "meetLink" TEXT NOT NULL,
     "applicantName" TEXT NOT NULL,
@@ -50,15 +51,14 @@ CREATE TABLE "Clause" (
 
     CONSTRAINT "Clause_pkey" PRIMARY KEY ("id")
 );
-
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- AddForeignKey
-ALTER TABLE "Report" ADD CONSTRAINT "Report_authorId_fkey" FOREIGN KEY ("authorId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "ReportToClause" ADD CONSTRAINT "ReportToClause_reportId_fkey" FOREIGN KEY ("reportId") REFERENCES "Report"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Report" ADD CONSTRAINT "Report_createdById_fkey" FOREIGN KEY ("createdById") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "ReportToClause" ADD CONSTRAINT "ReportToClause_clauseId_fkey" FOREIGN KEY ("clauseId") REFERENCES "Clause"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ReportToClause" ADD CONSTRAINT "ReportToClause_reportId_fkey" FOREIGN KEY ("reportId") REFERENCES "Report"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

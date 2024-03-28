@@ -23,18 +23,19 @@
     "vite-node": "^1.4.0"
   },
   "dependencies": {
-    "dotenv": "^16.4.5",
-    "postgres": "^3.4.4",
-    "prisma": "^5.11.0",
     "@fastify/cors": "^9.0.1",
+    "@prisma/client": "^5.11.0",
     "@trpc/client": "11.0.0-next.320",
     "@trpc/server": "11.0.0-next.320",
     "better-sqlite3": "^9.4.3",
+    "dotenv": "^16.4.5",
     "drizzle-orm": "^0.30.4",
     "drizzle-zod": "^0.5.1",
     "fastify": "^4.26.2",
     "jsonwebtoken": "^9.0.2",
     "pastable": "^2.2.1",
+    "postgres": "^3.4.4",
+    "prisma": "^5.11.0",
     "reflect-metadata": "^0.2.1",
     "zod": "^3.22.4"
   }

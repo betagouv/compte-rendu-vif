@@ -1,6 +1,4 @@
 import { z } from "zod";
-import { userTable } from "../db/schema";
-import { db } from "../db/db";
 import { eq } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 import { pick } from "pastable";
@@ -60,19 +58,16 @@ export class UserService {
     return jwt.sign(
       {
         id: user.id,
-        "x-triplit-user-id": user.id,
-        "x-triplit-project-id": ENV.PROJECT_ID,
-        "x-triplit-token-type": "external",
       },
-      ENV.EXTERNAL_JWT_SECRET,
+      ENV.JWT_SECRET,
       {
         expiresIn: ENV.TOKEN_LIFETIME,
-      },
+      }
     );
   }
 
   validateJWT(token: string) {
-    return jwt.verify(token, ENV.EXTERNAL_JWT_SECRET) as { id: string };
+    return jwt.verify(token, ENV.JWT_SECRET) as { id: string };
   }
 }
 

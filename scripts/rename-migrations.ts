@@ -1,5 +1,7 @@
 import fs from "fs/promises";
 import path from "path";
+import { v4 } from "uuid";
+import crypto from "crypto";
 
 const migrationsPath = path.join(process.cwd(), "prisma", "migrations");
 
@@ -22,19 +24,30 @@ const existingMigrations = migrationsFolderContent
   .map((file) => Number(file.split("-")[0]))
   .filter((n) => !Number.isNaN(n));
 const maxIndex = Math.max(...existingMigrations);
-let index = maxIndex + 1 || 0;
+let index = maxIndex === -Infinity ? 0 : maxIndex + 1;
 
 for (const migration of migrations) {
-  const [_, name] = migration.split("_");
+  const newContent = await getMigrationFileContent(migration);
 
-  await fs.rename(
-    path.join(migrationsPath, migration, "migration.sql"),
-    path.join(migrationsPath, `${numberTo3Digits(index)}-${name}.sql`)
-  );
-
-  await fs.rmdir(path.join(migrationsPath, migration));
+  await fs.writeFile(path.join(migrationsPath, `${numberTo3Digits(index)}-${migration}.sql`), newContent);
 
   index++;
+}
+
+async function getMigrationFileContent(migrationName: string) {
+  const filePath = path.join(migrationsPath, migrationName, "migration.sql");
+  const fileContent = await fs.readFile(filePath, "utf-8");
+
+  const checksum = crypto.createHash("md5").update(fileContent).digest("hex");
+  const startedAt = new Date().toISOString().slice(0, 19).replace("T", " ");
+  const finishedAt = new Date().toISOString().slice(0, 19).replace("T", " ");
+  const appliedStepsCount = 1;
+
+  const query = `INSERT INTO "public"."_prisma_migrations" ("id", "checksum", "started_at", "finished_at", "migration_name", "applied_steps_count") VALUES ('${v4()}', '${checksum}', '${startedAt}', '${finishedAt}', '${migrationName}', ${appliedStepsCount});`;
+
+  const newContent = `${fileContent}\n${query}`;
+
+  return newContent;
 }
 
 function numberTo3Digits(number: number) {

@@ -7,9 +7,10 @@
     "frontend": "pnpm --filter @cr-vif/frontend",
     "backend": "pnpm --filter @cr-vif/backend",
     "migration:create": "prisma migrate dev --create-only && pnpm migration:rename",
+    "prisma:client": "prisma generate",
     "migration:rename": "vite-node ./scripts/rename-migrations.ts",
     "migration:up": "electric-sql with-config \"npx pg-migrations apply --database {{ELECTRIC_PROXY}} --directory ./prisma/migrations\"",
-    "client:generate": "electric-sql generate --client-path ./packages/frontend/src/generated/client"
+    "client:generate": "electric-sql generate --client-path ./packages/frontend/src/generated/client && prisma:client"
   },
   "keywords": [],
   "author": "",
@@ -17,10 +18,13 @@
     "@databases/pg-migrations": "^5.0.3",
     "@pandabox/prettier-plugin": "^0.1.0",
     "@types/node": "^20.11.28",
+    "@types/uuid": "^9.0.8",
     "electric-sql": "^0.9.6",
     "prettier": "^3.2.5",
     "prisma": "^5.11.0",
     "typescript": "^5.2.2",
-    "vite-node": "^1.4.0"
+    "uuid": "^9.0.1",
+    "vite-node": "^1.4.0",
+    "zod-prisma": "^0.5.4"
   }
 }
