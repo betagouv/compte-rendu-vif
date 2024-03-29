@@ -46,14 +46,22 @@ const Layout = ({ children }: PropsWithChildren) => {
           ...(isLoggedIn
             ? [
                 {
-                  iconId: "fr-icon-logout-box-r-line" as const,
+                  // iconId: "fr-icon-logout-box-r-line" as const,
                   text: "Se déconnecter",
                   buttonProps: { onClick: logout },
                 },
               ]
             : [
-                { text: "Connexion", iconId: "ri-account-box-line" as const, linkProps: { href: "/login" } },
-                { text: "Inscription", iconId: "fr-icon-add-circle-line" as const, linkProps: { href: "/signup" } },
+                {
+                  text: "Connexion",
+                  // iconId: "ri-account-circle-line" as const,
+                  linkProps: { href: "/login" },
+                },
+                {
+                  text: "Inscription",
+                  // iconId: "fr-icon-add-circle-line" as const,
+                  linkProps: { href: "/signup" },
+                },
               ]),
         ]}
       />

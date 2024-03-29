@@ -17,6 +17,9 @@ importers:
 
   packages/backend:
     dependencies:
+      '@electric-sql/pglite':
+        specifier: ^0.1.1
+        version: 0.1.1
       '@fastify/cors':
         specifier: ^9.0.1
         version: 9.0.1
@@ -498,6 +501,10 @@ packages:
     dependencies:
       superjson: 2.2.1
     dev: true
+
+  /@electric-sql/pglite@0.1.1:
+    resolution: {integrity: sha512-7tJNIJBXuiuVl6Y9ehwv9mTlQlPeQbQ7wIKn49eorToPlNnkYnBzVWpOOTkNqv6Xu4dz75vl3S/9BmlfqCqM1w==}
+    dev: false
 
   /@emotion/babel-plugin@11.11.0:
     resolution: {integrity: sha512-m4HEDZleaaCH+XgDDsPF15Ht6wTLsgDTeR3WYj9Q/k76JtWhrJjcP4+/XlG8LGT/Rol9qUfOIztXeA84ATpqPQ==}

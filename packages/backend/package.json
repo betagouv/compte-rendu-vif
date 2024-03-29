@@ -25,6 +25,7 @@
     "vite-node": "^1.4.0"
   },
   "dependencies": {
+    "@electric-sql/pglite": "^0.1.1",
     "@fastify/cors": "^9.0.1",
     "@triplit/db": "^0.3.27",
     "@triplit/server": "^0.3.30",
