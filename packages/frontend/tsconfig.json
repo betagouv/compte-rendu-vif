@@ -7,7 +7,7 @@
       "#styled-system/*": ["./styled-system/*"]
     }
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "include": ["./src/**/*.ts", "./src/**/*.tsx"],
   "extends": "../../tsconfig.json",
   "references": [{ "path": "./tsconfig.node.json" }]
 }

@@ -111,6 +111,9 @@ importers:
       '@codegouvfr/react-dsfr':
         specifier: ^1.9.2
         version: 1.9.2
+      '@cr-vif/backend':
+        specifier: workspace:*
+        version: link:../backend
       '@emotion/react':
         specifier: ^11.11.4
         version: 11.11.4(@types/react@18.2.66)(react@18.2.0)

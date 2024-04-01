@@ -36,6 +36,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.51.1",
+    "@cr-vif/backend": "workspace:*",
     "zod": "^3.22.4"
   },
   "imports": {

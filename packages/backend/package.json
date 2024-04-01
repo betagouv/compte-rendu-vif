@@ -10,6 +10,9 @@
     "dev": "vite-node --watch ./src/index.ts",
     "migration:create": "pnpm drizzle-kit generate:sqlite"
   },
+  "exports": {
+    ".": "./src/router.ts"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
