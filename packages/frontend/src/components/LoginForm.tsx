@@ -1,15 +1,14 @@
+import { css } from "#styled-system/css";
 import { Divider, Flex, styled } from "#styled-system/jsx";
-import { forwardRef, useState } from "react";
-import { FormProvider, useForm } from "react-hook-form";
-import { RouterInputs, trpc } from "../api";
-import Input from "@codegouvfr/react-dsfr/Input";
 import Alert from "@codegouvfr/react-dsfr/Alert";
-import { PasswordInput } from "./PasswordInput";
+import Input from "@codegouvfr/react-dsfr/Input";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { FullWidthButton } from "./FullWidthButton";
-import { css, cva } from "#styled-system/css";
-import { InputGroup } from "./InputGroup";
+import { useForm } from "react-hook-form";
+import { RouterInputs, trpc } from "../api";
 import { useAuthContext } from "../contexts/AuthContext";
+import { FullWidthButton } from "./FullWidthButton";
+import { InputGroup } from "./InputGroup";
+import { PasswordInput } from "./PasswordInput";
 
 export const LoginForm = () => {
   const [_, setAuthData] = useAuthContext();

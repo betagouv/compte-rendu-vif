@@ -18,10 +18,17 @@ export const tabs = defineSlotRecipe({
       fontSize: "16px",
       bgColor: "#C1C1FB",
       _selected: {
+        color: "text.title.blueFrance",
         bgColor: "white",
+        _hover: {
+          color: "text.title.blueFrance",
+        },
       },
       _horizontal: {
         pt: "2.5",
+      },
+      _hover: {
+        color: "text.title.blueFrance",
       },
     },
     content: {

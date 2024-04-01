@@ -1,13 +1,10 @@
+import { startReactDsfr } from "@codegouvfr/react-dsfr/spa";
 import React from "react";
 import ReactDOM from "react-dom/client";
-import "./index.css";
-import { createRouter, RouterProvider } from "@tanstack/react-router";
-import { routeTree } from "./routeTree.gen";
-import { startReactDsfr } from "@codegouvfr/react-dsfr/spa";
-import { TRPCProvider } from "./TrpcProvider";
-import { AuthProvider } from "./contexts/AuthContext";
-import { safeParseLocalStorage } from "./utils";
 import { App } from "./App";
+import { AuthProvider } from "./contexts/AuthContext";
+import "./index.css";
+import { TRPCProvider } from "./TrpcProvider";
 
 startReactDsfr({ defaultColorScheme: "system" });
 
