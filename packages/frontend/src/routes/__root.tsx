@@ -2,13 +2,14 @@ import Badge from "@codegouvfr/react-dsfr/Badge";
 import Footer from "@codegouvfr/react-dsfr/Footer";
 import Header from "@codegouvfr/react-dsfr/Header/Header";
 import MuiDsfrThemeProvider from "@codegouvfr/react-dsfr/mui";
-import { createRootRoute, Outlet } from "@tanstack/react-router";
+import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import { PropsWithChildren } from "react";
 import { useIsLoggedIn, useLogout } from "../contexts/AuthContext";
 import { Box, Flex } from "#styled-system/jsx";
+import { RouterOutputs } from "../api";
 
-export const Route = createRootRoute({
+export const Route = createRootRouteWithContext<Partial<RouterOutputs["login"]>>()({
   component: () => (
     <>
       <MuiDsfrThemeProvider>

@@ -6,22 +6,16 @@ import { routeTree } from "./routeTree.gen";
 import { startReactDsfr } from "@codegouvfr/react-dsfr/spa";
 import { TRPCProvider } from "./TrpcProvider";
 import { AuthProvider } from "./contexts/AuthContext";
+import { safeParseLocalStorage } from "./utils";
+import { App } from "./App";
 
 startReactDsfr({ defaultColorScheme: "system" });
-
-const router = createRouter({ routeTree });
-
-declare module "@tanstack/react-router" {
-  interface Register {
-    router: typeof router;
-  }
-}
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <TRPCProvider>
       <AuthProvider>
-        <RouterProvider router={router} />
+        <App />
       </AuthProvider>
     </TRPCProvider>
   </React.StrictMode>,

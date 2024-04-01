@@ -7,3 +7,7 @@ export const safeParseLocalStorage = (key: LocalStorageKeys) => {
   }
 };
 type LocalStorageKeys = "crvif/auth";
+
+// export const createProtectedRoute = <TFilePath extends keyof FileRoutesByPath, TRoute extends FileRoutesByPath[TFilePath]['preLoaderRoute']>(path: TFilePath):  => {
+
+// }

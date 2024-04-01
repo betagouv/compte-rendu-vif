@@ -15,6 +15,8 @@
     "migration:create": "triplit migrate create"
   },
   "dependencies": {
+    "@ark-ui/anatomy": "^2.3.1",
+    "@ark-ui/react": "^2.2.3",
     "@codegouvfr/react-dsfr": "^1.9.2",
     "@emotion/react": "^11.11.4",
     "@emotion/server": "^11.11.0",
@@ -41,7 +43,8 @@
   },
   "devDependencies": {
     "@pandabox/unplugin": "^0.0.1",
-    "@pandacss/dev": "^0.35.0",
+    "@pandacss/dev": "^0.36.1",
+    "@park-ui/panda-preset": "^0.36.1",
     "@tanstack/router-vite-plugin": "^1.20.5",
     "@triplit/cli": "^0.3.33",
     "@types/node": "^20.11.28",
@@ -54,7 +57,7 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
     "postcss": "^8.4.38",
-    "typescript": "^5.2.2",
+    "typescript": "^5.4",
     "vite": "^5.1.6",
     "vite-node": "^1.4.0"
   }

@@ -15,7 +15,11 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
 
   const setDataAndSaveInStorage = (data: Omit<AuthContextProps, "setData">) => {
     setData(data);
-    window.localStorage.setItem("crvif/auth", JSON.stringify(data));
+    if (data) {
+      window.localStorage.setItem("crvif/auth", JSON.stringify(data));
+    } else {
+      window.localStorage.removeItem("crvif/auth");
+    }
   };
 
   const value = { ...data, setData: setDataAndSaveInStorage };
@@ -36,6 +40,11 @@ export const useIsLoggedIn = () => {
 export const useLogout = () => {
   const [, setData] = useAuthContext();
   return () => setData({ token: undefined, user: undefined });
+};
+
+export const useUser = () => {
+  const { user } = useContext(AuthContext);
+  return user;
 };
 
 type AuthContextProps = Partial<RouterOutputs["login"]> & {
