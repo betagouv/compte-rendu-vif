@@ -42,7 +42,7 @@ const Layout = ({ children }: PropsWithChildren) => {
             </Badge>
           </>
         }
-        homeLinkProps={{ title: "Compte rendu vif", href: "/" }}
+        homeLinkProps={{ title: "Compte rendu vif", to: "/" }}
         quickAccessItems={[
           ...(isLoggedIn
             ? [
@@ -56,12 +56,12 @@ const Layout = ({ children }: PropsWithChildren) => {
                 {
                   text: "Connexion",
                   // iconId: "ri-account-circle-line" as const,
-                  linkProps: { href: "/login" },
+                  linkProps: { to: "/login" },
                 },
                 {
                   text: "Inscription",
                   // iconId: "fr-icon-add-circle-line" as const,
-                  linkProps: { href: "/signup" },
+                  linkProps: { to: "/signup" },
                 },
               ]),
         ]}

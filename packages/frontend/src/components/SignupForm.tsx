@@ -32,6 +32,9 @@ export const SignupForm = () => {
   const { errors: formErrors } = form.formState;
   const { error: mutationError } = mutation;
 
+  console.log(JSON.stringify(mutationError, null, 2));
+  console.log(mutationError?.data);
+
   return (
     <Flex direction="column">
       <form onSubmit={form.handleSubmit(signup)}>
@@ -76,8 +79,8 @@ export const SignupForm = () => {
 
       <h5>Vous avez déjà un compte ?</h5>
 
-      <FullWidthButton priority="secondary" onClick={() => {}}>
-        <Link to="/login">Se connecter</Link>
+      <FullWidthButton priority="secondary" linkProps={{ to: "/login" }}>
+        Se connecter
       </FullWidthButton>
     </Flex>
   );

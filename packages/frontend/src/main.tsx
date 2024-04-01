@@ -5,8 +5,9 @@ import { App } from "./App";
 import { TRPCProvider } from "./TrpcProvider";
 import { AuthProvider } from "./contexts/AuthContext";
 import "./index.css";
+import { Link } from "@tanstack/react-router";
 
-startReactDsfr({ defaultColorScheme: "system" });
+startReactDsfr({ defaultColorScheme: "system", Link: Link });
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
@@ -17,3 +18,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     </TRPCProvider>
   </React.StrictMode>,
 );
+
+declare module "@codegouvfr/react-dsfr/spa" {
+  interface RegisterLink {
+    Link: typeof Link;
+  }
+}

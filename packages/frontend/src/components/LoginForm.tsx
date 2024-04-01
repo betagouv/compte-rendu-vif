@@ -73,7 +73,7 @@ export const LoginForm = () => {
           <Link to="/reset-password">Mot de passe oublié</Link>
         </styled.div>
 
-        <FullWidthButton className={css({ mt: "1.5rem " })} type="submit" onClick={form.handleSubmit(login)}>
+        <FullWidthButton className={css({ mt: "1.5rem" })} type="submit" onClick={form.handleSubmit(login)}>
           Se connecter
         </FullWidthButton>
       </form>
@@ -82,8 +82,8 @@ export const LoginForm = () => {
 
       <h5>Vous n'avez pas de compte ?</h5>
 
-      <FullWidthButton priority="secondary" onClick={() => {}}>
-        <Link to="/signup">Créer un compte</Link>
+      <FullWidthButton linkProps={{ to: "/signup" }} priority="secondary">
+        Créer un compte
       </FullWidthButton>
     </Flex>
   );

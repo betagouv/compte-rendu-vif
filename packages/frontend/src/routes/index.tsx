@@ -1,23 +1,12 @@
-import { Center, CenterProps, Flex, styled } from "#styled-system/jsx";
-import { createFileRoute, createLazyFileRoute, redirect, useNavigate } from "@tanstack/react-router";
-import { useQuery } from "@triplit/react";
-import { db } from "../db";
-import Button from "@codegouvfr/react-dsfr/Button";
 import { css } from "#styled-system/css";
+import { Center, CenterProps, Flex, styled } from "#styled-system/jsx";
+import Button from "@codegouvfr/react-dsfr/Button";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import { Tabs } from "../components/Tabs";
-import { useAuthContext, useIsLoggedIn, useUser } from "../contexts/AuthContext";
-import { useLayoutEffect } from "react";
-
-const query = db.query("delegations");
+import { useUser } from "../contexts/AuthContext";
 
 const Index = () => {
   const user = useUser()!;
-  const onClick = async () => {
-    await db.insert("delegations", {
-      createdBy: "d79a5b57-0f51-48d5-b0ff-94bdb8e459d4",
-      delegatedTo: "random2",
-    });
-  };
 
   const options = [
     { id: "my", label: user.name },

@@ -1,6 +1,5 @@
 import "./envVars";
 import { onHmr, registerViteHmrServerRestart } from "./hmr";
-import { Schema as S, and, or } from "@triplit/db";
 
 import { createServer } from "@triplit/server";
 import { db } from "./db/db";
@@ -10,6 +9,8 @@ import { fastifyTRPCPlugin, FastifyTRPCPluginOptions } from "@trpc/server/adapte
 import fastify from "fastify";
 import { appRouter, AppRouter } from "./router";
 import { createContext } from "./trpc";
+import cors from "@fastify/cors";
+import { ENV } from "./envVars";
 
 const server = createServer({
   storage: "sqlite",
@@ -25,27 +26,28 @@ const start = async () => {
 
   migrate(db, { migrationsFolder: "./drizzle" });
 
-  // const fastifyInstance = fastify({ maxParamLength: 5000 });
+  const fastifyInstance = fastify({ maxParamLength: 5000 });
 
-  // fastifyInstance.register(cors, {
-  //   origin: "*",
-  // });
+  fastifyInstance.register(cors, {
+    origin: "*",
+  });
 
-  // fastifyInstance.register(fastifyTRPCPlugin, {
-  //   prefix: "/api",
-  //   trpcOptions: {
-  //     router: appRouter,
-  //     createContext,
-  //     onError({ path, error }) {
-  //       console.error(`[${path}] ${error.message}`);
-  //     },
-  //   } satisfies FastifyTRPCPluginOptions<AppRouter>["trpcOptions"],
-  // });
+  fastifyInstance.register(fastifyTRPCPlugin, {
+    prefix: "/api",
+    trpcOptions: {
+      router: appRouter,
+      createContext,
+      onError({ path, error }) {
+        console.error(`[${path}] ${error.message}`);
+      },
+    } satisfies FastifyTRPCPluginOptions<AppRouter>["trpcOptions"],
+  });
 
-  const b = appRouter.listen({ port: 3001 });
+  await fastifyInstance.listen({ port: ENV.HTTP_PORT });
 
-  onHmr(() => {
+  onHmr(async () => {
     server.close();
+    await fastifyInstance.close();
   });
 };
 

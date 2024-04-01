@@ -1,6 +1,7 @@
-import { RouterProvider, createRouter } from "@tanstack/react-router";
+import { LinkProps, RouterProvider, createRouter } from "@tanstack/react-router";
 import { useAuthContext } from "./contexts/AuthContext";
 import { routeTree } from "./routeTree.gen";
+import { RegisteredLinkProps } from "@codegouvfr/react-dsfr/link";
 
 export const App = () => {
   const [auth] = useAuthContext();

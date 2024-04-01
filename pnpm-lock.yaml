@@ -26,6 +26,9 @@ importers:
       '@fastify/cors':
         specifier: ^9.0.1
         version: 9.0.1
+      '@sinclair/typebox':
+        specifier: ^0.32.20
+        version: 0.32.20
       '@triplit/db':
         specifier: ^0.3.27
         version: 0.3.27(react@18.2.0)
