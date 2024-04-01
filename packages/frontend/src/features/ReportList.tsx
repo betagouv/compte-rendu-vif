@@ -1,5 +1,5 @@
 import { Flex } from "#styled-system/jsx";
-import { Report } from "../../triplit/schema";
+import { Report } from "../../../backend/triplit/schema";
 
 export const ReportList = ({ reports }: { reports: Report[] }) => {
   return (
