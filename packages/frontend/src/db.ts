@@ -1,12 +1,18 @@
-import { TriplitClient } from "@triplit/client";
-import { schema } from "../../backend/triplit/schema";
+// import { TriplitClient } from "@triplit/client";
+import { ENV } from "./envVars";
 
-const mockToken =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImQ3OWE1YjU3LTBmNTEtNDhkNS1iMGZmLTk0YmRiOGU0NTlkNCIsIngtdHJpcGxpdC11c2VyLWlkIjoiZDc5YTViNTctMGY1MS00OGQ1LWIwZmYtOTRiZGI4ZTQ1OWQ0IiwieC10cmlwbGl0LXByb2plY3QtaWQiOiJjcnZpZiIsIngtdHJpcGxpdC10b2tlbi10eXBlIjoiZXh0ZXJuYWwiLCJpYXQiOjE3MTE1MzA4ODQsImV4cCI6MTcxMjEzNTY4NH0.hbOxcbL60CLoworrkdX4emra4HzB9zdG_nqkYLrbGyw";
+// export const db = new TriplitClient({
+//   serverUrl: ENV.VITE_TRIPLIT_URL,
+//   schema: {},
+//   storage: "indexeddb",
+// });
+import { isValidAutomergeUrl, Repo } from "@automerge/automerge-repo";
+import { BroadcastChannelNetworkAdapter } from "@automerge/automerge-repo-network-broadcastchannel";
+import { IndexedDBStorageAdapter } from "@automerge/automerge-repo-storage-indexeddb";
+import { next as A } from "@automerge/automerge"; //why `next`? See the the "next" section of the conceptual overview
+import { BrowserWebSocketClientAdapter } from "@automerge/automerge-repo-network-websocket";
 
-export const db = new TriplitClient({
-  serverUrl: "http://localhost:3000",
-  token: mockToken,
-  schema: schema,
-  storage: "indexeddb",
+export const repo = new Repo({
+  network: [new BroadcastChannelNetworkAdapter(), new BrowserWebSocketClientAdapter(ENV.VITE_WS_URL)],
+  storage: new IndexedDBStorageAdapter(),
 });

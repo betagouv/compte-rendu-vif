@@ -1,6 +1,7 @@
 import { defineConfig, definePreset } from "@pandacss/dev";
 import theme from "./dsfr-tokens.json";
 import { tabs } from "./theme/recipes/tabs";
+
 const dsfrPreset = definePreset(theme);
 
 export default defineConfig({

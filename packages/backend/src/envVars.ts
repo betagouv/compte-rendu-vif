@@ -13,6 +13,7 @@ const envSchema = z.object({
   TOKEN_LIFETIME: z.string().default("1w"),
   // EMAIL_CLIENT_ID: z.string(),
   // EMAIL_CLIENT_SECRET: z.string(),
+  WS_PORT: stringOrNumberAsNumber.default(3002),
   NODE_ENV: z.string().default("development"),
   TRIPLIT_PORT: stringOrNumberAsNumber.default(3000),
   HTTP_PORT: stringOrNumberAsNumber.default(3001),

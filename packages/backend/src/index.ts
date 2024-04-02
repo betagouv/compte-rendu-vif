@@ -1,10 +1,10 @@
 import "./envVars";
 import { onHmr, registerViteHmrServerRestart } from "./hmr";
 
-import { createServer } from "@triplit/server";
+// import { createServer } from "@triplit/server";
 import { db } from "./db/db";
 import { migrate } from "drizzle-orm/better-sqlite3/migrator";
-import { schema } from "../triplit/schema";
+// import { schema } from "../../frontend/triplit/schema";
 import { fastifyTRPCPlugin, FastifyTRPCPluginOptions } from "@trpc/server/adapters/fastify";
 import fastify from "fastify";
 import { appRouter, AppRouter } from "./router";
@@ -12,13 +12,13 @@ import { createContext } from "./trpc";
 import cors from "@fastify/cors";
 import { ENV } from "./envVars";
 
-const server = createServer({
-  storage: "sqlite",
-  verboseLogs: true,
-  dbOptions: {
-    schema: { collections: schema, version: 0 },
-  },
-})(3000);
+// const server = createServer({
+//   storage: "sqlite",
+//   verboseLogs: true,
+//   dbOptions: {
+//     schema: { collections: schema, version: 0 },
+//   },
+// })(ENV.TRIPLIT_PORT);
 
 const start = async () => {
   await registerViteHmrServerRestart();
@@ -46,16 +46,17 @@ const start = async () => {
   await fastifyInstance.listen({ port: ENV.HTTP_PORT });
 
   onHmr(async () => {
-    server.close();
+    // server.close();
     await fastifyInstance.close();
   });
 };
 
 start();
 process.on("SIGINT", function () {
-  server.close(() => {
-    console.log("Shut down server");
-    // some cleanup code
-    process.exit();
-  });
+  process.exit();
+  // server.close(() => {
+  //   console.log("Shut down server");
+  //   // some cleanup code
+  //   process.exit();
+  // });
 });

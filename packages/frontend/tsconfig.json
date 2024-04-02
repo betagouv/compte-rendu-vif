@@ -23,5 +23,6 @@
       "#styled-system/*": ["./styled-system/*"]
     }
   },
-  "include": ["src", "scripts/**/*.ts", "../backend/triplit/**/*.ts"]
+  "include": ["src/**/*.tsx", "src/**/*.ts", "scripts/**/*.ts"],
+  "references": [{ "path": "./tsconfig.node.json" }]
 }

@@ -16,7 +16,7 @@ const Index = () => {
   return (
     <Flex direction="column">
       <Banner pt="30px" pb="40px">
-        <styled.div color="text.title.blueFrance" fontSize="18px" fontWeight="bold">
+        <styled.div color="text-title-blue-france" fontSize="18px" fontWeight="bold">
           Compte-rendu VIF
         </styled.div>
         <Button className={css({ mt: "15px" })} iconId="ri-add-line">
@@ -50,5 +50,5 @@ export const Route = createFileRoute("/")({
 });
 
 const Banner = (props: CenterProps) => {
-  return <Center flexDir="column" bgColor="background.open.blueFrance" {...props} />;
+  return <Center flexDir="column" bgColor="background-open-blue-france" {...props} />;
 };

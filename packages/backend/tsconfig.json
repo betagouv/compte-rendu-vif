@@ -25,5 +25,6 @@
     "strictBindCallApply": false,
     "lib": ["es2022"],
     "types": ["node"]
-  }
+  },
+  "include": ["src/**/*.ts"]
 }
