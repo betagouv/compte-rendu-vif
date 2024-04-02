@@ -24,6 +24,7 @@ export default defineConfig({
         tabs: tabs,
       },
       tokens: {},
+      semanticTokens: {},
     },
   },
 
