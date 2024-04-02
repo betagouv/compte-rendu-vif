@@ -24,3 +24,9 @@
   height: 100vh;
   overflow-y: auto;
 }
+
+*,
+::before,
+::after {
+  box-sizing: border-box;
+}
