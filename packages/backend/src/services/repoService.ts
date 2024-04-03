@@ -32,32 +32,30 @@ export class RepoService {
   }
 }
 
-import * as Y from "yjs";
-import { Server } from "@hocuspocus/server";
+// import * as Y from "yjs";
+// import { Server } from "@hocuspocus/server";
 
-// import { Hocuspocus } from "@hocuspocus/server";
-import { SQLite } from "@hocuspocus/extension-sqlite";
+// // import { Hocuspocus } from "@hocuspocus/server";
+// import { SQLite } from "@hocuspocus/extension-sqlite";
 
-const sqlite = new SQLite({
-  database: "../../local_db/hocuspocus.sqlite",
-});
-const server = Server.configure({
-  port: ENV.WS_PORT,
+// const sqlite = new SQLite({
+//   database: "../../local_db/hocuspocus.sqlite",
+// });
+// const server = Server.configure({
+//   port: ENV.WS_PORT,
 
-  onChange: async (payload) => {
-    console.log(payload.document);
-  },
+//   onChange: async (payload) => {
+//     console.log(payload.document);
+//   },
 
-  onAuthenticate: async (payload) => {
-    payload.documentName
-  }
+//   onAuthenticate: async (payload) => {
+//     payload.documentName;
+//   },
+// });
 
-  extensions: [sqlite],
-});
+// server.listen();
 
-server.listen();
-
-onHmr(() => server.destroy());
+// onHmr(() => server.destroy());
 
 // const doc = new Y.Doc();
 // const wsProvider = new WebsocketProvider("ws://localhost:1234", "roomName", doc, { WebSocketPolyfill: ws });

@@ -93,12 +93,9 @@ export class UserService {
   generateJWT(user: SelectUser) {
     return jwt.sign(
       {
-        id: user.id,
-        "x-triplit-user-id": user.id,
-        "x-triplit-project-id": ENV.PROJECT_ID,
-        "x-triplit-token-type": "external",
+        sub: user.id,
       },
-      ENV.EXTERNAL_JWT_SECRET,
+      ENV.JWT_SECRET,
       {
         expiresIn: ENV.TOKEN_LIFETIME,
       },
@@ -106,7 +103,7 @@ export class UserService {
   }
 
   validateJWT(token: string) {
-    return jwt.verify(token, ENV.EXTERNAL_JWT_SECRET) as { id: string };
+    return jwt.verify(token, ENV.JWT_SECRET) as { id: string };
   }
 }
 

@@ -5,12 +5,17 @@
   "main": "index.js",
   "scripts": {
     "frontend": "pnpm --filter @cr-vif/frontend",
-    "backend": "pnpm --filter @cr-vif/backend"
+    "backend": "pnpm --filter @cr-vif/backend",
+    "migrate": "pnpm migration:up && pnpm client:generate",
+    "migration:up": "pnpm electric-sql with-config \"pnpm pg-migrations apply --database {{ELECTRIC_PROXY}} --directory ./migrations\"",
+    "client:generate": "pnpm frontend client:generate"
   },
   "keywords": [],
   "author": "",
   "devDependencies": {
+    "@databases/pg-migrations": "^5.0.3",
     "@pandabox/prettier-plugin": "^0.1.0",
+    "electric-sql": "^0.9.5",
     "prettier": "^3.2.5"
   },
   "pnpm": {}

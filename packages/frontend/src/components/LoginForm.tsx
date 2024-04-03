@@ -2,28 +2,27 @@ import { css } from "#styled-system/css";
 import { Divider, Flex, styled } from "#styled-system/jsx";
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import Input from "@codegouvfr/react-dsfr/Input";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate, useRouter } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import { RouterInputs, trpc } from "../api";
 import { useAuthContext } from "../contexts/AuthContext";
 import { FullWidthButton } from "./FullWidthButton";
 import { InputGroup } from "./InputGroup";
 import { PasswordInput } from "./PasswordInput";
+import { getDefaultRedirectUrl } from "../utils";
 
 export const LoginForm = () => {
-  const [_, setAuthData] = useAuthContext();
+  const [authData, setAuthData] = useAuthContext();
   const form = useForm<RouterInputs["login"]>();
 
   const navigate = useNavigate();
+  const router = useRouter();
 
   const mutation = trpc.login.useMutation();
 
   const login = async (values: RouterInputs["login"]) => {
     const response = await mutation.mutateAsync(values);
-    setAuthData(response);
-
-    const shouldRedirectTo = new URLSearchParams(window.location.search).get("redirect") || "/";
-    navigate({ to: shouldRedirectTo });
+    setAuthData({ ...authData, ...response });
   };
 
   const { error: mutationError } = mutation;

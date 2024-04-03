@@ -56,3 +56,4 @@ robots.txt
 /.out
 
 local_db/*
+.electric_migrations_*

@@ -2,6 +2,7 @@ import { createLazyFileRoute } from "@tanstack/react-router";
 import { SignupForm } from "../components/SignupForm";
 import { Center, Flex } from "#styled-system/jsx";
 import { styled } from "#styled-system/jsx";
+import { RedirectIfUser } from "../components/RedirectIfUser";
 
 const SignupPage = () => {
   return (
@@ -15,5 +16,9 @@ const SignupPage = () => {
 };
 
 export const Route = createLazyFileRoute("/signup")({
-  component: () => <SignupPage />,
+  component: () => (
+    <RedirectIfUser>
+      <SignupPage />
+    </RedirectIfUser>
+  ),
 });

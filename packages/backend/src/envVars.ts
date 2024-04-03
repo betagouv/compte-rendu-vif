@@ -11,6 +11,7 @@ const envSchema = z.object({
   EXTERNAL_JWT_SECRET: z.string(),
   PROJECT_ID: z.string(),
   TOKEN_LIFETIME: z.string().default("1w"),
+  JWT_SECRET: z.string(),
   // EMAIL_CLIENT_ID: z.string(),
   // EMAIL_CLIENT_SECRET: z.string(),
   WS_PORT: stringOrNumberAsNumber.default(3002),

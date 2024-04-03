@@ -4,10 +4,17 @@ import Button from "@codegouvfr/react-dsfr/Button";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { Tabs } from "../components/Tabs";
 import { useUser } from "../contexts/AuthContext";
+import { db } from "../db";
+import { EnsureUser } from "../components/EnsureUser";
+import { useLiveQuery } from "electric-sql/react";
 
 const Index = () => {
   const user = useUser()!;
 
+  const getAllReportsQuery = db.report.liveMany({ where: { ownedby: user.id } });
+  const query = useLiveQuery(getAllReportsQuery);
+
+  console.log(query);
   const options = [
     { id: "my", label: user.name },
     { id: "udap", label: "UDAP" },
@@ -41,8 +48,13 @@ const Index = () => {
 };
 
 export const Route = createFileRoute("/")({
-  component: Index,
+  component: () => (
+    <EnsureUser>
+      <Index />
+    </EnsureUser>
+  ),
   beforeLoad: ({ context, location }) => {
+    console.log(context);
     if (!context.token || !context.user) {
       throw redirect({ to: "/login", search: { redirect: location.href } });
     }

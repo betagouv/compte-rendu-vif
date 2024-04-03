@@ -1,6 +1,10 @@
-import { PropsWithChildren, createContext, useContext, useState } from "react";
+import { PropsWithChildren, createContext, useContext, useMemo, useState } from "react";
 import { RouterOutputs } from "../api";
 import { safeParseLocalStorage } from "../utils";
+import { useQuery } from "@tanstack/react-query";
+import { electric } from "../db";
+import { useNavigate, useParams } from "@tanstack/react-router";
+import { useHref } from "../hooks/useHref";
 
 const initialAuth = safeParseLocalStorage("crvif/auth");
 
@@ -8,10 +12,26 @@ const AuthContext = createContext<AuthContextProps>({
   token: initialAuth?.token,
   user: initialAuth?.user,
   setData: null as any,
+  electricStatus: "idle",
 });
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
   const [data, setData] = useState<Omit<AuthContextProps, "setData">>(initialAuth);
+
+  const electricQuery = useQuery({
+    queryKey: ["electric", data?.token!],
+    queryFn: async () => {
+      if (electric.isConnected) electric.disconnect();
+      console.log(await electric.connect(data.token!));
+      return true;
+    },
+    enabled: !!data?.token,
+    refetchOnWindowFocus: false,
+  });
+
+  if (electricQuery.isError) {
+    console.error("electricQuery error", electricQuery.error);
+  }
 
   const setDataAndSaveInStorage = (data: Omit<AuthContextProps, "setData">) => {
     setData(data);
@@ -22,8 +42,10 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     }
   };
 
-  const value = { ...data, setData: setDataAndSaveInStorage };
-  console.log(data);
+  const value = { ...data, setData: setDataAndSaveInStorage, electricStatus: electricQuery.status };
+  //   [data, electricQuery.status],
+  // );
+
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
@@ -38,8 +60,11 @@ export const useIsLoggedIn = () => {
 };
 
 export const useLogout = () => {
-  const [, setData] = useAuthContext();
-  return () => setData({ token: undefined, user: undefined });
+  const [data, setData] = useAuthContext();
+
+  return () => {
+    setData({ ...data, token: undefined, user: undefined });
+  };
 };
 
 export const useUser = () => {
@@ -49,4 +74,5 @@ export const useUser = () => {
 
 type AuthContextProps = Partial<RouterOutputs["login"]> & {
   setData: (data: Omit<AuthContextProps, "setData">) => void;
+  electricStatus: "error" | "pending" | "success" | "idle";
 };
