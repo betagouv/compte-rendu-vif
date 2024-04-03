@@ -30,6 +30,7 @@
     "@emotion/server": "^11.11.0",
     "@emotion/styled": "^11.11.0",
     "@gouvfr/dsfr-chart": "^1.0.0",
+    "@hocuspocus/provider": "^2.11.3",
     "@mui/material": "^5.15.14",
     "@tanstack/react-query": "^5.28.8",
     "@tanstack/react-router": "^1.22.2",
@@ -45,6 +46,7 @@
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.51.1",
     "vite-plugin-wasm": "^3.3.0",
+    "yjs": "^13.6.14",
     "zod": "^3.22.4"
   },
   "imports": {

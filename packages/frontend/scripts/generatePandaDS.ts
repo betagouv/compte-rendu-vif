@@ -5,39 +5,39 @@ import { fr } from "@codegouvfr/react-dsfr";
 
 export const generatePandaDSRegex = async () => {
   const variables = getColorVariablesFromFr();
-  await fs.writeFile("./dsfr-variables.json", JSON.stringify(variables, null, 2));
-  // let dsfrContent = await fs.readFile("./public/dsfr/dsfr.min.css", "utf-8");
-  // dsfrContent = dsfrContent.slice('@charset "UTF-8";'.length);
+  await fs.writeFile("./WIP-dsfr-variables.json", JSON.stringify(variables, null, 2));
+  let dsfrContent = await fs.readFile("./public/dsfr/dsfr.min.css", "utf-8");
+  dsfrContent = dsfrContent.slice('@charset "UTF-8";'.length);
 
-  // const parser = new Parser(dsfrContent);
+  const parser = new Parser(dsfrContent);
 
-  // const fontFaces = parser.extractFontFaces();
-  // const { light, dark, rootBlock, darkRootBlock } = parser.extractLightAndDarkVariables();
-  // const semanticTokens = getSemanticTokens({ light, dark });
+  const fontFaces = parser.extractFontFaces();
+  const { light, dark, rootBlock, darkRootBlock } = parser.extractLightAndDarkVariables();
+  const semanticTokens = getSemanticTokens({ light, dark });
 
-  // const replaced = parser.replaceVariableNames(semanticTokens);
-  // const newContent = [rootBlock, darkRootBlock, ...fontFaces, "@layer dsfr {", replaced, "}"].join("\n");
+  const replaced = parser.replaceVariableNames(semanticTokens);
+  const newContent = [rootBlock, darkRootBlock, ...fontFaces, "@layer dsfr {", replaced, "}"].join("\n");
 
-  // const { textStyles, fontWeights } = parseTypography();
+  const { textStyles, fontWeights } = parseTypography();
 
-  // const tokens = defineConfig({
-  //   theme: {
-  //     extend: {
-  //       tokens: {
-  //         spacing: parseSpacings(),
-  //         fontWeights,
-  //       },
-  //       semanticTokens: {
-  //         colors: semanticTokens,
-  //       },
-  //       breakpoints: parseBreakpoints(),
-  //       textStyles,
-  //     },
-  //   },
-  // });
+  const tokens = defineConfig({
+    theme: {
+      extend: {
+        tokens: {
+          spacing: parseSpacings(),
+          fontWeights,
+        },
+        semanticTokens: {
+          colors: semanticTokens,
+        },
+        breakpoints: parseBreakpoints(),
+        textStyles,
+      },
+    },
+  });
 
-  // await fs.writeFile("./dsfr-tokens.json", JSON.stringify(tokens, null, 2));
-  // await fs.writeFile("./public/dsfr/dsfr-patched.css", newContent);
+  await fs.writeFile("./dsfr-tokens.json", JSON.stringify(tokens, null, 2));
+  await fs.writeFile("./public/dsfr/dsfr-patched.css", newContent);
 };
 
 const getColorVariablesFromFr = () => {

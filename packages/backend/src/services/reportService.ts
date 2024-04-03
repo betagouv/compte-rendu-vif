@@ -1,1 +1,3 @@
-export class ReportService {}
+export class ReportService {
+  async getReports() {}
+}

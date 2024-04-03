@@ -32,6 +32,37 @@ export class RepoService {
   }
 }
 
+import * as Y from "yjs";
+import { Server } from "@hocuspocus/server";
+
+// import { Hocuspocus } from "@hocuspocus/server";
+import { SQLite } from "@hocuspocus/extension-sqlite";
+
+const sqlite = new SQLite({
+  database: "../../local_db/hocuspocus.sqlite",
+});
+const server = Server.configure({
+  port: ENV.WS_PORT,
+
+  onChange: async (payload) => {
+    console.log(payload.document);
+  },
+
+  onAuthenticate: async (payload) => {
+    payload.documentName
+  }
+
+  extensions: [sqlite],
+});
+
+server.listen();
+
+onHmr(() => server.destroy());
+
+// const doc = new Y.Doc();
+// const wsProvider = new WebsocketProvider("ws://localhost:1234", "roomName", doc, { WebSocketPolyfill: ws });
+
+// wsProvider.on("status", (e) => console.log(e.status));
 // const uuid = Uint8Array.from([
 //   251, 65, 151, 55, 143, 34, 76, 8, 178, 152, 120, 121, 62, 243, 20, 225,
 // ]) as BinaryDocumentId;

@@ -6,6 +6,22 @@ import { useEffect } from "react";
 import { repo } from "../db";
 import { AutomergeUrl } from "@automerge/automerge-repo";
 import Button from "@codegouvfr/react-dsfr/Button";
+import * as Y from "yjs";
+import { HocuspocusProvider } from "@hocuspocus/provider";
+import { ENV } from "../envVars";
+
+const provider = new HocuspocusProvider({
+  url: ENV.VITE_WS_URL,
+  name: "example-document",
+});
+
+const reports = provider.document.getArray("reports");
+
+reports.observe((event) => {
+  console.log(event);
+});
+
+reports.push([{ name: "salut" }]);
 
 const LoginPage = () => {
   // const repoId = "automerge:aUh5StGvbgp6yupwW4JpTejB2f2";
@@ -15,6 +31,11 @@ const LoginPage = () => {
   // console.log(repoIdQuery.data);
 
   useEffect(() => {
+    console.log(reports.toJSON());
+
+    setTimeout(() => {
+      console.log(reports.toJSON());
+    }, 2000);
     // const repoId = localStorage.getItem("repoId") as AutomergeUrl | undefined;
     // if (!repoId) return;
     // const handle = repo.find<{ name: string }>(repoId);
