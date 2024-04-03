@@ -7,14 +7,11 @@ import { useUser } from "../contexts/AuthContext";
 import { db } from "../db";
 import { EnsureUser } from "../components/EnsureUser";
 import { useLiveQuery } from "electric-sql/react";
+import { AllReports, MyReports } from "../features/ReportList";
 
 const Index = () => {
   const user = useUser()!;
 
-  const getAllReportsQuery = db.report.liveMany({ where: { ownedby: user.id } });
-  const query = useLiveQuery(getAllReportsQuery);
-
-  console.log(query);
   const options = [
     { id: "my", label: user.name },
     { id: "udap", label: "UDAP" },
@@ -26,7 +23,7 @@ const Index = () => {
         <styled.div color="text-title-blue-france" fontSize="18px" fontWeight="bold">
           Compte-rendu VIF
         </styled.div>
-        <Button className={css({ mt: "15px" })} iconId="ri-add-line">
+        <Button className={css({ mt: "15px" })} iconId="ri-add-line" linkProps={{ to: "/create" }}>
           Créer un compte-rendu
         </Button>
       </Banner>
@@ -40,8 +37,12 @@ const Index = () => {
           ))}
           <Tabs.Indicator />
         </Tabs.List>
-        <Tabs.Content value="my">Know React? Check out Solid!</Tabs.Content>
-        <Tabs.Content value="udap">Know Solid? Check out Svelte!</Tabs.Content>
+        <Tabs.Content value="my">
+          <MyReports />
+        </Tabs.Content>
+        <Tabs.Content value="udap">
+          <AllReports />
+        </Tabs.Content>
       </Tabs.Root>
     </Flex>
   );
@@ -54,7 +55,6 @@ export const Route = createFileRoute("/")({
     </EnsureUser>
   ),
   beforeLoad: ({ context, location }) => {
-    console.log(context);
     if (!context.token || !context.user) {
       throw redirect({ to: "/login", search: { redirect: location.href } });
     }

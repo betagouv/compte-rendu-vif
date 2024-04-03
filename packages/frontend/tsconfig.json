@@ -9,7 +9,7 @@
     /* Bundler mode */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
-    "resolveJsonModule": true,
+    "resolveJsonModule": false,
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
@@ -23,6 +23,16 @@
       "#styled-system/*": ["./styled-system/*"]
     }
   },
-  "include": ["src/**/*.tsx", "src/**/*.ts", "scripts/**/*.ts"],
+  "include": ["src/**/*.tsx", "src/**/*.ts"],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "build",
+    "coverage",
+    "public",
+    "scripts",
+    "src/**/*.test.ts",
+    "src/**/*.test.tsx"
+  ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

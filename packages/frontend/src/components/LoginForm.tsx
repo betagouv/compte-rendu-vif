@@ -77,7 +77,7 @@ export const LoginForm = () => {
         </FullWidthButton>
       </form>
 
-      <Divider my="20px" color="#DDDDDD" />
+      <Divider my="20px" />
 
       <h5>Vous n'avez pas de compte ?</h5>
 

@@ -29,6 +29,16 @@ export default defineConfig({
     },
   },
 
+  patterns: {
+    extend: {
+      divider: {
+        defaultValues: {
+          bgColor: "#DDDDDD",
+        },
+      },
+    },
+  },
+
   // The output directory for your css system
   outdir: "styled-system",
 });

@@ -14,7 +14,9 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
 
 export type ClausePayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
   name: "Clause"
-  objects: {}
+  objects: {
+    report_to_clause: Report_to_clausePayload<ExtArgs>[]
+  }
   scalars: $Extensions.GetResult<{
     id: string
     label: string
@@ -30,28 +32,30 @@ export type ClausePayload<ExtArgs extends $Extensions.Args = $Extensions.Default
 export type Clause = runtime.Types.DefaultSelection<ClausePayload>
 export type ReportPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
   name: "Report"
-  objects: {}
+  objects: {
+    report_to_clause: Report_to_clausePayload<ExtArgs>[]
+  }
   scalars: $Extensions.GetResult<{
     id: string
     title: string
-    redactedby: string
-    ownedby: string
-    createdbyid: string
-    meetdate: Date
-    meetlink: string
-    applicantname: string
-    applicanttype: string
-    projectstatus: string
-    projectcadastralref: string
-    projectlandcontact: string
-    projectspacetype: string
-    projectnature: string
-    projectdescription: string
+    redacted_by: string
+    owned_by: string
+    created_by_id: string
+    meet_date: Date
+    meet_link: string
+    applicant_name: string
+    applicant_type: string
+    project_status: string
+    project_cadastral_ref: string
+    project_land_contact: string
+    project_space_type: string
+    project_nature: string
+    project_description: string
     decision: string
-    decisioncomment: string
+    decision_comment: string
     contacts: string
-    createdat: Date
-    updatedat: Date
+    created_at: Date
+    updated_at: Date
   }, ExtArgs["result"]["report"]>
   composites: {}
 }
@@ -63,11 +67,14 @@ export type ReportPayload<ExtArgs extends $Extensions.Args = $Extensions.Default
 export type Report = runtime.Types.DefaultSelection<ReportPayload>
 export type Report_to_clausePayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
   name: "Report_to_clause"
-  objects: {}
+  objects: {
+    clause: ClausePayload<ExtArgs>
+    report: ReportPayload<ExtArgs>
+  }
   scalars: $Extensions.GetResult<{
     id: string
-    reportid: string
-    clauseid: string
+    report_id: string
+    clause_id: string
   }, ExtArgs["result"]["report_to_clause"]>
   composites: {}
 }
@@ -1109,6 +1116,75 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
    */
 
 
+  /**
+   * Count Type ClauseCountOutputType
+   */
+
+
+  export type ClauseCountOutputType = {
+    report_to_clause: number
+  }
+
+  export type ClauseCountOutputTypeSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    report_to_clause?: boolean | ClauseCountOutputTypeCountReport_to_clauseArgs
+  }
+
+  // Custom InputTypes
+
+  /**
+   * ClauseCountOutputType without action
+   */
+  export type ClauseCountOutputTypeArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ClauseCountOutputType
+     */
+    select?: ClauseCountOutputTypeSelect<ExtArgs> | null
+  }
+
+
+  /**
+   * ClauseCountOutputType without action
+   */
+  export type ClauseCountOutputTypeCountReport_to_clauseArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    where?: Report_to_clauseWhereInput
+  }
+
+
+
+  /**
+   * Count Type ReportCountOutputType
+   */
+
+
+  export type ReportCountOutputType = {
+    report_to_clause: number
+  }
+
+  export type ReportCountOutputTypeSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    report_to_clause?: boolean | ReportCountOutputTypeCountReport_to_clauseArgs
+  }
+
+  // Custom InputTypes
+
+  /**
+   * ReportCountOutputType without action
+   */
+  export type ReportCountOutputTypeArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReportCountOutputType
+     */
+    select?: ReportCountOutputTypeSelect<ExtArgs> | null
+  }
+
+
+  /**
+   * ReportCountOutputType without action
+   */
+  export type ReportCountOutputTypeCountReport_to_clauseArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    where?: Report_to_clauseWhereInput
+  }
+
+
 
   /**
    * Models
@@ -1264,12 +1340,19 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id?: boolean
     label?: boolean
     value?: boolean
+    report_to_clause?: boolean | Clause$report_to_clauseArgs<ExtArgs>
+    _count?: boolean | ClauseCountOutputTypeArgs<ExtArgs>
   }, ExtArgs["result"]["clause"]>
 
   export type ClauseSelectScalar = {
     id?: boolean
     label?: boolean
     value?: boolean
+  }
+
+  export type ClauseInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    report_to_clause?: boolean | Clause$report_to_clauseArgs<ExtArgs>
+    _count?: boolean | ClauseCountOutputTypeArgs<ExtArgs>
   }
 
 
@@ -1642,6 +1725,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     readonly [Symbol.toStringTag]: 'PrismaPromise';
     constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
 
+    report_to_clause<T extends Clause$report_to_clauseArgs<ExtArgs> = {}>(args?: Subset<T, Clause$report_to_clauseArgs<ExtArgs>>): Prisma.PrismaPromise<$Types.GetResult<Report_to_clausePayload<ExtArgs>, T, 'findMany', never>| Null>;
 
     private get _document();
     /**
@@ -1679,6 +1763,10 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      */
     select?: ClauseSelect<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: ClauseInclude<ExtArgs> | null
+    /**
      * Filter, which Clause to fetch.
      */
     where: ClauseWhereUniqueInput
@@ -1705,6 +1793,10 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      */
     select?: ClauseSelect<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: ClauseInclude<ExtArgs> | null
+    /**
      * Filter, which Clause to fetch.
      */
     where: ClauseWhereUniqueInput
@@ -1719,6 +1811,10 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      * Select specific fields to fetch from the Clause
      */
     select?: ClauseSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: ClauseInclude<ExtArgs> | null
     /**
      * Filter, which Clause to fetch.
      */
@@ -1776,6 +1872,10 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      */
     select?: ClauseSelect<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: ClauseInclude<ExtArgs> | null
+    /**
      * Filter, which Clause to fetch.
      */
     where?: ClauseWhereInput
@@ -1821,6 +1921,10 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      */
     select?: ClauseSelect<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: ClauseInclude<ExtArgs> | null
+    /**
      * Filter, which Clauses to fetch.
      */
     where?: ClauseWhereInput
@@ -1861,6 +1965,10 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      */
     select?: ClauseSelect<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: ClauseInclude<ExtArgs> | null
+    /**
      * The data needed to create a Clause.
      */
     data: XOR<ClauseCreateInput, ClauseUncheckedCreateInput>
@@ -1887,6 +1995,10 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      * Select specific fields to fetch from the Clause
      */
     select?: ClauseSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: ClauseInclude<ExtArgs> | null
     /**
      * The data needed to update a Clause.
      */
@@ -1922,6 +2034,10 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      */
     select?: ClauseSelect<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: ClauseInclude<ExtArgs> | null
+    /**
      * The filter to search for the Clause to update in case it exists.
      */
     where: ClauseWhereUniqueInput
@@ -1945,6 +2061,10 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      */
     select?: ClauseSelect<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: ClauseInclude<ExtArgs> | null
+    /**
      * Filter which Clause to delete.
      */
     where: ClauseWhereUniqueInput
@@ -1963,6 +2083,27 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
 
   /**
+   * Clause.report_to_clause
+   */
+  export type Clause$report_to_clauseArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Report_to_clause
+     */
+    select?: Report_to_clauseSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: Report_to_clauseInclude<ExtArgs> | null
+    where?: Report_to_clauseWhereInput
+    orderBy?: Enumerable<Report_to_clauseOrderByWithRelationInput>
+    cursor?: Report_to_clauseWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Enumerable<Report_to_clauseScalarFieldEnum>
+  }
+
+
+  /**
    * Clause without action
    */
   export type ClauseArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
@@ -1970,6 +2111,10 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      * Select specific fields to fetch from the Clause
      */
     select?: ClauseSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: ClauseInclude<ExtArgs> | null
   }
 
 
@@ -1988,70 +2133,70 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type ReportMinAggregateOutputType = {
     id: string | null
     title: string | null
-    redactedby: string | null
-    ownedby: string | null
-    createdbyid: string | null
-    meetdate: Date | null
-    meetlink: string | null
-    applicantname: string | null
-    applicanttype: string | null
-    projectstatus: string | null
-    projectcadastralref: string | null
-    projectlandcontact: string | null
-    projectspacetype: string | null
-    projectnature: string | null
-    projectdescription: string | null
+    redacted_by: string | null
+    owned_by: string | null
+    created_by_id: string | null
+    meet_date: Date | null
+    meet_link: string | null
+    applicant_name: string | null
+    applicant_type: string | null
+    project_status: string | null
+    project_cadastral_ref: string | null
+    project_land_contact: string | null
+    project_space_type: string | null
+    project_nature: string | null
+    project_description: string | null
     decision: string | null
-    decisioncomment: string | null
+    decision_comment: string | null
     contacts: string | null
-    createdat: Date | null
-    updatedat: Date | null
+    created_at: Date | null
+    updated_at: Date | null
   }
 
   export type ReportMaxAggregateOutputType = {
     id: string | null
     title: string | null
-    redactedby: string | null
-    ownedby: string | null
-    createdbyid: string | null
-    meetdate: Date | null
-    meetlink: string | null
-    applicantname: string | null
-    applicanttype: string | null
-    projectstatus: string | null
-    projectcadastralref: string | null
-    projectlandcontact: string | null
-    projectspacetype: string | null
-    projectnature: string | null
-    projectdescription: string | null
+    redacted_by: string | null
+    owned_by: string | null
+    created_by_id: string | null
+    meet_date: Date | null
+    meet_link: string | null
+    applicant_name: string | null
+    applicant_type: string | null
+    project_status: string | null
+    project_cadastral_ref: string | null
+    project_land_contact: string | null
+    project_space_type: string | null
+    project_nature: string | null
+    project_description: string | null
     decision: string | null
-    decisioncomment: string | null
+    decision_comment: string | null
     contacts: string | null
-    createdat: Date | null
-    updatedat: Date | null
+    created_at: Date | null
+    updated_at: Date | null
   }
 
   export type ReportCountAggregateOutputType = {
     id: number
     title: number
-    redactedby: number
-    ownedby: number
-    createdbyid: number
-    meetdate: number
-    meetlink: number
-    applicantname: number
-    applicanttype: number
-    projectstatus: number
-    projectcadastralref: number
-    projectlandcontact: number
-    projectspacetype: number
-    projectnature: number
-    projectdescription: number
+    redacted_by: number
+    owned_by: number
+    created_by_id: number
+    meet_date: number
+    meet_link: number
+    applicant_name: number
+    applicant_type: number
+    project_status: number
+    project_cadastral_ref: number
+    project_land_contact: number
+    project_space_type: number
+    project_nature: number
+    project_description: number
     decision: number
-    decisioncomment: number
+    decision_comment: number
     contacts: number
-    createdat: number
-    updatedat: number
+    created_at: number
+    updated_at: number
     _all: number
   }
 
@@ -2059,70 +2204,70 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type ReportMinAggregateInputType = {
     id?: true
     title?: true
-    redactedby?: true
-    ownedby?: true
-    createdbyid?: true
-    meetdate?: true
-    meetlink?: true
-    applicantname?: true
-    applicanttype?: true
-    projectstatus?: true
-    projectcadastralref?: true
-    projectlandcontact?: true
-    projectspacetype?: true
-    projectnature?: true
-    projectdescription?: true
+    redacted_by?: true
+    owned_by?: true
+    created_by_id?: true
+    meet_date?: true
+    meet_link?: true
+    applicant_name?: true
+    applicant_type?: true
+    project_status?: true
+    project_cadastral_ref?: true
+    project_land_contact?: true
+    project_space_type?: true
+    project_nature?: true
+    project_description?: true
     decision?: true
-    decisioncomment?: true
+    decision_comment?: true
     contacts?: true
-    createdat?: true
-    updatedat?: true
+    created_at?: true
+    updated_at?: true
   }
 
   export type ReportMaxAggregateInputType = {
     id?: true
     title?: true
-    redactedby?: true
-    ownedby?: true
-    createdbyid?: true
-    meetdate?: true
-    meetlink?: true
-    applicantname?: true
-    applicanttype?: true
-    projectstatus?: true
-    projectcadastralref?: true
-    projectlandcontact?: true
-    projectspacetype?: true
-    projectnature?: true
-    projectdescription?: true
+    redacted_by?: true
+    owned_by?: true
+    created_by_id?: true
+    meet_date?: true
+    meet_link?: true
+    applicant_name?: true
+    applicant_type?: true
+    project_status?: true
+    project_cadastral_ref?: true
+    project_land_contact?: true
+    project_space_type?: true
+    project_nature?: true
+    project_description?: true
     decision?: true
-    decisioncomment?: true
+    decision_comment?: true
     contacts?: true
-    createdat?: true
-    updatedat?: true
+    created_at?: true
+    updated_at?: true
   }
 
   export type ReportCountAggregateInputType = {
     id?: true
     title?: true
-    redactedby?: true
-    ownedby?: true
-    createdbyid?: true
-    meetdate?: true
-    meetlink?: true
-    applicantname?: true
-    applicanttype?: true
-    projectstatus?: true
-    projectcadastralref?: true
-    projectlandcontact?: true
-    projectspacetype?: true
-    projectnature?: true
-    projectdescription?: true
+    redacted_by?: true
+    owned_by?: true
+    created_by_id?: true
+    meet_date?: true
+    meet_link?: true
+    applicant_name?: true
+    applicant_type?: true
+    project_status?: true
+    project_cadastral_ref?: true
+    project_land_contact?: true
+    project_space_type?: true
+    project_nature?: true
+    project_description?: true
     decision?: true
-    decisioncomment?: true
+    decision_comment?: true
     contacts?: true
-    createdat?: true
-    updatedat?: true
+    created_at?: true
+    updated_at?: true
     _all?: true
   }
 
@@ -2202,24 +2347,24 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type ReportGroupByOutputType = {
     id: string
     title: string
-    redactedby: string
-    ownedby: string
-    createdbyid: string
-    meetdate: Date
-    meetlink: string
-    applicantname: string
-    applicanttype: string
-    projectstatus: string
-    projectcadastralref: string
-    projectlandcontact: string
-    projectspacetype: string
-    projectnature: string
-    projectdescription: string
+    redacted_by: string
+    owned_by: string
+    created_by_id: string
+    meet_date: Date
+    meet_link: string
+    applicant_name: string
+    applicant_type: string
+    project_status: string
+    project_cadastral_ref: string
+    project_land_contact: string
+    project_space_type: string
+    project_nature: string
+    project_description: string
     decision: string
-    decisioncomment: string
+    decision_comment: string
     contacts: string
-    createdat: Date
-    updatedat: Date
+    created_at: Date
+    updated_at: Date
     _count: ReportCountAggregateOutputType | null
     _min: ReportMinAggregateOutputType | null
     _max: ReportMaxAggregateOutputType | null
@@ -2242,47 +2387,54 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type ReportSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     title?: boolean
-    redactedby?: boolean
-    ownedby?: boolean
-    createdbyid?: boolean
-    meetdate?: boolean
-    meetlink?: boolean
-    applicantname?: boolean
-    applicanttype?: boolean
-    projectstatus?: boolean
-    projectcadastralref?: boolean
-    projectlandcontact?: boolean
-    projectspacetype?: boolean
-    projectnature?: boolean
-    projectdescription?: boolean
+    redacted_by?: boolean
+    owned_by?: boolean
+    created_by_id?: boolean
+    meet_date?: boolean
+    meet_link?: boolean
+    applicant_name?: boolean
+    applicant_type?: boolean
+    project_status?: boolean
+    project_cadastral_ref?: boolean
+    project_land_contact?: boolean
+    project_space_type?: boolean
+    project_nature?: boolean
+    project_description?: boolean
     decision?: boolean
-    decisioncomment?: boolean
+    decision_comment?: boolean
     contacts?: boolean
-    createdat?: boolean
-    updatedat?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    report_to_clause?: boolean | Report$report_to_clauseArgs<ExtArgs>
+    _count?: boolean | ReportCountOutputTypeArgs<ExtArgs>
   }, ExtArgs["result"]["report"]>
 
   export type ReportSelectScalar = {
     id?: boolean
     title?: boolean
-    redactedby?: boolean
-    ownedby?: boolean
-    createdbyid?: boolean
-    meetdate?: boolean
-    meetlink?: boolean
-    applicantname?: boolean
-    applicanttype?: boolean
-    projectstatus?: boolean
-    projectcadastralref?: boolean
-    projectlandcontact?: boolean
-    projectspacetype?: boolean
-    projectnature?: boolean
-    projectdescription?: boolean
+    redacted_by?: boolean
+    owned_by?: boolean
+    created_by_id?: boolean
+    meet_date?: boolean
+    meet_link?: boolean
+    applicant_name?: boolean
+    applicant_type?: boolean
+    project_status?: boolean
+    project_cadastral_ref?: boolean
+    project_land_contact?: boolean
+    project_space_type?: boolean
+    project_nature?: boolean
+    project_description?: boolean
     decision?: boolean
-    decisioncomment?: boolean
+    decision_comment?: boolean
     contacts?: boolean
-    createdat?: boolean
-    updatedat?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }
+
+  export type ReportInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    report_to_clause?: boolean | Report$report_to_clauseArgs<ExtArgs>
+    _count?: boolean | ReportCountOutputTypeArgs<ExtArgs>
   }
 
 
@@ -2655,6 +2807,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     readonly [Symbol.toStringTag]: 'PrismaPromise';
     constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
 
+    report_to_clause<T extends Report$report_to_clauseArgs<ExtArgs> = {}>(args?: Subset<T, Report$report_to_clauseArgs<ExtArgs>>): Prisma.PrismaPromise<$Types.GetResult<Report_to_clausePayload<ExtArgs>, T, 'findMany', never>| Null>;
 
     private get _document();
     /**
@@ -2692,6 +2845,10 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      */
     select?: ReportSelect<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: ReportInclude<ExtArgs> | null
+    /**
      * Filter, which Report to fetch.
      */
     where: ReportWhereUniqueInput
@@ -2718,6 +2875,10 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      */
     select?: ReportSelect<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: ReportInclude<ExtArgs> | null
+    /**
      * Filter, which Report to fetch.
      */
     where: ReportWhereUniqueInput
@@ -2732,6 +2893,10 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      * Select specific fields to fetch from the Report
      */
     select?: ReportSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: ReportInclude<ExtArgs> | null
     /**
      * Filter, which Report to fetch.
      */
@@ -2789,6 +2954,10 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      */
     select?: ReportSelect<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: ReportInclude<ExtArgs> | null
+    /**
      * Filter, which Report to fetch.
      */
     where?: ReportWhereInput
@@ -2834,6 +3003,10 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      */
     select?: ReportSelect<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: ReportInclude<ExtArgs> | null
+    /**
      * Filter, which Reports to fetch.
      */
     where?: ReportWhereInput
@@ -2874,6 +3047,10 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      */
     select?: ReportSelect<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: ReportInclude<ExtArgs> | null
+    /**
      * The data needed to create a Report.
      */
     data: XOR<ReportCreateInput, ReportUncheckedCreateInput>
@@ -2900,6 +3077,10 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      * Select specific fields to fetch from the Report
      */
     select?: ReportSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: ReportInclude<ExtArgs> | null
     /**
      * The data needed to update a Report.
      */
@@ -2935,6 +3116,10 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      */
     select?: ReportSelect<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: ReportInclude<ExtArgs> | null
+    /**
      * The filter to search for the Report to update in case it exists.
      */
     where: ReportWhereUniqueInput
@@ -2958,6 +3143,10 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      */
     select?: ReportSelect<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: ReportInclude<ExtArgs> | null
+    /**
      * Filter which Report to delete.
      */
     where: ReportWhereUniqueInput
@@ -2976,6 +3165,27 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
 
   /**
+   * Report.report_to_clause
+   */
+  export type Report$report_to_clauseArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Report_to_clause
+     */
+    select?: Report_to_clauseSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: Report_to_clauseInclude<ExtArgs> | null
+    where?: Report_to_clauseWhereInput
+    orderBy?: Enumerable<Report_to_clauseOrderByWithRelationInput>
+    cursor?: Report_to_clauseWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Enumerable<Report_to_clauseScalarFieldEnum>
+  }
+
+
+  /**
    * Report without action
    */
   export type ReportArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
@@ -2983,6 +3193,10 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      * Select specific fields to fetch from the Report
      */
     select?: ReportSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: ReportInclude<ExtArgs> | null
   }
 
 
@@ -3000,40 +3214,40 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type Report_to_clauseMinAggregateOutputType = {
     id: string | null
-    reportid: string | null
-    clauseid: string | null
+    report_id: string | null
+    clause_id: string | null
   }
 
   export type Report_to_clauseMaxAggregateOutputType = {
     id: string | null
-    reportid: string | null
-    clauseid: string | null
+    report_id: string | null
+    clause_id: string | null
   }
 
   export type Report_to_clauseCountAggregateOutputType = {
     id: number
-    reportid: number
-    clauseid: number
+    report_id: number
+    clause_id: number
     _all: number
   }
 
 
   export type Report_to_clauseMinAggregateInputType = {
     id?: true
-    reportid?: true
-    clauseid?: true
+    report_id?: true
+    clause_id?: true
   }
 
   export type Report_to_clauseMaxAggregateInputType = {
     id?: true
-    reportid?: true
-    clauseid?: true
+    report_id?: true
+    clause_id?: true
   }
 
   export type Report_to_clauseCountAggregateInputType = {
     id?: true
-    reportid?: true
-    clauseid?: true
+    report_id?: true
+    clause_id?: true
     _all?: true
   }
 
@@ -3112,8 +3326,8 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type Report_to_clauseGroupByOutputType = {
     id: string
-    reportid: string
-    clauseid: string
+    report_id: string
+    clause_id: string
     _count: Report_to_clauseCountAggregateOutputType | null
     _min: Report_to_clauseMinAggregateOutputType | null
     _max: Report_to_clauseMaxAggregateOutputType | null
@@ -3135,14 +3349,21 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type Report_to_clauseSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    reportid?: boolean
-    clauseid?: boolean
+    report_id?: boolean
+    clause_id?: boolean
+    clause?: boolean | ClauseArgs<ExtArgs>
+    report?: boolean | ReportArgs<ExtArgs>
   }, ExtArgs["result"]["report_to_clause"]>
 
   export type Report_to_clauseSelectScalar = {
     id?: boolean
-    reportid?: boolean
-    clauseid?: boolean
+    report_id?: boolean
+    clause_id?: boolean
+  }
+
+  export type Report_to_clauseInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    clause?: boolean | ClauseArgs<ExtArgs>
+    report?: boolean | ReportArgs<ExtArgs>
   }
 
 
@@ -3515,6 +3736,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     readonly [Symbol.toStringTag]: 'PrismaPromise';
     constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
 
+    clause<T extends ClauseArgs<ExtArgs> = {}>(args?: Subset<T, ClauseArgs<ExtArgs>>): Prisma__ClauseClient<$Types.GetResult<ClausePayload<ExtArgs>, T, 'findUnique', never> | Null, never, ExtArgs>;
+
+    report<T extends ReportArgs<ExtArgs> = {}>(args?: Subset<T, ReportArgs<ExtArgs>>): Prisma__ReportClient<$Types.GetResult<ReportPayload<ExtArgs>, T, 'findUnique', never> | Null, never, ExtArgs>;
 
     private get _document();
     /**
@@ -3552,6 +3776,10 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      */
     select?: Report_to_clauseSelect<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: Report_to_clauseInclude<ExtArgs> | null
+    /**
      * Filter, which Report_to_clause to fetch.
      */
     where: Report_to_clauseWhereUniqueInput
@@ -3578,6 +3806,10 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      */
     select?: Report_to_clauseSelect<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: Report_to_clauseInclude<ExtArgs> | null
+    /**
      * Filter, which Report_to_clause to fetch.
      */
     where: Report_to_clauseWhereUniqueInput
@@ -3592,6 +3824,10 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      * Select specific fields to fetch from the Report_to_clause
      */
     select?: Report_to_clauseSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: Report_to_clauseInclude<ExtArgs> | null
     /**
      * Filter, which Report_to_clause to fetch.
      */
@@ -3649,6 +3885,10 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      */
     select?: Report_to_clauseSelect<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: Report_to_clauseInclude<ExtArgs> | null
+    /**
      * Filter, which Report_to_clause to fetch.
      */
     where?: Report_to_clauseWhereInput
@@ -3694,6 +3934,10 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      */
     select?: Report_to_clauseSelect<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: Report_to_clauseInclude<ExtArgs> | null
+    /**
      * Filter, which Report_to_clauses to fetch.
      */
     where?: Report_to_clauseWhereInput
@@ -3734,6 +3978,10 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      */
     select?: Report_to_clauseSelect<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: Report_to_clauseInclude<ExtArgs> | null
+    /**
      * The data needed to create a Report_to_clause.
      */
     data: XOR<Report_to_clauseCreateInput, Report_to_clauseUncheckedCreateInput>
@@ -3760,6 +4008,10 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      * Select specific fields to fetch from the Report_to_clause
      */
     select?: Report_to_clauseSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: Report_to_clauseInclude<ExtArgs> | null
     /**
      * The data needed to update a Report_to_clause.
      */
@@ -3795,6 +4047,10 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      */
     select?: Report_to_clauseSelect<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: Report_to_clauseInclude<ExtArgs> | null
+    /**
      * The filter to search for the Report_to_clause to update in case it exists.
      */
     where: Report_to_clauseWhereUniqueInput
@@ -3817,6 +4073,10 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      * Select specific fields to fetch from the Report_to_clause
      */
     select?: Report_to_clauseSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: Report_to_clauseInclude<ExtArgs> | null
     /**
      * Filter which Report_to_clause to delete.
      */
@@ -3843,6 +4103,10 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      * Select specific fields to fetch from the Report_to_clause
      */
     select?: Report_to_clauseSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: Report_to_clauseInclude<ExtArgs> | null
   }
 
 
@@ -3873,24 +4137,24 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export const ReportScalarFieldEnum: {
     id: 'id',
     title: 'title',
-    redactedby: 'redactedby',
-    ownedby: 'ownedby',
-    createdbyid: 'createdbyid',
-    meetdate: 'meetdate',
-    meetlink: 'meetlink',
-    applicantname: 'applicantname',
-    applicanttype: 'applicanttype',
-    projectstatus: 'projectstatus',
-    projectcadastralref: 'projectcadastralref',
-    projectlandcontact: 'projectlandcontact',
-    projectspacetype: 'projectspacetype',
-    projectnature: 'projectnature',
-    projectdescription: 'projectdescription',
+    redacted_by: 'redacted_by',
+    owned_by: 'owned_by',
+    created_by_id: 'created_by_id',
+    meet_date: 'meet_date',
+    meet_link: 'meet_link',
+    applicant_name: 'applicant_name',
+    applicant_type: 'applicant_type',
+    project_status: 'project_status',
+    project_cadastral_ref: 'project_cadastral_ref',
+    project_land_contact: 'project_land_contact',
+    project_space_type: 'project_space_type',
+    project_nature: 'project_nature',
+    project_description: 'project_description',
     decision: 'decision',
-    decisioncomment: 'decisioncomment',
+    decision_comment: 'decision_comment',
     contacts: 'contacts',
-    createdat: 'createdat',
-    updatedat: 'updatedat'
+    created_at: 'created_at',
+    updated_at: 'updated_at'
   };
 
   export type ReportScalarFieldEnum = (typeof ReportScalarFieldEnum)[keyof typeof ReportScalarFieldEnum]
@@ -3898,8 +4162,8 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export const Report_to_clauseScalarFieldEnum: {
     id: 'id',
-    reportid: 'reportid',
-    clauseid: 'clauseid'
+    report_id: 'report_id',
+    clause_id: 'clause_id'
   };
 
   export type Report_to_clauseScalarFieldEnum = (typeof Report_to_clauseScalarFieldEnum)[keyof typeof Report_to_clauseScalarFieldEnum]
@@ -3933,12 +4197,14 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id?: StringFilter | string
     label?: StringFilter | string
     value?: StringFilter | string
+    report_to_clause?: Report_to_clauseListRelationFilter
   }
 
   export type ClauseOrderByWithRelationInput = {
     id?: SortOrder
     label?: SortOrder
     value?: SortOrder
+    report_to_clause?: Report_to_clauseOrderByRelationAggregateInput
   }
 
   export type ClauseWhereUniqueInput = {
@@ -3969,47 +4235,49 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     NOT?: Enumerable<ReportWhereInput>
     id?: StringFilter | string
     title?: StringFilter | string
-    redactedby?: StringFilter | string
-    ownedby?: StringFilter | string
-    createdbyid?: StringFilter | string
-    meetdate?: DateTimeFilter | Date | string
-    meetlink?: StringFilter | string
-    applicantname?: StringFilter | string
-    applicanttype?: StringFilter | string
-    projectstatus?: StringFilter | string
-    projectcadastralref?: StringFilter | string
-    projectlandcontact?: StringFilter | string
-    projectspacetype?: StringFilter | string
-    projectnature?: StringFilter | string
-    projectdescription?: StringFilter | string
+    redacted_by?: StringFilter | string
+    owned_by?: StringFilter | string
+    created_by_id?: StringFilter | string
+    meet_date?: DateTimeFilter | Date | string
+    meet_link?: StringFilter | string
+    applicant_name?: StringFilter | string
+    applicant_type?: StringFilter | string
+    project_status?: StringFilter | string
+    project_cadastral_ref?: StringFilter | string
+    project_land_contact?: StringFilter | string
+    project_space_type?: StringFilter | string
+    project_nature?: StringFilter | string
+    project_description?: StringFilter | string
     decision?: StringFilter | string
-    decisioncomment?: StringFilter | string
+    decision_comment?: StringFilter | string
     contacts?: StringFilter | string
-    createdat?: DateTimeFilter | Date | string
-    updatedat?: DateTimeFilter | Date | string
+    created_at?: DateTimeFilter | Date | string
+    updated_at?: DateTimeFilter | Date | string
+    report_to_clause?: Report_to_clauseListRelationFilter
   }
 
   export type ReportOrderByWithRelationInput = {
     id?: SortOrder
     title?: SortOrder
-    redactedby?: SortOrder
-    ownedby?: SortOrder
-    createdbyid?: SortOrder
-    meetdate?: SortOrder
-    meetlink?: SortOrder
-    applicantname?: SortOrder
-    applicanttype?: SortOrder
-    projectstatus?: SortOrder
-    projectcadastralref?: SortOrder
-    projectlandcontact?: SortOrder
-    projectspacetype?: SortOrder
-    projectnature?: SortOrder
-    projectdescription?: SortOrder
+    redacted_by?: SortOrder
+    owned_by?: SortOrder
+    created_by_id?: SortOrder
+    meet_date?: SortOrder
+    meet_link?: SortOrder
+    applicant_name?: SortOrder
+    applicant_type?: SortOrder
+    project_status?: SortOrder
+    project_cadastral_ref?: SortOrder
+    project_land_contact?: SortOrder
+    project_space_type?: SortOrder
+    project_nature?: SortOrder
+    project_description?: SortOrder
     decision?: SortOrder
-    decisioncomment?: SortOrder
+    decision_comment?: SortOrder
     contacts?: SortOrder
-    createdat?: SortOrder
-    updatedat?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    report_to_clause?: Report_to_clauseOrderByRelationAggregateInput
   }
 
   export type ReportWhereUniqueInput = {
@@ -4019,24 +4287,24 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type ReportOrderByWithAggregationInput = {
     id?: SortOrder
     title?: SortOrder
-    redactedby?: SortOrder
-    ownedby?: SortOrder
-    createdbyid?: SortOrder
-    meetdate?: SortOrder
-    meetlink?: SortOrder
-    applicantname?: SortOrder
-    applicanttype?: SortOrder
-    projectstatus?: SortOrder
-    projectcadastralref?: SortOrder
-    projectlandcontact?: SortOrder
-    projectspacetype?: SortOrder
-    projectnature?: SortOrder
-    projectdescription?: SortOrder
+    redacted_by?: SortOrder
+    owned_by?: SortOrder
+    created_by_id?: SortOrder
+    meet_date?: SortOrder
+    meet_link?: SortOrder
+    applicant_name?: SortOrder
+    applicant_type?: SortOrder
+    project_status?: SortOrder
+    project_cadastral_ref?: SortOrder
+    project_land_contact?: SortOrder
+    project_space_type?: SortOrder
+    project_nature?: SortOrder
+    project_description?: SortOrder
     decision?: SortOrder
-    decisioncomment?: SortOrder
+    decision_comment?: SortOrder
     contacts?: SortOrder
-    createdat?: SortOrder
-    updatedat?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
     _count?: ReportCountOrderByAggregateInput
     _max?: ReportMaxOrderByAggregateInput
     _min?: ReportMinOrderByAggregateInput
@@ -4048,24 +4316,24 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     NOT?: Enumerable<ReportScalarWhereWithAggregatesInput>
     id?: StringWithAggregatesFilter | string
     title?: StringWithAggregatesFilter | string
-    redactedby?: StringWithAggregatesFilter | string
-    ownedby?: StringWithAggregatesFilter | string
-    createdbyid?: StringWithAggregatesFilter | string
-    meetdate?: DateTimeWithAggregatesFilter | Date | string
-    meetlink?: StringWithAggregatesFilter | string
-    applicantname?: StringWithAggregatesFilter | string
-    applicanttype?: StringWithAggregatesFilter | string
-    projectstatus?: StringWithAggregatesFilter | string
-    projectcadastralref?: StringWithAggregatesFilter | string
-    projectlandcontact?: StringWithAggregatesFilter | string
-    projectspacetype?: StringWithAggregatesFilter | string
-    projectnature?: StringWithAggregatesFilter | string
-    projectdescription?: StringWithAggregatesFilter | string
+    redacted_by?: StringWithAggregatesFilter | string
+    owned_by?: StringWithAggregatesFilter | string
+    created_by_id?: StringWithAggregatesFilter | string
+    meet_date?: DateTimeWithAggregatesFilter | Date | string
+    meet_link?: StringWithAggregatesFilter | string
+    applicant_name?: StringWithAggregatesFilter | string
+    applicant_type?: StringWithAggregatesFilter | string
+    project_status?: StringWithAggregatesFilter | string
+    project_cadastral_ref?: StringWithAggregatesFilter | string
+    project_land_contact?: StringWithAggregatesFilter | string
+    project_space_type?: StringWithAggregatesFilter | string
+    project_nature?: StringWithAggregatesFilter | string
+    project_description?: StringWithAggregatesFilter | string
     decision?: StringWithAggregatesFilter | string
-    decisioncomment?: StringWithAggregatesFilter | string
+    decision_comment?: StringWithAggregatesFilter | string
     contacts?: StringWithAggregatesFilter | string
-    createdat?: DateTimeWithAggregatesFilter | Date | string
-    updatedat?: DateTimeWithAggregatesFilter | Date | string
+    created_at?: DateTimeWithAggregatesFilter | Date | string
+    updated_at?: DateTimeWithAggregatesFilter | Date | string
   }
 
   export type Report_to_clauseWhereInput = {
@@ -4073,14 +4341,18 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     OR?: Enumerable<Report_to_clauseWhereInput>
     NOT?: Enumerable<Report_to_clauseWhereInput>
     id?: StringFilter | string
-    reportid?: StringFilter | string
-    clauseid?: StringFilter | string
+    report_id?: StringFilter | string
+    clause_id?: StringFilter | string
+    clause?: XOR<ClauseRelationFilter, ClauseWhereInput>
+    report?: XOR<ReportRelationFilter, ReportWhereInput>
   }
 
   export type Report_to_clauseOrderByWithRelationInput = {
     id?: SortOrder
-    reportid?: SortOrder
-    clauseid?: SortOrder
+    report_id?: SortOrder
+    clause_id?: SortOrder
+    clause?: ClauseOrderByWithRelationInput
+    report?: ReportOrderByWithRelationInput
   }
 
   export type Report_to_clauseWhereUniqueInput = {
@@ -4089,8 +4361,8 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type Report_to_clauseOrderByWithAggregationInput = {
     id?: SortOrder
-    reportid?: SortOrder
-    clauseid?: SortOrder
+    report_id?: SortOrder
+    clause_id?: SortOrder
     _count?: Report_to_clauseCountOrderByAggregateInput
     _max?: Report_to_clauseMaxOrderByAggregateInput
     _min?: Report_to_clauseMinOrderByAggregateInput
@@ -4101,32 +4373,36 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     OR?: Enumerable<Report_to_clauseScalarWhereWithAggregatesInput>
     NOT?: Enumerable<Report_to_clauseScalarWhereWithAggregatesInput>
     id?: StringWithAggregatesFilter | string
-    reportid?: StringWithAggregatesFilter | string
-    clauseid?: StringWithAggregatesFilter | string
+    report_id?: StringWithAggregatesFilter | string
+    clause_id?: StringWithAggregatesFilter | string
   }
 
   export type ClauseCreateInput = {
     id: string
     label: string
     value: string
+    report_to_clause?: Report_to_clauseCreateNestedManyWithoutClauseInput
   }
 
   export type ClauseUncheckedCreateInput = {
     id: string
     label: string
     value: string
+    report_to_clause?: Report_to_clauseUncheckedCreateNestedManyWithoutClauseInput
   }
 
   export type ClauseUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     label?: StringFieldUpdateOperationsInput | string
     value?: StringFieldUpdateOperationsInput | string
+    report_to_clause?: Report_to_clauseUpdateManyWithoutClauseNestedInput
   }
 
   export type ClauseUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     label?: StringFieldUpdateOperationsInput | string
     value?: StringFieldUpdateOperationsInput | string
+    report_to_clause?: Report_to_clauseUncheckedUpdateManyWithoutClauseNestedInput
   }
 
   export type ClauseCreateManyInput = {
@@ -4150,204 +4426,206 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type ReportCreateInput = {
     id: string
     title: string
-    redactedby: string
-    ownedby: string
-    createdbyid: string
-    meetdate: Date | string
-    meetlink: string
-    applicantname: string
-    applicanttype: string
-    projectstatus: string
-    projectcadastralref: string
-    projectlandcontact: string
-    projectspacetype: string
-    projectnature: string
-    projectdescription: string
+    redacted_by: string
+    owned_by: string
+    created_by_id: string
+    meet_date: Date | string
+    meet_link: string
+    applicant_name: string
+    applicant_type: string
+    project_status: string
+    project_cadastral_ref: string
+    project_land_contact: string
+    project_space_type: string
+    project_nature: string
+    project_description: string
     decision: string
-    decisioncomment: string
+    decision_comment: string
     contacts: string
-    createdat: Date | string
-    updatedat: Date | string
+    created_at: Date | string
+    updated_at: Date | string
+    report_to_clause?: Report_to_clauseCreateNestedManyWithoutReportInput
   }
 
   export type ReportUncheckedCreateInput = {
     id: string
     title: string
-    redactedby: string
-    ownedby: string
-    createdbyid: string
-    meetdate: Date | string
-    meetlink: string
-    applicantname: string
-    applicanttype: string
-    projectstatus: string
-    projectcadastralref: string
-    projectlandcontact: string
-    projectspacetype: string
-    projectnature: string
-    projectdescription: string
+    redacted_by: string
+    owned_by: string
+    created_by_id: string
+    meet_date: Date | string
+    meet_link: string
+    applicant_name: string
+    applicant_type: string
+    project_status: string
+    project_cadastral_ref: string
+    project_land_contact: string
+    project_space_type: string
+    project_nature: string
+    project_description: string
     decision: string
-    decisioncomment: string
+    decision_comment: string
     contacts: string
-    createdat: Date | string
-    updatedat: Date | string
+    created_at: Date | string
+    updated_at: Date | string
+    report_to_clause?: Report_to_clauseUncheckedCreateNestedManyWithoutReportInput
   }
 
   export type ReportUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
-    redactedby?: StringFieldUpdateOperationsInput | string
-    ownedby?: StringFieldUpdateOperationsInput | string
-    createdbyid?: StringFieldUpdateOperationsInput | string
-    meetdate?: DateTimeFieldUpdateOperationsInput | Date | string
-    meetlink?: StringFieldUpdateOperationsInput | string
-    applicantname?: StringFieldUpdateOperationsInput | string
-    applicanttype?: StringFieldUpdateOperationsInput | string
-    projectstatus?: StringFieldUpdateOperationsInput | string
-    projectcadastralref?: StringFieldUpdateOperationsInput | string
-    projectlandcontact?: StringFieldUpdateOperationsInput | string
-    projectspacetype?: StringFieldUpdateOperationsInput | string
-    projectnature?: StringFieldUpdateOperationsInput | string
-    projectdescription?: StringFieldUpdateOperationsInput | string
+    redacted_by?: StringFieldUpdateOperationsInput | string
+    owned_by?: StringFieldUpdateOperationsInput | string
+    created_by_id?: StringFieldUpdateOperationsInput | string
+    meet_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    meet_link?: StringFieldUpdateOperationsInput | string
+    applicant_name?: StringFieldUpdateOperationsInput | string
+    applicant_type?: StringFieldUpdateOperationsInput | string
+    project_status?: StringFieldUpdateOperationsInput | string
+    project_cadastral_ref?: StringFieldUpdateOperationsInput | string
+    project_land_contact?: StringFieldUpdateOperationsInput | string
+    project_space_type?: StringFieldUpdateOperationsInput | string
+    project_nature?: StringFieldUpdateOperationsInput | string
+    project_description?: StringFieldUpdateOperationsInput | string
     decision?: StringFieldUpdateOperationsInput | string
-    decisioncomment?: StringFieldUpdateOperationsInput | string
+    decision_comment?: StringFieldUpdateOperationsInput | string
     contacts?: StringFieldUpdateOperationsInput | string
-    createdat?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedat?: DateTimeFieldUpdateOperationsInput | Date | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    report_to_clause?: Report_to_clauseUpdateManyWithoutReportNestedInput
   }
 
   export type ReportUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
-    redactedby?: StringFieldUpdateOperationsInput | string
-    ownedby?: StringFieldUpdateOperationsInput | string
-    createdbyid?: StringFieldUpdateOperationsInput | string
-    meetdate?: DateTimeFieldUpdateOperationsInput | Date | string
-    meetlink?: StringFieldUpdateOperationsInput | string
-    applicantname?: StringFieldUpdateOperationsInput | string
-    applicanttype?: StringFieldUpdateOperationsInput | string
-    projectstatus?: StringFieldUpdateOperationsInput | string
-    projectcadastralref?: StringFieldUpdateOperationsInput | string
-    projectlandcontact?: StringFieldUpdateOperationsInput | string
-    projectspacetype?: StringFieldUpdateOperationsInput | string
-    projectnature?: StringFieldUpdateOperationsInput | string
-    projectdescription?: StringFieldUpdateOperationsInput | string
+    redacted_by?: StringFieldUpdateOperationsInput | string
+    owned_by?: StringFieldUpdateOperationsInput | string
+    created_by_id?: StringFieldUpdateOperationsInput | string
+    meet_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    meet_link?: StringFieldUpdateOperationsInput | string
+    applicant_name?: StringFieldUpdateOperationsInput | string
+    applicant_type?: StringFieldUpdateOperationsInput | string
+    project_status?: StringFieldUpdateOperationsInput | string
+    project_cadastral_ref?: StringFieldUpdateOperationsInput | string
+    project_land_contact?: StringFieldUpdateOperationsInput | string
+    project_space_type?: StringFieldUpdateOperationsInput | string
+    project_nature?: StringFieldUpdateOperationsInput | string
+    project_description?: StringFieldUpdateOperationsInput | string
     decision?: StringFieldUpdateOperationsInput | string
-    decisioncomment?: StringFieldUpdateOperationsInput | string
+    decision_comment?: StringFieldUpdateOperationsInput | string
     contacts?: StringFieldUpdateOperationsInput | string
-    createdat?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedat?: DateTimeFieldUpdateOperationsInput | Date | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    report_to_clause?: Report_to_clauseUncheckedUpdateManyWithoutReportNestedInput
   }
 
   export type ReportCreateManyInput = {
     id: string
     title: string
-    redactedby: string
-    ownedby: string
-    createdbyid: string
-    meetdate: Date | string
-    meetlink: string
-    applicantname: string
-    applicanttype: string
-    projectstatus: string
-    projectcadastralref: string
-    projectlandcontact: string
-    projectspacetype: string
-    projectnature: string
-    projectdescription: string
+    redacted_by: string
+    owned_by: string
+    created_by_id: string
+    meet_date: Date | string
+    meet_link: string
+    applicant_name: string
+    applicant_type: string
+    project_status: string
+    project_cadastral_ref: string
+    project_land_contact: string
+    project_space_type: string
+    project_nature: string
+    project_description: string
     decision: string
-    decisioncomment: string
+    decision_comment: string
     contacts: string
-    createdat: Date | string
-    updatedat: Date | string
+    created_at: Date | string
+    updated_at: Date | string
   }
 
   export type ReportUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
-    redactedby?: StringFieldUpdateOperationsInput | string
-    ownedby?: StringFieldUpdateOperationsInput | string
-    createdbyid?: StringFieldUpdateOperationsInput | string
-    meetdate?: DateTimeFieldUpdateOperationsInput | Date | string
-    meetlink?: StringFieldUpdateOperationsInput | string
-    applicantname?: StringFieldUpdateOperationsInput | string
-    applicanttype?: StringFieldUpdateOperationsInput | string
-    projectstatus?: StringFieldUpdateOperationsInput | string
-    projectcadastralref?: StringFieldUpdateOperationsInput | string
-    projectlandcontact?: StringFieldUpdateOperationsInput | string
-    projectspacetype?: StringFieldUpdateOperationsInput | string
-    projectnature?: StringFieldUpdateOperationsInput | string
-    projectdescription?: StringFieldUpdateOperationsInput | string
+    redacted_by?: StringFieldUpdateOperationsInput | string
+    owned_by?: StringFieldUpdateOperationsInput | string
+    created_by_id?: StringFieldUpdateOperationsInput | string
+    meet_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    meet_link?: StringFieldUpdateOperationsInput | string
+    applicant_name?: StringFieldUpdateOperationsInput | string
+    applicant_type?: StringFieldUpdateOperationsInput | string
+    project_status?: StringFieldUpdateOperationsInput | string
+    project_cadastral_ref?: StringFieldUpdateOperationsInput | string
+    project_land_contact?: StringFieldUpdateOperationsInput | string
+    project_space_type?: StringFieldUpdateOperationsInput | string
+    project_nature?: StringFieldUpdateOperationsInput | string
+    project_description?: StringFieldUpdateOperationsInput | string
     decision?: StringFieldUpdateOperationsInput | string
-    decisioncomment?: StringFieldUpdateOperationsInput | string
+    decision_comment?: StringFieldUpdateOperationsInput | string
     contacts?: StringFieldUpdateOperationsInput | string
-    createdat?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedat?: DateTimeFieldUpdateOperationsInput | Date | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ReportUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
-    redactedby?: StringFieldUpdateOperationsInput | string
-    ownedby?: StringFieldUpdateOperationsInput | string
-    createdbyid?: StringFieldUpdateOperationsInput | string
-    meetdate?: DateTimeFieldUpdateOperationsInput | Date | string
-    meetlink?: StringFieldUpdateOperationsInput | string
-    applicantname?: StringFieldUpdateOperationsInput | string
-    applicanttype?: StringFieldUpdateOperationsInput | string
-    projectstatus?: StringFieldUpdateOperationsInput | string
-    projectcadastralref?: StringFieldUpdateOperationsInput | string
-    projectlandcontact?: StringFieldUpdateOperationsInput | string
-    projectspacetype?: StringFieldUpdateOperationsInput | string
-    projectnature?: StringFieldUpdateOperationsInput | string
-    projectdescription?: StringFieldUpdateOperationsInput | string
+    redacted_by?: StringFieldUpdateOperationsInput | string
+    owned_by?: StringFieldUpdateOperationsInput | string
+    created_by_id?: StringFieldUpdateOperationsInput | string
+    meet_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    meet_link?: StringFieldUpdateOperationsInput | string
+    applicant_name?: StringFieldUpdateOperationsInput | string
+    applicant_type?: StringFieldUpdateOperationsInput | string
+    project_status?: StringFieldUpdateOperationsInput | string
+    project_cadastral_ref?: StringFieldUpdateOperationsInput | string
+    project_land_contact?: StringFieldUpdateOperationsInput | string
+    project_space_type?: StringFieldUpdateOperationsInput | string
+    project_nature?: StringFieldUpdateOperationsInput | string
+    project_description?: StringFieldUpdateOperationsInput | string
     decision?: StringFieldUpdateOperationsInput | string
-    decisioncomment?: StringFieldUpdateOperationsInput | string
+    decision_comment?: StringFieldUpdateOperationsInput | string
     contacts?: StringFieldUpdateOperationsInput | string
-    createdat?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedat?: DateTimeFieldUpdateOperationsInput | Date | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type Report_to_clauseCreateInput = {
     id: string
-    reportid: string
-    clauseid: string
+    clause: ClauseCreateNestedOneWithoutReport_to_clauseInput
+    report: ReportCreateNestedOneWithoutReport_to_clauseInput
   }
 
   export type Report_to_clauseUncheckedCreateInput = {
     id: string
-    reportid: string
-    clauseid: string
+    report_id: string
+    clause_id: string
   }
 
   export type Report_to_clauseUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    reportid?: StringFieldUpdateOperationsInput | string
-    clauseid?: StringFieldUpdateOperationsInput | string
+    clause?: ClauseUpdateOneRequiredWithoutReport_to_clauseNestedInput
+    report?: ReportUpdateOneRequiredWithoutReport_to_clauseNestedInput
   }
 
   export type Report_to_clauseUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    reportid?: StringFieldUpdateOperationsInput | string
-    clauseid?: StringFieldUpdateOperationsInput | string
+    report_id?: StringFieldUpdateOperationsInput | string
+    clause_id?: StringFieldUpdateOperationsInput | string
   }
 
   export type Report_to_clauseCreateManyInput = {
     id: string
-    reportid: string
-    clauseid: string
+    report_id: string
+    clause_id: string
   }
 
   export type Report_to_clauseUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    reportid?: StringFieldUpdateOperationsInput | string
-    clauseid?: StringFieldUpdateOperationsInput | string
   }
 
   export type Report_to_clauseUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    reportid?: StringFieldUpdateOperationsInput | string
-    clauseid?: StringFieldUpdateOperationsInput | string
+    report_id?: StringFieldUpdateOperationsInput | string
+    clause_id?: StringFieldUpdateOperationsInput | string
   }
 
   export type StringFilter = {
@@ -4363,6 +4641,16 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     endsWith?: string
     mode?: QueryMode
     not?: NestedStringFilter | string
+  }
+
+  export type Report_to_clauseListRelationFilter = {
+    every?: Report_to_clauseWhereInput
+    some?: Report_to_clauseWhereInput
+    none?: Report_to_clauseWhereInput
+  }
+
+  export type Report_to_clauseOrderByRelationAggregateInput = {
+    _count?: SortOrder
   }
 
   export type ClauseCountOrderByAggregateInput = {
@@ -4415,70 +4703,70 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type ReportCountOrderByAggregateInput = {
     id?: SortOrder
     title?: SortOrder
-    redactedby?: SortOrder
-    ownedby?: SortOrder
-    createdbyid?: SortOrder
-    meetdate?: SortOrder
-    meetlink?: SortOrder
-    applicantname?: SortOrder
-    applicanttype?: SortOrder
-    projectstatus?: SortOrder
-    projectcadastralref?: SortOrder
-    projectlandcontact?: SortOrder
-    projectspacetype?: SortOrder
-    projectnature?: SortOrder
-    projectdescription?: SortOrder
+    redacted_by?: SortOrder
+    owned_by?: SortOrder
+    created_by_id?: SortOrder
+    meet_date?: SortOrder
+    meet_link?: SortOrder
+    applicant_name?: SortOrder
+    applicant_type?: SortOrder
+    project_status?: SortOrder
+    project_cadastral_ref?: SortOrder
+    project_land_contact?: SortOrder
+    project_space_type?: SortOrder
+    project_nature?: SortOrder
+    project_description?: SortOrder
     decision?: SortOrder
-    decisioncomment?: SortOrder
+    decision_comment?: SortOrder
     contacts?: SortOrder
-    createdat?: SortOrder
-    updatedat?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
   }
 
   export type ReportMaxOrderByAggregateInput = {
     id?: SortOrder
     title?: SortOrder
-    redactedby?: SortOrder
-    ownedby?: SortOrder
-    createdbyid?: SortOrder
-    meetdate?: SortOrder
-    meetlink?: SortOrder
-    applicantname?: SortOrder
-    applicanttype?: SortOrder
-    projectstatus?: SortOrder
-    projectcadastralref?: SortOrder
-    projectlandcontact?: SortOrder
-    projectspacetype?: SortOrder
-    projectnature?: SortOrder
-    projectdescription?: SortOrder
+    redacted_by?: SortOrder
+    owned_by?: SortOrder
+    created_by_id?: SortOrder
+    meet_date?: SortOrder
+    meet_link?: SortOrder
+    applicant_name?: SortOrder
+    applicant_type?: SortOrder
+    project_status?: SortOrder
+    project_cadastral_ref?: SortOrder
+    project_land_contact?: SortOrder
+    project_space_type?: SortOrder
+    project_nature?: SortOrder
+    project_description?: SortOrder
     decision?: SortOrder
-    decisioncomment?: SortOrder
+    decision_comment?: SortOrder
     contacts?: SortOrder
-    createdat?: SortOrder
-    updatedat?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
   }
 
   export type ReportMinOrderByAggregateInput = {
     id?: SortOrder
     title?: SortOrder
-    redactedby?: SortOrder
-    ownedby?: SortOrder
-    createdbyid?: SortOrder
-    meetdate?: SortOrder
-    meetlink?: SortOrder
-    applicantname?: SortOrder
-    applicanttype?: SortOrder
-    projectstatus?: SortOrder
-    projectcadastralref?: SortOrder
-    projectlandcontact?: SortOrder
-    projectspacetype?: SortOrder
-    projectnature?: SortOrder
-    projectdescription?: SortOrder
+    redacted_by?: SortOrder
+    owned_by?: SortOrder
+    created_by_id?: SortOrder
+    meet_date?: SortOrder
+    meet_link?: SortOrder
+    applicant_name?: SortOrder
+    applicant_type?: SortOrder
+    project_status?: SortOrder
+    project_cadastral_ref?: SortOrder
+    project_land_contact?: SortOrder
+    project_space_type?: SortOrder
+    project_nature?: SortOrder
+    project_description?: SortOrder
     decision?: SortOrder
-    decisioncomment?: SortOrder
+    decision_comment?: SortOrder
     contacts?: SortOrder
-    createdat?: SortOrder
-    updatedat?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
   }
 
   export type DateTimeWithAggregatesFilter = {
@@ -4495,30 +4783,152 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     _max?: NestedDateTimeFilter
   }
 
+  export type ClauseRelationFilter = {
+    is?: ClauseWhereInput | null
+    isNot?: ClauseWhereInput | null
+  }
+
+  export type ReportRelationFilter = {
+    is?: ReportWhereInput | null
+    isNot?: ReportWhereInput | null
+  }
+
   export type Report_to_clauseCountOrderByAggregateInput = {
     id?: SortOrder
-    reportid?: SortOrder
-    clauseid?: SortOrder
+    report_id?: SortOrder
+    clause_id?: SortOrder
   }
 
   export type Report_to_clauseMaxOrderByAggregateInput = {
     id?: SortOrder
-    reportid?: SortOrder
-    clauseid?: SortOrder
+    report_id?: SortOrder
+    clause_id?: SortOrder
   }
 
   export type Report_to_clauseMinOrderByAggregateInput = {
     id?: SortOrder
-    reportid?: SortOrder
-    clauseid?: SortOrder
+    report_id?: SortOrder
+    clause_id?: SortOrder
+  }
+
+  export type Report_to_clauseCreateNestedManyWithoutClauseInput = {
+    create?: XOR<Enumerable<Report_to_clauseCreateWithoutClauseInput>, Enumerable<Report_to_clauseUncheckedCreateWithoutClauseInput>>
+    connectOrCreate?: Enumerable<Report_to_clauseCreateOrConnectWithoutClauseInput>
+    createMany?: Report_to_clauseCreateManyClauseInputEnvelope
+    connect?: Enumerable<Report_to_clauseWhereUniqueInput>
+  }
+
+  export type Report_to_clauseUncheckedCreateNestedManyWithoutClauseInput = {
+    create?: XOR<Enumerable<Report_to_clauseCreateWithoutClauseInput>, Enumerable<Report_to_clauseUncheckedCreateWithoutClauseInput>>
+    connectOrCreate?: Enumerable<Report_to_clauseCreateOrConnectWithoutClauseInput>
+    createMany?: Report_to_clauseCreateManyClauseInputEnvelope
+    connect?: Enumerable<Report_to_clauseWhereUniqueInput>
   }
 
   export type StringFieldUpdateOperationsInput = {
     set?: string
   }
 
+  export type Report_to_clauseUpdateManyWithoutClauseNestedInput = {
+    create?: XOR<Enumerable<Report_to_clauseCreateWithoutClauseInput>, Enumerable<Report_to_clauseUncheckedCreateWithoutClauseInput>>
+    connectOrCreate?: Enumerable<Report_to_clauseCreateOrConnectWithoutClauseInput>
+    upsert?: Enumerable<Report_to_clauseUpsertWithWhereUniqueWithoutClauseInput>
+    createMany?: Report_to_clauseCreateManyClauseInputEnvelope
+    set?: Enumerable<Report_to_clauseWhereUniqueInput>
+    disconnect?: Enumerable<Report_to_clauseWhereUniqueInput>
+    delete?: Enumerable<Report_to_clauseWhereUniqueInput>
+    connect?: Enumerable<Report_to_clauseWhereUniqueInput>
+    update?: Enumerable<Report_to_clauseUpdateWithWhereUniqueWithoutClauseInput>
+    updateMany?: Enumerable<Report_to_clauseUpdateManyWithWhereWithoutClauseInput>
+    deleteMany?: Enumerable<Report_to_clauseScalarWhereInput>
+  }
+
+  export type Report_to_clauseUncheckedUpdateManyWithoutClauseNestedInput = {
+    create?: XOR<Enumerable<Report_to_clauseCreateWithoutClauseInput>, Enumerable<Report_to_clauseUncheckedCreateWithoutClauseInput>>
+    connectOrCreate?: Enumerable<Report_to_clauseCreateOrConnectWithoutClauseInput>
+    upsert?: Enumerable<Report_to_clauseUpsertWithWhereUniqueWithoutClauseInput>
+    createMany?: Report_to_clauseCreateManyClauseInputEnvelope
+    set?: Enumerable<Report_to_clauseWhereUniqueInput>
+    disconnect?: Enumerable<Report_to_clauseWhereUniqueInput>
+    delete?: Enumerable<Report_to_clauseWhereUniqueInput>
+    connect?: Enumerable<Report_to_clauseWhereUniqueInput>
+    update?: Enumerable<Report_to_clauseUpdateWithWhereUniqueWithoutClauseInput>
+    updateMany?: Enumerable<Report_to_clauseUpdateManyWithWhereWithoutClauseInput>
+    deleteMany?: Enumerable<Report_to_clauseScalarWhereInput>
+  }
+
+  export type Report_to_clauseCreateNestedManyWithoutReportInput = {
+    create?: XOR<Enumerable<Report_to_clauseCreateWithoutReportInput>, Enumerable<Report_to_clauseUncheckedCreateWithoutReportInput>>
+    connectOrCreate?: Enumerable<Report_to_clauseCreateOrConnectWithoutReportInput>
+    createMany?: Report_to_clauseCreateManyReportInputEnvelope
+    connect?: Enumerable<Report_to_clauseWhereUniqueInput>
+  }
+
+  export type Report_to_clauseUncheckedCreateNestedManyWithoutReportInput = {
+    create?: XOR<Enumerable<Report_to_clauseCreateWithoutReportInput>, Enumerable<Report_to_clauseUncheckedCreateWithoutReportInput>>
+    connectOrCreate?: Enumerable<Report_to_clauseCreateOrConnectWithoutReportInput>
+    createMany?: Report_to_clauseCreateManyReportInputEnvelope
+    connect?: Enumerable<Report_to_clauseWhereUniqueInput>
+  }
+
   export type DateTimeFieldUpdateOperationsInput = {
     set?: Date | string
+  }
+
+  export type Report_to_clauseUpdateManyWithoutReportNestedInput = {
+    create?: XOR<Enumerable<Report_to_clauseCreateWithoutReportInput>, Enumerable<Report_to_clauseUncheckedCreateWithoutReportInput>>
+    connectOrCreate?: Enumerable<Report_to_clauseCreateOrConnectWithoutReportInput>
+    upsert?: Enumerable<Report_to_clauseUpsertWithWhereUniqueWithoutReportInput>
+    createMany?: Report_to_clauseCreateManyReportInputEnvelope
+    set?: Enumerable<Report_to_clauseWhereUniqueInput>
+    disconnect?: Enumerable<Report_to_clauseWhereUniqueInput>
+    delete?: Enumerable<Report_to_clauseWhereUniqueInput>
+    connect?: Enumerable<Report_to_clauseWhereUniqueInput>
+    update?: Enumerable<Report_to_clauseUpdateWithWhereUniqueWithoutReportInput>
+    updateMany?: Enumerable<Report_to_clauseUpdateManyWithWhereWithoutReportInput>
+    deleteMany?: Enumerable<Report_to_clauseScalarWhereInput>
+  }
+
+  export type Report_to_clauseUncheckedUpdateManyWithoutReportNestedInput = {
+    create?: XOR<Enumerable<Report_to_clauseCreateWithoutReportInput>, Enumerable<Report_to_clauseUncheckedCreateWithoutReportInput>>
+    connectOrCreate?: Enumerable<Report_to_clauseCreateOrConnectWithoutReportInput>
+    upsert?: Enumerable<Report_to_clauseUpsertWithWhereUniqueWithoutReportInput>
+    createMany?: Report_to_clauseCreateManyReportInputEnvelope
+    set?: Enumerable<Report_to_clauseWhereUniqueInput>
+    disconnect?: Enumerable<Report_to_clauseWhereUniqueInput>
+    delete?: Enumerable<Report_to_clauseWhereUniqueInput>
+    connect?: Enumerable<Report_to_clauseWhereUniqueInput>
+    update?: Enumerable<Report_to_clauseUpdateWithWhereUniqueWithoutReportInput>
+    updateMany?: Enumerable<Report_to_clauseUpdateManyWithWhereWithoutReportInput>
+    deleteMany?: Enumerable<Report_to_clauseScalarWhereInput>
+  }
+
+  export type ClauseCreateNestedOneWithoutReport_to_clauseInput = {
+    create?: XOR<ClauseCreateWithoutReport_to_clauseInput, ClauseUncheckedCreateWithoutReport_to_clauseInput>
+    connectOrCreate?: ClauseCreateOrConnectWithoutReport_to_clauseInput
+    connect?: ClauseWhereUniqueInput
+  }
+
+  export type ReportCreateNestedOneWithoutReport_to_clauseInput = {
+    create?: XOR<ReportCreateWithoutReport_to_clauseInput, ReportUncheckedCreateWithoutReport_to_clauseInput>
+    connectOrCreate?: ReportCreateOrConnectWithoutReport_to_clauseInput
+    connect?: ReportWhereUniqueInput
+  }
+
+  export type ClauseUpdateOneRequiredWithoutReport_to_clauseNestedInput = {
+    create?: XOR<ClauseCreateWithoutReport_to_clauseInput, ClauseUncheckedCreateWithoutReport_to_clauseInput>
+    connectOrCreate?: ClauseCreateOrConnectWithoutReport_to_clauseInput
+    upsert?: ClauseUpsertWithoutReport_to_clauseInput
+    connect?: ClauseWhereUniqueInput
+    update?: XOR<ClauseUpdateWithoutReport_to_clauseInput, ClauseUncheckedUpdateWithoutReport_to_clauseInput>
+  }
+
+  export type ReportUpdateOneRequiredWithoutReport_to_clauseNestedInput = {
+    create?: XOR<ReportCreateWithoutReport_to_clauseInput, ReportUncheckedCreateWithoutReport_to_clauseInput>
+    connectOrCreate?: ReportCreateOrConnectWithoutReport_to_clauseInput
+    upsert?: ReportUpsertWithoutReport_to_clauseInput
+    connect?: ReportWhereUniqueInput
+    update?: XOR<ReportUpdateWithoutReport_to_clauseInput, ReportUncheckedUpdateWithoutReport_to_clauseInput>
   }
 
   export type NestedStringFilter = {
@@ -4586,6 +4996,258 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     _count?: NestedIntFilter
     _min?: NestedDateTimeFilter
     _max?: NestedDateTimeFilter
+  }
+
+  export type Report_to_clauseCreateWithoutClauseInput = {
+    id: string
+    report: ReportCreateNestedOneWithoutReport_to_clauseInput
+  }
+
+  export type Report_to_clauseUncheckedCreateWithoutClauseInput = {
+    id: string
+    report_id: string
+  }
+
+  export type Report_to_clauseCreateOrConnectWithoutClauseInput = {
+    where: Report_to_clauseWhereUniqueInput
+    create: XOR<Report_to_clauseCreateWithoutClauseInput, Report_to_clauseUncheckedCreateWithoutClauseInput>
+  }
+
+  export type Report_to_clauseCreateManyClauseInputEnvelope = {
+    data: Enumerable<Report_to_clauseCreateManyClauseInput>
+    skipDuplicates?: boolean
+  }
+
+  export type Report_to_clauseUpsertWithWhereUniqueWithoutClauseInput = {
+    where: Report_to_clauseWhereUniqueInput
+    update: XOR<Report_to_clauseUpdateWithoutClauseInput, Report_to_clauseUncheckedUpdateWithoutClauseInput>
+    create: XOR<Report_to_clauseCreateWithoutClauseInput, Report_to_clauseUncheckedCreateWithoutClauseInput>
+  }
+
+  export type Report_to_clauseUpdateWithWhereUniqueWithoutClauseInput = {
+    where: Report_to_clauseWhereUniqueInput
+    data: XOR<Report_to_clauseUpdateWithoutClauseInput, Report_to_clauseUncheckedUpdateWithoutClauseInput>
+  }
+
+  export type Report_to_clauseUpdateManyWithWhereWithoutClauseInput = {
+    where: Report_to_clauseScalarWhereInput
+    data: XOR<Report_to_clauseUpdateManyMutationInput, Report_to_clauseUncheckedUpdateManyWithoutReport_to_clauseInput>
+  }
+
+  export type Report_to_clauseScalarWhereInput = {
+    AND?: Enumerable<Report_to_clauseScalarWhereInput>
+    OR?: Enumerable<Report_to_clauseScalarWhereInput>
+    NOT?: Enumerable<Report_to_clauseScalarWhereInput>
+    id?: StringFilter | string
+    report_id?: StringFilter | string
+    clause_id?: StringFilter | string
+  }
+
+  export type Report_to_clauseCreateWithoutReportInput = {
+    id: string
+    clause: ClauseCreateNestedOneWithoutReport_to_clauseInput
+  }
+
+  export type Report_to_clauseUncheckedCreateWithoutReportInput = {
+    id: string
+    clause_id: string
+  }
+
+  export type Report_to_clauseCreateOrConnectWithoutReportInput = {
+    where: Report_to_clauseWhereUniqueInput
+    create: XOR<Report_to_clauseCreateWithoutReportInput, Report_to_clauseUncheckedCreateWithoutReportInput>
+  }
+
+  export type Report_to_clauseCreateManyReportInputEnvelope = {
+    data: Enumerable<Report_to_clauseCreateManyReportInput>
+    skipDuplicates?: boolean
+  }
+
+  export type Report_to_clauseUpsertWithWhereUniqueWithoutReportInput = {
+    where: Report_to_clauseWhereUniqueInput
+    update: XOR<Report_to_clauseUpdateWithoutReportInput, Report_to_clauseUncheckedUpdateWithoutReportInput>
+    create: XOR<Report_to_clauseCreateWithoutReportInput, Report_to_clauseUncheckedCreateWithoutReportInput>
+  }
+
+  export type Report_to_clauseUpdateWithWhereUniqueWithoutReportInput = {
+    where: Report_to_clauseWhereUniqueInput
+    data: XOR<Report_to_clauseUpdateWithoutReportInput, Report_to_clauseUncheckedUpdateWithoutReportInput>
+  }
+
+  export type Report_to_clauseUpdateManyWithWhereWithoutReportInput = {
+    where: Report_to_clauseScalarWhereInput
+    data: XOR<Report_to_clauseUpdateManyMutationInput, Report_to_clauseUncheckedUpdateManyWithoutReport_to_clauseInput>
+  }
+
+  export type ClauseCreateWithoutReport_to_clauseInput = {
+    id: string
+    label: string
+    value: string
+  }
+
+  export type ClauseUncheckedCreateWithoutReport_to_clauseInput = {
+    id: string
+    label: string
+    value: string
+  }
+
+  export type ClauseCreateOrConnectWithoutReport_to_clauseInput = {
+    where: ClauseWhereUniqueInput
+    create: XOR<ClauseCreateWithoutReport_to_clauseInput, ClauseUncheckedCreateWithoutReport_to_clauseInput>
+  }
+
+  export type ReportCreateWithoutReport_to_clauseInput = {
+    id: string
+    title: string
+    redacted_by: string
+    owned_by: string
+    created_by_id: string
+    meet_date: Date | string
+    meet_link: string
+    applicant_name: string
+    applicant_type: string
+    project_status: string
+    project_cadastral_ref: string
+    project_land_contact: string
+    project_space_type: string
+    project_nature: string
+    project_description: string
+    decision: string
+    decision_comment: string
+    contacts: string
+    created_at: Date | string
+    updated_at: Date | string
+  }
+
+  export type ReportUncheckedCreateWithoutReport_to_clauseInput = {
+    id: string
+    title: string
+    redacted_by: string
+    owned_by: string
+    created_by_id: string
+    meet_date: Date | string
+    meet_link: string
+    applicant_name: string
+    applicant_type: string
+    project_status: string
+    project_cadastral_ref: string
+    project_land_contact: string
+    project_space_type: string
+    project_nature: string
+    project_description: string
+    decision: string
+    decision_comment: string
+    contacts: string
+    created_at: Date | string
+    updated_at: Date | string
+  }
+
+  export type ReportCreateOrConnectWithoutReport_to_clauseInput = {
+    where: ReportWhereUniqueInput
+    create: XOR<ReportCreateWithoutReport_to_clauseInput, ReportUncheckedCreateWithoutReport_to_clauseInput>
+  }
+
+  export type ClauseUpsertWithoutReport_to_clauseInput = {
+    update: XOR<ClauseUpdateWithoutReport_to_clauseInput, ClauseUncheckedUpdateWithoutReport_to_clauseInput>
+    create: XOR<ClauseCreateWithoutReport_to_clauseInput, ClauseUncheckedCreateWithoutReport_to_clauseInput>
+  }
+
+  export type ClauseUpdateWithoutReport_to_clauseInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    label?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type ClauseUncheckedUpdateWithoutReport_to_clauseInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    label?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type ReportUpsertWithoutReport_to_clauseInput = {
+    update: XOR<ReportUpdateWithoutReport_to_clauseInput, ReportUncheckedUpdateWithoutReport_to_clauseInput>
+    create: XOR<ReportCreateWithoutReport_to_clauseInput, ReportUncheckedCreateWithoutReport_to_clauseInput>
+  }
+
+  export type ReportUpdateWithoutReport_to_clauseInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    redacted_by?: StringFieldUpdateOperationsInput | string
+    owned_by?: StringFieldUpdateOperationsInput | string
+    created_by_id?: StringFieldUpdateOperationsInput | string
+    meet_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    meet_link?: StringFieldUpdateOperationsInput | string
+    applicant_name?: StringFieldUpdateOperationsInput | string
+    applicant_type?: StringFieldUpdateOperationsInput | string
+    project_status?: StringFieldUpdateOperationsInput | string
+    project_cadastral_ref?: StringFieldUpdateOperationsInput | string
+    project_land_contact?: StringFieldUpdateOperationsInput | string
+    project_space_type?: StringFieldUpdateOperationsInput | string
+    project_nature?: StringFieldUpdateOperationsInput | string
+    project_description?: StringFieldUpdateOperationsInput | string
+    decision?: StringFieldUpdateOperationsInput | string
+    decision_comment?: StringFieldUpdateOperationsInput | string
+    contacts?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ReportUncheckedUpdateWithoutReport_to_clauseInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    redacted_by?: StringFieldUpdateOperationsInput | string
+    owned_by?: StringFieldUpdateOperationsInput | string
+    created_by_id?: StringFieldUpdateOperationsInput | string
+    meet_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    meet_link?: StringFieldUpdateOperationsInput | string
+    applicant_name?: StringFieldUpdateOperationsInput | string
+    applicant_type?: StringFieldUpdateOperationsInput | string
+    project_status?: StringFieldUpdateOperationsInput | string
+    project_cadastral_ref?: StringFieldUpdateOperationsInput | string
+    project_land_contact?: StringFieldUpdateOperationsInput | string
+    project_space_type?: StringFieldUpdateOperationsInput | string
+    project_nature?: StringFieldUpdateOperationsInput | string
+    project_description?: StringFieldUpdateOperationsInput | string
+    decision?: StringFieldUpdateOperationsInput | string
+    decision_comment?: StringFieldUpdateOperationsInput | string
+    contacts?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type Report_to_clauseCreateManyClauseInput = {
+    id: string
+    report_id: string
+  }
+
+  export type Report_to_clauseUpdateWithoutClauseInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    report?: ReportUpdateOneRequiredWithoutReport_to_clauseNestedInput
+  }
+
+  export type Report_to_clauseUncheckedUpdateWithoutClauseInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    report_id?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type Report_to_clauseUncheckedUpdateManyWithoutReport_to_clauseInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    report_id?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type Report_to_clauseCreateManyReportInput = {
+    id: string
+    clause_id: string
+  }
+
+  export type Report_to_clauseUpdateWithoutReportInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    clause?: ClauseUpdateOneRequiredWithoutReport_to_clauseNestedInput
+  }
+
+  export type Report_to_clauseUncheckedUpdateWithoutReportInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    clause_id?: StringFieldUpdateOperationsInput | string
   }
 
 

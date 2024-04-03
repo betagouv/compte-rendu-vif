@@ -33,23 +33,13 @@
     "vite-node": "^1.4.0"
   },
   "dependencies": {
-    "@automerge/automerge-repo": "^1.1.4",
-    "@automerge/automerge-repo-network-websocket": "^1.1.4",
-    "@automerge/automerge-repo-storage-nodefs": "^1.1.4",
     "@electric-sql/pglite": "^0.1.1",
-    "@elysiajs/cors": "^1.0.2",
     "@fastify/cors": "^9.0.1",
-    "@hocuspocus/extension-sqlite": "^2.11.3",
-    "@hocuspocus/server": "^2.11.3",
-    "@nozbe/watermelondb": "^0.27.1",
     "@sinclair/typebox": "^0.32.20",
-    "@triplit/db": "^0.3.28",
-    "@triplit/server": "^0.3.31",
-    "@trpc/client": "11.0.0-next.320",
-    "@trpc/server": "11.0.0-next.320",
     "better-sqlite3": "^9.4.3",
     "date-fns": "^3.6.0",
     "dotenv": "^16.4.5",
+    "dotenv-expand": "^11.0.6",
     "drizzle-orm": "^0.30.4",
     "drizzle-zod": "^0.5.1",
     "elysia": "^1.0.10",
@@ -62,9 +52,6 @@
     "uuid": "^9.0.1",
     "ws": "^8.16.0",
     "xoauth2": "^1.2.0",
-    "y-protocols": "^1.0.6",
-    "y-websocket": "^2.0.2",
-    "yjs": "^13.6.14",
     "zod": "^3.22.4"
   }
 }

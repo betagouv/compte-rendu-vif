@@ -11,6 +11,7 @@ services:
       POSTGRES_DB: ${PG_DB}
       POSTGRES_USER: ${PG_USER}
       POSTGRES_PORT: ${PG_PORT}
+      POSTGRES_MULTIPLE_DATABASES: cr-vif-users
     command:
       - -c
       - wal_level=logical
@@ -19,7 +20,7 @@ services:
     restart: always
     volumes:
       - pg_data:/var/lib/postgresql/data
-      # - ./prisma/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
 
   electric:
     image: electricsql/electric:canary

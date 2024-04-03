@@ -1,22 +1,15 @@
 import { config } from "dotenv";
-import { z, ZodTypeAny } from "zod";
+import { z } from "zod";
 
 config({ path: "../../.env" });
 
 const stringOrNumberAsNumber = z.string().or(z.number()).transform(Number);
 
 const envSchema = z.object({
-  LOCAL_DATABASE_URL: z.string(),
   USERS_DATABASE_URL: z.string(),
-  EXTERNAL_JWT_SECRET: z.string(),
-  PROJECT_ID: z.string(),
   TOKEN_LIFETIME: z.string().default("1w"),
   JWT_SECRET: z.string(),
-  // EMAIL_CLIENT_ID: z.string(),
-  // EMAIL_CLIENT_SECRET: z.string(),
-  WS_PORT: stringOrNumberAsNumber.default(3002),
   NODE_ENV: z.string().default("development"),
-  TRIPLIT_PORT: stringOrNumberAsNumber.default(3000),
   HTTP_PORT: stringOrNumberAsNumber.default(3001),
 });
 
