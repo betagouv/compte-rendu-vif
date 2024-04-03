@@ -14,7 +14,7 @@ const Index = () => {
   ];
 
   return (
-    <Flex direction="column">
+    <Flex direction="column" color="text-label-grey">
       <Banner pt="30px" pb="40px">
         <styled.div color="text-title-blue-france" fontSize="18px" fontWeight="bold">
           Compte-rendu VIF

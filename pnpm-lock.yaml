@@ -86,6 +86,9 @@ importers:
       reflect-metadata:
         specifier: ^0.2.1
         version: 0.2.1
+      uuid:
+        specifier: ^9.0.1
+        version: 9.0.1
       ws:
         specifier: ^8.16.0
         version: 8.16.0
@@ -114,6 +117,9 @@ importers:
       '@types/nodemailer':
         specifier: ^6.4.14
         version: 6.4.14
+      '@types/uuid':
+        specifier: ^9.0.8
+        version: 9.0.8
       '@types/ws':
         specifier: ^8.5.10
         version: 8.5.10
@@ -3486,6 +3492,10 @@ packages:
       '@types/http-errors': 2.0.4
       '@types/mime': 4.0.0
       '@types/node': 20.12.2
+    dev: true
+
+  /@types/uuid@9.0.8:
+    resolution: {integrity: sha512-jg+97EGIcY9AGHJJRaaPVgetKDsrTgbRjQ5Msgjh/DQKEFl0DtyRr/VCOyD1T2R1MNeWPK/u7JoGhlDZnKBAfA==}
     dev: true
 
   /@types/ws@8.5.10:

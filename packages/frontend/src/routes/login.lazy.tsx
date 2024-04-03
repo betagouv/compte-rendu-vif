@@ -5,26 +5,51 @@ import { trpc } from "../api";
 import { useEffect } from "react";
 import { repo } from "../db";
 import { AutomergeUrl } from "@automerge/automerge-repo";
+import Button from "@codegouvfr/react-dsfr/Button";
 
 const LoginPage = () => {
-  const repoIdQuery = trpc.getOrCreateRepo.useQuery({ repoId: "test" });
+  // const repoId = "automerge:aUh5StGvbgp6yupwW4JpTejB2f2";
+  // const repoIdQuery = trpc.getOrCreateRepo.useQuery({ repoId });
 
-  const repoId = repoIdQuery.data || (localStorage.getItem("repoId") as AutomergeUrl | undefined);
-  console.log(repoIdQuery.data);
+  //repoIdQuery.data || (localStorage.getItem("repoId") as AutomergeUrl | undefined);
+  // console.log(repoIdQuery.data);
 
   useEffect(() => {
-    if (!repoId) return;
-    localStorage.setItem("repoId", repoId);
-    const handle = repo.find<{ name: string }>(repoId);
+    // const repoId = localStorage.getItem("repoId") as AutomergeUrl | undefined;
+    // if (!repoId) return;
+    // const handle = repo.find<{ name: string }>(repoId);
+    // handle.on("change", (payload) => {
+    //   console.log("change", payload);
+    // });
+    // handle.whenReady(["ready"]).then(() => {
+    //   handle.change((doc) => {
+    //     doc.age = 21;
+    //   });
+    //   console.log("ready");
+    // });
+    // console.log(handle);
+  }, []);
 
-    handle.on("change", (payload) => {
-      console.log("change", payload);
-    });
-    console.log(handle);
-  }, [repoId]);
+  const createCr = () => {
+    // const handle = repo.create<{ name: string }>({ name: "salut3" });
+    // localStorage.setItem("repoId", handle.url);
+    // console.log(handle);
+  };
+
+  // useEffect(() => {
+  //   if (!repoId) return;
+  //   localStorage.setItem("repoId", repoId);
+  //   const handle = repo.find<{ name: string }>(repoId);
+
+  //   handle.on("change", (payload) => {
+  //     console.log("change", payload);
+  //   });
+  //   console.log(handle);
+  // }, [repoId]);
 
   return (
     <Center mt="20px" mb="80px">
+      <Button onClick={() => createCr()}>Create CR</Button>
       <Flex flexDirection="column" w="484px" p="16px">
         <styled.h4>Connexion à Compte-rendu VIF</styled.h4>
         <LoginForm />

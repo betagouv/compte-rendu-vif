@@ -1,39 +1,89 @@
 import fs from "fs/promises";
 import { defineConfig } from "@pandacss/dev";
 import { parseBreakpoints, parseSpacings, parseTypography } from "./parseDsfrFRVariable";
+import { fr } from "@codegouvfr/react-dsfr";
 
 export const generatePandaDSRegex = async () => {
-  let dsfrContent = await fs.readFile("./public/dsfr/dsfr.min.css", "utf-8");
-  dsfrContent = dsfrContent.slice('@charset "UTF-8";'.length);
+  const variables = getColorVariablesFromFr();
+  await fs.writeFile("./dsfr-variables.json", JSON.stringify(variables, null, 2));
+  // let dsfrContent = await fs.readFile("./public/dsfr/dsfr.min.css", "utf-8");
+  // dsfrContent = dsfrContent.slice('@charset "UTF-8";'.length);
 
-  const parser = new Parser(dsfrContent);
+  // const parser = new Parser(dsfrContent);
 
-  const fontFaces = parser.extractFontFaces();
-  const { light, dark, rootBlock, darkRootBlock } = parser.extractLightAndDarkVariables();
-  const semanticTokens = getSemanticTokens({ light, dark });
+  // const fontFaces = parser.extractFontFaces();
+  // const { light, dark, rootBlock, darkRootBlock } = parser.extractLightAndDarkVariables();
+  // const semanticTokens = getSemanticTokens({ light, dark });
 
-  const replaced = parser.replaceVariableNames(semanticTokens);
-  const newContent = [rootBlock, darkRootBlock, ...fontFaces, "@layer dsfr {", replaced, "}"].join("\n");
+  // const replaced = parser.replaceVariableNames(semanticTokens);
+  // const newContent = [rootBlock, darkRootBlock, ...fontFaces, "@layer dsfr {", replaced, "}"].join("\n");
 
-  const { textStyles, fontWeights } = parseTypography();
+  // const { textStyles, fontWeights } = parseTypography();
 
-  const tokens = defineConfig({
-    theme: {
-      extend: {
-        tokens: {
-          spacing: parseSpacings(),
-          fontWeights,
-        },
-        semanticTokens: {
-          colors: semanticTokens,
-        },
-        breakpoints: parseBreakpoints(),
-        textStyles,
-      },
-    },
+  // const tokens = defineConfig({
+  //   theme: {
+  //     extend: {
+  //       tokens: {
+  //         spacing: parseSpacings(),
+  //         fontWeights,
+  //       },
+  //       semanticTokens: {
+  //         colors: semanticTokens,
+  //       },
+  //       breakpoints: parseBreakpoints(),
+  //       textStyles,
+  //     },
+  //   },
+  // });
+
+  // await fs.writeFile("./dsfr-tokens.json", JSON.stringify(tokens, null, 2));
+  // await fs.writeFile("./public/dsfr/dsfr-patched.css", newContent);
+};
+
+const getColorVariablesFromFr = () => {
+  const dotPaths = getEveryDotPath(fr.colors);
+
+  const lightFr = fr.colors.getHex({ isDark: false });
+  const darkFr = fr.colors.getHex({ isDark: true });
+
+  const variables = dotPaths.map((path) => {
+    const toReplace = pathWithDots(fr.colors, path);
+
+    const lightValue = pathWithDots(lightFr, path);
+    const darkValue = pathWithDots(darkFr, path);
+
+    const name = (path.endsWith(".default") ? path.slice(0, -".default".length) : path).replace(/\./g, "-");
+    const pandaName = "--colors-" + name.replace(/\./g, "-");
+
+    return { path, lightValue, darkValue, name, toReplace, pandaName };
   });
-  await fs.writeFile("./dsfr-tokens.json", JSON.stringify(tokens, null, 2));
-  await fs.writeFile("./public/dsfr/dsfr-patched.css", newContent);
+
+  return variables;
+};
+
+const getEveryDotPath = (obj: any) => {
+  const dotPaths = [] as string[];
+
+  const traverse = (obj: any, path: string) => {
+    for (const key in obj) {
+      const newPath = path ? `${path}.${key}` : key;
+      if (typeof obj[key] === "function") continue;
+
+      if (typeof obj[key] === "object") {
+        traverse(obj[key], newPath);
+      } else {
+        dotPaths.push(newPath);
+      }
+    }
+  };
+
+  traverse(obj, "");
+
+  return dotPaths;
+};
+
+const pathWithDots = (obj: any, path: string) => {
+  return path.split(".").reduce((acc, key) => acc[key], obj);
 };
 
 const getSemanticTokens = ({ light, dark }: { light: Record<string, string>; dark: Record<string, string> }) => {
