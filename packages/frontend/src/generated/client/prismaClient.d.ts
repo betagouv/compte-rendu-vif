@@ -39,7 +39,6 @@ export type ReportPayload<ExtArgs extends $Extensions.Args = $Extensions.Default
     id: string
     title: string
     redacted_by: string
-    owned_by: string
     created_by_id: string
     meet_date: Date
     meet_link: string
@@ -2134,7 +2133,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id: string | null
     title: string | null
     redacted_by: string | null
-    owned_by: string | null
     created_by_id: string | null
     meet_date: Date | null
     meet_link: string | null
@@ -2157,7 +2155,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id: string | null
     title: string | null
     redacted_by: string | null
-    owned_by: string | null
     created_by_id: string | null
     meet_date: Date | null
     meet_link: string | null
@@ -2180,7 +2177,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id: number
     title: number
     redacted_by: number
-    owned_by: number
     created_by_id: number
     meet_date: number
     meet_link: number
@@ -2205,7 +2201,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id?: true
     title?: true
     redacted_by?: true
-    owned_by?: true
     created_by_id?: true
     meet_date?: true
     meet_link?: true
@@ -2228,7 +2223,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id?: true
     title?: true
     redacted_by?: true
-    owned_by?: true
     created_by_id?: true
     meet_date?: true
     meet_link?: true
@@ -2251,7 +2245,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id?: true
     title?: true
     redacted_by?: true
-    owned_by?: true
     created_by_id?: true
     meet_date?: true
     meet_link?: true
@@ -2348,7 +2341,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id: string
     title: string
     redacted_by: string
-    owned_by: string
     created_by_id: string
     meet_date: Date
     meet_link: string
@@ -2388,7 +2380,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id?: boolean
     title?: boolean
     redacted_by?: boolean
-    owned_by?: boolean
     created_by_id?: boolean
     meet_date?: boolean
     meet_link?: boolean
@@ -2413,7 +2404,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id?: boolean
     title?: boolean
     redacted_by?: boolean
-    owned_by?: boolean
     created_by_id?: boolean
     meet_date?: boolean
     meet_link?: boolean
@@ -4138,7 +4128,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id: 'id',
     title: 'title',
     redacted_by: 'redacted_by',
-    owned_by: 'owned_by',
     created_by_id: 'created_by_id',
     meet_date: 'meet_date',
     meet_link: 'meet_link',
@@ -4236,7 +4225,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id?: StringFilter | string
     title?: StringFilter | string
     redacted_by?: StringFilter | string
-    owned_by?: StringFilter | string
     created_by_id?: StringFilter | string
     meet_date?: DateTimeFilter | Date | string
     meet_link?: StringFilter | string
@@ -4260,7 +4248,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id?: SortOrder
     title?: SortOrder
     redacted_by?: SortOrder
-    owned_by?: SortOrder
     created_by_id?: SortOrder
     meet_date?: SortOrder
     meet_link?: SortOrder
@@ -4288,7 +4275,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id?: SortOrder
     title?: SortOrder
     redacted_by?: SortOrder
-    owned_by?: SortOrder
     created_by_id?: SortOrder
     meet_date?: SortOrder
     meet_link?: SortOrder
@@ -4317,7 +4303,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id?: StringWithAggregatesFilter | string
     title?: StringWithAggregatesFilter | string
     redacted_by?: StringWithAggregatesFilter | string
-    owned_by?: StringWithAggregatesFilter | string
     created_by_id?: StringWithAggregatesFilter | string
     meet_date?: DateTimeWithAggregatesFilter | Date | string
     meet_link?: StringWithAggregatesFilter | string
@@ -4427,7 +4412,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id: string
     title: string
     redacted_by: string
-    owned_by: string
     created_by_id: string
     meet_date: Date | string
     meet_link: string
@@ -4451,7 +4435,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id: string
     title: string
     redacted_by: string
-    owned_by: string
     created_by_id: string
     meet_date: Date | string
     meet_link: string
@@ -4475,7 +4458,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     redacted_by?: StringFieldUpdateOperationsInput | string
-    owned_by?: StringFieldUpdateOperationsInput | string
     created_by_id?: StringFieldUpdateOperationsInput | string
     meet_date?: DateTimeFieldUpdateOperationsInput | Date | string
     meet_link?: StringFieldUpdateOperationsInput | string
@@ -4499,7 +4481,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     redacted_by?: StringFieldUpdateOperationsInput | string
-    owned_by?: StringFieldUpdateOperationsInput | string
     created_by_id?: StringFieldUpdateOperationsInput | string
     meet_date?: DateTimeFieldUpdateOperationsInput | Date | string
     meet_link?: StringFieldUpdateOperationsInput | string
@@ -4523,7 +4504,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id: string
     title: string
     redacted_by: string
-    owned_by: string
     created_by_id: string
     meet_date: Date | string
     meet_link: string
@@ -4546,7 +4526,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     redacted_by?: StringFieldUpdateOperationsInput | string
-    owned_by?: StringFieldUpdateOperationsInput | string
     created_by_id?: StringFieldUpdateOperationsInput | string
     meet_date?: DateTimeFieldUpdateOperationsInput | Date | string
     meet_link?: StringFieldUpdateOperationsInput | string
@@ -4569,7 +4548,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     redacted_by?: StringFieldUpdateOperationsInput | string
-    owned_by?: StringFieldUpdateOperationsInput | string
     created_by_id?: StringFieldUpdateOperationsInput | string
     meet_date?: DateTimeFieldUpdateOperationsInput | Date | string
     meet_link?: StringFieldUpdateOperationsInput | string
@@ -4704,7 +4682,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id?: SortOrder
     title?: SortOrder
     redacted_by?: SortOrder
-    owned_by?: SortOrder
     created_by_id?: SortOrder
     meet_date?: SortOrder
     meet_link?: SortOrder
@@ -4727,7 +4704,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id?: SortOrder
     title?: SortOrder
     redacted_by?: SortOrder
-    owned_by?: SortOrder
     created_by_id?: SortOrder
     meet_date?: SortOrder
     meet_link?: SortOrder
@@ -4750,7 +4726,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id?: SortOrder
     title?: SortOrder
     redacted_by?: SortOrder
-    owned_by?: SortOrder
     created_by_id?: SortOrder
     meet_date?: SortOrder
     meet_link?: SortOrder
@@ -5100,7 +5075,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id: string
     title: string
     redacted_by: string
-    owned_by: string
     created_by_id: string
     meet_date: Date | string
     meet_link: string
@@ -5123,7 +5097,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id: string
     title: string
     redacted_by: string
-    owned_by: string
     created_by_id: string
     meet_date: Date | string
     meet_link: string
@@ -5173,7 +5146,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     redacted_by?: StringFieldUpdateOperationsInput | string
-    owned_by?: StringFieldUpdateOperationsInput | string
     created_by_id?: StringFieldUpdateOperationsInput | string
     meet_date?: DateTimeFieldUpdateOperationsInput | Date | string
     meet_link?: StringFieldUpdateOperationsInput | string
@@ -5196,7 +5168,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     redacted_by?: StringFieldUpdateOperationsInput | string
-    owned_by?: StringFieldUpdateOperationsInput | string
     created_by_id?: StringFieldUpdateOperationsInput | string
     meet_date?: DateTimeFieldUpdateOperationsInput | Date | string
     meet_link?: StringFieldUpdateOperationsInput | string

@@ -1,23 +1,14 @@
 import "./envVars";
 import { onHmr, registerViteHmrServerRestart } from "./hmr";
 
-// import { createServer } from "@triplit/server";
 import { db, migrateUsersDb } from "./db/db";
-// import { schema } from "../../frontend/triplit/schema";
 import { fastifyTRPCPlugin, FastifyTRPCPluginOptions } from "@trpc/server/adapters/fastify";
 import fastify from "fastify";
 import { appRouter, AppRouter } from "./router";
 import { createContext } from "./trpc";
 import cors from "@fastify/cors";
 import { ENV } from "./envVars";
-
-// const server = createServer({
-//   storage: "sqlite",
-//   verboseLogs: true,
-//   dbOptions: {
-//     schema: { collections: schema, version: 0 },
-//   },
-// })(ENV.TRIPLIT_PORT);
+import { AppError } from "./features/errors";
 
 const start = async () => {
   await registerViteHmrServerRestart();
@@ -38,6 +29,10 @@ const start = async () => {
       createContext,
       onError({ path, error }) {
         console.error(`[${path}] ${error.message}`);
+        if (!(error instanceof AppError)) {
+          error.message = "Une erreur s'est produite. Veuillez réessayer plus tard.";
+          console.error(error.stack);
+        }
       },
     } satisfies FastifyTRPCPluginOptions<AppRouter>["trpcOptions"],
   });
@@ -53,9 +48,4 @@ const start = async () => {
 start();
 process.on("SIGINT", function () {
   process.exit();
-  // server.close(() => {
-  //   console.log("Shut down server");
-  //   // some cleanup code
-  //   process.exit();
-  // });
 });

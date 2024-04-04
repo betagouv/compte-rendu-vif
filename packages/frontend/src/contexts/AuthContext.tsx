@@ -1,10 +1,8 @@
-import { PropsWithChildren, createContext, useContext, useMemo, useState } from "react";
+import { PropsWithChildren, createContext, useContext, useState } from "react";
 import { RouterOutputs } from "../api";
 import { safeParseLocalStorage } from "../utils";
 import { useQuery } from "@tanstack/react-query";
 import { electric } from "../db";
-import { useNavigate, useParams } from "@tanstack/react-router";
-import { useHref } from "../hooks/useHref";
 
 const initialAuth = safeParseLocalStorage("crvif/auth");
 
@@ -22,7 +20,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     queryKey: ["electric", data?.token!],
     queryFn: async () => {
       if (electric.isConnected) electric.disconnect();
-      console.log(await electric.connect(data.token!));
+      await electric.connect(data.token!);
       return true;
     },
     enabled: !!data?.token,

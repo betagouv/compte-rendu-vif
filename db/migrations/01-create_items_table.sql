@@ -11,7 +11,6 @@ CREATE TABLE IF NOT EXISTS "report" (
   id TEXT PRIMARY KEY NOT NULL,
   title TEXT NOT NULL,
   redacted_by TEXT NOT NULL,
-  owned_by TEXT NOT NULL,
   created_by_id TEXT NOT NULL,
   meet_date TIMESTAMP NOT NULL,
   meet_link TEXT NOT NULL,

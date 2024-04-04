@@ -8,10 +8,6 @@ export const safeParseLocalStorage = (key: LocalStorageKeys) => {
 };
 type LocalStorageKeys = "crvif/auth";
 
-// export const createProtectedRoute = <TFilePath extends keyof FileRoutesByPath, TRoute extends FileRoutesByPath[TFilePath]['preLoaderRoute']>(path: TFilePath):  => {
-
-// }
 export const getDefaultRedirectUrl = () => {
-  console.trace("redirect");
   return new URLSearchParams(window.location.search).get("redirect") || "/";
 };

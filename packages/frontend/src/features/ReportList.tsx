@@ -7,10 +7,15 @@ import { db } from "../db";
 export const MyReports = () => {
   const user = useUser()!;
   const myReports = useLiveQuery(
-    db.report.liveMany({ where: { owned_by: user.id }, include: { report_to_clause: { include: { clause: true } } } }),
+    db.report.liveMany({
+      where: { created_by_id: user.id },
+      include: { report_to_clause: { include: { clause: true } } },
+    }),
   );
-
-  if (myReports.error) return <Center>Une erreur s'est produite</Center>;
+  if (myReports.error) {
+    console.error(myReports.error);
+    return <Center>Une erreur s'est produite</Center>;
+  }
 
   return <ReportList reports={myReports.results ?? []} />;
 };
@@ -18,7 +23,10 @@ export const MyReports = () => {
 export const AllReports = () => {
   const allReports = useLiveQuery(db.report.liveMany());
 
-  if (allReports.error) return <Center>Une erreur s'est produite</Center>;
+  if (allReports.error) {
+    console.error(allReports.error);
+    return <Center>Une erreur s'est produite</Center>;
+  }
 
   return <ReportList reports={allReports.results ?? []} />;
 };

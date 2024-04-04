@@ -6,32 +6,12 @@ import { InputGroup } from "../components/InputGroup";
 import { PropsWithChildren, useRef } from "react";
 import { ChipGroup } from "../components/Chip";
 import { css } from "#styled-system/css";
-import { useForm, useWatch } from "react-hook-form";
+import { useFormContext, useWatch } from "react-hook-form";
 import type { Report } from "../generated/client";
 import { format, parse } from "date-fns";
 
 export const InfoForm = () => {
-  const form = useForm<Report>({
-    defaultValues: {
-      title: "",
-      redacted_by: "",
-      owned_by: "",
-      created_by_id: "",
-      meet_date: undefined,
-      meet_link: "",
-      applicant_name: "",
-      applicant_type: "",
-      project_status: "",
-      project_cadastral_ref: "",
-      project_land_contact: "",
-      project_space_type: "",
-      project_nature: "",
-      project_description: "",
-      decision: "",
-      decision_comment: "",
-      contacts: "",
-    },
-  });
+  const form = useFormContext<Report>();
   const user = useUser()!;
 
   const meetDate = useWatch({ control: form.control, name: "meet_date" });

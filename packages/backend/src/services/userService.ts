@@ -10,6 +10,7 @@ import { addDays } from "date-fns";
 
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { ENV, isDev } from "../envVars";
+import { AppError } from "../features/errors";
 
 export const insertUserSchema = createInsertSchema(userTable);
 export const selectUserSchema = createSelectSchema(userTable);
@@ -124,12 +125,6 @@ const serializeUser = (user: SelectUser) => {
   return pick(user, ["id", "name", "email"]);
 };
 
-/*
-  "x-triplit-user-id": "ledouxm",
-  "x-triplit-project-id": "crvif",
-  "x-triplit-token-type": "external"
-*/
-
 const encryptPassword = (password: string) => {
   return new Promise<string>((resolve, reject) => {
     const salt = crypto.randomBytes(16).toString("hex");
@@ -154,7 +149,7 @@ const verifyPassword = (password: string, hash: string) => {
 
 const assertLinkIsValid = (user?: SelectUser) => {
   if (!user) {
-    throw new TRPCError({
+    throw new AppError({
       code: "UNAUTHORIZED",
       message: "Le lien est invalide",
     });
@@ -163,7 +158,7 @@ const assertLinkIsValid = (user?: SelectUser) => {
 
 const assertUserExists = (user?: SelectUser) => {
   if (!user) {
-    throw new TRPCError({
+    throw new AppError({
       code: "UNAUTHORIZED",
       message: "Le courriel ou le mot de passe est incorrect",
     });
@@ -174,7 +169,7 @@ const assertPasswordsMatch = async (password: string, hash: string) => {
   const match = await verifyPassword(password, hash);
 
   if (!match) {
-    throw new TRPCError({
+    throw new AppError({
       code: "UNAUTHORIZED",
       message: "Le courriel ou le mot de passe est incorrect",
     });
@@ -185,7 +180,7 @@ const assertEmailDoesNotAlreadyExist = async (user: Omit<InsertUser, "id">) => {
   const userExists = await db.select().from(userTable).where(eq(userTable.email, user.email));
 
   if (userExists.length) {
-    throw new TRPCError({
+    throw new AppError({
       code: "CONFLICT",
       message: "Un utilisateur avec ce courriel existe déjà",
     });
