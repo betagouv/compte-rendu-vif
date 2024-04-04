@@ -4,9 +4,7 @@ import Button from "@codegouvfr/react-dsfr/Button";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { Tabs } from "../components/Tabs";
 import { useUser } from "../contexts/AuthContext";
-import { db } from "../db";
 import { EnsureUser } from "../components/EnsureUser";
-import { useLiveQuery } from "electric-sql/react";
 import { AllReports, MyReports } from "../features/ReportList";
 
 const Index = () => {
