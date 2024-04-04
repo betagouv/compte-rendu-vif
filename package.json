@@ -14,7 +14,8 @@
     "migrate:users": "pnpm migration-users:create",
     "migrate:electric": "pnpm migration-electric:up && pnpm client:generate",
     "migration-electric:up": "pnpm electric-sql with-config \"pnpm pg-migrations apply --database {{ELECTRIC_PROXY}} --directory ./db/migrations\"",
-    "client:generate": "pnpm frontend client:generate"
+    "client:generate": "pnpm frontend client:generate",
+    "electric:start": "docker compose up -d"
   },
   "keywords": [],
   "author": "",
