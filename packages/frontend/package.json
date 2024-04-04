@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && pnpm dsfr && pnpm icons",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "start": "vite preview -p $PORT",
@@ -32,6 +32,7 @@
     "@tanstack/react-query": "^5.28.8",
     "@tanstack/react-router": "^1.22.2",
     "@tanstack/router-devtools": "^1.22.2",
+    "@trpc/client": "^10.45.2",
     "date-fns": "^3.6.0",
     "electric-sql": "^0.9.5",
     "install": "^0.13.0",
