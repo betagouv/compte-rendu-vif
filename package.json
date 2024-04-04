@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "engines": {
-    "node": ">=20.10.0"
+    "node": "^20"
   },
   "scripts": {
     "frontend": "pnpm --filter @cr-vif/frontend",

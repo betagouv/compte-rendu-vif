@@ -40,7 +40,7 @@ importers:
         version: 16.4.5
       drizzle-orm:
         specifier: ^0.30.4
-        version: 0.30.6(@types/better-sqlite3@7.6.9)(pg@8.11.5)(postgres@3.4.4)(react@18.2.0)
+        version: 0.30.6(pg@8.11.5)(postgres@3.4.4)(react@18.2.0)
       drizzle-zod:
         specifier: ^0.5.1
         version: 0.5.1(drizzle-orm@0.30.6)(zod@3.22.4)
@@ -84,9 +84,6 @@ importers:
       '@triplit/client':
         specifier: ^0.3.33
         version: 0.3.33(react@18.2.0)
-      '@types/better-sqlite3':
-        specifier: ^7.6.9
-        version: 7.6.9
       '@types/express':
         specifier: ^4.17.21
         version: 4.17.21
@@ -3376,11 +3373,6 @@ packages:
       '@babel/types': 7.24.0
     dev: true
 
-  /@types/better-sqlite3@7.6.9:
-    resolution: {integrity: sha512-FvktcujPDj9XKMJQWFcl2vVl7OdRIqsSRX9b0acWwTmwLK9CF2eqo/FRcmMLNpugKoX/avA6pb7TorDLmpgTnQ==}
-    dependencies:
-      '@types/node': 20.12.3
-
   /@types/body-parser@1.19.5:
     resolution: {integrity: sha512-fB3Zu92ucau0iQ0JMCFQE7b/dv8Ot07NI3KaZIkIUNXq82k4eBAqUaneXfleGY9JWskeS9y+u0nXMyspcuQrCg==}
     dependencies:
@@ -5710,7 +5702,7 @@ packages:
       - supports-color
     dev: true
 
-  /drizzle-orm@0.30.6(@types/better-sqlite3@7.6.9)(pg@8.11.5)(postgres@3.4.4)(react@18.2.0):
+  /drizzle-orm@0.30.6(pg@8.11.5)(postgres@3.4.4)(react@18.2.0):
     resolution: {integrity: sha512-8RgNUmY7J03GRuRgBV5SaJNbYgLVPjdSWNS/bRkIMIHt2TFCA439lJsNpqYX8asyKMqkw8ceBiamUnCIXZIt9w==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
@@ -5790,7 +5782,6 @@ packages:
       sqlite3:
         optional: true
     dependencies:
-      '@types/better-sqlite3': 7.6.9
       pg: 8.11.5
       postgres: 3.4.4
       react: 18.2.0
@@ -5802,7 +5793,7 @@ packages:
       drizzle-orm: '>=0.23.13'
       zod: '*'
     dependencies:
-      drizzle-orm: 0.30.6(@types/better-sqlite3@7.6.9)(pg@8.11.5)(postgres@3.4.4)(react@18.2.0)
+      drizzle-orm: 0.30.6(pg@8.11.5)(postgres@3.4.4)(react@18.2.0)
       zod: 3.22.4
     dev: false
 
