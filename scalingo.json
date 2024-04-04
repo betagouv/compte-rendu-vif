@@ -1,0 +1,25 @@
+{
+  "//": "https://developers.scalingo.com/scalingo-json-schema",
+  "name": "Compte-rendu VIF",
+  "description": "",
+  "keywords": [],
+  "logo": "",
+  "repository": "h",
+  "success_url": "/",
+  "website": "",
+  "env": {
+    "BUILDPACK_URL": {
+      "description": "Custom buildpack to support pnpm (don't change the default value).",
+      "value": "https://github.com/unfold/heroku-buildpack-pnpm"
+    },
+    "NODE_ENV": {
+      "description": "Application environment (don't change the default value).",
+      "value": "production"
+    }
+  },
+  "addons": [
+    {
+      "plan": "postgresql:postgresql-sandbox"
+    }
+  ]
+}
