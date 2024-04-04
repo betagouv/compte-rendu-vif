@@ -7,6 +7,7 @@
     "frontend": "pnpm --filter @cr-vif/frontend",
     "backend": "pnpm --filter @cr-vif/backend",
     "migration-users:create": "pnpm backend migration:create",
+    "build": "pnpm frontend build",
     "migrate:users": "pnpm migration-users:create",
     "migrate:electric": "pnpm migration-electric:up && pnpm client:generate",
     "migration-electric:up": "pnpm electric-sql with-config \"pnpm pg-migrations apply --database {{ELECTRIC_PROXY}} --directory ./db/migrations\"",
