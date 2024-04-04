@@ -8,7 +8,7 @@
     "build": "pnpm dsfr && vite build && pnpm icons",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "start": "vite preview -p $PORT",
+    "start": "vite preview --port $PORT",
     "prepare": "panda codegen",
     "dsfr": "copy-dsfr-to-public && pnpm panda-ds",
     "icons": "only-include-used-icons",
