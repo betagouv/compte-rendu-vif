@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "5",
-      "when": 1711462972209,
-      "tag": "0000_bent_gorilla_man",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "5",
-      "when": 1711650727283,
-      "tag": "0001_goofy_psynapse",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "5",
-      "when": 1712064808139,
-      "tag": "0002_public_gertrude_yorkes",
+      "when": 1712221218199,
+      "tag": "0000_regular_adam_warlock",
       "breakpoints": true
     }
   ]

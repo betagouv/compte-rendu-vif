@@ -8,7 +8,7 @@
     "build": "tsup ./src/index.ts --format esm",
     "start": "node ./dist/index.js",
     "dev": "vite-node --watch ./src/index.ts",
-    "migration:create": "pnpm drizzle-kit generate:sqlite"
+    "migration:create": "pnpm drizzle-kit generate:pg"
   },
   "exports": {
     ".": "./src/router.ts"
@@ -33,13 +33,11 @@
     "vite-node": "^1.4.0"
   },
   "dependencies": {
-    "@electric-sql/pglite": "^0.1.1",
     "@fastify/cors": "^9.0.1",
     "@sinclair/typebox": "^0.32.20",
-    "better-sqlite3": "^9.4.3",
+    "@trpc/server": "^10.45.2",
     "date-fns": "^3.6.0",
     "dotenv": "^16.4.5",
-    "dotenv-expand": "^11.0.6",
     "drizzle-orm": "^0.30.4",
     "drizzle-zod": "^0.5.1",
     "elysia": "^1.0.10",
@@ -48,6 +46,7 @@
     "jsonwebtoken": "^9.0.2",
     "nodemailer": "^6.9.13",
     "pastable": "^2.2.1",
+    "postgres": "^3.4.4",
     "reflect-metadata": "^0.2.1",
     "uuid": "^9.0.1",
     "ws": "^8.16.0",

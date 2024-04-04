@@ -20,9 +20,6 @@ export const appRouter = router({
     .mutation(({ input, ctx }) => {
       return ctx.services.user.resetPassword(input);
     }),
-  getOrCreateRepo: procedure.input(z.object({ repoId: z.string() })).query(({ input, ctx }) => {
-    return ctx.services.repo.getOrCreateRepo(input.repoId);
-  }),
 });
 
 export type AppRouter = typeof appRouter;

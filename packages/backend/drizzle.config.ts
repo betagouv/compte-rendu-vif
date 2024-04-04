@@ -4,8 +4,8 @@ import { ENV } from "./src/envVars";
 export default {
   schema: "./src/db/schema.ts",
   out: "./drizzle",
-  driver: "better-sqlite",
+  driver: "pg",
   dbCredentials: {
-    url: ENV.USERS_DATABASE_URL,
+    connectionString: ENV.USERS_DATABASE_URL,
   },
 } satisfies Config;

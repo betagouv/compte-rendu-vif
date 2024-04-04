@@ -19,21 +19,24 @@ type SelectUser = z.infer<typeof selectUserSchema>;
 
 export class UserService {
   async createUser(payload: Omit<InsertUser, "id">) {
-    assertEmailDoesNotAlreadyExist(payload);
+    await assertEmailDoesNotAlreadyExist(payload);
 
     const password = await encryptPassword(payload.password);
 
-    const user = db
+    const changes = await db
       .insert(userTable)
       .values({ ...payload, password, id: crypto.randomUUID() })
       .returning()
-      .get();
+      .execute();
+
+    const user = changes[0]!;
 
     return { user: serializeUser(user)!, token: this.generateJWT(user) };
   }
 
   async getUserById(id: string) {
-    const user = db.select().from(userTable).where(eq(userTable.id, id)).get();
+    const users = await db.select().from(userTable).where(eq(userTable.id, id));
+    const user = users[0];
     assertUserExists(user);
 
     return serializeUser(user!);
@@ -41,13 +44,15 @@ export class UserService {
 
   async updateUser(id: string, payload: Partial<InsertUser>) {
     const changes = pick(payload, ["name", "email", "password"]);
-    const user = db.update(userTable).set(changes).where(eq(userTable.id, id)).returning().get();
+    const users = await db.update(userTable).set(changes).where(eq(userTable.id, id)).returning().execute();
+    const user = users[0];
 
-    return serializeUser(user);
+    return serializeUser(user!);
   }
 
   async login(payload: Pick<SelectUser, "email" | "password">) {
-    const user = db.select().from(userTable).where(eq(userTable.email, payload.email)).get();
+    const users = await db.select().from(userTable).where(eq(userTable.email, payload.email));
+    const user = users[0];
 
     assertUserExists(user);
     await assertPasswordsMatch(payload.password, user!.password);
@@ -56,33 +61,41 @@ export class UserService {
   }
 
   async generateResetLink(email: string) {
-    const user = db.select().from(userTable).where(eq(userTable.email, email)).get();
+    const users = await db.select().from(userTable).where(eq(userTable.email, email));
+    const user = users[0];
     assertUserExists(user);
 
     const temporaryLink = crypto.randomUUID();
     const temporaryLinkExpiresAt = addDays(new Date(), 1).toISOString();
 
-    db.update(userTable).set({ temporaryLink, temporaryLinkExpiresAt }).where(eq(userTable.email, email)).run();
+    await db
+      .update(userTable)
+      .set({ temporaryLink, temporaryLinkExpiresAt })
+      .where(eq(userTable.email, email))
+      .execute();
 
     return isDev ? temporaryLink : null;
   }
 
   async resetPassword({ temporaryLink, newPassword }: { temporaryLink: string; newPassword: string }) {
-    const user = db
+    const users = await db
       .select()
       .from(userTable)
       .where(
         and(eq(userTable.temporaryLink, temporaryLink), gt(userTable.temporaryLinkExpiresAt, new Date().toISOString())),
-      )
-      .get();
+      );
+    const user = users[0];
 
     assertLinkIsValid(user);
     const password = await encryptPassword(newPassword);
 
-    db.update(userTable)
+    await db
+      .update(userTable)
       .set({ password, temporaryLink: null, temporaryLinkExpiresAt: null })
       .where(eq(userTable.temporaryLink, temporaryLink))
-      .run();
+      .execute();
+
+    return true;
   }
 
   verifyJWT(token: string) {
@@ -168,10 +181,10 @@ const assertPasswordsMatch = async (password: string, hash: string) => {
   }
 };
 
-const assertEmailDoesNotAlreadyExist = (user: Omit<InsertUser, "id">) => {
-  const userExists = db.select().from(userTable).where(eq(userTable.email, user.email)).get();
+const assertEmailDoesNotAlreadyExist = async (user: Omit<InsertUser, "id">) => {
+  const userExists = await db.select().from(userTable).where(eq(userTable.email, user.email));
 
-  if (userExists) {
+  if (userExists.length) {
     throw new TRPCError({
       code: "CONFLICT",
       message: "Un utilisateur avec ce courriel existe déjà",

@@ -2,8 +2,7 @@ import "./envVars";
 import { onHmr, registerViteHmrServerRestart } from "./hmr";
 
 // import { createServer } from "@triplit/server";
-import { db } from "./db/db";
-import { migrate } from "drizzle-orm/better-sqlite3/migrator";
+import { db, migrateUsersDb } from "./db/db";
 // import { schema } from "../../frontend/triplit/schema";
 import { fastifyTRPCPlugin, FastifyTRPCPluginOptions } from "@trpc/server/adapters/fastify";
 import fastify from "fastify";
@@ -24,7 +23,7 @@ const start = async () => {
   await registerViteHmrServerRestart();
   console.log("Starting...");
 
-  migrate(db, { migrationsFolder: "./drizzle" });
+  await migrateUsersDb();
 
   const fastifyInstance = fastify({ maxParamLength: 5000 });
 
