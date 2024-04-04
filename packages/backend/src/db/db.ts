@@ -2,9 +2,10 @@ import { drizzle } from "drizzle-orm/postgres-js";
 import { ENV } from "../envVars";
 import postgres from "postgres";
 import { migrate } from "drizzle-orm/postgres-js/migrator";
+import { config } from "../../drizzle.config";
 
-const migrationClient = postgres(ENV.USERS_DATABASE_URL, { max: 1 });
+const migrationClient = postgres({ ...config, max: 1 });
 export const migrateUsersDb = () => migrate(drizzle(migrationClient), { migrationsFolder: "./drizzle" });
 
-const queryClient = postgres(ENV.USERS_DATABASE_URL);
+const queryClient = postgres(config);
 export const db = drizzle(queryClient);

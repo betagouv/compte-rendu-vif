@@ -1,5 +1,5 @@
 {
-  "id": "1d3868b3-fd2d-436c-8744-bc2a47f2e2dd",
+  "id": "0e9842b4-cb80-431b-9645-a46282843819",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "5",
   "dialect": "pg",
@@ -8,12 +8,6 @@
       "name": "delegations",
       "schema": "",
       "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true
-        },
         "createdBy": {
           "name": "createdBy",
           "type": "text",
@@ -29,7 +23,15 @@
       },
       "indexes": {},
       "foreignKeys": {},
-      "compositePrimaryKeys": {},
+      "compositePrimaryKeys": {
+        "delegations_createdBy_delegatedTo_pk": {
+          "name": "delegations_createdBy_delegatedTo_pk",
+          "columns": [
+            "createdBy",
+            "delegatedTo"
+          ]
+        }
+      },
       "uniqueConstraints": {}
     },
     "users": {

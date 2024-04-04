@@ -6,7 +6,11 @@ config({ path: "../../.env" });
 const stringOrNumberAsNumber = z.string().or(z.number()).transform(Number);
 
 const envSchema = z.object({
-  USERS_DATABASE_URL: z.string(),
+  PG_PORT: stringOrNumberAsNumber.default(5432),
+  PG_HOST: z.string(),
+  PG_USER: z.string(),
+  PG_PASSWORD: z.string(),
+  PG_USERS_DB: z.string(),
   TOKEN_LIFETIME: z.string().default("1w"),
   JWT_SECRET: z.string(),
   NODE_ENV: z.string().default("development"),

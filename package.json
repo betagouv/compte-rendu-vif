@@ -6,8 +6,9 @@
   "scripts": {
     "frontend": "pnpm --filter @cr-vif/frontend",
     "backend": "pnpm --filter @cr-vif/backend",
-    "migrate": "pnpm migration:up && pnpm client:generate",
-    "migration:up": "pnpm electric-sql with-config \"pnpm pg-migrations apply --database {{ELECTRIC_PROXY}} --directory ./db/migrations\"",
+    "migration-users:create": "pnpm backend migration:create",
+    "migrate:electric": "pnpm migration:up && pnpm client:generate",
+    "migration-electric:up": "pnpm electric-sql with-config \"pnpm pg-migrations apply --database {{ELECTRIC_PROXY}} --directory ./db/migrations\"",
     "client:generate": "pnpm frontend client:generate"
   },
   "keywords": [],

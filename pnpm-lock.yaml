@@ -23,9 +23,6 @@ importers:
 
   packages/backend:
     dependencies:
-      '@electric-sql/pglite':
-        specifier: ^0.1.1
-        version: 0.1.1
       '@fastify/cors':
         specifier: ^9.0.1
         version: 9.0.1
@@ -35,21 +32,15 @@ importers:
       '@trpc/server':
         specifier: ^10.45.2
         version: 10.45.2
-      better-sqlite3:
-        specifier: ^9.4.3
-        version: 9.4.4
       date-fns:
         specifier: ^3.6.0
         version: 3.6.0
       dotenv:
         specifier: ^16.4.5
         version: 16.4.5
-      dotenv-expand:
-        specifier: ^11.0.6
-        version: 11.0.6
       drizzle-orm:
         specifier: ^0.30.4
-        version: 0.30.6(@electric-sql/pglite@0.1.1)(@types/better-sqlite3@7.6.9)(better-sqlite3@9.4.4)(pg@8.11.5)(postgres@3.4.4)(react@18.2.0)
+        version: 0.30.6(@types/better-sqlite3@7.6.9)(pg@8.11.5)(postgres@3.4.4)(react@18.2.0)
       drizzle-zod:
         specifier: ^0.5.1
         version: 0.5.1(drizzle-orm@0.30.6)(zod@3.22.4)
@@ -1107,10 +1098,6 @@ packages:
     dependencies:
       superjson: 2.2.1
     dev: true
-
-  /@electric-sql/pglite@0.1.1:
-    resolution: {integrity: sha512-7tJNIJBXuiuVl6Y9ehwv9mTlQlPeQbQ7wIKn49eorToPlNnkYnBzVWpOOTkNqv6Xu4dz75vl3S/9BmlfqCqM1w==}
-    dev: false
 
   /@electric-sql/prisma-generator@1.1.3:
     resolution: {integrity: sha512-Tvtdw7Vm3Ggdp35bCWmaYEyGmWeoLxU+g3mdbGNP4PzCq/eqMyO6OCTyZF7bdT+KqO2hEQT+jljsPRA+uUTgrQ==}
@@ -4700,14 +4687,6 @@ packages:
       bindings: 1.5.0
       prebuild-install: 7.1.2
 
-  /better-sqlite3@9.4.4:
-    resolution: {integrity: sha512-h/gmKmmcTBHg9kDE05ZfocXyfQ7UzPlLVwHVD3yCZ5iXdj3x0hK5x2VTm4BRavBqxTGBOsmYcjOOHHMxuM0BVw==}
-    requiresBuild: true
-    dependencies:
-      bindings: 1.5.0
-      prebuild-install: 7.1.2
-    dev: false
-
   /big.js@5.2.2:
     resolution: {integrity: sha512-vyL2OymJxmarO8gxMr0mhChsO9QGwhynfuu4+MHTAW6czfq9humCB7rKpUjDd9YUiDPU4mzpyupFSvOClAwbmQ==}
     dev: false
@@ -5692,13 +5671,6 @@ packages:
     engines: {node: '>=12'}
     dev: true
 
-  /dotenv-expand@11.0.6:
-    resolution: {integrity: sha512-8NHi73otpWsZGBSZwwknTXS5pqMOrk9+Ssrna8xCaxkzEpU9OTf9R5ArQGVw03//Zmk9MOwLPng9WwndvpAJ5g==}
-    engines: {node: '>=12'}
-    dependencies:
-      dotenv: 16.4.5
-    dev: false
-
   /dotenv-flow@4.1.0:
     resolution: {integrity: sha512-0cwP9jpQBQfyHwvE0cRhraZMkdV45TQedA8AAUZMsFzvmLcQyc1HPv+oX0OOYwLFjIlvgVepQ+WuQHbqDaHJZg==}
     engines: {node: '>= 12.0.0'}
@@ -5738,7 +5710,7 @@ packages:
       - supports-color
     dev: true
 
-  /drizzle-orm@0.30.6(@electric-sql/pglite@0.1.1)(@types/better-sqlite3@7.6.9)(better-sqlite3@9.4.4)(pg@8.11.5)(postgres@3.4.4)(react@18.2.0):
+  /drizzle-orm@0.30.6(@types/better-sqlite3@7.6.9)(pg@8.11.5)(postgres@3.4.4)(react@18.2.0):
     resolution: {integrity: sha512-8RgNUmY7J03GRuRgBV5SaJNbYgLVPjdSWNS/bRkIMIHt2TFCA439lJsNpqYX8asyKMqkw8ceBiamUnCIXZIt9w==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
@@ -5818,9 +5790,7 @@ packages:
       sqlite3:
         optional: true
     dependencies:
-      '@electric-sql/pglite': 0.1.1
       '@types/better-sqlite3': 7.6.9
-      better-sqlite3: 9.4.4
       pg: 8.11.5
       postgres: 3.4.4
       react: 18.2.0
@@ -5832,7 +5802,7 @@ packages:
       drizzle-orm: '>=0.23.13'
       zod: '*'
     dependencies:
-      drizzle-orm: 0.30.6(@electric-sql/pglite@0.1.1)(@types/better-sqlite3@7.6.9)(better-sqlite3@9.4.4)(pg@8.11.5)(postgres@3.4.4)(react@18.2.0)
+      drizzle-orm: 0.30.6(@types/better-sqlite3@7.6.9)(pg@8.11.5)(postgres@3.4.4)(react@18.2.0)
       zod: 3.22.4
     dev: false
 

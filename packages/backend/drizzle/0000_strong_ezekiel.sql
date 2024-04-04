@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS "delegations" (
-	"id" text PRIMARY KEY NOT NULL,
 	"createdBy" text NOT NULL,
-	"delegatedTo" text NOT NULL
+	"delegatedTo" text NOT NULL,
+	CONSTRAINT "delegations_createdBy_delegatedTo_pk" PRIMARY KEY("createdBy","delegatedTo")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "users" (
