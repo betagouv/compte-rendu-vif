@@ -1,2 +1,2 @@
-backend: pnpm backend start
-frontend: pnpm frontend start
+backend: cd ./packages/backend && pnpm start
+frontend: cd ./packages/frontend && pnpm start
