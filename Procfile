@@ -1,2 +1,2 @@
-frontend: pnpm frontend start
+# frontend: pnpm frontend start
 backend: pnpm backend start
