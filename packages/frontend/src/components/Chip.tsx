@@ -57,7 +57,7 @@ export const Chip = ({
   const styles = chip({ isChecked });
 
   return (
-    <Tag className={styles} nativeButtonProps={{ onClick: () => onCheckChange(!isChecked) }}>
+    <Tag className={styles} nativeButtonProps={{ onClick: () => onCheckChange(!isChecked), type: "button" }}>
       {children}
     </Tag>
   );

@@ -9,7 +9,6 @@ import { useAuthContext } from "../contexts/AuthContext";
 import { FullWidthButton } from "./FullWidthButton";
 import { InputGroup } from "./InputGroup";
 import { PasswordInput } from "./PasswordInput";
-import { getDefaultRedirectUrl } from "../utils";
 
 export const LoginForm = () => {
   const [authData, setAuthData] = useAuthContext();
@@ -51,7 +50,7 @@ export const LoginForm = () => {
               }),
             }}
             state={formErrors.email ? "error" : undefined}
-            stateRelatedMessage={formErrors.email?.message}
+            stateRelatedMessage={formErrors.email?.message as string}
           />
           <PasswordInput
             state={formErrors?.password ? "error" : undefined}

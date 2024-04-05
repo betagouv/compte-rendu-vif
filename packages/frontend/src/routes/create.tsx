@@ -1,11 +1,15 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { EnsureUser } from "../components/EnsureUser";
-import { Flex } from "#styled-system/jsx";
+import { Box, Center, Flex } from "#styled-system/jsx";
 import { Tabs } from "../components/Tabs";
 import { InfoForm } from "../features/InfoForm";
 import { FormProvider, useForm } from "react-hook-form";
-import type { Report } from "../generated/client";
+import type { Report } from "../generated/client/prismaClient";
 import { useUser } from "../contexts/AuthContext";
+import Button from "@codegouvfr/react-dsfr/Button";
+import { useMutation } from "@tanstack/react-query";
+import { db } from "../db";
+import { v4 } from "uuid";
 
 export const CreatePage = () => {
   const user = useUser()!;
@@ -14,7 +18,8 @@ export const CreatePage = () => {
       title: "",
       redacted_by: "",
       created_by_id: user.id,
-      meet_date: undefined,
+      created_by_username: user.name,
+      meet_date: new Date(),
       meet_link: "",
       applicant_name: "",
       applicant_type: "",
@@ -27,6 +32,8 @@ export const CreatePage = () => {
       decision: "",
       decision_comment: "",
       contacts: "",
+      created_at: new Date(),
+      updated_at: new Date(),
     },
   });
 
@@ -35,9 +42,18 @@ export const CreatePage = () => {
     { id: "notes", label: "Notes terrain" },
   ];
 
+  const navigate = useNavigate();
+
+  const createReportMutation = useMutation({
+    mutationFn: (report: Report) => db.report.create({ data: { ...report, id: "report-" + v4() } }),
+    onSuccess: () => {
+      navigate({ to: "/" });
+    },
+  });
+
   return (
     <FormProvider {...form}>
-      <form>
+      <form onSubmit={form.handleSubmit((values) => createReportMutation.mutate(values))}>
         <Tabs.Root defaultValue="info">
           <Tabs.List>
             {options.map((option) => (
@@ -52,6 +68,12 @@ export const CreatePage = () => {
           </Tabs.Content>
           <Tabs.Content value="notes"></Tabs.Content>
         </Tabs.Root>
+
+        <Center>
+          <Button type="submit" iconId="ri-draft-line">
+            Créer le CR
+          </Button>
+        </Center>
       </form>
     </FormProvider>
   );
@@ -60,7 +82,9 @@ export const CreatePage = () => {
 export const Route = createFileRoute("/create")({
   component: () => (
     <EnsureUser>
-      <CreatePage />
+      <Box mb="80px">
+        <CreatePage />
+      </Box>
     </EnsureUser>
   ),
   beforeLoad: ({ context, location }) => {

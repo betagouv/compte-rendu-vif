@@ -1,5 +1,5 @@
 import { PropsWithChildren } from "react";
-import { InputProps } from "@codegouvfr/react-dsfr/Input";
+import type { InputProps } from "@codegouvfr/react-dsfr/Input";
 import React from "react";
 import { BoxProps } from "#styled-system/jsx";
 import { cx } from "#styled-system/css";

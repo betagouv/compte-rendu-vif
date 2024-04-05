@@ -55,6 +55,7 @@ export type ReportPayload<ExtArgs extends $Extensions.Args = $Extensions.Default
     contacts: string
     created_at: Date
     updated_at: Date
+    created_by_username: string
   }, ExtArgs["result"]["report"]>
   composites: {}
 }
@@ -2149,6 +2150,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     contacts: string | null
     created_at: Date | null
     updated_at: Date | null
+    created_by_username: string | null
   }
 
   export type ReportMaxAggregateOutputType = {
@@ -2171,6 +2173,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     contacts: string | null
     created_at: Date | null
     updated_at: Date | null
+    created_by_username: string | null
   }
 
   export type ReportCountAggregateOutputType = {
@@ -2193,6 +2196,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     contacts: number
     created_at: number
     updated_at: number
+    created_by_username: number
     _all: number
   }
 
@@ -2217,6 +2221,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     contacts?: true
     created_at?: true
     updated_at?: true
+    created_by_username?: true
   }
 
   export type ReportMaxAggregateInputType = {
@@ -2239,6 +2244,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     contacts?: true
     created_at?: true
     updated_at?: true
+    created_by_username?: true
   }
 
   export type ReportCountAggregateInputType = {
@@ -2261,6 +2267,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     contacts?: true
     created_at?: true
     updated_at?: true
+    created_by_username?: true
     _all?: true
   }
 
@@ -2357,6 +2364,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     contacts: string
     created_at: Date
     updated_at: Date
+    created_by_username: string
     _count: ReportCountAggregateOutputType | null
     _min: ReportMinAggregateOutputType | null
     _max: ReportMaxAggregateOutputType | null
@@ -2396,6 +2404,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     contacts?: boolean
     created_at?: boolean
     updated_at?: boolean
+    created_by_username?: boolean
     report_to_clause?: boolean | Report$report_to_clauseArgs<ExtArgs>
     _count?: boolean | ReportCountOutputTypeArgs<ExtArgs>
   }, ExtArgs["result"]["report"]>
@@ -2420,6 +2429,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     contacts?: boolean
     created_at?: boolean
     updated_at?: boolean
+    created_by_username?: boolean
   }
 
   export type ReportInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
@@ -4143,7 +4153,8 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     decision_comment: 'decision_comment',
     contacts: 'contacts',
     created_at: 'created_at',
-    updated_at: 'updated_at'
+    updated_at: 'updated_at',
+    created_by_username: 'created_by_username'
   };
 
   export type ReportScalarFieldEnum = (typeof ReportScalarFieldEnum)[keyof typeof ReportScalarFieldEnum]
@@ -4241,6 +4252,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     contacts?: StringFilter | string
     created_at?: DateTimeFilter | Date | string
     updated_at?: DateTimeFilter | Date | string
+    created_by_username?: StringFilter | string
     report_to_clause?: Report_to_clauseListRelationFilter
   }
 
@@ -4264,6 +4276,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     contacts?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
+    created_by_username?: SortOrder
     report_to_clause?: Report_to_clauseOrderByRelationAggregateInput
   }
 
@@ -4291,6 +4304,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     contacts?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
+    created_by_username?: SortOrder
     _count?: ReportCountOrderByAggregateInput
     _max?: ReportMaxOrderByAggregateInput
     _min?: ReportMinOrderByAggregateInput
@@ -4319,6 +4333,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     contacts?: StringWithAggregatesFilter | string
     created_at?: DateTimeWithAggregatesFilter | Date | string
     updated_at?: DateTimeWithAggregatesFilter | Date | string
+    created_by_username?: StringWithAggregatesFilter | string
   }
 
   export type Report_to_clauseWhereInput = {
@@ -4428,6 +4443,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     contacts: string
     created_at: Date | string
     updated_at: Date | string
+    created_by_username: string
     report_to_clause?: Report_to_clauseCreateNestedManyWithoutReportInput
   }
 
@@ -4451,6 +4467,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     contacts: string
     created_at: Date | string
     updated_at: Date | string
+    created_by_username: string
     report_to_clause?: Report_to_clauseUncheckedCreateNestedManyWithoutReportInput
   }
 
@@ -4474,6 +4491,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     contacts?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    created_by_username?: StringFieldUpdateOperationsInput | string
     report_to_clause?: Report_to_clauseUpdateManyWithoutReportNestedInput
   }
 
@@ -4497,6 +4515,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     contacts?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    created_by_username?: StringFieldUpdateOperationsInput | string
     report_to_clause?: Report_to_clauseUncheckedUpdateManyWithoutReportNestedInput
   }
 
@@ -4520,6 +4539,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     contacts: string
     created_at: Date | string
     updated_at: Date | string
+    created_by_username: string
   }
 
   export type ReportUpdateManyMutationInput = {
@@ -4542,6 +4562,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     contacts?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    created_by_username?: StringFieldUpdateOperationsInput | string
   }
 
   export type ReportUncheckedUpdateManyInput = {
@@ -4564,6 +4585,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     contacts?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    created_by_username?: StringFieldUpdateOperationsInput | string
   }
 
   export type Report_to_clauseCreateInput = {
@@ -4698,6 +4720,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     contacts?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
+    created_by_username?: SortOrder
   }
 
   export type ReportMaxOrderByAggregateInput = {
@@ -4720,6 +4743,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     contacts?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
+    created_by_username?: SortOrder
   }
 
   export type ReportMinOrderByAggregateInput = {
@@ -4742,6 +4766,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     contacts?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
+    created_by_username?: SortOrder
   }
 
   export type DateTimeWithAggregatesFilter = {
@@ -5091,6 +5116,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     contacts: string
     created_at: Date | string
     updated_at: Date | string
+    created_by_username: string
   }
 
   export type ReportUncheckedCreateWithoutReport_to_clauseInput = {
@@ -5113,6 +5139,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     contacts: string
     created_at: Date | string
     updated_at: Date | string
+    created_by_username: string
   }
 
   export type ReportCreateOrConnectWithoutReport_to_clauseInput = {
@@ -5162,6 +5189,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     contacts?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    created_by_username?: StringFieldUpdateOperationsInput | string
   }
 
   export type ReportUncheckedUpdateWithoutReport_to_clauseInput = {
@@ -5184,6 +5212,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     contacts?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    created_by_username?: StringFieldUpdateOperationsInput | string
   }
 
   export type Report_to_clauseCreateManyClauseInput = {

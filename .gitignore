@@ -57,3 +57,4 @@ robots.txt
 
 local_db/*
 .electric_migrations_*
+trace-dir/*
