@@ -18,6 +18,7 @@
   "keywords": [],
   "author": "",
   "devDependencies": {
+    "@biomejs/biome": "1.6.4",
     "@databases/pg-migrations": "^5.0.3",
     "@pandabox/prettier-plugin": "^0.1.0",
     "electric-sql": "^0.9.5",

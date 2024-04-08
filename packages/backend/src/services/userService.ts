@@ -3,15 +3,14 @@ import { userTable } from "../db/schema";
 import { db } from "../db/db";
 import { and, eq, gt } from "drizzle-orm";
 import { pick } from "pastable";
-import crypto from "crypto";
+import crypto from "node:crypto";
 import jwt from "jsonwebtoken";
 import { addDays } from "date-fns";
 
 import { createInsertSchema, createSelectSchema } from "drizzle-typebox";
 import { ENV, isDev } from "../envVars";
 import { AppError } from "../features/errors";
-import { Static } from "elysia";
-import { Type } from "@sinclair/typebox";
+import { Type, type Static } from "@sinclair/typebox";
 
 export const insertUserSchema = createInsertSchema(userTable);
 export const selectUserSchema = createSelectSchema(userTable);
@@ -177,4 +176,6 @@ const assertEmailDoesNotAlreadyExist = async (user: Omit<InsertUser, "id">) => {
   if (userExists.length) {
     throw new AppError(400, "Un utilisateur avec ce courriel existe déjà");
   }
+
+  return userExists[0];
 };
