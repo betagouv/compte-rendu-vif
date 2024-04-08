@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "frontend": "pnpm --filter @cr-vif/frontend",
     "backend": "pnpm --filter @cr-vif/backend",
@@ -17,8 +20,12 @@
   "devDependencies": {
     "@databases/pg-migrations": "^5.0.3",
     "@pandabox/prettier-plugin": "^0.1.0",
+    "@types/bun": "^1.0.12",
     "electric-sql": "^0.9.5",
     "prettier": "^3.2.5"
   },
-  "pnpm": {}
+  "pnpm": {},
+  "dependencies": {
+    "wa-sqlite": "^1.0.0"
+  }
 }
