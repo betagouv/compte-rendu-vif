@@ -1,52 +1,70 @@
-import { insertUserSchema } from "./services/userService";
-
-// export const appRouter = router({
-//   createUser: procedure.input(insertUserSchema.omit({ id: true })).mutation(({ input, ctx }) => {
-//     return ctx.services.user.createUser(input);
-//   }),
-//   login: procedure.input(insertUserSchema.pick({ email: true, password: true })).mutation(({ input, ctx }) => {
-//     return ctx.services.user.login(input);
-//   }),
-//   verifyToken: procedure.input(z.object({ token: z.string() })).query(({ input, ctx }) => {
-//     return ctx.services.user.verifyJWT(input.token);
-//   }),
-//   generateResetLink: procedure.input(z.object({ email: z.string() })).mutation(({ input, ctx }) => {
-//     return ctx.services.user.generateResetLink(input.email);
-//   }),
-//   resetPassword: procedure
-//     .input(z.object({ temporaryLink: z.string(), newPassword: z.string() }))
-//     .mutation(({ input, ctx }) => {
-//       return ctx.services.user.resetPassword(input);
-//     }),
-// });
-import { Elysia, t } from "elysia";
+import { TypeBoxValidatorCompiler, TypeBoxTypeProvider } from "@fastify/type-provider-typebox";
+import fastify from "fastify";
+import { AppError } from "./features/errors";
+import { userPlugin } from "./routes/userRoutes";
 import { getServices } from "./services/services";
+import cors from "@fastify/cors";
+// import fastifySwagger from "@fastify/swagger";
+import swaggerUi from "@fastify/swagger";
+import fs from "fs/promises";
+import { makeDebug } from "./features/debug";
 
-const createUserTSchema = { body: t.Pick(insertUserSchema, ["name", "email", "password"]) };
-const loginTSchema = { body: t.Pick(insertUserSchema, ["email", "password"]) };
-const verifyTokenTSchema = { query: t.Object({ token: t.String() }) };
+const debug = makeDebug("fastify");
 
-export const elysia = new Elysia()
-  .decorate("services", getServices())
-  .post(
-    "/create-user",
-    ({ body: { name, email, password }, services }) => {
-      return services.user.createUser({ name, email, password });
+export const initFastify = async () => {
+  const fastifyInstance = fastify({ maxParamLength: 5000 })
+    .setValidatorCompiler(TypeBoxValidatorCompiler)
+    .withTypeProvider<TypeBoxTypeProvider>();
+
+  await fastifyInstance.register(swaggerUi, {
+    prefix: "/documentation",
+    openapi: {
+      openapi: "3.1.0",
+      info: {
+        title: "Oukwa API",
+        description: "API Oukwa",
+        version: "1.0",
+      },
     },
-    createUserTSchema,
-  )
-  .post(
-    "/login",
-    ({ body: { email, password }, services }) => {
-      return services.user.login({ email, password });
+  });
+
+  fastifyInstance.register(cors, {
+    origin: "*",
+  });
+
+  fastifyInstance.addHook("onRequest", async (request) => {
+    debug(request.method, request.url);
+    request.services = getServices();
+  });
+
+  fastifyInstance.register(
+    async (instance) => {
+      instance.setErrorHandler((error, request, reply) => {
+        console.error(error);
+        if (error instanceof AppError) {
+          reply.status(error.status).send({ error: error.message });
+        } else {
+          reply.status(500).send({ error: "Une erreur s'est produite" });
+        }
+      });
+
+      await instance.register(userPlugin);
     },
-    loginTSchema,
-  )
-  .get(
-    "/verify-token",
-    ({ query: { token }, services }) => {
-      return services.user.verifyJWT(token);
-    },
-    verifyTokenTSchema,
+    { prefix: "/api" },
   );
-export type AppRouter = typeof elysia;
+
+  await fastifyInstance.ready();
+
+  return fastifyInstance;
+};
+
+export const generateOpenApi = async () => {
+  const fastifyInstance = await initFastify();
+  await fastifyInstance.ready();
+
+  const swagger = fastifyInstance.swagger();
+
+  await fs.writeFile("openapi.json", JSON.stringify(swagger));
+
+  return fastifyInstance;
+};

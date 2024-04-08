@@ -2,18 +2,17 @@ import { Center, Flex, styled } from "#styled-system/jsx";
 import { createLazyFileRoute, useParams } from "@tanstack/react-router";
 import { FullWidthButton } from "../components/FullWidthButton";
 import Input from "@codegouvfr/react-dsfr/Input";
-import { RouterInputs, trpc } from "../api";
 import { useForm } from "react-hook-form";
 import { PasswordInput } from "../components/PasswordInput";
 
 const ResetPasswordAction = () => {
-  const form = useForm<RouterInputs["resetPassword"]>();
+  const form = useForm<any>();
   const { link } = Route.useParams();
-  const mutation = trpc.resetPassword.useMutation();
+  // const mutation = trpc.resetPassword.useMutation();
 
-  const resetPassword = async (values: RouterInputs["resetPassword"]) => {
-    const result = await mutation.mutateAsync(values);
-    console.log(result);
+  const resetPassword = async (values: any) => {
+    //  const result = await mutation.mutateAsync(values);
+    //  console.log(result);
   };
 
   return (

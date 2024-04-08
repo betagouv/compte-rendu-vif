@@ -1,3 +1,8 @@
 import { TRPCError } from "@trpc/server";
 
-export class AppError extends TRPCError {}
+export class AppError {
+  constructor(
+    public status: number,
+    public message: string,
+  ) {}
+}

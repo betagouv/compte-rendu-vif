@@ -27,13 +27,13 @@ Non-synchronized data is stored in the /cr-vif-users database of the Postgres co
 ### Electric
 
 - Write migrations in `db/migrations/` and electrify tables using `ALTER TABLE table ENABLE ELECTRIC;`
-- `pnpm migrate:electric` applys migrations to the proxy db and generate the TS client in
+- `pnpm electric:migrate` applys migrations to the proxy db and generate the TS client in
   `./packages/frontend/src/generated`
 
 ### Users
 
 - Edit `./packages/backend/src/db/schema.ts`
-- `pnpm migrate:users` generates migrations files in `./backend/drizzle`
+- `pnpm db:migrate` generates migrations files in `./backend/drizzle`
 - Migrations are applied when the backend starts
 
 ![alt text](images/db-workflow.png)

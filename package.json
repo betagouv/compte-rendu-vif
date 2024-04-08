@@ -6,11 +6,14 @@
   "scripts": {
     "frontend": "pnpm --filter @cr-vif/frontend",
     "backend": "pnpm --filter @cr-vif/backend",
-    "migration-users:create": "pnpm backend migration:create",
-    "migrate:users": "pnpm migration-users:create",
-    "migrate:electric": "pnpm migration-electric:up && pnpm client:generate",
-    "migration-electric:up": "pnpm electric-sql with-config \"pnpm pg-migrations apply --database {{ELECTRIC_PROXY}} --directory ./db/migrations\"",
-    "client:generate": "pnpm frontend client:generate"
+    "db:create": "pnpm backend migration:create",
+    "db:migrate": "pnpm db:create",
+    "electric:up": "pnpm electric-sql with-config \"pnpm pg-migrations apply --database {{ELECTRIC_PROXY}} --directory ./db/migrations\"",
+    "electric:migrate": "pnpm electric:up && pnpm electric:generate",
+    "electric:client": "pnpm frontend client:generate",
+    "client:ts": "typed-openapi ./packages/backend/openapi.json --output ./packages/frontend/src/api.gen.ts",
+    "client:json": "pnpm backend dev --create-only",
+    "client:generate": "pnpm client:json && pnpm client:ts"
   },
   "keywords": [],
   "author": "",
@@ -18,7 +21,7 @@
     "@databases/pg-migrations": "^5.0.3",
     "@pandabox/prettier-plugin": "^0.1.0",
     "electric-sql": "^0.9.5",
-    "prettier": "^3.2.5"
-  },
-  "pnpm": {}
+    "prettier": "^3.2.5",
+    "typed-openapi": "^0.4.1"
+  }
 }

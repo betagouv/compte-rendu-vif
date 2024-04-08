@@ -3,16 +3,16 @@ import Input from "@codegouvfr/react-dsfr/Input";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import { FullWidthButton } from "../components/FullWidthButton";
-import { RouterInputs, trpc } from "../api";
 
 const ResetPasswordPage = () => {
-  const form = useForm<RouterInputs["generateResetLink"]>();
+  const form = useForm<ResetPasswordFormProps>();
 
-  const mutation = trpc.generateResetLink.useMutation();
+  // TODO: implement mutation
+  // const mutation =
 
   const generateResetLink = async (values: { email: string }) => {
-    const result = await mutation.mutateAsync(values);
-    console.log(result);
+    // const result = await mutation.mutateAsync(values);
+    // console.log(result);
   };
 
   return (
@@ -44,3 +44,5 @@ const ResetPasswordPage = () => {
 export const Route = createLazyFileRoute("/reset-password/")({
   component: () => <ResetPasswordPage />,
 });
+
+type ResetPasswordFormProps = any;

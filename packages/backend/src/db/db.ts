@@ -9,3 +9,8 @@ export const migrateUsersDb = () => migrate(drizzle(migrationClient), { migratio
 
 const queryClient = postgres(config);
 export const db = drizzle(queryClient);
+
+export const cleanUpDb = async () => {
+  await queryClient.end();
+  await migrationClient.end();
+};

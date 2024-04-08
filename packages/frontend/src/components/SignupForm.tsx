@@ -1,6 +1,5 @@
 import { Divider, Flex, styled } from "#styled-system/jsx";
 import { UseFormReturn, useForm, useWatch } from "react-hook-form";
-import { InputOf, useCreateUserMutation } from "../api";
 import Input from "@codegouvfr/react-dsfr/Input";
 import { PasswordInput } from "./PasswordInput";
 import { FullWidthButton } from "./FullWidthButton";
@@ -8,9 +7,12 @@ import { css } from "#styled-system/css";
 import { InputGroup } from "./InputGroup";
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import { useAuthContext } from "../contexts/AuthContext";
+import { useMutation } from "@tanstack/react-query";
+import { Endpoints } from "../api.gen";
+import { api } from "../api";
 
 export const SignupForm = () => {
-  const form = useForm<InputOf<"create-user">>({
+  const form = useForm<SignupFormProps>({
     defaultValues: {
       name: "",
       email: "",
@@ -20,19 +22,16 @@ export const SignupForm = () => {
 
   const [_, setData] = useAuthContext();
 
-  const mutation = useCreateUserMutation();
+  const mutation = useMutation((body: SignupFormProps) => api.post("/api/create-user", { body }));
 
-  const signup = async (values: InputOf<"create-user">) => {
+  const signup = async (values: SignupFormProps) => {
     const response = await mutation.mutateAsync(values);
     setData(response);
-    console.log(response.data?.user);
+    console.log(response?.user);
   };
 
   const { errors: formErrors } = form.formState;
   const { error: mutationError } = mutation;
-
-  console.log(JSON.stringify(mutationError, null, 2));
-  console.log(mutationError?.data);
 
   return (
     <Flex direction="column">
@@ -41,7 +40,7 @@ export const SignupForm = () => {
           <Alert
             className={css({ mb: "1.5rem" })}
             severity="error"
-            title={<styled.span fontWeight="regular">{mutationError.message}</styled.span>}
+            title={<styled.span fontWeight="regular">{(mutationError as any).message}</styled.span>}
           />
         ) : null}
         <InputGroup state={mutationError ? "error" : undefined}>
@@ -85,7 +84,7 @@ export const SignupForm = () => {
   );
 };
 
-const SignupPasswordInput = ({ form }: { form: UseFormReturn<InputOf<"create-user">> }) => {
+const SignupPasswordInput = ({ form }: { form: UseFormReturn<SignupFormProps> }) => {
   const value = useWatch({ control: form.control, name: "password" });
 
   const hasNumber = /\d/.test(value);
@@ -135,3 +134,5 @@ const SignupPasswordInput = ({ form }: { form: UseFormReturn<InputOf<"create-use
     />
   );
 };
+
+type SignupFormProps = Endpoints.post_ApicreateUser["parameters"]["body"];

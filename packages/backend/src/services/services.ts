@@ -15,3 +15,9 @@ export const getServices = () => {
 
   return ref.services;
 };
+
+declare module "fastify" {
+  export interface FastifyRequest {
+    services: ReturnType<typeof makeServices>;
+  }
+}

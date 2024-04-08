@@ -8,17 +8,19 @@ import { useAuthContext } from "../contexts/AuthContext";
 import { FullWidthButton } from "./FullWidthButton";
 import { InputGroup } from "./InputGroup";
 import { PasswordInput } from "./PasswordInput";
-import { InputOf, useLoginMutation } from "../api";
+import { useMutation } from "@tanstack/react-query";
+import { Endpoints } from "../api.gen";
+import { api } from "../api";
 
 export const LoginForm = () => {
   const [authData, setAuthData] = useAuthContext();
   const form = useForm<LoginFormProps>();
 
-  const mutation = useLoginMutation();
+  const mutation = useMutation((body: LoginFormProps) => api.post("/api/login", { body }));
 
   const login = async (values: LoginFormProps) => {
     const response = await mutation.mutateAsync(values);
-    setAuthData({ ...authData, ...response.data });
+    setAuthData({ ...authData, ...response });
   };
 
   const { error: mutationError } = mutation;
@@ -31,7 +33,7 @@ export const LoginForm = () => {
           <Alert
             className={css({ mb: "1.5rem" })}
             severity="error"
-            title={<styled.span fontWeight="regular">{mutationError.message}</styled.span>}
+            title={<styled.span fontWeight="regular">{(mutationError as any).message}</styled.span>}
           />
         ) : null}
         <InputGroup state={mutationError ? "error" : undefined}>
@@ -84,4 +86,4 @@ export const LoginForm = () => {
   );
 };
 
-export type LoginFormProps = InputOf<"login">;
+export type LoginFormProps = Endpoints.post_Apilogin["parameters"]["body"];

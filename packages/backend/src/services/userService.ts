@@ -11,6 +11,7 @@ import { createInsertSchema, createSelectSchema } from "drizzle-typebox";
 import { ENV, isDev } from "../envVars";
 import { AppError } from "../features/errors";
 import { Static } from "elysia";
+import { Type } from "@sinclair/typebox";
 
 export const insertUserSchema = createInsertSchema(userTable);
 export const selectUserSchema = createSelectSchema(userTable);
@@ -125,6 +126,9 @@ const serializeUser = (user: SelectUser) => {
   return pick(user, ["id", "name", "email"]);
 };
 
+export const serializedUserTSchema = Type.Pick(selectUserSchema, ["id", "name", "email"]);
+export const userAndTokenTSchema = Type.Object({ user: serializedUserTSchema, token: Type.String() });
+
 const encryptPassword = (password: string) => {
   return new Promise<string>((resolve, reject) => {
     const salt = crypto.randomBytes(16).toString("hex");
@@ -149,19 +153,13 @@ const verifyPassword = (password: string, hash: string) => {
 
 const assertLinkIsValid = (user?: SelectUser) => {
   if (!user) {
-    throw new AppError({
-      code: "UNAUTHORIZED",
-      message: "Le lien est invalide",
-    });
+    throw new AppError(403, "Le lien est invalide");
   }
 };
 
 const assertUserExists = (user?: SelectUser) => {
   if (!user) {
-    throw new AppError({
-      code: "UNAUTHORIZED",
-      message: "Le courriel ou le mot de passe est incorrect",
-    });
+    throw new AppError(403, "Le courriel ou le mot de passe est incorrect");
   }
 };
 
@@ -169,10 +167,7 @@ const assertPasswordsMatch = async (password: string, hash: string) => {
   const match = await verifyPassword(password, hash);
 
   if (!match) {
-    throw new AppError({
-      code: "UNAUTHORIZED",
-      message: "Le courriel ou le mot de passe est incorrect",
-    });
+    throw new AppError(403, "Le courriel ou le mot de passe est incorrect");
   }
 };
 
@@ -180,9 +175,6 @@ const assertEmailDoesNotAlreadyExist = async (user: Omit<InsertUser, "id">) => {
   const userExists = await db.select().from(userTable).where(eq(userTable.email, user.email));
 
   if (userExists.length) {
-    throw new AppError({
-      code: "CONFLICT",
-      message: "Un utilisateur avec ce courriel existe déjà",
-    });
+    throw new AppError(400, "Un utilisateur avec ce courriel existe déjà");
   }
 };

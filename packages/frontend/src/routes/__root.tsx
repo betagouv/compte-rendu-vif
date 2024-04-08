@@ -7,7 +7,7 @@ import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import { PropsWithChildren } from "react";
 import { useIsLoggedIn, useLogout } from "../contexts/AuthContext";
 import { Box, Flex } from "#styled-system/jsx";
-import { RouterOutputs } from "../api";
+import { RouterOutputs } from "../api.gen";
 
 export const Route = createRootRouteWithContext<Partial<RouterOutputs["login"]>>()({
   component: () => (
