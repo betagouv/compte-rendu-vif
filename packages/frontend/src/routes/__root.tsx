@@ -9,7 +9,9 @@ import { useIsLoggedIn, useLogout } from "../contexts/AuthContext";
 import { Box, Flex } from "#styled-system/jsx";
 import { RouterOutputs } from "../api.gen";
 
-export const Route = createRootRouteWithContext<Partial<RouterOutputs["login"]>>()({
+export const Route = createRootRouteWithContext<
+  Partial<RouterOutputs["login"]>
+>()({
   component: () => (
     <>
       <MuiDsfrThemeProvider>

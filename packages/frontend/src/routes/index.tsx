@@ -20,10 +20,18 @@ const Index = () => {
   return (
     <Flex direction="column" color="text-label-grey">
       <Banner pt="30px" pb="40px">
-        <styled.div color="text-title-blue-france" fontSize="18px" fontWeight="bold">
+        <styled.div
+          color="text-title-blue-france"
+          fontSize="18px"
+          fontWeight="bold"
+        >
           Compte-rendu VIF
         </styled.div>
-        <Button className={css({ mt: "15px" })} iconId="ri-add-line" linkProps={{ to: "/create" }}>
+        <Button
+          className={css({ mt: "15px" })}
+          iconId="ri-add-line"
+          linkProps={{ to: "/create" }}
+        >
           Créer un compte-rendu
         </Button>
       </Banner>
@@ -62,5 +70,7 @@ export const Route = createFileRoute("/")({
 });
 
 const Banner = (props: CenterProps) => {
-  return <Center flexDir="column" bgColor="background-open-blue-france" {...props} />;
+  return (
+    <Center flexDir="column" bgColor="background-open-blue-france" {...props} />
+  );
 };

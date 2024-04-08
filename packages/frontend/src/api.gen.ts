@@ -12,7 +12,10 @@ export namespace Endpoints {
     parameters: {
       body: { name: string; email: string; password: string };
     };
-    response: { user: { id: string; name: string; email: string }; token: string };
+    response: {
+      user: { id: string; name: string; email: string };
+      token: string;
+    };
   };
   export type post_Apilogin = {
     method: "POST";
@@ -20,7 +23,10 @@ export namespace Endpoints {
     parameters: {
       body: { email: string; password: string };
     };
-    response: { user: { id: string; name: string; email: string }; token: string };
+    response: {
+      user: { id: string; name: string; email: string };
+      token: string;
+    };
   };
   export type get_ApiverifyToken = {
     method: "GET";
@@ -92,7 +98,9 @@ type RequiredKeys<T> = {
   [P in keyof T]-?: undefined extends T[P] ? never : P;
 }[keyof T];
 
-type MaybeOptionalArg<T> = RequiredKeys<T> extends never ? [config?: T] : [config: T];
+type MaybeOptionalArg<T> = RequiredKeys<T> extends never
+  ? [config?: T]
+  : [config: T];
 
 // </ApiClientTypes>
 

@@ -26,10 +26,7 @@
       "compositePrimaryKeys": {
         "delegations_createdBy_delegatedTo_pk": {
           "name": "delegations_createdBy_delegatedTo_pk",
-          "columns": [
-            "createdBy",
-            "delegatedTo"
-          ]
+          "columns": ["createdBy", "delegatedTo"]
         }
       },
       "uniqueConstraints": {}
@@ -82,9 +79,7 @@
         "users_email_unique": {
           "name": "users_email_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
+          "columns": ["email"]
         }
       }
     }

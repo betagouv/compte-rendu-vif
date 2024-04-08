@@ -45,7 +45,8 @@ export const CreatePage = () => {
   const navigate = useNavigate();
 
   const createReportMutation = useMutation({
-    mutationFn: (report: Report) => db.report.create({ data: { ...report, id: "report-" + v4() } }),
+    mutationFn: (report: Report) =>
+      db.report.create({ data: { ...report, id: "report-" + v4() } }),
     onSuccess: () => {
       navigate({ to: "/" });
     },
@@ -53,7 +54,11 @@ export const CreatePage = () => {
 
   return (
     <FormProvider {...form}>
-      <form onSubmit={form.handleSubmit((values) => createReportMutation.mutate(values))}>
+      <form
+        onSubmit={form.handleSubmit((values) =>
+          createReportMutation.mutate(values),
+        )}
+      >
         <Tabs.Root defaultValue="info">
           <Tabs.List>
             {options.map((option) => (

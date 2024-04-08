@@ -49,10 +49,13 @@ module.exports = plugin("postcss-clean", () => {
     // Second pass: replace variables
     root.walkDecls((decl) => {
       if (decl.value.startsWith("var(")) {
-        const replacedValue = decl.value.replace(/var\((.*?)\)/g, (match, varName) => {
-          const name = variableMap[varName.trim()];
-          return name ? `var(${name})` : match;
-        });
+        const replacedValue = decl.value.replace(
+          /var\((.*?)\)/g,
+          (match, varName) => {
+            const name = variableMap[varName.trim()];
+            return name ? `var(${name})` : match;
+          },
+        );
         decl.value = replacedValue;
       }
     });

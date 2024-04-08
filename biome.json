@@ -17,6 +17,7 @@
   },
   "formatter": {
     "enabled": true,
-    "indentWidth": 2
+    "indentWidth": 2,
+    "indentStyle": "space"
   }
 }

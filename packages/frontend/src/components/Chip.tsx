@@ -47,17 +47,30 @@ export const ChipGroup = ({
     </Flex>
   );
 };
-type ChipGroupOption = { initialIsChecked: boolean; label: string; key: string };
+type ChipGroupOption = {
+  initialIsChecked: boolean;
+  label: string;
+  key: string;
+};
 
 export const Chip = ({
   children,
   onCheckChange,
   isChecked,
-}: BoxProps & { isChecked?: boolean; onCheckChange: (value: boolean) => void }) => {
+}: BoxProps & {
+  isChecked?: boolean;
+  onCheckChange: (value: boolean) => void;
+}) => {
   const styles = chip({ isChecked });
 
   return (
-    <Tag className={styles} nativeButtonProps={{ onClick: () => onCheckChange(!isChecked), type: "button" }}>
+    <Tag
+      className={styles}
+      nativeButtonProps={{
+        onClick: () => onCheckChange(!isChecked),
+        type: "button",
+      }}
+    >
       {children}
     </Tag>
   );

@@ -1,6 +1,10 @@
 import fs from "fs/promises";
 import { defineConfig } from "@pandacss/dev";
-import { parseBreakpoints, parseSpacings, parseTypography } from "./parseDsfrFRVariable";
+import {
+  parseBreakpoints,
+  parseSpacings,
+  parseTypography,
+} from "./parseDsfrFRVariable";
 
 export const generatePandaDSRegex = async () => {
   let dsfrContent = await fs.readFile("./public/dsfr/dsfr.min.css", "utf-8");
@@ -9,11 +13,19 @@ export const generatePandaDSRegex = async () => {
   const parser = new Parser(dsfrContent);
 
   const fontFaces = parser.extractFontFaces();
-  const { light, dark, rootBlock, darkRootBlock } = parser.extractLightAndDarkVariables();
+  const { light, dark, rootBlock, darkRootBlock } =
+    parser.extractLightAndDarkVariables();
   const semanticTokens = getSemanticTokens({ light, dark });
 
   const replaced = parser.replaceVariableNames(semanticTokens);
-  const newContent = [rootBlock, darkRootBlock, ...fontFaces, "@layer dsfr {", replaced, "}"].join("\n");
+  const newContent = [
+    rootBlock,
+    darkRootBlock,
+    ...fontFaces,
+    "@layer dsfr {",
+    replaced,
+    "}",
+  ].join("\n");
 
   const { textStyles, fontWeights } = parseTypography();
 
@@ -37,18 +49,28 @@ export const generatePandaDSRegex = async () => {
   await fs.writeFile("./public/dsfr/dsfr-patched.css", newContent);
 };
 
-const getSemanticTokens = ({ light, dark }: { light: Record<string, string>; dark: Record<string, string> }) => {
-  const grouped = {} as Record<string, { value: { base: string; _dark: string } }>;
+const getSemanticTokens = ({
+  light,
+  dark,
+}: { light: Record<string, string>; dark: Record<string, string> }) => {
+  const grouped = {} as Record<
+    string,
+    { value: { base: string; _dark: string } }
+  >;
 
   for (const [name, value] of Object.entries(light)) {
     const isPrimitive = !value.includes("var(");
 
-    const atomicVarName = isPrimitive ? name : value.replace(/var\((.*)\)/, (_, varName) => varName);
+    const atomicVarName = isPrimitive
+      ? name
+      : value.replace(/var\((.*)\)/, (_, varName) => varName);
 
     const lightValue = light[atomicVarName];
     const darkValue = dark[atomicVarName];
 
-    grouped[name.replace("--", "")] = { value: { base: lightValue, _dark: darkValue } };
+    grouped[name.replace("--", "")] = {
+      value: { base: lightValue, _dark: darkValue },
+    };
   }
 
   return grouped;
@@ -58,7 +80,11 @@ class Parser {
   constructor(public content: string) {}
 
   getBlockAndRemove = (blockName: string) => {
-    const { block, rest } = getNextBlock({ content: this.content, blockName, remove: true })!;
+    const { block, rest } = getNextBlock({
+      content: this.content,
+      blockName,
+      remove: true,
+    })!;
     this.content = rest;
     return block;
   };
@@ -75,8 +101,12 @@ class Parser {
   };
 
   extractLightAndDarkVariables = () => {
-    const lightVariablesRaw = this.extractVariables(this.getBlockAndRemove(":root")!);
-    const darkVariablesRaw = this.extractVariables(this.getBlockAndRemove(":root[data-fr-theme=dark]")!);
+    const lightVariablesRaw = this.extractVariables(
+      this.getBlockAndRemove(":root")!,
+    );
+    const darkVariablesRaw = this.extractVariables(
+      this.getBlockAndRemove(":root[data-fr-theme=dark]")!,
+    );
 
     const lightVariables = this.filterColorVariables(lightVariablesRaw);
     const darkVariables = this.filterColorVariables(darkVariablesRaw);
@@ -84,11 +114,18 @@ class Parser {
     const rootBlock = `:root{${Object.entries(lightVariables.untouched)
       .map(([name, value]) => `${name}:${value};`)
       .join("")}}`;
-    const darkRootBlock = `:root[data-fr-theme=dark]{${Object.entries(darkVariables.untouched)
+    const darkRootBlock = `:root[data-fr-theme=dark]{${Object.entries(
+      darkVariables.untouched,
+    )
       .map(([name, value]) => `${name}:${value};`)
       .join("")}}`;
 
-    return { light: lightVariables.colors, dark: darkVariables.colors, rootBlock, darkRootBlock };
+    return {
+      light: lightVariables.colors,
+      dark: darkVariables.colors,
+      rootBlock,
+      darkRootBlock,
+    };
   };
 
   extractVariables = (block: string) => {
@@ -120,7 +157,10 @@ class Parser {
 
         return acc;
       },
-      { untouched: {}, colors: {} } as { untouched: Record<string, string>; colors: Record<string, string> },
+      { untouched: {}, colors: {} } as {
+        untouched: Record<string, string>;
+        colors: Record<string, string>;
+      },
     );
   };
 
@@ -131,7 +171,10 @@ class Parser {
       const pandaVariableName = "--colors-" + variableName;
       const stringToReplace = `var(--${variableName})`;
       while (this.content.includes(stringToReplace)) {
-        this.content = this.content.replace(stringToReplace, `var(${pandaVariableName})`);
+        this.content = this.content.replace(
+          stringToReplace,
+          `var(${pandaVariableName})`,
+        );
       }
     }
 
@@ -142,7 +185,11 @@ class Parser {
 const colorValueRegex = /#[0-9a-fA-F]{3,6}/;
 const variableDeclRegex = /--[^:]+:[^;]+;/g;
 
-const getNextBlock = ({ content, blockName, remove }: { content: string; blockName: string; remove?: boolean }) => {
+const getNextBlock = ({
+  content,
+  blockName,
+  remove,
+}: { content: string; blockName: string; remove?: boolean }) => {
   const start = content.indexOf(blockName + "{");
   if (start === -1) return null;
   const end = content.indexOf("}", start) + 1;

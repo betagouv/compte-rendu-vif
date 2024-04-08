@@ -14,7 +14,8 @@ const AuthContext = createContext<AuthContextProps>({
 });
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
-  const [data, setData] = useState<Omit<AuthContextProps, "setData">>(initialAuth);
+  const [data, setData] =
+    useState<Omit<AuthContextProps, "setData">>(initialAuth);
 
   const electricQuery = useQuery({
     queryKey: ["electric", data?.token!],
@@ -40,7 +41,11 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     }
   };
 
-  const value = { ...data, setData: setDataAndSaveInStorage, electricStatus: electricQuery.status };
+  const value = {
+    ...data,
+    setData: setDataAndSaveInStorage,
+    electricStatus: electricQuery.status,
+  };
   //   [data, electricQuery.status],
   // );
 

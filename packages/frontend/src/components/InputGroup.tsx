@@ -13,12 +13,18 @@ export const InputGroup = ({
 
   const Comp = asChild ? Slot : "div";
 
-  return <Comp className={["fr-input-group", stateClass].join(" ")}>{children}</Comp>;
+  return (
+    <Comp className={["fr-input-group", stateClass].join(" ")}>{children}</Comp>
+  );
 };
 
 export const InputGroupWithTitle = {};
 
-const Slot = ({ children, className, ...props }: PropsWithChildren & BoxProps) => {
+const Slot = ({
+  children,
+  className,
+  ...props
+}: PropsWithChildren & BoxProps) => {
   if (React.Children.count(children) !== 1) {
     throw new Error("Slot component should have exactly one child");
   }

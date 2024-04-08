@@ -16,7 +16,9 @@ export const LoginForm = () => {
   const [authData, setAuthData] = useAuthContext();
   const form = useForm<LoginFormProps>();
 
-  const mutation = useMutation((body: LoginFormProps) => api.post("/api/login", { body }));
+  const mutation = useMutation((body: LoginFormProps) =>
+    api.post("/api/login", { body }),
+  );
 
   const login = async (values: LoginFormProps) => {
     const response = await mutation.mutateAsync(values);
@@ -33,7 +35,11 @@ export const LoginForm = () => {
           <Alert
             className={css({ mb: "1.5rem" })}
             severity="error"
-            title={<styled.span fontWeight="regular">{(mutationError as any).message}</styled.span>}
+            title={
+              <styled.span fontWeight="regular">
+                {(mutationError as any).message}
+              </styled.span>
+            }
           />
         ) : null}
         <InputGroup state={mutationError ? "error" : undefined}>
@@ -45,7 +51,10 @@ export const LoginForm = () => {
               autoComplete: "username",
               ...form.register("email", {
                 required: "Le courriel est requis",
-                pattern: { value: /\S+@\S+\.\S+/, message: "Le courriel n'est pas valide" },
+                pattern: {
+                  value: /\S+@\S+\.\S+/,
+                  message: "Le courriel n'est pas valide",
+                },
               }),
             }}
             state={formErrors.email ? "error" : undefined}
@@ -59,7 +68,8 @@ export const LoginForm = () => {
                 required: "Le mot de passe est requis",
                 minLength: {
                   value: 8,
-                  message: "Le mot de passe doit contenir au moins 8 caractères",
+                  message:
+                    "Le mot de passe doit contenir au moins 8 caractères",
                 },
               }),
             }}
@@ -70,7 +80,11 @@ export const LoginForm = () => {
           <Link to="/reset-password">Mot de passe oublié</Link>
         </styled.div>
 
-        <FullWidthButton className={css({ mt: "1.5rem" })} type="submit" onClick={form.handleSubmit(login)}>
+        <FullWidthButton
+          className={css({ mt: "1.5rem" })}
+          type="submit"
+          onClick={form.handleSubmit(login)}
+        >
           Se connecter
         </FullWidthButton>
       </form>

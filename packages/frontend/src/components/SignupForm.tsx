@@ -22,7 +22,9 @@ export const SignupForm = () => {
 
   const [_, setData] = useAuthContext();
 
-  const mutation = useMutation((body: SignupFormProps) => api.post("/api/create-user", { body }));
+  const mutation = useMutation((body: SignupFormProps) =>
+    api.post("/api/create-user", { body }),
+  );
 
   const signup = async (values: SignupFormProps) => {
     const response = await mutation.mutateAsync(values);
@@ -40,13 +42,19 @@ export const SignupForm = () => {
           <Alert
             className={css({ mb: "1.5rem" })}
             severity="error"
-            title={<styled.span fontWeight="regular">{(mutationError as any).message}</styled.span>}
+            title={
+              <styled.span fontWeight="regular">
+                {(mutationError as any).message}
+              </styled.span>
+            }
           />
         ) : null}
         <InputGroup state={mutationError ? "error" : undefined}>
           <Input
             label="Nom"
-            nativeInputProps={{ ...form.register("name", { required: "Le nom est requis" }) }}
+            nativeInputProps={{
+              ...form.register("name", { required: "Le nom est requis" }),
+            }}
             state={formErrors.name ? "error" : undefined}
             stateRelatedMessage={formErrors.name?.message}
           />
@@ -58,7 +66,10 @@ export const SignupForm = () => {
               autoComplete: "username",
               ...form.register("email", {
                 required: "Le courriel est requis",
-                pattern: { value: /\S+@\S+\.\S+/, message: "Le courriel n'est pas valide" },
+                pattern: {
+                  value: /\S+@\S+\.\S+/,
+                  message: "Le courriel n'est pas valide",
+                },
               }),
             }}
             state={formErrors.email ? "error" : undefined}
@@ -84,7 +95,9 @@ export const SignupForm = () => {
   );
 };
 
-const SignupPasswordInput = ({ form }: { form: UseFormReturn<SignupFormProps> }) => {
+const SignupPasswordInput = ({
+  form,
+}: { form: UseFormReturn<SignupFormProps> }) => {
   const value = useWatch({ control: form.control, name: "password" });
 
   const hasNumber = /\d/.test(value);
@@ -126,7 +139,8 @@ const SignupPasswordInput = ({ form }: { form: UseFormReturn<SignupFormProps> })
           message: "Le mot de passe doit contenir au moins 8 caractères",
         },
         validate: () => {
-          const isValid = hasNumber && hasUpperCase && hasLowerCase && hasSpecial;
+          const isValid =
+            hasNumber && hasUpperCase && hasLowerCase && hasSpecial;
 
           return isValid || "Mot de passe invalide";
         },

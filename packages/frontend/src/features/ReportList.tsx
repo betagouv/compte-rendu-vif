@@ -43,19 +43,27 @@ export const AllReports = () => {
 };
 
 export const ReportList = ({ reports }: { reports: Report[] }) => {
-  const error = reports.length === 0 ? <Center>Aucun compte-rendu</Center> : null;
+  const error =
+    reports.length === 0 ? <Center>Aucun compte-rendu</Center> : null;
 
   return (
     <Flex flexDir="column" w="484px">
       {error ??
         reports.map((report, index) => (
-          <ReportListItem key={report.id} report={report} isLast={index === reports.length - 1} />
+          <ReportListItem
+            key={report.id}
+            report={report}
+            isLast={index === reports.length - 1}
+          />
         ))}
     </Flex>
   );
 };
 
-const ReportListItem = ({ report, isLast }: { report: Report; isLast?: boolean }) => {
+const ReportListItem = ({
+  report,
+  isLast,
+}: { report: Report; isLast?: boolean }) => {
   // const mutation = useMutation({ mutationFn: () => db.report.delete({ where: { id: report.id } }) });
 
   return (
@@ -70,7 +78,9 @@ const ReportListItem = ({ report, isLast }: { report: Report; isLast?: boolean }
       >
         <Flex>
           <styled.span fontWeight="bold">{report.title}</styled.span>
-          <styled.span ml="5px">{report.created_at.toLocaleDateString()}</styled.span>
+          <styled.span ml="5px">
+            {report.created_at.toLocaleDateString()}
+          </styled.span>
         </Flex>
         <styled.span>Rédigé par {report.created_by_username}</styled.span>
         {/* TODO: set correct status */}
@@ -96,6 +106,8 @@ const ReportListItem = ({ report, isLast }: { report: Report; isLast?: boolean }
 type ReportStatus = "draft" | "published";
 const ReportBadge = ({ status }: { status: ReportStatus }) => {
   return (
-    <Badge severity={status === "draft" ? "info" : "success"}>{status === "draft" ? "Brouillon" : "Publié"}</Badge>
+    <Badge severity={status === "draft" ? "info" : "success"}>
+      {status === "draft" ? "Brouillon" : "Publié"}
+    </Badge>
   );
 };

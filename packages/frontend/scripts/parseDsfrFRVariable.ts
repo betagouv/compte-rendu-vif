@@ -8,7 +8,12 @@ const parseColorDecisions = () => {
       Object.entries(variants).forEach(([variant, colors]) => {
         Object.entries(colors).forEach(([colorName, usages]) => {
           Object.entries(usages as any).forEach(([usage, color]: any) => {
-            const path = [context, variant, colorName, ...(usage === "default" ? [] : [usage])].join(".");
+            const path = [
+              context,
+              variant,
+              colorName,
+              ...(usage === "default" ? [] : [usage]),
+            ].join(".");
             acc[path] = { value: color };
           });
         });
@@ -53,14 +58,19 @@ export const parseTypography = () => {
     if (!name.startsWith(".fr-")) return;
     const [_, context, __, variant] = name.split("-");
 
-    if (Object.keys(typo.style).length === 1 && (typo.style as any).fontWeight) {
+    if (
+      Object.keys(typo.style).length === 1 &&
+      (typo.style as any).fontWeight
+    ) {
       fontWeights[variant] = { value: (typo.style as any).fontWeight };
       return;
     }
 
     const style = typo.style as any;
 
-    const mediaQueryKey = Object.keys(style).find((key) => key.startsWith("@media"));
+    const mediaQueryKey = Object.keys(style).find((key) =>
+      key.startsWith("@media"),
+    );
     const mediaQuery = style[mediaQueryKey as string];
 
     textStyles[`${context}-${variant}`] = {

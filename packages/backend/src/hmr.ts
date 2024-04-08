@@ -18,7 +18,9 @@ export async function registerViteHmrServerRestart() {
       const callbacks = hot.data.callbacks || [];
 
       console.clear();
-      console.log(`########## HMR (${callbacks.length} callbacks) ############\n`);
+      console.log(
+        `########## HMR (${callbacks.length} callbacks) ############\n`,
+      );
 
       for (const callback of callbacks) {
         await callback();

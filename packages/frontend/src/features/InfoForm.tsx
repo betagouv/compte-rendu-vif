@@ -1,4 +1,11 @@
-import { Box, BoxProps, Divider, Flex, Stack, styled } from "#styled-system/jsx";
+import {
+  Box,
+  BoxProps,
+  Divider,
+  Flex,
+  Stack,
+  styled,
+} from "#styled-system/jsx";
 import Input from "@codegouvfr/react-dsfr/Input";
 import Select from "@codegouvfr/react-dsfr/Select";
 import { useUser } from "../contexts/AuthContext";
@@ -51,7 +58,10 @@ export const InfoForm = () => {
         <Flex direction="column">
           <Title>Le compte-rendu</Title>
           <Input label="Titre" nativeInputProps={form.register("title")} />
-          <Select label="Rédigé par" nativeSelectProps={form.register("redacted_by")}>
+          <Select
+            label="Rédigé par"
+            nativeSelectProps={form.register("redacted_by")}
+          >
             <option value={user.name}>{user.name}</option>
           </Select>
         </Flex>
@@ -63,10 +73,19 @@ export const InfoForm = () => {
         <Flex direction="column">
           <Title>Le rendez-vous</Title>
           <Stack direction="row">
-            <Input label="Date" nativeInputProps={{ type: "date", onChange: setDay }} />
-            <Input label="Horaire" nativeInputProps={{ type: "time", onChange: setTime }} />
+            <Input
+              label="Date"
+              nativeInputProps={{ type: "date", onChange: setDay }}
+            />
+            <Input
+              label="Horaire"
+              nativeInputProps={{ type: "time", onChange: setTime }}
+            />
           </Stack>
-          <Input label="Lien visio ou adresse" nativeInputProps={form.register("meet_link")} />
+          <Input
+            label="Lien visio ou adresse"
+            nativeInputProps={form.register("meet_link")}
+          />
         </Flex>
       </InputGroup>
 
@@ -81,9 +100,21 @@ export const InfoForm = () => {
               form.setValue("applicant_type", values?.[0]);
             }}
             options={[
-              { initialIsChecked: true, label: "particulier", key: "particulier" },
-              { initialIsChecked: false, label: "maître d'œuvre", key: "maitre-d-oeuvre" },
-              { initialIsChecked: false, label: "collectivité", key: "collectivite" },
+              {
+                initialIsChecked: true,
+                label: "particulier",
+                key: "particulier",
+              },
+              {
+                initialIsChecked: false,
+                label: "maître d'œuvre",
+                key: "maitre-d-oeuvre",
+              },
+              {
+                initialIsChecked: false,
+                label: "collectivité",
+                key: "collectivite",
+              },
             ]}
           />
           <Input className={css({ mt: "1rem" })} label="Nom" />

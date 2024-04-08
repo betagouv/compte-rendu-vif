@@ -1,4 +1,7 @@
-import { TypeBoxValidatorCompiler, TypeBoxTypeProvider } from "@fastify/type-provider-typebox";
+import {
+  TypeBoxValidatorCompiler,
+  TypeBoxTypeProvider,
+} from "@fastify/type-provider-typebox";
 import fastify from "fastify";
 import { AppError } from "./features/errors";
 import { userPlugin } from "./routes/userRoutes";

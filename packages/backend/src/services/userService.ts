@@ -45,14 +45,22 @@ export class UserService {
 
   async updateUser(id: string, payload: Partial<InsertUser>) {
     const changes = pick(payload, ["name", "email", "password"]);
-    const users = await db.update(userTable).set(changes).where(eq(userTable.id, id)).returning().execute();
+    const users = await db
+      .update(userTable)
+      .set(changes)
+      .where(eq(userTable.id, id))
+      .returning()
+      .execute();
     const user = users[0];
 
     return serializeUser(user!);
   }
 
   async login(payload: Pick<SelectUser, "email" | "password">) {
-    const users = await db.select().from(userTable).where(eq(userTable.email, payload.email));
+    const users = await db
+      .select()
+      .from(userTable)
+      .where(eq(userTable.email, payload.email));
     const user = users[0];
 
     assertUserExists(user);
@@ -62,7 +70,10 @@ export class UserService {
   }
 
   async generateResetLink(email: string) {
-    const users = await db.select().from(userTable).where(eq(userTable.email, email));
+    const users = await db
+      .select()
+      .from(userTable)
+      .where(eq(userTable.email, email));
     const user = users[0];
     assertUserExists(user);
 
@@ -78,12 +89,18 @@ export class UserService {
     return isDev ? temporaryLink : null;
   }
 
-  async resetPassword({ temporaryLink, newPassword }: { temporaryLink: string; newPassword: string }) {
+  async resetPassword({
+    temporaryLink,
+    newPassword,
+  }: { temporaryLink: string; newPassword: string }) {
     const users = await db
       .select()
       .from(userTable)
       .where(
-        and(eq(userTable.temporaryLink, temporaryLink), gt(userTable.temporaryLinkExpiresAt, new Date().toISOString())),
+        and(
+          eq(userTable.temporaryLink, temporaryLink),
+          gt(userTable.temporaryLinkExpiresAt, new Date().toISOString()),
+        ),
       );
     const user = users[0];
 
@@ -125,8 +142,15 @@ const serializeUser = (user: SelectUser) => {
   return pick(user, ["id", "name", "email"]);
 };
 
-export const serializedUserTSchema = Type.Pick(selectUserSchema, ["id", "name", "email"]);
-export const userAndTokenTSchema = Type.Object({ user: serializedUserTSchema, token: Type.String() });
+export const serializedUserTSchema = Type.Pick(selectUserSchema, [
+  "id",
+  "name",
+  "email",
+]);
+export const userAndTokenTSchema = Type.Object({
+  user: serializedUserTSchema,
+  token: Type.String(),
+});
 
 const encryptPassword = (password: string) => {
   return new Promise<string>((resolve, reject) => {
@@ -171,7 +195,10 @@ const assertPasswordsMatch = async (password: string, hash: string) => {
 };
 
 const assertEmailDoesNotAlreadyExist = async (user: Omit<InsertUser, "id">) => {
-  const userExists = await db.select().from(userTable).where(eq(userTable.email, user.email));
+  const userExists = await db
+    .select()
+    .from(userTable)
+    .where(eq(userTable.email, user.email));
 
   if (userExists.length) {
     throw new AppError(400, "Un utilisateur avec ce courriel existe déjà");
