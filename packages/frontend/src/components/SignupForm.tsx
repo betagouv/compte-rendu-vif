@@ -1,17 +1,16 @@
 import { Divider, Flex, styled } from "#styled-system/jsx";
 import { UseFormReturn, useForm, useWatch } from "react-hook-form";
-import { RouterInputs, trpc } from "../api";
+import { InputOf, useCreateUserMutation } from "../api";
 import Input from "@codegouvfr/react-dsfr/Input";
 import { PasswordInput } from "./PasswordInput";
 import { FullWidthButton } from "./FullWidthButton";
 import { css } from "#styled-system/css";
-import { Link } from "@tanstack/react-router";
 import { InputGroup } from "./InputGroup";
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import { useAuthContext } from "../contexts/AuthContext";
 
 export const SignupForm = () => {
-  const form = useForm<RouterInputs["createUser"]>({
+  const form = useForm<InputOf<"create-user">>({
     defaultValues: {
       name: "",
       email: "",
@@ -21,12 +20,12 @@ export const SignupForm = () => {
 
   const [_, setData] = useAuthContext();
 
-  const mutation = trpc.createUser.useMutation();
+  const mutation = useCreateUserMutation();
 
-  const signup = async (values: RouterInputs["createUser"]) => {
+  const signup = async (values: InputOf<"create-user">) => {
     const response = await mutation.mutateAsync(values);
     setData(response);
-    console.log(response.user);
+    console.log(response.data?.user);
   };
 
   const { errors: formErrors } = form.formState;
@@ -86,7 +85,7 @@ export const SignupForm = () => {
   );
 };
 
-const SignupPasswordInput = ({ form }: { form: UseFormReturn<RouterInputs["createUser"]> }) => {
+const SignupPasswordInput = ({ form }: { form: UseFormReturn<InputOf<"create-user">> }) => {
   const value = useWatch({ control: form.control, name: "password" });
 
   const hasNumber = /\d/.test(value);

@@ -4,24 +4,21 @@ import Alert from "@codegouvfr/react-dsfr/Alert";
 import Input from "@codegouvfr/react-dsfr/Input";
 import { Link, useNavigate, useRouter } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
-import { RouterInputs, trpc } from "../api";
 import { useAuthContext } from "../contexts/AuthContext";
 import { FullWidthButton } from "./FullWidthButton";
 import { InputGroup } from "./InputGroup";
 import { PasswordInput } from "./PasswordInput";
+import { InputOf, useLoginMutation } from "../api";
 
 export const LoginForm = () => {
   const [authData, setAuthData] = useAuthContext();
-  const form = useForm<RouterInputs["login"]>();
+  const form = useForm<LoginFormProps>();
 
-  const navigate = useNavigate();
-  const router = useRouter();
+  const mutation = useLoginMutation();
 
-  const mutation = trpc.login.useMutation();
-
-  const login = async (values: RouterInputs["login"]) => {
+  const login = async (values: LoginFormProps) => {
     const response = await mutation.mutateAsync(values);
-    setAuthData({ ...authData, ...response });
+    setAuthData({ ...authData, ...response.data });
   };
 
   const { error: mutationError } = mutation;
@@ -86,3 +83,5 @@ export const LoginForm = () => {
     </Flex>
   );
 };
+
+export type LoginFormProps = InputOf<"login">;

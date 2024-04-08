@@ -2,21 +2,21 @@ import { z } from "zod";
 import { userTable } from "../db/schema";
 import { db } from "../db/db";
 import { and, eq, gt } from "drizzle-orm";
-import { TRPCError } from "@trpc/server";
 import { pick } from "pastable";
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
 import { addDays } from "date-fns";
 
-import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import { createInsertSchema, createSelectSchema } from "drizzle-typebox";
 import { ENV, isDev } from "../envVars";
 import { AppError } from "../features/errors";
+import { Static } from "elysia";
 
 export const insertUserSchema = createInsertSchema(userTable);
 export const selectUserSchema = createSelectSchema(userTable);
 
-type InsertUser = z.infer<typeof insertUserSchema>;
-type SelectUser = z.infer<typeof selectUserSchema>;
+type InsertUser = Static<typeof insertUserSchema>;
+type SelectUser = Static<typeof selectUserSchema>;
 
 export class UserService {
   async createUser(payload: Omit<InsertUser, "id">) {

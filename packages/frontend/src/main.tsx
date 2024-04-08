@@ -2,20 +2,22 @@ import { startReactDsfr } from "@codegouvfr/react-dsfr/spa";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { App } from "./App";
-import { TRPCProvider } from "./TrpcProvider";
 import { AuthProvider } from "./contexts/AuthContext";
 import "./index.css";
 import { Link } from "@tanstack/react-router";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 startReactDsfr({ defaultColorScheme: "system", Link: Link });
 
+const queryClient = new QueryClient();
+
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <TRPCProvider>
+    <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <App />
       </AuthProvider>
-    </TRPCProvider>
+    </QueryClientProvider>
   </React.StrictMode>,
 );
 
