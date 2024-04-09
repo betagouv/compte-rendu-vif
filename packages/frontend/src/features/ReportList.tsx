@@ -2,10 +2,9 @@ import { Center, Divider, Flex, styled } from "#styled-system/jsx";
 import { flex } from "#styled-system/patterns";
 import { useLiveQuery } from "electric-sql/react";
 import { useUser } from "../contexts/AuthContext";
-import { Report } from "../generated/client/prismaClient";
+import type { Report } from "../generated/client/prismaClient";
 import { db } from "../db";
 import Button from "@codegouvfr/react-dsfr/Button";
-import { useMutation } from "@tanstack/react-query";
 import Badge from "@codegouvfr/react-dsfr/Badge";
 import { css } from "#styled-system/css";
 
@@ -43,27 +42,19 @@ export const AllReports = () => {
 };
 
 export const ReportList = ({ reports }: { reports: Report[] }) => {
-  const error =
-    reports.length === 0 ? <Center>Aucun compte-rendu</Center> : null;
+  const error = reports.length === 0 ? <Center>Aucun compte-rendu</Center> : null;
 
   return (
     <Flex flexDir="column" w="484px">
       {error ??
         reports.map((report, index) => (
-          <ReportListItem
-            key={report.id}
-            report={report}
-            isLast={index === reports.length - 1}
-          />
+          <ReportListItem key={report.id} report={report} isLast={index === reports.length - 1} />
         ))}
     </Flex>
   );
 };
 
-const ReportListItem = ({
-  report,
-  isLast,
-}: { report: Report; isLast?: boolean }) => {
+const ReportListItem = ({ report, isLast }: { report: Report; isLast?: boolean }) => {
   // const mutation = useMutation({ mutationFn: () => db.report.delete({ where: { id: report.id } }) });
 
   return (
@@ -78,9 +69,7 @@ const ReportListItem = ({
       >
         <Flex>
           <styled.span fontWeight="bold">{report.title}</styled.span>
-          <styled.span ml="5px">
-            {report.created_at.toLocaleDateString()}
-          </styled.span>
+          <styled.span ml="5px">{report.created_at.toLocaleDateString()}</styled.span>
         </Flex>
         <styled.span>Rédigé par {report.created_by_username}</styled.span>
         {/* TODO: set correct status */}
@@ -106,8 +95,6 @@ const ReportListItem = ({
 type ReportStatus = "draft" | "published";
 const ReportBadge = ({ status }: { status: ReportStatus }) => {
   return (
-    <Badge severity={status === "draft" ? "info" : "success"}>
-      {status === "draft" ? "Brouillon" : "Publié"}
-    </Badge>
+    <Badge severity={status === "draft" ? "info" : "success"}>{status === "draft" ? "Brouillon" : "Publié"}</Badge>
   );
 };

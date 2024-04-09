@@ -1,7 +1,6 @@
 import { ofetch } from "ofetch";
-import { Endpoints, createApiClient } from "./api.gen";
+import { type GetEndpoints, type PostEndpoints, createApiClient } from "./api.gen";
 import { ENV } from "./envVars";
-import { UseMutationOptions, UseQueryOptions } from "@tanstack/react-query";
 
 export const api = createApiClient((method, url, parameters) => {
   const { body, query, header } = parameters || {};
@@ -13,3 +12,8 @@ export const api = createApiClient((method, url, parameters) => {
     headers: header as Record<string, string>,
   });
 }, ENV.VITE_BACKEND_URL);
+
+export type RouterInputs<T extends keyof AllEndpoints> = AllEndpoints[T]["parameters"];
+export type RouterOutputs<T extends keyof AllEndpoints> = AllEndpoints[T]["response"];
+
+type AllEndpoints = GetEndpoints & PostEndpoints;

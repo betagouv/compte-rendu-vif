@@ -1,6 +1,6 @@
-import { PropsWithChildren } from "react";
+import { Navigate } from "@tanstack/react-router";
+import type { PropsWithChildren } from "react";
 import { useUser } from "../contexts/AuthContext";
-import { Navigate, useNavigate, useRouter } from "@tanstack/react-router";
 import { getDefaultRedirectUrl } from "../utils";
 
 export const RedirectIfUser = ({ children }: PropsWithChildren) => {

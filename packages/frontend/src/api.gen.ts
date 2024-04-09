@@ -98,9 +98,7 @@ type RequiredKeys<T> = {
   [P in keyof T]-?: undefined extends T[P] ? never : P;
 }[keyof T];
 
-type MaybeOptionalArg<T> = RequiredKeys<T> extends never
-  ? [config?: T]
-  : [config: T];
+type MaybeOptionalArg<T> = RequiredKeys<T> extends never ? [config?: T] : [config: T];
 
 // </ApiClientTypes>
 

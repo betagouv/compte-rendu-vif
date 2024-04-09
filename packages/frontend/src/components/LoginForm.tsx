@@ -2,23 +2,20 @@ import { css } from "#styled-system/css";
 import { Divider, Flex, styled } from "#styled-system/jsx";
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import Input from "@codegouvfr/react-dsfr/Input";
-import { Link, useNavigate, useRouter } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import { useAuthContext } from "../contexts/AuthContext";
 import { FullWidthButton } from "./FullWidthButton";
 import { InputGroup } from "./InputGroup";
 import { PasswordInput } from "./PasswordInput";
 import { useMutation } from "@tanstack/react-query";
-import { Endpoints } from "../api.gen";
-import { api } from "../api";
+import { type RouterInputs, api } from "../api";
 
 export const LoginForm = () => {
   const [authData, setAuthData] = useAuthContext();
   const form = useForm<LoginFormProps>();
 
-  const mutation = useMutation((body: LoginFormProps) =>
-    api.post("/api/login", { body }),
-  );
+  const mutation = useMutation((body: LoginFormProps) => api.post("/api/login", { body }));
 
   const login = async (values: LoginFormProps) => {
     const response = await mutation.mutateAsync(values);
@@ -35,11 +32,7 @@ export const LoginForm = () => {
           <Alert
             className={css({ mb: "1.5rem" })}
             severity="error"
-            title={
-              <styled.span fontWeight="regular">
-                {(mutationError as any).message}
-              </styled.span>
-            }
+            title={<styled.span fontWeight="regular">{(mutationError as any).message}</styled.span>}
           />
         ) : null}
         <InputGroup state={mutationError ? "error" : undefined}>
@@ -68,8 +61,7 @@ export const LoginForm = () => {
                 required: "Le mot de passe est requis",
                 minLength: {
                   value: 8,
-                  message:
-                    "Le mot de passe doit contenir au moins 8 caractères",
+                  message: "Le mot de passe doit contenir au moins 8 caractères",
                 },
               }),
             }}
@@ -80,11 +72,7 @@ export const LoginForm = () => {
           <Link to="/reset-password">Mot de passe oublié</Link>
         </styled.div>
 
-        <FullWidthButton
-          className={css({ mt: "1.5rem" })}
-          type="submit"
-          onClick={form.handleSubmit(login)}
-        >
+        <FullWidthButton className={css({ mt: "1.5rem" })} type="submit" onClick={form.handleSubmit(login)}>
           Se connecter
         </FullWidthButton>
       </form>
@@ -100,4 +88,4 @@ export const LoginForm = () => {
   );
 };
 
-export type LoginFormProps = Endpoints.post_Apilogin["parameters"]["body"];
+export type LoginFormProps = RouterInputs<"/api/login">["body"];

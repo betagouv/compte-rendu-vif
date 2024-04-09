@@ -1,6 +1,6 @@
 import { Flex } from "#styled-system/jsx";
 import { useFormContext } from "react-hook-form";
-import { InputGroup, InputGroupWithTitle } from "../components/InputGroup";
+import { InputGroupWithTitle } from "../components/InputGroup";
 import Input from "@codegouvfr/react-dsfr/Input";
 import type { Report } from "../generated/client/prismaClient";
 import { ChipGroup } from "../components/Chip";

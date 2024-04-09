@@ -1,9 +1,9 @@
-import { type BoxProps, Divider, Flex, Stack, styled } from "#styled-system/jsx";
+import { Divider, Flex, Stack } from "#styled-system/jsx";
 import Input from "@codegouvfr/react-dsfr/Input";
 import Select from "@codegouvfr/react-dsfr/Select";
 import { useUser } from "../contexts/AuthContext";
-import { InputGroup, InputGroupWithTitle } from "../components/InputGroup";
-import { type PropsWithChildren, useRef } from "react";
+import { InputGroupWithTitle } from "../components/InputGroup";
+import { useRef } from "react";
 import { ChipGroup } from "../components/Chip";
 import { css } from "#styled-system/css";
 import { useFormContext, useWatch } from "react-hook-form";

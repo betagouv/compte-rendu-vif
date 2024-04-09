@@ -1,5 +1,5 @@
 import { Divider, Flex, styled } from "#styled-system/jsx";
-import { UseFormReturn, useForm, useWatch } from "react-hook-form";
+import { type UseFormReturn, useForm, useWatch } from "react-hook-form";
 import Input from "@codegouvfr/react-dsfr/Input";
 import { PasswordInput } from "./PasswordInput";
 import { FullWidthButton } from "./FullWidthButton";
@@ -8,8 +8,7 @@ import { InputGroup } from "./InputGroup";
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import { useAuthContext } from "../contexts/AuthContext";
 import { useMutation } from "@tanstack/react-query";
-import { Endpoints } from "../api.gen";
-import { api } from "../api";
+import { type RouterInputs, api } from "../api";
 
 export const SignupForm = () => {
   const form = useForm<SignupFormProps>({
@@ -22,9 +21,7 @@ export const SignupForm = () => {
 
   const [_, setData] = useAuthContext();
 
-  const mutation = useMutation((body: SignupFormProps) =>
-    api.post("/api/create-user", { body }),
-  );
+  const mutation = useMutation((body: SignupFormProps) => api.post("/api/create-user", { body }));
 
   const signup = async (values: SignupFormProps) => {
     const response = await mutation.mutateAsync(values);
@@ -42,11 +39,7 @@ export const SignupForm = () => {
           <Alert
             className={css({ mb: "1.5rem" })}
             severity="error"
-            title={
-              <styled.span fontWeight="regular">
-                {(mutationError as any).message}
-              </styled.span>
-            }
+            title={<styled.span fontWeight="regular">{(mutationError as any).message}</styled.span>}
           />
         ) : null}
         <InputGroup state={mutationError ? "error" : undefined}>
@@ -95,9 +88,7 @@ export const SignupForm = () => {
   );
 };
 
-const SignupPasswordInput = ({
-  form,
-}: { form: UseFormReturn<SignupFormProps> }) => {
+const SignupPasswordInput = ({ form }: { form: UseFormReturn<SignupFormProps> }) => {
   const value = useWatch({ control: form.control, name: "password" });
 
   const hasNumber = /\d/.test(value);
@@ -139,8 +130,7 @@ const SignupPasswordInput = ({
           message: "Le mot de passe doit contenir au moins 8 caractères",
         },
         validate: () => {
-          const isValid =
-            hasNumber && hasUpperCase && hasLowerCase && hasSpecial;
+          const isValid = hasNumber && hasUpperCase && hasLowerCase && hasSpecial;
 
           return isValid || "Mot de passe invalide";
         },
@@ -149,4 +139,4 @@ const SignupPasswordInput = ({
   );
 };
 
-type SignupFormProps = Endpoints.post_ApicreateUser["parameters"]["body"];
+type SignupFormProps = RouterInputs<"/api/create-user">["body"];

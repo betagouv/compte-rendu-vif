@@ -1,6 +1,6 @@
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { EnsureUser } from "../components/EnsureUser";
-import { Box, Center, Flex } from "#styled-system/jsx";
+import { Box, Center } from "#styled-system/jsx";
 import { Tabs } from "../components/Tabs";
 import { InfoForm } from "../features/InfoForm";
 import { FormProvider, useForm } from "react-hook-form";

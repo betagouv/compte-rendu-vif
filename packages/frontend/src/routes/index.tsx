@@ -1,12 +1,10 @@
 import { css } from "#styled-system/css";
-import { Center, CenterProps, Flex, styled } from "#styled-system/jsx";
+import { Center, type CenterProps, Flex, styled } from "#styled-system/jsx";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { Tabs } from "../components/Tabs";
 import { useUser } from "../contexts/AuthContext";
-import { db } from "../db";
 import { EnsureUser } from "../components/EnsureUser";
-import { useLiveQuery } from "electric-sql/react";
 import { AllReports, MyReports } from "../features/ReportList";
 
 const Index = () => {
@@ -20,18 +18,10 @@ const Index = () => {
   return (
     <Flex direction="column" color="text-label-grey">
       <Banner pt="30px" pb="40px">
-        <styled.div
-          color="text-title-blue-france"
-          fontSize="18px"
-          fontWeight="bold"
-        >
+        <styled.div color="text-title-blue-france" fontSize="18px" fontWeight="bold">
           Compte-rendu VIF
         </styled.div>
-        <Button
-          className={css({ mt: "15px" })}
-          iconId="ri-add-line"
-          linkProps={{ to: "/create" }}
-        >
+        <Button className={css({ mt: "15px" })} iconId="ri-add-line" linkProps={{ to: "/create" }}>
           Créer un compte-rendu
         </Button>
       </Banner>
@@ -70,7 +60,5 @@ export const Route = createFileRoute("/")({
 });
 
 const Banner = (props: CenterProps) => {
-  return (
-    <Center flexDir="column" bgColor="background-open-blue-france" {...props} />
-  );
+  return <Center flexDir="column" bgColor="background-open-blue-france" {...props} />;
 };

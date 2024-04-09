@@ -1,27 +1,13 @@
-import Button, { ButtonProps } from "@codegouvfr/react-dsfr/Button";
+import Button, { type ButtonProps } from "@codegouvfr/react-dsfr/Button";
 import { css, cx } from "#styled-system/css";
-import { RegisteredLinkProps } from "@codegouvfr/react-dsfr/link";
-import { AnchorHTMLAttributes, DetailedHTMLProps } from "react";
 
-export const FullWidthButton = ({
-  className,
-  type,
-  linkProps,
-  ...props
-}: ButtonProps) => {
+export const FullWidthButton = ({ className, type, linkProps, ...props }: ButtonProps) => {
   linkProps!;
   return (
     <Button
       {...(props as any)}
-      className={cx(
-        css({ display: "block", w: "100%", textAlign: "center" }),
-        className,
-      )}
-      linkProps={
-        linkProps
-          ? { ...linkProps, className: cx(css({ w: "100%" })) }
-          : undefined
-      }
+      className={cx(css({ display: "block", w: "100%", textAlign: "center" }), className)}
+      linkProps={linkProps ? { ...linkProps, className: cx(css({ w: "100%" })) } : undefined}
     />
   );
 };

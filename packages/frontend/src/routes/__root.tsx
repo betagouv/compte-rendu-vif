@@ -4,14 +4,12 @@ import Header from "@codegouvfr/react-dsfr/Header/Header";
 import MuiDsfrThemeProvider from "@codegouvfr/react-dsfr/mui";
 import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
-import { PropsWithChildren } from "react";
+import type { PropsWithChildren } from "react";
 import { useIsLoggedIn, useLogout } from "../contexts/AuthContext";
 import { Box, Flex } from "#styled-system/jsx";
-import { RouterOutputs } from "../api.gen";
+import type { RouterOutputs } from "../api";
 
-export const Route = createRootRouteWithContext<
-  Partial<RouterOutputs["login"]>
->()({
+export const Route = createRootRouteWithContext<Partial<RouterOutputs<"/api/login">>>()({
   component: () => (
     <>
       <MuiDsfrThemeProvider>

@@ -10,7 +10,7 @@ const ResetPasswordPage = () => {
   // TODO: implement mutation
   // const mutation =
 
-  const generateResetLink = async (values: { email: string }) => {
+  const generateResetLink = async (_: { email: string }) => {
     // const result = await mutation.mutateAsync(values);
     // console.log(result);
   };
@@ -18,12 +18,10 @@ const ResetPasswordPage = () => {
   return (
     <Center mt="20px" mb="80px">
       <Flex flexDirection="column" w="484px" p="16px">
-        <styled.h4>
-          Récupération de mot de passe pour Compte-rendu VIF
-        </styled.h4>
+        <styled.h4>Récupération de mot de passe pour Compte-rendu VIF</styled.h4>
         <p>
-          Veuillez saisir l’adresse courriel associée à votre compte. Nous vous
-          enverrons un lien pour réinitialiser votre mot de passe.
+          Veuillez saisir l’adresse courriel associée à votre compte. Nous vous enverrons un lien pour réinitialiser
+          votre mot de passe.
         </p>
 
         <form onSubmit={form.handleSubmit(generateResetLink)}>

@@ -1,8 +1,8 @@
-import { PropsWithChildren, createContext, useContext, useState } from "react";
-import { RouterOutputs } from "../api.gen";
+import { type PropsWithChildren, createContext, useContext, useState } from "react";
 import { safeParseLocalStorage } from "../utils";
 import { useQuery } from "@tanstack/react-query";
 import { electric } from "../db";
+import type { RouterOutputs } from "../api";
 
 const initialAuth = safeParseLocalStorage("crvif/auth");
 
@@ -14,8 +14,7 @@ const AuthContext = createContext<AuthContextProps>({
 });
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
-  const [data, setData] =
-    useState<Omit<AuthContextProps, "setData">>(initialAuth);
+  const [data, setData] = useState<Omit<AuthContextProps, "setData">>(initialAuth);
 
   const electricQuery = useQuery({
     queryKey: ["electric", data?.token!],
@@ -32,8 +31,8 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     console.error("electricQuery error", electricQuery.error);
   }
 
-  const setDataAndSaveInStorage = (data: Omit<AuthContextProps, "setData">) => {
-    setData(data);
+  const setDataAndSaveInStorage = (data: Omit<AuthContextProps, "setData" | "electricStatus">) => {
+    setData((d) => ({ ...d, ...data }));
     if (data) {
       window.localStorage.setItem("crvif/auth", JSON.stringify(data));
     } else {
@@ -75,7 +74,7 @@ export const useUser = () => {
   return user;
 };
 
-type AuthContextProps = Partial<RouterOutputs["login"]> & {
-  setData: (data: Omit<AuthContextProps, "setData">) => void;
-  electricStatus: "error" | "pending" | "success" | "idle";
+type AuthContextProps = Partial<RouterOutputs<"/api/login">> & {
+  setData: (data: Omit<AuthContextProps, "setData" | "electricStatus">) => void;
+  electricStatus: "error" | "pending" | "success" | "idle" | "loading";
 };
