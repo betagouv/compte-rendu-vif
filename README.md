@@ -1,3 +1,9 @@
+# Scripts
+- `clearDb.sh` clears postgres db
+- `frontend/createEnvFile.ts` used in prod to inject env vars starting with VITE_ at runtime
+- `frontend/generatePandaDS.ts` used in dev to generate [PandaCSS](https://panda-css.com/docs/theming/tokens) tokens from [DSFR](https://github.com/GouvernementFR/dsfr)
+- `frontend/completePrismaClient.ts` resolves an issue with prisma not being properly typed
+
 # DB Workflow
 
 This app contains 2 databases on a single Postgres container, and a database proxy.

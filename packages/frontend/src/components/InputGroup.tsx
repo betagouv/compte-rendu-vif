@@ -39,6 +39,7 @@ const Slot = ({ children, className, ...props }: PropsWithChildren & BoxProps) =
 
   return null;
 };
+
 const Title = ({ children, ...props }: PropsWithChildren & BoxProps) => (
   <styled.h6 mb="0.875rem" fontSize="20px" {...props}>
     {children}
