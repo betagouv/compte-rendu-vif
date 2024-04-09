@@ -21,6 +21,10 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     queryFn: async () => {
       if (electric.isConnected) electric.disconnect();
       await electric.connect(data.token!);
+
+      await electric.db.report.sync();
+      await electric.db.clause.sync();
+
       return true;
     },
     enabled: !!data?.token,

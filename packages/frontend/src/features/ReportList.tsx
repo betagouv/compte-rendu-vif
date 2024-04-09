@@ -10,6 +10,7 @@ import { css } from "#styled-system/css";
 
 export const MyReports = () => {
   const user = useUser()!;
+  console.log(user.id);
   const myReports = useLiveQuery(
     db.report.liveMany({
       where: { created_by_id: user.id },
@@ -38,7 +39,11 @@ export const AllReports = () => {
     return <Center>Une erreur s'est produite</Center>;
   }
 
-  return <ReportList reports={allReports.results ?? []} />;
+  return (
+    <Center>
+      <ReportList reports={allReports.results ?? []} />
+    </Center>
+  );
 };
 
 export const ReportList = ({ reports }: { reports: Report[] }) => {

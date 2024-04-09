@@ -4,11 +4,44 @@ volumes:
   pg_data:
 
 services:
+  frontend: 
+    build: 
+      context: .
+      target: frontend
+    environment:
+      VITE_BACKEND_URL: ${VITE_BACKEND_URL}
+      VITE_ELECTRIC_URL: ${VITE_ELECTRIC_URL}
+    ports: 
+      - "${FRONTEND_PORT}:4173"
+    profiles: 
+      - production
+
+  backend:
+    build:
+      context: .
+      target: backend
+    environment: 
+      PG_HOST: pg
+      PG_PORT: ${PG_PORT}
+      PG_USER: ${PG_USER}
+      PG_PASSWORD: ${PG_PASSWORD}
+      PG_USERS_DB: ${PG_USERS_DB}
+      JWT_SECRET: ${JWT_SECRET}
+      ELECTRIC_SERVICE: http://electric
+      ELECTRIC_PG_PROXY_PORT: ${PG_PROXY_PORT}
+      HTTP_PORT: ${HTTP_PORT}
+    ports:
+      - "${HTTP_PORT}:${HTTP_PORT}"
+    depends_on:
+      - electric
+    profiles: 
+      - production
+
   pg:
     image: postgres:14-alpine
     environment:
       POSTGRES_PASSWORD: ${PG_PASSWORD}
-      POSTGRES_DB: ${PG_DB}
+      POSTGRES_DB: ${PG_ELECTRIC_DB}
       POSTGRES_USER: ${PG_USER}
       POSTGRES_PORT: ${PG_PORT}
       POSTGRES_MULTIPLE_DATABASES: ${PG_USERS_DB}
@@ -16,7 +49,7 @@ services:
       - -c
       - wal_level=logical
     ports:
-      - 5432:5432
+      - ${PG_PORT}:5432
     restart: always
     volumes:
       - pg_data:/var/lib/postgresql/data
@@ -27,18 +60,19 @@ services:
     depends_on:
       - pg
     environment:
-      DATABASE_URL: postgresql://${PG_USER}:${PG_PASSWORD}@pg:${PG_PORT}/${PG_DB}
-      LOGICAL_PUBLISHER_HOST: electric
-      AUTH_JWT_ALG: HS256
+      DATABASE_URL: postgresql://${PG_USER}:${PG_PASSWORD}@pg:${PG_PORT}/${PG_ELECTRIC_DB}
       AUTH_JWT_KEY: ${JWT_SECRET}
       # LOGICAL_PUBLISHER_PORT: 5433
       # SERVICE: 'http://localhost:5133',
       PG_PROXY_PASSWORD: ${PG_PROXY_PASSWORD}
       PG_PROXY_PORT: ${PG_PROXY_PORT}
       AUTH_MODE: secure
+      LOGICAL_PUBLISHER_HOST: electric
+      AUTH_JWT_ALG: HS256
+      ELECTRIC_PG_PROXY_PORT: 65432
     ports:
-      - 5133:5133
-      - 65432:65432
+      - ${ELECTRIC_PORT}:5133
+      - ${PG_PROXY_PORT}:65432
     restart: always
 
   adminer:

@@ -16,7 +16,7 @@ const start = async () => {
 
   debug("Starting fastify server");
   const fastifyInstance = await initFastify();
-  await fastifyInstance.listen({ port: ENV.HTTP_PORT });
+  await fastifyInstance.listen({ port: ENV.HTTP_PORT, host: "0.0.0.0" });
 
   debug(`Server listening on ${ENV.HTTP_PORT}`);
 
@@ -37,6 +37,6 @@ if (shouldCreateOnly) {
   start();
 }
 
-process.on("SIGINT", function () {
+process.on("SIGINT", () => {
   process.exit();
 });

@@ -1,9 +1,10 @@
 import { electrify, ElectricDatabase } from "electric-sql/wa-sqlite";
 import { schema } from "./generated/client";
 import type { ElectricConfig } from "electric-sql/config";
+import { ENV } from "./envVars";
 
 const config = {
-  url: "http://localhost:5133",
+  url: ENV.VITE_ELECTRIC_URL,
 } satisfies ElectricConfig;
 const conn = await ElectricDatabase.init("my.db", "/");
 

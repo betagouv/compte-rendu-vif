@@ -2,6 +2,7 @@ import type { Awaitable } from "./types";
 
 export const onHmr = (callback: () => Awaitable<any>) => {
   const hot = (import.meta as any).hot;
+  if (!hot) return;
   if (!hot.data.callbacks) {
     hot.data.callbacks = [];
   }
@@ -18,9 +19,7 @@ export async function registerViteHmrServerRestart() {
       const callbacks = hot.data.callbacks || [];
 
       console.clear();
-      console.log(
-        `########## HMR (${callbacks.length} callbacks) ############\n`,
-      );
+      console.log(`########## HMR (${callbacks.length} callbacks) ############\n`);
 
       for (const callback of callbacks) {
         await callback();

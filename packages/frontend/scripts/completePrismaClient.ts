@@ -1,4 +1,4 @@
-import { promises as fs } from "fs";
+import { promises as fs } from "node:fs";
 
 const content = `export * from '@prisma/client/runtime';`;
 const path = "./src/generated/client/runtime/library.d.ts";
