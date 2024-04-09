@@ -63,7 +63,11 @@ class Parser {
   constructor(public content: string) {}
 
   replaceUrls = () => {
-    this.content = this.content.replaceAll('url("', 'url("/dsfr/');
+    this.content = this.content.replaceAll(/url\("([^"]+)\"\)/g, (match, capturedUrl) => {
+      if (capturedUrl.startsWith("data:")) return match;
+
+      return `url("/dsfr/${capturedUrl}")`;
+    });
   };
 
   getBlockAndRemove = (blockName: string) => {
