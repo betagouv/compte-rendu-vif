@@ -10,6 +10,7 @@ import Button from "@codegouvfr/react-dsfr/Button";
 import { useMutation } from "@tanstack/react-query";
 import { db } from "../db";
 import { v4 } from "uuid";
+import { NotesForm } from "../features/NotesForm";
 
 export const CreatePage = () => {
   const user = useUser()!;
@@ -45,8 +46,7 @@ export const CreatePage = () => {
   const navigate = useNavigate();
 
   const createReportMutation = useMutation({
-    mutationFn: (report: Report) =>
-      db.report.create({ data: { ...report, id: "report-" + v4() } }),
+    mutationFn: (report: Report) => db.report.create({ data: { ...report, id: `report-${v4()}` } }),
     onSuccess: () => {
       navigate({ to: "/" });
     },
@@ -54,11 +54,7 @@ export const CreatePage = () => {
 
   return (
     <FormProvider {...form}>
-      <form
-        onSubmit={form.handleSubmit((values) =>
-          createReportMutation.mutate(values),
-        )}
-      >
+      <form onSubmit={form.handleSubmit((values) => createReportMutation.mutate(values))}>
         <Tabs.Root defaultValue="info">
           <Tabs.List>
             {options.map((option) => (
@@ -71,7 +67,9 @@ export const CreatePage = () => {
           <Tabs.Content value="info">
             <InfoForm />
           </Tabs.Content>
-          <Tabs.Content value="notes"></Tabs.Content>
+          <Tabs.Content value="notes">
+            <NotesForm />
+          </Tabs.Content>
         </Tabs.Root>
 
         <Center>

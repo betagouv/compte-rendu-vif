@@ -1,17 +1,19 @@
 import { cva } from "#styled-system/css";
-import { BoxProps, Flex, FlexProps } from "#styled-system/jsx";
+import { type BoxProps, Flex, type FlexProps } from "#styled-system/jsx";
 import Tag from "@codegouvfr/react-dsfr/Tag";
 import { useState } from "react";
 
 export const ChipGroup = ({
   options,
   isMulti,
+  label,
   canBeEmpty,
   onChange,
   ...props
 }: {
   options: ChipGroupOption[];
   isMulti?: boolean;
+  label?: string;
   canBeEmpty?: boolean;
   onChange: (values: string[]) => void;
 } & Omit<FlexProps, "onChange">) => {
@@ -47,8 +49,9 @@ export const ChipGroup = ({
     </Flex>
   );
 };
+
 type ChipGroupOption = {
-  initialIsChecked: boolean;
+  initialIsChecked?: boolean;
   label: string;
   key: string;
 };

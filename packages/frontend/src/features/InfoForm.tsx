@@ -1,16 +1,9 @@
-import {
-  Box,
-  BoxProps,
-  Divider,
-  Flex,
-  Stack,
-  styled,
-} from "#styled-system/jsx";
+import { type BoxProps, Divider, Flex, Stack, styled } from "#styled-system/jsx";
 import Input from "@codegouvfr/react-dsfr/Input";
 import Select from "@codegouvfr/react-dsfr/Select";
 import { useUser } from "../contexts/AuthContext";
-import { InputGroup } from "../components/InputGroup";
-import { PropsWithChildren, useRef } from "react";
+import { InputGroup, InputGroupWithTitle } from "../components/InputGroup";
+import { type PropsWithChildren, useRef } from "react";
 import { ChipGroup } from "../components/Chip";
 import { css } from "#styled-system/css";
 import { useFormContext, useWatch } from "react-hook-form";
@@ -32,9 +25,9 @@ export const InfoForm = () => {
     const day = meetDateRef.current.day;
     const time = meetDateRef.current.time;
 
-    const date = parse(day + "T" + time, "yyyy-MM-dd'T'HH:mm", new Date());
+    const date = parse(`${day}T${time}`, "yyyy-MM-dd'T'HH:mm", new Date());
 
-    if (!day || !time || isNaN(date.getTime())) {
+    if (!day || !time || Number.isNaN(date.getTime())) {
       form.setValue("meet_date", undefined as any);
       return;
     }
@@ -54,91 +47,58 @@ export const InfoForm = () => {
 
   return (
     <Flex direction="column" padding="16px">
-      <InputGroup asChild>
-        <Flex direction="column">
-          <Title>Le compte-rendu</Title>
-          <Input label="Titre" nativeInputProps={form.register("title")} />
-          <Select
-            label="Rédigé par"
-            nativeSelectProps={form.register("redacted_by")}
-          >
-            <option value={user.name}>{user.name}</option>
-          </Select>
-        </Flex>
-      </InputGroup>
+      <InputGroupWithTitle title="Le compte-rendu">
+        <Input label="Titre" nativeInputProps={form.register("title")} />
+        <Select label="Rédigé par" nativeSelectProps={form.register("redacted_by")}>
+          <option value={user.name}>{user.name}</option>
+        </Select>
+      </InputGroupWithTitle>
 
       <Divider mb="32px" />
 
-      <InputGroup asChild>
-        <Flex direction="column">
-          <Title>Le rendez-vous</Title>
-          <Stack direction="row">
-            <Input
-              label="Date"
-              nativeInputProps={{ type: "date", onChange: setDay }}
-            />
-            <Input
-              label="Horaire"
-              nativeInputProps={{ type: "time", onChange: setTime }}
-            />
-          </Stack>
-          <Input
-            label="Lien visio ou adresse"
-            nativeInputProps={form.register("meet_link")}
-          />
-        </Flex>
-      </InputGroup>
+      <InputGroupWithTitle title="Le rendez-vous">
+        <Stack direction="row">
+          <Input label="Date" nativeInputProps={{ type: "date", onChange: setDay }} />
+          <Input label="Horaire" nativeInputProps={{ type: "time", onChange: setTime }} />
+        </Stack>
+        <Input label="Lien visio ou adresse" nativeInputProps={form.register("meet_link")} />
+      </InputGroupWithTitle>
 
       <Divider mb="32px" />
 
-      <InputGroup asChild>
-        <Flex direction="column">
-          <Title>Le demandeur</Title>
-          <ChipGroup
-            onChange={(values) => {
-              console.log(values?.[0]);
-              form.setValue("applicant_type", values?.[0]);
-            }}
-            options={[
-              {
-                initialIsChecked: true,
-                label: "particulier",
-                key: "particulier",
-              },
-              {
-                initialIsChecked: false,
-                label: "maître d'œuvre",
-                key: "maitre-d-oeuvre",
-              },
-              {
-                initialIsChecked: false,
-                label: "collectivité",
-                key: "collectivite",
-              },
-            ]}
-          />
-          <Input className={css({ mt: "1rem" })} label="Nom" />
-        </Flex>
-      </InputGroup>
+      <InputGroupWithTitle title="Le demandeur">
+        <ChipGroup
+          onChange={(values) => {
+            form.setValue("applicant_type", values?.[0]);
+          }}
+          options={[
+            {
+              initialIsChecked: true,
+              label: "particulier",
+              key: "particulier",
+            },
+            {
+              label: "maître d'œuvre",
+              key: "maitre-d-oeuvre",
+            },
+            {
+              label: "collectivité",
+              key: "collectivite",
+            },
+          ]}
+        />
+        <Input className={css({ mt: "1rem" })} label="Nom" />
+      </InputGroupWithTitle>
 
       <Divider mb="32px" />
 
-      <InputGroup asChild>
-        <Flex direction="column">
-          <Title>Le projet</Title>
-          <Input label="Ref cadastrale ou adresse" />
-          <Select label="Relation territoire" nativeSelectProps={{}}>
-            <option disabled>Sélectionner une option</option>
-          </Select>
-          <Input label="Nature du projet" />
-        </Flex>
-      </InputGroup>
+      <InputGroupWithTitle title="Le projet">
+        <Input label="Ref cadastrale ou adresse" />
+        <Select label="Relation territoire" nativeSelectProps={{}}>
+          <option disabled>Sélectionner une option</option>
+        </Select>
+        <Input label="Nature du projet" />
+      </InputGroupWithTitle>
     </Flex>
   );
 };
-
-const Title = ({ children, ...props }: PropsWithChildren & BoxProps) => (
-  <styled.h6 mb="0.875rem" fontSize="20px" {...props}>
-    {children}
-  </styled.h6>
-);
