@@ -1,7 +1,7 @@
 ################################
 # BASE IMAGE FOR EVERY SERVICE #
 ################################
-FROM --platform=linux/amd64  node:18 AS with-pnpm
+FROM --platform=linux/amd64  node:20-alpine AS with-pnpm
 RUN npm i -g pnpm
 
 ################################
