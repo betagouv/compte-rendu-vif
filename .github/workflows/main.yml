@@ -26,6 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: login
     permissions:
+      contents: read
       packages: write
     steps:
       - name: Build and push Docker image
@@ -40,6 +41,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: login
     permissions:
+      contents: read
       packages: write
     steps:
       - name: Build and push Docker image
