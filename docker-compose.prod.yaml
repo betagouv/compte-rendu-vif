@@ -1,7 +1,11 @@
 version: "3.1"
 
 volumes:
-  pg_data:
+  cr-vif-pg-data:
+
+networks:
+  cr-vif-network:
+    driver: bridge
 
 services:
   frontend: 
@@ -13,27 +17,13 @@ services:
     build:
       context: .
       target: backend
-    environment: 
-      PG_HOST: pg
-      PG_PORT: ${PG_PORT}
-      PG_USER: ${PG_USER}
-      PG_PASSWORD: ${PG_PASSWORD}
-      PG_USERS_DB: ${PG_USERS_DB}
-      JWT_SECRET: ${JWT_SECRET}
-      ELECTRIC_SERVICE: http://electric
-      ELECTRIC_PG_PROXY_PORT: ${PG_PROXY_PORT}
-      HTTP_PORT: ${HTTP_PORT}
     depends_on:
       - electric
+    networks:
+      - cr-vif-network
 
   pg:
     image: postgres:14-alpine
-    environment:
-      POSTGRES_PASSWORD: ${PG_PASSWORD}
-      POSTGRES_DB: ${PG_ELECTRIC_DB}
-      POSTGRES_USER: ${PG_USER}
-      POSTGRES_PORT: ${PG_PORT}
-      POSTGRES_MULTIPLE_DATABASES: ${PG_USERS_DB}
     command:
       - -c
       - wal_level=logical
@@ -42,7 +32,8 @@ services:
     restart: always
     volumes:
       - pg_data:/var/lib/postgresql/data
-      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - cr-vif-network
 
   electric:
     image: electricsql/electric:canary
@@ -52,9 +43,13 @@ services:
       - ${ELECTRIC_PORT}:5133
       - ${PG_PROXY_PORT}:65432
     restart: always
+    networks:
+      - cr-vif-network
 
   adminer:
     image: adminer
     restart: always
     ports:
       - "${ADMINER_PORT:-8081}:8080"
+    networks:
+      - cr-vif-network
