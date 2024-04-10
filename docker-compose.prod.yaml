@@ -38,7 +38,6 @@ services:
     image: electricsql/electric:canary
     depends_on:
       - pg
-      - "65432"
     restart: always
     networks:
       - cr-vif-network
@@ -47,6 +46,6 @@ services:
     image: adminer
     restart: always
     ports:
-      - "${ADMINER_PORT:-8081}:8080"
+      - "8080"
     networks:
       - cr-vif-network
