@@ -39,9 +39,7 @@ services:
     image: electricsql/electric:canary
     depends_on:
       - pg
-    ports:
-      - ${ELECTRIC_PORT}:5133
-      - ${PG_PROXY_PORT}:65432
+      - "65432"
     restart: always
     networks:
       - cr-vif-network
