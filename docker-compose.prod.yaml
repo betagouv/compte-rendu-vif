@@ -30,7 +30,7 @@ services:
     restart: always
     volumes:
       - cr-vif-pg-data:/var/lib/postgresql/data
-      - ./db/init:/docker-entrypoint-initdb.d
+      - ./db/init/multipleDatabases.sh:/docker-entrypoint-initdb.d/multipleDatabases.sh
     networks:
       - cr-vif-network
 
