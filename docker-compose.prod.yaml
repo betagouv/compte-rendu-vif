@@ -8,8 +8,6 @@ services:
     build: 
       context: .
       target: frontend
-    ports: 
-      - ${FRONTEND_PORT}
 
   backend:
     build:
@@ -27,8 +25,6 @@ services:
       HTTP_PORT: ${HTTP_PORT}
     depends_on:
       - electric
-    ports: 
-      - ${HTTP_PORT}
 
   pg:
     image: postgres:14-alpine
