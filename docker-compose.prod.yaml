@@ -8,11 +8,8 @@ services:
     build: 
       context: .
       target: frontend
-    environment:
-      VITE_BACKEND_URL: ${VITE_BACKEND_URL}
-      VITE_ELECTRIC_URL: ${VITE_ELECTRIC_URL}
     ports: 
-      - "${FRONTEND_PORT}:4173"
+      - ${FRONTEND_PORT}
 
   backend:
     build:
@@ -28,10 +25,10 @@ services:
       ELECTRIC_SERVICE: http://electric
       ELECTRIC_PG_PROXY_PORT: ${PG_PROXY_PORT}
       HTTP_PORT: ${HTTP_PORT}
-    ports:
-      - "${HTTP_PORT}:${HTTP_PORT}"
     depends_on:
       - electric
+    ports: 
+      - ${HTTP_PORT}
 
   pg:
     image: postgres:14-alpine
