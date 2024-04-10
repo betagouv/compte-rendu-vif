@@ -48,17 +48,6 @@ services:
     image: electricsql/electric:canary
     depends_on:
       - pg
-    environment:
-      DATABASE_URL: postgresql://${PG_USER}:${PG_PASSWORD}@pg:${PG_PORT}/${PG_ELECTRIC_DB}
-      AUTH_JWT_KEY: ${JWT_SECRET}
-      # LOGICAL_PUBLISHER_PORT: 5433
-      # SERVICE: 'http://localhost:5133',
-      PG_PROXY_PASSWORD: ${PG_PROXY_PASSWORD}
-      PG_PROXY_PORT: ${PG_PROXY_PORT}
-      AUTH_MODE: secure
-      LOGICAL_PUBLISHER_HOST: electric
-      AUTH_JWT_ALG: HS256
-      ELECTRIC_PG_PROXY_PORT: 65432
     ports:
       - ${ELECTRIC_PORT}:5133
       - ${PG_PROXY_PORT}:65432
