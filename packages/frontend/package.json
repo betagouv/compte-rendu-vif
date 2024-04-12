@@ -39,6 +39,7 @@
     "react-dom": "^18.2.0",
     "react-error-boundary": "^4.0.13",
     "react-hook-form": "^7.51.1",
+    "react-use": "^17.5.0",
     "uuid": "^9.0.1",
     "vite-plugin-wasm": "^3.3.0",
     "wa-sqlite": "github:rhashimoto/wa-sqlite",

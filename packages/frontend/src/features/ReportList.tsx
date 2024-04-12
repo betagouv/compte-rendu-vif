@@ -7,17 +7,16 @@ import { db } from "../db";
 import Button from "@codegouvfr/react-dsfr/Button";
 import Badge from "@codegouvfr/react-dsfr/Badge";
 import { css } from "#styled-system/css";
+import { Link } from "@tanstack/react-router";
 
 export const MyReports = () => {
   const user = useUser()!;
-  console.log(user.id);
   const myReports = useLiveQuery(
     db.report.liveMany({
       where: { created_by_id: user.id },
       include: { report_to_clause: { include: { clause: true } } },
     }),
   );
-  console.log(myReports);
 
   if (myReports.error) {
     console.error(myReports.error);
@@ -65,34 +64,36 @@ const ReportListItem = ({ report, isLast }: { report: Report; isLast?: boolean }
 
   return (
     <>
-      <article
-        className={flex({
-          position: "relative",
-          flexDirection: "column",
-          color: "text-action-high-blue-france",
-          fontSize: "16px",
-        })}
-      >
-        <Flex>
-          <styled.span fontWeight="bold">{report.title}</styled.span>
-          <styled.span ml="5px">{report.created_at.toLocaleDateString()}</styled.span>
-        </Flex>
-        <styled.span>Rédigé par {report.created_by_username}</styled.span>
-        {/* TODO: set correct status */}
-        <styled.div mt="8px">
-          <ReportBadge status="draft" />
-        </styled.div>
-        {/* <Button onClick={() => mutation.mutate()}>Supprimer</Button> */}
-        <styled.div position="absolute" top="10px" right="10px">
-          <Button
-            className={css({ borderRadius: "50%" })}
-            iconId="ri-more-fill"
-            title="Label button"
-            size="small"
-            priority="secondary"
-          />
-        </styled.div>
-      </article>
+      <Link to={"/edit/$reportId"} params={{ reportId: report.id }}>
+        <article
+          className={flex({
+            position: "relative",
+            flexDirection: "column",
+            color: "text-action-high-blue-france",
+            fontSize: "16px",
+          })}
+        >
+          <Flex>
+            <styled.span fontWeight="bold">{report.title}</styled.span>
+            <styled.span ml="5px">{report.created_at.toLocaleDateString()}</styled.span>
+          </Flex>
+          <styled.span>Rédigé par {report.created_by_username}</styled.span>
+          {/* TODO: set correct status */}
+          <styled.div mt="8px">
+            <ReportBadge status="draft" />
+          </styled.div>
+          {/* <Button onClick={() => mutation.mutate()}>Supprimer</Button> */}
+          <styled.div position="absolute" top="10px" right="10px">
+            <Button
+              className={css({ borderRadius: "50%" })}
+              iconId="ri-more-fill"
+              title="Label button"
+              size="small"
+              priority="secondary"
+            />
+          </styled.div>
+        </article>
+      </Link>
       {isLast ? null : <Divider mt="12px" mb="8px" />}
     </>
   );

@@ -1,10 +1,14 @@
 import { css } from "#styled-system/css";
-import { Center, type CenterProps, Flex, styled } from "#styled-system/jsx";
+import { Flex, styled } from "#styled-system/jsx";
 import Button from "@codegouvfr/react-dsfr/Button";
+import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, redirect } from "@tanstack/react-router";
+import { v4 } from "uuid";
+import { Banner } from "../components/Banner";
+import { EnsureUser } from "../components/EnsureUser";
 import { Tabs } from "../components/Tabs";
 import { useUser } from "../contexts/AuthContext";
-import { EnsureUser } from "../components/EnsureUser";
+import { db } from "../db";
 import { AllReports, MyReports } from "../features/ReportList";
 
 const Index = () => {
@@ -15,13 +19,27 @@ const Index = () => {
     { id: "udap", label: "UDAP" },
   ];
 
+  const createReportMutation = useMutation({
+    mutationFn: () =>
+      db.report.create({
+        data: { id: `report-${v4()}`, created_by_id: user.id, created_at: new Date(), created_by_username: user.name },
+      }),
+    onSuccess: () => {
+      console.log("success");
+    },
+  });
+
   return (
     <Flex direction="column" color="text-label-grey">
       <Banner pt="30px" pb="40px">
         <styled.div color="text-title-blue-france" fontSize="18px" fontWeight="bold">
           Compte-rendu VIF
         </styled.div>
-        <Button className={css({ mt: "15px" })} iconId="ri-add-line" linkProps={{ to: "/create" }}>
+        <Button
+          className={css({ mt: "15px" })}
+          iconId="ri-add-line"
+          nativeButtonProps={{ onClick: () => createReportMutation.mutate() }}
+        >
           Créer un compte-rendu
         </Button>
       </Banner>
@@ -58,7 +76,3 @@ export const Route = createFileRoute("/")({
     }
   },
 });
-
-const Banner = (props: CenterProps) => {
-  return <Center flexDir="column" bgColor="background-open-blue-france" {...props} />;
-};

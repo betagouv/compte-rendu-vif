@@ -12,10 +12,7 @@ export namespace Endpoints {
     parameters: {
       body: { name: string; email: string; password: string };
     };
-    response: {
-      user: { id: string; name: string; email: string };
-      token: string;
-    };
+    response: { user: { id: string; name: string; email: string }; token: string };
   };
   export type post_Apilogin = {
     method: "POST";
@@ -23,10 +20,7 @@ export namespace Endpoints {
     parameters: {
       body: { email: string; password: string };
     };
-    response: {
-      user: { id: string; name: string; email: string };
-      token: string;
-    };
+    response: { user: { id: string; name: string; email: string }; token: string };
   };
   export type get_ApiverifyToken = {
     method: "GET";
@@ -118,7 +112,7 @@ export class ApiClient {
     path: Path,
     ...params: MaybeOptionalArg<TEndpoint["parameters"]>
   ): Promise<TEndpoint["response"]> {
-    return this.fetcher("post", this.baseUrl + path, params[0]) as any;
+    return this.fetcher("post", this.baseUrl + path, params[0]);
   }
   // </ApiClient.post>
 
@@ -127,7 +121,7 @@ export class ApiClient {
     path: Path,
     ...params: MaybeOptionalArg<TEndpoint["parameters"]>
   ): Promise<TEndpoint["response"]> {
-    return this.fetcher("get", this.baseUrl + path, params[0]) as any;
+    return this.fetcher("get", this.baseUrl + path, params[0]);
   }
   // </ApiClient.get>
 }

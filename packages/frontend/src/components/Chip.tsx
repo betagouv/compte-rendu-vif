@@ -1,4 +1,4 @@
-import { cva } from "#styled-system/css";
+import { cva, cx } from "#styled-system/css";
 import { type BoxProps, Flex, type FlexProps } from "#styled-system/jsx";
 import Tag from "@codegouvfr/react-dsfr/Tag";
 import { useState } from "react";
@@ -8,23 +8,23 @@ export const ChipGroup = ({
   isMulti,
   label,
   canBeEmpty,
+  value,
   onChange,
   ...props
 }: {
   options: ChipGroupOption[];
   isMulti?: boolean;
+  value?: string[];
   label?: string;
   canBeEmpty?: boolean;
   onChange: (values: string[]) => void;
 } & Omit<FlexProps, "onChange">) => {
-  const [selectedOptions, setSelectedOptions] = useState(
-    new Set(options.filter((o) => o.initialIsChecked).map((o) => o.key)),
-  );
+  const [selectedOptions, setSelectedOptions] = useState(new Set(value ?? []));
 
   const values = Object.values(options);
 
-  return (
-    <Flex {...props} gap="8px" flexWrap="wrap">
+  const ChipGroupList = (
+    <Flex {...props} gap="8px" mt={label ? "8px" : 0} flexWrap="wrap">
       {values.map((option) => (
         <Chip
           key={option.key}
@@ -48,10 +48,18 @@ export const ChipGroup = ({
       ))}
     </Flex>
   );
+
+  if (!label) return ChipGroupList;
+
+  return (
+    <Flex direction="column" {...props} className={cx(props.className, "fr-input-group")}>
+      <label className="fr-label">{label}</label>
+      {ChipGroupList}
+    </Flex>
+  );
 };
 
-type ChipGroupOption = {
-  initialIsChecked?: boolean;
+export type ChipGroupOption = {
   label: string;
   key: string;
 };
