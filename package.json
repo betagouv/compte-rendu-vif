@@ -13,7 +13,9 @@
     "electric:client": "pnpm frontend client:generate",
     "client:ts": "typed-openapi ./packages/backend/openapi.json --output ./packages/frontend/src/api.gen.ts",
     "client:json": "pnpm backend dev --create-only",
-    "client:generate": "pnpm client:json && pnpm client:ts"
+    "client:generate": "pnpm client:json && pnpm client:ts",
+    "salut": "docker ps",
+    "e2e": "playwright test"
   },
   "keywords": [],
   "author": "",
@@ -21,6 +23,8 @@
     "@biomejs/biome": "1.6.4",
     "@databases/pg-migrations": "^5.0.3",
     "@pandabox/prettier-plugin": "^0.1.0",
+    "@playwright/test": "^1.43.0",
+    "@types/node": "^20.11.28",
     "electric-sql": "^0.9.5",
     "prettier": "^3.2.5",
     "typed-openapi": "^0.4.1"

@@ -26,7 +26,6 @@ yarn-debug.log*
 yarn-error.log*
 
 .env
-
 # vercel
 .vercel
 
@@ -58,3 +57,7 @@ robots.txt
 local_db/*
 .electric_migrations_*
 trace-dir/*
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/

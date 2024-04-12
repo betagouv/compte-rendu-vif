@@ -2,7 +2,6 @@ import Button, { type ButtonProps } from "@codegouvfr/react-dsfr/Button";
 import { css, cx } from "#styled-system/css";
 
 export const FullWidthButton = ({ className, type, linkProps, ...props }: ButtonProps) => {
-  linkProps!;
   return (
     <Button
       {...(props as any)}

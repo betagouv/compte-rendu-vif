@@ -29,7 +29,6 @@ services:
     environment:
       DATABASE_URL: postgresql://${PG_USER}:${PG_PASSWORD}@pg:${PG_PORT}/${PG_ELECTRIC_DB}
       AUTH_JWT_KEY: ${JWT_SECRET}
-      # LOGICAL_PUBLISHER_PORT: 5433
       PG_PROXY_PASSWORD: ${PG_PROXY_PASSWORD}
       PG_PROXY_PORT: ${PG_PROXY_PORT}
       AUTH_MODE: secure

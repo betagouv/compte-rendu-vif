@@ -72,7 +72,12 @@ export const LoginForm = () => {
           <Link to="/reset-password">Mot de passe oublié</Link>
         </styled.div>
 
-        <FullWidthButton className={css({ mt: "1.5rem" })} type="submit" onClick={form.handleSubmit(login)}>
+        <FullWidthButton
+          className={css({ mt: "1.5rem" })}
+          type="submit"
+          nativeButtonProps={{ type: "submit" }}
+          onClick={form.handleSubmit(login)}
+        >
           Se connecter
         </FullWidthButton>
       </form>

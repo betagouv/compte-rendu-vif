@@ -72,7 +72,7 @@ export const SignupForm = () => {
           <SignupPasswordInput form={form} />
         </InputGroup>
 
-        <FullWidthButton className={css({ mt: "1.5rem" })} type="submit">
+        <FullWidthButton className={css({ mt: "1.5rem" })} type="submit" nativeButtonProps={{ type: "submit" }}>
           Valider
         </FullWidthButton>
       </form>
