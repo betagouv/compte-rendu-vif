@@ -22,6 +22,7 @@ export const FurtherInfoChips = () => {
   return (
     <ChipGroup
       isMulti
+      canBeEmpty
       options={furtherInfoOptions}
       value={selected}
       onChange={(values) => form.setValue("further_information", values.join(","))}

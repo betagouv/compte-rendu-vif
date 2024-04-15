@@ -22,9 +22,10 @@ export const SpaceTypeChips = () => {
   return (
     <ChipGroup
       isMulti
+      canBeEmpty
       options={spaceTypes}
       value={selected}
-      onChange={(values) => form.setValue("project_space_type", values.join(","))}
+      onChange={(values) => void console.log(values) || form.setValue("project_space_type", values.join(","))}
       label="Type d'espace"
     />
   );

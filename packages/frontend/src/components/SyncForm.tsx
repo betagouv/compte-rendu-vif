@@ -21,7 +21,7 @@ export function SyncFormBanner<TFieldValues extends FieldValues>({
   const diff = getDiff(newObject, baseObject);
   const syncMutation = useMutation(() => syncObject(baseObject.id, diff));
 
-  useDebounce(() => syncMutation.mutate(), 500, [diff]);
+  useDebounce(() => syncMutation.mutate(), 1000, [diff]);
 
   const router = useRouter();
   const goBack = () => router.history.back();
@@ -69,14 +69,26 @@ async function syncObject(id: string, diff: Record<string, any>) {
 }
 
 function isPrimitive(value: any) {
-  return value !== Object(value);
+  return value !== Object(value) || value instanceof Date;
 }
 
 function getDiff(a: Record<string, any>, b: Record<string, any>) {
   const diff = Object.entries(a).reduce((acc, [key, value]) => {
     const oldValue = b[key];
+
     if (!isPrimitive(oldValue) || !isPrimitive(value)) return acc;
 
+    if (value instanceof Date) {
+      if (oldValue instanceof Date) {
+        if (value.getTime() !== oldValue.getTime()) {
+          acc[key] = value;
+        }
+      } else {
+        acc[key] = value;
+      }
+
+      return acc;
+    }
     if (oldValue !== value) {
       acc[key] = value;
     }

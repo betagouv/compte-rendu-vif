@@ -1,7 +1,7 @@
 import { cva, cx } from "#styled-system/css";
 import { type BoxProps, Flex, type FlexProps } from "#styled-system/jsx";
 import Tag from "@codegouvfr/react-dsfr/Tag";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export const ChipGroup = ({
   options,
@@ -21,6 +21,10 @@ export const ChipGroup = ({
 } & Omit<FlexProps, "onChange">) => {
   const [selectedOptions, setSelectedOptions] = useState(new Set(value ?? []));
 
+  useEffect(() => {
+    setSelectedOptions(new Set(value ?? []));
+  }, [value]);
+
   const values = Object.values(options);
 
   const ChipGroupList = (
@@ -31,6 +35,7 @@ export const ChipGroup = ({
           isChecked={selectedOptions.has(option.key)}
           onCheckChange={(isChecked) => {
             const newSelectedOptions = new Set(selectedOptions);
+
             if (isChecked) {
               if (!isMulti) {
                 newSelectedOptions.clear();
@@ -39,6 +44,8 @@ export const ChipGroup = ({
             } else if (selectedOptions.size > 1 || canBeEmpty) {
               newSelectedOptions.delete(option.key);
             }
+            newSelectedOptions.delete("");
+
             setSelectedOptions(newSelectedOptions);
             onChange?.(Array.from(newSelectedOptions));
           }}

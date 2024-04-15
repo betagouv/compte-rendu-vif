@@ -13,19 +13,17 @@ import type { Report } from "../generated/client/prismaClient";
 const EditReport = () => {
   const { reportId } = Route.useParams();
 
-  const { results: report } = useLiveQuery(db.report.liveUnique({ where: { id: reportId } }));
+  const { results: report } = useLiveQuery(() => db.report.liveUnique({ where: { id: reportId } }), [reportId]);
 
-  return (
-    <Flex direction="column">
-      <div>edit report {reportId}</div>
-      {report ? <WithReport report={report} /> : null}
-    </Flex>
-  );
+  return <Flex direction="column">{report ? <WithReport report={report} /> : null}</Flex>;
 };
 
 const WithReport = ({ report }: { report: Report }) => {
   const form = useForm<Report>({
     defaultValues: report!,
+    resetOptions: {
+      // keepDirty: true
+    },
   });
 
   const navigate = useNavigate();
@@ -41,9 +39,10 @@ const WithReport = ({ report }: { report: Report }) => {
     { id: "notes", label: "Notes terrain" },
   ];
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     form.reset(report);
-  }, [report, form]);
+  }, [report]);
 
   return (
     <Flex direction="column">
