@@ -27,6 +27,7 @@
     "@gouvfr/dsfr-chart": "^1.0.0",
     "@mui/material": "^5.15.15",
     "@prisma/client": "^4.8.1",
+    "@react-pdf/renderer": "^3.4.2",
     "@tanstack/react-query": "^4.18.0",
     "@tanstack/react-router": "^1.22.2",
     "@tanstack/router-devtools": "^1.22.2",

@@ -1,3 +1,4 @@
+import { UploadService } from "./uploadService";
 import { UserService } from "./userService";
 
 const ref = {
@@ -6,6 +7,7 @@ const ref = {
 
 const makeServices = () => ({
   user: new UserService(),
+  upload: new UploadService(),
 });
 
 export const getServices = () => {
