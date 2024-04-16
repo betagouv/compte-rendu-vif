@@ -8,7 +8,8 @@ import Button from "@codegouvfr/react-dsfr/Button";
 import { styled } from "#styled-system/jsx";
 import { fr } from "@codegouvfr/react-dsfr";
 import { css } from "#styled-system/css";
-
+import useNetworkState from "react-use/lib/useNetworkState";
+import { useElectricStatus } from "../contexts/AuthContext";
 export function SyncFormBanner<TFieldValues extends FieldValues>({
   form,
   baseObject,
@@ -22,6 +23,10 @@ export function SyncFormBanner<TFieldValues extends FieldValues>({
   const syncMutation = useMutation(() => syncObject(baseObject.id, diff));
 
   useDebounce(() => syncMutation.mutate(), 1000, [diff]);
+
+  const networkState = useNetworkState();
+  const electricStatus = useElectricStatus();
+  console.log(electricStatus);
 
   const router = useRouter();
   const goBack = () => router.history.back();

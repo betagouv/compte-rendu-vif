@@ -7,6 +7,7 @@ import { DecisionChips } from "../components/chips/DecisionChips";
 import { ContactChips } from "../components/chips/ContactChips";
 import { css } from "#styled-system/css";
 import { FurtherInfoChips } from "../components/chips/FurtherInfoChips";
+import { UploadImage } from "../components/UploadImage";
 
 export const NotesForm = () => {
   const form = useFormContext<Report>();
@@ -27,6 +28,8 @@ export const NotesForm = () => {
         <ContactChips />
         <FurtherInfoChips />
       </InputGroupWithTitle>
+
+      <UploadImage />
     </Flex>
   );
 };

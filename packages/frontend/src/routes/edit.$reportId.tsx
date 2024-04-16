@@ -39,10 +39,9 @@ const WithReport = ({ report }: { report: Report }) => {
     { id: "notes", label: "Notes terrain" },
   ];
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     form.reset(report);
-  }, [report]);
+  }, [report, form]);
 
   return (
     <Flex direction="column">

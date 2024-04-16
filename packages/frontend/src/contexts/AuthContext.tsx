@@ -35,6 +35,8 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     console.error("electricQuery error", electricQuery.error);
   }
 
+  console.log(electricQuery.error);
+
   const setDataAndSaveInStorage = (data: Omit<AuthContextProps, "setData" | "electricStatus">) => {
     setData((d) => ({ ...d, ...data }));
     if (data) {
@@ -71,6 +73,11 @@ export const useLogout = () => {
   return () => {
     setData({ ...data, token: undefined, user: undefined });
   };
+};
+
+export const useElectricStatus = () => {
+  const { electricStatus } = useContext(AuthContext);
+  return electricStatus;
 };
 
 export const useUser = () => {

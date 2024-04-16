@@ -212,6 +212,9 @@ importers:
       electric-sql:
         specifier: ^0.10.0
         version: 0.10.0(@tauri-apps/plugin-sql@2.0.0-alpha.5)(react-dom@18.2.0)(react@18.2.0)(vue@2.7.16)(wa-sqlite@0.9.13)
+      idb-keyval:
+        specifier: ^6.2.1
+        version: 6.2.1
       install:
         specifier: ^0.13.0
         version: 0.13.0
@@ -8103,6 +8106,10 @@ packages:
     dependencies:
       safer-buffer: 2.1.2
     dev: true
+
+  /idb-keyval@6.2.1:
+    resolution: {integrity: sha512-8Sb3veuYCyrZL+VBt9LJfZjLUPWVvqn8tG28VqYNFCo43KHcKuq+b4EiXGeuaLAQWL2YmyDgMp2aSpH9JHsEQg==}
+    dev: false
 
   /idb@7.1.1:
     resolution: {integrity: sha512-gchesWBzyvGHRO9W8tzUWFDycow5gwjvFKfyV9FF32Y7F50yZMp7mP+T2mJIWFx49zicqyC4uefHM17o6xKIVQ==}
