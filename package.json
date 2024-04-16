@@ -6,6 +6,7 @@
   "scripts": {
     "frontend": "pnpm --filter @cr-vif/frontend",
     "backend": "pnpm --filter @cr-vif/backend",
+    "electric-client": "pnpm --filter @cr-vif/electric-client",
     "db:create": "pnpm backend migration:create",
     "db:migrate": "pnpm db:create",
     "electric:up": "pnpm electric-sql with-config \"pnpm pg-migrations apply --database {{ELECTRIC_PROXY}} --directory ./db/migrations\"",
@@ -28,5 +29,8 @@
     "electric-sql": "^0.9.5",
     "prettier": "^3.2.5",
     "typed-openapi": "^0.4.1"
+  },
+  "dependencies": {
+    "@prisma/client": "^4.8.1"
   }
 }

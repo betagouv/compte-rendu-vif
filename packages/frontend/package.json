@@ -13,9 +13,7 @@
     "dsfr": "copy-dsfr-to-public && pnpm panda-ds",
     "icons": "only-include-used-icons",
     "panda-ds": "vite-node ./scripts/generatePandaDS.ts",
-    "panda-ds:dev": "vite-node --watch ./scripts/generatePandaDS.ts",
-    "client:generate": "pnpm electric-sql generate && pnpm client:complete",
-    "client:complete": "vite-node ./scripts/completePrismaClient.ts"
+    "panda-ds:dev": "vite-node --watch ./scripts/generatePandaDS.ts"
   },
   "dependencies": {
     "@ark-ui/anatomy": "^2.3.1",

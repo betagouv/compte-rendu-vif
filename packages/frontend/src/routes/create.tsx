@@ -1,85 +1,51 @@
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { EnsureUser } from "../components/EnsureUser";
 import { Box, Center } from "#styled-system/jsx";
-import { Tabs } from "../components/Tabs";
-import { InfoForm } from "../features/InfoForm";
-import { FormProvider, useForm } from "react-hook-form";
-import type { Report } from "../generated/client/prismaClient";
-import { useUser } from "../contexts/AuthContext";
-import Button from "@codegouvfr/react-dsfr/Button";
-import { useMutation } from "@tanstack/react-query";
-import { db } from "../db";
-import { v4 } from "uuid";
-import { NotesForm } from "../features/NotesForm";
+import { Page, Text, View, Document, StyleSheet, PDFViewer } from "@react-pdf/renderer";
+import { css } from "#styled-system/css";
 
 export const CreatePage = () => {
-  const user = useUser()!;
-  const form = useForm<Report>({
-    defaultValues: {
-      title: "",
-      redacted_by: "",
-      created_by_id: user.id,
-      created_by_username: user.name,
-      meet_date: new Date(),
-      meet_link: "",
-      applicant_name: "",
-      applicant_type: "",
-      project_status: "",
-      project_cadastral_ref: "",
-      project_land_contact: "",
-      project_space_type: "",
-      project_nature: "",
-      project_description: "",
-      decision: "",
-      decision_comment: "",
-      contacts: "",
-      created_at: new Date(),
-    },
-  });
-
-  const options = [
-    { id: "info", label: "Informations" },
-    { id: "notes", label: "Notes terrain" },
-  ];
-
-  const navigate = useNavigate();
-
-  const createReportMutation = useMutation({
-    mutationFn: (report: Report) => db.report.create({ data: { ...report, id: `report-${v4()}` } }),
-    onSuccess: () => {
-      navigate({ to: "/" });
-    },
-  });
-
   return (
-    <FormProvider {...form}>
-      <form onSubmit={form.handleSubmit((values) => createReportMutation.mutate(values))}>
-        <Tabs.Root defaultValue="info">
-          <Tabs.List>
-            {options.map((option) => (
-              <Tabs.Trigger key={option.id} value={option.id}>
-                {option.label}
-              </Tabs.Trigger>
-            ))}
-            <Tabs.Indicator />
-          </Tabs.List>
-          <Tabs.Content value="info">
-            <InfoForm />
-          </Tabs.Content>
-          <Tabs.Content value="notes">
-            <NotesForm />
-          </Tabs.Content>
-        </Tabs.Root>
-
-        <Center>
-          <Button type="submit" iconId="ri-draft-line">
-            Créer le CR
-          </Button>
-        </Center>
-      </form>
-    </FormProvider>
+    <>
+      <PDFViewer>
+        <MyDocument />
+      </PDFViewer>
+      <div className={css({ display: "flex", w: "300px", h: "150px" })} style={styles.page}>
+        <div style={styles.section}>
+          <span>Section #1</span>
+        </div>
+        <div style={styles.section}>
+          <span>Section #2</span>
+        </div>
+      </div>
+    </>
   );
 };
+
+const styles = StyleSheet.create({
+  page: {
+    flexDirection: "row",
+    backgroundColor: "#E4E4E4",
+  },
+  section: {
+    margin: 10,
+    padding: 10,
+    flexGrow: 1,
+  },
+});
+
+const MyDocument = () => (
+  <Document>
+    <Page size="A4" style={styles.page}>
+      <View style={styles.section}>
+        <Text>Section #1</Text>
+      </View>
+      <View style={styles.section}>
+        <Text>Section #2</Text>
+      </View>
+    </Page>
+  </Document>
+);
 
 export const Route = createFileRoute("/create")({
   component: () => (

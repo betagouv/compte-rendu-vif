@@ -1,16 +1,21 @@
 import "./envVars";
 import { onHmr, registerViteHmrServerRestart } from "./hmr";
 
-import { cleanUpDb, db, migrateUsersDb } from "./db/db";
+import { cleanUpDb, db, migrateUsersDb, realDb } from "./db/db";
 import { ENV } from "./envVars";
 import { generateOpenApi, initFastify } from "./router";
 import { makeDebug } from "./features/debug";
 import { upload } from "./services/uploadService";
+// import prisma/client";
+import { PrismaClient } from "@prisma/client";
 
 const debug = makeDebug("index");
 
 const start = async () => {
-  await upload();
+  // await upload();
+  // console.log(schema);
+  const prisma = new PrismaClient();
+  prisma.report.findMany().then((res) => console.log(res));
   // await registerViteHmrServerRestart();
 
   // debug("Migrating database");
