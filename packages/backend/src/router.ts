@@ -1,7 +1,4 @@
-import {
-  TypeBoxValidatorCompiler,
-  TypeBoxTypeProvider,
-} from "@fastify/type-provider-typebox";
+import { TypeBoxValidatorCompiler, TypeBoxTypeProvider } from "@fastify/type-provider-typebox";
 import fastify from "fastify";
 import { AppError } from "./features/errors";
 import { userPlugin } from "./routes/userRoutes";
@@ -9,8 +6,9 @@ import { getServices } from "./services/services";
 import cors from "@fastify/cors";
 // import fastifySwagger from "@fastify/swagger";
 import swaggerUi from "@fastify/swagger";
-import fs from "fs/promises";
+import fs from "node:fs/promises";
 import { makeDebug } from "./features/debug";
+import { uploadPlugin } from "./routes/uploadRoutes";
 
 const debug = makeDebug("fastify");
 
@@ -52,6 +50,7 @@ export const initFastify = async () => {
       });
 
       await instance.register(userPlugin);
+      await instance.register(uploadPlugin);
     },
     { prefix: "/api" },
   );

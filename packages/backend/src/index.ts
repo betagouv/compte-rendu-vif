@@ -14,22 +14,20 @@ const debug = makeDebug("index");
 const start = async () => {
   // await upload();
   // console.log(schema);
-  const prisma = new PrismaClient();
-  prisma.report.findMany().then((res) => console.log(res));
-  // await registerViteHmrServerRestart();
+  await registerViteHmrServerRestart();
 
-  // debug("Migrating database");
-  // await migrateUsersDb();
+  debug("Migrating database");
+  await migrateUsersDb();
 
-  // debug("Starting fastify server");
-  // const fastifyInstance = await initFastify();
-  // await fastifyInstance.listen({ port: ENV.HTTP_PORT, host: "0.0.0.0" });
+  debug("Starting fastify server");
+  const fastifyInstance = await initFastify();
+  await fastifyInstance.listen({ port: ENV.HTTP_PORT, host: "0.0.0.0" });
 
-  // debug(`Server listening on ${ENV.HTTP_PORT}`);
+  debug(`Server listening on ${ENV.HTTP_PORT}`);
 
-  // onHmr(async () => {
-  //   await fastifyInstance.close();
-  // });
+  onHmr(async () => {
+    await fastifyInstance.close();
+  });
 };
 
 const shouldCreateOnly = process.argv.includes("--create-only");
