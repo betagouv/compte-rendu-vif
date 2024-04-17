@@ -15,6 +15,7 @@ const envSchema = z.object({
   JWT_SECRET: z.string(),
   NODE_ENV: z.string().default("development"),
   HTTP_PORT: stringOrNumberAsNumber.default(3001),
+  AWS_BUCKET_NAME: z.string(),
   DEBUG: z.string().default("cr-vif:*"),
 });
 

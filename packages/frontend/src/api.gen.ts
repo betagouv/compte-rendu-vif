@@ -30,6 +30,12 @@ export namespace Endpoints {
     };
     response: { id: string; name: string; email: string };
   };
+  export type post_ApiuploadImage = {
+    method: "POST";
+    path: "/api/upload-image";
+    parameters: never;
+    response: unknown;
+  };
 
   // </Endpoints>
 }
@@ -39,6 +45,7 @@ export type EndpointByMethod = {
   post: {
     "/api/create-user": Endpoints.post_ApicreateUser;
     "/api/login": Endpoints.post_Apilogin;
+    "/api/upload-image": Endpoints.post_ApiuploadImage;
   };
   get: {
     "/api/verify-token": Endpoints.get_ApiverifyToken;

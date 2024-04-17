@@ -2,9 +2,10 @@ import { Upload } from "@codegouvfr/react-dsfr/Upload";
 import { useFormContext, useWatch } from "react-hook-form";
 import type { Report } from "../generated/client";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { addImageToIdb, getImageFromIdb } from "../db";
+import { getImageFromIdb } from "../db";
 import { useRef } from "react";
 import { Flex, styled } from "#styled-system/jsx";
+import { api } from "../api";
 
 export const UploadImage = () => {
   const form = useFormContext<Report>();
@@ -22,10 +23,10 @@ export const UploadImage = () => {
   console.log(imagesQuery);
 
   const storeImageMutation = useMutation(async (image: File) => {
-    await addImageToIdb(form.getValues().id, image);
-    imagesQuery.refetch();
-    inputRef.current!.value;
-    return true;
+    const formData = new FormData();
+    formData.append("image", image);
+
+    return await api.post("/api/upload-image", { body: formData, headers: { "Content-Disposition": formData } } as any);
   });
 
   return (
