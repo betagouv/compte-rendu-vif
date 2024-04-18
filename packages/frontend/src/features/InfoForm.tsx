@@ -1,14 +1,15 @@
-import { Divider, Flex, Stack } from "#styled-system/jsx";
+import { Center, Divider, Flex, Stack } from "#styled-system/jsx";
+import { useTabsContext } from "@ark-ui/react/tabs";
+import Button from "@codegouvfr/react-dsfr/Button";
 import Input from "@codegouvfr/react-dsfr/Input";
 import Select from "@codegouvfr/react-dsfr/Select";
-import { useUser } from "../contexts/AuthContext";
-import { InputGroupWithTitle } from "../components/InputGroup";
-import { useRef } from "react";
-import { ChipGroup } from "../components/Chip";
-import { css } from "#styled-system/css";
-import { useFormContext, useWatch } from "react-hook-form";
-import type { Report } from "../generated/client";
 import { format, parse } from "date-fns";
+import { useRef } from "react";
+import { useFormContext, useWatch } from "react-hook-form";
+import { InputGroupWithTitle } from "../components/InputGroup";
+import { SpaceTypeChips } from "../components/chips/SpaceTypeChips";
+import { useUser } from "../contexts/AuthContext";
+import type { Report } from "../generated/client";
 
 export const InfoForm = () => {
   const form = useFormContext<Report>();
@@ -45,60 +46,41 @@ export const InfoForm = () => {
     tryToSetMeetDate();
   };
 
+  const tab = useTabsContext();
+
   return (
     <Flex direction="column" padding="16px">
-      <InputGroupWithTitle title="Le compte-rendu">
+      <InputGroupWithTitle title="Le rendez-vous">
         <Input label="Titre" nativeInputProps={form.register("title")} />
+        <Input label="Description" textArea nativeTextAreaProps={form.register("project_description")} />
         <Select label="Rédigé par" nativeSelectProps={form.register("redacted_by")}>
           <option value={user.name}>{user.name}</option>
         </Select>
-      </InputGroupWithTitle>
-
-      <Divider mb="32px" />
-
-      <InputGroupWithTitle title="Le rendez-vous">
         <Stack direction="row">
           <Input label="Date" nativeInputProps={{ type: "date", onChange: setDay }} />
           <Input label="Horaire" nativeInputProps={{ type: "time", onChange: setTime }} />
         </Stack>
-        <Input label="Lien visio ou adresse" nativeInputProps={form.register("meet_link")} />
-      </InputGroupWithTitle>
-
-      <Divider mb="32px" />
-
-      <InputGroupWithTitle title="Le demandeur">
-        <ChipGroup
-          onChange={(values) => {
-            form.setValue("applicant_type", values?.[0]);
-          }}
-          options={[
-            {
-              initialIsChecked: true,
-              label: "particulier",
-              key: "particulier",
-            },
-            {
-              label: "maître d'œuvre",
-              key: "maitre-d-oeuvre",
-            },
-            {
-              label: "collectivité",
-              key: "collectivite",
-            },
-          ]}
-        />
-        <Input className={css({ mt: "1rem" })} label="Nom" />
       </InputGroupWithTitle>
 
       <Divider mb="32px" />
 
       <InputGroupWithTitle title="Le projet">
-        <Input label="Ref cadastrale ou adresse" />
-        <Select label="Relation territoire" nativeSelectProps={{}}>
-          <option disabled>Sélectionner une option</option>
-        </Select>
-        <Input label="Nature du projet" />
+        <Input label="Nom du demandeur*" nativeInputProps={form.register("applicant_name")} />
+        <Input label="Adresse du projet*" nativeInputProps={form.register("applicant_address")} />
+        <Input label="Référence cadastrale du projet" nativeInputProps={form.register("project_cadastral_ref")} />
+        <Input label="Service instructeur*" nativeInputProps={form.register("service_instructeur")} />
+        <SpaceTypeChips />
       </InputGroupWithTitle>
+
+      <Center>
+        <Button
+          type="button"
+          // iconId="ri-draft-line"
+          nativeButtonProps={{ type: "button", onClick: () => tab.setValue("notes") }}
+        >
+          Ajouter notes terrain
+        </Button>
+      </Center>
     </Flex>
   );
 };

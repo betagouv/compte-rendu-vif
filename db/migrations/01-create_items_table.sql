@@ -1,32 +1,20 @@
-CREATE TABLE IF NOT EXISTS "user" (
-  id TEXT PRIMARY KEY NOT NULL,
-  email TEXT NOT NULL,
-  name TEXT,
-  password TEXT NOT NULL,
-  created_at TIMESTAMP NOT NULL,
-  updated_at TIMESTAMP NOT NULL
-);
-
 CREATE TABLE IF NOT EXISTS "report" (
   id TEXT PRIMARY KEY NOT NULL,
-  title TEXT NOT NULL,
-  redacted_by TEXT NOT NULL,
+  title TEXT,
+  project_description TEXT,
+  redacted_by TEXT,
+  meet_date TIMESTAMP,
+  applicant_name TEXT,
+  applicant_address TEXT,
+  project_cadastral_ref TEXT,
+  project_space_type TEXT,
+  decision TEXT,
+  precisions TEXT,
+  contacts TEXT,
+  further_information TEXT,
   created_by_id TEXT NOT NULL,
-  meet_date TIMESTAMP NOT NULL,
-  meet_link TEXT NOT NULL,
-  applicant_name TEXT NOT NULL,
-  applicant_type TEXT NOT NULL,
-  project_status TEXT NOT NULL,
-  project_cadastral_ref TEXT NOT NULL,
-  project_land_contact TEXT NOT NULL,
-  project_space_type TEXT NOT NULL,
-  project_nature TEXT NOT NULL,
-  project_description TEXT NOT NULL,
-  decision TEXT NOT NULL,
-  decision_comment TEXT NOT NULL,
-  contacts TEXT NOT NULL,
-  created_at TIMESTAMP NOT NULL,
-  updated_at TIMESTAMP NOT NULL
+  created_by_username TEXT NOT NULL,
+  created_at TIMESTAMP NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS "clause" (

@@ -34,7 +34,6 @@ export const CreatePage = () => {
       decision_comment: "",
       contacts: "",
       created_at: new Date(),
-      updated_at: new Date(),
     },
   });
 
