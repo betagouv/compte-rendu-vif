@@ -15,22 +15,16 @@ const EditReport = () => {
 
   const { results: report } = useLiveQuery(db.report.liveUnique({ where: { id: reportId } }));
 
-  return (
-    <Flex direction="column">
-      <div>edit report {reportId}</div>
-      {report ? <WithReport report={report} /> : null}
-    </Flex>
-  );
+  return <Flex direction="column">{report ? <WithReport report={report} /> : null}</Flex>;
 };
 
 const WithReport = ({ report }: { report: Report }) => {
+  const { tab } = Route.useSearch();
   const form = useForm<Report>({
     defaultValues: report!,
   });
 
   const navigate = useNavigate();
-
-  const { tab } = Route.useSearch();
 
   const setTab = (tab: string) => {
     navigate({ search: { tab }, replace: true });
@@ -45,10 +39,21 @@ const WithReport = ({ report }: { report: Report }) => {
     form.reset(report);
   }, [report, form]);
 
+  const onSubmit = (values: Report) => {
+    console.log(values);
+
+    navigate({
+      to: "/export/$reportId",
+      params: {
+        reportId: report.id,
+      },
+    });
+  };
+
   return (
     <Flex direction="column">
       <FormProvider {...form}>
-        <form onSubmit={form.handleSubmit((values) => console.log(values))}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
           <SyncFormBanner form={form} baseObject={report} />
           <Tabs.Root defaultValue="info" onValueChange={(e) => setTab(e.value)} value={tab}>
             <Tabs.List>
@@ -80,6 +85,6 @@ export const Route = createFileRoute("/edit/$reportId")({
 
     return {
       tab: isTabValid ? tab : "info",
-    };
+    } as { tab?: string };
   },
 });
