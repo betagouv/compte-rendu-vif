@@ -10,7 +10,7 @@
     "db:migrate": "pnpm db:create",
     "electric:up": "pnpm electric-sql with-config \"pnpm pg-migrations apply --database {{ELECTRIC_PROXY}} --directory ./db/migrations\"",
     "electric:migrate": "pnpm electric:up && pnpm electric:client",
-    "electric:client": "pnpm electric-sql generate --client-path ./packages/frontend/src/generated/client && pnpm frontend client:complete",
+    "electric:client": "pnpm frontend client:generate",
     "client:ts": "typed-openapi ./packages/backend/openapi.json --output ./packages/frontend/src/api.gen.ts",
     "client:json": "pnpm backend dev --create-only",
     "client:generate": "pnpm client:json && pnpm client:ts",
@@ -20,6 +20,7 @@
   "keywords": [],
   "author": "",
   "devDependencies": {
+    "prisma": "^4.8.1",
     "@biomejs/biome": "1.6.4",
     "@databases/pg-migrations": "^5.0.3",
     "@pandabox/prettier-plugin": "^0.1.0",

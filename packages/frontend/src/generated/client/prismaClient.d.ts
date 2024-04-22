@@ -3,59 +3,122 @@
  * Client
 **/
 
-import * as runtime from './runtime/index';
-declare const prisma: unique symbol
-export type PrismaPromise<A> = Promise<A> & {[prisma]: true}
-type UnwrapPromise<P extends any> = P extends Promise<infer R> ? R : P
-type UnwrapTuple<Tuple extends readonly unknown[]> = {
-  [K in keyof Tuple]: K extends `${number}` ? Tuple[K] extends PrismaPromise<infer X> ? X : UnwrapPromise<Tuple[K]> : UnwrapPromise<Tuple[K]>
-};
+import * as runtime from './runtime/library';
+import $Types = runtime.Types // general types
+import $Public = runtime.Types.Public
+import $Utils = runtime.Types.Utils
+import $Extensions = runtime.Types.Extensions
 
+export type PrismaPromise<T> = $Public.PrismaPromise<T>
+
+
+export type ChipPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  name: "Chip"
+  objects: {
+    report_to_chip: Report_to_chipPayload<ExtArgs>[]
+  }
+  scalars: $Extensions.GetResult<{
+    id: string
+    label: string
+    value: string
+  }, ExtArgs["result"]["chip"]>
+  composites: {}
+}
+
+/**
+ * Model Chip
+ * 
+ */
+export type Chip = runtime.Types.DefaultSelection<ChipPayload>
+export type ClausePayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  name: "Clause"
+  objects: {
+    report_to_clause: Report_to_clausePayload<ExtArgs>[]
+  }
+  scalars: $Extensions.GetResult<{
+    id: string
+    label: string
+    value: string
+  }, ExtArgs["result"]["clause"]>
+  composites: {}
+}
 
 /**
  * Model Clause
  * 
  */
-export type Clause = {
-  id: string
-  label: string
-  value: string
+export type Clause = runtime.Types.DefaultSelection<ClausePayload>
+export type ReportPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  name: "Report"
+  objects: {
+    report_to_chip: Report_to_chipPayload<ExtArgs>[]
+    report_to_clause: Report_to_clausePayload<ExtArgs>[]
+  }
+  scalars: $Extensions.GetResult<{
+    id: string
+    title: string | null
+    project_description: string | null
+    redacted_by: string | null
+    meet_date: Date | null
+    applicant_name: string | null
+    applicant_address: string | null
+    project_cadastral_ref: string | null
+    project_space_type: string | null
+    decision: string | null
+    precisions: string | null
+    contacts: string | null
+    further_information: string | null
+    created_by_id: string
+    created_by_username: string
+    created_at: Date
+    service_instructeur: string | null
+  }, ExtArgs["result"]["report"]>
+  composites: {}
 }
 
 /**
  * Model Report
  * 
  */
-export type Report = {
-  id: string
-  title: string | null
-  project_description: string | null
-  redacted_by: string | null
-  meet_date: Date | null
-  applicant_name: string | null
-  applicant_address: string | null
-  project_cadastral_ref: string | null
-  project_space_type: string | null
-  decision: string | null
-  precisions: string | null
-  contacts: string | null
-  further_information: string | null
-  created_by_id: string
-  created_by_username: string
-  created_at: Date
-  service_instructeur: string | null
+export type Report = runtime.Types.DefaultSelection<ReportPayload>
+export type Report_to_chipPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  name: "Report_to_chip"
+  objects: {
+    chip: ChipPayload<ExtArgs>
+    report: ReportPayload<ExtArgs>
+  }
+  scalars: $Extensions.GetResult<{
+    id: string
+    report_id: string
+    chip_id: string
+  }, ExtArgs["result"]["report_to_chip"]>
+  composites: {}
+}
+
+/**
+ * Model Report_to_chip
+ * 
+ */
+export type Report_to_chip = runtime.Types.DefaultSelection<Report_to_chipPayload>
+export type Report_to_clausePayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  name: "Report_to_clause"
+  objects: {
+    clause: ClausePayload<ExtArgs>
+    report: ReportPayload<ExtArgs>
+  }
+  scalars: $Extensions.GetResult<{
+    id: string
+    report_id: string
+    clause_id: string
+  }, ExtArgs["result"]["report_to_clause"]>
+  composites: {}
 }
 
 /**
  * Model Report_to_clause
  * 
  */
-export type Report_to_clause = {
-  id: string
-  report_id: string
-  clause_id: string
-}
-
+export type Report_to_clause = runtime.Types.DefaultSelection<Report_to_clausePayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -64,8 +127,8 @@ export type Report_to_clause = {
  * @example
  * ```
  * const prisma = new PrismaClient()
- * // Fetch zero or more Clauses
- * const clauses = await prisma.clause.findMany()
+ * // Fetch zero or more Chips
+ * const chips = await prisma.chip.findMany()
  * ```
  *
  * 
@@ -76,8 +139,11 @@ export class PrismaClient<
   U = 'log' extends keyof T ? T['log'] extends Array<Prisma.LogLevel | Prisma.LogDefinition> ? Prisma.GetEvents<T['log']> : never : never,
   GlobalReject extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined = 'rejectOnNotFound' extends keyof T
     ? T['rejectOnNotFound']
-    : false
-      > {
+    : false,
+  ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs
+> {
+  [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['other'] }
+
     /**
    * ##  Prisma Client ʲˢ
    * 
@@ -85,8 +151,8 @@ export class PrismaClient<
    * @example
    * ```
    * const prisma = new PrismaClient()
-   * // Fetch zero or more Clauses
-   * const clauses = await prisma.clause.findMany()
+   * // Fetch zero or more Chips
+   * const chips = await prisma.chip.findMany()
    * ```
    *
    * 
@@ -108,6 +174,8 @@ export class PrismaClient<
 
   /**
    * Add a middleware
+   * @deprecated since 4.16.0. For new code, prefer client extensions instead.
+   * @see https://pris.ly/d/extensions
    */
   $use(cb: Prisma.Middleware): void
 
@@ -120,7 +188,7 @@ export class PrismaClient<
    * 
    * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/raw-database-access).
    */
-  $executeRaw<T = unknown>(query: TemplateStringsArray | Prisma.Sql, ...values: any[]): PrismaPromise<number>;
+  $executeRaw<T = unknown>(query: TemplateStringsArray | Prisma.Sql, ...values: any[]): Prisma.PrismaPromise<number>;
 
   /**
    * Executes a raw query and returns the number of affected rows.
@@ -132,7 +200,7 @@ export class PrismaClient<
    * 
    * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/raw-database-access).
    */
-  $executeRawUnsafe<T = unknown>(query: string, ...values: any[]): PrismaPromise<number>;
+  $executeRawUnsafe<T = unknown>(query: string, ...values: any[]): Prisma.PrismaPromise<number>;
 
   /**
    * Performs a prepared raw query and returns the `SELECT` data.
@@ -143,7 +211,7 @@ export class PrismaClient<
    * 
    * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/raw-database-access).
    */
-  $queryRaw<T = unknown>(query: TemplateStringsArray | Prisma.Sql, ...values: any[]): PrismaPromise<T>;
+  $queryRaw<T = unknown>(query: TemplateStringsArray | Prisma.Sql, ...values: any[]): Prisma.PrismaPromise<T>;
 
   /**
    * Performs a raw query and returns the `SELECT` data.
@@ -155,7 +223,7 @@ export class PrismaClient<
    * 
    * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/raw-database-access).
    */
-  $queryRawUnsafe<T = unknown>(query: string, ...values: any[]): PrismaPromise<T>;
+  $queryRawUnsafe<T = unknown>(query: string, ...values: any[]): Prisma.PrismaPromise<T>;
 
   /**
    * Allows the running of a sequence of read/write operations that are guaranteed to either succeed or fail as a whole.
@@ -170,11 +238,24 @@ export class PrismaClient<
    * 
    * Read more in our [docs](https://www.prisma.io/docs/concepts/components/prisma-client/transactions).
    */
-  $transaction<P extends PrismaPromise<any>[]>(arg: [...P], options?: { isolationLevel?: Prisma.TransactionIsolationLevel }): Promise<UnwrapTuple<P>>;
+  $transaction<P extends Prisma.PrismaPromise<any>[]>(arg: [...P], options?: { isolationLevel?: Prisma.TransactionIsolationLevel }): Promise<runtime.Types.Utils.UnwrapTuple<P>>
 
-  $transaction<R>(fn: (prisma: Prisma.TransactionClient) => Promise<R>, options?: {maxWait?: number, timeout?: number, isolationLevel?: Prisma.TransactionIsolationLevel}): Promise<R>;
+  $transaction<R>(fn: (prisma: Omit<PrismaClient, runtime.ITXClientDenyList>) => Promise<R>, options?: { maxWait?: number, timeout?: number, isolationLevel?: Prisma.TransactionIsolationLevel }): Promise<R>
+
+
+  $extends: $Extensions.ExtendsHook<'extends', Prisma.TypeMapCb, ExtArgs>
 
       /**
+   * `prisma.chip`: Exposes CRUD operations for the **Chip** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Chips
+    * const chips = await prisma.chip.findMany()
+    * ```
+    */
+  get chip(): Prisma.ChipDelegate<GlobalReject, ExtArgs>;
+
+  /**
    * `prisma.clause`: Exposes CRUD operations for the **Clause** model.
     * Example usage:
     * ```ts
@@ -182,7 +263,7 @@ export class PrismaClient<
     * const clauses = await prisma.clause.findMany()
     * ```
     */
-  get clause(): Prisma.ClauseDelegate<GlobalReject>;
+  get clause(): Prisma.ClauseDelegate<GlobalReject, ExtArgs>;
 
   /**
    * `prisma.report`: Exposes CRUD operations for the **Report** model.
@@ -192,7 +273,17 @@ export class PrismaClient<
     * const reports = await prisma.report.findMany()
     * ```
     */
-  get report(): Prisma.ReportDelegate<GlobalReject>;
+  get report(): Prisma.ReportDelegate<GlobalReject, ExtArgs>;
+
+  /**
+   * `prisma.report_to_chip`: Exposes CRUD operations for the **Report_to_chip** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Report_to_chips
+    * const report_to_chips = await prisma.report_to_chip.findMany()
+    * ```
+    */
+  get report_to_chip(): Prisma.Report_to_chipDelegate<GlobalReject, ExtArgs>;
 
   /**
    * `prisma.report_to_clause`: Exposes CRUD operations for the **Report_to_clause** model.
@@ -202,11 +293,18 @@ export class PrismaClient<
     * const report_to_clauses = await prisma.report_to_clause.findMany()
     * ```
     */
-  get report_to_clause(): Prisma.Report_to_clauseDelegate<GlobalReject>;
+  get report_to_clause(): Prisma.Report_to_clauseDelegate<GlobalReject, ExtArgs>;
 }
 
 export namespace Prisma {
   export import DMMF = runtime.DMMF
+
+  export type PrismaPromise<T> = $Public.PrismaPromise<T>
+
+  /**
+   * Validator
+   */
+  export import validator = runtime.Public.validator
 
   /**
    * Prisma Errors
@@ -242,9 +340,18 @@ export namespace Prisma {
   export type MetricHistogram = runtime.MetricHistogram
   export type MetricHistogramBucket = runtime.MetricHistogramBucket
 
+  /**
+  * Extensions
+  */
+  export type Extension = $Extensions.UserArgs
+  export import getExtensionContext = runtime.Extensions.getExtensionContext
+  export type Args<T, F extends $Public.Operation> = $Public.Args<T, F>
+  export type Payload<T, F extends $Public.Operation> = $Public.Payload<T, F>
+  export type Result<T, A, F extends $Public.Operation> = $Public.Result<T, A, F>
+  export type Exact<T, W> = $Public.Exact<T, W>
 
   /**
-   * Prisma Client JS version: 4.8.1
+   * Prisma Client JS version: 4.16.2
    * Query Engine version: d6e67a83f971b175a593ccc12e15c4a757f93ffe
    */
   export type PrismaVersion = {
@@ -609,19 +716,11 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type Keys<U extends Union> = U extends unknown ? keyof U : never
 
-  type Exact<A, W = unknown> = 
-  W extends unknown ? A extends Narrowable ? Cast<A, W> : Cast<
-  {[K in keyof A]: K extends keyof W ? Exact<A[K], W[K]> : never},
-  {[K in keyof W]: K extends keyof A ? Exact<A[K], W[K]> : W[K]}>
-  : never;
-
-  type Narrowable = string | number | boolean | bigint;
-
   type Cast<A, B> = A extends B ? A : B;
 
   export const type: unique symbol;
 
-  export function validator<V>(): <S>(select: Exact<S, V>) => S;
+
 
   /**
    * Used by group by
@@ -676,19 +775,12 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRef<Model, FieldType>
 
-  class PrismaClientFetcher {
-    private readonly prisma;
-    private readonly debug;
-    private readonly hooks?;
-    constructor(prisma: PrismaClient<any, any>, debug?: boolean, hooks?: Hooks | undefined);
-    request<T>(document: any, dataPath?: string[], rootField?: string, typeName?: string, isList?: boolean, callsite?: string): Promise<T>;
-    sanitizeMessage(message: string): string;
-    protected unpack(document: any, data: any, path: string[], rootField?: string, isList?: boolean): any;
-  }
 
   export const ModelName: {
+    Chip: 'Chip',
     Clause: 'Clause',
     Report: 'Report',
+    Report_to_chip: 'Report_to_chip',
     Report_to_clause: 'Report_to_clause'
   };
 
@@ -699,6 +791,367 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     db?: Datasource
   }
 
+
+  interface TypeMapCb extends $Utils.Fn<{extArgs: $Extensions.Args}, $Utils.Record<string, any>> {
+    returns: Prisma.TypeMap<this['params']['extArgs']>
+  }
+
+  export type TypeMap<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    meta: {
+      modelProps: 'chip' | 'clause' | 'report' | 'report_to_chip' | 'report_to_clause'
+      txIsolationLevel: Prisma.TransactionIsolationLevel
+    },
+    model: {
+      Chip: {
+        payload: ChipPayload<ExtArgs>
+        operations: {
+          findUnique: {
+            args: Prisma.ChipFindUniqueArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<ChipPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ChipFindUniqueOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<ChipPayload>
+          }
+          findFirst: {
+            args: Prisma.ChipFindFirstArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<ChipPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ChipFindFirstOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<ChipPayload>
+          }
+          findMany: {
+            args: Prisma.ChipFindManyArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<ChipPayload>[]
+          }
+          create: {
+            args: Prisma.ChipCreateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<ChipPayload>
+          }
+          createMany: {
+            args: Prisma.ChipCreateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          delete: {
+            args: Prisma.ChipDeleteArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<ChipPayload>
+          }
+          update: {
+            args: Prisma.ChipUpdateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<ChipPayload>
+          }
+          deleteMany: {
+            args: Prisma.ChipDeleteManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ChipUpdateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          upsert: {
+            args: Prisma.ChipUpsertArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<ChipPayload>
+          }
+          aggregate: {
+            args: Prisma.ChipAggregateArgs<ExtArgs>,
+            result: $Utils.Optional<AggregateChip>
+          }
+          groupBy: {
+            args: Prisma.ChipGroupByArgs<ExtArgs>,
+            result: $Utils.Optional<ChipGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ChipCountArgs<ExtArgs>,
+            result: $Utils.Optional<ChipCountAggregateOutputType> | number
+          }
+        }
+      }
+      Clause: {
+        payload: ClausePayload<ExtArgs>
+        operations: {
+          findUnique: {
+            args: Prisma.ClauseFindUniqueArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<ClausePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ClauseFindUniqueOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<ClausePayload>
+          }
+          findFirst: {
+            args: Prisma.ClauseFindFirstArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<ClausePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ClauseFindFirstOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<ClausePayload>
+          }
+          findMany: {
+            args: Prisma.ClauseFindManyArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<ClausePayload>[]
+          }
+          create: {
+            args: Prisma.ClauseCreateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<ClausePayload>
+          }
+          createMany: {
+            args: Prisma.ClauseCreateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          delete: {
+            args: Prisma.ClauseDeleteArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<ClausePayload>
+          }
+          update: {
+            args: Prisma.ClauseUpdateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<ClausePayload>
+          }
+          deleteMany: {
+            args: Prisma.ClauseDeleteManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ClauseUpdateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          upsert: {
+            args: Prisma.ClauseUpsertArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<ClausePayload>
+          }
+          aggregate: {
+            args: Prisma.ClauseAggregateArgs<ExtArgs>,
+            result: $Utils.Optional<AggregateClause>
+          }
+          groupBy: {
+            args: Prisma.ClauseGroupByArgs<ExtArgs>,
+            result: $Utils.Optional<ClauseGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ClauseCountArgs<ExtArgs>,
+            result: $Utils.Optional<ClauseCountAggregateOutputType> | number
+          }
+        }
+      }
+      Report: {
+        payload: ReportPayload<ExtArgs>
+        operations: {
+          findUnique: {
+            args: Prisma.ReportFindUniqueArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<ReportPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ReportFindUniqueOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<ReportPayload>
+          }
+          findFirst: {
+            args: Prisma.ReportFindFirstArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<ReportPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ReportFindFirstOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<ReportPayload>
+          }
+          findMany: {
+            args: Prisma.ReportFindManyArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<ReportPayload>[]
+          }
+          create: {
+            args: Prisma.ReportCreateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<ReportPayload>
+          }
+          createMany: {
+            args: Prisma.ReportCreateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          delete: {
+            args: Prisma.ReportDeleteArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<ReportPayload>
+          }
+          update: {
+            args: Prisma.ReportUpdateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<ReportPayload>
+          }
+          deleteMany: {
+            args: Prisma.ReportDeleteManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ReportUpdateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          upsert: {
+            args: Prisma.ReportUpsertArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<ReportPayload>
+          }
+          aggregate: {
+            args: Prisma.ReportAggregateArgs<ExtArgs>,
+            result: $Utils.Optional<AggregateReport>
+          }
+          groupBy: {
+            args: Prisma.ReportGroupByArgs<ExtArgs>,
+            result: $Utils.Optional<ReportGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ReportCountArgs<ExtArgs>,
+            result: $Utils.Optional<ReportCountAggregateOutputType> | number
+          }
+        }
+      }
+      Report_to_chip: {
+        payload: Report_to_chipPayload<ExtArgs>
+        operations: {
+          findUnique: {
+            args: Prisma.Report_to_chipFindUniqueArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Report_to_chipPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.Report_to_chipFindUniqueOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Report_to_chipPayload>
+          }
+          findFirst: {
+            args: Prisma.Report_to_chipFindFirstArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Report_to_chipPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.Report_to_chipFindFirstOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Report_to_chipPayload>
+          }
+          findMany: {
+            args: Prisma.Report_to_chipFindManyArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Report_to_chipPayload>[]
+          }
+          create: {
+            args: Prisma.Report_to_chipCreateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Report_to_chipPayload>
+          }
+          createMany: {
+            args: Prisma.Report_to_chipCreateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          delete: {
+            args: Prisma.Report_to_chipDeleteArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Report_to_chipPayload>
+          }
+          update: {
+            args: Prisma.Report_to_chipUpdateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Report_to_chipPayload>
+          }
+          deleteMany: {
+            args: Prisma.Report_to_chipDeleteManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          updateMany: {
+            args: Prisma.Report_to_chipUpdateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          upsert: {
+            args: Prisma.Report_to_chipUpsertArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Report_to_chipPayload>
+          }
+          aggregate: {
+            args: Prisma.Report_to_chipAggregateArgs<ExtArgs>,
+            result: $Utils.Optional<AggregateReport_to_chip>
+          }
+          groupBy: {
+            args: Prisma.Report_to_chipGroupByArgs<ExtArgs>,
+            result: $Utils.Optional<Report_to_chipGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.Report_to_chipCountArgs<ExtArgs>,
+            result: $Utils.Optional<Report_to_chipCountAggregateOutputType> | number
+          }
+        }
+      }
+      Report_to_clause: {
+        payload: Report_to_clausePayload<ExtArgs>
+        operations: {
+          findUnique: {
+            args: Prisma.Report_to_clauseFindUniqueArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Report_to_clausePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.Report_to_clauseFindUniqueOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Report_to_clausePayload>
+          }
+          findFirst: {
+            args: Prisma.Report_to_clauseFindFirstArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Report_to_clausePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.Report_to_clauseFindFirstOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Report_to_clausePayload>
+          }
+          findMany: {
+            args: Prisma.Report_to_clauseFindManyArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Report_to_clausePayload>[]
+          }
+          create: {
+            args: Prisma.Report_to_clauseCreateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Report_to_clausePayload>
+          }
+          createMany: {
+            args: Prisma.Report_to_clauseCreateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          delete: {
+            args: Prisma.Report_to_clauseDeleteArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Report_to_clausePayload>
+          }
+          update: {
+            args: Prisma.Report_to_clauseUpdateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Report_to_clausePayload>
+          }
+          deleteMany: {
+            args: Prisma.Report_to_clauseDeleteManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          updateMany: {
+            args: Prisma.Report_to_clauseUpdateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          upsert: {
+            args: Prisma.Report_to_clauseUpsertArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Report_to_clausePayload>
+          }
+          aggregate: {
+            args: Prisma.Report_to_clauseAggregateArgs<ExtArgs>,
+            result: $Utils.Optional<AggregateReport_to_clause>
+          }
+          groupBy: {
+            args: Prisma.Report_to_clauseGroupByArgs<ExtArgs>,
+            result: $Utils.Optional<Report_to_clauseGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.Report_to_clauseCountArgs<ExtArgs>,
+            result: $Utils.Optional<Report_to_clauseCountAggregateOutputType> | number
+          }
+        }
+      }
+    }
+  } & {
+    other: {
+      payload: any
+      operations: {
+        $executeRawUnsafe: {
+          args: [query: string, ...values: any[]],
+          result: any
+        }
+        $executeRaw: {
+          args: [query: TemplateStringsArray | Prisma.Sql, ...values: any[]],
+          result: any
+        }
+        $queryRawUnsafe: {
+          args: [query: string, ...values: any[]],
+          result: any
+        }
+        $queryRaw: {
+          args: [query: TemplateStringsArray | Prisma.Sql, ...values: any[]],
+          result: any
+        }
+      }
+    }
+  }
+  export const defineExtension: $Extensions.ExtendsHook<'define', Prisma.TypeMapCb, $Extensions.DefaultArgs>
   export type DefaultPrismaClient = PrismaClient
   export type RejectOnNotFound = boolean | ((error: Error) => Error)
   export type RejectPerModel = { [P in ModelName]?: RejectOnNotFound }
@@ -766,10 +1219,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/logging#the-log-option).
      */
     log?: Array<LogLevel | LogDefinition>
-  }
-
-  export type Hooks = {
-    beforeRequest?: (options: { query: string, path: string[], rootField?: string, typeName?: string, document: any }) => any
   }
 
   /* Types for Logging */
@@ -843,7 +1292,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   /**
    * `PrismaClient` proxy available in interactive transactions.
    */
-  export type TransactionClient = Omit<Prisma.DefaultPrismaClient, '$connect' | '$disconnect' | '$on' | '$transaction' | '$use'>
+  export type TransactionClient = Omit<Prisma.DefaultPrismaClient, runtime.ITXClientDenyList>
 
   export type Datasource = {
     url?: string
@@ -855,6 +1304,41 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
 
   /**
+   * Count Type ChipCountOutputType
+   */
+
+
+  export type ChipCountOutputType = {
+    report_to_chip: number
+  }
+
+  export type ChipCountOutputTypeSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    report_to_chip?: boolean | ChipCountOutputTypeCountReport_to_chipArgs
+  }
+
+  // Custom InputTypes
+
+  /**
+   * ChipCountOutputType without action
+   */
+  export type ChipCountOutputTypeArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChipCountOutputType
+     */
+    select?: ChipCountOutputTypeSelect<ExtArgs> | null
+  }
+
+
+  /**
+   * ChipCountOutputType without action
+   */
+  export type ChipCountOutputTypeCountReport_to_chipArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    where?: Report_to_chipWhereInput
+  }
+
+
+
+  /**
    * Count Type ClauseCountOutputType
    */
 
@@ -863,37 +1347,28 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     report_to_clause: number
   }
 
-  export type ClauseCountOutputTypeSelect = {
-    report_to_clause?: boolean
+  export type ClauseCountOutputTypeSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    report_to_clause?: boolean | ClauseCountOutputTypeCountReport_to_clauseArgs
   }
-
-  export type ClauseCountOutputTypeGetPayload<S extends boolean | null | undefined | ClauseCountOutputTypeArgs> =
-    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
-    S extends true ? ClauseCountOutputType :
-    S extends undefined ? never :
-    S extends { include: any } & (ClauseCountOutputTypeArgs)
-    ? ClauseCountOutputType 
-    : S extends { select: any } & (ClauseCountOutputTypeArgs)
-      ? {
-    [P in TruthyKeys<S['select']>]:
-    P extends keyof ClauseCountOutputType ? ClauseCountOutputType[P] : never
-  } 
-      : ClauseCountOutputType
-
-
-
 
   // Custom InputTypes
 
   /**
    * ClauseCountOutputType without action
    */
-  export type ClauseCountOutputTypeArgs = {
+  export type ClauseCountOutputTypeArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the ClauseCountOutputType
-     * 
-    **/
-    select?: ClauseCountOutputTypeSelect | null
+     */
+    select?: ClauseCountOutputTypeSelect<ExtArgs> | null
+  }
+
+
+  /**
+   * ClauseCountOutputType without action
+   */
+  export type ClauseCountOutputTypeCountReport_to_clauseArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    where?: Report_to_clauseWhereInput
   }
 
 
@@ -904,40 +1379,41 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
 
   export type ReportCountOutputType = {
+    report_to_chip: number
     report_to_clause: number
   }
 
-  export type ReportCountOutputTypeSelect = {
-    report_to_clause?: boolean
+  export type ReportCountOutputTypeSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    report_to_chip?: boolean | ReportCountOutputTypeCountReport_to_chipArgs
+    report_to_clause?: boolean | ReportCountOutputTypeCountReport_to_clauseArgs
   }
-
-  export type ReportCountOutputTypeGetPayload<S extends boolean | null | undefined | ReportCountOutputTypeArgs> =
-    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
-    S extends true ? ReportCountOutputType :
-    S extends undefined ? never :
-    S extends { include: any } & (ReportCountOutputTypeArgs)
-    ? ReportCountOutputType 
-    : S extends { select: any } & (ReportCountOutputTypeArgs)
-      ? {
-    [P in TruthyKeys<S['select']>]:
-    P extends keyof ReportCountOutputType ? ReportCountOutputType[P] : never
-  } 
-      : ReportCountOutputType
-
-
-
 
   // Custom InputTypes
 
   /**
    * ReportCountOutputType without action
    */
-  export type ReportCountOutputTypeArgs = {
+  export type ReportCountOutputTypeArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the ReportCountOutputType
-     * 
-    **/
-    select?: ReportCountOutputTypeSelect | null
+     */
+    select?: ReportCountOutputTypeSelect<ExtArgs> | null
+  }
+
+
+  /**
+   * ReportCountOutputType without action
+   */
+  export type ReportCountOutputTypeCountReport_to_chipArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    where?: Report_to_chipWhereInput
+  }
+
+
+  /**
+   * ReportCountOutputType without action
+   */
+  export type ReportCountOutputTypeCountReport_to_clauseArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    where?: Report_to_clauseWhereInput
   }
 
 
@@ -945,6 +1421,935 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   /**
    * Models
    */
+
+  /**
+   * Model Chip
+   */
+
+
+  export type AggregateChip = {
+    _count: ChipCountAggregateOutputType | null
+    _min: ChipMinAggregateOutputType | null
+    _max: ChipMaxAggregateOutputType | null
+  }
+
+  export type ChipMinAggregateOutputType = {
+    id: string | null
+    label: string | null
+    value: string | null
+  }
+
+  export type ChipMaxAggregateOutputType = {
+    id: string | null
+    label: string | null
+    value: string | null
+  }
+
+  export type ChipCountAggregateOutputType = {
+    id: number
+    label: number
+    value: number
+    _all: number
+  }
+
+
+  export type ChipMinAggregateInputType = {
+    id?: true
+    label?: true
+    value?: true
+  }
+
+  export type ChipMaxAggregateInputType = {
+    id?: true
+    label?: true
+    value?: true
+  }
+
+  export type ChipCountAggregateInputType = {
+    id?: true
+    label?: true
+    value?: true
+    _all?: true
+  }
+
+  export type ChipAggregateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Chip to aggregate.
+     */
+    where?: ChipWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Chips to fetch.
+     */
+    orderBy?: Enumerable<ChipOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ChipWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Chips from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Chips.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Chips
+    **/
+    _count?: true | ChipCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ChipMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ChipMaxAggregateInputType
+  }
+
+  export type GetChipAggregateType<T extends ChipAggregateArgs> = {
+        [P in keyof T & keyof AggregateChip]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateChip[P]>
+      : GetScalarType<T[P], AggregateChip[P]>
+  }
+
+
+
+
+  export type ChipGroupByArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    where?: ChipWhereInput
+    orderBy?: Enumerable<ChipOrderByWithAggregationInput>
+    by: ChipScalarFieldEnum[]
+    having?: ChipScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ChipCountAggregateInputType | true
+    _min?: ChipMinAggregateInputType
+    _max?: ChipMaxAggregateInputType
+  }
+
+
+  export type ChipGroupByOutputType = {
+    id: string
+    label: string
+    value: string
+    _count: ChipCountAggregateOutputType | null
+    _min: ChipMinAggregateOutputType | null
+    _max: ChipMaxAggregateOutputType | null
+  }
+
+  type GetChipGroupByPayload<T extends ChipGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickArray<ChipGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ChipGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ChipGroupByOutputType[P]>
+            : GetScalarType<T[P], ChipGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ChipSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    label?: boolean
+    value?: boolean
+    report_to_chip?: boolean | Chip$report_to_chipArgs<ExtArgs>
+    _count?: boolean | ChipCountOutputTypeArgs<ExtArgs>
+  }, ExtArgs["result"]["chip"]>
+
+  export type ChipSelectScalar = {
+    id?: boolean
+    label?: boolean
+    value?: boolean
+  }
+
+  export type ChipInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    report_to_chip?: boolean | Chip$report_to_chipArgs<ExtArgs>
+    _count?: boolean | ChipCountOutputTypeArgs<ExtArgs>
+  }
+
+
+  type ChipGetPayload<S extends boolean | null | undefined | ChipArgs> = $Types.GetResult<ChipPayload, S>
+
+  type ChipCountArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = 
+    Omit<ChipFindManyArgs, 'select' | 'include'> & {
+      select?: ChipCountAggregateInputType | true
+    }
+
+  export interface ChipDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Chip'], meta: { name: 'Chip' } }
+    /**
+     * Find zero or one Chip that matches the filter.
+     * @param {ChipFindUniqueArgs} args - Arguments to find a Chip
+     * @example
+     * // Get one Chip
+     * const chip = await prisma.chip.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends ChipFindUniqueArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, ChipFindUniqueArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'Chip'> extends True ? Prisma__ChipClient<$Types.GetResult<ChipPayload<ExtArgs>, T, 'findUnique', never>, never, ExtArgs> : Prisma__ChipClient<$Types.GetResult<ChipPayload<ExtArgs>, T, 'findUnique', never> | null, null, ExtArgs>
+
+    /**
+     * Find one Chip that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {ChipFindUniqueOrThrowArgs} args - Arguments to find a Chip
+     * @example
+     * // Get one Chip
+     * const chip = await prisma.chip.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends ChipFindUniqueOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, ChipFindUniqueOrThrowArgs<ExtArgs>>
+    ): Prisma__ChipClient<$Types.GetResult<ChipPayload<ExtArgs>, T, 'findUniqueOrThrow', never>, never, ExtArgs>
+
+    /**
+     * Find the first Chip that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChipFindFirstArgs} args - Arguments to find a Chip
+     * @example
+     * // Get one Chip
+     * const chip = await prisma.chip.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends ChipFindFirstArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, ChipFindFirstArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'Chip'> extends True ? Prisma__ChipClient<$Types.GetResult<ChipPayload<ExtArgs>, T, 'findFirst', never>, never, ExtArgs> : Prisma__ChipClient<$Types.GetResult<ChipPayload<ExtArgs>, T, 'findFirst', never> | null, null, ExtArgs>
+
+    /**
+     * Find the first Chip that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChipFindFirstOrThrowArgs} args - Arguments to find a Chip
+     * @example
+     * // Get one Chip
+     * const chip = await prisma.chip.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends ChipFindFirstOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, ChipFindFirstOrThrowArgs<ExtArgs>>
+    ): Prisma__ChipClient<$Types.GetResult<ChipPayload<ExtArgs>, T, 'findFirstOrThrow', never>, never, ExtArgs>
+
+    /**
+     * Find zero or more Chips that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChipFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Chips
+     * const chips = await prisma.chip.findMany()
+     * 
+     * // Get first 10 Chips
+     * const chips = await prisma.chip.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const chipWithIdOnly = await prisma.chip.findMany({ select: { id: true } })
+     * 
+    **/
+    findMany<T extends ChipFindManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, ChipFindManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Types.GetResult<ChipPayload<ExtArgs>, T, 'findMany', never>>
+
+    /**
+     * Create a Chip.
+     * @param {ChipCreateArgs} args - Arguments to create a Chip.
+     * @example
+     * // Create one Chip
+     * const Chip = await prisma.chip.create({
+     *   data: {
+     *     // ... data to create a Chip
+     *   }
+     * })
+     * 
+    **/
+    create<T extends ChipCreateArgs<ExtArgs>>(
+      args: SelectSubset<T, ChipCreateArgs<ExtArgs>>
+    ): Prisma__ChipClient<$Types.GetResult<ChipPayload<ExtArgs>, T, 'create', never>, never, ExtArgs>
+
+    /**
+     * Create many Chips.
+     *     @param {ChipCreateManyArgs} args - Arguments to create many Chips.
+     *     @example
+     *     // Create many Chips
+     *     const chip = await prisma.chip.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
+     *     
+    **/
+    createMany<T extends ChipCreateManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, ChipCreateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Chip.
+     * @param {ChipDeleteArgs} args - Arguments to delete one Chip.
+     * @example
+     * // Delete one Chip
+     * const Chip = await prisma.chip.delete({
+     *   where: {
+     *     // ... filter to delete one Chip
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends ChipDeleteArgs<ExtArgs>>(
+      args: SelectSubset<T, ChipDeleteArgs<ExtArgs>>
+    ): Prisma__ChipClient<$Types.GetResult<ChipPayload<ExtArgs>, T, 'delete', never>, never, ExtArgs>
+
+    /**
+     * Update one Chip.
+     * @param {ChipUpdateArgs} args - Arguments to update one Chip.
+     * @example
+     * // Update one Chip
+     * const chip = await prisma.chip.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends ChipUpdateArgs<ExtArgs>>(
+      args: SelectSubset<T, ChipUpdateArgs<ExtArgs>>
+    ): Prisma__ChipClient<$Types.GetResult<ChipPayload<ExtArgs>, T, 'update', never>, never, ExtArgs>
+
+    /**
+     * Delete zero or more Chips.
+     * @param {ChipDeleteManyArgs} args - Arguments to filter Chips to delete.
+     * @example
+     * // Delete a few Chips
+     * const { count } = await prisma.chip.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends ChipDeleteManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, ChipDeleteManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Chips.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChipUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Chips
+     * const chip = await prisma.chip.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends ChipUpdateManyArgs<ExtArgs>>(
+      args: SelectSubset<T, ChipUpdateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Chip.
+     * @param {ChipUpsertArgs} args - Arguments to update or create a Chip.
+     * @example
+     * // Update or create a Chip
+     * const chip = await prisma.chip.upsert({
+     *   create: {
+     *     // ... data to create a Chip
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Chip we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends ChipUpsertArgs<ExtArgs>>(
+      args: SelectSubset<T, ChipUpsertArgs<ExtArgs>>
+    ): Prisma__ChipClient<$Types.GetResult<ChipPayload<ExtArgs>, T, 'upsert', never>, never, ExtArgs>
+
+    /**
+     * Count the number of Chips.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChipCountArgs} args - Arguments to filter Chips to count.
+     * @example
+     * // Count the number of Chips
+     * const count = await prisma.chip.count({
+     *   where: {
+     *     // ... the filter for the Chips we want to count
+     *   }
+     * })
+    **/
+    count<T extends ChipCountArgs>(
+      args?: Subset<T, ChipCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ChipCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Chip.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChipAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ChipAggregateArgs>(args: Subset<T, ChipAggregateArgs>): Prisma.PrismaPromise<GetChipAggregateType<T>>
+
+    /**
+     * Group by Chip.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChipGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ChipGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ChipGroupByArgs['orderBy'] }
+        : { orderBy?: ChipGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends TupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ChipGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetChipGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Chip.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export class Prisma__ChipClient<T, Null = never, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> implements Prisma.PrismaPromise<T> {
+    private readonly _dmmf;
+    private readonly _queryType;
+    private readonly _rootField;
+    private readonly _clientMethod;
+    private readonly _args;
+    private readonly _dataPath;
+    private readonly _errorFormat;
+    private readonly _measurePerformance?;
+    private _isList;
+    private _callsite;
+    private _requestPromise?;
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+    constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
+
+    report_to_chip<T extends Chip$report_to_chipArgs<ExtArgs> = {}>(args?: Subset<T, Chip$report_to_chipArgs<ExtArgs>>): Prisma.PrismaPromise<$Types.GetResult<Report_to_chipPayload<ExtArgs>, T, 'findMany', never>| Null>;
+
+    private get _document();
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): Promise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): Promise<T>;
+  }
+
+
+
+  // Custom InputTypes
+
+  /**
+   * Chip base type for findUnique actions
+   */
+  export type ChipFindUniqueArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Chip
+     */
+    select?: ChipSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: ChipInclude<ExtArgs> | null
+    /**
+     * Filter, which Chip to fetch.
+     */
+    where: ChipWhereUniqueInput
+  }
+
+  /**
+   * Chip findUnique
+   */
+  export interface ChipFindUniqueArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends ChipFindUniqueArgsBase<ExtArgs> {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * Chip findUniqueOrThrow
+   */
+  export type ChipFindUniqueOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Chip
+     */
+    select?: ChipSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: ChipInclude<ExtArgs> | null
+    /**
+     * Filter, which Chip to fetch.
+     */
+    where: ChipWhereUniqueInput
+  }
+
+
+  /**
+   * Chip base type for findFirst actions
+   */
+  export type ChipFindFirstArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Chip
+     */
+    select?: ChipSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: ChipInclude<ExtArgs> | null
+    /**
+     * Filter, which Chip to fetch.
+     */
+    where?: ChipWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Chips to fetch.
+     */
+    orderBy?: Enumerable<ChipOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Chips.
+     */
+    cursor?: ChipWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Chips from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Chips.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Chips.
+     */
+    distinct?: Enumerable<ChipScalarFieldEnum>
+  }
+
+  /**
+   * Chip findFirst
+   */
+  export interface ChipFindFirstArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends ChipFindFirstArgsBase<ExtArgs> {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * Chip findFirstOrThrow
+   */
+  export type ChipFindFirstOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Chip
+     */
+    select?: ChipSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: ChipInclude<ExtArgs> | null
+    /**
+     * Filter, which Chip to fetch.
+     */
+    where?: ChipWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Chips to fetch.
+     */
+    orderBy?: Enumerable<ChipOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Chips.
+     */
+    cursor?: ChipWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Chips from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Chips.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Chips.
+     */
+    distinct?: Enumerable<ChipScalarFieldEnum>
+  }
+
+
+  /**
+   * Chip findMany
+   */
+  export type ChipFindManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Chip
+     */
+    select?: ChipSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: ChipInclude<ExtArgs> | null
+    /**
+     * Filter, which Chips to fetch.
+     */
+    where?: ChipWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Chips to fetch.
+     */
+    orderBy?: Enumerable<ChipOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Chips.
+     */
+    cursor?: ChipWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Chips from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Chips.
+     */
+    skip?: number
+    distinct?: Enumerable<ChipScalarFieldEnum>
+  }
+
+
+  /**
+   * Chip create
+   */
+  export type ChipCreateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Chip
+     */
+    select?: ChipSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: ChipInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Chip.
+     */
+    data: XOR<ChipCreateInput, ChipUncheckedCreateInput>
+  }
+
+
+  /**
+   * Chip createMany
+   */
+  export type ChipCreateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Chips.
+     */
+    data: Enumerable<ChipCreateManyInput>
+    skipDuplicates?: boolean
+  }
+
+
+  /**
+   * Chip update
+   */
+  export type ChipUpdateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Chip
+     */
+    select?: ChipSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: ChipInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Chip.
+     */
+    data: XOR<ChipUpdateInput, ChipUncheckedUpdateInput>
+    /**
+     * Choose, which Chip to update.
+     */
+    where: ChipWhereUniqueInput
+  }
+
+
+  /**
+   * Chip updateMany
+   */
+  export type ChipUpdateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Chips.
+     */
+    data: XOR<ChipUpdateManyMutationInput, ChipUncheckedUpdateManyInput>
+    /**
+     * Filter which Chips to update
+     */
+    where?: ChipWhereInput
+  }
+
+
+  /**
+   * Chip upsert
+   */
+  export type ChipUpsertArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Chip
+     */
+    select?: ChipSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: ChipInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Chip to update in case it exists.
+     */
+    where: ChipWhereUniqueInput
+    /**
+     * In case the Chip found by the `where` argument doesn't exist, create a new Chip with this data.
+     */
+    create: XOR<ChipCreateInput, ChipUncheckedCreateInput>
+    /**
+     * In case the Chip was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ChipUpdateInput, ChipUncheckedUpdateInput>
+  }
+
+
+  /**
+   * Chip delete
+   */
+  export type ChipDeleteArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Chip
+     */
+    select?: ChipSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: ChipInclude<ExtArgs> | null
+    /**
+     * Filter which Chip to delete.
+     */
+    where: ChipWhereUniqueInput
+  }
+
+
+  /**
+   * Chip deleteMany
+   */
+  export type ChipDeleteManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Chips to delete
+     */
+    where?: ChipWhereInput
+  }
+
+
+  /**
+   * Chip.report_to_chip
+   */
+  export type Chip$report_to_chipArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Report_to_chip
+     */
+    select?: Report_to_chipSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: Report_to_chipInclude<ExtArgs> | null
+    where?: Report_to_chipWhereInput
+    orderBy?: Enumerable<Report_to_chipOrderByWithRelationInput>
+    cursor?: Report_to_chipWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Enumerable<Report_to_chipScalarFieldEnum>
+  }
+
+
+  /**
+   * Chip without action
+   */
+  export type ChipArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Chip
+     */
+    select?: ChipSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: ChipInclude<ExtArgs> | null
+  }
+
+
 
   /**
    * Model Clause
@@ -996,39 +2401,34 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     _all?: true
   }
 
-  export type ClauseAggregateArgs = {
+  export type ClauseAggregateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Filter which Clause to aggregate.
-     * 
-    **/
+     */
     where?: ClauseWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
      * Determine the order of Clauses to fetch.
-     * 
-    **/
+     */
     orderBy?: Enumerable<ClauseOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the start position
-     * 
-    **/
+     */
     cursor?: ClauseWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Take `±n` Clauses from the position of the cursor.
-     * 
-    **/
+     */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Skip the first `n` Clauses.
-     * 
-    **/
+     */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
@@ -1061,10 +2461,10 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
 
 
-  export type ClauseGroupByArgs = {
+  export type ClauseGroupByArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     where?: ClauseWhereInput
     orderBy?: Enumerable<ClauseOrderByWithAggregationInput>
-    by: Array<ClauseScalarFieldEnum>
+    by: ClauseScalarFieldEnum[]
     having?: ClauseScalarWhereWithAggregatesInput
     take?: number
     skip?: number
@@ -1083,7 +2483,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     _max: ClauseMaxAggregateOutputType | null
   }
 
-  type GetClauseGroupByPayload<T extends ClauseGroupByArgs> = PrismaPromise<
+  type GetClauseGroupByPayload<T extends ClauseGroupByArgs> = Prisma.PrismaPromise<
     Array<
       PickArray<ClauseGroupByOutputType, T['by']> &
         {
@@ -1097,46 +2497,35 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     >
 
 
-  export type ClauseSelect = {
+  export type ClauseSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     label?: boolean
     value?: boolean
-    report_to_clause?: boolean | Clause$report_to_clauseArgs
-    _count?: boolean | ClauseCountOutputTypeArgs
+    report_to_clause?: boolean | Clause$report_to_clauseArgs<ExtArgs>
+    _count?: boolean | ClauseCountOutputTypeArgs<ExtArgs>
+  }, ExtArgs["result"]["clause"]>
+
+  export type ClauseSelectScalar = {
+    id?: boolean
+    label?: boolean
+    value?: boolean
+  }
+
+  export type ClauseInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    report_to_clause?: boolean | Clause$report_to_clauseArgs<ExtArgs>
+    _count?: boolean | ClauseCountOutputTypeArgs<ExtArgs>
   }
 
 
-  export type ClauseInclude = {
-    report_to_clause?: boolean | Clause$report_to_clauseArgs
-    _count?: boolean | ClauseCountOutputTypeArgs
-  } 
+  type ClauseGetPayload<S extends boolean | null | undefined | ClauseArgs> = $Types.GetResult<ClausePayload, S>
 
-  export type ClauseGetPayload<S extends boolean | null | undefined | ClauseArgs> =
-    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
-    S extends true ? Clause :
-    S extends undefined ? never :
-    S extends { include: any } & (ClauseArgs | ClauseFindManyArgs)
-    ? Clause  & {
-    [P in TruthyKeys<S['include']>]:
-        P extends 'report_to_clause' ? Array < Report_to_clauseGetPayload<S['include'][P]>>  :
-        P extends '_count' ? ClauseCountOutputTypeGetPayload<S['include'][P]> :  never
-  } 
-    : S extends { select: any } & (ClauseArgs | ClauseFindManyArgs)
-      ? {
-    [P in TruthyKeys<S['select']>]:
-        P extends 'report_to_clause' ? Array < Report_to_clauseGetPayload<S['select'][P]>>  :
-        P extends '_count' ? ClauseCountOutputTypeGetPayload<S['select'][P]> :  P extends keyof Clause ? Clause[P] : never
-  } 
-      : Clause
-
-
-  type ClauseCountArgs = Merge<
+  type ClauseCountArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = 
     Omit<ClauseFindManyArgs, 'select' | 'include'> & {
       select?: ClauseCountAggregateInputType | true
     }
-  >
 
-  export interface ClauseDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
+  export interface ClauseDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Clause'], meta: { name: 'Clause' } }
     /**
      * Find zero or one Clause that matches the filter.
      * @param {ClauseFindUniqueArgs} args - Arguments to find a Clause
@@ -1148,9 +2537,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      *   }
      * })
     **/
-    findUnique<T extends ClauseFindUniqueArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
-      args: SelectSubset<T, ClauseFindUniqueArgs>
-    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'Clause'> extends True ? Prisma__ClauseClient<ClauseGetPayload<T>> : Prisma__ClauseClient<ClauseGetPayload<T> | null, null>
+    findUnique<T extends ClauseFindUniqueArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, ClauseFindUniqueArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'Clause'> extends True ? Prisma__ClauseClient<$Types.GetResult<ClausePayload<ExtArgs>, T, 'findUnique', never>, never, ExtArgs> : Prisma__ClauseClient<$Types.GetResult<ClausePayload<ExtArgs>, T, 'findUnique', never> | null, null, ExtArgs>
 
     /**
      * Find one Clause that matches the filter or throw an error  with `error.code='P2025'` 
@@ -1164,9 +2553,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      *   }
      * })
     **/
-    findUniqueOrThrow<T extends ClauseFindUniqueOrThrowArgs>(
-      args?: SelectSubset<T, ClauseFindUniqueOrThrowArgs>
-    ): Prisma__ClauseClient<ClauseGetPayload<T>>
+    findUniqueOrThrow<T extends ClauseFindUniqueOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, ClauseFindUniqueOrThrowArgs<ExtArgs>>
+    ): Prisma__ClauseClient<$Types.GetResult<ClausePayload<ExtArgs>, T, 'findUniqueOrThrow', never>, never, ExtArgs>
 
     /**
      * Find the first Clause that matches the filter.
@@ -1181,9 +2570,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      *   }
      * })
     **/
-    findFirst<T extends ClauseFindFirstArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
-      args?: SelectSubset<T, ClauseFindFirstArgs>
-    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'Clause'> extends True ? Prisma__ClauseClient<ClauseGetPayload<T>> : Prisma__ClauseClient<ClauseGetPayload<T> | null, null>
+    findFirst<T extends ClauseFindFirstArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, ClauseFindFirstArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'Clause'> extends True ? Prisma__ClauseClient<$Types.GetResult<ClausePayload<ExtArgs>, T, 'findFirst', never>, never, ExtArgs> : Prisma__ClauseClient<$Types.GetResult<ClausePayload<ExtArgs>, T, 'findFirst', never> | null, null, ExtArgs>
 
     /**
      * Find the first Clause that matches the filter or
@@ -1199,9 +2588,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      *   }
      * })
     **/
-    findFirstOrThrow<T extends ClauseFindFirstOrThrowArgs>(
-      args?: SelectSubset<T, ClauseFindFirstOrThrowArgs>
-    ): Prisma__ClauseClient<ClauseGetPayload<T>>
+    findFirstOrThrow<T extends ClauseFindFirstOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, ClauseFindFirstOrThrowArgs<ExtArgs>>
+    ): Prisma__ClauseClient<$Types.GetResult<ClausePayload<ExtArgs>, T, 'findFirstOrThrow', never>, never, ExtArgs>
 
     /**
      * Find zero or more Clauses that matches the filter.
@@ -1219,9 +2608,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      * const clauseWithIdOnly = await prisma.clause.findMany({ select: { id: true } })
      * 
     **/
-    findMany<T extends ClauseFindManyArgs>(
-      args?: SelectSubset<T, ClauseFindManyArgs>
-    ): PrismaPromise<Array<ClauseGetPayload<T>>>
+    findMany<T extends ClauseFindManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, ClauseFindManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Types.GetResult<ClausePayload<ExtArgs>, T, 'findMany', never>>
 
     /**
      * Create a Clause.
@@ -1235,9 +2624,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      * })
      * 
     **/
-    create<T extends ClauseCreateArgs>(
-      args: SelectSubset<T, ClauseCreateArgs>
-    ): Prisma__ClauseClient<ClauseGetPayload<T>>
+    create<T extends ClauseCreateArgs<ExtArgs>>(
+      args: SelectSubset<T, ClauseCreateArgs<ExtArgs>>
+    ): Prisma__ClauseClient<$Types.GetResult<ClausePayload<ExtArgs>, T, 'create', never>, never, ExtArgs>
 
     /**
      * Create many Clauses.
@@ -1251,9 +2640,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      *     })
      *     
     **/
-    createMany<T extends ClauseCreateManyArgs>(
-      args?: SelectSubset<T, ClauseCreateManyArgs>
-    ): PrismaPromise<BatchPayload>
+    createMany<T extends ClauseCreateManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, ClauseCreateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Delete a Clause.
@@ -1267,9 +2656,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      * })
      * 
     **/
-    delete<T extends ClauseDeleteArgs>(
-      args: SelectSubset<T, ClauseDeleteArgs>
-    ): Prisma__ClauseClient<ClauseGetPayload<T>>
+    delete<T extends ClauseDeleteArgs<ExtArgs>>(
+      args: SelectSubset<T, ClauseDeleteArgs<ExtArgs>>
+    ): Prisma__ClauseClient<$Types.GetResult<ClausePayload<ExtArgs>, T, 'delete', never>, never, ExtArgs>
 
     /**
      * Update one Clause.
@@ -1286,9 +2675,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      * })
      * 
     **/
-    update<T extends ClauseUpdateArgs>(
-      args: SelectSubset<T, ClauseUpdateArgs>
-    ): Prisma__ClauseClient<ClauseGetPayload<T>>
+    update<T extends ClauseUpdateArgs<ExtArgs>>(
+      args: SelectSubset<T, ClauseUpdateArgs<ExtArgs>>
+    ): Prisma__ClauseClient<$Types.GetResult<ClausePayload<ExtArgs>, T, 'update', never>, never, ExtArgs>
 
     /**
      * Delete zero or more Clauses.
@@ -1302,9 +2691,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      * })
      * 
     **/
-    deleteMany<T extends ClauseDeleteManyArgs>(
-      args?: SelectSubset<T, ClauseDeleteManyArgs>
-    ): PrismaPromise<BatchPayload>
+    deleteMany<T extends ClauseDeleteManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, ClauseDeleteManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Update zero or more Clauses.
@@ -1323,9 +2712,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      * })
      * 
     **/
-    updateMany<T extends ClauseUpdateManyArgs>(
-      args: SelectSubset<T, ClauseUpdateManyArgs>
-    ): PrismaPromise<BatchPayload>
+    updateMany<T extends ClauseUpdateManyArgs<ExtArgs>>(
+      args: SelectSubset<T, ClauseUpdateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Create or update one Clause.
@@ -1344,9 +2733,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      *   }
      * })
     **/
-    upsert<T extends ClauseUpsertArgs>(
-      args: SelectSubset<T, ClauseUpsertArgs>
-    ): Prisma__ClauseClient<ClauseGetPayload<T>>
+    upsert<T extends ClauseUpsertArgs<ExtArgs>>(
+      args: SelectSubset<T, ClauseUpsertArgs<ExtArgs>>
+    ): Prisma__ClauseClient<$Types.GetResult<ClausePayload<ExtArgs>, T, 'upsert', never>, never, ExtArgs>
 
     /**
      * Count the number of Clauses.
@@ -1363,8 +2752,8 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     **/
     count<T extends ClauseCountArgs>(
       args?: Subset<T, ClauseCountArgs>,
-    ): PrismaPromise<
-      T extends _Record<'select', any>
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
         ? T['select'] extends true
           ? number
           : GetScalarType<T['select'], ClauseCountAggregateOutputType>
@@ -1395,7 +2784,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      *   take: 10,
      * })
     **/
-    aggregate<T extends ClauseAggregateArgs>(args: Subset<T, ClauseAggregateArgs>): PrismaPromise<GetClauseAggregateType<T>>
+    aggregate<T extends ClauseAggregateArgs>(args: Subset<T, ClauseAggregateArgs>): Prisma.PrismaPromise<GetClauseAggregateType<T>>
 
     /**
      * Group by Clause.
@@ -1472,7 +2861,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-    >(args: SubsetIntersection<T, ClauseGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetClauseGroupByPayload<T> : PrismaPromise<InputErrors>
+    >(args: SubsetIntersection<T, ClauseGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetClauseGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
 
   }
 
@@ -1482,10 +2871,8 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export class Prisma__ClauseClient<T, Null = never> implements PrismaPromise<T> {
-    [prisma]: true;
+  export class Prisma__ClauseClient<T, Null = never, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> implements Prisma.PrismaPromise<T> {
     private readonly _dmmf;
-    private readonly _fetcher;
     private readonly _queryType;
     private readonly _rootField;
     private readonly _clientMethod;
@@ -1496,10 +2883,10 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     private _isList;
     private _callsite;
     private _requestPromise?;
-    constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
-    readonly [Symbol.toStringTag]: 'PrismaClientPromise';
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+    constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
 
-    report_to_clause<T extends Clause$report_to_clauseArgs= {}>(args?: Subset<T, Clause$report_to_clauseArgs>): PrismaPromise<Array<Report_to_clauseGetPayload<T>>| Null>;
+    report_to_clause<T extends Clause$report_to_clauseArgs<ExtArgs> = {}>(args?: Subset<T, Clause$report_to_clauseArgs<ExtArgs>>): Prisma.PrismaPromise<$Types.GetResult<Report_to_clausePayload<ExtArgs>, T, 'findMany', never>| Null>;
 
     private get _document();
     /**
@@ -1531,28 +2918,25 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   /**
    * Clause base type for findUnique actions
    */
-  export type ClauseFindUniqueArgsBase = {
+  export type ClauseFindUniqueArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Clause
-     * 
-    **/
-    select?: ClauseSelect | null
+     */
+    select?: ClauseSelect<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
-    include?: ClauseInclude | null
+     */
+    include?: ClauseInclude<ExtArgs> | null
     /**
      * Filter, which Clause to fetch.
-     * 
-    **/
+     */
     where: ClauseWhereUniqueInput
   }
 
   /**
    * Clause findUnique
    */
-  export interface ClauseFindUniqueArgs extends ClauseFindUniqueArgsBase {
+  export interface ClauseFindUniqueArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends ClauseFindUniqueArgsBase<ExtArgs> {
    /**
     * Throw an Error if query returns no results
     * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
@@ -1564,21 +2948,18 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   /**
    * Clause findUniqueOrThrow
    */
-  export type ClauseFindUniqueOrThrowArgs = {
+  export type ClauseFindUniqueOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Clause
-     * 
-    **/
-    select?: ClauseSelect | null
+     */
+    select?: ClauseSelect<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
-    include?: ClauseInclude | null
+     */
+    include?: ClauseInclude<ExtArgs> | null
     /**
      * Filter, which Clause to fetch.
-     * 
-    **/
+     */
     where: ClauseWhereUniqueInput
   }
 
@@ -1586,63 +2967,55 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   /**
    * Clause base type for findFirst actions
    */
-  export type ClauseFindFirstArgsBase = {
+  export type ClauseFindFirstArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Clause
-     * 
-    **/
-    select?: ClauseSelect | null
+     */
+    select?: ClauseSelect<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
-    include?: ClauseInclude | null
+     */
+    include?: ClauseInclude<ExtArgs> | null
     /**
      * Filter, which Clause to fetch.
-     * 
-    **/
+     */
     where?: ClauseWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
      * Determine the order of Clauses to fetch.
-     * 
-    **/
+     */
     orderBy?: Enumerable<ClauseOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the position for searching for Clauses.
-     * 
-    **/
+     */
     cursor?: ClauseWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Take `±n` Clauses from the position of the cursor.
-     * 
-    **/
+     */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Skip the first `n` Clauses.
-     * 
-    **/
+     */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
      * Filter by unique combinations of Clauses.
-     * 
-    **/
+     */
     distinct?: Enumerable<ClauseScalarFieldEnum>
   }
 
   /**
    * Clause findFirst
    */
-  export interface ClauseFindFirstArgs extends ClauseFindFirstArgsBase {
+  export interface ClauseFindFirstArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends ClauseFindFirstArgsBase<ExtArgs> {
    /**
     * Throw an Error if query returns no results
     * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
@@ -1654,56 +3027,48 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   /**
    * Clause findFirstOrThrow
    */
-  export type ClauseFindFirstOrThrowArgs = {
+  export type ClauseFindFirstOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Clause
-     * 
-    **/
-    select?: ClauseSelect | null
+     */
+    select?: ClauseSelect<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
-    include?: ClauseInclude | null
+     */
+    include?: ClauseInclude<ExtArgs> | null
     /**
      * Filter, which Clause to fetch.
-     * 
-    **/
+     */
     where?: ClauseWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
      * Determine the order of Clauses to fetch.
-     * 
-    **/
+     */
     orderBy?: Enumerable<ClauseOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the position for searching for Clauses.
-     * 
-    **/
+     */
     cursor?: ClauseWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Take `±n` Clauses from the position of the cursor.
-     * 
-    **/
+     */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Skip the first `n` Clauses.
-     * 
-    **/
+     */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
      * Filter by unique combinations of Clauses.
-     * 
-    **/
+     */
     distinct?: Enumerable<ClauseScalarFieldEnum>
   }
 
@@ -1711,49 +3076,42 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   /**
    * Clause findMany
    */
-  export type ClauseFindManyArgs = {
+  export type ClauseFindManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Clause
-     * 
-    **/
-    select?: ClauseSelect | null
+     */
+    select?: ClauseSelect<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
-    include?: ClauseInclude | null
+     */
+    include?: ClauseInclude<ExtArgs> | null
     /**
      * Filter, which Clauses to fetch.
-     * 
-    **/
+     */
     where?: ClauseWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
      * Determine the order of Clauses to fetch.
-     * 
-    **/
+     */
     orderBy?: Enumerable<ClauseOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the position for listing Clauses.
-     * 
-    **/
+     */
     cursor?: ClauseWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Take `±n` Clauses from the position of the cursor.
-     * 
-    **/
+     */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Skip the first `n` Clauses.
-     * 
-    **/
+     */
     skip?: number
     distinct?: Enumerable<ClauseScalarFieldEnum>
   }
@@ -1762,21 +3120,18 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   /**
    * Clause create
    */
-  export type ClauseCreateArgs = {
+  export type ClauseCreateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Clause
-     * 
-    **/
-    select?: ClauseSelect | null
+     */
+    select?: ClauseSelect<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
-    include?: ClauseInclude | null
+     */
+    include?: ClauseInclude<ExtArgs> | null
     /**
      * The data needed to create a Clause.
-     * 
-    **/
+     */
     data: XOR<ClauseCreateInput, ClauseUncheckedCreateInput>
   }
 
@@ -1784,11 +3139,10 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   /**
    * Clause createMany
    */
-  export type ClauseCreateManyArgs = {
+  export type ClauseCreateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * The data used to create many Clauses.
-     * 
-    **/
+     */
     data: Enumerable<ClauseCreateManyInput>
     skipDuplicates?: boolean
   }
@@ -1797,26 +3151,22 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   /**
    * Clause update
    */
-  export type ClauseUpdateArgs = {
+  export type ClauseUpdateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Clause
-     * 
-    **/
-    select?: ClauseSelect | null
+     */
+    select?: ClauseSelect<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
-    include?: ClauseInclude | null
+     */
+    include?: ClauseInclude<ExtArgs> | null
     /**
      * The data needed to update a Clause.
-     * 
-    **/
+     */
     data: XOR<ClauseUpdateInput, ClauseUncheckedUpdateInput>
     /**
      * Choose, which Clause to update.
-     * 
-    **/
+     */
     where: ClauseWhereUniqueInput
   }
 
@@ -1824,16 +3174,14 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   /**
    * Clause updateMany
    */
-  export type ClauseUpdateManyArgs = {
+  export type ClauseUpdateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * The data used to update Clauses.
-     * 
-    **/
+     */
     data: XOR<ClauseUpdateManyMutationInput, ClauseUncheckedUpdateManyInput>
     /**
      * Filter which Clauses to update
-     * 
-    **/
+     */
     where?: ClauseWhereInput
   }
 
@@ -1841,31 +3189,26 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   /**
    * Clause upsert
    */
-  export type ClauseUpsertArgs = {
+  export type ClauseUpsertArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Clause
-     * 
-    **/
-    select?: ClauseSelect | null
+     */
+    select?: ClauseSelect<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
-    include?: ClauseInclude | null
+     */
+    include?: ClauseInclude<ExtArgs> | null
     /**
      * The filter to search for the Clause to update in case it exists.
-     * 
-    **/
+     */
     where: ClauseWhereUniqueInput
     /**
      * In case the Clause found by the `where` argument doesn't exist, create a new Clause with this data.
-     * 
-    **/
+     */
     create: XOR<ClauseCreateInput, ClauseUncheckedCreateInput>
     /**
      * In case the Clause was found with the provided `where` argument, update it with this data.
-     * 
-    **/
+     */
     update: XOR<ClauseUpdateInput, ClauseUncheckedUpdateInput>
   }
 
@@ -1873,21 +3216,18 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   /**
    * Clause delete
    */
-  export type ClauseDeleteArgs = {
+  export type ClauseDeleteArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Clause
-     * 
-    **/
-    select?: ClauseSelect | null
+     */
+    select?: ClauseSelect<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
-    include?: ClauseInclude | null
+     */
+    include?: ClauseInclude<ExtArgs> | null
     /**
      * Filter which Clause to delete.
-     * 
-    **/
+     */
     where: ClauseWhereUniqueInput
   }
 
@@ -1895,11 +3235,10 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   /**
    * Clause deleteMany
    */
-  export type ClauseDeleteManyArgs = {
+  export type ClauseDeleteManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Filter which Clauses to delete
-     * 
-    **/
+     */
     where?: ClauseWhereInput
   }
 
@@ -1907,17 +3246,15 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   /**
    * Clause.report_to_clause
    */
-  export type Clause$report_to_clauseArgs = {
+  export type Clause$report_to_clauseArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Report_to_clause
-     * 
-    **/
-    select?: Report_to_clauseSelect | null
+     */
+    select?: Report_to_clauseSelect<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
-    include?: Report_to_clauseInclude | null
+     */
+    include?: Report_to_clauseInclude<ExtArgs> | null
     where?: Report_to_clauseWhereInput
     orderBy?: Enumerable<Report_to_clauseOrderByWithRelationInput>
     cursor?: Report_to_clauseWhereUniqueInput
@@ -1930,17 +3267,15 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   /**
    * Clause without action
    */
-  export type ClauseArgs = {
+  export type ClauseArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Clause
-     * 
-    **/
-    select?: ClauseSelect | null
+     */
+    select?: ClauseSelect<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
-    include?: ClauseInclude | null
+     */
+    include?: ClauseInclude<ExtArgs> | null
   }
 
 
@@ -2079,39 +3414,34 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     _all?: true
   }
 
-  export type ReportAggregateArgs = {
+  export type ReportAggregateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Filter which Report to aggregate.
-     * 
-    **/
+     */
     where?: ReportWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
      * Determine the order of Reports to fetch.
-     * 
-    **/
+     */
     orderBy?: Enumerable<ReportOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the start position
-     * 
-    **/
+     */
     cursor?: ReportWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Take `±n` Reports from the position of the cursor.
-     * 
-    **/
+     */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Skip the first `n` Reports.
-     * 
-    **/
+     */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
@@ -2144,10 +3474,10 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
 
 
-  export type ReportGroupByArgs = {
+  export type ReportGroupByArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     where?: ReportWhereInput
     orderBy?: Enumerable<ReportOrderByWithAggregationInput>
-    by: Array<ReportScalarFieldEnum>
+    by: ReportScalarFieldEnum[]
     having?: ReportScalarWhereWithAggregatesInput
     take?: number
     skip?: number
@@ -2180,7 +3510,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     _max: ReportMaxAggregateOutputType | null
   }
 
-  type GetReportGroupByPayload<T extends ReportGroupByArgs> = PrismaPromise<
+  type GetReportGroupByPayload<T extends ReportGroupByArgs> = Prisma.PrismaPromise<
     Array<
       PickArray<ReportGroupByOutputType, T['by']> &
         {
@@ -2194,7 +3524,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     >
 
 
-  export type ReportSelect = {
+  export type ReportSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     title?: boolean
     project_description?: boolean
@@ -2212,42 +3542,47 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     created_by_username?: boolean
     created_at?: boolean
     service_instructeur?: boolean
-    report_to_clause?: boolean | Report$report_to_clauseArgs
-    _count?: boolean | ReportCountOutputTypeArgs
+    report_to_chip?: boolean | Report$report_to_chipArgs<ExtArgs>
+    report_to_clause?: boolean | Report$report_to_clauseArgs<ExtArgs>
+    _count?: boolean | ReportCountOutputTypeArgs<ExtArgs>
+  }, ExtArgs["result"]["report"]>
+
+  export type ReportSelectScalar = {
+    id?: boolean
+    title?: boolean
+    project_description?: boolean
+    redacted_by?: boolean
+    meet_date?: boolean
+    applicant_name?: boolean
+    applicant_address?: boolean
+    project_cadastral_ref?: boolean
+    project_space_type?: boolean
+    decision?: boolean
+    precisions?: boolean
+    contacts?: boolean
+    further_information?: boolean
+    created_by_id?: boolean
+    created_by_username?: boolean
+    created_at?: boolean
+    service_instructeur?: boolean
+  }
+
+  export type ReportInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    report_to_chip?: boolean | Report$report_to_chipArgs<ExtArgs>
+    report_to_clause?: boolean | Report$report_to_clauseArgs<ExtArgs>
+    _count?: boolean | ReportCountOutputTypeArgs<ExtArgs>
   }
 
 
-  export type ReportInclude = {
-    report_to_clause?: boolean | Report$report_to_clauseArgs
-    _count?: boolean | ReportCountOutputTypeArgs
-  } 
+  type ReportGetPayload<S extends boolean | null | undefined | ReportArgs> = $Types.GetResult<ReportPayload, S>
 
-  export type ReportGetPayload<S extends boolean | null | undefined | ReportArgs> =
-    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
-    S extends true ? Report :
-    S extends undefined ? never :
-    S extends { include: any } & (ReportArgs | ReportFindManyArgs)
-    ? Report  & {
-    [P in TruthyKeys<S['include']>]:
-        P extends 'report_to_clause' ? Array < Report_to_clauseGetPayload<S['include'][P]>>  :
-        P extends '_count' ? ReportCountOutputTypeGetPayload<S['include'][P]> :  never
-  } 
-    : S extends { select: any } & (ReportArgs | ReportFindManyArgs)
-      ? {
-    [P in TruthyKeys<S['select']>]:
-        P extends 'report_to_clause' ? Array < Report_to_clauseGetPayload<S['select'][P]>>  :
-        P extends '_count' ? ReportCountOutputTypeGetPayload<S['select'][P]> :  P extends keyof Report ? Report[P] : never
-  } 
-      : Report
-
-
-  type ReportCountArgs = Merge<
+  type ReportCountArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = 
     Omit<ReportFindManyArgs, 'select' | 'include'> & {
       select?: ReportCountAggregateInputType | true
     }
-  >
 
-  export interface ReportDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
+  export interface ReportDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Report'], meta: { name: 'Report' } }
     /**
      * Find zero or one Report that matches the filter.
      * @param {ReportFindUniqueArgs} args - Arguments to find a Report
@@ -2259,9 +3594,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      *   }
      * })
     **/
-    findUnique<T extends ReportFindUniqueArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
-      args: SelectSubset<T, ReportFindUniqueArgs>
-    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'Report'> extends True ? Prisma__ReportClient<ReportGetPayload<T>> : Prisma__ReportClient<ReportGetPayload<T> | null, null>
+    findUnique<T extends ReportFindUniqueArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, ReportFindUniqueArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'Report'> extends True ? Prisma__ReportClient<$Types.GetResult<ReportPayload<ExtArgs>, T, 'findUnique', never>, never, ExtArgs> : Prisma__ReportClient<$Types.GetResult<ReportPayload<ExtArgs>, T, 'findUnique', never> | null, null, ExtArgs>
 
     /**
      * Find one Report that matches the filter or throw an error  with `error.code='P2025'` 
@@ -2275,9 +3610,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      *   }
      * })
     **/
-    findUniqueOrThrow<T extends ReportFindUniqueOrThrowArgs>(
-      args?: SelectSubset<T, ReportFindUniqueOrThrowArgs>
-    ): Prisma__ReportClient<ReportGetPayload<T>>
+    findUniqueOrThrow<T extends ReportFindUniqueOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, ReportFindUniqueOrThrowArgs<ExtArgs>>
+    ): Prisma__ReportClient<$Types.GetResult<ReportPayload<ExtArgs>, T, 'findUniqueOrThrow', never>, never, ExtArgs>
 
     /**
      * Find the first Report that matches the filter.
@@ -2292,9 +3627,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      *   }
      * })
     **/
-    findFirst<T extends ReportFindFirstArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
-      args?: SelectSubset<T, ReportFindFirstArgs>
-    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'Report'> extends True ? Prisma__ReportClient<ReportGetPayload<T>> : Prisma__ReportClient<ReportGetPayload<T> | null, null>
+    findFirst<T extends ReportFindFirstArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, ReportFindFirstArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'Report'> extends True ? Prisma__ReportClient<$Types.GetResult<ReportPayload<ExtArgs>, T, 'findFirst', never>, never, ExtArgs> : Prisma__ReportClient<$Types.GetResult<ReportPayload<ExtArgs>, T, 'findFirst', never> | null, null, ExtArgs>
 
     /**
      * Find the first Report that matches the filter or
@@ -2310,9 +3645,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      *   }
      * })
     **/
-    findFirstOrThrow<T extends ReportFindFirstOrThrowArgs>(
-      args?: SelectSubset<T, ReportFindFirstOrThrowArgs>
-    ): Prisma__ReportClient<ReportGetPayload<T>>
+    findFirstOrThrow<T extends ReportFindFirstOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, ReportFindFirstOrThrowArgs<ExtArgs>>
+    ): Prisma__ReportClient<$Types.GetResult<ReportPayload<ExtArgs>, T, 'findFirstOrThrow', never>, never, ExtArgs>
 
     /**
      * Find zero or more Reports that matches the filter.
@@ -2330,9 +3665,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      * const reportWithIdOnly = await prisma.report.findMany({ select: { id: true } })
      * 
     **/
-    findMany<T extends ReportFindManyArgs>(
-      args?: SelectSubset<T, ReportFindManyArgs>
-    ): PrismaPromise<Array<ReportGetPayload<T>>>
+    findMany<T extends ReportFindManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, ReportFindManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Types.GetResult<ReportPayload<ExtArgs>, T, 'findMany', never>>
 
     /**
      * Create a Report.
@@ -2346,9 +3681,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      * })
      * 
     **/
-    create<T extends ReportCreateArgs>(
-      args: SelectSubset<T, ReportCreateArgs>
-    ): Prisma__ReportClient<ReportGetPayload<T>>
+    create<T extends ReportCreateArgs<ExtArgs>>(
+      args: SelectSubset<T, ReportCreateArgs<ExtArgs>>
+    ): Prisma__ReportClient<$Types.GetResult<ReportPayload<ExtArgs>, T, 'create', never>, never, ExtArgs>
 
     /**
      * Create many Reports.
@@ -2362,9 +3697,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      *     })
      *     
     **/
-    createMany<T extends ReportCreateManyArgs>(
-      args?: SelectSubset<T, ReportCreateManyArgs>
-    ): PrismaPromise<BatchPayload>
+    createMany<T extends ReportCreateManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, ReportCreateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Delete a Report.
@@ -2378,9 +3713,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      * })
      * 
     **/
-    delete<T extends ReportDeleteArgs>(
-      args: SelectSubset<T, ReportDeleteArgs>
-    ): Prisma__ReportClient<ReportGetPayload<T>>
+    delete<T extends ReportDeleteArgs<ExtArgs>>(
+      args: SelectSubset<T, ReportDeleteArgs<ExtArgs>>
+    ): Prisma__ReportClient<$Types.GetResult<ReportPayload<ExtArgs>, T, 'delete', never>, never, ExtArgs>
 
     /**
      * Update one Report.
@@ -2397,9 +3732,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      * })
      * 
     **/
-    update<T extends ReportUpdateArgs>(
-      args: SelectSubset<T, ReportUpdateArgs>
-    ): Prisma__ReportClient<ReportGetPayload<T>>
+    update<T extends ReportUpdateArgs<ExtArgs>>(
+      args: SelectSubset<T, ReportUpdateArgs<ExtArgs>>
+    ): Prisma__ReportClient<$Types.GetResult<ReportPayload<ExtArgs>, T, 'update', never>, never, ExtArgs>
 
     /**
      * Delete zero or more Reports.
@@ -2413,9 +3748,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      * })
      * 
     **/
-    deleteMany<T extends ReportDeleteManyArgs>(
-      args?: SelectSubset<T, ReportDeleteManyArgs>
-    ): PrismaPromise<BatchPayload>
+    deleteMany<T extends ReportDeleteManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, ReportDeleteManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Update zero or more Reports.
@@ -2434,9 +3769,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      * })
      * 
     **/
-    updateMany<T extends ReportUpdateManyArgs>(
-      args: SelectSubset<T, ReportUpdateManyArgs>
-    ): PrismaPromise<BatchPayload>
+    updateMany<T extends ReportUpdateManyArgs<ExtArgs>>(
+      args: SelectSubset<T, ReportUpdateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Create or update one Report.
@@ -2455,9 +3790,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      *   }
      * })
     **/
-    upsert<T extends ReportUpsertArgs>(
-      args: SelectSubset<T, ReportUpsertArgs>
-    ): Prisma__ReportClient<ReportGetPayload<T>>
+    upsert<T extends ReportUpsertArgs<ExtArgs>>(
+      args: SelectSubset<T, ReportUpsertArgs<ExtArgs>>
+    ): Prisma__ReportClient<$Types.GetResult<ReportPayload<ExtArgs>, T, 'upsert', never>, never, ExtArgs>
 
     /**
      * Count the number of Reports.
@@ -2474,8 +3809,8 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     **/
     count<T extends ReportCountArgs>(
       args?: Subset<T, ReportCountArgs>,
-    ): PrismaPromise<
-      T extends _Record<'select', any>
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
         ? T['select'] extends true
           ? number
           : GetScalarType<T['select'], ReportCountAggregateOutputType>
@@ -2506,7 +3841,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      *   take: 10,
      * })
     **/
-    aggregate<T extends ReportAggregateArgs>(args: Subset<T, ReportAggregateArgs>): PrismaPromise<GetReportAggregateType<T>>
+    aggregate<T extends ReportAggregateArgs>(args: Subset<T, ReportAggregateArgs>): Prisma.PrismaPromise<GetReportAggregateType<T>>
 
     /**
      * Group by Report.
@@ -2583,7 +3918,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-    >(args: SubsetIntersection<T, ReportGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetReportGroupByPayload<T> : PrismaPromise<InputErrors>
+    >(args: SubsetIntersection<T, ReportGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetReportGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
 
   }
 
@@ -2593,10 +3928,8 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export class Prisma__ReportClient<T, Null = never> implements PrismaPromise<T> {
-    [prisma]: true;
+  export class Prisma__ReportClient<T, Null = never, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> implements Prisma.PrismaPromise<T> {
     private readonly _dmmf;
-    private readonly _fetcher;
     private readonly _queryType;
     private readonly _rootField;
     private readonly _clientMethod;
@@ -2607,10 +3940,12 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     private _isList;
     private _callsite;
     private _requestPromise?;
-    constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
-    readonly [Symbol.toStringTag]: 'PrismaClientPromise';
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+    constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
 
-    report_to_clause<T extends Report$report_to_clauseArgs= {}>(args?: Subset<T, Report$report_to_clauseArgs>): PrismaPromise<Array<Report_to_clauseGetPayload<T>>| Null>;
+    report_to_chip<T extends Report$report_to_chipArgs<ExtArgs> = {}>(args?: Subset<T, Report$report_to_chipArgs<ExtArgs>>): Prisma.PrismaPromise<$Types.GetResult<Report_to_chipPayload<ExtArgs>, T, 'findMany', never>| Null>;
+
+    report_to_clause<T extends Report$report_to_clauseArgs<ExtArgs> = {}>(args?: Subset<T, Report$report_to_clauseArgs<ExtArgs>>): Prisma.PrismaPromise<$Types.GetResult<Report_to_clausePayload<ExtArgs>, T, 'findMany', never>| Null>;
 
     private get _document();
     /**
@@ -2642,28 +3977,25 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   /**
    * Report base type for findUnique actions
    */
-  export type ReportFindUniqueArgsBase = {
+  export type ReportFindUniqueArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Report
-     * 
-    **/
-    select?: ReportSelect | null
+     */
+    select?: ReportSelect<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
-    include?: ReportInclude | null
+     */
+    include?: ReportInclude<ExtArgs> | null
     /**
      * Filter, which Report to fetch.
-     * 
-    **/
+     */
     where: ReportWhereUniqueInput
   }
 
   /**
    * Report findUnique
    */
-  export interface ReportFindUniqueArgs extends ReportFindUniqueArgsBase {
+  export interface ReportFindUniqueArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends ReportFindUniqueArgsBase<ExtArgs> {
    /**
     * Throw an Error if query returns no results
     * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
@@ -2675,21 +4007,18 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   /**
    * Report findUniqueOrThrow
    */
-  export type ReportFindUniqueOrThrowArgs = {
+  export type ReportFindUniqueOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Report
-     * 
-    **/
-    select?: ReportSelect | null
+     */
+    select?: ReportSelect<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
-    include?: ReportInclude | null
+     */
+    include?: ReportInclude<ExtArgs> | null
     /**
      * Filter, which Report to fetch.
-     * 
-    **/
+     */
     where: ReportWhereUniqueInput
   }
 
@@ -2697,63 +4026,55 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   /**
    * Report base type for findFirst actions
    */
-  export type ReportFindFirstArgsBase = {
+  export type ReportFindFirstArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Report
-     * 
-    **/
-    select?: ReportSelect | null
+     */
+    select?: ReportSelect<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
-    include?: ReportInclude | null
+     */
+    include?: ReportInclude<ExtArgs> | null
     /**
      * Filter, which Report to fetch.
-     * 
-    **/
+     */
     where?: ReportWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
      * Determine the order of Reports to fetch.
-     * 
-    **/
+     */
     orderBy?: Enumerable<ReportOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the position for searching for Reports.
-     * 
-    **/
+     */
     cursor?: ReportWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Take `±n` Reports from the position of the cursor.
-     * 
-    **/
+     */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Skip the first `n` Reports.
-     * 
-    **/
+     */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
      * Filter by unique combinations of Reports.
-     * 
-    **/
+     */
     distinct?: Enumerable<ReportScalarFieldEnum>
   }
 
   /**
    * Report findFirst
    */
-  export interface ReportFindFirstArgs extends ReportFindFirstArgsBase {
+  export interface ReportFindFirstArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends ReportFindFirstArgsBase<ExtArgs> {
    /**
     * Throw an Error if query returns no results
     * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
@@ -2765,56 +4086,48 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   /**
    * Report findFirstOrThrow
    */
-  export type ReportFindFirstOrThrowArgs = {
+  export type ReportFindFirstOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Report
-     * 
-    **/
-    select?: ReportSelect | null
+     */
+    select?: ReportSelect<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
-    include?: ReportInclude | null
+     */
+    include?: ReportInclude<ExtArgs> | null
     /**
      * Filter, which Report to fetch.
-     * 
-    **/
+     */
     where?: ReportWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
      * Determine the order of Reports to fetch.
-     * 
-    **/
+     */
     orderBy?: Enumerable<ReportOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the position for searching for Reports.
-     * 
-    **/
+     */
     cursor?: ReportWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Take `±n` Reports from the position of the cursor.
-     * 
-    **/
+     */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Skip the first `n` Reports.
-     * 
-    **/
+     */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
      * Filter by unique combinations of Reports.
-     * 
-    **/
+     */
     distinct?: Enumerable<ReportScalarFieldEnum>
   }
 
@@ -2822,49 +4135,42 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   /**
    * Report findMany
    */
-  export type ReportFindManyArgs = {
+  export type ReportFindManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Report
-     * 
-    **/
-    select?: ReportSelect | null
+     */
+    select?: ReportSelect<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
-    include?: ReportInclude | null
+     */
+    include?: ReportInclude<ExtArgs> | null
     /**
      * Filter, which Reports to fetch.
-     * 
-    **/
+     */
     where?: ReportWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
      * Determine the order of Reports to fetch.
-     * 
-    **/
+     */
     orderBy?: Enumerable<ReportOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the position for listing Reports.
-     * 
-    **/
+     */
     cursor?: ReportWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Take `±n` Reports from the position of the cursor.
-     * 
-    **/
+     */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Skip the first `n` Reports.
-     * 
-    **/
+     */
     skip?: number
     distinct?: Enumerable<ReportScalarFieldEnum>
   }
@@ -2873,21 +4179,18 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   /**
    * Report create
    */
-  export type ReportCreateArgs = {
+  export type ReportCreateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Report
-     * 
-    **/
-    select?: ReportSelect | null
+     */
+    select?: ReportSelect<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
-    include?: ReportInclude | null
+     */
+    include?: ReportInclude<ExtArgs> | null
     /**
      * The data needed to create a Report.
-     * 
-    **/
+     */
     data: XOR<ReportCreateInput, ReportUncheckedCreateInput>
   }
 
@@ -2895,11 +4198,10 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   /**
    * Report createMany
    */
-  export type ReportCreateManyArgs = {
+  export type ReportCreateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * The data used to create many Reports.
-     * 
-    **/
+     */
     data: Enumerable<ReportCreateManyInput>
     skipDuplicates?: boolean
   }
@@ -2908,26 +4210,22 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   /**
    * Report update
    */
-  export type ReportUpdateArgs = {
+  export type ReportUpdateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Report
-     * 
-    **/
-    select?: ReportSelect | null
+     */
+    select?: ReportSelect<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
-    include?: ReportInclude | null
+     */
+    include?: ReportInclude<ExtArgs> | null
     /**
      * The data needed to update a Report.
-     * 
-    **/
+     */
     data: XOR<ReportUpdateInput, ReportUncheckedUpdateInput>
     /**
      * Choose, which Report to update.
-     * 
-    **/
+     */
     where: ReportWhereUniqueInput
   }
 
@@ -2935,16 +4233,14 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   /**
    * Report updateMany
    */
-  export type ReportUpdateManyArgs = {
+  export type ReportUpdateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * The data used to update Reports.
-     * 
-    **/
+     */
     data: XOR<ReportUpdateManyMutationInput, ReportUncheckedUpdateManyInput>
     /**
      * Filter which Reports to update
-     * 
-    **/
+     */
     where?: ReportWhereInput
   }
 
@@ -2952,31 +4248,26 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   /**
    * Report upsert
    */
-  export type ReportUpsertArgs = {
+  export type ReportUpsertArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Report
-     * 
-    **/
-    select?: ReportSelect | null
+     */
+    select?: ReportSelect<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
-    include?: ReportInclude | null
+     */
+    include?: ReportInclude<ExtArgs> | null
     /**
      * The filter to search for the Report to update in case it exists.
-     * 
-    **/
+     */
     where: ReportWhereUniqueInput
     /**
      * In case the Report found by the `where` argument doesn't exist, create a new Report with this data.
-     * 
-    **/
+     */
     create: XOR<ReportCreateInput, ReportUncheckedCreateInput>
     /**
      * In case the Report was found with the provided `where` argument, update it with this data.
-     * 
-    **/
+     */
     update: XOR<ReportUpdateInput, ReportUncheckedUpdateInput>
   }
 
@@ -2984,21 +4275,18 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   /**
    * Report delete
    */
-  export type ReportDeleteArgs = {
+  export type ReportDeleteArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Report
-     * 
-    **/
-    select?: ReportSelect | null
+     */
+    select?: ReportSelect<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
-    include?: ReportInclude | null
+     */
+    include?: ReportInclude<ExtArgs> | null
     /**
      * Filter which Report to delete.
-     * 
-    **/
+     */
     where: ReportWhereUniqueInput
   }
 
@@ -3006,29 +4294,47 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   /**
    * Report deleteMany
    */
-  export type ReportDeleteManyArgs = {
+  export type ReportDeleteManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Filter which Reports to delete
-     * 
-    **/
+     */
     where?: ReportWhereInput
+  }
+
+
+  /**
+   * Report.report_to_chip
+   */
+  export type Report$report_to_chipArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Report_to_chip
+     */
+    select?: Report_to_chipSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: Report_to_chipInclude<ExtArgs> | null
+    where?: Report_to_chipWhereInput
+    orderBy?: Enumerable<Report_to_chipOrderByWithRelationInput>
+    cursor?: Report_to_chipWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Enumerable<Report_to_chipScalarFieldEnum>
   }
 
 
   /**
    * Report.report_to_clause
    */
-  export type Report$report_to_clauseArgs = {
+  export type Report$report_to_clauseArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Report_to_clause
-     * 
-    **/
-    select?: Report_to_clauseSelect | null
+     */
+    select?: Report_to_clauseSelect<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
-    include?: Report_to_clauseInclude | null
+     */
+    include?: Report_to_clauseInclude<ExtArgs> | null
     where?: Report_to_clauseWhereInput
     orderBy?: Enumerable<Report_to_clauseOrderByWithRelationInput>
     cursor?: Report_to_clauseWhereUniqueInput
@@ -3041,17 +4347,925 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   /**
    * Report without action
    */
-  export type ReportArgs = {
+  export type ReportArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Report
-     * 
-    **/
-    select?: ReportSelect | null
+     */
+    select?: ReportSelect<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well.
+     */
+    include?: ReportInclude<ExtArgs> | null
+  }
+
+
+
+  /**
+   * Model Report_to_chip
+   */
+
+
+  export type AggregateReport_to_chip = {
+    _count: Report_to_chipCountAggregateOutputType | null
+    _min: Report_to_chipMinAggregateOutputType | null
+    _max: Report_to_chipMaxAggregateOutputType | null
+  }
+
+  export type Report_to_chipMinAggregateOutputType = {
+    id: string | null
+    report_id: string | null
+    chip_id: string | null
+  }
+
+  export type Report_to_chipMaxAggregateOutputType = {
+    id: string | null
+    report_id: string | null
+    chip_id: string | null
+  }
+
+  export type Report_to_chipCountAggregateOutputType = {
+    id: number
+    report_id: number
+    chip_id: number
+    _all: number
+  }
+
+
+  export type Report_to_chipMinAggregateInputType = {
+    id?: true
+    report_id?: true
+    chip_id?: true
+  }
+
+  export type Report_to_chipMaxAggregateInputType = {
+    id?: true
+    report_id?: true
+    chip_id?: true
+  }
+
+  export type Report_to_chipCountAggregateInputType = {
+    id?: true
+    report_id?: true
+    chip_id?: true
+    _all?: true
+  }
+
+  export type Report_to_chipAggregateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Report_to_chip to aggregate.
+     */
+    where?: Report_to_chipWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Report_to_chips to fetch.
+     */
+    orderBy?: Enumerable<Report_to_chipOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: Report_to_chipWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Report_to_chips from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Report_to_chips.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Report_to_chips
+    **/
+    _count?: true | Report_to_chipCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Report_to_chipMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Report_to_chipMaxAggregateInputType
+  }
+
+  export type GetReport_to_chipAggregateType<T extends Report_to_chipAggregateArgs> = {
+        [P in keyof T & keyof AggregateReport_to_chip]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateReport_to_chip[P]>
+      : GetScalarType<T[P], AggregateReport_to_chip[P]>
+  }
+
+
+
+
+  export type Report_to_chipGroupByArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    where?: Report_to_chipWhereInput
+    orderBy?: Enumerable<Report_to_chipOrderByWithAggregationInput>
+    by: Report_to_chipScalarFieldEnum[]
+    having?: Report_to_chipScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Report_to_chipCountAggregateInputType | true
+    _min?: Report_to_chipMinAggregateInputType
+    _max?: Report_to_chipMaxAggregateInputType
+  }
+
+
+  export type Report_to_chipGroupByOutputType = {
+    id: string
+    report_id: string
+    chip_id: string
+    _count: Report_to_chipCountAggregateOutputType | null
+    _min: Report_to_chipMinAggregateOutputType | null
+    _max: Report_to_chipMaxAggregateOutputType | null
+  }
+
+  type GetReport_to_chipGroupByPayload<T extends Report_to_chipGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickArray<Report_to_chipGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Report_to_chipGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Report_to_chipGroupByOutputType[P]>
+            : GetScalarType<T[P], Report_to_chipGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type Report_to_chipSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    report_id?: boolean
+    chip_id?: boolean
+    chip?: boolean | ChipArgs<ExtArgs>
+    report?: boolean | ReportArgs<ExtArgs>
+  }, ExtArgs["result"]["report_to_chip"]>
+
+  export type Report_to_chipSelectScalar = {
+    id?: boolean
+    report_id?: boolean
+    chip_id?: boolean
+  }
+
+  export type Report_to_chipInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    chip?: boolean | ChipArgs<ExtArgs>
+    report?: boolean | ReportArgs<ExtArgs>
+  }
+
+
+  type Report_to_chipGetPayload<S extends boolean | null | undefined | Report_to_chipArgs> = $Types.GetResult<Report_to_chipPayload, S>
+
+  type Report_to_chipCountArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = 
+    Omit<Report_to_chipFindManyArgs, 'select' | 'include'> & {
+      select?: Report_to_chipCountAggregateInputType | true
+    }
+
+  export interface Report_to_chipDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Report_to_chip'], meta: { name: 'Report_to_chip' } }
+    /**
+     * Find zero or one Report_to_chip that matches the filter.
+     * @param {Report_to_chipFindUniqueArgs} args - Arguments to find a Report_to_chip
+     * @example
+     * // Get one Report_to_chip
+     * const report_to_chip = await prisma.report_to_chip.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends Report_to_chipFindUniqueArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, Report_to_chipFindUniqueArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'Report_to_chip'> extends True ? Prisma__Report_to_chipClient<$Types.GetResult<Report_to_chipPayload<ExtArgs>, T, 'findUnique', never>, never, ExtArgs> : Prisma__Report_to_chipClient<$Types.GetResult<Report_to_chipPayload<ExtArgs>, T, 'findUnique', never> | null, null, ExtArgs>
+
+    /**
+     * Find one Report_to_chip that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {Report_to_chipFindUniqueOrThrowArgs} args - Arguments to find a Report_to_chip
+     * @example
+     * // Get one Report_to_chip
+     * const report_to_chip = await prisma.report_to_chip.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends Report_to_chipFindUniqueOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, Report_to_chipFindUniqueOrThrowArgs<ExtArgs>>
+    ): Prisma__Report_to_chipClient<$Types.GetResult<Report_to_chipPayload<ExtArgs>, T, 'findUniqueOrThrow', never>, never, ExtArgs>
+
+    /**
+     * Find the first Report_to_chip that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Report_to_chipFindFirstArgs} args - Arguments to find a Report_to_chip
+     * @example
+     * // Get one Report_to_chip
+     * const report_to_chip = await prisma.report_to_chip.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends Report_to_chipFindFirstArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, Report_to_chipFindFirstArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'Report_to_chip'> extends True ? Prisma__Report_to_chipClient<$Types.GetResult<Report_to_chipPayload<ExtArgs>, T, 'findFirst', never>, never, ExtArgs> : Prisma__Report_to_chipClient<$Types.GetResult<Report_to_chipPayload<ExtArgs>, T, 'findFirst', never> | null, null, ExtArgs>
+
+    /**
+     * Find the first Report_to_chip that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Report_to_chipFindFirstOrThrowArgs} args - Arguments to find a Report_to_chip
+     * @example
+     * // Get one Report_to_chip
+     * const report_to_chip = await prisma.report_to_chip.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends Report_to_chipFindFirstOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, Report_to_chipFindFirstOrThrowArgs<ExtArgs>>
+    ): Prisma__Report_to_chipClient<$Types.GetResult<Report_to_chipPayload<ExtArgs>, T, 'findFirstOrThrow', never>, never, ExtArgs>
+
+    /**
+     * Find zero or more Report_to_chips that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Report_to_chipFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Report_to_chips
+     * const report_to_chips = await prisma.report_to_chip.findMany()
+     * 
+     * // Get first 10 Report_to_chips
+     * const report_to_chips = await prisma.report_to_chip.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const report_to_chipWithIdOnly = await prisma.report_to_chip.findMany({ select: { id: true } })
      * 
     **/
-    include?: ReportInclude | null
+    findMany<T extends Report_to_chipFindManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, Report_to_chipFindManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Types.GetResult<Report_to_chipPayload<ExtArgs>, T, 'findMany', never>>
+
+    /**
+     * Create a Report_to_chip.
+     * @param {Report_to_chipCreateArgs} args - Arguments to create a Report_to_chip.
+     * @example
+     * // Create one Report_to_chip
+     * const Report_to_chip = await prisma.report_to_chip.create({
+     *   data: {
+     *     // ... data to create a Report_to_chip
+     *   }
+     * })
+     * 
+    **/
+    create<T extends Report_to_chipCreateArgs<ExtArgs>>(
+      args: SelectSubset<T, Report_to_chipCreateArgs<ExtArgs>>
+    ): Prisma__Report_to_chipClient<$Types.GetResult<Report_to_chipPayload<ExtArgs>, T, 'create', never>, never, ExtArgs>
+
+    /**
+     * Create many Report_to_chips.
+     *     @param {Report_to_chipCreateManyArgs} args - Arguments to create many Report_to_chips.
+     *     @example
+     *     // Create many Report_to_chips
+     *     const report_to_chip = await prisma.report_to_chip.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
+     *     
+    **/
+    createMany<T extends Report_to_chipCreateManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, Report_to_chipCreateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Report_to_chip.
+     * @param {Report_to_chipDeleteArgs} args - Arguments to delete one Report_to_chip.
+     * @example
+     * // Delete one Report_to_chip
+     * const Report_to_chip = await prisma.report_to_chip.delete({
+     *   where: {
+     *     // ... filter to delete one Report_to_chip
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends Report_to_chipDeleteArgs<ExtArgs>>(
+      args: SelectSubset<T, Report_to_chipDeleteArgs<ExtArgs>>
+    ): Prisma__Report_to_chipClient<$Types.GetResult<Report_to_chipPayload<ExtArgs>, T, 'delete', never>, never, ExtArgs>
+
+    /**
+     * Update one Report_to_chip.
+     * @param {Report_to_chipUpdateArgs} args - Arguments to update one Report_to_chip.
+     * @example
+     * // Update one Report_to_chip
+     * const report_to_chip = await prisma.report_to_chip.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends Report_to_chipUpdateArgs<ExtArgs>>(
+      args: SelectSubset<T, Report_to_chipUpdateArgs<ExtArgs>>
+    ): Prisma__Report_to_chipClient<$Types.GetResult<Report_to_chipPayload<ExtArgs>, T, 'update', never>, never, ExtArgs>
+
+    /**
+     * Delete zero or more Report_to_chips.
+     * @param {Report_to_chipDeleteManyArgs} args - Arguments to filter Report_to_chips to delete.
+     * @example
+     * // Delete a few Report_to_chips
+     * const { count } = await prisma.report_to_chip.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends Report_to_chipDeleteManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, Report_to_chipDeleteManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Report_to_chips.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Report_to_chipUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Report_to_chips
+     * const report_to_chip = await prisma.report_to_chip.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends Report_to_chipUpdateManyArgs<ExtArgs>>(
+      args: SelectSubset<T, Report_to_chipUpdateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Report_to_chip.
+     * @param {Report_to_chipUpsertArgs} args - Arguments to update or create a Report_to_chip.
+     * @example
+     * // Update or create a Report_to_chip
+     * const report_to_chip = await prisma.report_to_chip.upsert({
+     *   create: {
+     *     // ... data to create a Report_to_chip
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Report_to_chip we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends Report_to_chipUpsertArgs<ExtArgs>>(
+      args: SelectSubset<T, Report_to_chipUpsertArgs<ExtArgs>>
+    ): Prisma__Report_to_chipClient<$Types.GetResult<Report_to_chipPayload<ExtArgs>, T, 'upsert', never>, never, ExtArgs>
+
+    /**
+     * Count the number of Report_to_chips.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Report_to_chipCountArgs} args - Arguments to filter Report_to_chips to count.
+     * @example
+     * // Count the number of Report_to_chips
+     * const count = await prisma.report_to_chip.count({
+     *   where: {
+     *     // ... the filter for the Report_to_chips we want to count
+     *   }
+     * })
+    **/
+    count<T extends Report_to_chipCountArgs>(
+      args?: Subset<T, Report_to_chipCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Report_to_chipCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Report_to_chip.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Report_to_chipAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Report_to_chipAggregateArgs>(args: Subset<T, Report_to_chipAggregateArgs>): Prisma.PrismaPromise<GetReport_to_chipAggregateType<T>>
+
+    /**
+     * Group by Report_to_chip.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Report_to_chipGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends Report_to_chipGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: Report_to_chipGroupByArgs['orderBy'] }
+        : { orderBy?: Report_to_chipGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends TupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, Report_to_chipGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetReport_to_chipGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Report_to_chip.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export class Prisma__Report_to_chipClient<T, Null = never, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> implements Prisma.PrismaPromise<T> {
+    private readonly _dmmf;
+    private readonly _queryType;
+    private readonly _rootField;
+    private readonly _clientMethod;
+    private readonly _args;
+    private readonly _dataPath;
+    private readonly _errorFormat;
+    private readonly _measurePerformance?;
+    private _isList;
+    private _callsite;
+    private _requestPromise?;
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+    constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
+
+    chip<T extends ChipArgs<ExtArgs> = {}>(args?: Subset<T, ChipArgs<ExtArgs>>): Prisma__ChipClient<$Types.GetResult<ChipPayload<ExtArgs>, T, 'findUnique', never> | Null, never, ExtArgs>;
+
+    report<T extends ReportArgs<ExtArgs> = {}>(args?: Subset<T, ReportArgs<ExtArgs>>): Prisma__ReportClient<$Types.GetResult<ReportPayload<ExtArgs>, T, 'findUnique', never> | Null, never, ExtArgs>;
+
+    private get _document();
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): Promise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): Promise<T>;
+  }
+
+
+
+  // Custom InputTypes
+
+  /**
+   * Report_to_chip base type for findUnique actions
+   */
+  export type Report_to_chipFindUniqueArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Report_to_chip
+     */
+    select?: Report_to_chipSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: Report_to_chipInclude<ExtArgs> | null
+    /**
+     * Filter, which Report_to_chip to fetch.
+     */
+    where: Report_to_chipWhereUniqueInput
+  }
+
+  /**
+   * Report_to_chip findUnique
+   */
+  export interface Report_to_chipFindUniqueArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends Report_to_chipFindUniqueArgsBase<ExtArgs> {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * Report_to_chip findUniqueOrThrow
+   */
+  export type Report_to_chipFindUniqueOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Report_to_chip
+     */
+    select?: Report_to_chipSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: Report_to_chipInclude<ExtArgs> | null
+    /**
+     * Filter, which Report_to_chip to fetch.
+     */
+    where: Report_to_chipWhereUniqueInput
+  }
+
+
+  /**
+   * Report_to_chip base type for findFirst actions
+   */
+  export type Report_to_chipFindFirstArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Report_to_chip
+     */
+    select?: Report_to_chipSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: Report_to_chipInclude<ExtArgs> | null
+    /**
+     * Filter, which Report_to_chip to fetch.
+     */
+    where?: Report_to_chipWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Report_to_chips to fetch.
+     */
+    orderBy?: Enumerable<Report_to_chipOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Report_to_chips.
+     */
+    cursor?: Report_to_chipWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Report_to_chips from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Report_to_chips.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Report_to_chips.
+     */
+    distinct?: Enumerable<Report_to_chipScalarFieldEnum>
+  }
+
+  /**
+   * Report_to_chip findFirst
+   */
+  export interface Report_to_chipFindFirstArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends Report_to_chipFindFirstArgsBase<ExtArgs> {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * Report_to_chip findFirstOrThrow
+   */
+  export type Report_to_chipFindFirstOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Report_to_chip
+     */
+    select?: Report_to_chipSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: Report_to_chipInclude<ExtArgs> | null
+    /**
+     * Filter, which Report_to_chip to fetch.
+     */
+    where?: Report_to_chipWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Report_to_chips to fetch.
+     */
+    orderBy?: Enumerable<Report_to_chipOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Report_to_chips.
+     */
+    cursor?: Report_to_chipWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Report_to_chips from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Report_to_chips.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Report_to_chips.
+     */
+    distinct?: Enumerable<Report_to_chipScalarFieldEnum>
+  }
+
+
+  /**
+   * Report_to_chip findMany
+   */
+  export type Report_to_chipFindManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Report_to_chip
+     */
+    select?: Report_to_chipSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: Report_to_chipInclude<ExtArgs> | null
+    /**
+     * Filter, which Report_to_chips to fetch.
+     */
+    where?: Report_to_chipWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Report_to_chips to fetch.
+     */
+    orderBy?: Enumerable<Report_to_chipOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Report_to_chips.
+     */
+    cursor?: Report_to_chipWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Report_to_chips from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Report_to_chips.
+     */
+    skip?: number
+    distinct?: Enumerable<Report_to_chipScalarFieldEnum>
+  }
+
+
+  /**
+   * Report_to_chip create
+   */
+  export type Report_to_chipCreateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Report_to_chip
+     */
+    select?: Report_to_chipSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: Report_to_chipInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Report_to_chip.
+     */
+    data: XOR<Report_to_chipCreateInput, Report_to_chipUncheckedCreateInput>
+  }
+
+
+  /**
+   * Report_to_chip createMany
+   */
+  export type Report_to_chipCreateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Report_to_chips.
+     */
+    data: Enumerable<Report_to_chipCreateManyInput>
+    skipDuplicates?: boolean
+  }
+
+
+  /**
+   * Report_to_chip update
+   */
+  export type Report_to_chipUpdateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Report_to_chip
+     */
+    select?: Report_to_chipSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: Report_to_chipInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Report_to_chip.
+     */
+    data: XOR<Report_to_chipUpdateInput, Report_to_chipUncheckedUpdateInput>
+    /**
+     * Choose, which Report_to_chip to update.
+     */
+    where: Report_to_chipWhereUniqueInput
+  }
+
+
+  /**
+   * Report_to_chip updateMany
+   */
+  export type Report_to_chipUpdateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Report_to_chips.
+     */
+    data: XOR<Report_to_chipUpdateManyMutationInput, Report_to_chipUncheckedUpdateManyInput>
+    /**
+     * Filter which Report_to_chips to update
+     */
+    where?: Report_to_chipWhereInput
+  }
+
+
+  /**
+   * Report_to_chip upsert
+   */
+  export type Report_to_chipUpsertArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Report_to_chip
+     */
+    select?: Report_to_chipSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: Report_to_chipInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Report_to_chip to update in case it exists.
+     */
+    where: Report_to_chipWhereUniqueInput
+    /**
+     * In case the Report_to_chip found by the `where` argument doesn't exist, create a new Report_to_chip with this data.
+     */
+    create: XOR<Report_to_chipCreateInput, Report_to_chipUncheckedCreateInput>
+    /**
+     * In case the Report_to_chip was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<Report_to_chipUpdateInput, Report_to_chipUncheckedUpdateInput>
+  }
+
+
+  /**
+   * Report_to_chip delete
+   */
+  export type Report_to_chipDeleteArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Report_to_chip
+     */
+    select?: Report_to_chipSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: Report_to_chipInclude<ExtArgs> | null
+    /**
+     * Filter which Report_to_chip to delete.
+     */
+    where: Report_to_chipWhereUniqueInput
+  }
+
+
+  /**
+   * Report_to_chip deleteMany
+   */
+  export type Report_to_chipDeleteManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Report_to_chips to delete
+     */
+    where?: Report_to_chipWhereInput
+  }
+
+
+  /**
+   * Report_to_chip without action
+   */
+  export type Report_to_chipArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Report_to_chip
+     */
+    select?: Report_to_chipSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: Report_to_chipInclude<ExtArgs> | null
   }
 
 
@@ -3106,39 +5320,34 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     _all?: true
   }
 
-  export type Report_to_clauseAggregateArgs = {
+  export type Report_to_clauseAggregateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Filter which Report_to_clause to aggregate.
-     * 
-    **/
+     */
     where?: Report_to_clauseWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
      * Determine the order of Report_to_clauses to fetch.
-     * 
-    **/
+     */
     orderBy?: Enumerable<Report_to_clauseOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the start position
-     * 
-    **/
+     */
     cursor?: Report_to_clauseWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Take `±n` Report_to_clauses from the position of the cursor.
-     * 
-    **/
+     */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Skip the first `n` Report_to_clauses.
-     * 
-    **/
+     */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
@@ -3171,10 +5380,10 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
 
 
-  export type Report_to_clauseGroupByArgs = {
+  export type Report_to_clauseGroupByArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     where?: Report_to_clauseWhereInput
     orderBy?: Enumerable<Report_to_clauseOrderByWithAggregationInput>
-    by: Array<Report_to_clauseScalarFieldEnum>
+    by: Report_to_clauseScalarFieldEnum[]
     having?: Report_to_clauseScalarWhereWithAggregatesInput
     take?: number
     skip?: number
@@ -3193,7 +5402,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     _max: Report_to_clauseMaxAggregateOutputType | null
   }
 
-  type GetReport_to_clauseGroupByPayload<T extends Report_to_clauseGroupByArgs> = PrismaPromise<
+  type GetReport_to_clauseGroupByPayload<T extends Report_to_clauseGroupByArgs> = Prisma.PrismaPromise<
     Array<
       PickArray<Report_to_clauseGroupByOutputType, T['by']> &
         {
@@ -3207,46 +5416,35 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     >
 
 
-  export type Report_to_clauseSelect = {
+  export type Report_to_clauseSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     report_id?: boolean
     clause_id?: boolean
-    clause?: boolean | ClauseArgs
-    report?: boolean | ReportArgs
+    clause?: boolean | ClauseArgs<ExtArgs>
+    report?: boolean | ReportArgs<ExtArgs>
+  }, ExtArgs["result"]["report_to_clause"]>
+
+  export type Report_to_clauseSelectScalar = {
+    id?: boolean
+    report_id?: boolean
+    clause_id?: boolean
+  }
+
+  export type Report_to_clauseInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    clause?: boolean | ClauseArgs<ExtArgs>
+    report?: boolean | ReportArgs<ExtArgs>
   }
 
 
-  export type Report_to_clauseInclude = {
-    clause?: boolean | ClauseArgs
-    report?: boolean | ReportArgs
-  } 
+  type Report_to_clauseGetPayload<S extends boolean | null | undefined | Report_to_clauseArgs> = $Types.GetResult<Report_to_clausePayload, S>
 
-  export type Report_to_clauseGetPayload<S extends boolean | null | undefined | Report_to_clauseArgs> =
-    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
-    S extends true ? Report_to_clause :
-    S extends undefined ? never :
-    S extends { include: any } & (Report_to_clauseArgs | Report_to_clauseFindManyArgs)
-    ? Report_to_clause  & {
-    [P in TruthyKeys<S['include']>]:
-        P extends 'clause' ? ClauseGetPayload<S['include'][P]> :
-        P extends 'report' ? ReportGetPayload<S['include'][P]> :  never
-  } 
-    : S extends { select: any } & (Report_to_clauseArgs | Report_to_clauseFindManyArgs)
-      ? {
-    [P in TruthyKeys<S['select']>]:
-        P extends 'clause' ? ClauseGetPayload<S['select'][P]> :
-        P extends 'report' ? ReportGetPayload<S['select'][P]> :  P extends keyof Report_to_clause ? Report_to_clause[P] : never
-  } 
-      : Report_to_clause
-
-
-  type Report_to_clauseCountArgs = Merge<
+  type Report_to_clauseCountArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = 
     Omit<Report_to_clauseFindManyArgs, 'select' | 'include'> & {
       select?: Report_to_clauseCountAggregateInputType | true
     }
-  >
 
-  export interface Report_to_clauseDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
+  export interface Report_to_clauseDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Report_to_clause'], meta: { name: 'Report_to_clause' } }
     /**
      * Find zero or one Report_to_clause that matches the filter.
      * @param {Report_to_clauseFindUniqueArgs} args - Arguments to find a Report_to_clause
@@ -3258,9 +5456,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      *   }
      * })
     **/
-    findUnique<T extends Report_to_clauseFindUniqueArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
-      args: SelectSubset<T, Report_to_clauseFindUniqueArgs>
-    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'Report_to_clause'> extends True ? Prisma__Report_to_clauseClient<Report_to_clauseGetPayload<T>> : Prisma__Report_to_clauseClient<Report_to_clauseGetPayload<T> | null, null>
+    findUnique<T extends Report_to_clauseFindUniqueArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, Report_to_clauseFindUniqueArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'Report_to_clause'> extends True ? Prisma__Report_to_clauseClient<$Types.GetResult<Report_to_clausePayload<ExtArgs>, T, 'findUnique', never>, never, ExtArgs> : Prisma__Report_to_clauseClient<$Types.GetResult<Report_to_clausePayload<ExtArgs>, T, 'findUnique', never> | null, null, ExtArgs>
 
     /**
      * Find one Report_to_clause that matches the filter or throw an error  with `error.code='P2025'` 
@@ -3274,9 +5472,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      *   }
      * })
     **/
-    findUniqueOrThrow<T extends Report_to_clauseFindUniqueOrThrowArgs>(
-      args?: SelectSubset<T, Report_to_clauseFindUniqueOrThrowArgs>
-    ): Prisma__Report_to_clauseClient<Report_to_clauseGetPayload<T>>
+    findUniqueOrThrow<T extends Report_to_clauseFindUniqueOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, Report_to_clauseFindUniqueOrThrowArgs<ExtArgs>>
+    ): Prisma__Report_to_clauseClient<$Types.GetResult<Report_to_clausePayload<ExtArgs>, T, 'findUniqueOrThrow', never>, never, ExtArgs>
 
     /**
      * Find the first Report_to_clause that matches the filter.
@@ -3291,9 +5489,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      *   }
      * })
     **/
-    findFirst<T extends Report_to_clauseFindFirstArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
-      args?: SelectSubset<T, Report_to_clauseFindFirstArgs>
-    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'Report_to_clause'> extends True ? Prisma__Report_to_clauseClient<Report_to_clauseGetPayload<T>> : Prisma__Report_to_clauseClient<Report_to_clauseGetPayload<T> | null, null>
+    findFirst<T extends Report_to_clauseFindFirstArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, Report_to_clauseFindFirstArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'Report_to_clause'> extends True ? Prisma__Report_to_clauseClient<$Types.GetResult<Report_to_clausePayload<ExtArgs>, T, 'findFirst', never>, never, ExtArgs> : Prisma__Report_to_clauseClient<$Types.GetResult<Report_to_clausePayload<ExtArgs>, T, 'findFirst', never> | null, null, ExtArgs>
 
     /**
      * Find the first Report_to_clause that matches the filter or
@@ -3309,9 +5507,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      *   }
      * })
     **/
-    findFirstOrThrow<T extends Report_to_clauseFindFirstOrThrowArgs>(
-      args?: SelectSubset<T, Report_to_clauseFindFirstOrThrowArgs>
-    ): Prisma__Report_to_clauseClient<Report_to_clauseGetPayload<T>>
+    findFirstOrThrow<T extends Report_to_clauseFindFirstOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, Report_to_clauseFindFirstOrThrowArgs<ExtArgs>>
+    ): Prisma__Report_to_clauseClient<$Types.GetResult<Report_to_clausePayload<ExtArgs>, T, 'findFirstOrThrow', never>, never, ExtArgs>
 
     /**
      * Find zero or more Report_to_clauses that matches the filter.
@@ -3329,9 +5527,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      * const report_to_clauseWithIdOnly = await prisma.report_to_clause.findMany({ select: { id: true } })
      * 
     **/
-    findMany<T extends Report_to_clauseFindManyArgs>(
-      args?: SelectSubset<T, Report_to_clauseFindManyArgs>
-    ): PrismaPromise<Array<Report_to_clauseGetPayload<T>>>
+    findMany<T extends Report_to_clauseFindManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, Report_to_clauseFindManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Types.GetResult<Report_to_clausePayload<ExtArgs>, T, 'findMany', never>>
 
     /**
      * Create a Report_to_clause.
@@ -3345,9 +5543,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      * })
      * 
     **/
-    create<T extends Report_to_clauseCreateArgs>(
-      args: SelectSubset<T, Report_to_clauseCreateArgs>
-    ): Prisma__Report_to_clauseClient<Report_to_clauseGetPayload<T>>
+    create<T extends Report_to_clauseCreateArgs<ExtArgs>>(
+      args: SelectSubset<T, Report_to_clauseCreateArgs<ExtArgs>>
+    ): Prisma__Report_to_clauseClient<$Types.GetResult<Report_to_clausePayload<ExtArgs>, T, 'create', never>, never, ExtArgs>
 
     /**
      * Create many Report_to_clauses.
@@ -3361,9 +5559,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      *     })
      *     
     **/
-    createMany<T extends Report_to_clauseCreateManyArgs>(
-      args?: SelectSubset<T, Report_to_clauseCreateManyArgs>
-    ): PrismaPromise<BatchPayload>
+    createMany<T extends Report_to_clauseCreateManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, Report_to_clauseCreateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Delete a Report_to_clause.
@@ -3377,9 +5575,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      * })
      * 
     **/
-    delete<T extends Report_to_clauseDeleteArgs>(
-      args: SelectSubset<T, Report_to_clauseDeleteArgs>
-    ): Prisma__Report_to_clauseClient<Report_to_clauseGetPayload<T>>
+    delete<T extends Report_to_clauseDeleteArgs<ExtArgs>>(
+      args: SelectSubset<T, Report_to_clauseDeleteArgs<ExtArgs>>
+    ): Prisma__Report_to_clauseClient<$Types.GetResult<Report_to_clausePayload<ExtArgs>, T, 'delete', never>, never, ExtArgs>
 
     /**
      * Update one Report_to_clause.
@@ -3396,9 +5594,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      * })
      * 
     **/
-    update<T extends Report_to_clauseUpdateArgs>(
-      args: SelectSubset<T, Report_to_clauseUpdateArgs>
-    ): Prisma__Report_to_clauseClient<Report_to_clauseGetPayload<T>>
+    update<T extends Report_to_clauseUpdateArgs<ExtArgs>>(
+      args: SelectSubset<T, Report_to_clauseUpdateArgs<ExtArgs>>
+    ): Prisma__Report_to_clauseClient<$Types.GetResult<Report_to_clausePayload<ExtArgs>, T, 'update', never>, never, ExtArgs>
 
     /**
      * Delete zero or more Report_to_clauses.
@@ -3412,9 +5610,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      * })
      * 
     **/
-    deleteMany<T extends Report_to_clauseDeleteManyArgs>(
-      args?: SelectSubset<T, Report_to_clauseDeleteManyArgs>
-    ): PrismaPromise<BatchPayload>
+    deleteMany<T extends Report_to_clauseDeleteManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, Report_to_clauseDeleteManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Update zero or more Report_to_clauses.
@@ -3433,9 +5631,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      * })
      * 
     **/
-    updateMany<T extends Report_to_clauseUpdateManyArgs>(
-      args: SelectSubset<T, Report_to_clauseUpdateManyArgs>
-    ): PrismaPromise<BatchPayload>
+    updateMany<T extends Report_to_clauseUpdateManyArgs<ExtArgs>>(
+      args: SelectSubset<T, Report_to_clauseUpdateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Create or update one Report_to_clause.
@@ -3454,9 +5652,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      *   }
      * })
     **/
-    upsert<T extends Report_to_clauseUpsertArgs>(
-      args: SelectSubset<T, Report_to_clauseUpsertArgs>
-    ): Prisma__Report_to_clauseClient<Report_to_clauseGetPayload<T>>
+    upsert<T extends Report_to_clauseUpsertArgs<ExtArgs>>(
+      args: SelectSubset<T, Report_to_clauseUpsertArgs<ExtArgs>>
+    ): Prisma__Report_to_clauseClient<$Types.GetResult<Report_to_clausePayload<ExtArgs>, T, 'upsert', never>, never, ExtArgs>
 
     /**
      * Count the number of Report_to_clauses.
@@ -3473,8 +5671,8 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     **/
     count<T extends Report_to_clauseCountArgs>(
       args?: Subset<T, Report_to_clauseCountArgs>,
-    ): PrismaPromise<
-      T extends _Record<'select', any>
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
         ? T['select'] extends true
           ? number
           : GetScalarType<T['select'], Report_to_clauseCountAggregateOutputType>
@@ -3505,7 +5703,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      *   take: 10,
      * })
     **/
-    aggregate<T extends Report_to_clauseAggregateArgs>(args: Subset<T, Report_to_clauseAggregateArgs>): PrismaPromise<GetReport_to_clauseAggregateType<T>>
+    aggregate<T extends Report_to_clauseAggregateArgs>(args: Subset<T, Report_to_clauseAggregateArgs>): Prisma.PrismaPromise<GetReport_to_clauseAggregateType<T>>
 
     /**
      * Group by Report_to_clause.
@@ -3582,7 +5780,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-    >(args: SubsetIntersection<T, Report_to_clauseGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetReport_to_clauseGroupByPayload<T> : PrismaPromise<InputErrors>
+    >(args: SubsetIntersection<T, Report_to_clauseGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetReport_to_clauseGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
 
   }
 
@@ -3592,10 +5790,8 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export class Prisma__Report_to_clauseClient<T, Null = never> implements PrismaPromise<T> {
-    [prisma]: true;
+  export class Prisma__Report_to_clauseClient<T, Null = never, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> implements Prisma.PrismaPromise<T> {
     private readonly _dmmf;
-    private readonly _fetcher;
     private readonly _queryType;
     private readonly _rootField;
     private readonly _clientMethod;
@@ -3606,12 +5802,12 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     private _isList;
     private _callsite;
     private _requestPromise?;
-    constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
-    readonly [Symbol.toStringTag]: 'PrismaClientPromise';
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+    constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
 
-    clause<T extends ClauseArgs= {}>(args?: Subset<T, ClauseArgs>): Prisma__ClauseClient<ClauseGetPayload<T> | Null>;
+    clause<T extends ClauseArgs<ExtArgs> = {}>(args?: Subset<T, ClauseArgs<ExtArgs>>): Prisma__ClauseClient<$Types.GetResult<ClausePayload<ExtArgs>, T, 'findUnique', never> | Null, never, ExtArgs>;
 
-    report<T extends ReportArgs= {}>(args?: Subset<T, ReportArgs>): Prisma__ReportClient<ReportGetPayload<T> | Null>;
+    report<T extends ReportArgs<ExtArgs> = {}>(args?: Subset<T, ReportArgs<ExtArgs>>): Prisma__ReportClient<$Types.GetResult<ReportPayload<ExtArgs>, T, 'findUnique', never> | Null, never, ExtArgs>;
 
     private get _document();
     /**
@@ -3643,28 +5839,25 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   /**
    * Report_to_clause base type for findUnique actions
    */
-  export type Report_to_clauseFindUniqueArgsBase = {
+  export type Report_to_clauseFindUniqueArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Report_to_clause
-     * 
-    **/
-    select?: Report_to_clauseSelect | null
+     */
+    select?: Report_to_clauseSelect<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
-    include?: Report_to_clauseInclude | null
+     */
+    include?: Report_to_clauseInclude<ExtArgs> | null
     /**
      * Filter, which Report_to_clause to fetch.
-     * 
-    **/
+     */
     where: Report_to_clauseWhereUniqueInput
   }
 
   /**
    * Report_to_clause findUnique
    */
-  export interface Report_to_clauseFindUniqueArgs extends Report_to_clauseFindUniqueArgsBase {
+  export interface Report_to_clauseFindUniqueArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends Report_to_clauseFindUniqueArgsBase<ExtArgs> {
    /**
     * Throw an Error if query returns no results
     * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
@@ -3676,21 +5869,18 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   /**
    * Report_to_clause findUniqueOrThrow
    */
-  export type Report_to_clauseFindUniqueOrThrowArgs = {
+  export type Report_to_clauseFindUniqueOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Report_to_clause
-     * 
-    **/
-    select?: Report_to_clauseSelect | null
+     */
+    select?: Report_to_clauseSelect<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
-    include?: Report_to_clauseInclude | null
+     */
+    include?: Report_to_clauseInclude<ExtArgs> | null
     /**
      * Filter, which Report_to_clause to fetch.
-     * 
-    **/
+     */
     where: Report_to_clauseWhereUniqueInput
   }
 
@@ -3698,63 +5888,55 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   /**
    * Report_to_clause base type for findFirst actions
    */
-  export type Report_to_clauseFindFirstArgsBase = {
+  export type Report_to_clauseFindFirstArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Report_to_clause
-     * 
-    **/
-    select?: Report_to_clauseSelect | null
+     */
+    select?: Report_to_clauseSelect<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
-    include?: Report_to_clauseInclude | null
+     */
+    include?: Report_to_clauseInclude<ExtArgs> | null
     /**
      * Filter, which Report_to_clause to fetch.
-     * 
-    **/
+     */
     where?: Report_to_clauseWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
      * Determine the order of Report_to_clauses to fetch.
-     * 
-    **/
+     */
     orderBy?: Enumerable<Report_to_clauseOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the position for searching for Report_to_clauses.
-     * 
-    **/
+     */
     cursor?: Report_to_clauseWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Take `±n` Report_to_clauses from the position of the cursor.
-     * 
-    **/
+     */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Skip the first `n` Report_to_clauses.
-     * 
-    **/
+     */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
      * Filter by unique combinations of Report_to_clauses.
-     * 
-    **/
+     */
     distinct?: Enumerable<Report_to_clauseScalarFieldEnum>
   }
 
   /**
    * Report_to_clause findFirst
    */
-  export interface Report_to_clauseFindFirstArgs extends Report_to_clauseFindFirstArgsBase {
+  export interface Report_to_clauseFindFirstArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends Report_to_clauseFindFirstArgsBase<ExtArgs> {
    /**
     * Throw an Error if query returns no results
     * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
@@ -3766,56 +5948,48 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   /**
    * Report_to_clause findFirstOrThrow
    */
-  export type Report_to_clauseFindFirstOrThrowArgs = {
+  export type Report_to_clauseFindFirstOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Report_to_clause
-     * 
-    **/
-    select?: Report_to_clauseSelect | null
+     */
+    select?: Report_to_clauseSelect<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
-    include?: Report_to_clauseInclude | null
+     */
+    include?: Report_to_clauseInclude<ExtArgs> | null
     /**
      * Filter, which Report_to_clause to fetch.
-     * 
-    **/
+     */
     where?: Report_to_clauseWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
      * Determine the order of Report_to_clauses to fetch.
-     * 
-    **/
+     */
     orderBy?: Enumerable<Report_to_clauseOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the position for searching for Report_to_clauses.
-     * 
-    **/
+     */
     cursor?: Report_to_clauseWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Take `±n` Report_to_clauses from the position of the cursor.
-     * 
-    **/
+     */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Skip the first `n` Report_to_clauses.
-     * 
-    **/
+     */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
      * Filter by unique combinations of Report_to_clauses.
-     * 
-    **/
+     */
     distinct?: Enumerable<Report_to_clauseScalarFieldEnum>
   }
 
@@ -3823,49 +5997,42 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   /**
    * Report_to_clause findMany
    */
-  export type Report_to_clauseFindManyArgs = {
+  export type Report_to_clauseFindManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Report_to_clause
-     * 
-    **/
-    select?: Report_to_clauseSelect | null
+     */
+    select?: Report_to_clauseSelect<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
-    include?: Report_to_clauseInclude | null
+     */
+    include?: Report_to_clauseInclude<ExtArgs> | null
     /**
      * Filter, which Report_to_clauses to fetch.
-     * 
-    **/
+     */
     where?: Report_to_clauseWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
      * Determine the order of Report_to_clauses to fetch.
-     * 
-    **/
+     */
     orderBy?: Enumerable<Report_to_clauseOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the position for listing Report_to_clauses.
-     * 
-    **/
+     */
     cursor?: Report_to_clauseWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Take `±n` Report_to_clauses from the position of the cursor.
-     * 
-    **/
+     */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Skip the first `n` Report_to_clauses.
-     * 
-    **/
+     */
     skip?: number
     distinct?: Enumerable<Report_to_clauseScalarFieldEnum>
   }
@@ -3874,21 +6041,18 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   /**
    * Report_to_clause create
    */
-  export type Report_to_clauseCreateArgs = {
+  export type Report_to_clauseCreateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Report_to_clause
-     * 
-    **/
-    select?: Report_to_clauseSelect | null
+     */
+    select?: Report_to_clauseSelect<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
-    include?: Report_to_clauseInclude | null
+     */
+    include?: Report_to_clauseInclude<ExtArgs> | null
     /**
      * The data needed to create a Report_to_clause.
-     * 
-    **/
+     */
     data: XOR<Report_to_clauseCreateInput, Report_to_clauseUncheckedCreateInput>
   }
 
@@ -3896,11 +6060,10 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   /**
    * Report_to_clause createMany
    */
-  export type Report_to_clauseCreateManyArgs = {
+  export type Report_to_clauseCreateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * The data used to create many Report_to_clauses.
-     * 
-    **/
+     */
     data: Enumerable<Report_to_clauseCreateManyInput>
     skipDuplicates?: boolean
   }
@@ -3909,26 +6072,22 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   /**
    * Report_to_clause update
    */
-  export type Report_to_clauseUpdateArgs = {
+  export type Report_to_clauseUpdateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Report_to_clause
-     * 
-    **/
-    select?: Report_to_clauseSelect | null
+     */
+    select?: Report_to_clauseSelect<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
-    include?: Report_to_clauseInclude | null
+     */
+    include?: Report_to_clauseInclude<ExtArgs> | null
     /**
      * The data needed to update a Report_to_clause.
-     * 
-    **/
+     */
     data: XOR<Report_to_clauseUpdateInput, Report_to_clauseUncheckedUpdateInput>
     /**
      * Choose, which Report_to_clause to update.
-     * 
-    **/
+     */
     where: Report_to_clauseWhereUniqueInput
   }
 
@@ -3936,16 +6095,14 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   /**
    * Report_to_clause updateMany
    */
-  export type Report_to_clauseUpdateManyArgs = {
+  export type Report_to_clauseUpdateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * The data used to update Report_to_clauses.
-     * 
-    **/
+     */
     data: XOR<Report_to_clauseUpdateManyMutationInput, Report_to_clauseUncheckedUpdateManyInput>
     /**
      * Filter which Report_to_clauses to update
-     * 
-    **/
+     */
     where?: Report_to_clauseWhereInput
   }
 
@@ -3953,31 +6110,26 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   /**
    * Report_to_clause upsert
    */
-  export type Report_to_clauseUpsertArgs = {
+  export type Report_to_clauseUpsertArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Report_to_clause
-     * 
-    **/
-    select?: Report_to_clauseSelect | null
+     */
+    select?: Report_to_clauseSelect<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
-    include?: Report_to_clauseInclude | null
+     */
+    include?: Report_to_clauseInclude<ExtArgs> | null
     /**
      * The filter to search for the Report_to_clause to update in case it exists.
-     * 
-    **/
+     */
     where: Report_to_clauseWhereUniqueInput
     /**
      * In case the Report_to_clause found by the `where` argument doesn't exist, create a new Report_to_clause with this data.
-     * 
-    **/
+     */
     create: XOR<Report_to_clauseCreateInput, Report_to_clauseUncheckedCreateInput>
     /**
      * In case the Report_to_clause was found with the provided `where` argument, update it with this data.
-     * 
-    **/
+     */
     update: XOR<Report_to_clauseUpdateInput, Report_to_clauseUncheckedUpdateInput>
   }
 
@@ -3985,21 +6137,18 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   /**
    * Report_to_clause delete
    */
-  export type Report_to_clauseDeleteArgs = {
+  export type Report_to_clauseDeleteArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Report_to_clause
-     * 
-    **/
-    select?: Report_to_clauseSelect | null
+     */
+    select?: Report_to_clauseSelect<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
-    include?: Report_to_clauseInclude | null
+     */
+    include?: Report_to_clauseInclude<ExtArgs> | null
     /**
      * Filter which Report_to_clause to delete.
-     * 
-    **/
+     */
     where: Report_to_clauseWhereUniqueInput
   }
 
@@ -4007,11 +6156,10 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   /**
    * Report_to_clause deleteMany
    */
-  export type Report_to_clauseDeleteManyArgs = {
+  export type Report_to_clauseDeleteManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Filter which Report_to_clauses to delete
-     * 
-    **/
+     */
     where?: Report_to_clauseWhereInput
   }
 
@@ -4019,17 +6167,15 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   /**
    * Report_to_clause without action
    */
-  export type Report_to_clauseArgs = {
+  export type Report_to_clauseArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Report_to_clause
-     * 
-    **/
-    select?: Report_to_clauseSelect | null
+     */
+    select?: Report_to_clauseSelect<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well.
-     * 
-    **/
-    include?: Report_to_clauseInclude | null
+     */
+    include?: Report_to_clauseInclude<ExtArgs> | null
   }
 
 
@@ -4038,8 +6184,24 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
    * Enums
    */
 
-  // Based on
-  // https://github.com/microsoft/TypeScript/issues/3192#issuecomment-261720275
+  export const TransactionIsolationLevel: {
+    ReadUncommitted: 'ReadUncommitted',
+    ReadCommitted: 'ReadCommitted',
+    RepeatableRead: 'RepeatableRead',
+    Serializable: 'Serializable'
+  };
+
+  export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
+
+
+  export const ChipScalarFieldEnum: {
+    id: 'id',
+    label: 'label',
+    value: 'value'
+  };
+
+  export type ChipScalarFieldEnum = (typeof ChipScalarFieldEnum)[keyof typeof ChipScalarFieldEnum]
+
 
   export const ClauseScalarFieldEnum: {
     id: 'id',
@@ -4048,14 +6210,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   };
 
   export type ClauseScalarFieldEnum = (typeof ClauseScalarFieldEnum)[keyof typeof ClauseScalarFieldEnum]
-
-
-  export const QueryMode: {
-    default: 'default',
-    insensitive: 'insensitive'
-  };
-
-  export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
 
 
   export const ReportScalarFieldEnum: {
@@ -4081,6 +6235,15 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type ReportScalarFieldEnum = (typeof ReportScalarFieldEnum)[keyof typeof ReportScalarFieldEnum]
 
 
+  export const Report_to_chipScalarFieldEnum: {
+    id: 'id',
+    report_id: 'report_id',
+    chip_id: 'chip_id'
+  };
+
+  export type Report_to_chipScalarFieldEnum = (typeof Report_to_chipScalarFieldEnum)[keyof typeof Report_to_chipScalarFieldEnum]
+
+
   export const Report_to_clauseScalarFieldEnum: {
     id: 'id',
     report_id: 'report_id',
@@ -4098,20 +6261,65 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
-  export const TransactionIsolationLevel: {
-    ReadUncommitted: 'ReadUncommitted',
-    ReadCommitted: 'ReadCommitted',
-    RepeatableRead: 'RepeatableRead',
-    Serializable: 'Serializable'
+  export const QueryMode: {
+    default: 'default',
+    insensitive: 'insensitive'
   };
 
-  export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
+  export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
+
+
+  export const NullsOrder: {
+    first: 'first',
+    last: 'last'
+  };
+
+  export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 
 
   /**
    * Deep Input Types
    */
 
+
+  export type ChipWhereInput = {
+    AND?: Enumerable<ChipWhereInput>
+    OR?: Enumerable<ChipWhereInput>
+    NOT?: Enumerable<ChipWhereInput>
+    id?: StringFilter | string
+    label?: StringFilter | string
+    value?: StringFilter | string
+    report_to_chip?: Report_to_chipListRelationFilter
+  }
+
+  export type ChipOrderByWithRelationInput = {
+    id?: SortOrder
+    label?: SortOrder
+    value?: SortOrder
+    report_to_chip?: Report_to_chipOrderByRelationAggregateInput
+  }
+
+  export type ChipWhereUniqueInput = {
+    id?: string
+  }
+
+  export type ChipOrderByWithAggregationInput = {
+    id?: SortOrder
+    label?: SortOrder
+    value?: SortOrder
+    _count?: ChipCountOrderByAggregateInput
+    _max?: ChipMaxOrderByAggregateInput
+    _min?: ChipMinOrderByAggregateInput
+  }
+
+  export type ChipScalarWhereWithAggregatesInput = {
+    AND?: Enumerable<ChipScalarWhereWithAggregatesInput>
+    OR?: Enumerable<ChipScalarWhereWithAggregatesInput>
+    NOT?: Enumerable<ChipScalarWhereWithAggregatesInput>
+    id?: StringWithAggregatesFilter | string
+    label?: StringWithAggregatesFilter | string
+    value?: StringWithAggregatesFilter | string
+  }
 
   export type ClauseWhereInput = {
     AND?: Enumerable<ClauseWhereInput>
@@ -4173,27 +6381,29 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     created_by_username?: StringFilter | string
     created_at?: DateTimeFilter | Date | string
     service_instructeur?: StringNullableFilter | string | null
+    report_to_chip?: Report_to_chipListRelationFilter
     report_to_clause?: Report_to_clauseListRelationFilter
   }
 
   export type ReportOrderByWithRelationInput = {
     id?: SortOrder
-    title?: SortOrder
-    project_description?: SortOrder
-    redacted_by?: SortOrder
-    meet_date?: SortOrder
-    applicant_name?: SortOrder
-    applicant_address?: SortOrder
-    project_cadastral_ref?: SortOrder
-    project_space_type?: SortOrder
-    decision?: SortOrder
-    precisions?: SortOrder
-    contacts?: SortOrder
-    further_information?: SortOrder
+    title?: SortOrderInput | SortOrder
+    project_description?: SortOrderInput | SortOrder
+    redacted_by?: SortOrderInput | SortOrder
+    meet_date?: SortOrderInput | SortOrder
+    applicant_name?: SortOrderInput | SortOrder
+    applicant_address?: SortOrderInput | SortOrder
+    project_cadastral_ref?: SortOrderInput | SortOrder
+    project_space_type?: SortOrderInput | SortOrder
+    decision?: SortOrderInput | SortOrder
+    precisions?: SortOrderInput | SortOrder
+    contacts?: SortOrderInput | SortOrder
+    further_information?: SortOrderInput | SortOrder
     created_by_id?: SortOrder
     created_by_username?: SortOrder
     created_at?: SortOrder
-    service_instructeur?: SortOrder
+    service_instructeur?: SortOrderInput | SortOrder
+    report_to_chip?: Report_to_chipOrderByRelationAggregateInput
     report_to_clause?: Report_to_clauseOrderByRelationAggregateInput
   }
 
@@ -4203,22 +6413,22 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type ReportOrderByWithAggregationInput = {
     id?: SortOrder
-    title?: SortOrder
-    project_description?: SortOrder
-    redacted_by?: SortOrder
-    meet_date?: SortOrder
-    applicant_name?: SortOrder
-    applicant_address?: SortOrder
-    project_cadastral_ref?: SortOrder
-    project_space_type?: SortOrder
-    decision?: SortOrder
-    precisions?: SortOrder
-    contacts?: SortOrder
-    further_information?: SortOrder
+    title?: SortOrderInput | SortOrder
+    project_description?: SortOrderInput | SortOrder
+    redacted_by?: SortOrderInput | SortOrder
+    meet_date?: SortOrderInput | SortOrder
+    applicant_name?: SortOrderInput | SortOrder
+    applicant_address?: SortOrderInput | SortOrder
+    project_cadastral_ref?: SortOrderInput | SortOrder
+    project_space_type?: SortOrderInput | SortOrder
+    decision?: SortOrderInput | SortOrder
+    precisions?: SortOrderInput | SortOrder
+    contacts?: SortOrderInput | SortOrder
+    further_information?: SortOrderInput | SortOrder
     created_by_id?: SortOrder
     created_by_username?: SortOrder
     created_at?: SortOrder
-    service_instructeur?: SortOrder
+    service_instructeur?: SortOrderInput | SortOrder
     _count?: ReportCountOrderByAggregateInput
     _max?: ReportMaxOrderByAggregateInput
     _min?: ReportMinOrderByAggregateInput
@@ -4245,6 +6455,47 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     created_by_username?: StringWithAggregatesFilter | string
     created_at?: DateTimeWithAggregatesFilter | Date | string
     service_instructeur?: StringNullableWithAggregatesFilter | string | null
+  }
+
+  export type Report_to_chipWhereInput = {
+    AND?: Enumerable<Report_to_chipWhereInput>
+    OR?: Enumerable<Report_to_chipWhereInput>
+    NOT?: Enumerable<Report_to_chipWhereInput>
+    id?: StringFilter | string
+    report_id?: StringFilter | string
+    chip_id?: StringFilter | string
+    chip?: XOR<ChipRelationFilter, ChipWhereInput>
+    report?: XOR<ReportRelationFilter, ReportWhereInput>
+  }
+
+  export type Report_to_chipOrderByWithRelationInput = {
+    id?: SortOrder
+    report_id?: SortOrder
+    chip_id?: SortOrder
+    chip?: ChipOrderByWithRelationInput
+    report?: ReportOrderByWithRelationInput
+  }
+
+  export type Report_to_chipWhereUniqueInput = {
+    id?: string
+  }
+
+  export type Report_to_chipOrderByWithAggregationInput = {
+    id?: SortOrder
+    report_id?: SortOrder
+    chip_id?: SortOrder
+    _count?: Report_to_chipCountOrderByAggregateInput
+    _max?: Report_to_chipMaxOrderByAggregateInput
+    _min?: Report_to_chipMinOrderByAggregateInput
+  }
+
+  export type Report_to_chipScalarWhereWithAggregatesInput = {
+    AND?: Enumerable<Report_to_chipScalarWhereWithAggregatesInput>
+    OR?: Enumerable<Report_to_chipScalarWhereWithAggregatesInput>
+    NOT?: Enumerable<Report_to_chipScalarWhereWithAggregatesInput>
+    id?: StringWithAggregatesFilter | string
+    report_id?: StringWithAggregatesFilter | string
+    chip_id?: StringWithAggregatesFilter | string
   }
 
   export type Report_to_clauseWhereInput = {
@@ -4286,6 +6537,52 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id?: StringWithAggregatesFilter | string
     report_id?: StringWithAggregatesFilter | string
     clause_id?: StringWithAggregatesFilter | string
+  }
+
+  export type ChipCreateInput = {
+    id: string
+    label: string
+    value: string
+    report_to_chip?: Report_to_chipCreateNestedManyWithoutChipInput
+  }
+
+  export type ChipUncheckedCreateInput = {
+    id: string
+    label: string
+    value: string
+    report_to_chip?: Report_to_chipUncheckedCreateNestedManyWithoutChipInput
+  }
+
+  export type ChipUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    label?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+    report_to_chip?: Report_to_chipUpdateManyWithoutChipNestedInput
+  }
+
+  export type ChipUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    label?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+    report_to_chip?: Report_to_chipUncheckedUpdateManyWithoutChipNestedInput
+  }
+
+  export type ChipCreateManyInput = {
+    id: string
+    label: string
+    value: string
+  }
+
+  export type ChipUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    label?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type ChipUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    label?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
   }
 
   export type ClauseCreateInput = {
@@ -4352,6 +6649,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     created_by_username: string
     created_at: Date | string
     service_instructeur?: string | null
+    report_to_chip?: Report_to_chipCreateNestedManyWithoutReportInput
     report_to_clause?: Report_to_clauseCreateNestedManyWithoutReportInput
   }
 
@@ -4373,6 +6671,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     created_by_username: string
     created_at: Date | string
     service_instructeur?: string | null
+    report_to_chip?: Report_to_chipUncheckedCreateNestedManyWithoutReportInput
     report_to_clause?: Report_to_clauseUncheckedCreateNestedManyWithoutReportInput
   }
 
@@ -4394,6 +6693,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     created_by_username?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     service_instructeur?: NullableStringFieldUpdateOperationsInput | string | null
+    report_to_chip?: Report_to_chipUpdateManyWithoutReportNestedInput
     report_to_clause?: Report_to_clauseUpdateManyWithoutReportNestedInput
   }
 
@@ -4415,6 +6715,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     created_by_username?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     service_instructeur?: NullableStringFieldUpdateOperationsInput | string | null
+    report_to_chip?: Report_to_chipUncheckedUpdateManyWithoutReportNestedInput
     report_to_clause?: Report_to_clauseUncheckedUpdateManyWithoutReportNestedInput
   }
 
@@ -4478,6 +6779,46 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     service_instructeur?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type Report_to_chipCreateInput = {
+    id: string
+    chip: ChipCreateNestedOneWithoutReport_to_chipInput
+    report: ReportCreateNestedOneWithoutReport_to_chipInput
+  }
+
+  export type Report_to_chipUncheckedCreateInput = {
+    id: string
+    report_id: string
+    chip_id: string
+  }
+
+  export type Report_to_chipUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    chip?: ChipUpdateOneRequiredWithoutReport_to_chipNestedInput
+    report?: ReportUpdateOneRequiredWithoutReport_to_chipNestedInput
+  }
+
+  export type Report_to_chipUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    report_id?: StringFieldUpdateOperationsInput | string
+    chip_id?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type Report_to_chipCreateManyInput = {
+    id: string
+    report_id: string
+    chip_id: string
+  }
+
+  export type Report_to_chipUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type Report_to_chipUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    report_id?: StringFieldUpdateOperationsInput | string
+    chip_id?: StringFieldUpdateOperationsInput | string
+  }
+
   export type Report_to_clauseCreateInput = {
     id: string
     clause: ClauseCreateNestedOneWithoutReport_to_clauseInput
@@ -4520,8 +6861,8 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type StringFilter = {
     equals?: string
-    in?: Enumerable<string>
-    notIn?: Enumerable<string>
+    in?: Enumerable<string> | string
+    notIn?: Enumerable<string> | string
     lt?: string
     lte?: string
     gt?: string
@@ -4531,6 +6872,52 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     endsWith?: string
     mode?: QueryMode
     not?: NestedStringFilter | string
+  }
+
+  export type Report_to_chipListRelationFilter = {
+    every?: Report_to_chipWhereInput
+    some?: Report_to_chipWhereInput
+    none?: Report_to_chipWhereInput
+  }
+
+  export type Report_to_chipOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ChipCountOrderByAggregateInput = {
+    id?: SortOrder
+    label?: SortOrder
+    value?: SortOrder
+  }
+
+  export type ChipMaxOrderByAggregateInput = {
+    id?: SortOrder
+    label?: SortOrder
+    value?: SortOrder
+  }
+
+  export type ChipMinOrderByAggregateInput = {
+    id?: SortOrder
+    label?: SortOrder
+    value?: SortOrder
+  }
+
+  export type StringWithAggregatesFilter = {
+    equals?: string
+    in?: Enumerable<string> | string
+    notIn?: Enumerable<string> | string
+    lt?: string
+    lte?: string
+    gt?: string
+    gte?: string
+    contains?: string
+    startsWith?: string
+    endsWith?: string
+    mode?: QueryMode
+    not?: NestedStringWithAggregatesFilter | string
+    _count?: NestedIntFilter
+    _min?: NestedStringFilter
+    _max?: NestedStringFilter
   }
 
   export type Report_to_clauseListRelationFilter = {
@@ -4561,28 +6948,10 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     value?: SortOrder
   }
 
-  export type StringWithAggregatesFilter = {
-    equals?: string
-    in?: Enumerable<string>
-    notIn?: Enumerable<string>
-    lt?: string
-    lte?: string
-    gt?: string
-    gte?: string
-    contains?: string
-    startsWith?: string
-    endsWith?: string
-    mode?: QueryMode
-    not?: NestedStringWithAggregatesFilter | string
-    _count?: NestedIntFilter
-    _min?: NestedStringFilter
-    _max?: NestedStringFilter
-  }
-
   export type StringNullableFilter = {
     equals?: string | null
-    in?: Enumerable<string> | null
-    notIn?: Enumerable<string> | null
+    in?: Enumerable<string> | string | null
+    notIn?: Enumerable<string> | string | null
     lt?: string
     lte?: string
     gt?: string
@@ -4596,8 +6965,8 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type DateTimeNullableFilter = {
     equals?: Date | string | null
-    in?: Enumerable<Date> | Enumerable<string> | null
-    notIn?: Enumerable<Date> | Enumerable<string> | null
+    in?: Enumerable<Date> | Enumerable<string> | Date | string | null
+    notIn?: Enumerable<Date> | Enumerable<string> | Date | string | null
     lt?: Date | string
     lte?: Date | string
     gt?: Date | string
@@ -4607,13 +6976,18 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type DateTimeFilter = {
     equals?: Date | string
-    in?: Enumerable<Date> | Enumerable<string>
-    notIn?: Enumerable<Date> | Enumerable<string>
+    in?: Enumerable<Date> | Enumerable<string> | Date | string
+    notIn?: Enumerable<Date> | Enumerable<string> | Date | string
     lt?: Date | string
     lte?: Date | string
     gt?: Date | string
     gte?: Date | string
     not?: NestedDateTimeFilter | Date | string
+  }
+
+  export type SortOrderInput = {
+    sort: SortOrder
+    nulls?: NullsOrder
   }
 
   export type ReportCountOrderByAggregateInput = {
@@ -4678,8 +7052,8 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type StringNullableWithAggregatesFilter = {
     equals?: string | null
-    in?: Enumerable<string> | null
-    notIn?: Enumerable<string> | null
+    in?: Enumerable<string> | string | null
+    notIn?: Enumerable<string> | string | null
     lt?: string
     lte?: string
     gt?: string
@@ -4696,8 +7070,8 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type DateTimeNullableWithAggregatesFilter = {
     equals?: Date | string | null
-    in?: Enumerable<Date> | Enumerable<string> | null
-    notIn?: Enumerable<Date> | Enumerable<string> | null
+    in?: Enumerable<Date> | Enumerable<string> | Date | string | null
+    notIn?: Enumerable<Date> | Enumerable<string> | Date | string | null
     lt?: Date | string
     lte?: Date | string
     gt?: Date | string
@@ -4710,8 +7084,8 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type DateTimeWithAggregatesFilter = {
     equals?: Date | string
-    in?: Enumerable<Date> | Enumerable<string>
-    notIn?: Enumerable<Date> | Enumerable<string>
+    in?: Enumerable<Date> | Enumerable<string> | Date | string
+    notIn?: Enumerable<Date> | Enumerable<string> | Date | string
     lt?: Date | string
     lte?: Date | string
     gt?: Date | string
@@ -4722,14 +7096,37 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     _max?: NestedDateTimeFilter
   }
 
-  export type ClauseRelationFilter = {
-    is?: ClauseWhereInput
-    isNot?: ClauseWhereInput
+  export type ChipRelationFilter = {
+    is?: ChipWhereInput | null
+    isNot?: ChipWhereInput | null
   }
 
   export type ReportRelationFilter = {
-    is?: ReportWhereInput
-    isNot?: ReportWhereInput
+    is?: ReportWhereInput | null
+    isNot?: ReportWhereInput | null
+  }
+
+  export type Report_to_chipCountOrderByAggregateInput = {
+    id?: SortOrder
+    report_id?: SortOrder
+    chip_id?: SortOrder
+  }
+
+  export type Report_to_chipMaxOrderByAggregateInput = {
+    id?: SortOrder
+    report_id?: SortOrder
+    chip_id?: SortOrder
+  }
+
+  export type Report_to_chipMinOrderByAggregateInput = {
+    id?: SortOrder
+    report_id?: SortOrder
+    chip_id?: SortOrder
+  }
+
+  export type ClauseRelationFilter = {
+    is?: ClauseWhereInput | null
+    isNot?: ClauseWhereInput | null
   }
 
   export type Report_to_clauseCountOrderByAggregateInput = {
@@ -4750,6 +7147,52 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     clause_id?: SortOrder
   }
 
+  export type Report_to_chipCreateNestedManyWithoutChipInput = {
+    create?: XOR<Enumerable<Report_to_chipCreateWithoutChipInput>, Enumerable<Report_to_chipUncheckedCreateWithoutChipInput>>
+    connectOrCreate?: Enumerable<Report_to_chipCreateOrConnectWithoutChipInput>
+    createMany?: Report_to_chipCreateManyChipInputEnvelope
+    connect?: Enumerable<Report_to_chipWhereUniqueInput>
+  }
+
+  export type Report_to_chipUncheckedCreateNestedManyWithoutChipInput = {
+    create?: XOR<Enumerable<Report_to_chipCreateWithoutChipInput>, Enumerable<Report_to_chipUncheckedCreateWithoutChipInput>>
+    connectOrCreate?: Enumerable<Report_to_chipCreateOrConnectWithoutChipInput>
+    createMany?: Report_to_chipCreateManyChipInputEnvelope
+    connect?: Enumerable<Report_to_chipWhereUniqueInput>
+  }
+
+  export type StringFieldUpdateOperationsInput = {
+    set?: string
+  }
+
+  export type Report_to_chipUpdateManyWithoutChipNestedInput = {
+    create?: XOR<Enumerable<Report_to_chipCreateWithoutChipInput>, Enumerable<Report_to_chipUncheckedCreateWithoutChipInput>>
+    connectOrCreate?: Enumerable<Report_to_chipCreateOrConnectWithoutChipInput>
+    upsert?: Enumerable<Report_to_chipUpsertWithWhereUniqueWithoutChipInput>
+    createMany?: Report_to_chipCreateManyChipInputEnvelope
+    set?: Enumerable<Report_to_chipWhereUniqueInput>
+    disconnect?: Enumerable<Report_to_chipWhereUniqueInput>
+    delete?: Enumerable<Report_to_chipWhereUniqueInput>
+    connect?: Enumerable<Report_to_chipWhereUniqueInput>
+    update?: Enumerable<Report_to_chipUpdateWithWhereUniqueWithoutChipInput>
+    updateMany?: Enumerable<Report_to_chipUpdateManyWithWhereWithoutChipInput>
+    deleteMany?: Enumerable<Report_to_chipScalarWhereInput>
+  }
+
+  export type Report_to_chipUncheckedUpdateManyWithoutChipNestedInput = {
+    create?: XOR<Enumerable<Report_to_chipCreateWithoutChipInput>, Enumerable<Report_to_chipUncheckedCreateWithoutChipInput>>
+    connectOrCreate?: Enumerable<Report_to_chipCreateOrConnectWithoutChipInput>
+    upsert?: Enumerable<Report_to_chipUpsertWithWhereUniqueWithoutChipInput>
+    createMany?: Report_to_chipCreateManyChipInputEnvelope
+    set?: Enumerable<Report_to_chipWhereUniqueInput>
+    disconnect?: Enumerable<Report_to_chipWhereUniqueInput>
+    delete?: Enumerable<Report_to_chipWhereUniqueInput>
+    connect?: Enumerable<Report_to_chipWhereUniqueInput>
+    update?: Enumerable<Report_to_chipUpdateWithWhereUniqueWithoutChipInput>
+    updateMany?: Enumerable<Report_to_chipUpdateManyWithWhereWithoutChipInput>
+    deleteMany?: Enumerable<Report_to_chipScalarWhereInput>
+  }
+
   export type Report_to_clauseCreateNestedManyWithoutClauseInput = {
     create?: XOR<Enumerable<Report_to_clauseCreateWithoutClauseInput>, Enumerable<Report_to_clauseUncheckedCreateWithoutClauseInput>>
     connectOrCreate?: Enumerable<Report_to_clauseCreateOrConnectWithoutClauseInput>
@@ -4762,10 +7205,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     connectOrCreate?: Enumerable<Report_to_clauseCreateOrConnectWithoutClauseInput>
     createMany?: Report_to_clauseCreateManyClauseInputEnvelope
     connect?: Enumerable<Report_to_clauseWhereUniqueInput>
-  }
-
-  export type StringFieldUpdateOperationsInput = {
-    set?: string
   }
 
   export type Report_to_clauseUpdateManyWithoutClauseNestedInput = {
@@ -4796,11 +7235,25 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     deleteMany?: Enumerable<Report_to_clauseScalarWhereInput>
   }
 
+  export type Report_to_chipCreateNestedManyWithoutReportInput = {
+    create?: XOR<Enumerable<Report_to_chipCreateWithoutReportInput>, Enumerable<Report_to_chipUncheckedCreateWithoutReportInput>>
+    connectOrCreate?: Enumerable<Report_to_chipCreateOrConnectWithoutReportInput>
+    createMany?: Report_to_chipCreateManyReportInputEnvelope
+    connect?: Enumerable<Report_to_chipWhereUniqueInput>
+  }
+
   export type Report_to_clauseCreateNestedManyWithoutReportInput = {
     create?: XOR<Enumerable<Report_to_clauseCreateWithoutReportInput>, Enumerable<Report_to_clauseUncheckedCreateWithoutReportInput>>
     connectOrCreate?: Enumerable<Report_to_clauseCreateOrConnectWithoutReportInput>
     createMany?: Report_to_clauseCreateManyReportInputEnvelope
     connect?: Enumerable<Report_to_clauseWhereUniqueInput>
+  }
+
+  export type Report_to_chipUncheckedCreateNestedManyWithoutReportInput = {
+    create?: XOR<Enumerable<Report_to_chipCreateWithoutReportInput>, Enumerable<Report_to_chipUncheckedCreateWithoutReportInput>>
+    connectOrCreate?: Enumerable<Report_to_chipCreateOrConnectWithoutReportInput>
+    createMany?: Report_to_chipCreateManyReportInputEnvelope
+    connect?: Enumerable<Report_to_chipWhereUniqueInput>
   }
 
   export type Report_to_clauseUncheckedCreateNestedManyWithoutReportInput = {
@@ -4822,6 +7275,20 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     set?: Date | string
   }
 
+  export type Report_to_chipUpdateManyWithoutReportNestedInput = {
+    create?: XOR<Enumerable<Report_to_chipCreateWithoutReportInput>, Enumerable<Report_to_chipUncheckedCreateWithoutReportInput>>
+    connectOrCreate?: Enumerable<Report_to_chipCreateOrConnectWithoutReportInput>
+    upsert?: Enumerable<Report_to_chipUpsertWithWhereUniqueWithoutReportInput>
+    createMany?: Report_to_chipCreateManyReportInputEnvelope
+    set?: Enumerable<Report_to_chipWhereUniqueInput>
+    disconnect?: Enumerable<Report_to_chipWhereUniqueInput>
+    delete?: Enumerable<Report_to_chipWhereUniqueInput>
+    connect?: Enumerable<Report_to_chipWhereUniqueInput>
+    update?: Enumerable<Report_to_chipUpdateWithWhereUniqueWithoutReportInput>
+    updateMany?: Enumerable<Report_to_chipUpdateManyWithWhereWithoutReportInput>
+    deleteMany?: Enumerable<Report_to_chipScalarWhereInput>
+  }
+
   export type Report_to_clauseUpdateManyWithoutReportNestedInput = {
     create?: XOR<Enumerable<Report_to_clauseCreateWithoutReportInput>, Enumerable<Report_to_clauseUncheckedCreateWithoutReportInput>>
     connectOrCreate?: Enumerable<Report_to_clauseCreateOrConnectWithoutReportInput>
@@ -4836,6 +7303,20 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     deleteMany?: Enumerable<Report_to_clauseScalarWhereInput>
   }
 
+  export type Report_to_chipUncheckedUpdateManyWithoutReportNestedInput = {
+    create?: XOR<Enumerable<Report_to_chipCreateWithoutReportInput>, Enumerable<Report_to_chipUncheckedCreateWithoutReportInput>>
+    connectOrCreate?: Enumerable<Report_to_chipCreateOrConnectWithoutReportInput>
+    upsert?: Enumerable<Report_to_chipUpsertWithWhereUniqueWithoutReportInput>
+    createMany?: Report_to_chipCreateManyReportInputEnvelope
+    set?: Enumerable<Report_to_chipWhereUniqueInput>
+    disconnect?: Enumerable<Report_to_chipWhereUniqueInput>
+    delete?: Enumerable<Report_to_chipWhereUniqueInput>
+    connect?: Enumerable<Report_to_chipWhereUniqueInput>
+    update?: Enumerable<Report_to_chipUpdateWithWhereUniqueWithoutReportInput>
+    updateMany?: Enumerable<Report_to_chipUpdateManyWithWhereWithoutReportInput>
+    deleteMany?: Enumerable<Report_to_chipScalarWhereInput>
+  }
+
   export type Report_to_clauseUncheckedUpdateManyWithoutReportNestedInput = {
     create?: XOR<Enumerable<Report_to_clauseCreateWithoutReportInput>, Enumerable<Report_to_clauseUncheckedCreateWithoutReportInput>>
     connectOrCreate?: Enumerable<Report_to_clauseCreateOrConnectWithoutReportInput>
@@ -4848,6 +7329,34 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     update?: Enumerable<Report_to_clauseUpdateWithWhereUniqueWithoutReportInput>
     updateMany?: Enumerable<Report_to_clauseUpdateManyWithWhereWithoutReportInput>
     deleteMany?: Enumerable<Report_to_clauseScalarWhereInput>
+  }
+
+  export type ChipCreateNestedOneWithoutReport_to_chipInput = {
+    create?: XOR<ChipCreateWithoutReport_to_chipInput, ChipUncheckedCreateWithoutReport_to_chipInput>
+    connectOrCreate?: ChipCreateOrConnectWithoutReport_to_chipInput
+    connect?: ChipWhereUniqueInput
+  }
+
+  export type ReportCreateNestedOneWithoutReport_to_chipInput = {
+    create?: XOR<ReportCreateWithoutReport_to_chipInput, ReportUncheckedCreateWithoutReport_to_chipInput>
+    connectOrCreate?: ReportCreateOrConnectWithoutReport_to_chipInput
+    connect?: ReportWhereUniqueInput
+  }
+
+  export type ChipUpdateOneRequiredWithoutReport_to_chipNestedInput = {
+    create?: XOR<ChipCreateWithoutReport_to_chipInput, ChipUncheckedCreateWithoutReport_to_chipInput>
+    connectOrCreate?: ChipCreateOrConnectWithoutReport_to_chipInput
+    upsert?: ChipUpsertWithoutReport_to_chipInput
+    connect?: ChipWhereUniqueInput
+    update?: XOR<ChipUpdateWithoutReport_to_chipInput, ChipUncheckedUpdateWithoutReport_to_chipInput>
+  }
+
+  export type ReportUpdateOneRequiredWithoutReport_to_chipNestedInput = {
+    create?: XOR<ReportCreateWithoutReport_to_chipInput, ReportUncheckedCreateWithoutReport_to_chipInput>
+    connectOrCreate?: ReportCreateOrConnectWithoutReport_to_chipInput
+    upsert?: ReportUpsertWithoutReport_to_chipInput
+    connect?: ReportWhereUniqueInput
+    update?: XOR<ReportUpdateWithoutReport_to_chipInput, ReportUncheckedUpdateWithoutReport_to_chipInput>
   }
 
   export type ClauseCreateNestedOneWithoutReport_to_clauseInput = {
@@ -4880,8 +7389,8 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type NestedStringFilter = {
     equals?: string
-    in?: Enumerable<string>
-    notIn?: Enumerable<string>
+    in?: Enumerable<string> | string
+    notIn?: Enumerable<string> | string
     lt?: string
     lte?: string
     gt?: string
@@ -4894,8 +7403,8 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type NestedStringWithAggregatesFilter = {
     equals?: string
-    in?: Enumerable<string>
-    notIn?: Enumerable<string>
+    in?: Enumerable<string> | string
+    notIn?: Enumerable<string> | string
     lt?: string
     lte?: string
     gt?: string
@@ -4911,8 +7420,8 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type NestedIntFilter = {
     equals?: number
-    in?: Enumerable<number>
-    notIn?: Enumerable<number>
+    in?: Enumerable<number> | number
+    notIn?: Enumerable<number> | number
     lt?: number
     lte?: number
     gt?: number
@@ -4922,8 +7431,8 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type NestedStringNullableFilter = {
     equals?: string | null
-    in?: Enumerable<string> | null
-    notIn?: Enumerable<string> | null
+    in?: Enumerable<string> | string | null
+    notIn?: Enumerable<string> | string | null
     lt?: string
     lte?: string
     gt?: string
@@ -4936,8 +7445,8 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type NestedDateTimeNullableFilter = {
     equals?: Date | string | null
-    in?: Enumerable<Date> | Enumerable<string> | null
-    notIn?: Enumerable<Date> | Enumerable<string> | null
+    in?: Enumerable<Date> | Enumerable<string> | Date | string | null
+    notIn?: Enumerable<Date> | Enumerable<string> | Date | string | null
     lt?: Date | string
     lte?: Date | string
     gt?: Date | string
@@ -4947,8 +7456,8 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type NestedDateTimeFilter = {
     equals?: Date | string
-    in?: Enumerable<Date> | Enumerable<string>
-    notIn?: Enumerable<Date> | Enumerable<string>
+    in?: Enumerable<Date> | Enumerable<string> | Date | string
+    notIn?: Enumerable<Date> | Enumerable<string> | Date | string
     lt?: Date | string
     lte?: Date | string
     gt?: Date | string
@@ -4958,8 +7467,8 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type NestedStringNullableWithAggregatesFilter = {
     equals?: string | null
-    in?: Enumerable<string> | null
-    notIn?: Enumerable<string> | null
+    in?: Enumerable<string> | string | null
+    notIn?: Enumerable<string> | string | null
     lt?: string
     lte?: string
     gt?: string
@@ -4975,8 +7484,8 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type NestedIntNullableFilter = {
     equals?: number | null
-    in?: Enumerable<number> | null
-    notIn?: Enumerable<number> | null
+    in?: Enumerable<number> | number | null
+    notIn?: Enumerable<number> | number | null
     lt?: number
     lte?: number
     gt?: number
@@ -4986,8 +7495,8 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type NestedDateTimeNullableWithAggregatesFilter = {
     equals?: Date | string | null
-    in?: Enumerable<Date> | Enumerable<string> | null
-    notIn?: Enumerable<Date> | Enumerable<string> | null
+    in?: Enumerable<Date> | Enumerable<string> | Date | string | null
+    notIn?: Enumerable<Date> | Enumerable<string> | Date | string | null
     lt?: Date | string
     lte?: Date | string
     gt?: Date | string
@@ -5000,8 +7509,8 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type NestedDateTimeWithAggregatesFilter = {
     equals?: Date | string
-    in?: Enumerable<Date> | Enumerable<string>
-    notIn?: Enumerable<Date> | Enumerable<string>
+    in?: Enumerable<Date> | Enumerable<string> | Date | string
+    notIn?: Enumerable<Date> | Enumerable<string> | Date | string
     lt?: Date | string
     lte?: Date | string
     gt?: Date | string
@@ -5010,6 +7519,51 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     _count?: NestedIntFilter
     _min?: NestedDateTimeFilter
     _max?: NestedDateTimeFilter
+  }
+
+  export type Report_to_chipCreateWithoutChipInput = {
+    id: string
+    report: ReportCreateNestedOneWithoutReport_to_chipInput
+  }
+
+  export type Report_to_chipUncheckedCreateWithoutChipInput = {
+    id: string
+    report_id: string
+  }
+
+  export type Report_to_chipCreateOrConnectWithoutChipInput = {
+    where: Report_to_chipWhereUniqueInput
+    create: XOR<Report_to_chipCreateWithoutChipInput, Report_to_chipUncheckedCreateWithoutChipInput>
+  }
+
+  export type Report_to_chipCreateManyChipInputEnvelope = {
+    data: Enumerable<Report_to_chipCreateManyChipInput>
+    skipDuplicates?: boolean
+  }
+
+  export type Report_to_chipUpsertWithWhereUniqueWithoutChipInput = {
+    where: Report_to_chipWhereUniqueInput
+    update: XOR<Report_to_chipUpdateWithoutChipInput, Report_to_chipUncheckedUpdateWithoutChipInput>
+    create: XOR<Report_to_chipCreateWithoutChipInput, Report_to_chipUncheckedCreateWithoutChipInput>
+  }
+
+  export type Report_to_chipUpdateWithWhereUniqueWithoutChipInput = {
+    where: Report_to_chipWhereUniqueInput
+    data: XOR<Report_to_chipUpdateWithoutChipInput, Report_to_chipUncheckedUpdateWithoutChipInput>
+  }
+
+  export type Report_to_chipUpdateManyWithWhereWithoutChipInput = {
+    where: Report_to_chipScalarWhereInput
+    data: XOR<Report_to_chipUpdateManyMutationInput, Report_to_chipUncheckedUpdateManyWithoutReport_to_chipInput>
+  }
+
+  export type Report_to_chipScalarWhereInput = {
+    AND?: Enumerable<Report_to_chipScalarWhereInput>
+    OR?: Enumerable<Report_to_chipScalarWhereInput>
+    NOT?: Enumerable<Report_to_chipScalarWhereInput>
+    id?: StringFilter | string
+    report_id?: StringFilter | string
+    chip_id?: StringFilter | string
   }
 
   export type Report_to_clauseCreateWithoutClauseInput = {
@@ -5057,6 +7611,26 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     clause_id?: StringFilter | string
   }
 
+  export type Report_to_chipCreateWithoutReportInput = {
+    id: string
+    chip: ChipCreateNestedOneWithoutReport_to_chipInput
+  }
+
+  export type Report_to_chipUncheckedCreateWithoutReportInput = {
+    id: string
+    chip_id: string
+  }
+
+  export type Report_to_chipCreateOrConnectWithoutReportInput = {
+    where: Report_to_chipWhereUniqueInput
+    create: XOR<Report_to_chipCreateWithoutReportInput, Report_to_chipUncheckedCreateWithoutReportInput>
+  }
+
+  export type Report_to_chipCreateManyReportInputEnvelope = {
+    data: Enumerable<Report_to_chipCreateManyReportInput>
+    skipDuplicates?: boolean
+  }
+
   export type Report_to_clauseCreateWithoutReportInput = {
     id: string
     clause: ClauseCreateNestedOneWithoutReport_to_clauseInput
@@ -5077,6 +7651,22 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     skipDuplicates?: boolean
   }
 
+  export type Report_to_chipUpsertWithWhereUniqueWithoutReportInput = {
+    where: Report_to_chipWhereUniqueInput
+    update: XOR<Report_to_chipUpdateWithoutReportInput, Report_to_chipUncheckedUpdateWithoutReportInput>
+    create: XOR<Report_to_chipCreateWithoutReportInput, Report_to_chipUncheckedCreateWithoutReportInput>
+  }
+
+  export type Report_to_chipUpdateWithWhereUniqueWithoutReportInput = {
+    where: Report_to_chipWhereUniqueInput
+    data: XOR<Report_to_chipUpdateWithoutReportInput, Report_to_chipUncheckedUpdateWithoutReportInput>
+  }
+
+  export type Report_to_chipUpdateManyWithWhereWithoutReportInput = {
+    where: Report_to_chipScalarWhereInput
+    data: XOR<Report_to_chipUpdateManyMutationInput, Report_to_chipUncheckedUpdateManyWithoutReport_to_chipInput>
+  }
+
   export type Report_to_clauseUpsertWithWhereUniqueWithoutReportInput = {
     where: Report_to_clauseWhereUniqueInput
     update: XOR<Report_to_clauseUpdateWithoutReportInput, Report_to_clauseUncheckedUpdateWithoutReportInput>
@@ -5091,6 +7681,134 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type Report_to_clauseUpdateManyWithWhereWithoutReportInput = {
     where: Report_to_clauseScalarWhereInput
     data: XOR<Report_to_clauseUpdateManyMutationInput, Report_to_clauseUncheckedUpdateManyWithoutReport_to_clauseInput>
+  }
+
+  export type ChipCreateWithoutReport_to_chipInput = {
+    id: string
+    label: string
+    value: string
+  }
+
+  export type ChipUncheckedCreateWithoutReport_to_chipInput = {
+    id: string
+    label: string
+    value: string
+  }
+
+  export type ChipCreateOrConnectWithoutReport_to_chipInput = {
+    where: ChipWhereUniqueInput
+    create: XOR<ChipCreateWithoutReport_to_chipInput, ChipUncheckedCreateWithoutReport_to_chipInput>
+  }
+
+  export type ReportCreateWithoutReport_to_chipInput = {
+    id: string
+    title?: string | null
+    project_description?: string | null
+    redacted_by?: string | null
+    meet_date?: Date | string | null
+    applicant_name?: string | null
+    applicant_address?: string | null
+    project_cadastral_ref?: string | null
+    project_space_type?: string | null
+    decision?: string | null
+    precisions?: string | null
+    contacts?: string | null
+    further_information?: string | null
+    created_by_id: string
+    created_by_username: string
+    created_at: Date | string
+    service_instructeur?: string | null
+    report_to_clause?: Report_to_clauseCreateNestedManyWithoutReportInput
+  }
+
+  export type ReportUncheckedCreateWithoutReport_to_chipInput = {
+    id: string
+    title?: string | null
+    project_description?: string | null
+    redacted_by?: string | null
+    meet_date?: Date | string | null
+    applicant_name?: string | null
+    applicant_address?: string | null
+    project_cadastral_ref?: string | null
+    project_space_type?: string | null
+    decision?: string | null
+    precisions?: string | null
+    contacts?: string | null
+    further_information?: string | null
+    created_by_id: string
+    created_by_username: string
+    created_at: Date | string
+    service_instructeur?: string | null
+    report_to_clause?: Report_to_clauseUncheckedCreateNestedManyWithoutReportInput
+  }
+
+  export type ReportCreateOrConnectWithoutReport_to_chipInput = {
+    where: ReportWhereUniqueInput
+    create: XOR<ReportCreateWithoutReport_to_chipInput, ReportUncheckedCreateWithoutReport_to_chipInput>
+  }
+
+  export type ChipUpsertWithoutReport_to_chipInput = {
+    update: XOR<ChipUpdateWithoutReport_to_chipInput, ChipUncheckedUpdateWithoutReport_to_chipInput>
+    create: XOR<ChipCreateWithoutReport_to_chipInput, ChipUncheckedCreateWithoutReport_to_chipInput>
+  }
+
+  export type ChipUpdateWithoutReport_to_chipInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    label?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type ChipUncheckedUpdateWithoutReport_to_chipInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    label?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type ReportUpsertWithoutReport_to_chipInput = {
+    update: XOR<ReportUpdateWithoutReport_to_chipInput, ReportUncheckedUpdateWithoutReport_to_chipInput>
+    create: XOR<ReportCreateWithoutReport_to_chipInput, ReportUncheckedCreateWithoutReport_to_chipInput>
+  }
+
+  export type ReportUpdateWithoutReport_to_chipInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    project_description?: NullableStringFieldUpdateOperationsInput | string | null
+    redacted_by?: NullableStringFieldUpdateOperationsInput | string | null
+    meet_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    applicant_name?: NullableStringFieldUpdateOperationsInput | string | null
+    applicant_address?: NullableStringFieldUpdateOperationsInput | string | null
+    project_cadastral_ref?: NullableStringFieldUpdateOperationsInput | string | null
+    project_space_type?: NullableStringFieldUpdateOperationsInput | string | null
+    decision?: NullableStringFieldUpdateOperationsInput | string | null
+    precisions?: NullableStringFieldUpdateOperationsInput | string | null
+    contacts?: NullableStringFieldUpdateOperationsInput | string | null
+    further_information?: NullableStringFieldUpdateOperationsInput | string | null
+    created_by_id?: StringFieldUpdateOperationsInput | string
+    created_by_username?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    service_instructeur?: NullableStringFieldUpdateOperationsInput | string | null
+    report_to_clause?: Report_to_clauseUpdateManyWithoutReportNestedInput
+  }
+
+  export type ReportUncheckedUpdateWithoutReport_to_chipInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    project_description?: NullableStringFieldUpdateOperationsInput | string | null
+    redacted_by?: NullableStringFieldUpdateOperationsInput | string | null
+    meet_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    applicant_name?: NullableStringFieldUpdateOperationsInput | string | null
+    applicant_address?: NullableStringFieldUpdateOperationsInput | string | null
+    project_cadastral_ref?: NullableStringFieldUpdateOperationsInput | string | null
+    project_space_type?: NullableStringFieldUpdateOperationsInput | string | null
+    decision?: NullableStringFieldUpdateOperationsInput | string | null
+    precisions?: NullableStringFieldUpdateOperationsInput | string | null
+    contacts?: NullableStringFieldUpdateOperationsInput | string | null
+    further_information?: NullableStringFieldUpdateOperationsInput | string | null
+    created_by_id?: StringFieldUpdateOperationsInput | string
+    created_by_username?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    service_instructeur?: NullableStringFieldUpdateOperationsInput | string | null
+    report_to_clause?: Report_to_clauseUncheckedUpdateManyWithoutReportNestedInput
   }
 
   export type ClauseCreateWithoutReport_to_clauseInput = {
@@ -5128,6 +7846,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     created_by_username: string
     created_at: Date | string
     service_instructeur?: string | null
+    report_to_chip?: Report_to_chipCreateNestedManyWithoutReportInput
   }
 
   export type ReportUncheckedCreateWithoutReport_to_clauseInput = {
@@ -5148,6 +7867,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     created_by_username: string
     created_at: Date | string
     service_instructeur?: string | null
+    report_to_chip?: Report_to_chipUncheckedCreateNestedManyWithoutReportInput
   }
 
   export type ReportCreateOrConnectWithoutReport_to_clauseInput = {
@@ -5195,6 +7915,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     created_by_username?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     service_instructeur?: NullableStringFieldUpdateOperationsInput | string | null
+    report_to_chip?: Report_to_chipUpdateManyWithoutReportNestedInput
   }
 
   export type ReportUncheckedUpdateWithoutReport_to_clauseInput = {
@@ -5215,6 +7936,27 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     created_by_username?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     service_instructeur?: NullableStringFieldUpdateOperationsInput | string | null
+    report_to_chip?: Report_to_chipUncheckedUpdateManyWithoutReportNestedInput
+  }
+
+  export type Report_to_chipCreateManyChipInput = {
+    id: string
+    report_id: string
+  }
+
+  export type Report_to_chipUpdateWithoutChipInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    report?: ReportUpdateOneRequiredWithoutReport_to_chipNestedInput
+  }
+
+  export type Report_to_chipUncheckedUpdateWithoutChipInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    report_id?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type Report_to_chipUncheckedUpdateManyWithoutReport_to_chipInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    report_id?: StringFieldUpdateOperationsInput | string
   }
 
   export type Report_to_clauseCreateManyClauseInput = {
@@ -5237,9 +7979,24 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     report_id?: StringFieldUpdateOperationsInput | string
   }
 
+  export type Report_to_chipCreateManyReportInput = {
+    id: string
+    chip_id: string
+  }
+
   export type Report_to_clauseCreateManyReportInput = {
     id: string
     clause_id: string
+  }
+
+  export type Report_to_chipUpdateWithoutReportInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    chip?: ChipUpdateOneRequiredWithoutReport_to_chipNestedInput
+  }
+
+  export type Report_to_chipUncheckedUpdateWithoutReportInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    chip_id?: StringFieldUpdateOperationsInput | string
   }
 
   export type Report_to_clauseUpdateWithoutReportInput = {
@@ -5267,3 +8024,5 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
    */
   export const dmmf: runtime.BaseDMMF
 }
+
+type Buffer = Omit<Uint8Array, 'set'>
