@@ -45,6 +45,7 @@ CMD pnpm electric:up;pnpm backend start
 FROM with-deps AS frontend
 COPY packages/frontend/ ./packages/frontend/
 COPY --from=with-deps /usr/src/app/packages/frontend/node_modules ./packages/frontend/node_modules
+COPY --from=with-deps /usr/src/app/packages/frontend/styled-system ./packages/frontend/styled-system
 
 RUN pnpm frontend build
 CMD ["pnpm", "frontend", "preview"]
