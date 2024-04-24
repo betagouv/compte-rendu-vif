@@ -1,7 +1,7 @@
 import { electrify, ElectricDatabase } from "electric-sql/wa-sqlite";
-import { schema } from "./generated/client";
 import type { ElectricConfig } from "electric-sql/config";
 import { ENV } from "./envVars";
+import { schema } from "@cr-vif/electric-client/development";
 
 const config = {
   url: ENV.VITE_ELECTRIC_URL,
