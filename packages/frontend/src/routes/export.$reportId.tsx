@@ -5,6 +5,9 @@ import { Flex, styled } from "#styled-system/jsx";
 import type { Report } from "../generated/client";
 import { Document, Page, Text, View, StyleSheet, type Styles } from "@react-pdf/renderer";
 import { PDFViewer } from "@react-pdf/renderer";
+import { TextEditor } from "../features/text-editor/TextEditor";
+import { useState } from "react";
+import Html from "react-pdf-html";
 
 const ExportPdf = () => {
   const { reportId } = Route.useParams();
@@ -14,12 +17,23 @@ const ExportPdf = () => {
 };
 
 const WithReport = ({ report }: { report: Report }) => {
+  const [value, setValue] = useState("");
+
+  console.log(value);
+
   return (
     <Flex direction="column">
+      <TextEditor defaultValue={value} onChange={(e) => setValue(e)} />
       <PDFViewer>
         {/* <ReportPdf report={report} /> */}
         <Document>
-          <RenderPdfLike components={pdfComponents} styles={styles} />
+          <Page size="A4" style={styles.page}>
+            <Html>
+              {/* <div dangerouslySetInnerHTML={{ __html: value }}></div> */}
+              {value}
+            </Html>
+            {/* <View _ht */}
+          </Page>
         </Document>
       </PDFViewer>
 
