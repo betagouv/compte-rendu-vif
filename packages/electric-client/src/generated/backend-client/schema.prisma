@@ -1,0 +1,97 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/backend-client"
+}
+
+generator typebox {
+  provider = "prisma-typebox-generator"
+  output   = "../src/generated/typebox"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model atdatabases_migrations_applied {
+  id            BigInt   @id @default(autoincrement())
+  index         Int
+  name          String
+  script        String
+  applied_at    DateTime @db.Timestamptz(6)
+  ignored_error String?
+  obsolete      Boolean
+}
+
+model atdatabases_migrations_version {
+  id      Int     @id
+  version String?
+}
+
+model chip {
+  id             String           @id
+  label          String
+  value          String
+  report_to_chip report_to_chip[]
+}
+
+model clause {
+  id               String             @id
+  label            String
+  value            String
+  report_to_clause report_to_clause[]
+}
+
+model delegations {
+  createdBy   String
+  delegatedTo String
+
+  @@id([createdBy, delegatedTo], map: "delegations_createdBy_delegatedTo_pk")
+}
+
+model report {
+  id                    String             @id
+  title                 String?
+  project_description   String?
+  redacted_by           String?
+  meet_date             DateTime?          @db.Timestamp(6)
+  applicant_name        String?
+  applicant_address     String?
+  project_cadastral_ref String?
+  project_space_type    String?
+  decision              String?
+  precisions            String?
+  contacts              String?
+  further_information   String?
+  created_by_id         String
+  created_by_username   String
+  created_at            DateTime           @db.Timestamp(6)
+  service_instructeur   String?
+  report_to_chip        report_to_chip[]
+  report_to_clause      report_to_clause[]
+}
+
+model report_to_chip {
+  id        String @id
+  report_id String
+  chip_id   String
+  chip      chip   @relation(fields: [chip_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  report    report @relation(fields: [report_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model report_to_clause {
+  id        String @id
+  report_id String
+  clause_id String
+  clause    clause @relation(fields: [clause_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  report    report @relation(fields: [report_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model users {
+  id                     String  @id
+  email                  String  @unique(map: "users_email_unique")
+  name                   String
+  temporaryLink          String?
+  temporaryLinkExpiresAt String?
+  password               String
+}

@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { userTable } from "../db/schema";
 import { db } from "../db/db";
 import { and, eq, gt } from "drizzle-orm";
 import { pick } from "pastable";
@@ -11,57 +10,43 @@ import { createInsertSchema, createSelectSchema } from "drizzle-typebox";
 import { ENV, isDev } from "../envVars";
 import { AppError } from "../features/errors";
 import { Type, type Static } from "@sinclair/typebox";
-
-export const insertUserSchema = createInsertSchema(userTable);
-export const selectUserSchema = createSelectSchema(userTable);
-
-type InsertUser = Static<typeof insertUserSchema>;
-type SelectUser = Static<typeof selectUserSchema>;
+import { users, usersInputType } from "@cr-vif/electric-client/typebox";
+import { Prisma } from "@cr-vif/electric-client/backend";
 
 export class UserService {
-  async createUser(payload: Omit<InsertUser, "id">) {
+  async createUser(payload: Omit<Prisma.usersCreateInput, "id">) {
     await assertEmailDoesNotAlreadyExist(payload);
 
     const password = await encryptPassword(payload.password);
 
-    const changes = await db
-      .insert(userTable)
-      .values({ ...payload, password, id: crypto.randomUUID() })
-      .returning()
-      .execute();
-
-    const user = changes[0]!;
+    const user = await db.users.create({
+      data: {
+        ...payload,
+        password,
+        id: crypto.randomUUID(),
+      },
+    });
 
     return { user: serializeUser(user)!, token: this.generateJWT(user) };
   }
 
   async getUserById(id: string) {
-    const users = await db.select().from(userTable).where(eq(userTable.id, id));
-    const user = users[0];
+    const user = await db.users.findFirst({ where: { id } });
     assertUserExists(user);
 
     return serializeUser(user!);
   }
 
-  async updateUser(id: string, payload: Partial<InsertUser>) {
+  async updateUser(id: string, payload: Partial<Prisma.usersCreateInput>) {
     const changes = pick(payload, ["name", "email", "password"]);
-    const users = await db
-      .update(userTable)
-      .set(changes)
-      .where(eq(userTable.id, id))
-      .returning()
-      .execute();
-    const user = users[0];
+
+    const user = await db.users.update({ where: { id }, data: changes });
 
     return serializeUser(user!);
   }
 
-  async login(payload: Pick<SelectUser, "email" | "password">) {
-    const users = await db
-      .select()
-      .from(userTable)
-      .where(eq(userTable.email, payload.email));
-    const user = users[0];
+  async login(payload: Pick<Prisma.usersCreateInput, "email" | "password">) {
+    const user = await db.users.findFirst({ where: { email: payload.email } });
 
     assertUserExists(user);
     await assertPasswordsMatch(payload.password, user!.password);
@@ -70,48 +55,27 @@ export class UserService {
   }
 
   async generateResetLink(email: string) {
-    const users = await db
-      .select()
-      .from(userTable)
-      .where(eq(userTable.email, email));
-    const user = users[0];
+    const user = await db.users.findFirst({ where: { email } });
     assertUserExists(user);
 
     const temporaryLink = crypto.randomUUID();
     const temporaryLinkExpiresAt = addDays(new Date(), 1).toISOString();
 
-    await db
-      .update(userTable)
-      .set({ temporaryLink, temporaryLinkExpiresAt })
-      .where(eq(userTable.email, email))
-      .execute();
-
-    return isDev ? temporaryLink : null;
+    await db.users.update({ where: { email }, data: { temporaryLink, temporaryLinkExpiresAt } });
   }
 
-  async resetPassword({
-    temporaryLink,
-    newPassword,
-  }: { temporaryLink: string; newPassword: string }) {
-    const users = await db
-      .select()
-      .from(userTable)
-      .where(
-        and(
-          eq(userTable.temporaryLink, temporaryLink),
-          gt(userTable.temporaryLinkExpiresAt, new Date().toISOString()),
-        ),
-      );
-    const user = users[0];
+  async resetPassword({ temporaryLink, newPassword }: { temporaryLink: string; newPassword: string }) {
+    const user = await db.users.findFirst({
+      where: { temporaryLink, temporaryLinkExpiresAt: { gt: new Date().toISOString() } },
+    });
 
     assertLinkIsValid(user);
     const password = await encryptPassword(newPassword);
 
-    await db
-      .update(userTable)
-      .set({ password, temporaryLink: null, temporaryLinkExpiresAt: null })
-      .where(eq(userTable.temporaryLink, temporaryLink))
-      .execute();
+    await db.users.update({
+      where: { id: user!.id },
+      data: { password, temporaryLink: null, temporaryLinkExpiresAt: null },
+    });
 
     return true;
   }
@@ -121,7 +85,7 @@ export class UserService {
     return this.getUserById(id);
   }
 
-  generateJWT(user: SelectUser) {
+  generateJWT(user: Prisma.usersCreateInput) {
     return jwt.sign(
       {
         sub: user.id,
@@ -138,15 +102,11 @@ export class UserService {
   }
 }
 
-const serializeUser = (user: SelectUser) => {
+const serializeUser = (user: Prisma.usersCreateInput) => {
   return pick(user, ["id", "name", "email"]);
 };
 
-export const serializedUserTSchema = Type.Pick(selectUserSchema, [
-  "id",
-  "name",
-  "email",
-]);
+export const serializedUserTSchema = Type.Pick(users, ["id", "name", "email"]);
 export const userAndTokenTSchema = Type.Object({
   user: serializedUserTSchema,
   token: Type.String(),
@@ -174,13 +134,13 @@ const verifyPassword = (password: string, hash: string) => {
   });
 };
 
-const assertLinkIsValid = (user?: SelectUser) => {
+const assertLinkIsValid = (user?: Prisma.usersCreateInput | null) => {
   if (!user) {
     throw new AppError(403, "Le lien est invalide");
   }
 };
 
-const assertUserExists = (user?: SelectUser) => {
+const assertUserExists = (user?: Prisma.usersCreateInput | null) => {
   if (!user) {
     throw new AppError(403, "Le courriel ou le mot de passe est incorrect");
   }
@@ -194,15 +154,16 @@ const assertPasswordsMatch = async (password: string, hash: string) => {
   }
 };
 
-const assertEmailDoesNotAlreadyExist = async (user: Omit<InsertUser, "id">) => {
-  const userExists = await db
-    .select()
-    .from(userTable)
-    .where(eq(userTable.email, user.email));
+const assertEmailDoesNotAlreadyExist = async (user: Omit<Prisma.usersCreateInput, "id">) => {
+  const existingUser = await db.users.findFirst({
+    where: {
+      email: user.email,
+    },
+  });
 
-  if (userExists.length) {
+  if (existingUser) {
     throw new AppError(400, "Un utilisateur avec ce courriel existe déjà");
   }
 
-  return userExists[0];
+  return existingUser;
 };

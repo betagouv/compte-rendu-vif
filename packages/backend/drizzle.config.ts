@@ -6,7 +6,7 @@ export const config = {
   host: ENV.PG_HOST,
   user: ENV.PG_USER,
   password: ENV.PG_PASSWORD,
-  database: ENV.PG_USERS_DB,
+  database: ENV.PG_DB,
 };
 
 export const usersDatabaseUrl = `postgres://${config.user}:${config.password}@${config.host}:${config.port}/${config.database}`;

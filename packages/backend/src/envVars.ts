@@ -1,7 +1,8 @@
 import { config } from "dotenv";
+import { expand } from "dotenv-expand";
 import { z } from "zod";
 
-config({ path: "../../.env" });
+expand(config({ path: "../../.env" }));
 
 const stringOrNumberAsNumber = z.string().or(z.number()).transform(Number);
 
@@ -10,7 +11,8 @@ const envSchema = z.object({
   PG_HOST: z.string(),
   PG_USER: z.string(),
   PG_PASSWORD: z.string(),
-  PG_USERS_DB: z.string(),
+  PG_DB: z.string(),
+  DATABASE_URL: z.string(),
   TOKEN_LIFETIME: z.string().default("1w"),
   JWT_SECRET: z.string(),
   NODE_ENV: z.string().default("development"),

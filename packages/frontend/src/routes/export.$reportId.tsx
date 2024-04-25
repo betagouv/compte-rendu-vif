@@ -1,9 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useLiveQuery } from "electric-sql/react";
 import { db } from "../db";
-import { Flex } from "#styled-system/jsx";
+import { Flex, styled } from "#styled-system/jsx";
 import type { Report } from "../generated/client";
-import { Document, Page, Text, View, StyleSheet, Image } from "@react-pdf/renderer";
+import { Document, Page, Text, View, StyleSheet, type Styles } from "@react-pdf/renderer";
 import { PDFViewer } from "@react-pdf/renderer";
 
 const ExportPdf = () => {
@@ -17,29 +17,49 @@ const WithReport = ({ report }: { report: Report }) => {
   return (
     <Flex direction="column">
       <PDFViewer>
-        <ReportPdf report={report} />
+        {/* <ReportPdf report={report} /> */}
+        <Document>
+          <RenderPdfLike components={pdfComponents} styles={styles} />
+        </Document>
       </PDFViewer>
+
+      <Flex direction="column">
+        <RenderPdfLike components={htmlComponents} styles={styles} />
+      </Flex>
     </Flex>
   );
 };
 
-const ReportPdf = ({ report }: { report: Report }) => {
+const pdfComponents = { Page, View, Text };
+const htmlComponents = { Page: styled.div, View: styled.div, Text: styled.div };
+type Components = { Page: any; View: any; Text: any };
+type Style = Styles[any];
+type PdfLikeStyles = { page: Style; section: Style };
+
+const RenderPdfLike = ({ components, styles }: { components: Components; styles: PdfLikeStyles }) => {
+  const { Page, View, Text } = components;
   return (
-    <Document>
-      <Page size="A4" style={styles.page}>
-        <View style={styles.section}>
-          <Text>{report.title}</Text>
-          <Image />
+    <Page size="A4" style={styles.page}>
+      <View style={styles.section}>
+        <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+          <View style={{ display: "flex", flexDirection: "column" }}>
+            <Text>Object : </Text>
+            <Text>Votre interlocuteur : </Text>
+            <Text>Demandeur : </Text>
+            <Text>Adresse du projet : </Text>
+            <Text>Ref cadastrale : </Text>
+          </View>
+          <Text style={{ textAlign: "right" }}>Suite au rendez-vous du </Text>
         </View>
-      </Page>
-    </Document>
+      </View>
+    </Page>
   );
 };
 
 const styles = StyleSheet.create({
   page: {
     flexDirection: "row",
-    backgroundColor: "#E4E4E4",
+    backgroundColor: "white",
   },
   section: {
     margin: 10,

@@ -1,7 +1,7 @@
 import "./envVars";
 import { onHmr, registerViteHmrServerRestart } from "./hmr";
 
-import { cleanUpDb, db, migrateUsersDb } from "./db/db";
+import { cleanUpDb, db } from "./db/db";
 import { ENV } from "./envVars";
 import { generateOpenApi, initFastify } from "./router";
 import { makeDebug } from "./features/debug";
@@ -10,9 +10,7 @@ const debug = makeDebug("index");
 
 const start = async () => {
   await registerViteHmrServerRestart();
-
-  debug("Migrating database");
-  await migrateUsersDb();
+  console.log(ENV.DATABASE_URL);
 
   debug("Starting fastify server");
   const fastifyInstance = await initFastify();
