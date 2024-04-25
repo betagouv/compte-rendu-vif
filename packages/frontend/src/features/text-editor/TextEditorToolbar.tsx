@@ -1,5 +1,17 @@
 import type { Editor } from "@tiptap/react";
-import { LuBold, LuCode, LuItalic, LuLink, LuList, LuListOrdered, LuQuote, LuStrikethrough } from "react-icons/lu";
+import {
+  LuBold,
+  LuCode,
+  LuItalic,
+  LuLink,
+  LuList,
+  LuListOrdered,
+  LuQuote,
+  LuStrikethrough,
+  LuAlignLeft,
+  LuAlignCenter,
+  LuAlignRight,
+} from "react-icons/lu";
 import { cva } from "#styled-system/css";
 import { hstack } from "#styled-system/patterns";
 
@@ -69,7 +81,18 @@ export const TextEditorToolbar = (props: Props) => {
       >
         <LuStrikethrough />
       </button>
-      <button
+      <input
+        type="color"
+        onInput={(event) =>
+          editor
+            .chain()
+            .focus()
+            .setColor((event.target as any).value)
+            .run()
+        }
+        value={editor.getAttributes("textStyle").color ?? "#000000"}
+      />
+      {/* <button
         type="button"
         onPointerDown={(event) => event.preventDefault()}
         onClick={() => editor.chain().focus().toggleBulletList().run()}
@@ -108,8 +131,8 @@ export const TextEditorToolbar = (props: Props) => {
         })}
       >
         <LuCode />
-      </button>
-      <button
+      </button> */}
+      {/* <button
         type="button"
         onPointerDown={(event) => event.preventDefault()}
         onClick={() => {
@@ -128,7 +151,7 @@ export const TextEditorToolbar = (props: Props) => {
         })}
       >
         <LuLink />
-      </button>
+      </button> */}
     </div>
   );
 };

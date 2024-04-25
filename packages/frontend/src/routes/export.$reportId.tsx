@@ -5,9 +5,11 @@ import { Flex, styled } from "#styled-system/jsx";
 import type { Report } from "../generated/client";
 import { Document, Page, Text, View, StyleSheet, type Styles } from "@react-pdf/renderer";
 import { PDFViewer } from "@react-pdf/renderer";
-import { TextEditor } from "../features/text-editor/TextEditor";
+import { TextEditor, textEditorClassName } from "../features/text-editor/TextEditor";
 import { useState } from "react";
 import Html from "react-pdf-html";
+import useDebounce from "react-use/lib/useDebounce";
+import { Font } from "@react-pdf/renderer";
 
 const ExportPdf = () => {
   const { reportId } = Route.useParams();
@@ -18,55 +20,54 @@ const ExportPdf = () => {
 
 const WithReport = ({ report }: { report: Report }) => {
   const [value, setValue] = useState("");
+  const [debouncedValue, setDebouncedValue] = useState(value);
 
-  console.log(value);
+  useDebounce(() => void console.log(value) || setDebouncedValue(value), 1000, [value]);
 
   return (
     <Flex direction="column">
       <TextEditor defaultValue={value} onChange={(e) => setValue(e)} />
       <PDFViewer>
-        {/* <ReportPdf report={report} /> */}
         <Document>
           <Page size="A4" style={styles.page}>
-            <Html>
-              {/* <div dangerouslySetInnerHTML={{ __html: value }}></div> */}
-              {value}
-            </Html>
-            {/* <View _ht */}
+            <Text style={{ fontWeight: "normal" }}>salut</Text>
+            <Html>{`
+              <html>
+                <body>
+                  <style>
+                    body {
+                      font-family: Helvetica;
+                      font-size: 12px;
+                    }
+
+                    strong {
+                      font-family: Helvetica-Bold;
+                    }
+
+                    em {
+                      font-family: Helvetica-Oblique;
+                    }
+                    
+                    strong > em {
+                      font-family: Helvetica-BoldOblique;
+                    }
+
+
+                  </style>
+
+                  ${debouncedValue}
+                </body>
+              </html>
+            `}</Html>
           </Page>
         </Document>
       </PDFViewer>
 
       <Flex direction="column">
-        <RenderPdfLike components={htmlComponents} styles={styles} />
+        {/* biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation> */}
+        <div dangerouslySetInnerHTML={{ __html: value }} />
       </Flex>
     </Flex>
-  );
-};
-
-const pdfComponents = { Page, View, Text };
-const htmlComponents = { Page: styled.div, View: styled.div, Text: styled.div };
-type Components = { Page: any; View: any; Text: any };
-type Style = Styles[any];
-type PdfLikeStyles = { page: Style; section: Style };
-
-const RenderPdfLike = ({ components, styles }: { components: Components; styles: PdfLikeStyles }) => {
-  const { Page, View, Text } = components;
-  return (
-    <Page size="A4" style={styles.page}>
-      <View style={styles.section}>
-        <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
-          <View style={{ display: "flex", flexDirection: "column" }}>
-            <Text>Object : </Text>
-            <Text>Votre interlocuteur : </Text>
-            <Text>Demandeur : </Text>
-            <Text>Adresse du projet : </Text>
-            <Text>Ref cadastrale : </Text>
-          </View>
-          <Text style={{ textAlign: "right" }}>Suite au rendez-vous du </Text>
-        </View>
-      </View>
-    </Page>
   );
 };
 
@@ -74,6 +75,7 @@ const styles = StyleSheet.create({
   page: {
     flexDirection: "row",
     backgroundColor: "white",
+    color: "black",
   },
   section: {
     margin: 10,
