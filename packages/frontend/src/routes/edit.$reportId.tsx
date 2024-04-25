@@ -1,8 +1,17 @@
 import { Flex } from "#styled-system/jsx";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useLiveQuery } from "electric-sql/react";
-import { useEffect } from "react";
-import { FormProvider, useForm } from "react-hook-form";
+import { useEffect, useRef } from "react";
+import {
+  FormProvider,
+  useForm,
+  type FieldPath,
+  type FieldValues,
+  type RegisterOptions,
+  type UseFormProps,
+  type UseFormRegister,
+} from "react-hook-form";
+import { EnsureUser } from "../components/EnsureUser";
 import { SyncFormBanner } from "../components/SyncForm";
 import { Tabs } from "../components/Tabs";
 import { db } from "../db";
@@ -18,10 +27,46 @@ const EditReport = () => {
   return <Flex direction="column">{report ? <WithReport report={report} /> : null}</Flex>;
 };
 
+function useFormWithFocus<TFieldValues extends FieldValues = FieldValues>(props: UseFormProps<TFieldValues, any>) {
+  const form = useForm<TFieldValues>(props);
+  const focusedRef = useRef<string | null>(null);
+
+  const unsafeForm = form as any;
+
+  if (!unsafeForm.done) {
+    unsafeForm.oldRegister = form.register;
+    unsafeForm.done = true;
+  }
+
+  const register: UseFormRegister<TFieldValues> = <
+    TFieldName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
+  >(
+    name: TFieldName,
+    options?: RegisterOptions<TFieldValues, TFieldName>,
+  ) => {
+    const { onBlur, ...registered } = (form as any).oldRegister(name, options);
+    return {
+      ...registered,
+      onFocus: () => {
+        focusedRef.current = name;
+      },
+      onBlur: (e) => {
+        focusedRef.current = null;
+        return onBlur?.(e);
+      },
+    };
+  };
+
+  form.register = register;
+
+  return [form, () => focusedRef.current] as const;
+}
+
 const WithReport = ({ report }: { report: Report }) => {
   const { tab } = Route.useSearch();
-  const form = useForm<Report>({
+  const [form, getFocused] = useFormWithFocus<Report>({
     defaultValues: report!,
+    resetOptions: {},
   });
 
   const navigate = useNavigate();
@@ -35,9 +80,27 @@ const WithReport = ({ report }: { report: Report }) => {
     { id: "notes", label: "Notes terrain" },
   ];
 
+  const previousValuesRef = useRef<Report>(report);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies:
   useEffect(() => {
-    form.reset(report);
-  }, [report, form]);
+    if (!report) return;
+    const previousValues = previousValuesRef.current;
+    const focused = getFocused();
+
+    for (const key in previousValues) {
+      if (previousValues[key] !== report[key]) {
+        const fieldState = form.getFieldState(key);
+        const hasFocus = key === focused;
+
+        if (!hasFocus || !fieldState.isDirty) {
+          form.setValue(key, report[key]);
+        }
+      }
+    }
+
+    previousValuesRef.current = report;
+  }, [report]);
 
   const onSubmit = (values: Report) => {
     console.log(values);
@@ -78,7 +141,11 @@ const WithReport = ({ report }: { report: Report }) => {
 };
 
 export const Route = createFileRoute("/edit/$reportId")({
-  component: () => <EditReport />,
+  component: () => (
+    <EnsureUser>
+      <EditReport />
+    </EnsureUser>
+  ),
   validateSearch: (search: Record<string, unknown>) => {
     const tab = search?.tab as string;
     const isTabValid = ["info", "notes"].includes(tab);

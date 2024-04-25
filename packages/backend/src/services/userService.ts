@@ -11,7 +11,7 @@ import { ENV, isDev } from "../envVars";
 import { AppError } from "../features/errors";
 import { Type, type Static } from "@sinclair/typebox";
 import { users, usersInputType } from "@cr-vif/electric-client/typebox";
-import { Prisma } from "@cr-vif/electric-client/backend";
+import type { Prisma } from "@cr-vif/electric-client/backend";
 
 export class UserService {
   async createUser(payload: Omit<Prisma.usersCreateInput, "id">) {

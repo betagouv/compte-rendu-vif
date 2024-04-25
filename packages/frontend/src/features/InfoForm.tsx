@@ -50,6 +50,9 @@ export const InfoForm = () => {
 
   return (
     <Flex direction="column" padding="16px">
+      <Button type="button" onClick={() => console.log(form.formState)}>
+        aaa
+      </Button>
       <InputGroupWithTitle title="Le rendez-vous">
         <Input label="Titre" nativeInputProps={form.register("title")} />
         <Input label="Description" textArea nativeTextAreaProps={form.register("project_description")} />

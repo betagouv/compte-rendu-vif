@@ -3,7 +3,7 @@ import { db } from "../db";
 import { type FieldValues, type UseFormReturn, useWatch } from "react-hook-form";
 import useDebounce from "react-use/lib/useDebounce";
 import { Banner } from "./Banner";
-import { useNavigate, useRouter } from "@tanstack/react-router";
+import { useRouter } from "@tanstack/react-router";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { styled } from "#styled-system/jsx";
 import { fr } from "@codegouvfr/react-dsfr";
