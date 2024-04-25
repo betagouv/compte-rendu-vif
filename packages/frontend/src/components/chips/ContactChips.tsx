@@ -1,5 +1,5 @@
 import { useFormContext, useWatch } from "react-hook-form";
-import type { Report } from "../../generated/client/prismaClient";
+import type { Report } from "../../generated/client";
 import { ChipGroup, type ChipGroupOption } from "../Chip";
 
 export const ContactChips = () => {

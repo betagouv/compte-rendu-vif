@@ -2,7 +2,7 @@ import { Flex } from "#styled-system/jsx";
 import { useFormContext } from "react-hook-form";
 import { InputGroupWithTitle } from "../components/InputGroup";
 import Input from "@codegouvfr/react-dsfr/Input";
-import type { Report } from "../generated/client/prismaClient";
+import type { Report } from "../generated/client";
 import { DecisionChips } from "../components/chips/DecisionChips";
 import { ContactChips } from "../components/chips/ContactChips";
 import { css } from "#styled-system/css";

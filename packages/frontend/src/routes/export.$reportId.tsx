@@ -19,7 +19,7 @@ const ExportPdf = () => {
 };
 
 const WithReport = ({ report }: { report: Report }) => {
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState(getReportHtmlString(report));
   const [debouncedValue, setDebouncedValue] = useState(value);
 
   useDebounce(() => void console.log(value) || setDebouncedValue(value), 1000, [value]);
@@ -30,12 +30,11 @@ const WithReport = ({ report }: { report: Report }) => {
       <PDFViewer>
         <Document>
           <Page size="A4" style={styles.page}>
-            <Text style={{ fontWeight: "normal" }}>salut</Text>
             <Html>{`
               <html>
                 <body>
                   <style>
-                    body {
+                    * {
                       font-family: Helvetica;
                       font-size: 12px;
                     }
@@ -47,7 +46,7 @@ const WithReport = ({ report }: { report: Report }) => {
                     em {
                       font-family: Helvetica-Oblique;
                     }
-                    
+
                     strong > em {
                       font-family: Helvetica-BoldOblique;
                     }
@@ -69,6 +68,16 @@ const WithReport = ({ report }: { report: Report }) => {
       </Flex>
     </Flex>
   );
+};
+
+const getReportHtmlString = (report: Report) => {
+  return `<p>
+    <span>Objet : ${report.title}</span><br/>
+    <span>Votre interlocuteur : ${report.created_by_username}</span><br/>
+    <span>Demandeur : ${report.applicant_name}</span><br/>
+    <span>Adresse du projet : ${report.applicant_address}</span><br/>
+    <span>Ref cadastrale : ${report.project_cadastral_ref}</span>
+  </p>`;
 };
 
 const styles = StyleSheet.create({

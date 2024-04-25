@@ -2,7 +2,7 @@ import { Center, Divider, Flex, styled } from "#styled-system/jsx";
 import { flex } from "#styled-system/patterns";
 import { useLiveQuery } from "electric-sql/react";
 import { useUser } from "../contexts/AuthContext";
-import type { Report } from "../generated/client/prismaClient";
+import type { Report } from "../generated/client";
 import { db } from "../db";
 import Button from "@codegouvfr/react-dsfr/Button";
 import Badge from "@codegouvfr/react-dsfr/Badge";
