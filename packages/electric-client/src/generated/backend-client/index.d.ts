@@ -68,26 +68,26 @@ export type clause = runtime.Types.DefaultSelection<clausePayload>
 export type reportPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
   name: "report"
   objects: {
+    user: userPayload<ExtArgs>
     report_to_clause: report_to_clausePayload<ExtArgs>[]
   }
   scalars: $Extensions.GetResult<{
     id: string
     title: string | null
-    project_description: string | null
-    redacted_by: string | null
-    meet_date: Date | null
-    applicant_name: string | null
-    applicant_address: string | null
-    project_cadastral_ref: string | null
-    project_space_type: string | null
+    projectDescription: string | null
+    redactedBy: string | null
+    meetDate: Date | null
+    applicantName: string | null
+    applicantAddress: string | null
+    projectCadastralRef: string | null
+    projectSpaceType: string | null
     decision: string | null
     precisions: string | null
     contacts: string | null
-    further_information: string | null
-    created_by_id: string
-    created_by_username: string
-    created_at: Date
-    service_instructeur: string | null
+    furtherInformation: string | null
+    createdByEmail: string
+    createdAt: Date
+    serviceInstructeur: string | null
   }, ExtArgs["result"]["report"]>
   composites: {}
 }
@@ -105,8 +105,8 @@ export type report_to_clausePayload<ExtArgs extends $Extensions.Args = $Extensio
   }
   scalars: $Extensions.GetResult<{
     id: string
-    report_id: string
-    clause_id: string
+    reportId: string
+    clauseId: string
   }, ExtArgs["result"]["report_to_clause"]>
   composites: {}
 }
@@ -159,11 +159,11 @@ export type udapPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultAr
   scalars: $Extensions.GetResult<{
     id: string
     department: string
-    complete_coords: string | null
+    completeCoords: string | null
     visible: boolean | null
     name: string | null
     address: string | null
-    zip_code: string | null
+    zipCode: string | null
     city: string | null
     phone: string | null
     email: string | null
@@ -181,6 +181,7 @@ export type userPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultAr
   objects: {
     delegation_delegation_createdByTouser: delegationPayload<ExtArgs>[]
     delegation_delegation_delegatedToTouser: delegationPayload<ExtArgs>[]
+    report: reportPayload<ExtArgs>[]
     udap: udapPayload<ExtArgs>
   }
   scalars: $Extensions.GetResult<{
@@ -1800,11 +1801,13 @@ export namespace Prisma {
   export type UserCountOutputType = {
     delegation_delegation_createdByTouser: number
     delegation_delegation_delegatedToTouser: number
+    report: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     delegation_delegation_createdByTouser?: boolean | UserCountOutputTypeCountDelegation_delegation_createdByTouserArgs
     delegation_delegation_delegatedToTouser?: boolean | UserCountOutputTypeCountDelegation_delegation_delegatedToTouserArgs
+    report?: boolean | UserCountOutputTypeCountReportArgs
   }
 
   // Custom InputTypes
@@ -1833,6 +1836,14 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountDelegation_delegation_delegatedToTouserArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     where?: delegationWhereInput
+  }
+
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountReportArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    where?: reportWhereInput
   }
 
 
@@ -4603,61 +4614,58 @@ export namespace Prisma {
   export type ReportMinAggregateOutputType = {
     id: string | null
     title: string | null
-    project_description: string | null
-    redacted_by: string | null
-    meet_date: Date | null
-    applicant_name: string | null
-    applicant_address: string | null
-    project_cadastral_ref: string | null
-    project_space_type: string | null
+    projectDescription: string | null
+    redactedBy: string | null
+    meetDate: Date | null
+    applicantName: string | null
+    applicantAddress: string | null
+    projectCadastralRef: string | null
+    projectSpaceType: string | null
     decision: string | null
     precisions: string | null
     contacts: string | null
-    further_information: string | null
-    created_by_id: string | null
-    created_by_username: string | null
-    created_at: Date | null
-    service_instructeur: string | null
+    furtherInformation: string | null
+    createdByEmail: string | null
+    createdAt: Date | null
+    serviceInstructeur: string | null
   }
 
   export type ReportMaxAggregateOutputType = {
     id: string | null
     title: string | null
-    project_description: string | null
-    redacted_by: string | null
-    meet_date: Date | null
-    applicant_name: string | null
-    applicant_address: string | null
-    project_cadastral_ref: string | null
-    project_space_type: string | null
+    projectDescription: string | null
+    redactedBy: string | null
+    meetDate: Date | null
+    applicantName: string | null
+    applicantAddress: string | null
+    projectCadastralRef: string | null
+    projectSpaceType: string | null
     decision: string | null
     precisions: string | null
     contacts: string | null
-    further_information: string | null
-    created_by_id: string | null
-    created_by_username: string | null
-    created_at: Date | null
-    service_instructeur: string | null
+    furtherInformation: string | null
+    createdByEmail: string | null
+    createdAt: Date | null
+    serviceInstructeur: string | null
   }
 
   export type ReportCountAggregateOutputType = {
     id: number
     title: number
-    project_description: number
-    redacted_by: number
-    meet_date: number
-    applicant_name: number
-    applicant_address: number
-    project_cadastral_ref: number
-    project_space_type: number
+    projectDescription: number
+    redactedBy: number
+    meetDate: number
+    applicantName: number
+    applicantAddress: number
+    projectCadastralRef: number
+    projectSpaceType: number
     decision: number
     precisions: number
     contacts: number
-    further_information: number
-    created_by_id: number
-    created_by_username: number
-    created_at: number
-    service_instructeur: number
+    furtherInformation: number
+    createdByEmail: number
+    createdAt: number
+    serviceInstructeur: number
     _all: number
   }
 
@@ -4665,61 +4673,58 @@ export namespace Prisma {
   export type ReportMinAggregateInputType = {
     id?: true
     title?: true
-    project_description?: true
-    redacted_by?: true
-    meet_date?: true
-    applicant_name?: true
-    applicant_address?: true
-    project_cadastral_ref?: true
-    project_space_type?: true
+    projectDescription?: true
+    redactedBy?: true
+    meetDate?: true
+    applicantName?: true
+    applicantAddress?: true
+    projectCadastralRef?: true
+    projectSpaceType?: true
     decision?: true
     precisions?: true
     contacts?: true
-    further_information?: true
-    created_by_id?: true
-    created_by_username?: true
-    created_at?: true
-    service_instructeur?: true
+    furtherInformation?: true
+    createdByEmail?: true
+    createdAt?: true
+    serviceInstructeur?: true
   }
 
   export type ReportMaxAggregateInputType = {
     id?: true
     title?: true
-    project_description?: true
-    redacted_by?: true
-    meet_date?: true
-    applicant_name?: true
-    applicant_address?: true
-    project_cadastral_ref?: true
-    project_space_type?: true
+    projectDescription?: true
+    redactedBy?: true
+    meetDate?: true
+    applicantName?: true
+    applicantAddress?: true
+    projectCadastralRef?: true
+    projectSpaceType?: true
     decision?: true
     precisions?: true
     contacts?: true
-    further_information?: true
-    created_by_id?: true
-    created_by_username?: true
-    created_at?: true
-    service_instructeur?: true
+    furtherInformation?: true
+    createdByEmail?: true
+    createdAt?: true
+    serviceInstructeur?: true
   }
 
   export type ReportCountAggregateInputType = {
     id?: true
     title?: true
-    project_description?: true
-    redacted_by?: true
-    meet_date?: true
-    applicant_name?: true
-    applicant_address?: true
-    project_cadastral_ref?: true
-    project_space_type?: true
+    projectDescription?: true
+    redactedBy?: true
+    meetDate?: true
+    applicantName?: true
+    applicantAddress?: true
+    projectCadastralRef?: true
+    projectSpaceType?: true
     decision?: true
     precisions?: true
     contacts?: true
-    further_information?: true
-    created_by_id?: true
-    created_by_username?: true
-    created_at?: true
-    service_instructeur?: true
+    furtherInformation?: true
+    createdByEmail?: true
+    createdAt?: true
+    serviceInstructeur?: true
     _all?: true
   }
 
@@ -4799,21 +4804,20 @@ export namespace Prisma {
   export type ReportGroupByOutputType = {
     id: string
     title: string | null
-    project_description: string | null
-    redacted_by: string | null
-    meet_date: Date | null
-    applicant_name: string | null
-    applicant_address: string | null
-    project_cadastral_ref: string | null
-    project_space_type: string | null
+    projectDescription: string | null
+    redactedBy: string | null
+    meetDate: Date | null
+    applicantName: string | null
+    applicantAddress: string | null
+    projectCadastralRef: string | null
+    projectSpaceType: string | null
     decision: string | null
     precisions: string | null
     contacts: string | null
-    further_information: string | null
-    created_by_id: string
-    created_by_username: string
-    created_at: Date
-    service_instructeur: string | null
+    furtherInformation: string | null
+    createdByEmail: string
+    createdAt: Date
+    serviceInstructeur: string | null
     _count: ReportCountAggregateOutputType | null
     _min: ReportMinAggregateOutputType | null
     _max: ReportMaxAggregateOutputType | null
@@ -4836,21 +4840,21 @@ export namespace Prisma {
   export type reportSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     title?: boolean
-    project_description?: boolean
-    redacted_by?: boolean
-    meet_date?: boolean
-    applicant_name?: boolean
-    applicant_address?: boolean
-    project_cadastral_ref?: boolean
-    project_space_type?: boolean
+    projectDescription?: boolean
+    redactedBy?: boolean
+    meetDate?: boolean
+    applicantName?: boolean
+    applicantAddress?: boolean
+    projectCadastralRef?: boolean
+    projectSpaceType?: boolean
     decision?: boolean
     precisions?: boolean
     contacts?: boolean
-    further_information?: boolean
-    created_by_id?: boolean
-    created_by_username?: boolean
-    created_at?: boolean
-    service_instructeur?: boolean
+    furtherInformation?: boolean
+    createdByEmail?: boolean
+    createdAt?: boolean
+    serviceInstructeur?: boolean
+    user?: boolean | userArgs<ExtArgs>
     report_to_clause?: boolean | report$report_to_clauseArgs<ExtArgs>
     _count?: boolean | ReportCountOutputTypeArgs<ExtArgs>
   }, ExtArgs["result"]["report"]>
@@ -4858,24 +4862,24 @@ export namespace Prisma {
   export type reportSelectScalar = {
     id?: boolean
     title?: boolean
-    project_description?: boolean
-    redacted_by?: boolean
-    meet_date?: boolean
-    applicant_name?: boolean
-    applicant_address?: boolean
-    project_cadastral_ref?: boolean
-    project_space_type?: boolean
+    projectDescription?: boolean
+    redactedBy?: boolean
+    meetDate?: boolean
+    applicantName?: boolean
+    applicantAddress?: boolean
+    projectCadastralRef?: boolean
+    projectSpaceType?: boolean
     decision?: boolean
     precisions?: boolean
     contacts?: boolean
-    further_information?: boolean
-    created_by_id?: boolean
-    created_by_username?: boolean
-    created_at?: boolean
-    service_instructeur?: boolean
+    furtherInformation?: boolean
+    createdByEmail?: boolean
+    createdAt?: boolean
+    serviceInstructeur?: boolean
   }
 
   export type reportInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    user?: boolean | userArgs<ExtArgs>
     report_to_clause?: boolean | report$report_to_clauseArgs<ExtArgs>
     _count?: boolean | ReportCountOutputTypeArgs<ExtArgs>
   }
@@ -5249,6 +5253,8 @@ export namespace Prisma {
     private _requestPromise?;
     readonly [Symbol.toStringTag]: 'PrismaPromise';
     constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
+
+    user<T extends userArgs<ExtArgs> = {}>(args?: Subset<T, userArgs<ExtArgs>>): Prisma__userClient<$Types.GetResult<userPayload<ExtArgs>, T, 'findUnique', never> | Null, never, ExtArgs>;
 
     report_to_clause<T extends report$report_to_clauseArgs<ExtArgs> = {}>(args?: Subset<T, report$report_to_clauseArgs<ExtArgs>>): Prisma.PrismaPromise<$Types.GetResult<report_to_clausePayload<ExtArgs>, T, 'findMany', never>| Null>;
 
@@ -5657,40 +5663,40 @@ export namespace Prisma {
 
   export type Report_to_clauseMinAggregateOutputType = {
     id: string | null
-    report_id: string | null
-    clause_id: string | null
+    reportId: string | null
+    clauseId: string | null
   }
 
   export type Report_to_clauseMaxAggregateOutputType = {
     id: string | null
-    report_id: string | null
-    clause_id: string | null
+    reportId: string | null
+    clauseId: string | null
   }
 
   export type Report_to_clauseCountAggregateOutputType = {
     id: number
-    report_id: number
-    clause_id: number
+    reportId: number
+    clauseId: number
     _all: number
   }
 
 
   export type Report_to_clauseMinAggregateInputType = {
     id?: true
-    report_id?: true
-    clause_id?: true
+    reportId?: true
+    clauseId?: true
   }
 
   export type Report_to_clauseMaxAggregateInputType = {
     id?: true
-    report_id?: true
-    clause_id?: true
+    reportId?: true
+    clauseId?: true
   }
 
   export type Report_to_clauseCountAggregateInputType = {
     id?: true
-    report_id?: true
-    clause_id?: true
+    reportId?: true
+    clauseId?: true
     _all?: true
   }
 
@@ -5769,8 +5775,8 @@ export namespace Prisma {
 
   export type Report_to_clauseGroupByOutputType = {
     id: string
-    report_id: string
-    clause_id: string
+    reportId: string
+    clauseId: string
     _count: Report_to_clauseCountAggregateOutputType | null
     _min: Report_to_clauseMinAggregateOutputType | null
     _max: Report_to_clauseMaxAggregateOutputType | null
@@ -5792,16 +5798,16 @@ export namespace Prisma {
 
   export type report_to_clauseSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    report_id?: boolean
-    clause_id?: boolean
+    reportId?: boolean
+    clauseId?: boolean
     clause?: boolean | clauseArgs<ExtArgs>
     report?: boolean | reportArgs<ExtArgs>
   }, ExtArgs["result"]["report_to_clause"]>
 
   export type report_to_clauseSelectScalar = {
     id?: boolean
-    report_id?: boolean
-    clause_id?: boolean
+    reportId?: boolean
+    clauseId?: boolean
   }
 
   export type report_to_clauseInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
@@ -8338,11 +8344,11 @@ export namespace Prisma {
   export type UdapMinAggregateOutputType = {
     id: string | null
     department: string | null
-    complete_coords: string | null
+    completeCoords: string | null
     visible: boolean | null
     name: string | null
     address: string | null
-    zip_code: string | null
+    zipCode: string | null
     city: string | null
     phone: string | null
     email: string | null
@@ -8351,11 +8357,11 @@ export namespace Prisma {
   export type UdapMaxAggregateOutputType = {
     id: string | null
     department: string | null
-    complete_coords: string | null
+    completeCoords: string | null
     visible: boolean | null
     name: string | null
     address: string | null
-    zip_code: string | null
+    zipCode: string | null
     city: string | null
     phone: string | null
     email: string | null
@@ -8364,11 +8370,11 @@ export namespace Prisma {
   export type UdapCountAggregateOutputType = {
     id: number
     department: number
-    complete_coords: number
+    completeCoords: number
     visible: number
     name: number
     address: number
-    zip_code: number
+    zipCode: number
     city: number
     phone: number
     email: number
@@ -8379,11 +8385,11 @@ export namespace Prisma {
   export type UdapMinAggregateInputType = {
     id?: true
     department?: true
-    complete_coords?: true
+    completeCoords?: true
     visible?: true
     name?: true
     address?: true
-    zip_code?: true
+    zipCode?: true
     city?: true
     phone?: true
     email?: true
@@ -8392,11 +8398,11 @@ export namespace Prisma {
   export type UdapMaxAggregateInputType = {
     id?: true
     department?: true
-    complete_coords?: true
+    completeCoords?: true
     visible?: true
     name?: true
     address?: true
-    zip_code?: true
+    zipCode?: true
     city?: true
     phone?: true
     email?: true
@@ -8405,11 +8411,11 @@ export namespace Prisma {
   export type UdapCountAggregateInputType = {
     id?: true
     department?: true
-    complete_coords?: true
+    completeCoords?: true
     visible?: true
     name?: true
     address?: true
-    zip_code?: true
+    zipCode?: true
     city?: true
     phone?: true
     email?: true
@@ -8492,11 +8498,11 @@ export namespace Prisma {
   export type UdapGroupByOutputType = {
     id: string
     department: string
-    complete_coords: string | null
+    completeCoords: string | null
     visible: boolean | null
     name: string | null
     address: string | null
-    zip_code: string | null
+    zipCode: string | null
     city: string | null
     phone: string | null
     email: string | null
@@ -8522,11 +8528,11 @@ export namespace Prisma {
   export type udapSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     department?: boolean
-    complete_coords?: boolean
+    completeCoords?: boolean
     visible?: boolean
     name?: boolean
     address?: boolean
-    zip_code?: boolean
+    zipCode?: boolean
     city?: boolean
     phone?: boolean
     email?: boolean
@@ -8537,11 +8543,11 @@ export namespace Prisma {
   export type udapSelectScalar = {
     id?: boolean
     department?: boolean
-    complete_coords?: boolean
+    completeCoords?: boolean
     visible?: boolean
     name?: boolean
     address?: boolean
-    zip_code?: boolean
+    zipCode?: boolean
     city?: boolean
     phone?: boolean
     email?: boolean
@@ -9492,6 +9498,7 @@ export namespace Prisma {
     udap_id?: boolean
     delegation_delegation_createdByTouser?: boolean | user$delegation_delegation_createdByTouserArgs<ExtArgs>
     delegation_delegation_delegatedToTouser?: boolean | user$delegation_delegation_delegatedToTouserArgs<ExtArgs>
+    report?: boolean | user$reportArgs<ExtArgs>
     udap?: boolean | udapArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
@@ -9508,6 +9515,7 @@ export namespace Prisma {
   export type userInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     delegation_delegation_createdByTouser?: boolean | user$delegation_delegation_createdByTouserArgs<ExtArgs>
     delegation_delegation_delegatedToTouser?: boolean | user$delegation_delegation_delegatedToTouserArgs<ExtArgs>
+    report?: boolean | user$reportArgs<ExtArgs>
     udap?: boolean | udapArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeArgs<ExtArgs>
   }
@@ -9885,6 +9893,8 @@ export namespace Prisma {
     delegation_delegation_createdByTouser<T extends user$delegation_delegation_createdByTouserArgs<ExtArgs> = {}>(args?: Subset<T, user$delegation_delegation_createdByTouserArgs<ExtArgs>>): Prisma.PrismaPromise<$Types.GetResult<delegationPayload<ExtArgs>, T, 'findMany', never>| Null>;
 
     delegation_delegation_delegatedToTouser<T extends user$delegation_delegation_delegatedToTouserArgs<ExtArgs> = {}>(args?: Subset<T, user$delegation_delegation_delegatedToTouserArgs<ExtArgs>>): Prisma.PrismaPromise<$Types.GetResult<delegationPayload<ExtArgs>, T, 'findMany', never>| Null>;
+
+    report<T extends user$reportArgs<ExtArgs> = {}>(args?: Subset<T, user$reportArgs<ExtArgs>>): Prisma.PrismaPromise<$Types.GetResult<reportPayload<ExtArgs>, T, 'findMany', never>| Null>;
 
     udap<T extends udapArgs<ExtArgs> = {}>(args?: Subset<T, udapArgs<ExtArgs>>): Prisma__udapClient<$Types.GetResult<udapPayload<ExtArgs>, T, 'findUnique', never> | Null, never, ExtArgs>;
 
@@ -10286,6 +10296,27 @@ export namespace Prisma {
 
 
   /**
+   * user.report
+   */
+  export type user$reportArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the report
+     */
+    select?: reportSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: reportInclude<ExtArgs> | null
+    where?: reportWhereInput
+    orderBy?: Enumerable<reportOrderByWithRelationInput>
+    cursor?: reportWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Enumerable<ReportScalarFieldEnum>
+  }
+
+
+  /**
    * user without action
    */
   export type userArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
@@ -10348,21 +10379,20 @@ export namespace Prisma {
   export const ReportScalarFieldEnum: {
     id: 'id',
     title: 'title',
-    project_description: 'project_description',
-    redacted_by: 'redacted_by',
-    meet_date: 'meet_date',
-    applicant_name: 'applicant_name',
-    applicant_address: 'applicant_address',
-    project_cadastral_ref: 'project_cadastral_ref',
-    project_space_type: 'project_space_type',
+    projectDescription: 'projectDescription',
+    redactedBy: 'redactedBy',
+    meetDate: 'meetDate',
+    applicantName: 'applicantName',
+    applicantAddress: 'applicantAddress',
+    projectCadastralRef: 'projectCadastralRef',
+    projectSpaceType: 'projectSpaceType',
     decision: 'decision',
     precisions: 'precisions',
     contacts: 'contacts',
-    further_information: 'further_information',
-    created_by_id: 'created_by_id',
-    created_by_username: 'created_by_username',
-    created_at: 'created_at',
-    service_instructeur: 'service_instructeur'
+    furtherInformation: 'furtherInformation',
+    createdByEmail: 'createdByEmail',
+    createdAt: 'createdAt',
+    serviceInstructeur: 'serviceInstructeur'
   };
 
   export type ReportScalarFieldEnum = (typeof ReportScalarFieldEnum)[keyof typeof ReportScalarFieldEnum]
@@ -10370,8 +10400,8 @@ export namespace Prisma {
 
   export const Report_to_clauseScalarFieldEnum: {
     id: 'id',
-    report_id: 'report_id',
-    clause_id: 'clause_id'
+    reportId: 'reportId',
+    clauseId: 'clauseId'
   };
 
   export type Report_to_clauseScalarFieldEnum = (typeof Report_to_clauseScalarFieldEnum)[keyof typeof Report_to_clauseScalarFieldEnum]
@@ -10398,11 +10428,11 @@ export namespace Prisma {
   export const UdapScalarFieldEnum: {
     id: 'id',
     department: 'department',
-    complete_coords: 'complete_coords',
+    completeCoords: 'completeCoords',
     visible: 'visible',
     name: 'name',
     address: 'address',
-    zip_code: 'zip_code',
+    zipCode: 'zipCode',
     city: 'city',
     phone: 'phone',
     email: 'email'
@@ -10587,42 +10617,42 @@ export namespace Prisma {
     NOT?: Enumerable<reportWhereInput>
     id?: StringFilter | string
     title?: StringNullableFilter | string | null
-    project_description?: StringNullableFilter | string | null
-    redacted_by?: StringNullableFilter | string | null
-    meet_date?: DateTimeNullableFilter | Date | string | null
-    applicant_name?: StringNullableFilter | string | null
-    applicant_address?: StringNullableFilter | string | null
-    project_cadastral_ref?: StringNullableFilter | string | null
-    project_space_type?: StringNullableFilter | string | null
+    projectDescription?: StringNullableFilter | string | null
+    redactedBy?: StringNullableFilter | string | null
+    meetDate?: DateTimeNullableFilter | Date | string | null
+    applicantName?: StringNullableFilter | string | null
+    applicantAddress?: StringNullableFilter | string | null
+    projectCadastralRef?: StringNullableFilter | string | null
+    projectSpaceType?: StringNullableFilter | string | null
     decision?: StringNullableFilter | string | null
     precisions?: StringNullableFilter | string | null
     contacts?: StringNullableFilter | string | null
-    further_information?: StringNullableFilter | string | null
-    created_by_id?: StringFilter | string
-    created_by_username?: StringFilter | string
-    created_at?: DateTimeFilter | Date | string
-    service_instructeur?: StringNullableFilter | string | null
+    furtherInformation?: StringNullableFilter | string | null
+    createdByEmail?: StringFilter | string
+    createdAt?: DateTimeFilter | Date | string
+    serviceInstructeur?: StringNullableFilter | string | null
+    user?: XOR<UserRelationFilter, userWhereInput>
     report_to_clause?: Report_to_clauseListRelationFilter
   }
 
   export type reportOrderByWithRelationInput = {
     id?: SortOrder
     title?: SortOrderInput | SortOrder
-    project_description?: SortOrderInput | SortOrder
-    redacted_by?: SortOrderInput | SortOrder
-    meet_date?: SortOrderInput | SortOrder
-    applicant_name?: SortOrderInput | SortOrder
-    applicant_address?: SortOrderInput | SortOrder
-    project_cadastral_ref?: SortOrderInput | SortOrder
-    project_space_type?: SortOrderInput | SortOrder
+    projectDescription?: SortOrderInput | SortOrder
+    redactedBy?: SortOrderInput | SortOrder
+    meetDate?: SortOrderInput | SortOrder
+    applicantName?: SortOrderInput | SortOrder
+    applicantAddress?: SortOrderInput | SortOrder
+    projectCadastralRef?: SortOrderInput | SortOrder
+    projectSpaceType?: SortOrderInput | SortOrder
     decision?: SortOrderInput | SortOrder
     precisions?: SortOrderInput | SortOrder
     contacts?: SortOrderInput | SortOrder
-    further_information?: SortOrderInput | SortOrder
-    created_by_id?: SortOrder
-    created_by_username?: SortOrder
-    created_at?: SortOrder
-    service_instructeur?: SortOrderInput | SortOrder
+    furtherInformation?: SortOrderInput | SortOrder
+    createdByEmail?: SortOrder
+    createdAt?: SortOrder
+    serviceInstructeur?: SortOrderInput | SortOrder
+    user?: userOrderByWithRelationInput
     report_to_clause?: report_to_clauseOrderByRelationAggregateInput
   }
 
@@ -10633,21 +10663,20 @@ export namespace Prisma {
   export type reportOrderByWithAggregationInput = {
     id?: SortOrder
     title?: SortOrderInput | SortOrder
-    project_description?: SortOrderInput | SortOrder
-    redacted_by?: SortOrderInput | SortOrder
-    meet_date?: SortOrderInput | SortOrder
-    applicant_name?: SortOrderInput | SortOrder
-    applicant_address?: SortOrderInput | SortOrder
-    project_cadastral_ref?: SortOrderInput | SortOrder
-    project_space_type?: SortOrderInput | SortOrder
+    projectDescription?: SortOrderInput | SortOrder
+    redactedBy?: SortOrderInput | SortOrder
+    meetDate?: SortOrderInput | SortOrder
+    applicantName?: SortOrderInput | SortOrder
+    applicantAddress?: SortOrderInput | SortOrder
+    projectCadastralRef?: SortOrderInput | SortOrder
+    projectSpaceType?: SortOrderInput | SortOrder
     decision?: SortOrderInput | SortOrder
     precisions?: SortOrderInput | SortOrder
     contacts?: SortOrderInput | SortOrder
-    further_information?: SortOrderInput | SortOrder
-    created_by_id?: SortOrder
-    created_by_username?: SortOrder
-    created_at?: SortOrder
-    service_instructeur?: SortOrderInput | SortOrder
+    furtherInformation?: SortOrderInput | SortOrder
+    createdByEmail?: SortOrder
+    createdAt?: SortOrder
+    serviceInstructeur?: SortOrderInput | SortOrder
     _count?: reportCountOrderByAggregateInput
     _max?: reportMaxOrderByAggregateInput
     _min?: reportMinOrderByAggregateInput
@@ -10659,21 +10688,20 @@ export namespace Prisma {
     NOT?: Enumerable<reportScalarWhereWithAggregatesInput>
     id?: StringWithAggregatesFilter | string
     title?: StringNullableWithAggregatesFilter | string | null
-    project_description?: StringNullableWithAggregatesFilter | string | null
-    redacted_by?: StringNullableWithAggregatesFilter | string | null
-    meet_date?: DateTimeNullableWithAggregatesFilter | Date | string | null
-    applicant_name?: StringNullableWithAggregatesFilter | string | null
-    applicant_address?: StringNullableWithAggregatesFilter | string | null
-    project_cadastral_ref?: StringNullableWithAggregatesFilter | string | null
-    project_space_type?: StringNullableWithAggregatesFilter | string | null
+    projectDescription?: StringNullableWithAggregatesFilter | string | null
+    redactedBy?: StringNullableWithAggregatesFilter | string | null
+    meetDate?: DateTimeNullableWithAggregatesFilter | Date | string | null
+    applicantName?: StringNullableWithAggregatesFilter | string | null
+    applicantAddress?: StringNullableWithAggregatesFilter | string | null
+    projectCadastralRef?: StringNullableWithAggregatesFilter | string | null
+    projectSpaceType?: StringNullableWithAggregatesFilter | string | null
     decision?: StringNullableWithAggregatesFilter | string | null
     precisions?: StringNullableWithAggregatesFilter | string | null
     contacts?: StringNullableWithAggregatesFilter | string | null
-    further_information?: StringNullableWithAggregatesFilter | string | null
-    created_by_id?: StringWithAggregatesFilter | string
-    created_by_username?: StringWithAggregatesFilter | string
-    created_at?: DateTimeWithAggregatesFilter | Date | string
-    service_instructeur?: StringNullableWithAggregatesFilter | string | null
+    furtherInformation?: StringNullableWithAggregatesFilter | string | null
+    createdByEmail?: StringWithAggregatesFilter | string
+    createdAt?: DateTimeWithAggregatesFilter | Date | string
+    serviceInstructeur?: StringNullableWithAggregatesFilter | string | null
   }
 
   export type report_to_clauseWhereInput = {
@@ -10681,16 +10709,16 @@ export namespace Prisma {
     OR?: Enumerable<report_to_clauseWhereInput>
     NOT?: Enumerable<report_to_clauseWhereInput>
     id?: StringFilter | string
-    report_id?: StringFilter | string
-    clause_id?: StringFilter | string
+    reportId?: StringFilter | string
+    clauseId?: StringFilter | string
     clause?: XOR<ClauseRelationFilter, clauseWhereInput>
     report?: XOR<ReportRelationFilter, reportWhereInput>
   }
 
   export type report_to_clauseOrderByWithRelationInput = {
     id?: SortOrder
-    report_id?: SortOrder
-    clause_id?: SortOrder
+    reportId?: SortOrder
+    clauseId?: SortOrder
     clause?: clauseOrderByWithRelationInput
     report?: reportOrderByWithRelationInput
   }
@@ -10701,8 +10729,8 @@ export namespace Prisma {
 
   export type report_to_clauseOrderByWithAggregationInput = {
     id?: SortOrder
-    report_id?: SortOrder
-    clause_id?: SortOrder
+    reportId?: SortOrder
+    clauseId?: SortOrder
     _count?: report_to_clauseCountOrderByAggregateInput
     _max?: report_to_clauseMaxOrderByAggregateInput
     _min?: report_to_clauseMinOrderByAggregateInput
@@ -10713,8 +10741,8 @@ export namespace Prisma {
     OR?: Enumerable<report_to_clauseScalarWhereWithAggregatesInput>
     NOT?: Enumerable<report_to_clauseScalarWhereWithAggregatesInput>
     id?: StringWithAggregatesFilter | string
-    report_id?: StringWithAggregatesFilter | string
-    clause_id?: StringWithAggregatesFilter | string
+    reportId?: StringWithAggregatesFilter | string
+    clauseId?: StringWithAggregatesFilter | string
   }
 
   export type chipWhereInput = {
@@ -10801,11 +10829,11 @@ export namespace Prisma {
     NOT?: Enumerable<udapWhereInput>
     id?: StringFilter | string
     department?: StringFilter | string
-    complete_coords?: StringNullableFilter | string | null
+    completeCoords?: StringNullableFilter | string | null
     visible?: BoolNullableFilter | boolean | null
     name?: StringNullableFilter | string | null
     address?: StringNullableFilter | string | null
-    zip_code?: StringNullableFilter | string | null
+    zipCode?: StringNullableFilter | string | null
     city?: StringNullableFilter | string | null
     phone?: StringNullableFilter | string | null
     email?: StringNullableFilter | string | null
@@ -10815,11 +10843,11 @@ export namespace Prisma {
   export type udapOrderByWithRelationInput = {
     id?: SortOrder
     department?: SortOrder
-    complete_coords?: SortOrderInput | SortOrder
+    completeCoords?: SortOrderInput | SortOrder
     visible?: SortOrderInput | SortOrder
     name?: SortOrderInput | SortOrder
     address?: SortOrderInput | SortOrder
-    zip_code?: SortOrderInput | SortOrder
+    zipCode?: SortOrderInput | SortOrder
     city?: SortOrderInput | SortOrder
     phone?: SortOrderInput | SortOrder
     email?: SortOrderInput | SortOrder
@@ -10833,11 +10861,11 @@ export namespace Prisma {
   export type udapOrderByWithAggregationInput = {
     id?: SortOrder
     department?: SortOrder
-    complete_coords?: SortOrderInput | SortOrder
+    completeCoords?: SortOrderInput | SortOrder
     visible?: SortOrderInput | SortOrder
     name?: SortOrderInput | SortOrder
     address?: SortOrderInput | SortOrder
-    zip_code?: SortOrderInput | SortOrder
+    zipCode?: SortOrderInput | SortOrder
     city?: SortOrderInput | SortOrder
     phone?: SortOrderInput | SortOrder
     email?: SortOrderInput | SortOrder
@@ -10852,11 +10880,11 @@ export namespace Prisma {
     NOT?: Enumerable<udapScalarWhereWithAggregatesInput>
     id?: StringWithAggregatesFilter | string
     department?: StringWithAggregatesFilter | string
-    complete_coords?: StringNullableWithAggregatesFilter | string | null
+    completeCoords?: StringNullableWithAggregatesFilter | string | null
     visible?: BoolNullableWithAggregatesFilter | boolean | null
     name?: StringNullableWithAggregatesFilter | string | null
     address?: StringNullableWithAggregatesFilter | string | null
-    zip_code?: StringNullableWithAggregatesFilter | string | null
+    zipCode?: StringNullableWithAggregatesFilter | string | null
     city?: StringNullableWithAggregatesFilter | string | null
     phone?: StringNullableWithAggregatesFilter | string | null
     email?: StringNullableWithAggregatesFilter | string | null
@@ -10874,6 +10902,7 @@ export namespace Prisma {
     udap_id?: StringFilter | string
     delegation_delegation_createdByTouser?: DelegationListRelationFilter
     delegation_delegation_delegatedToTouser?: DelegationListRelationFilter
+    report?: ReportListRelationFilter
     udap?: XOR<UdapRelationFilter, udapWhereInput>
   }
 
@@ -10886,6 +10915,7 @@ export namespace Prisma {
     udap_id?: SortOrder
     delegation_delegation_createdByTouser?: delegationOrderByRelationAggregateInput
     delegation_delegation_delegatedToTouser?: delegationOrderByRelationAggregateInput
+    report?: reportOrderByRelationAggregateInput
     udap?: udapOrderByWithRelationInput
   }
 
@@ -11071,145 +11101,137 @@ export namespace Prisma {
   export type reportCreateInput = {
     id: string
     title?: string | null
-    project_description?: string | null
-    redacted_by?: string | null
-    meet_date?: Date | string | null
-    applicant_name?: string | null
-    applicant_address?: string | null
-    project_cadastral_ref?: string | null
-    project_space_type?: string | null
+    projectDescription?: string | null
+    redactedBy?: string | null
+    meetDate?: Date | string | null
+    applicantName?: string | null
+    applicantAddress?: string | null
+    projectCadastralRef?: string | null
+    projectSpaceType?: string | null
     decision?: string | null
     precisions?: string | null
     contacts?: string | null
-    further_information?: string | null
-    created_by_id: string
-    created_by_username: string
-    created_at: Date | string
-    service_instructeur?: string | null
+    furtherInformation?: string | null
+    createdAt: Date | string
+    serviceInstructeur?: string | null
+    user: userCreateNestedOneWithoutReportInput
     report_to_clause?: report_to_clauseCreateNestedManyWithoutReportInput
   }
 
   export type reportUncheckedCreateInput = {
     id: string
     title?: string | null
-    project_description?: string | null
-    redacted_by?: string | null
-    meet_date?: Date | string | null
-    applicant_name?: string | null
-    applicant_address?: string | null
-    project_cadastral_ref?: string | null
-    project_space_type?: string | null
+    projectDescription?: string | null
+    redactedBy?: string | null
+    meetDate?: Date | string | null
+    applicantName?: string | null
+    applicantAddress?: string | null
+    projectCadastralRef?: string | null
+    projectSpaceType?: string | null
     decision?: string | null
     precisions?: string | null
     contacts?: string | null
-    further_information?: string | null
-    created_by_id: string
-    created_by_username: string
-    created_at: Date | string
-    service_instructeur?: string | null
+    furtherInformation?: string | null
+    createdByEmail: string
+    createdAt: Date | string
+    serviceInstructeur?: string | null
     report_to_clause?: report_to_clauseUncheckedCreateNestedManyWithoutReportInput
   }
 
   export type reportUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: NullableStringFieldUpdateOperationsInput | string | null
-    project_description?: NullableStringFieldUpdateOperationsInput | string | null
-    redacted_by?: NullableStringFieldUpdateOperationsInput | string | null
-    meet_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    applicant_name?: NullableStringFieldUpdateOperationsInput | string | null
-    applicant_address?: NullableStringFieldUpdateOperationsInput | string | null
-    project_cadastral_ref?: NullableStringFieldUpdateOperationsInput | string | null
-    project_space_type?: NullableStringFieldUpdateOperationsInput | string | null
+    projectDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    redactedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    meetDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    applicantName?: NullableStringFieldUpdateOperationsInput | string | null
+    applicantAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    projectCadastralRef?: NullableStringFieldUpdateOperationsInput | string | null
+    projectSpaceType?: NullableStringFieldUpdateOperationsInput | string | null
     decision?: NullableStringFieldUpdateOperationsInput | string | null
     precisions?: NullableStringFieldUpdateOperationsInput | string | null
     contacts?: NullableStringFieldUpdateOperationsInput | string | null
-    further_information?: NullableStringFieldUpdateOperationsInput | string | null
-    created_by_id?: StringFieldUpdateOperationsInput | string
-    created_by_username?: StringFieldUpdateOperationsInput | string
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    service_instructeur?: NullableStringFieldUpdateOperationsInput | string | null
+    furtherInformation?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    serviceInstructeur?: NullableStringFieldUpdateOperationsInput | string | null
+    user?: userUpdateOneRequiredWithoutReportNestedInput
     report_to_clause?: report_to_clauseUpdateManyWithoutReportNestedInput
   }
 
   export type reportUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: NullableStringFieldUpdateOperationsInput | string | null
-    project_description?: NullableStringFieldUpdateOperationsInput | string | null
-    redacted_by?: NullableStringFieldUpdateOperationsInput | string | null
-    meet_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    applicant_name?: NullableStringFieldUpdateOperationsInput | string | null
-    applicant_address?: NullableStringFieldUpdateOperationsInput | string | null
-    project_cadastral_ref?: NullableStringFieldUpdateOperationsInput | string | null
-    project_space_type?: NullableStringFieldUpdateOperationsInput | string | null
+    projectDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    redactedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    meetDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    applicantName?: NullableStringFieldUpdateOperationsInput | string | null
+    applicantAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    projectCadastralRef?: NullableStringFieldUpdateOperationsInput | string | null
+    projectSpaceType?: NullableStringFieldUpdateOperationsInput | string | null
     decision?: NullableStringFieldUpdateOperationsInput | string | null
     precisions?: NullableStringFieldUpdateOperationsInput | string | null
     contacts?: NullableStringFieldUpdateOperationsInput | string | null
-    further_information?: NullableStringFieldUpdateOperationsInput | string | null
-    created_by_id?: StringFieldUpdateOperationsInput | string
-    created_by_username?: StringFieldUpdateOperationsInput | string
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    service_instructeur?: NullableStringFieldUpdateOperationsInput | string | null
+    furtherInformation?: NullableStringFieldUpdateOperationsInput | string | null
+    createdByEmail?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    serviceInstructeur?: NullableStringFieldUpdateOperationsInput | string | null
     report_to_clause?: report_to_clauseUncheckedUpdateManyWithoutReportNestedInput
   }
 
   export type reportCreateManyInput = {
     id: string
     title?: string | null
-    project_description?: string | null
-    redacted_by?: string | null
-    meet_date?: Date | string | null
-    applicant_name?: string | null
-    applicant_address?: string | null
-    project_cadastral_ref?: string | null
-    project_space_type?: string | null
+    projectDescription?: string | null
+    redactedBy?: string | null
+    meetDate?: Date | string | null
+    applicantName?: string | null
+    applicantAddress?: string | null
+    projectCadastralRef?: string | null
+    projectSpaceType?: string | null
     decision?: string | null
     precisions?: string | null
     contacts?: string | null
-    further_information?: string | null
-    created_by_id: string
-    created_by_username: string
-    created_at: Date | string
-    service_instructeur?: string | null
+    furtherInformation?: string | null
+    createdByEmail: string
+    createdAt: Date | string
+    serviceInstructeur?: string | null
   }
 
   export type reportUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: NullableStringFieldUpdateOperationsInput | string | null
-    project_description?: NullableStringFieldUpdateOperationsInput | string | null
-    redacted_by?: NullableStringFieldUpdateOperationsInput | string | null
-    meet_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    applicant_name?: NullableStringFieldUpdateOperationsInput | string | null
-    applicant_address?: NullableStringFieldUpdateOperationsInput | string | null
-    project_cadastral_ref?: NullableStringFieldUpdateOperationsInput | string | null
-    project_space_type?: NullableStringFieldUpdateOperationsInput | string | null
+    projectDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    redactedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    meetDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    applicantName?: NullableStringFieldUpdateOperationsInput | string | null
+    applicantAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    projectCadastralRef?: NullableStringFieldUpdateOperationsInput | string | null
+    projectSpaceType?: NullableStringFieldUpdateOperationsInput | string | null
     decision?: NullableStringFieldUpdateOperationsInput | string | null
     precisions?: NullableStringFieldUpdateOperationsInput | string | null
     contacts?: NullableStringFieldUpdateOperationsInput | string | null
-    further_information?: NullableStringFieldUpdateOperationsInput | string | null
-    created_by_id?: StringFieldUpdateOperationsInput | string
-    created_by_username?: StringFieldUpdateOperationsInput | string
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    service_instructeur?: NullableStringFieldUpdateOperationsInput | string | null
+    furtherInformation?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    serviceInstructeur?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type reportUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: NullableStringFieldUpdateOperationsInput | string | null
-    project_description?: NullableStringFieldUpdateOperationsInput | string | null
-    redacted_by?: NullableStringFieldUpdateOperationsInput | string | null
-    meet_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    applicant_name?: NullableStringFieldUpdateOperationsInput | string | null
-    applicant_address?: NullableStringFieldUpdateOperationsInput | string | null
-    project_cadastral_ref?: NullableStringFieldUpdateOperationsInput | string | null
-    project_space_type?: NullableStringFieldUpdateOperationsInput | string | null
+    projectDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    redactedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    meetDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    applicantName?: NullableStringFieldUpdateOperationsInput | string | null
+    applicantAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    projectCadastralRef?: NullableStringFieldUpdateOperationsInput | string | null
+    projectSpaceType?: NullableStringFieldUpdateOperationsInput | string | null
     decision?: NullableStringFieldUpdateOperationsInput | string | null
     precisions?: NullableStringFieldUpdateOperationsInput | string | null
     contacts?: NullableStringFieldUpdateOperationsInput | string | null
-    further_information?: NullableStringFieldUpdateOperationsInput | string | null
-    created_by_id?: StringFieldUpdateOperationsInput | string
-    created_by_username?: StringFieldUpdateOperationsInput | string
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    service_instructeur?: NullableStringFieldUpdateOperationsInput | string | null
+    furtherInformation?: NullableStringFieldUpdateOperationsInput | string | null
+    createdByEmail?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    serviceInstructeur?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type report_to_clauseCreateInput = {
@@ -11220,8 +11242,8 @@ export namespace Prisma {
 
   export type report_to_clauseUncheckedCreateInput = {
     id: string
-    report_id: string
-    clause_id: string
+    reportId: string
+    clauseId: string
   }
 
   export type report_to_clauseUpdateInput = {
@@ -11232,14 +11254,14 @@ export namespace Prisma {
 
   export type report_to_clauseUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    report_id?: StringFieldUpdateOperationsInput | string
-    clause_id?: StringFieldUpdateOperationsInput | string
+    reportId?: StringFieldUpdateOperationsInput | string
+    clauseId?: StringFieldUpdateOperationsInput | string
   }
 
   export type report_to_clauseCreateManyInput = {
     id: string
-    report_id: string
-    clause_id: string
+    reportId: string
+    clauseId: string
   }
 
   export type report_to_clauseUpdateManyMutationInput = {
@@ -11248,8 +11270,8 @@ export namespace Prisma {
 
   export type report_to_clauseUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    report_id?: StringFieldUpdateOperationsInput | string
-    clause_id?: StringFieldUpdateOperationsInput | string
+    reportId?: StringFieldUpdateOperationsInput | string
+    clauseId?: StringFieldUpdateOperationsInput | string
   }
 
   export type chipCreateInput = {
@@ -11338,11 +11360,11 @@ export namespace Prisma {
   export type udapCreateInput = {
     id: string
     department: string
-    complete_coords?: string | null
+    completeCoords?: string | null
     visible?: boolean | null
     name?: string | null
     address?: string | null
-    zip_code?: string | null
+    zipCode?: string | null
     city?: string | null
     phone?: string | null
     email?: string | null
@@ -11352,11 +11374,11 @@ export namespace Prisma {
   export type udapUncheckedCreateInput = {
     id: string
     department: string
-    complete_coords?: string | null
+    completeCoords?: string | null
     visible?: boolean | null
     name?: string | null
     address?: string | null
-    zip_code?: string | null
+    zipCode?: string | null
     city?: string | null
     phone?: string | null
     email?: string | null
@@ -11366,11 +11388,11 @@ export namespace Prisma {
   export type udapUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     department?: StringFieldUpdateOperationsInput | string
-    complete_coords?: NullableStringFieldUpdateOperationsInput | string | null
+    completeCoords?: NullableStringFieldUpdateOperationsInput | string | null
     visible?: NullableBoolFieldUpdateOperationsInput | boolean | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
-    zip_code?: NullableStringFieldUpdateOperationsInput | string | null
+    zipCode?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
@@ -11380,11 +11402,11 @@ export namespace Prisma {
   export type udapUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     department?: StringFieldUpdateOperationsInput | string
-    complete_coords?: NullableStringFieldUpdateOperationsInput | string | null
+    completeCoords?: NullableStringFieldUpdateOperationsInput | string | null
     visible?: NullableBoolFieldUpdateOperationsInput | boolean | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
-    zip_code?: NullableStringFieldUpdateOperationsInput | string | null
+    zipCode?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
@@ -11394,11 +11416,11 @@ export namespace Prisma {
   export type udapCreateManyInput = {
     id: string
     department: string
-    complete_coords?: string | null
+    completeCoords?: string | null
     visible?: boolean | null
     name?: string | null
     address?: string | null
-    zip_code?: string | null
+    zipCode?: string | null
     city?: string | null
     phone?: string | null
     email?: string | null
@@ -11407,11 +11429,11 @@ export namespace Prisma {
   export type udapUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     department?: StringFieldUpdateOperationsInput | string
-    complete_coords?: NullableStringFieldUpdateOperationsInput | string | null
+    completeCoords?: NullableStringFieldUpdateOperationsInput | string | null
     visible?: NullableBoolFieldUpdateOperationsInput | boolean | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
-    zip_code?: NullableStringFieldUpdateOperationsInput | string | null
+    zipCode?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
@@ -11420,11 +11442,11 @@ export namespace Prisma {
   export type udapUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     department?: StringFieldUpdateOperationsInput | string
-    complete_coords?: NullableStringFieldUpdateOperationsInput | string | null
+    completeCoords?: NullableStringFieldUpdateOperationsInput | string | null
     visible?: NullableBoolFieldUpdateOperationsInput | boolean | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
-    zip_code?: NullableStringFieldUpdateOperationsInput | string | null
+    zipCode?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
@@ -11438,6 +11460,7 @@ export namespace Prisma {
     password: string
     delegation_delegation_createdByTouser?: delegationCreateNestedManyWithoutUser_delegation_createdByTouserInput
     delegation_delegation_delegatedToTouser?: delegationCreateNestedManyWithoutUser_delegation_delegatedToTouserInput
+    report?: reportCreateNestedManyWithoutUserInput
     udap: udapCreateNestedOneWithoutUserInput
   }
 
@@ -11450,6 +11473,7 @@ export namespace Prisma {
     udap_id: string
     delegation_delegation_createdByTouser?: delegationUncheckedCreateNestedManyWithoutUser_delegation_createdByTouserInput
     delegation_delegation_delegatedToTouser?: delegationUncheckedCreateNestedManyWithoutUser_delegation_delegatedToTouserInput
+    report?: reportUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type userUpdateInput = {
@@ -11460,6 +11484,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     delegation_delegation_createdByTouser?: delegationUpdateManyWithoutUser_delegation_createdByTouserNestedInput
     delegation_delegation_delegatedToTouser?: delegationUpdateManyWithoutUser_delegation_delegatedToTouserNestedInput
+    report?: reportUpdateManyWithoutUserNestedInput
     udap?: udapUpdateOneRequiredWithoutUserNestedInput
   }
 
@@ -11472,6 +11497,7 @@ export namespace Prisma {
     udap_id?: StringFieldUpdateOperationsInput | string
     delegation_delegation_createdByTouser?: delegationUncheckedUpdateManyWithoutUser_delegation_createdByTouserNestedInput
     delegation_delegation_delegatedToTouser?: delegationUncheckedUpdateManyWithoutUser_delegation_delegatedToTouserNestedInput
+    report?: reportUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type userCreateManyInput = {
@@ -11765,64 +11791,66 @@ export namespace Prisma {
     not?: NestedDateTimeNullableFilter | Date | string | null
   }
 
+  export type UserRelationFilter = {
+    is?: userWhereInput | null
+    isNot?: userWhereInput | null
+  }
+
   export type reportCountOrderByAggregateInput = {
     id?: SortOrder
     title?: SortOrder
-    project_description?: SortOrder
-    redacted_by?: SortOrder
-    meet_date?: SortOrder
-    applicant_name?: SortOrder
-    applicant_address?: SortOrder
-    project_cadastral_ref?: SortOrder
-    project_space_type?: SortOrder
+    projectDescription?: SortOrder
+    redactedBy?: SortOrder
+    meetDate?: SortOrder
+    applicantName?: SortOrder
+    applicantAddress?: SortOrder
+    projectCadastralRef?: SortOrder
+    projectSpaceType?: SortOrder
     decision?: SortOrder
     precisions?: SortOrder
     contacts?: SortOrder
-    further_information?: SortOrder
-    created_by_id?: SortOrder
-    created_by_username?: SortOrder
-    created_at?: SortOrder
-    service_instructeur?: SortOrder
+    furtherInformation?: SortOrder
+    createdByEmail?: SortOrder
+    createdAt?: SortOrder
+    serviceInstructeur?: SortOrder
   }
 
   export type reportMaxOrderByAggregateInput = {
     id?: SortOrder
     title?: SortOrder
-    project_description?: SortOrder
-    redacted_by?: SortOrder
-    meet_date?: SortOrder
-    applicant_name?: SortOrder
-    applicant_address?: SortOrder
-    project_cadastral_ref?: SortOrder
-    project_space_type?: SortOrder
+    projectDescription?: SortOrder
+    redactedBy?: SortOrder
+    meetDate?: SortOrder
+    applicantName?: SortOrder
+    applicantAddress?: SortOrder
+    projectCadastralRef?: SortOrder
+    projectSpaceType?: SortOrder
     decision?: SortOrder
     precisions?: SortOrder
     contacts?: SortOrder
-    further_information?: SortOrder
-    created_by_id?: SortOrder
-    created_by_username?: SortOrder
-    created_at?: SortOrder
-    service_instructeur?: SortOrder
+    furtherInformation?: SortOrder
+    createdByEmail?: SortOrder
+    createdAt?: SortOrder
+    serviceInstructeur?: SortOrder
   }
 
   export type reportMinOrderByAggregateInput = {
     id?: SortOrder
     title?: SortOrder
-    project_description?: SortOrder
-    redacted_by?: SortOrder
-    meet_date?: SortOrder
-    applicant_name?: SortOrder
-    applicant_address?: SortOrder
-    project_cadastral_ref?: SortOrder
-    project_space_type?: SortOrder
+    projectDescription?: SortOrder
+    redactedBy?: SortOrder
+    meetDate?: SortOrder
+    applicantName?: SortOrder
+    applicantAddress?: SortOrder
+    projectCadastralRef?: SortOrder
+    projectSpaceType?: SortOrder
     decision?: SortOrder
     precisions?: SortOrder
     contacts?: SortOrder
-    further_information?: SortOrder
-    created_by_id?: SortOrder
-    created_by_username?: SortOrder
-    created_at?: SortOrder
-    service_instructeur?: SortOrder
+    furtherInformation?: SortOrder
+    createdByEmail?: SortOrder
+    createdAt?: SortOrder
+    serviceInstructeur?: SortOrder
   }
 
   export type DateTimeNullableWithAggregatesFilter = {
@@ -11851,20 +11879,20 @@ export namespace Prisma {
 
   export type report_to_clauseCountOrderByAggregateInput = {
     id?: SortOrder
-    report_id?: SortOrder
-    clause_id?: SortOrder
+    reportId?: SortOrder
+    clauseId?: SortOrder
   }
 
   export type report_to_clauseMaxOrderByAggregateInput = {
     id?: SortOrder
-    report_id?: SortOrder
-    clause_id?: SortOrder
+    reportId?: SortOrder
+    clauseId?: SortOrder
   }
 
   export type report_to_clauseMinOrderByAggregateInput = {
     id?: SortOrder
-    report_id?: SortOrder
-    clause_id?: SortOrder
+    reportId?: SortOrder
+    clauseId?: SortOrder
   }
 
   export type chipKeyValueUdap_idCompoundUniqueInput = {
@@ -11892,11 +11920,6 @@ export namespace Prisma {
     value?: SortOrder
     udap_id?: SortOrder
     text?: SortOrder
-  }
-
-  export type UserRelationFilter = {
-    is?: userWhereInput | null
-    isNot?: userWhereInput | null
   }
 
   export type delegationCreatedByDelegatedToCompoundUniqueInput = {
@@ -11937,11 +11960,11 @@ export namespace Prisma {
   export type udapCountOrderByAggregateInput = {
     id?: SortOrder
     department?: SortOrder
-    complete_coords?: SortOrder
+    completeCoords?: SortOrder
     visible?: SortOrder
     name?: SortOrder
     address?: SortOrder
-    zip_code?: SortOrder
+    zipCode?: SortOrder
     city?: SortOrder
     phone?: SortOrder
     email?: SortOrder
@@ -11950,11 +11973,11 @@ export namespace Prisma {
   export type udapMaxOrderByAggregateInput = {
     id?: SortOrder
     department?: SortOrder
-    complete_coords?: SortOrder
+    completeCoords?: SortOrder
     visible?: SortOrder
     name?: SortOrder
     address?: SortOrder
-    zip_code?: SortOrder
+    zipCode?: SortOrder
     city?: SortOrder
     phone?: SortOrder
     email?: SortOrder
@@ -11963,11 +11986,11 @@ export namespace Prisma {
   export type udapMinOrderByAggregateInput = {
     id?: SortOrder
     department?: SortOrder
-    complete_coords?: SortOrder
+    completeCoords?: SortOrder
     visible?: SortOrder
     name?: SortOrder
     address?: SortOrder
-    zip_code?: SortOrder
+    zipCode?: SortOrder
     city?: SortOrder
     phone?: SortOrder
     email?: SortOrder
@@ -11987,12 +12010,22 @@ export namespace Prisma {
     none?: delegationWhereInput
   }
 
+  export type ReportListRelationFilter = {
+    every?: reportWhereInput
+    some?: reportWhereInput
+    none?: reportWhereInput
+  }
+
   export type UdapRelationFilter = {
     is?: udapWhereInput | null
     isNot?: udapWhereInput | null
   }
 
   export type delegationOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type reportOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -12097,6 +12130,12 @@ export namespace Prisma {
     deleteMany?: Enumerable<report_to_clauseScalarWhereInput>
   }
 
+  export type userCreateNestedOneWithoutReportInput = {
+    create?: XOR<userCreateWithoutReportInput, userUncheckedCreateWithoutReportInput>
+    connectOrCreate?: userCreateOrConnectWithoutReportInput
+    connect?: userWhereUniqueInput
+  }
+
   export type report_to_clauseCreateNestedManyWithoutReportInput = {
     create?: XOR<Enumerable<report_to_clauseCreateWithoutReportInput>, Enumerable<report_to_clauseUncheckedCreateWithoutReportInput>>
     connectOrCreate?: Enumerable<report_to_clauseCreateOrConnectWithoutReportInput>
@@ -12113,6 +12152,14 @@ export namespace Prisma {
 
   export type NullableDateTimeFieldUpdateOperationsInput = {
     set?: Date | string | null
+  }
+
+  export type userUpdateOneRequiredWithoutReportNestedInput = {
+    create?: XOR<userCreateWithoutReportInput, userUncheckedCreateWithoutReportInput>
+    connectOrCreate?: userCreateOrConnectWithoutReportInput
+    upsert?: userUpsertWithoutReportInput
+    connect?: userWhereUniqueInput
+    update?: XOR<userUpdateWithoutReportInput, userUncheckedUpdateWithoutReportInput>
   }
 
   export type report_to_clauseUpdateManyWithoutReportNestedInput = {
@@ -12259,6 +12306,13 @@ export namespace Prisma {
     connect?: Enumerable<delegationWhereUniqueInput>
   }
 
+  export type reportCreateNestedManyWithoutUserInput = {
+    create?: XOR<Enumerable<reportCreateWithoutUserInput>, Enumerable<reportUncheckedCreateWithoutUserInput>>
+    connectOrCreate?: Enumerable<reportCreateOrConnectWithoutUserInput>
+    createMany?: reportCreateManyUserInputEnvelope
+    connect?: Enumerable<reportWhereUniqueInput>
+  }
+
   export type udapCreateNestedOneWithoutUserInput = {
     create?: XOR<udapCreateWithoutUserInput, udapUncheckedCreateWithoutUserInput>
     connectOrCreate?: udapCreateOrConnectWithoutUserInput
@@ -12277,6 +12331,13 @@ export namespace Prisma {
     connectOrCreate?: Enumerable<delegationCreateOrConnectWithoutUser_delegation_delegatedToTouserInput>
     createMany?: delegationCreateManyUser_delegation_delegatedToTouserInputEnvelope
     connect?: Enumerable<delegationWhereUniqueInput>
+  }
+
+  export type reportUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<Enumerable<reportCreateWithoutUserInput>, Enumerable<reportUncheckedCreateWithoutUserInput>>
+    connectOrCreate?: Enumerable<reportCreateOrConnectWithoutUserInput>
+    createMany?: reportCreateManyUserInputEnvelope
+    connect?: Enumerable<reportWhereUniqueInput>
   }
 
   export type delegationUpdateManyWithoutUser_delegation_createdByTouserNestedInput = {
@@ -12305,6 +12366,20 @@ export namespace Prisma {
     update?: Enumerable<delegationUpdateWithWhereUniqueWithoutUser_delegation_delegatedToTouserInput>
     updateMany?: Enumerable<delegationUpdateManyWithWhereWithoutUser_delegation_delegatedToTouserInput>
     deleteMany?: Enumerable<delegationScalarWhereInput>
+  }
+
+  export type reportUpdateManyWithoutUserNestedInput = {
+    create?: XOR<Enumerable<reportCreateWithoutUserInput>, Enumerable<reportUncheckedCreateWithoutUserInput>>
+    connectOrCreate?: Enumerable<reportCreateOrConnectWithoutUserInput>
+    upsert?: Enumerable<reportUpsertWithWhereUniqueWithoutUserInput>
+    createMany?: reportCreateManyUserInputEnvelope
+    set?: Enumerable<reportWhereUniqueInput>
+    disconnect?: Enumerable<reportWhereUniqueInput>
+    delete?: Enumerable<reportWhereUniqueInput>
+    connect?: Enumerable<reportWhereUniqueInput>
+    update?: Enumerable<reportUpdateWithWhereUniqueWithoutUserInput>
+    updateMany?: Enumerable<reportUpdateManyWithWhereWithoutUserInput>
+    deleteMany?: Enumerable<reportScalarWhereInput>
   }
 
   export type udapUpdateOneRequiredWithoutUserNestedInput = {
@@ -12341,6 +12416,20 @@ export namespace Prisma {
     update?: Enumerable<delegationUpdateWithWhereUniqueWithoutUser_delegation_delegatedToTouserInput>
     updateMany?: Enumerable<delegationUpdateManyWithWhereWithoutUser_delegation_delegatedToTouserInput>
     deleteMany?: Enumerable<delegationScalarWhereInput>
+  }
+
+  export type reportUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<Enumerable<reportCreateWithoutUserInput>, Enumerable<reportUncheckedCreateWithoutUserInput>>
+    connectOrCreate?: Enumerable<reportCreateOrConnectWithoutUserInput>
+    upsert?: Enumerable<reportUpsertWithWhereUniqueWithoutUserInput>
+    createMany?: reportCreateManyUserInputEnvelope
+    set?: Enumerable<reportWhereUniqueInput>
+    disconnect?: Enumerable<reportWhereUniqueInput>
+    delete?: Enumerable<reportWhereUniqueInput>
+    connect?: Enumerable<reportWhereUniqueInput>
+    update?: Enumerable<reportUpdateWithWhereUniqueWithoutUserInput>
+    updateMany?: Enumerable<reportUpdateManyWithWhereWithoutUserInput>
+    deleteMany?: Enumerable<reportScalarWhereInput>
   }
 
   export type NestedBigIntFilter = {
@@ -12564,7 +12653,7 @@ export namespace Prisma {
 
   export type report_to_clauseUncheckedCreateWithoutClauseInput = {
     id: string
-    report_id: string
+    reportId: string
   }
 
   export type report_to_clauseCreateOrConnectWithoutClauseInput = {
@@ -12598,8 +12687,35 @@ export namespace Prisma {
     OR?: Enumerable<report_to_clauseScalarWhereInput>
     NOT?: Enumerable<report_to_clauseScalarWhereInput>
     id?: StringFilter | string
-    report_id?: StringFilter | string
-    clause_id?: StringFilter | string
+    reportId?: StringFilter | string
+    clauseId?: StringFilter | string
+  }
+
+  export type userCreateWithoutReportInput = {
+    email: string
+    name: string
+    temporaryLink?: string | null
+    temporaryLinkExpiresAt?: string | null
+    password: string
+    delegation_delegation_createdByTouser?: delegationCreateNestedManyWithoutUser_delegation_createdByTouserInput
+    delegation_delegation_delegatedToTouser?: delegationCreateNestedManyWithoutUser_delegation_delegatedToTouserInput
+    udap: udapCreateNestedOneWithoutUserInput
+  }
+
+  export type userUncheckedCreateWithoutReportInput = {
+    email: string
+    name: string
+    temporaryLink?: string | null
+    temporaryLinkExpiresAt?: string | null
+    password: string
+    udap_id: string
+    delegation_delegation_createdByTouser?: delegationUncheckedCreateNestedManyWithoutUser_delegation_createdByTouserInput
+    delegation_delegation_delegatedToTouser?: delegationUncheckedCreateNestedManyWithoutUser_delegation_delegatedToTouserInput
+  }
+
+  export type userCreateOrConnectWithoutReportInput = {
+    where: userWhereUniqueInput
+    create: XOR<userCreateWithoutReportInput, userUncheckedCreateWithoutReportInput>
   }
 
   export type report_to_clauseCreateWithoutReportInput = {
@@ -12609,7 +12725,7 @@ export namespace Prisma {
 
   export type report_to_clauseUncheckedCreateWithoutReportInput = {
     id: string
-    clause_id: string
+    clauseId: string
   }
 
   export type report_to_clauseCreateOrConnectWithoutReportInput = {
@@ -12620,6 +12736,33 @@ export namespace Prisma {
   export type report_to_clauseCreateManyReportInputEnvelope = {
     data: Enumerable<report_to_clauseCreateManyReportInput>
     skipDuplicates?: boolean
+  }
+
+  export type userUpsertWithoutReportInput = {
+    update: XOR<userUpdateWithoutReportInput, userUncheckedUpdateWithoutReportInput>
+    create: XOR<userCreateWithoutReportInput, userUncheckedCreateWithoutReportInput>
+  }
+
+  export type userUpdateWithoutReportInput = {
+    email?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    delegation_delegation_createdByTouser?: delegationUpdateManyWithoutUser_delegation_createdByTouserNestedInput
+    delegation_delegation_delegatedToTouser?: delegationUpdateManyWithoutUser_delegation_delegatedToTouserNestedInput
+    udap?: udapUpdateOneRequiredWithoutUserNestedInput
+  }
+
+  export type userUncheckedUpdateWithoutReportInput = {
+    email?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    udap_id?: StringFieldUpdateOperationsInput | string
+    delegation_delegation_createdByTouser?: delegationUncheckedUpdateManyWithoutUser_delegation_createdByTouserNestedInput
+    delegation_delegation_delegatedToTouser?: delegationUncheckedUpdateManyWithoutUser_delegation_delegatedToTouserNestedInput
   }
 
   export type report_to_clauseUpsertWithWhereUniqueWithoutReportInput = {
@@ -12658,41 +12801,39 @@ export namespace Prisma {
   export type reportCreateWithoutReport_to_clauseInput = {
     id: string
     title?: string | null
-    project_description?: string | null
-    redacted_by?: string | null
-    meet_date?: Date | string | null
-    applicant_name?: string | null
-    applicant_address?: string | null
-    project_cadastral_ref?: string | null
-    project_space_type?: string | null
+    projectDescription?: string | null
+    redactedBy?: string | null
+    meetDate?: Date | string | null
+    applicantName?: string | null
+    applicantAddress?: string | null
+    projectCadastralRef?: string | null
+    projectSpaceType?: string | null
     decision?: string | null
     precisions?: string | null
     contacts?: string | null
-    further_information?: string | null
-    created_by_id: string
-    created_by_username: string
-    created_at: Date | string
-    service_instructeur?: string | null
+    furtherInformation?: string | null
+    createdAt: Date | string
+    serviceInstructeur?: string | null
+    user: userCreateNestedOneWithoutReportInput
   }
 
   export type reportUncheckedCreateWithoutReport_to_clauseInput = {
     id: string
     title?: string | null
-    project_description?: string | null
-    redacted_by?: string | null
-    meet_date?: Date | string | null
-    applicant_name?: string | null
-    applicant_address?: string | null
-    project_cadastral_ref?: string | null
-    project_space_type?: string | null
+    projectDescription?: string | null
+    redactedBy?: string | null
+    meetDate?: Date | string | null
+    applicantName?: string | null
+    applicantAddress?: string | null
+    projectCadastralRef?: string | null
+    projectSpaceType?: string | null
     decision?: string | null
     precisions?: string | null
     contacts?: string | null
-    further_information?: string | null
-    created_by_id: string
-    created_by_username: string
-    created_at: Date | string
-    service_instructeur?: string | null
+    furtherInformation?: string | null
+    createdByEmail: string
+    createdAt: Date | string
+    serviceInstructeur?: string | null
   }
 
   export type reportCreateOrConnectWithoutReport_to_clauseInput = {
@@ -12725,41 +12866,39 @@ export namespace Prisma {
   export type reportUpdateWithoutReport_to_clauseInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: NullableStringFieldUpdateOperationsInput | string | null
-    project_description?: NullableStringFieldUpdateOperationsInput | string | null
-    redacted_by?: NullableStringFieldUpdateOperationsInput | string | null
-    meet_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    applicant_name?: NullableStringFieldUpdateOperationsInput | string | null
-    applicant_address?: NullableStringFieldUpdateOperationsInput | string | null
-    project_cadastral_ref?: NullableStringFieldUpdateOperationsInput | string | null
-    project_space_type?: NullableStringFieldUpdateOperationsInput | string | null
+    projectDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    redactedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    meetDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    applicantName?: NullableStringFieldUpdateOperationsInput | string | null
+    applicantAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    projectCadastralRef?: NullableStringFieldUpdateOperationsInput | string | null
+    projectSpaceType?: NullableStringFieldUpdateOperationsInput | string | null
     decision?: NullableStringFieldUpdateOperationsInput | string | null
     precisions?: NullableStringFieldUpdateOperationsInput | string | null
     contacts?: NullableStringFieldUpdateOperationsInput | string | null
-    further_information?: NullableStringFieldUpdateOperationsInput | string | null
-    created_by_id?: StringFieldUpdateOperationsInput | string
-    created_by_username?: StringFieldUpdateOperationsInput | string
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    service_instructeur?: NullableStringFieldUpdateOperationsInput | string | null
+    furtherInformation?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    serviceInstructeur?: NullableStringFieldUpdateOperationsInput | string | null
+    user?: userUpdateOneRequiredWithoutReportNestedInput
   }
 
   export type reportUncheckedUpdateWithoutReport_to_clauseInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: NullableStringFieldUpdateOperationsInput | string | null
-    project_description?: NullableStringFieldUpdateOperationsInput | string | null
-    redacted_by?: NullableStringFieldUpdateOperationsInput | string | null
-    meet_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    applicant_name?: NullableStringFieldUpdateOperationsInput | string | null
-    applicant_address?: NullableStringFieldUpdateOperationsInput | string | null
-    project_cadastral_ref?: NullableStringFieldUpdateOperationsInput | string | null
-    project_space_type?: NullableStringFieldUpdateOperationsInput | string | null
+    projectDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    redactedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    meetDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    applicantName?: NullableStringFieldUpdateOperationsInput | string | null
+    applicantAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    projectCadastralRef?: NullableStringFieldUpdateOperationsInput | string | null
+    projectSpaceType?: NullableStringFieldUpdateOperationsInput | string | null
     decision?: NullableStringFieldUpdateOperationsInput | string | null
     precisions?: NullableStringFieldUpdateOperationsInput | string | null
     contacts?: NullableStringFieldUpdateOperationsInput | string | null
-    further_information?: NullableStringFieldUpdateOperationsInput | string | null
-    created_by_id?: StringFieldUpdateOperationsInput | string
-    created_by_username?: StringFieldUpdateOperationsInput | string
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    service_instructeur?: NullableStringFieldUpdateOperationsInput | string | null
+    furtherInformation?: NullableStringFieldUpdateOperationsInput | string | null
+    createdByEmail?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    serviceInstructeur?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type userCreateWithoutDelegation_delegation_createdByTouserInput = {
@@ -12769,6 +12908,7 @@ export namespace Prisma {
     temporaryLinkExpiresAt?: string | null
     password: string
     delegation_delegation_delegatedToTouser?: delegationCreateNestedManyWithoutUser_delegation_delegatedToTouserInput
+    report?: reportCreateNestedManyWithoutUserInput
     udap: udapCreateNestedOneWithoutUserInput
   }
 
@@ -12780,6 +12920,7 @@ export namespace Prisma {
     password: string
     udap_id: string
     delegation_delegation_delegatedToTouser?: delegationUncheckedCreateNestedManyWithoutUser_delegation_delegatedToTouserInput
+    report?: reportUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type userCreateOrConnectWithoutDelegation_delegation_createdByTouserInput = {
@@ -12794,6 +12935,7 @@ export namespace Prisma {
     temporaryLinkExpiresAt?: string | null
     password: string
     delegation_delegation_createdByTouser?: delegationCreateNestedManyWithoutUser_delegation_createdByTouserInput
+    report?: reportCreateNestedManyWithoutUserInput
     udap: udapCreateNestedOneWithoutUserInput
   }
 
@@ -12805,6 +12947,7 @@ export namespace Prisma {
     password: string
     udap_id: string
     delegation_delegation_createdByTouser?: delegationUncheckedCreateNestedManyWithoutUser_delegation_createdByTouserInput
+    report?: reportUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type userCreateOrConnectWithoutDelegation_delegation_delegatedToTouserInput = {
@@ -12824,6 +12967,7 @@ export namespace Prisma {
     temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
     password?: StringFieldUpdateOperationsInput | string
     delegation_delegation_delegatedToTouser?: delegationUpdateManyWithoutUser_delegation_delegatedToTouserNestedInput
+    report?: reportUpdateManyWithoutUserNestedInput
     udap?: udapUpdateOneRequiredWithoutUserNestedInput
   }
 
@@ -12835,6 +12979,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     udap_id?: StringFieldUpdateOperationsInput | string
     delegation_delegation_delegatedToTouser?: delegationUncheckedUpdateManyWithoutUser_delegation_delegatedToTouserNestedInput
+    report?: reportUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type userUpsertWithoutDelegation_delegation_delegatedToTouserInput = {
@@ -12849,6 +12994,7 @@ export namespace Prisma {
     temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
     password?: StringFieldUpdateOperationsInput | string
     delegation_delegation_createdByTouser?: delegationUpdateManyWithoutUser_delegation_createdByTouserNestedInput
+    report?: reportUpdateManyWithoutUserNestedInput
     udap?: udapUpdateOneRequiredWithoutUserNestedInput
   }
 
@@ -12860,6 +13006,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     udap_id?: StringFieldUpdateOperationsInput | string
     delegation_delegation_createdByTouser?: delegationUncheckedUpdateManyWithoutUser_delegation_createdByTouserNestedInput
+    report?: reportUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type userCreateWithoutUdapInput = {
@@ -12870,6 +13017,7 @@ export namespace Prisma {
     password: string
     delegation_delegation_createdByTouser?: delegationCreateNestedManyWithoutUser_delegation_createdByTouserInput
     delegation_delegation_delegatedToTouser?: delegationCreateNestedManyWithoutUser_delegation_delegatedToTouserInput
+    report?: reportCreateNestedManyWithoutUserInput
   }
 
   export type userUncheckedCreateWithoutUdapInput = {
@@ -12880,6 +13028,7 @@ export namespace Prisma {
     password: string
     delegation_delegation_createdByTouser?: delegationUncheckedCreateNestedManyWithoutUser_delegation_createdByTouserInput
     delegation_delegation_delegatedToTouser?: delegationUncheckedCreateNestedManyWithoutUser_delegation_delegatedToTouserInput
+    report?: reportUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type userCreateOrConnectWithoutUdapInput = {
@@ -12956,14 +13105,62 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type reportCreateWithoutUserInput = {
+    id: string
+    title?: string | null
+    projectDescription?: string | null
+    redactedBy?: string | null
+    meetDate?: Date | string | null
+    applicantName?: string | null
+    applicantAddress?: string | null
+    projectCadastralRef?: string | null
+    projectSpaceType?: string | null
+    decision?: string | null
+    precisions?: string | null
+    contacts?: string | null
+    furtherInformation?: string | null
+    createdAt: Date | string
+    serviceInstructeur?: string | null
+    report_to_clause?: report_to_clauseCreateNestedManyWithoutReportInput
+  }
+
+  export type reportUncheckedCreateWithoutUserInput = {
+    id: string
+    title?: string | null
+    projectDescription?: string | null
+    redactedBy?: string | null
+    meetDate?: Date | string | null
+    applicantName?: string | null
+    applicantAddress?: string | null
+    projectCadastralRef?: string | null
+    projectSpaceType?: string | null
+    decision?: string | null
+    precisions?: string | null
+    contacts?: string | null
+    furtherInformation?: string | null
+    createdAt: Date | string
+    serviceInstructeur?: string | null
+    report_to_clause?: report_to_clauseUncheckedCreateNestedManyWithoutReportInput
+  }
+
+  export type reportCreateOrConnectWithoutUserInput = {
+    where: reportWhereUniqueInput
+    create: XOR<reportCreateWithoutUserInput, reportUncheckedCreateWithoutUserInput>
+  }
+
+  export type reportCreateManyUserInputEnvelope = {
+    data: Enumerable<reportCreateManyUserInput>
+    skipDuplicates?: boolean
+  }
+
   export type udapCreateWithoutUserInput = {
     id: string
     department: string
-    complete_coords?: string | null
+    completeCoords?: string | null
     visible?: boolean | null
     name?: string | null
     address?: string | null
-    zip_code?: string | null
+    zipCode?: string | null
     city?: string | null
     phone?: string | null
     email?: string | null
@@ -12972,11 +13169,11 @@ export namespace Prisma {
   export type udapUncheckedCreateWithoutUserInput = {
     id: string
     department: string
-    complete_coords?: string | null
+    completeCoords?: string | null
     visible?: boolean | null
     name?: string | null
     address?: string | null
-    zip_code?: string | null
+    zipCode?: string | null
     city?: string | null
     phone?: string | null
     email?: string | null
@@ -13027,6 +13224,44 @@ export namespace Prisma {
     data: XOR<delegationUpdateManyMutationInput, delegationUncheckedUpdateManyWithoutDelegation_delegation_delegatedToTouserInput>
   }
 
+  export type reportUpsertWithWhereUniqueWithoutUserInput = {
+    where: reportWhereUniqueInput
+    update: XOR<reportUpdateWithoutUserInput, reportUncheckedUpdateWithoutUserInput>
+    create: XOR<reportCreateWithoutUserInput, reportUncheckedCreateWithoutUserInput>
+  }
+
+  export type reportUpdateWithWhereUniqueWithoutUserInput = {
+    where: reportWhereUniqueInput
+    data: XOR<reportUpdateWithoutUserInput, reportUncheckedUpdateWithoutUserInput>
+  }
+
+  export type reportUpdateManyWithWhereWithoutUserInput = {
+    where: reportScalarWhereInput
+    data: XOR<reportUpdateManyMutationInput, reportUncheckedUpdateManyWithoutReportInput>
+  }
+
+  export type reportScalarWhereInput = {
+    AND?: Enumerable<reportScalarWhereInput>
+    OR?: Enumerable<reportScalarWhereInput>
+    NOT?: Enumerable<reportScalarWhereInput>
+    id?: StringFilter | string
+    title?: StringNullableFilter | string | null
+    projectDescription?: StringNullableFilter | string | null
+    redactedBy?: StringNullableFilter | string | null
+    meetDate?: DateTimeNullableFilter | Date | string | null
+    applicantName?: StringNullableFilter | string | null
+    applicantAddress?: StringNullableFilter | string | null
+    projectCadastralRef?: StringNullableFilter | string | null
+    projectSpaceType?: StringNullableFilter | string | null
+    decision?: StringNullableFilter | string | null
+    precisions?: StringNullableFilter | string | null
+    contacts?: StringNullableFilter | string | null
+    furtherInformation?: StringNullableFilter | string | null
+    createdByEmail?: StringFilter | string
+    createdAt?: DateTimeFilter | Date | string
+    serviceInstructeur?: StringNullableFilter | string | null
+  }
+
   export type udapUpsertWithoutUserInput = {
     update: XOR<udapUpdateWithoutUserInput, udapUncheckedUpdateWithoutUserInput>
     create: XOR<udapCreateWithoutUserInput, udapUncheckedCreateWithoutUserInput>
@@ -13035,11 +13270,11 @@ export namespace Prisma {
   export type udapUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     department?: StringFieldUpdateOperationsInput | string
-    complete_coords?: NullableStringFieldUpdateOperationsInput | string | null
+    completeCoords?: NullableStringFieldUpdateOperationsInput | string | null
     visible?: NullableBoolFieldUpdateOperationsInput | boolean | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
-    zip_code?: NullableStringFieldUpdateOperationsInput | string | null
+    zipCode?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
@@ -13048,11 +13283,11 @@ export namespace Prisma {
   export type udapUncheckedUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     department?: StringFieldUpdateOperationsInput | string
-    complete_coords?: NullableStringFieldUpdateOperationsInput | string | null
+    completeCoords?: NullableStringFieldUpdateOperationsInput | string | null
     visible?: NullableBoolFieldUpdateOperationsInput | boolean | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
-    zip_code?: NullableStringFieldUpdateOperationsInput | string | null
+    zipCode?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
@@ -13060,7 +13295,7 @@ export namespace Prisma {
 
   export type report_to_clauseCreateManyClauseInput = {
     id: string
-    report_id: string
+    reportId: string
   }
 
   export type report_to_clauseUpdateWithoutClauseInput = {
@@ -13070,17 +13305,17 @@ export namespace Prisma {
 
   export type report_to_clauseUncheckedUpdateWithoutClauseInput = {
     id?: StringFieldUpdateOperationsInput | string
-    report_id?: StringFieldUpdateOperationsInput | string
+    reportId?: StringFieldUpdateOperationsInput | string
   }
 
   export type report_to_clauseUncheckedUpdateManyWithoutReport_to_clauseInput = {
     id?: StringFieldUpdateOperationsInput | string
-    report_id?: StringFieldUpdateOperationsInput | string
+    reportId?: StringFieldUpdateOperationsInput | string
   }
 
   export type report_to_clauseCreateManyReportInput = {
     id: string
-    clause_id: string
+    clauseId: string
   }
 
   export type report_to_clauseUpdateWithoutReportInput = {
@@ -13090,7 +13325,7 @@ export namespace Prisma {
 
   export type report_to_clauseUncheckedUpdateWithoutReportInput = {
     id?: StringFieldUpdateOperationsInput | string
-    clause_id?: StringFieldUpdateOperationsInput | string
+    clauseId?: StringFieldUpdateOperationsInput | string
   }
 
   export type userCreateManyUdapInput = {
@@ -13109,6 +13344,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     delegation_delegation_createdByTouser?: delegationUpdateManyWithoutUser_delegation_createdByTouserNestedInput
     delegation_delegation_delegatedToTouser?: delegationUpdateManyWithoutUser_delegation_delegatedToTouserNestedInput
+    report?: reportUpdateManyWithoutUserNestedInput
   }
 
   export type userUncheckedUpdateWithoutUdapInput = {
@@ -13119,6 +13355,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     delegation_delegation_createdByTouser?: delegationUncheckedUpdateManyWithoutUser_delegation_createdByTouserNestedInput
     delegation_delegation_delegatedToTouser?: delegationUncheckedUpdateManyWithoutUser_delegation_delegatedToTouserNestedInput
+    report?: reportUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type userUncheckedUpdateManyWithoutUserInput = {
@@ -13135,6 +13372,24 @@ export namespace Prisma {
 
   export type delegationCreateManyUser_delegation_delegatedToTouserInput = {
     createdBy: string
+  }
+
+  export type reportCreateManyUserInput = {
+    id: string
+    title?: string | null
+    projectDescription?: string | null
+    redactedBy?: string | null
+    meetDate?: Date | string | null
+    applicantName?: string | null
+    applicantAddress?: string | null
+    projectCadastralRef?: string | null
+    projectSpaceType?: string | null
+    decision?: string | null
+    precisions?: string | null
+    contacts?: string | null
+    furtherInformation?: string | null
+    createdAt: Date | string
+    serviceInstructeur?: string | null
   }
 
   export type delegationUpdateWithoutUser_delegation_createdByTouserInput = {
@@ -13159,6 +13414,62 @@ export namespace Prisma {
 
   export type delegationUncheckedUpdateManyWithoutDelegation_delegation_delegatedToTouserInput = {
     createdBy?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type reportUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    projectDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    redactedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    meetDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    applicantName?: NullableStringFieldUpdateOperationsInput | string | null
+    applicantAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    projectCadastralRef?: NullableStringFieldUpdateOperationsInput | string | null
+    projectSpaceType?: NullableStringFieldUpdateOperationsInput | string | null
+    decision?: NullableStringFieldUpdateOperationsInput | string | null
+    precisions?: NullableStringFieldUpdateOperationsInput | string | null
+    contacts?: NullableStringFieldUpdateOperationsInput | string | null
+    furtherInformation?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    serviceInstructeur?: NullableStringFieldUpdateOperationsInput | string | null
+    report_to_clause?: report_to_clauseUpdateManyWithoutReportNestedInput
+  }
+
+  export type reportUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    projectDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    redactedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    meetDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    applicantName?: NullableStringFieldUpdateOperationsInput | string | null
+    applicantAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    projectCadastralRef?: NullableStringFieldUpdateOperationsInput | string | null
+    projectSpaceType?: NullableStringFieldUpdateOperationsInput | string | null
+    decision?: NullableStringFieldUpdateOperationsInput | string | null
+    precisions?: NullableStringFieldUpdateOperationsInput | string | null
+    contacts?: NullableStringFieldUpdateOperationsInput | string | null
+    furtherInformation?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    serviceInstructeur?: NullableStringFieldUpdateOperationsInput | string | null
+    report_to_clause?: report_to_clauseUncheckedUpdateManyWithoutReportNestedInput
+  }
+
+  export type reportUncheckedUpdateManyWithoutReportInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    projectDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    redactedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    meetDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    applicantName?: NullableStringFieldUpdateOperationsInput | string | null
+    applicantAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    projectCadastralRef?: NullableStringFieldUpdateOperationsInput | string | null
+    projectSpaceType?: NullableStringFieldUpdateOperationsInput | string | null
+    decision?: NullableStringFieldUpdateOperationsInput | string | null
+    precisions?: NullableStringFieldUpdateOperationsInput | string | null
+    contacts?: NullableStringFieldUpdateOperationsInput | string | null
+    furtherInformation?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    serviceInstructeur?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
 

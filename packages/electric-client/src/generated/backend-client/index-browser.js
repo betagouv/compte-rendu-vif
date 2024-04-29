@@ -129,27 +129,26 @@ exports.Prisma.ClauseScalarFieldEnum = {
 exports.Prisma.ReportScalarFieldEnum = {
   id: 'id',
   title: 'title',
-  project_description: 'project_description',
-  redacted_by: 'redacted_by',
-  meet_date: 'meet_date',
-  applicant_name: 'applicant_name',
-  applicant_address: 'applicant_address',
-  project_cadastral_ref: 'project_cadastral_ref',
-  project_space_type: 'project_space_type',
+  projectDescription: 'projectDescription',
+  redactedBy: 'redactedBy',
+  meetDate: 'meetDate',
+  applicantName: 'applicantName',
+  applicantAddress: 'applicantAddress',
+  projectCadastralRef: 'projectCadastralRef',
+  projectSpaceType: 'projectSpaceType',
   decision: 'decision',
   precisions: 'precisions',
   contacts: 'contacts',
-  further_information: 'further_information',
-  created_by_id: 'created_by_id',
-  created_by_username: 'created_by_username',
-  created_at: 'created_at',
-  service_instructeur: 'service_instructeur'
+  furtherInformation: 'furtherInformation',
+  createdByEmail: 'createdByEmail',
+  createdAt: 'createdAt',
+  serviceInstructeur: 'serviceInstructeur'
 };
 
 exports.Prisma.Report_to_clauseScalarFieldEnum = {
   id: 'id',
-  report_id: 'report_id',
-  clause_id: 'clause_id'
+  reportId: 'reportId',
+  clauseId: 'clauseId'
 };
 
 exports.Prisma.ChipScalarFieldEnum = {
@@ -167,11 +166,11 @@ exports.Prisma.DelegationScalarFieldEnum = {
 exports.Prisma.UdapScalarFieldEnum = {
   id: 'id',
   department: 'department',
-  complete_coords: 'complete_coords',
+  completeCoords: 'completeCoords',
   visible: 'visible',
   name: 'name',
   address: 'address',
-  zip_code: 'zip_code',
+  zipCode: 'zipCode',
   city: 'city',
   phone: 'phone',
   email: 'email'

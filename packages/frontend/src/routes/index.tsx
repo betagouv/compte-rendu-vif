@@ -24,9 +24,8 @@ const Index = () => {
       db.report.create({
         data: {
           id: `report-${v4()}`,
-          created_by_id: user.email,
-          created_at: new Date(),
-          created_by_username: user.name,
+          createdByEmail: user.email,
+          createdAt: new Date(),
         },
       }),
   });

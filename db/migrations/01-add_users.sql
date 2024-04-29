@@ -2,11 +2,11 @@
 CREATE TABLE "udap"(
    id              TEXT NOT NULL PRIMARY KEY
   ,department      TEXT NOT NULL
-  ,complete_coords TEXT
+  ,"completeCoords" TEXT
   ,visible         BOOLEAN
   ,name            TEXT
   ,address         TEXT
-  ,zip_code        TEXT 
+  ,"zipCode"        TEXT 
   ,city            TEXT
   ,phone           TEXT 
   ,email           TEXT

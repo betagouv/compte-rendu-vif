@@ -1,20 +1,20 @@
 CREATE TABLE IF NOT EXISTS "report" (
   id TEXT PRIMARY KEY NOT NULL,
   title TEXT,
-  project_description TEXT,
-  redacted_by TEXT,
-  meet_date TIMESTAMP,
-  applicant_name TEXT,
-  applicant_address TEXT,
-  project_cadastral_ref TEXT,
-  project_space_type TEXT,
+  "projectDescription" TEXT,
+  "redactedBy" TEXT,
+  "meetDate" TIMESTAMP,
+  "applicantName" TEXT,
+  "applicantAddress" TEXT,
+  "projectCadastralRef" TEXT,
+  "projectSpaceType" TEXT,
   decision TEXT,
   precisions TEXT,
   contacts TEXT,
-  further_information TEXT,
-  created_by_email TEXT NOT NULL REFERENCES "user"(email) ON DELETE SET NULL,
-  created_at TIMESTAMP NOT NULL,
-  service_instructeur TEXT
+  "furtherInformation" TEXT,
+  "createdByEmail" TEXT NOT NULL REFERENCES "user"(email) ON DELETE SET NULL,
+  "createdAt" TIMESTAMP NOT NULL,
+  "serviceInstructeur" TEXT
 );
 
 CREATE TABLE IF NOT EXISTS "clause" (
@@ -25,8 +25,8 @@ CREATE TABLE IF NOT EXISTS "clause" (
 
 CREATE TABLE IF NOT EXISTS "report_to_clause" (
   id TEXT PRIMARY KEY NOT NULL,
-  report_id TEXT NOT NULL REFERENCES report(id) ON DELETE CASCADE,
-  clause_id TEXT NOT NULL REFERENCES clause(id) ON DELETE CASCADE
+  "reportId" TEXT NOT NULL REFERENCES report(id) ON DELETE CASCADE,
+  "clauseId" TEXT NOT NULL REFERENCES clause(id) ON DELETE CASCADE
 );
 
 ALTER TABLE

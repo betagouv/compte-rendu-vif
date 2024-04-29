@@ -2,8 +2,8 @@ import { Type, Static } from "@sinclair/typebox";
 
 export const report_to_clause = Type.Object({
   id: Type.String(),
-  report_id: Type.String(),
-  clause_id: Type.String(),
+  reportId: Type.String(),
+  clauseId: Type.String(),
   clause: Type.Object({
     id: Type.String(),
     label: Type.String(),
@@ -12,21 +12,20 @@ export const report_to_clause = Type.Object({
   report: Type.Object({
     id: Type.String(),
     title: Type.Optional(Type.String()),
-    project_description: Type.Optional(Type.String()),
-    redacted_by: Type.Optional(Type.String()),
-    meet_date: Type.Optional(Type.String()),
-    applicant_name: Type.Optional(Type.String()),
-    applicant_address: Type.Optional(Type.String()),
-    project_cadastral_ref: Type.Optional(Type.String()),
-    project_space_type: Type.Optional(Type.String()),
+    projectDescription: Type.Optional(Type.String()),
+    redactedBy: Type.Optional(Type.String()),
+    meetDate: Type.Optional(Type.String()),
+    applicantName: Type.Optional(Type.String()),
+    applicantAddress: Type.Optional(Type.String()),
+    projectCadastralRef: Type.Optional(Type.String()),
+    projectSpaceType: Type.Optional(Type.String()),
     decision: Type.Optional(Type.String()),
     precisions: Type.Optional(Type.String()),
     contacts: Type.Optional(Type.String()),
-    further_information: Type.Optional(Type.String()),
-    created_by_id: Type.String(),
-    created_by_username: Type.String(),
-    created_at: Type.String(),
-    service_instructeur: Type.Optional(Type.String()),
+    furtherInformation: Type.Optional(Type.String()),
+    createdByEmail: Type.String(),
+    createdAt: Type.String(),
+    serviceInstructeur: Type.Optional(Type.String()),
   }),
 });
 

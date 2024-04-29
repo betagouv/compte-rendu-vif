@@ -68,26 +68,26 @@ export type Delegation = runtime.Types.DefaultSelection<DelegationPayload>
 export type ReportPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
   name: "Report"
   objects: {
+    user: UserPayload<ExtArgs>
     report_to_clause: Report_to_clausePayload<ExtArgs>[]
   }
   scalars: $Extensions.GetResult<{
     id: string
     title: string | null
-    project_description: string | null
-    redacted_by: string | null
-    meet_date: Date | null
-    applicant_name: string | null
-    applicant_address: string | null
-    project_cadastral_ref: string | null
-    project_space_type: string | null
+    projectDescription: string | null
+    redactedBy: string | null
+    meetDate: Date | null
+    applicantName: string | null
+    applicantAddress: string | null
+    projectCadastralRef: string | null
+    projectSpaceType: string | null
     decision: string | null
     precisions: string | null
     contacts: string | null
-    further_information: string | null
-    created_by_id: string
-    created_by_username: string
-    created_at: Date
-    service_instructeur: string | null
+    furtherInformation: string | null
+    createdByEmail: string
+    createdAt: Date
+    serviceInstructeur: string | null
   }, ExtArgs["result"]["report"]>
   composites: {}
 }
@@ -105,8 +105,8 @@ export type Report_to_clausePayload<ExtArgs extends $Extensions.Args = $Extensio
   }
   scalars: $Extensions.GetResult<{
     id: string
-    report_id: string
-    clause_id: string
+    reportId: string
+    clauseId: string
   }, ExtArgs["result"]["report_to_clause"]>
   composites: {}
 }
@@ -124,11 +124,11 @@ export type UdapPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultAr
   scalars: $Extensions.GetResult<{
     id: string
     department: string
-    complete_coords: string | null
+    completeCoords: string | null
     visible: boolean | null
     name: string | null
     address: string | null
-    zip_code: string | null
+    zipCode: string | null
     city: string | null
     phone: string | null
     email: string | null
@@ -146,6 +146,7 @@ export type UserPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultAr
   objects: {
     delegation_delegation_createdByTouser: DelegationPayload<ExtArgs>[]
     delegation_delegation_delegatedToTouser: DelegationPayload<ExtArgs>[]
+    report: ReportPayload<ExtArgs>[]
     udap: UdapPayload<ExtArgs>
   }
   scalars: $Extensions.GetResult<{
@@ -1613,11 +1614,13 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type UserCountOutputType = {
     delegation_delegation_createdByTouser: number
     delegation_delegation_delegatedToTouser: number
+    report: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     delegation_delegation_createdByTouser?: boolean | UserCountOutputTypeCountDelegation_delegation_createdByTouserArgs
     delegation_delegation_delegatedToTouser?: boolean | UserCountOutputTypeCountDelegation_delegation_delegatedToTouserArgs
+    report?: boolean | UserCountOutputTypeCountReportArgs
   }
 
   // Custom InputTypes
@@ -1646,6 +1649,14 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
    */
   export type UserCountOutputTypeCountDelegation_delegation_delegatedToTouserArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     where?: DelegationWhereInput
+  }
+
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountReportArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    where?: ReportWhereInput
   }
 
 
@@ -4367,61 +4378,58 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type ReportMinAggregateOutputType = {
     id: string | null
     title: string | null
-    project_description: string | null
-    redacted_by: string | null
-    meet_date: Date | null
-    applicant_name: string | null
-    applicant_address: string | null
-    project_cadastral_ref: string | null
-    project_space_type: string | null
+    projectDescription: string | null
+    redactedBy: string | null
+    meetDate: Date | null
+    applicantName: string | null
+    applicantAddress: string | null
+    projectCadastralRef: string | null
+    projectSpaceType: string | null
     decision: string | null
     precisions: string | null
     contacts: string | null
-    further_information: string | null
-    created_by_id: string | null
-    created_by_username: string | null
-    created_at: Date | null
-    service_instructeur: string | null
+    furtherInformation: string | null
+    createdByEmail: string | null
+    createdAt: Date | null
+    serviceInstructeur: string | null
   }
 
   export type ReportMaxAggregateOutputType = {
     id: string | null
     title: string | null
-    project_description: string | null
-    redacted_by: string | null
-    meet_date: Date | null
-    applicant_name: string | null
-    applicant_address: string | null
-    project_cadastral_ref: string | null
-    project_space_type: string | null
+    projectDescription: string | null
+    redactedBy: string | null
+    meetDate: Date | null
+    applicantName: string | null
+    applicantAddress: string | null
+    projectCadastralRef: string | null
+    projectSpaceType: string | null
     decision: string | null
     precisions: string | null
     contacts: string | null
-    further_information: string | null
-    created_by_id: string | null
-    created_by_username: string | null
-    created_at: Date | null
-    service_instructeur: string | null
+    furtherInformation: string | null
+    createdByEmail: string | null
+    createdAt: Date | null
+    serviceInstructeur: string | null
   }
 
   export type ReportCountAggregateOutputType = {
     id: number
     title: number
-    project_description: number
-    redacted_by: number
-    meet_date: number
-    applicant_name: number
-    applicant_address: number
-    project_cadastral_ref: number
-    project_space_type: number
+    projectDescription: number
+    redactedBy: number
+    meetDate: number
+    applicantName: number
+    applicantAddress: number
+    projectCadastralRef: number
+    projectSpaceType: number
     decision: number
     precisions: number
     contacts: number
-    further_information: number
-    created_by_id: number
-    created_by_username: number
-    created_at: number
-    service_instructeur: number
+    furtherInformation: number
+    createdByEmail: number
+    createdAt: number
+    serviceInstructeur: number
     _all: number
   }
 
@@ -4429,61 +4437,58 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type ReportMinAggregateInputType = {
     id?: true
     title?: true
-    project_description?: true
-    redacted_by?: true
-    meet_date?: true
-    applicant_name?: true
-    applicant_address?: true
-    project_cadastral_ref?: true
-    project_space_type?: true
+    projectDescription?: true
+    redactedBy?: true
+    meetDate?: true
+    applicantName?: true
+    applicantAddress?: true
+    projectCadastralRef?: true
+    projectSpaceType?: true
     decision?: true
     precisions?: true
     contacts?: true
-    further_information?: true
-    created_by_id?: true
-    created_by_username?: true
-    created_at?: true
-    service_instructeur?: true
+    furtherInformation?: true
+    createdByEmail?: true
+    createdAt?: true
+    serviceInstructeur?: true
   }
 
   export type ReportMaxAggregateInputType = {
     id?: true
     title?: true
-    project_description?: true
-    redacted_by?: true
-    meet_date?: true
-    applicant_name?: true
-    applicant_address?: true
-    project_cadastral_ref?: true
-    project_space_type?: true
+    projectDescription?: true
+    redactedBy?: true
+    meetDate?: true
+    applicantName?: true
+    applicantAddress?: true
+    projectCadastralRef?: true
+    projectSpaceType?: true
     decision?: true
     precisions?: true
     contacts?: true
-    further_information?: true
-    created_by_id?: true
-    created_by_username?: true
-    created_at?: true
-    service_instructeur?: true
+    furtherInformation?: true
+    createdByEmail?: true
+    createdAt?: true
+    serviceInstructeur?: true
   }
 
   export type ReportCountAggregateInputType = {
     id?: true
     title?: true
-    project_description?: true
-    redacted_by?: true
-    meet_date?: true
-    applicant_name?: true
-    applicant_address?: true
-    project_cadastral_ref?: true
-    project_space_type?: true
+    projectDescription?: true
+    redactedBy?: true
+    meetDate?: true
+    applicantName?: true
+    applicantAddress?: true
+    projectCadastralRef?: true
+    projectSpaceType?: true
     decision?: true
     precisions?: true
     contacts?: true
-    further_information?: true
-    created_by_id?: true
-    created_by_username?: true
-    created_at?: true
-    service_instructeur?: true
+    furtherInformation?: true
+    createdByEmail?: true
+    createdAt?: true
+    serviceInstructeur?: true
     _all?: true
   }
 
@@ -4563,21 +4568,20 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type ReportGroupByOutputType = {
     id: string
     title: string | null
-    project_description: string | null
-    redacted_by: string | null
-    meet_date: Date | null
-    applicant_name: string | null
-    applicant_address: string | null
-    project_cadastral_ref: string | null
-    project_space_type: string | null
+    projectDescription: string | null
+    redactedBy: string | null
+    meetDate: Date | null
+    applicantName: string | null
+    applicantAddress: string | null
+    projectCadastralRef: string | null
+    projectSpaceType: string | null
     decision: string | null
     precisions: string | null
     contacts: string | null
-    further_information: string | null
-    created_by_id: string
-    created_by_username: string
-    created_at: Date
-    service_instructeur: string | null
+    furtherInformation: string | null
+    createdByEmail: string
+    createdAt: Date
+    serviceInstructeur: string | null
     _count: ReportCountAggregateOutputType | null
     _min: ReportMinAggregateOutputType | null
     _max: ReportMaxAggregateOutputType | null
@@ -4600,21 +4604,21 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type ReportSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     title?: boolean
-    project_description?: boolean
-    redacted_by?: boolean
-    meet_date?: boolean
-    applicant_name?: boolean
-    applicant_address?: boolean
-    project_cadastral_ref?: boolean
-    project_space_type?: boolean
+    projectDescription?: boolean
+    redactedBy?: boolean
+    meetDate?: boolean
+    applicantName?: boolean
+    applicantAddress?: boolean
+    projectCadastralRef?: boolean
+    projectSpaceType?: boolean
     decision?: boolean
     precisions?: boolean
     contacts?: boolean
-    further_information?: boolean
-    created_by_id?: boolean
-    created_by_username?: boolean
-    created_at?: boolean
-    service_instructeur?: boolean
+    furtherInformation?: boolean
+    createdByEmail?: boolean
+    createdAt?: boolean
+    serviceInstructeur?: boolean
+    user?: boolean | UserArgs<ExtArgs>
     report_to_clause?: boolean | Report$report_to_clauseArgs<ExtArgs>
     _count?: boolean | ReportCountOutputTypeArgs<ExtArgs>
   }, ExtArgs["result"]["report"]>
@@ -4622,24 +4626,24 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type ReportSelectScalar = {
     id?: boolean
     title?: boolean
-    project_description?: boolean
-    redacted_by?: boolean
-    meet_date?: boolean
-    applicant_name?: boolean
-    applicant_address?: boolean
-    project_cadastral_ref?: boolean
-    project_space_type?: boolean
+    projectDescription?: boolean
+    redactedBy?: boolean
+    meetDate?: boolean
+    applicantName?: boolean
+    applicantAddress?: boolean
+    projectCadastralRef?: boolean
+    projectSpaceType?: boolean
     decision?: boolean
     precisions?: boolean
     contacts?: boolean
-    further_information?: boolean
-    created_by_id?: boolean
-    created_by_username?: boolean
-    created_at?: boolean
-    service_instructeur?: boolean
+    furtherInformation?: boolean
+    createdByEmail?: boolean
+    createdAt?: boolean
+    serviceInstructeur?: boolean
   }
 
   export type ReportInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    user?: boolean | UserArgs<ExtArgs>
     report_to_clause?: boolean | Report$report_to_clauseArgs<ExtArgs>
     _count?: boolean | ReportCountOutputTypeArgs<ExtArgs>
   }
@@ -5013,6 +5017,8 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     private _requestPromise?;
     readonly [Symbol.toStringTag]: 'PrismaPromise';
     constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
+
+    user<T extends UserArgs<ExtArgs> = {}>(args?: Subset<T, UserArgs<ExtArgs>>): Prisma__UserClient<$Types.GetResult<UserPayload<ExtArgs>, T, 'findUnique', never> | Null, never, ExtArgs>;
 
     report_to_clause<T extends Report$report_to_clauseArgs<ExtArgs> = {}>(args?: Subset<T, Report$report_to_clauseArgs<ExtArgs>>): Prisma.PrismaPromise<$Types.GetResult<Report_to_clausePayload<ExtArgs>, T, 'findMany', never>| Null>;
 
@@ -5421,40 +5427,40 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type Report_to_clauseMinAggregateOutputType = {
     id: string | null
-    report_id: string | null
-    clause_id: string | null
+    reportId: string | null
+    clauseId: string | null
   }
 
   export type Report_to_clauseMaxAggregateOutputType = {
     id: string | null
-    report_id: string | null
-    clause_id: string | null
+    reportId: string | null
+    clauseId: string | null
   }
 
   export type Report_to_clauseCountAggregateOutputType = {
     id: number
-    report_id: number
-    clause_id: number
+    reportId: number
+    clauseId: number
     _all: number
   }
 
 
   export type Report_to_clauseMinAggregateInputType = {
     id?: true
-    report_id?: true
-    clause_id?: true
+    reportId?: true
+    clauseId?: true
   }
 
   export type Report_to_clauseMaxAggregateInputType = {
     id?: true
-    report_id?: true
-    clause_id?: true
+    reportId?: true
+    clauseId?: true
   }
 
   export type Report_to_clauseCountAggregateInputType = {
     id?: true
-    report_id?: true
-    clause_id?: true
+    reportId?: true
+    clauseId?: true
     _all?: true
   }
 
@@ -5533,8 +5539,8 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type Report_to_clauseGroupByOutputType = {
     id: string
-    report_id: string
-    clause_id: string
+    reportId: string
+    clauseId: string
     _count: Report_to_clauseCountAggregateOutputType | null
     _min: Report_to_clauseMinAggregateOutputType | null
     _max: Report_to_clauseMaxAggregateOutputType | null
@@ -5556,16 +5562,16 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type Report_to_clauseSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    report_id?: boolean
-    clause_id?: boolean
+    reportId?: boolean
+    clauseId?: boolean
     clause?: boolean | ClauseArgs<ExtArgs>
     report?: boolean | ReportArgs<ExtArgs>
   }, ExtArgs["result"]["report_to_clause"]>
 
   export type Report_to_clauseSelectScalar = {
     id?: boolean
-    report_id?: boolean
-    clause_id?: boolean
+    reportId?: boolean
+    clauseId?: boolean
   }
 
   export type Report_to_clauseInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
@@ -6332,11 +6338,11 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type UdapMinAggregateOutputType = {
     id: string | null
     department: string | null
-    complete_coords: string | null
+    completeCoords: string | null
     visible: boolean | null
     name: string | null
     address: string | null
-    zip_code: string | null
+    zipCode: string | null
     city: string | null
     phone: string | null
     email: string | null
@@ -6345,11 +6351,11 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type UdapMaxAggregateOutputType = {
     id: string | null
     department: string | null
-    complete_coords: string | null
+    completeCoords: string | null
     visible: boolean | null
     name: string | null
     address: string | null
-    zip_code: string | null
+    zipCode: string | null
     city: string | null
     phone: string | null
     email: string | null
@@ -6358,11 +6364,11 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type UdapCountAggregateOutputType = {
     id: number
     department: number
-    complete_coords: number
+    completeCoords: number
     visible: number
     name: number
     address: number
-    zip_code: number
+    zipCode: number
     city: number
     phone: number
     email: number
@@ -6373,11 +6379,11 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type UdapMinAggregateInputType = {
     id?: true
     department?: true
-    complete_coords?: true
+    completeCoords?: true
     visible?: true
     name?: true
     address?: true
-    zip_code?: true
+    zipCode?: true
     city?: true
     phone?: true
     email?: true
@@ -6386,11 +6392,11 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type UdapMaxAggregateInputType = {
     id?: true
     department?: true
-    complete_coords?: true
+    completeCoords?: true
     visible?: true
     name?: true
     address?: true
-    zip_code?: true
+    zipCode?: true
     city?: true
     phone?: true
     email?: true
@@ -6399,11 +6405,11 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type UdapCountAggregateInputType = {
     id?: true
     department?: true
-    complete_coords?: true
+    completeCoords?: true
     visible?: true
     name?: true
     address?: true
-    zip_code?: true
+    zipCode?: true
     city?: true
     phone?: true
     email?: true
@@ -6486,11 +6492,11 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type UdapGroupByOutputType = {
     id: string
     department: string
-    complete_coords: string | null
+    completeCoords: string | null
     visible: boolean | null
     name: string | null
     address: string | null
-    zip_code: string | null
+    zipCode: string | null
     city: string | null
     phone: string | null
     email: string | null
@@ -6516,11 +6522,11 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type UdapSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     department?: boolean
-    complete_coords?: boolean
+    completeCoords?: boolean
     visible?: boolean
     name?: boolean
     address?: boolean
-    zip_code?: boolean
+    zipCode?: boolean
     city?: boolean
     phone?: boolean
     email?: boolean
@@ -6531,11 +6537,11 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type UdapSelectScalar = {
     id?: boolean
     department?: boolean
-    complete_coords?: boolean
+    completeCoords?: boolean
     visible?: boolean
     name?: boolean
     address?: boolean
-    zip_code?: boolean
+    zipCode?: boolean
     city?: boolean
     phone?: boolean
     email?: boolean
@@ -7486,6 +7492,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     udap_id?: boolean
     delegation_delegation_createdByTouser?: boolean | User$delegation_delegation_createdByTouserArgs<ExtArgs>
     delegation_delegation_delegatedToTouser?: boolean | User$delegation_delegation_delegatedToTouserArgs<ExtArgs>
+    report?: boolean | User$reportArgs<ExtArgs>
     udap?: boolean | UdapArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
@@ -7502,6 +7509,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type UserInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     delegation_delegation_createdByTouser?: boolean | User$delegation_delegation_createdByTouserArgs<ExtArgs>
     delegation_delegation_delegatedToTouser?: boolean | User$delegation_delegation_delegatedToTouserArgs<ExtArgs>
+    report?: boolean | User$reportArgs<ExtArgs>
     udap?: boolean | UdapArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeArgs<ExtArgs>
   }
@@ -7879,6 +7887,8 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     delegation_delegation_createdByTouser<T extends User$delegation_delegation_createdByTouserArgs<ExtArgs> = {}>(args?: Subset<T, User$delegation_delegation_createdByTouserArgs<ExtArgs>>): Prisma.PrismaPromise<$Types.GetResult<DelegationPayload<ExtArgs>, T, 'findMany', never>| Null>;
 
     delegation_delegation_delegatedToTouser<T extends User$delegation_delegation_delegatedToTouserArgs<ExtArgs> = {}>(args?: Subset<T, User$delegation_delegation_delegatedToTouserArgs<ExtArgs>>): Prisma.PrismaPromise<$Types.GetResult<DelegationPayload<ExtArgs>, T, 'findMany', never>| Null>;
+
+    report<T extends User$reportArgs<ExtArgs> = {}>(args?: Subset<T, User$reportArgs<ExtArgs>>): Prisma.PrismaPromise<$Types.GetResult<ReportPayload<ExtArgs>, T, 'findMany', never>| Null>;
 
     udap<T extends UdapArgs<ExtArgs> = {}>(args?: Subset<T, UdapArgs<ExtArgs>>): Prisma__UdapClient<$Types.GetResult<UdapPayload<ExtArgs>, T, 'findUnique', never> | Null, never, ExtArgs>;
 
@@ -8280,6 +8290,27 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
 
   /**
+   * User.report
+   */
+  export type User$reportArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Report
+     */
+    select?: ReportSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: ReportInclude<ExtArgs> | null
+    where?: ReportWhereInput
+    orderBy?: Enumerable<ReportOrderByWithRelationInput>
+    cursor?: ReportWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Enumerable<ReportScalarFieldEnum>
+  }
+
+
+  /**
    * User without action
    */
   export type UserArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
@@ -8339,21 +8370,20 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export const ReportScalarFieldEnum: {
     id: 'id',
     title: 'title',
-    project_description: 'project_description',
-    redacted_by: 'redacted_by',
-    meet_date: 'meet_date',
-    applicant_name: 'applicant_name',
-    applicant_address: 'applicant_address',
-    project_cadastral_ref: 'project_cadastral_ref',
-    project_space_type: 'project_space_type',
+    projectDescription: 'projectDescription',
+    redactedBy: 'redactedBy',
+    meetDate: 'meetDate',
+    applicantName: 'applicantName',
+    applicantAddress: 'applicantAddress',
+    projectCadastralRef: 'projectCadastralRef',
+    projectSpaceType: 'projectSpaceType',
     decision: 'decision',
     precisions: 'precisions',
     contacts: 'contacts',
-    further_information: 'further_information',
-    created_by_id: 'created_by_id',
-    created_by_username: 'created_by_username',
-    created_at: 'created_at',
-    service_instructeur: 'service_instructeur'
+    furtherInformation: 'furtherInformation',
+    createdByEmail: 'createdByEmail',
+    createdAt: 'createdAt',
+    serviceInstructeur: 'serviceInstructeur'
   };
 
   export type ReportScalarFieldEnum = (typeof ReportScalarFieldEnum)[keyof typeof ReportScalarFieldEnum]
@@ -8361,8 +8391,8 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export const Report_to_clauseScalarFieldEnum: {
     id: 'id',
-    report_id: 'report_id',
-    clause_id: 'clause_id'
+    reportId: 'reportId',
+    clauseId: 'clauseId'
   };
 
   export type Report_to_clauseScalarFieldEnum = (typeof Report_to_clauseScalarFieldEnum)[keyof typeof Report_to_clauseScalarFieldEnum]
@@ -8371,11 +8401,11 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export const UdapScalarFieldEnum: {
     id: 'id',
     department: 'department',
-    complete_coords: 'complete_coords',
+    completeCoords: 'completeCoords',
     visible: 'visible',
     name: 'name',
     address: 'address',
-    zip_code: 'zip_code',
+    zipCode: 'zipCode',
     city: 'city',
     phone: 'phone',
     email: 'email'
@@ -8548,42 +8578,42 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     NOT?: Enumerable<ReportWhereInput>
     id?: StringFilter | string
     title?: StringNullableFilter | string | null
-    project_description?: StringNullableFilter | string | null
-    redacted_by?: StringNullableFilter | string | null
-    meet_date?: DateTimeNullableFilter | Date | string | null
-    applicant_name?: StringNullableFilter | string | null
-    applicant_address?: StringNullableFilter | string | null
-    project_cadastral_ref?: StringNullableFilter | string | null
-    project_space_type?: StringNullableFilter | string | null
+    projectDescription?: StringNullableFilter | string | null
+    redactedBy?: StringNullableFilter | string | null
+    meetDate?: DateTimeNullableFilter | Date | string | null
+    applicantName?: StringNullableFilter | string | null
+    applicantAddress?: StringNullableFilter | string | null
+    projectCadastralRef?: StringNullableFilter | string | null
+    projectSpaceType?: StringNullableFilter | string | null
     decision?: StringNullableFilter | string | null
     precisions?: StringNullableFilter | string | null
     contacts?: StringNullableFilter | string | null
-    further_information?: StringNullableFilter | string | null
-    created_by_id?: StringFilter | string
-    created_by_username?: StringFilter | string
-    created_at?: DateTimeFilter | Date | string
-    service_instructeur?: StringNullableFilter | string | null
+    furtherInformation?: StringNullableFilter | string | null
+    createdByEmail?: StringFilter | string
+    createdAt?: DateTimeFilter | Date | string
+    serviceInstructeur?: StringNullableFilter | string | null
+    user?: XOR<UserRelationFilter, UserWhereInput>
     report_to_clause?: Report_to_clauseListRelationFilter
   }
 
   export type ReportOrderByWithRelationInput = {
     id?: SortOrder
     title?: SortOrderInput | SortOrder
-    project_description?: SortOrderInput | SortOrder
-    redacted_by?: SortOrderInput | SortOrder
-    meet_date?: SortOrderInput | SortOrder
-    applicant_name?: SortOrderInput | SortOrder
-    applicant_address?: SortOrderInput | SortOrder
-    project_cadastral_ref?: SortOrderInput | SortOrder
-    project_space_type?: SortOrderInput | SortOrder
+    projectDescription?: SortOrderInput | SortOrder
+    redactedBy?: SortOrderInput | SortOrder
+    meetDate?: SortOrderInput | SortOrder
+    applicantName?: SortOrderInput | SortOrder
+    applicantAddress?: SortOrderInput | SortOrder
+    projectCadastralRef?: SortOrderInput | SortOrder
+    projectSpaceType?: SortOrderInput | SortOrder
     decision?: SortOrderInput | SortOrder
     precisions?: SortOrderInput | SortOrder
     contacts?: SortOrderInput | SortOrder
-    further_information?: SortOrderInput | SortOrder
-    created_by_id?: SortOrder
-    created_by_username?: SortOrder
-    created_at?: SortOrder
-    service_instructeur?: SortOrderInput | SortOrder
+    furtherInformation?: SortOrderInput | SortOrder
+    createdByEmail?: SortOrder
+    createdAt?: SortOrder
+    serviceInstructeur?: SortOrderInput | SortOrder
+    user?: UserOrderByWithRelationInput
     report_to_clause?: Report_to_clauseOrderByRelationAggregateInput
   }
 
@@ -8594,21 +8624,20 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type ReportOrderByWithAggregationInput = {
     id?: SortOrder
     title?: SortOrderInput | SortOrder
-    project_description?: SortOrderInput | SortOrder
-    redacted_by?: SortOrderInput | SortOrder
-    meet_date?: SortOrderInput | SortOrder
-    applicant_name?: SortOrderInput | SortOrder
-    applicant_address?: SortOrderInput | SortOrder
-    project_cadastral_ref?: SortOrderInput | SortOrder
-    project_space_type?: SortOrderInput | SortOrder
+    projectDescription?: SortOrderInput | SortOrder
+    redactedBy?: SortOrderInput | SortOrder
+    meetDate?: SortOrderInput | SortOrder
+    applicantName?: SortOrderInput | SortOrder
+    applicantAddress?: SortOrderInput | SortOrder
+    projectCadastralRef?: SortOrderInput | SortOrder
+    projectSpaceType?: SortOrderInput | SortOrder
     decision?: SortOrderInput | SortOrder
     precisions?: SortOrderInput | SortOrder
     contacts?: SortOrderInput | SortOrder
-    further_information?: SortOrderInput | SortOrder
-    created_by_id?: SortOrder
-    created_by_username?: SortOrder
-    created_at?: SortOrder
-    service_instructeur?: SortOrderInput | SortOrder
+    furtherInformation?: SortOrderInput | SortOrder
+    createdByEmail?: SortOrder
+    createdAt?: SortOrder
+    serviceInstructeur?: SortOrderInput | SortOrder
     _count?: ReportCountOrderByAggregateInput
     _max?: ReportMaxOrderByAggregateInput
     _min?: ReportMinOrderByAggregateInput
@@ -8620,21 +8649,20 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     NOT?: Enumerable<ReportScalarWhereWithAggregatesInput>
     id?: StringWithAggregatesFilter | string
     title?: StringNullableWithAggregatesFilter | string | null
-    project_description?: StringNullableWithAggregatesFilter | string | null
-    redacted_by?: StringNullableWithAggregatesFilter | string | null
-    meet_date?: DateTimeNullableWithAggregatesFilter | Date | string | null
-    applicant_name?: StringNullableWithAggregatesFilter | string | null
-    applicant_address?: StringNullableWithAggregatesFilter | string | null
-    project_cadastral_ref?: StringNullableWithAggregatesFilter | string | null
-    project_space_type?: StringNullableWithAggregatesFilter | string | null
+    projectDescription?: StringNullableWithAggregatesFilter | string | null
+    redactedBy?: StringNullableWithAggregatesFilter | string | null
+    meetDate?: DateTimeNullableWithAggregatesFilter | Date | string | null
+    applicantName?: StringNullableWithAggregatesFilter | string | null
+    applicantAddress?: StringNullableWithAggregatesFilter | string | null
+    projectCadastralRef?: StringNullableWithAggregatesFilter | string | null
+    projectSpaceType?: StringNullableWithAggregatesFilter | string | null
     decision?: StringNullableWithAggregatesFilter | string | null
     precisions?: StringNullableWithAggregatesFilter | string | null
     contacts?: StringNullableWithAggregatesFilter | string | null
-    further_information?: StringNullableWithAggregatesFilter | string | null
-    created_by_id?: StringWithAggregatesFilter | string
-    created_by_username?: StringWithAggregatesFilter | string
-    created_at?: DateTimeWithAggregatesFilter | Date | string
-    service_instructeur?: StringNullableWithAggregatesFilter | string | null
+    furtherInformation?: StringNullableWithAggregatesFilter | string | null
+    createdByEmail?: StringWithAggregatesFilter | string
+    createdAt?: DateTimeWithAggregatesFilter | Date | string
+    serviceInstructeur?: StringNullableWithAggregatesFilter | string | null
   }
 
   export type Report_to_clauseWhereInput = {
@@ -8642,16 +8670,16 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     OR?: Enumerable<Report_to_clauseWhereInput>
     NOT?: Enumerable<Report_to_clauseWhereInput>
     id?: StringFilter | string
-    report_id?: StringFilter | string
-    clause_id?: StringFilter | string
+    reportId?: StringFilter | string
+    clauseId?: StringFilter | string
     clause?: XOR<ClauseRelationFilter, ClauseWhereInput>
     report?: XOR<ReportRelationFilter, ReportWhereInput>
   }
 
   export type Report_to_clauseOrderByWithRelationInput = {
     id?: SortOrder
-    report_id?: SortOrder
-    clause_id?: SortOrder
+    reportId?: SortOrder
+    clauseId?: SortOrder
     clause?: ClauseOrderByWithRelationInput
     report?: ReportOrderByWithRelationInput
   }
@@ -8662,8 +8690,8 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type Report_to_clauseOrderByWithAggregationInput = {
     id?: SortOrder
-    report_id?: SortOrder
-    clause_id?: SortOrder
+    reportId?: SortOrder
+    clauseId?: SortOrder
     _count?: Report_to_clauseCountOrderByAggregateInput
     _max?: Report_to_clauseMaxOrderByAggregateInput
     _min?: Report_to_clauseMinOrderByAggregateInput
@@ -8674,8 +8702,8 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     OR?: Enumerable<Report_to_clauseScalarWhereWithAggregatesInput>
     NOT?: Enumerable<Report_to_clauseScalarWhereWithAggregatesInput>
     id?: StringWithAggregatesFilter | string
-    report_id?: StringWithAggregatesFilter | string
-    clause_id?: StringWithAggregatesFilter | string
+    reportId?: StringWithAggregatesFilter | string
+    clauseId?: StringWithAggregatesFilter | string
   }
 
   export type UdapWhereInput = {
@@ -8684,11 +8712,11 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     NOT?: Enumerable<UdapWhereInput>
     id?: StringFilter | string
     department?: StringFilter | string
-    complete_coords?: StringNullableFilter | string | null
+    completeCoords?: StringNullableFilter | string | null
     visible?: BoolNullableFilter | boolean | null
     name?: StringNullableFilter | string | null
     address?: StringNullableFilter | string | null
-    zip_code?: StringNullableFilter | string | null
+    zipCode?: StringNullableFilter | string | null
     city?: StringNullableFilter | string | null
     phone?: StringNullableFilter | string | null
     email?: StringNullableFilter | string | null
@@ -8698,11 +8726,11 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type UdapOrderByWithRelationInput = {
     id?: SortOrder
     department?: SortOrder
-    complete_coords?: SortOrderInput | SortOrder
+    completeCoords?: SortOrderInput | SortOrder
     visible?: SortOrderInput | SortOrder
     name?: SortOrderInput | SortOrder
     address?: SortOrderInput | SortOrder
-    zip_code?: SortOrderInput | SortOrder
+    zipCode?: SortOrderInput | SortOrder
     city?: SortOrderInput | SortOrder
     phone?: SortOrderInput | SortOrder
     email?: SortOrderInput | SortOrder
@@ -8716,11 +8744,11 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type UdapOrderByWithAggregationInput = {
     id?: SortOrder
     department?: SortOrder
-    complete_coords?: SortOrderInput | SortOrder
+    completeCoords?: SortOrderInput | SortOrder
     visible?: SortOrderInput | SortOrder
     name?: SortOrderInput | SortOrder
     address?: SortOrderInput | SortOrder
-    zip_code?: SortOrderInput | SortOrder
+    zipCode?: SortOrderInput | SortOrder
     city?: SortOrderInput | SortOrder
     phone?: SortOrderInput | SortOrder
     email?: SortOrderInput | SortOrder
@@ -8735,11 +8763,11 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     NOT?: Enumerable<UdapScalarWhereWithAggregatesInput>
     id?: StringWithAggregatesFilter | string
     department?: StringWithAggregatesFilter | string
-    complete_coords?: StringNullableWithAggregatesFilter | string | null
+    completeCoords?: StringNullableWithAggregatesFilter | string | null
     visible?: BoolNullableWithAggregatesFilter | boolean | null
     name?: StringNullableWithAggregatesFilter | string | null
     address?: StringNullableWithAggregatesFilter | string | null
-    zip_code?: StringNullableWithAggregatesFilter | string | null
+    zipCode?: StringNullableWithAggregatesFilter | string | null
     city?: StringNullableWithAggregatesFilter | string | null
     phone?: StringNullableWithAggregatesFilter | string | null
     email?: StringNullableWithAggregatesFilter | string | null
@@ -8757,6 +8785,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     udap_id?: StringFilter | string
     delegation_delegation_createdByTouser?: DelegationListRelationFilter
     delegation_delegation_delegatedToTouser?: DelegationListRelationFilter
+    report?: ReportListRelationFilter
     udap?: XOR<UdapRelationFilter, UdapWhereInput>
   }
 
@@ -8769,6 +8798,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     udap_id?: SortOrder
     delegation_delegation_createdByTouser?: DelegationOrderByRelationAggregateInput
     delegation_delegation_delegatedToTouser?: DelegationOrderByRelationAggregateInput
+    report?: ReportOrderByRelationAggregateInput
     udap?: UdapOrderByWithRelationInput
   }
 
@@ -8932,145 +8962,137 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type ReportCreateInput = {
     id: string
     title?: string | null
-    project_description?: string | null
-    redacted_by?: string | null
-    meet_date?: Date | string | null
-    applicant_name?: string | null
-    applicant_address?: string | null
-    project_cadastral_ref?: string | null
-    project_space_type?: string | null
+    projectDescription?: string | null
+    redactedBy?: string | null
+    meetDate?: Date | string | null
+    applicantName?: string | null
+    applicantAddress?: string | null
+    projectCadastralRef?: string | null
+    projectSpaceType?: string | null
     decision?: string | null
     precisions?: string | null
     contacts?: string | null
-    further_information?: string | null
-    created_by_id: string
-    created_by_username: string
-    created_at: Date | string
-    service_instructeur?: string | null
+    furtherInformation?: string | null
+    createdAt: Date | string
+    serviceInstructeur?: string | null
+    user: UserCreateNestedOneWithoutReportInput
     report_to_clause?: Report_to_clauseCreateNestedManyWithoutReportInput
   }
 
   export type ReportUncheckedCreateInput = {
     id: string
     title?: string | null
-    project_description?: string | null
-    redacted_by?: string | null
-    meet_date?: Date | string | null
-    applicant_name?: string | null
-    applicant_address?: string | null
-    project_cadastral_ref?: string | null
-    project_space_type?: string | null
+    projectDescription?: string | null
+    redactedBy?: string | null
+    meetDate?: Date | string | null
+    applicantName?: string | null
+    applicantAddress?: string | null
+    projectCadastralRef?: string | null
+    projectSpaceType?: string | null
     decision?: string | null
     precisions?: string | null
     contacts?: string | null
-    further_information?: string | null
-    created_by_id: string
-    created_by_username: string
-    created_at: Date | string
-    service_instructeur?: string | null
+    furtherInformation?: string | null
+    createdByEmail: string
+    createdAt: Date | string
+    serviceInstructeur?: string | null
     report_to_clause?: Report_to_clauseUncheckedCreateNestedManyWithoutReportInput
   }
 
   export type ReportUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: NullableStringFieldUpdateOperationsInput | string | null
-    project_description?: NullableStringFieldUpdateOperationsInput | string | null
-    redacted_by?: NullableStringFieldUpdateOperationsInput | string | null
-    meet_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    applicant_name?: NullableStringFieldUpdateOperationsInput | string | null
-    applicant_address?: NullableStringFieldUpdateOperationsInput | string | null
-    project_cadastral_ref?: NullableStringFieldUpdateOperationsInput | string | null
-    project_space_type?: NullableStringFieldUpdateOperationsInput | string | null
+    projectDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    redactedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    meetDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    applicantName?: NullableStringFieldUpdateOperationsInput | string | null
+    applicantAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    projectCadastralRef?: NullableStringFieldUpdateOperationsInput | string | null
+    projectSpaceType?: NullableStringFieldUpdateOperationsInput | string | null
     decision?: NullableStringFieldUpdateOperationsInput | string | null
     precisions?: NullableStringFieldUpdateOperationsInput | string | null
     contacts?: NullableStringFieldUpdateOperationsInput | string | null
-    further_information?: NullableStringFieldUpdateOperationsInput | string | null
-    created_by_id?: StringFieldUpdateOperationsInput | string
-    created_by_username?: StringFieldUpdateOperationsInput | string
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    service_instructeur?: NullableStringFieldUpdateOperationsInput | string | null
+    furtherInformation?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    serviceInstructeur?: NullableStringFieldUpdateOperationsInput | string | null
+    user?: UserUpdateOneRequiredWithoutReportNestedInput
     report_to_clause?: Report_to_clauseUpdateManyWithoutReportNestedInput
   }
 
   export type ReportUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: NullableStringFieldUpdateOperationsInput | string | null
-    project_description?: NullableStringFieldUpdateOperationsInput | string | null
-    redacted_by?: NullableStringFieldUpdateOperationsInput | string | null
-    meet_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    applicant_name?: NullableStringFieldUpdateOperationsInput | string | null
-    applicant_address?: NullableStringFieldUpdateOperationsInput | string | null
-    project_cadastral_ref?: NullableStringFieldUpdateOperationsInput | string | null
-    project_space_type?: NullableStringFieldUpdateOperationsInput | string | null
+    projectDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    redactedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    meetDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    applicantName?: NullableStringFieldUpdateOperationsInput | string | null
+    applicantAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    projectCadastralRef?: NullableStringFieldUpdateOperationsInput | string | null
+    projectSpaceType?: NullableStringFieldUpdateOperationsInput | string | null
     decision?: NullableStringFieldUpdateOperationsInput | string | null
     precisions?: NullableStringFieldUpdateOperationsInput | string | null
     contacts?: NullableStringFieldUpdateOperationsInput | string | null
-    further_information?: NullableStringFieldUpdateOperationsInput | string | null
-    created_by_id?: StringFieldUpdateOperationsInput | string
-    created_by_username?: StringFieldUpdateOperationsInput | string
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    service_instructeur?: NullableStringFieldUpdateOperationsInput | string | null
+    furtherInformation?: NullableStringFieldUpdateOperationsInput | string | null
+    createdByEmail?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    serviceInstructeur?: NullableStringFieldUpdateOperationsInput | string | null
     report_to_clause?: Report_to_clauseUncheckedUpdateManyWithoutReportNestedInput
   }
 
   export type ReportCreateManyInput = {
     id: string
     title?: string | null
-    project_description?: string | null
-    redacted_by?: string | null
-    meet_date?: Date | string | null
-    applicant_name?: string | null
-    applicant_address?: string | null
-    project_cadastral_ref?: string | null
-    project_space_type?: string | null
+    projectDescription?: string | null
+    redactedBy?: string | null
+    meetDate?: Date | string | null
+    applicantName?: string | null
+    applicantAddress?: string | null
+    projectCadastralRef?: string | null
+    projectSpaceType?: string | null
     decision?: string | null
     precisions?: string | null
     contacts?: string | null
-    further_information?: string | null
-    created_by_id: string
-    created_by_username: string
-    created_at: Date | string
-    service_instructeur?: string | null
+    furtherInformation?: string | null
+    createdByEmail: string
+    createdAt: Date | string
+    serviceInstructeur?: string | null
   }
 
   export type ReportUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: NullableStringFieldUpdateOperationsInput | string | null
-    project_description?: NullableStringFieldUpdateOperationsInput | string | null
-    redacted_by?: NullableStringFieldUpdateOperationsInput | string | null
-    meet_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    applicant_name?: NullableStringFieldUpdateOperationsInput | string | null
-    applicant_address?: NullableStringFieldUpdateOperationsInput | string | null
-    project_cadastral_ref?: NullableStringFieldUpdateOperationsInput | string | null
-    project_space_type?: NullableStringFieldUpdateOperationsInput | string | null
+    projectDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    redactedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    meetDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    applicantName?: NullableStringFieldUpdateOperationsInput | string | null
+    applicantAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    projectCadastralRef?: NullableStringFieldUpdateOperationsInput | string | null
+    projectSpaceType?: NullableStringFieldUpdateOperationsInput | string | null
     decision?: NullableStringFieldUpdateOperationsInput | string | null
     precisions?: NullableStringFieldUpdateOperationsInput | string | null
     contacts?: NullableStringFieldUpdateOperationsInput | string | null
-    further_information?: NullableStringFieldUpdateOperationsInput | string | null
-    created_by_id?: StringFieldUpdateOperationsInput | string
-    created_by_username?: StringFieldUpdateOperationsInput | string
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    service_instructeur?: NullableStringFieldUpdateOperationsInput | string | null
+    furtherInformation?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    serviceInstructeur?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ReportUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: NullableStringFieldUpdateOperationsInput | string | null
-    project_description?: NullableStringFieldUpdateOperationsInput | string | null
-    redacted_by?: NullableStringFieldUpdateOperationsInput | string | null
-    meet_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    applicant_name?: NullableStringFieldUpdateOperationsInput | string | null
-    applicant_address?: NullableStringFieldUpdateOperationsInput | string | null
-    project_cadastral_ref?: NullableStringFieldUpdateOperationsInput | string | null
-    project_space_type?: NullableStringFieldUpdateOperationsInput | string | null
+    projectDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    redactedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    meetDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    applicantName?: NullableStringFieldUpdateOperationsInput | string | null
+    applicantAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    projectCadastralRef?: NullableStringFieldUpdateOperationsInput | string | null
+    projectSpaceType?: NullableStringFieldUpdateOperationsInput | string | null
     decision?: NullableStringFieldUpdateOperationsInput | string | null
     precisions?: NullableStringFieldUpdateOperationsInput | string | null
     contacts?: NullableStringFieldUpdateOperationsInput | string | null
-    further_information?: NullableStringFieldUpdateOperationsInput | string | null
-    created_by_id?: StringFieldUpdateOperationsInput | string
-    created_by_username?: StringFieldUpdateOperationsInput | string
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    service_instructeur?: NullableStringFieldUpdateOperationsInput | string | null
+    furtherInformation?: NullableStringFieldUpdateOperationsInput | string | null
+    createdByEmail?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    serviceInstructeur?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type Report_to_clauseCreateInput = {
@@ -9081,8 +9103,8 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type Report_to_clauseUncheckedCreateInput = {
     id: string
-    report_id: string
-    clause_id: string
+    reportId: string
+    clauseId: string
   }
 
   export type Report_to_clauseUpdateInput = {
@@ -9093,14 +9115,14 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type Report_to_clauseUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    report_id?: StringFieldUpdateOperationsInput | string
-    clause_id?: StringFieldUpdateOperationsInput | string
+    reportId?: StringFieldUpdateOperationsInput | string
+    clauseId?: StringFieldUpdateOperationsInput | string
   }
 
   export type Report_to_clauseCreateManyInput = {
     id: string
-    report_id: string
-    clause_id: string
+    reportId: string
+    clauseId: string
   }
 
   export type Report_to_clauseUpdateManyMutationInput = {
@@ -9109,18 +9131,18 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type Report_to_clauseUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    report_id?: StringFieldUpdateOperationsInput | string
-    clause_id?: StringFieldUpdateOperationsInput | string
+    reportId?: StringFieldUpdateOperationsInput | string
+    clauseId?: StringFieldUpdateOperationsInput | string
   }
 
   export type UdapCreateInput = {
     id: string
     department: string
-    complete_coords?: string | null
+    completeCoords?: string | null
     visible?: boolean | null
     name?: string | null
     address?: string | null
-    zip_code?: string | null
+    zipCode?: string | null
     city?: string | null
     phone?: string | null
     email?: string | null
@@ -9130,11 +9152,11 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type UdapUncheckedCreateInput = {
     id: string
     department: string
-    complete_coords?: string | null
+    completeCoords?: string | null
     visible?: boolean | null
     name?: string | null
     address?: string | null
-    zip_code?: string | null
+    zipCode?: string | null
     city?: string | null
     phone?: string | null
     email?: string | null
@@ -9144,11 +9166,11 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type UdapUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     department?: StringFieldUpdateOperationsInput | string
-    complete_coords?: NullableStringFieldUpdateOperationsInput | string | null
+    completeCoords?: NullableStringFieldUpdateOperationsInput | string | null
     visible?: NullableBoolFieldUpdateOperationsInput | boolean | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
-    zip_code?: NullableStringFieldUpdateOperationsInput | string | null
+    zipCode?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
@@ -9158,11 +9180,11 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type UdapUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     department?: StringFieldUpdateOperationsInput | string
-    complete_coords?: NullableStringFieldUpdateOperationsInput | string | null
+    completeCoords?: NullableStringFieldUpdateOperationsInput | string | null
     visible?: NullableBoolFieldUpdateOperationsInput | boolean | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
-    zip_code?: NullableStringFieldUpdateOperationsInput | string | null
+    zipCode?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
@@ -9172,11 +9194,11 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type UdapCreateManyInput = {
     id: string
     department: string
-    complete_coords?: string | null
+    completeCoords?: string | null
     visible?: boolean | null
     name?: string | null
     address?: string | null
-    zip_code?: string | null
+    zipCode?: string | null
     city?: string | null
     phone?: string | null
     email?: string | null
@@ -9185,11 +9207,11 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type UdapUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     department?: StringFieldUpdateOperationsInput | string
-    complete_coords?: NullableStringFieldUpdateOperationsInput | string | null
+    completeCoords?: NullableStringFieldUpdateOperationsInput | string | null
     visible?: NullableBoolFieldUpdateOperationsInput | boolean | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
-    zip_code?: NullableStringFieldUpdateOperationsInput | string | null
+    zipCode?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
@@ -9198,11 +9220,11 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type UdapUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     department?: StringFieldUpdateOperationsInput | string
-    complete_coords?: NullableStringFieldUpdateOperationsInput | string | null
+    completeCoords?: NullableStringFieldUpdateOperationsInput | string | null
     visible?: NullableBoolFieldUpdateOperationsInput | boolean | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
-    zip_code?: NullableStringFieldUpdateOperationsInput | string | null
+    zipCode?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
@@ -9216,6 +9238,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     password: string
     delegation_delegation_createdByTouser?: DelegationCreateNestedManyWithoutUser_delegation_createdByTouserInput
     delegation_delegation_delegatedToTouser?: DelegationCreateNestedManyWithoutUser_delegation_delegatedToTouserInput
+    report?: ReportCreateNestedManyWithoutUserInput
     udap: UdapCreateNestedOneWithoutUserInput
   }
 
@@ -9228,6 +9251,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     udap_id: string
     delegation_delegation_createdByTouser?: DelegationUncheckedCreateNestedManyWithoutUser_delegation_createdByTouserInput
     delegation_delegation_delegatedToTouser?: DelegationUncheckedCreateNestedManyWithoutUser_delegation_delegatedToTouserInput
+    report?: ReportUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -9238,6 +9262,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     password?: StringFieldUpdateOperationsInput | string
     delegation_delegation_createdByTouser?: DelegationUpdateManyWithoutUser_delegation_createdByTouserNestedInput
     delegation_delegation_delegatedToTouser?: DelegationUpdateManyWithoutUser_delegation_delegatedToTouserNestedInput
+    report?: ReportUpdateManyWithoutUserNestedInput
     udap?: UdapUpdateOneRequiredWithoutUserNestedInput
   }
 
@@ -9250,6 +9275,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     udap_id?: StringFieldUpdateOperationsInput | string
     delegation_delegation_createdByTouser?: DelegationUncheckedUpdateManyWithoutUser_delegation_createdByTouserNestedInput
     delegation_delegation_delegatedToTouser?: DelegationUncheckedUpdateManyWithoutUser_delegation_delegatedToTouserNestedInput
+    report?: ReportUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -9436,61 +9462,58 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type ReportCountOrderByAggregateInput = {
     id?: SortOrder
     title?: SortOrder
-    project_description?: SortOrder
-    redacted_by?: SortOrder
-    meet_date?: SortOrder
-    applicant_name?: SortOrder
-    applicant_address?: SortOrder
-    project_cadastral_ref?: SortOrder
-    project_space_type?: SortOrder
+    projectDescription?: SortOrder
+    redactedBy?: SortOrder
+    meetDate?: SortOrder
+    applicantName?: SortOrder
+    applicantAddress?: SortOrder
+    projectCadastralRef?: SortOrder
+    projectSpaceType?: SortOrder
     decision?: SortOrder
     precisions?: SortOrder
     contacts?: SortOrder
-    further_information?: SortOrder
-    created_by_id?: SortOrder
-    created_by_username?: SortOrder
-    created_at?: SortOrder
-    service_instructeur?: SortOrder
+    furtherInformation?: SortOrder
+    createdByEmail?: SortOrder
+    createdAt?: SortOrder
+    serviceInstructeur?: SortOrder
   }
 
   export type ReportMaxOrderByAggregateInput = {
     id?: SortOrder
     title?: SortOrder
-    project_description?: SortOrder
-    redacted_by?: SortOrder
-    meet_date?: SortOrder
-    applicant_name?: SortOrder
-    applicant_address?: SortOrder
-    project_cadastral_ref?: SortOrder
-    project_space_type?: SortOrder
+    projectDescription?: SortOrder
+    redactedBy?: SortOrder
+    meetDate?: SortOrder
+    applicantName?: SortOrder
+    applicantAddress?: SortOrder
+    projectCadastralRef?: SortOrder
+    projectSpaceType?: SortOrder
     decision?: SortOrder
     precisions?: SortOrder
     contacts?: SortOrder
-    further_information?: SortOrder
-    created_by_id?: SortOrder
-    created_by_username?: SortOrder
-    created_at?: SortOrder
-    service_instructeur?: SortOrder
+    furtherInformation?: SortOrder
+    createdByEmail?: SortOrder
+    createdAt?: SortOrder
+    serviceInstructeur?: SortOrder
   }
 
   export type ReportMinOrderByAggregateInput = {
     id?: SortOrder
     title?: SortOrder
-    project_description?: SortOrder
-    redacted_by?: SortOrder
-    meet_date?: SortOrder
-    applicant_name?: SortOrder
-    applicant_address?: SortOrder
-    project_cadastral_ref?: SortOrder
-    project_space_type?: SortOrder
+    projectDescription?: SortOrder
+    redactedBy?: SortOrder
+    meetDate?: SortOrder
+    applicantName?: SortOrder
+    applicantAddress?: SortOrder
+    projectCadastralRef?: SortOrder
+    projectSpaceType?: SortOrder
     decision?: SortOrder
     precisions?: SortOrder
     contacts?: SortOrder
-    further_information?: SortOrder
-    created_by_id?: SortOrder
-    created_by_username?: SortOrder
-    created_at?: SortOrder
-    service_instructeur?: SortOrder
+    furtherInformation?: SortOrder
+    createdByEmail?: SortOrder
+    createdAt?: SortOrder
+    serviceInstructeur?: SortOrder
   }
 
   export type StringNullableWithAggregatesFilter = {
@@ -9551,20 +9574,20 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type Report_to_clauseCountOrderByAggregateInput = {
     id?: SortOrder
-    report_id?: SortOrder
-    clause_id?: SortOrder
+    reportId?: SortOrder
+    clauseId?: SortOrder
   }
 
   export type Report_to_clauseMaxOrderByAggregateInput = {
     id?: SortOrder
-    report_id?: SortOrder
-    clause_id?: SortOrder
+    reportId?: SortOrder
+    clauseId?: SortOrder
   }
 
   export type Report_to_clauseMinOrderByAggregateInput = {
     id?: SortOrder
-    report_id?: SortOrder
-    clause_id?: SortOrder
+    reportId?: SortOrder
+    clauseId?: SortOrder
   }
 
   export type BoolNullableFilter = {
@@ -9585,11 +9608,11 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type UdapCountOrderByAggregateInput = {
     id?: SortOrder
     department?: SortOrder
-    complete_coords?: SortOrder
+    completeCoords?: SortOrder
     visible?: SortOrder
     name?: SortOrder
     address?: SortOrder
-    zip_code?: SortOrder
+    zipCode?: SortOrder
     city?: SortOrder
     phone?: SortOrder
     email?: SortOrder
@@ -9598,11 +9621,11 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type UdapMaxOrderByAggregateInput = {
     id?: SortOrder
     department?: SortOrder
-    complete_coords?: SortOrder
+    completeCoords?: SortOrder
     visible?: SortOrder
     name?: SortOrder
     address?: SortOrder
-    zip_code?: SortOrder
+    zipCode?: SortOrder
     city?: SortOrder
     phone?: SortOrder
     email?: SortOrder
@@ -9611,11 +9634,11 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type UdapMinOrderByAggregateInput = {
     id?: SortOrder
     department?: SortOrder
-    complete_coords?: SortOrder
+    completeCoords?: SortOrder
     visible?: SortOrder
     name?: SortOrder
     address?: SortOrder
-    zip_code?: SortOrder
+    zipCode?: SortOrder
     city?: SortOrder
     phone?: SortOrder
     email?: SortOrder
@@ -9635,12 +9658,22 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     none?: DelegationWhereInput
   }
 
+  export type ReportListRelationFilter = {
+    every?: ReportWhereInput
+    some?: ReportWhereInput
+    none?: ReportWhereInput
+  }
+
   export type UdapRelationFilter = {
     is?: UdapWhereInput | null
     isNot?: UdapWhereInput | null
   }
 
   export type DelegationOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ReportOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -9745,6 +9778,12 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     update?: XOR<UserUpdateWithoutDelegation_delegation_delegatedToTouserInput, UserUncheckedUpdateWithoutDelegation_delegation_delegatedToTouserInput>
   }
 
+  export type UserCreateNestedOneWithoutReportInput = {
+    create?: XOR<UserCreateWithoutReportInput, UserUncheckedCreateWithoutReportInput>
+    connectOrCreate?: UserCreateOrConnectWithoutReportInput
+    connect?: UserWhereUniqueInput
+  }
+
   export type Report_to_clauseCreateNestedManyWithoutReportInput = {
     create?: XOR<Enumerable<Report_to_clauseCreateWithoutReportInput>, Enumerable<Report_to_clauseUncheckedCreateWithoutReportInput>>
     connectOrCreate?: Enumerable<Report_to_clauseCreateOrConnectWithoutReportInput>
@@ -9769,6 +9808,14 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type DateTimeFieldUpdateOperationsInput = {
     set?: Date | string
+  }
+
+  export type UserUpdateOneRequiredWithoutReportNestedInput = {
+    create?: XOR<UserCreateWithoutReportInput, UserUncheckedCreateWithoutReportInput>
+    connectOrCreate?: UserCreateOrConnectWithoutReportInput
+    upsert?: UserUpsertWithoutReportInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<UserUpdateWithoutReportInput, UserUncheckedUpdateWithoutReportInput>
   }
 
   export type Report_to_clauseUpdateManyWithoutReportNestedInput = {
@@ -9887,6 +9934,13 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     connect?: Enumerable<DelegationWhereUniqueInput>
   }
 
+  export type ReportCreateNestedManyWithoutUserInput = {
+    create?: XOR<Enumerable<ReportCreateWithoutUserInput>, Enumerable<ReportUncheckedCreateWithoutUserInput>>
+    connectOrCreate?: Enumerable<ReportCreateOrConnectWithoutUserInput>
+    createMany?: ReportCreateManyUserInputEnvelope
+    connect?: Enumerable<ReportWhereUniqueInput>
+  }
+
   export type UdapCreateNestedOneWithoutUserInput = {
     create?: XOR<UdapCreateWithoutUserInput, UdapUncheckedCreateWithoutUserInput>
     connectOrCreate?: UdapCreateOrConnectWithoutUserInput
@@ -9905,6 +9959,13 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     connectOrCreate?: Enumerable<DelegationCreateOrConnectWithoutUser_delegation_delegatedToTouserInput>
     createMany?: DelegationCreateManyUser_delegation_delegatedToTouserInputEnvelope
     connect?: Enumerable<DelegationWhereUniqueInput>
+  }
+
+  export type ReportUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<Enumerable<ReportCreateWithoutUserInput>, Enumerable<ReportUncheckedCreateWithoutUserInput>>
+    connectOrCreate?: Enumerable<ReportCreateOrConnectWithoutUserInput>
+    createMany?: ReportCreateManyUserInputEnvelope
+    connect?: Enumerable<ReportWhereUniqueInput>
   }
 
   export type DelegationUpdateManyWithoutUser_delegation_createdByTouserNestedInput = {
@@ -9933,6 +9994,20 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     update?: Enumerable<DelegationUpdateWithWhereUniqueWithoutUser_delegation_delegatedToTouserInput>
     updateMany?: Enumerable<DelegationUpdateManyWithWhereWithoutUser_delegation_delegatedToTouserInput>
     deleteMany?: Enumerable<DelegationScalarWhereInput>
+  }
+
+  export type ReportUpdateManyWithoutUserNestedInput = {
+    create?: XOR<Enumerable<ReportCreateWithoutUserInput>, Enumerable<ReportUncheckedCreateWithoutUserInput>>
+    connectOrCreate?: Enumerable<ReportCreateOrConnectWithoutUserInput>
+    upsert?: Enumerable<ReportUpsertWithWhereUniqueWithoutUserInput>
+    createMany?: ReportCreateManyUserInputEnvelope
+    set?: Enumerable<ReportWhereUniqueInput>
+    disconnect?: Enumerable<ReportWhereUniqueInput>
+    delete?: Enumerable<ReportWhereUniqueInput>
+    connect?: Enumerable<ReportWhereUniqueInput>
+    update?: Enumerable<ReportUpdateWithWhereUniqueWithoutUserInput>
+    updateMany?: Enumerable<ReportUpdateManyWithWhereWithoutUserInput>
+    deleteMany?: Enumerable<ReportScalarWhereInput>
   }
 
   export type UdapUpdateOneRequiredWithoutUserNestedInput = {
@@ -9969,6 +10044,20 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     update?: Enumerable<DelegationUpdateWithWhereUniqueWithoutUser_delegation_delegatedToTouserInput>
     updateMany?: Enumerable<DelegationUpdateManyWithWhereWithoutUser_delegation_delegatedToTouserInput>
     deleteMany?: Enumerable<DelegationScalarWhereInput>
+  }
+
+  export type ReportUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<Enumerable<ReportCreateWithoutUserInput>, Enumerable<ReportUncheckedCreateWithoutUserInput>>
+    connectOrCreate?: Enumerable<ReportCreateOrConnectWithoutUserInput>
+    upsert?: Enumerable<ReportUpsertWithWhereUniqueWithoutUserInput>
+    createMany?: ReportCreateManyUserInputEnvelope
+    set?: Enumerable<ReportWhereUniqueInput>
+    disconnect?: Enumerable<ReportWhereUniqueInput>
+    delete?: Enumerable<ReportWhereUniqueInput>
+    connect?: Enumerable<ReportWhereUniqueInput>
+    update?: Enumerable<ReportUpdateWithWhereUniqueWithoutUserInput>
+    updateMany?: Enumerable<ReportUpdateManyWithWhereWithoutUserInput>
+    deleteMany?: Enumerable<ReportScalarWhereInput>
   }
 
   export type NestedStringFilter = {
@@ -10125,7 +10214,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type Report_to_clauseUncheckedCreateWithoutClauseInput = {
     id: string
-    report_id: string
+    reportId: string
   }
 
   export type Report_to_clauseCreateOrConnectWithoutClauseInput = {
@@ -10159,8 +10248,8 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     OR?: Enumerable<Report_to_clauseScalarWhereInput>
     NOT?: Enumerable<Report_to_clauseScalarWhereInput>
     id?: StringFilter | string
-    report_id?: StringFilter | string
-    clause_id?: StringFilter | string
+    reportId?: StringFilter | string
+    clauseId?: StringFilter | string
   }
 
   export type UserCreateWithoutDelegation_delegation_createdByTouserInput = {
@@ -10170,6 +10259,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     temporaryLinkExpiresAt?: string | null
     password: string
     delegation_delegation_delegatedToTouser?: DelegationCreateNestedManyWithoutUser_delegation_delegatedToTouserInput
+    report?: ReportCreateNestedManyWithoutUserInput
     udap: UdapCreateNestedOneWithoutUserInput
   }
 
@@ -10181,6 +10271,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     password: string
     udap_id: string
     delegation_delegation_delegatedToTouser?: DelegationUncheckedCreateNestedManyWithoutUser_delegation_delegatedToTouserInput
+    report?: ReportUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutDelegation_delegation_createdByTouserInput = {
@@ -10195,6 +10286,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     temporaryLinkExpiresAt?: string | null
     password: string
     delegation_delegation_createdByTouser?: DelegationCreateNestedManyWithoutUser_delegation_createdByTouserInput
+    report?: ReportCreateNestedManyWithoutUserInput
     udap: UdapCreateNestedOneWithoutUserInput
   }
 
@@ -10206,6 +10298,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     password: string
     udap_id: string
     delegation_delegation_createdByTouser?: DelegationUncheckedCreateNestedManyWithoutUser_delegation_createdByTouserInput
+    report?: ReportUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutDelegation_delegation_delegatedToTouserInput = {
@@ -10225,6 +10318,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
     password?: StringFieldUpdateOperationsInput | string
     delegation_delegation_delegatedToTouser?: DelegationUpdateManyWithoutUser_delegation_delegatedToTouserNestedInput
+    report?: ReportUpdateManyWithoutUserNestedInput
     udap?: UdapUpdateOneRequiredWithoutUserNestedInput
   }
 
@@ -10236,6 +10330,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     password?: StringFieldUpdateOperationsInput | string
     udap_id?: StringFieldUpdateOperationsInput | string
     delegation_delegation_delegatedToTouser?: DelegationUncheckedUpdateManyWithoutUser_delegation_delegatedToTouserNestedInput
+    report?: ReportUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUpsertWithoutDelegation_delegation_delegatedToTouserInput = {
@@ -10250,6 +10345,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
     password?: StringFieldUpdateOperationsInput | string
     delegation_delegation_createdByTouser?: DelegationUpdateManyWithoutUser_delegation_createdByTouserNestedInput
+    report?: ReportUpdateManyWithoutUserNestedInput
     udap?: UdapUpdateOneRequiredWithoutUserNestedInput
   }
 
@@ -10261,6 +10357,34 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     password?: StringFieldUpdateOperationsInput | string
     udap_id?: StringFieldUpdateOperationsInput | string
     delegation_delegation_createdByTouser?: DelegationUncheckedUpdateManyWithoutUser_delegation_createdByTouserNestedInput
+    report?: ReportUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserCreateWithoutReportInput = {
+    email: string
+    name: string
+    temporaryLink?: string | null
+    temporaryLinkExpiresAt?: string | null
+    password: string
+    delegation_delegation_createdByTouser?: DelegationCreateNestedManyWithoutUser_delegation_createdByTouserInput
+    delegation_delegation_delegatedToTouser?: DelegationCreateNestedManyWithoutUser_delegation_delegatedToTouserInput
+    udap: UdapCreateNestedOneWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutReportInput = {
+    email: string
+    name: string
+    temporaryLink?: string | null
+    temporaryLinkExpiresAt?: string | null
+    password: string
+    udap_id: string
+    delegation_delegation_createdByTouser?: DelegationUncheckedCreateNestedManyWithoutUser_delegation_createdByTouserInput
+    delegation_delegation_delegatedToTouser?: DelegationUncheckedCreateNestedManyWithoutUser_delegation_delegatedToTouserInput
+  }
+
+  export type UserCreateOrConnectWithoutReportInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutReportInput, UserUncheckedCreateWithoutReportInput>
   }
 
   export type Report_to_clauseCreateWithoutReportInput = {
@@ -10270,7 +10394,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type Report_to_clauseUncheckedCreateWithoutReportInput = {
     id: string
-    clause_id: string
+    clauseId: string
   }
 
   export type Report_to_clauseCreateOrConnectWithoutReportInput = {
@@ -10281,6 +10405,33 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type Report_to_clauseCreateManyReportInputEnvelope = {
     data: Enumerable<Report_to_clauseCreateManyReportInput>
     skipDuplicates?: boolean
+  }
+
+  export type UserUpsertWithoutReportInput = {
+    update: XOR<UserUpdateWithoutReportInput, UserUncheckedUpdateWithoutReportInput>
+    create: XOR<UserCreateWithoutReportInput, UserUncheckedCreateWithoutReportInput>
+  }
+
+  export type UserUpdateWithoutReportInput = {
+    email?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    delegation_delegation_createdByTouser?: DelegationUpdateManyWithoutUser_delegation_createdByTouserNestedInput
+    delegation_delegation_delegatedToTouser?: DelegationUpdateManyWithoutUser_delegation_delegatedToTouserNestedInput
+    udap?: UdapUpdateOneRequiredWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutReportInput = {
+    email?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    udap_id?: StringFieldUpdateOperationsInput | string
+    delegation_delegation_createdByTouser?: DelegationUncheckedUpdateManyWithoutUser_delegation_createdByTouserNestedInput
+    delegation_delegation_delegatedToTouser?: DelegationUncheckedUpdateManyWithoutUser_delegation_delegatedToTouserNestedInput
   }
 
   export type Report_to_clauseUpsertWithWhereUniqueWithoutReportInput = {
@@ -10319,41 +10470,39 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type ReportCreateWithoutReport_to_clauseInput = {
     id: string
     title?: string | null
-    project_description?: string | null
-    redacted_by?: string | null
-    meet_date?: Date | string | null
-    applicant_name?: string | null
-    applicant_address?: string | null
-    project_cadastral_ref?: string | null
-    project_space_type?: string | null
+    projectDescription?: string | null
+    redactedBy?: string | null
+    meetDate?: Date | string | null
+    applicantName?: string | null
+    applicantAddress?: string | null
+    projectCadastralRef?: string | null
+    projectSpaceType?: string | null
     decision?: string | null
     precisions?: string | null
     contacts?: string | null
-    further_information?: string | null
-    created_by_id: string
-    created_by_username: string
-    created_at: Date | string
-    service_instructeur?: string | null
+    furtherInformation?: string | null
+    createdAt: Date | string
+    serviceInstructeur?: string | null
+    user: UserCreateNestedOneWithoutReportInput
   }
 
   export type ReportUncheckedCreateWithoutReport_to_clauseInput = {
     id: string
     title?: string | null
-    project_description?: string | null
-    redacted_by?: string | null
-    meet_date?: Date | string | null
-    applicant_name?: string | null
-    applicant_address?: string | null
-    project_cadastral_ref?: string | null
-    project_space_type?: string | null
+    projectDescription?: string | null
+    redactedBy?: string | null
+    meetDate?: Date | string | null
+    applicantName?: string | null
+    applicantAddress?: string | null
+    projectCadastralRef?: string | null
+    projectSpaceType?: string | null
     decision?: string | null
     precisions?: string | null
     contacts?: string | null
-    further_information?: string | null
-    created_by_id: string
-    created_by_username: string
-    created_at: Date | string
-    service_instructeur?: string | null
+    furtherInformation?: string | null
+    createdByEmail: string
+    createdAt: Date | string
+    serviceInstructeur?: string | null
   }
 
   export type ReportCreateOrConnectWithoutReport_to_clauseInput = {
@@ -10386,41 +10535,39 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type ReportUpdateWithoutReport_to_clauseInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: NullableStringFieldUpdateOperationsInput | string | null
-    project_description?: NullableStringFieldUpdateOperationsInput | string | null
-    redacted_by?: NullableStringFieldUpdateOperationsInput | string | null
-    meet_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    applicant_name?: NullableStringFieldUpdateOperationsInput | string | null
-    applicant_address?: NullableStringFieldUpdateOperationsInput | string | null
-    project_cadastral_ref?: NullableStringFieldUpdateOperationsInput | string | null
-    project_space_type?: NullableStringFieldUpdateOperationsInput | string | null
+    projectDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    redactedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    meetDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    applicantName?: NullableStringFieldUpdateOperationsInput | string | null
+    applicantAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    projectCadastralRef?: NullableStringFieldUpdateOperationsInput | string | null
+    projectSpaceType?: NullableStringFieldUpdateOperationsInput | string | null
     decision?: NullableStringFieldUpdateOperationsInput | string | null
     precisions?: NullableStringFieldUpdateOperationsInput | string | null
     contacts?: NullableStringFieldUpdateOperationsInput | string | null
-    further_information?: NullableStringFieldUpdateOperationsInput | string | null
-    created_by_id?: StringFieldUpdateOperationsInput | string
-    created_by_username?: StringFieldUpdateOperationsInput | string
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    service_instructeur?: NullableStringFieldUpdateOperationsInput | string | null
+    furtherInformation?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    serviceInstructeur?: NullableStringFieldUpdateOperationsInput | string | null
+    user?: UserUpdateOneRequiredWithoutReportNestedInput
   }
 
   export type ReportUncheckedUpdateWithoutReport_to_clauseInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: NullableStringFieldUpdateOperationsInput | string | null
-    project_description?: NullableStringFieldUpdateOperationsInput | string | null
-    redacted_by?: NullableStringFieldUpdateOperationsInput | string | null
-    meet_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    applicant_name?: NullableStringFieldUpdateOperationsInput | string | null
-    applicant_address?: NullableStringFieldUpdateOperationsInput | string | null
-    project_cadastral_ref?: NullableStringFieldUpdateOperationsInput | string | null
-    project_space_type?: NullableStringFieldUpdateOperationsInput | string | null
+    projectDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    redactedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    meetDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    applicantName?: NullableStringFieldUpdateOperationsInput | string | null
+    applicantAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    projectCadastralRef?: NullableStringFieldUpdateOperationsInput | string | null
+    projectSpaceType?: NullableStringFieldUpdateOperationsInput | string | null
     decision?: NullableStringFieldUpdateOperationsInput | string | null
     precisions?: NullableStringFieldUpdateOperationsInput | string | null
     contacts?: NullableStringFieldUpdateOperationsInput | string | null
-    further_information?: NullableStringFieldUpdateOperationsInput | string | null
-    created_by_id?: StringFieldUpdateOperationsInput | string
-    created_by_username?: StringFieldUpdateOperationsInput | string
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    service_instructeur?: NullableStringFieldUpdateOperationsInput | string | null
+    furtherInformation?: NullableStringFieldUpdateOperationsInput | string | null
+    createdByEmail?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    serviceInstructeur?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type UserCreateWithoutUdapInput = {
@@ -10431,6 +10578,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     password: string
     delegation_delegation_createdByTouser?: DelegationCreateNestedManyWithoutUser_delegation_createdByTouserInput
     delegation_delegation_delegatedToTouser?: DelegationCreateNestedManyWithoutUser_delegation_delegatedToTouserInput
+    report?: ReportCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutUdapInput = {
@@ -10441,6 +10589,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     password: string
     delegation_delegation_createdByTouser?: DelegationUncheckedCreateNestedManyWithoutUser_delegation_createdByTouserInput
     delegation_delegation_delegatedToTouser?: DelegationUncheckedCreateNestedManyWithoutUser_delegation_delegatedToTouserInput
+    report?: ReportUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutUdapInput = {
@@ -10517,14 +10666,62 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     skipDuplicates?: boolean
   }
 
+  export type ReportCreateWithoutUserInput = {
+    id: string
+    title?: string | null
+    projectDescription?: string | null
+    redactedBy?: string | null
+    meetDate?: Date | string | null
+    applicantName?: string | null
+    applicantAddress?: string | null
+    projectCadastralRef?: string | null
+    projectSpaceType?: string | null
+    decision?: string | null
+    precisions?: string | null
+    contacts?: string | null
+    furtherInformation?: string | null
+    createdAt: Date | string
+    serviceInstructeur?: string | null
+    report_to_clause?: Report_to_clauseCreateNestedManyWithoutReportInput
+  }
+
+  export type ReportUncheckedCreateWithoutUserInput = {
+    id: string
+    title?: string | null
+    projectDescription?: string | null
+    redactedBy?: string | null
+    meetDate?: Date | string | null
+    applicantName?: string | null
+    applicantAddress?: string | null
+    projectCadastralRef?: string | null
+    projectSpaceType?: string | null
+    decision?: string | null
+    precisions?: string | null
+    contacts?: string | null
+    furtherInformation?: string | null
+    createdAt: Date | string
+    serviceInstructeur?: string | null
+    report_to_clause?: Report_to_clauseUncheckedCreateNestedManyWithoutReportInput
+  }
+
+  export type ReportCreateOrConnectWithoutUserInput = {
+    where: ReportWhereUniqueInput
+    create: XOR<ReportCreateWithoutUserInput, ReportUncheckedCreateWithoutUserInput>
+  }
+
+  export type ReportCreateManyUserInputEnvelope = {
+    data: Enumerable<ReportCreateManyUserInput>
+    skipDuplicates?: boolean
+  }
+
   export type UdapCreateWithoutUserInput = {
     id: string
     department: string
-    complete_coords?: string | null
+    completeCoords?: string | null
     visible?: boolean | null
     name?: string | null
     address?: string | null
-    zip_code?: string | null
+    zipCode?: string | null
     city?: string | null
     phone?: string | null
     email?: string | null
@@ -10533,11 +10730,11 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type UdapUncheckedCreateWithoutUserInput = {
     id: string
     department: string
-    complete_coords?: string | null
+    completeCoords?: string | null
     visible?: boolean | null
     name?: string | null
     address?: string | null
-    zip_code?: string | null
+    zipCode?: string | null
     city?: string | null
     phone?: string | null
     email?: string | null
@@ -10588,6 +10785,44 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     data: XOR<DelegationUpdateManyMutationInput, DelegationUncheckedUpdateManyWithoutDelegation_delegation_delegatedToTouserInput>
   }
 
+  export type ReportUpsertWithWhereUniqueWithoutUserInput = {
+    where: ReportWhereUniqueInput
+    update: XOR<ReportUpdateWithoutUserInput, ReportUncheckedUpdateWithoutUserInput>
+    create: XOR<ReportCreateWithoutUserInput, ReportUncheckedCreateWithoutUserInput>
+  }
+
+  export type ReportUpdateWithWhereUniqueWithoutUserInput = {
+    where: ReportWhereUniqueInput
+    data: XOR<ReportUpdateWithoutUserInput, ReportUncheckedUpdateWithoutUserInput>
+  }
+
+  export type ReportUpdateManyWithWhereWithoutUserInput = {
+    where: ReportScalarWhereInput
+    data: XOR<ReportUpdateManyMutationInput, ReportUncheckedUpdateManyWithoutReportInput>
+  }
+
+  export type ReportScalarWhereInput = {
+    AND?: Enumerable<ReportScalarWhereInput>
+    OR?: Enumerable<ReportScalarWhereInput>
+    NOT?: Enumerable<ReportScalarWhereInput>
+    id?: StringFilter | string
+    title?: StringNullableFilter | string | null
+    projectDescription?: StringNullableFilter | string | null
+    redactedBy?: StringNullableFilter | string | null
+    meetDate?: DateTimeNullableFilter | Date | string | null
+    applicantName?: StringNullableFilter | string | null
+    applicantAddress?: StringNullableFilter | string | null
+    projectCadastralRef?: StringNullableFilter | string | null
+    projectSpaceType?: StringNullableFilter | string | null
+    decision?: StringNullableFilter | string | null
+    precisions?: StringNullableFilter | string | null
+    contacts?: StringNullableFilter | string | null
+    furtherInformation?: StringNullableFilter | string | null
+    createdByEmail?: StringFilter | string
+    createdAt?: DateTimeFilter | Date | string
+    serviceInstructeur?: StringNullableFilter | string | null
+  }
+
   export type UdapUpsertWithoutUserInput = {
     update: XOR<UdapUpdateWithoutUserInput, UdapUncheckedUpdateWithoutUserInput>
     create: XOR<UdapCreateWithoutUserInput, UdapUncheckedCreateWithoutUserInput>
@@ -10596,11 +10831,11 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type UdapUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     department?: StringFieldUpdateOperationsInput | string
-    complete_coords?: NullableStringFieldUpdateOperationsInput | string | null
+    completeCoords?: NullableStringFieldUpdateOperationsInput | string | null
     visible?: NullableBoolFieldUpdateOperationsInput | boolean | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
-    zip_code?: NullableStringFieldUpdateOperationsInput | string | null
+    zipCode?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
@@ -10609,11 +10844,11 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type UdapUncheckedUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     department?: StringFieldUpdateOperationsInput | string
-    complete_coords?: NullableStringFieldUpdateOperationsInput | string | null
+    completeCoords?: NullableStringFieldUpdateOperationsInput | string | null
     visible?: NullableBoolFieldUpdateOperationsInput | boolean | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
-    zip_code?: NullableStringFieldUpdateOperationsInput | string | null
+    zipCode?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
@@ -10621,7 +10856,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type Report_to_clauseCreateManyClauseInput = {
     id: string
-    report_id: string
+    reportId: string
   }
 
   export type Report_to_clauseUpdateWithoutClauseInput = {
@@ -10631,17 +10866,17 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type Report_to_clauseUncheckedUpdateWithoutClauseInput = {
     id?: StringFieldUpdateOperationsInput | string
-    report_id?: StringFieldUpdateOperationsInput | string
+    reportId?: StringFieldUpdateOperationsInput | string
   }
 
   export type Report_to_clauseUncheckedUpdateManyWithoutReport_to_clauseInput = {
     id?: StringFieldUpdateOperationsInput | string
-    report_id?: StringFieldUpdateOperationsInput | string
+    reportId?: StringFieldUpdateOperationsInput | string
   }
 
   export type Report_to_clauseCreateManyReportInput = {
     id: string
-    clause_id: string
+    clauseId: string
   }
 
   export type Report_to_clauseUpdateWithoutReportInput = {
@@ -10651,7 +10886,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type Report_to_clauseUncheckedUpdateWithoutReportInput = {
     id?: StringFieldUpdateOperationsInput | string
-    clause_id?: StringFieldUpdateOperationsInput | string
+    clauseId?: StringFieldUpdateOperationsInput | string
   }
 
   export type UserCreateManyUdapInput = {
@@ -10670,6 +10905,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     password?: StringFieldUpdateOperationsInput | string
     delegation_delegation_createdByTouser?: DelegationUpdateManyWithoutUser_delegation_createdByTouserNestedInput
     delegation_delegation_delegatedToTouser?: DelegationUpdateManyWithoutUser_delegation_delegatedToTouserNestedInput
+    report?: ReportUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutUdapInput = {
@@ -10680,6 +10916,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     password?: StringFieldUpdateOperationsInput | string
     delegation_delegation_createdByTouser?: DelegationUncheckedUpdateManyWithoutUser_delegation_createdByTouserNestedInput
     delegation_delegation_delegatedToTouser?: DelegationUncheckedUpdateManyWithoutUser_delegation_delegatedToTouserNestedInput
+    report?: ReportUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutUserInput = {
@@ -10696,6 +10933,24 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type DelegationCreateManyUser_delegation_delegatedToTouserInput = {
     createdBy: string
+  }
+
+  export type ReportCreateManyUserInput = {
+    id: string
+    title?: string | null
+    projectDescription?: string | null
+    redactedBy?: string | null
+    meetDate?: Date | string | null
+    applicantName?: string | null
+    applicantAddress?: string | null
+    projectCadastralRef?: string | null
+    projectSpaceType?: string | null
+    decision?: string | null
+    precisions?: string | null
+    contacts?: string | null
+    furtherInformation?: string | null
+    createdAt: Date | string
+    serviceInstructeur?: string | null
   }
 
   export type DelegationUpdateWithoutUser_delegation_createdByTouserInput = {
@@ -10720,6 +10975,62 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type DelegationUncheckedUpdateManyWithoutDelegation_delegation_delegatedToTouserInput = {
     createdBy?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type ReportUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    projectDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    redactedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    meetDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    applicantName?: NullableStringFieldUpdateOperationsInput | string | null
+    applicantAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    projectCadastralRef?: NullableStringFieldUpdateOperationsInput | string | null
+    projectSpaceType?: NullableStringFieldUpdateOperationsInput | string | null
+    decision?: NullableStringFieldUpdateOperationsInput | string | null
+    precisions?: NullableStringFieldUpdateOperationsInput | string | null
+    contacts?: NullableStringFieldUpdateOperationsInput | string | null
+    furtherInformation?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    serviceInstructeur?: NullableStringFieldUpdateOperationsInput | string | null
+    report_to_clause?: Report_to_clauseUpdateManyWithoutReportNestedInput
+  }
+
+  export type ReportUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    projectDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    redactedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    meetDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    applicantName?: NullableStringFieldUpdateOperationsInput | string | null
+    applicantAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    projectCadastralRef?: NullableStringFieldUpdateOperationsInput | string | null
+    projectSpaceType?: NullableStringFieldUpdateOperationsInput | string | null
+    decision?: NullableStringFieldUpdateOperationsInput | string | null
+    precisions?: NullableStringFieldUpdateOperationsInput | string | null
+    contacts?: NullableStringFieldUpdateOperationsInput | string | null
+    furtherInformation?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    serviceInstructeur?: NullableStringFieldUpdateOperationsInput | string | null
+    report_to_clause?: Report_to_clauseUncheckedUpdateManyWithoutReportNestedInput
+  }
+
+  export type ReportUncheckedUpdateManyWithoutReportInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    projectDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    redactedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    meetDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    applicantName?: NullableStringFieldUpdateOperationsInput | string | null
+    applicantAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    projectCadastralRef?: NullableStringFieldUpdateOperationsInput | string | null
+    projectSpaceType?: NullableStringFieldUpdateOperationsInput | string | null
+    decision?: NullableStringFieldUpdateOperationsInput | string | null
+    precisions?: NullableStringFieldUpdateOperationsInput | string | null
+    contacts?: NullableStringFieldUpdateOperationsInput | string | null
+    furtherInformation?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    serviceInstructeur?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
 

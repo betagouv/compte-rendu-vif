@@ -10,9 +10,27 @@ export namespace Endpoints {
     method: "POST";
     path: "/api/create-user";
     parameters: {
-      body: { name: string; email: string; password: string; udap_id?: string | undefined };
+      body: { name: string; email: string; password: string; udap_id: string };
     };
-    response: { user: { id: string; name: string; email: string }; token: string };
+    response: {
+      user: {
+        name: string;
+        email: string;
+        udap: {
+          id: string;
+          department: string;
+          completeCoords?: string | undefined;
+          visible?: boolean | undefined;
+          name?: string | undefined;
+          address?: string | undefined;
+          zipCode?: string | undefined;
+          city?: string | undefined;
+          phone?: string | undefined;
+          email?: string | undefined;
+        };
+      };
+      token: string;
+    };
   };
   export type post_Apilogin = {
     method: "POST";
@@ -21,23 +39,39 @@ export namespace Endpoints {
       body: {
         email: string;
         password: string;
-        udaps?:
-          | {
-              id: string;
-              department: string;
-              complete_coords?: string | undefined;
-              address?: string | undefined;
-              visible?: boolean | undefined;
-              name?: string | undefined;
-              zip_code?: number | undefined;
-              city?: string | undefined;
-              phone?: string | undefined;
-              email?: string | undefined;
-            }
-          | undefined;
+        udap: {
+          id: string;
+          department: string;
+          completeCoords?: string | undefined;
+          visible?: boolean | undefined;
+          name?: string | undefined;
+          address?: string | undefined;
+          zipCode?: string | undefined;
+          city?: string | undefined;
+          phone?: string | undefined;
+          email?: string | undefined;
+        };
       };
     };
-    response: { user: { id: string; name: string; email: string }; token: string };
+    response: {
+      user: {
+        name: string;
+        email: string;
+        udap: {
+          id: string;
+          department: string;
+          completeCoords?: string | undefined;
+          visible?: boolean | undefined;
+          name?: string | undefined;
+          address?: string | undefined;
+          zipCode?: string | undefined;
+          city?: string | undefined;
+          phone?: string | undefined;
+          email?: string | undefined;
+        };
+      };
+      token: string;
+    };
   };
   export type get_ApiverifyToken = {
     method: "GET";
@@ -45,7 +79,22 @@ export namespace Endpoints {
     parameters: {
       query: { token: string };
     };
-    response: { id: string; name: string; email: string };
+    response: {
+      name: string;
+      email: string;
+      udap: {
+        id: string;
+        department: string;
+        completeCoords?: string | undefined;
+        visible?: boolean | undefined;
+        name?: string | undefined;
+        address?: string | undefined;
+        zipCode?: string | undefined;
+        city?: string | undefined;
+        phone?: string | undefined;
+        email?: string | undefined;
+      };
+    };
   };
   export type get_Apiudaps = {
     method: "GET";
@@ -54,11 +103,11 @@ export namespace Endpoints {
     response: Array<{
       id: string;
       department: string;
-      complete_coords?: string | undefined;
-      address?: string | undefined;
+      completeCoords?: string | undefined;
       visible?: boolean | undefined;
       name?: string | undefined;
-      zip_code?: number | undefined;
+      address?: string | undefined;
+      zipCode?: string | undefined;
       city?: string | undefined;
       phone?: string | undefined;
       email?: string | undefined;

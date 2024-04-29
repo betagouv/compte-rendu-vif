@@ -2,21 +2,33 @@ import { Center, Divider, Flex, styled } from "#styled-system/jsx";
 import { flex } from "#styled-system/patterns";
 import { useLiveQuery } from "electric-sql/react";
 import { useUser } from "../contexts/AuthContext";
-import type { Report } from "../generated/client";
+import type { Report } from "@cr-vif/electric-client/frontend";
 import { db } from "../db";
 import Button from "@codegouvfr/react-dsfr/Button";
 import Badge from "@codegouvfr/react-dsfr/Badge";
 import { css } from "#styled-system/css";
 import { Link } from "@tanstack/react-router";
 
+type ReportWithUser = Report & { user?: { email: string; name: string } };
+
 export const MyReports = () => {
   const user = useUser()!;
   const myReports = useLiveQuery(
     db.report.liveMany({
-      where: { created_by_id: user.id },
-      include: { report_to_clause: { include: { clause: true } } },
+      where: { createdByEmail: user.email },
+      include: {
+        user: {
+          select: {
+            email: true,
+            name: true,
+          },
+        },
+      },
     }),
   );
+
+  const chips = useLiveQuery(db.chip.liveMany());
+  console.log(chips);
 
   if (myReports.error) {
     console.error(myReports.error);
@@ -32,7 +44,19 @@ export const MyReports = () => {
 
 export const AllReports = () => {
   const user = useUser()!;
-  const allReports = useLiveQuery(db.report.liveMany({ where: { created_by_id: { not: user.email } } }));
+  const allReports = useLiveQuery(
+    db.report.liveMany({
+      where: { createdByEmail: { not: user.email } },
+      include: {
+        user: {
+          select: {
+            email: true,
+            name: true,
+          },
+        },
+      },
+    }),
+  );
 
   if (allReports.error) {
     console.error(allReports.error);
@@ -46,7 +70,7 @@ export const AllReports = () => {
   );
 };
 
-export const ReportList = ({ reports }: { reports: Report[] }) => {
+export const ReportList = ({ reports }: { reports: ReportWithUser[] }) => {
   const error = reports.length === 0 ? <Center>Aucun compte-rendu</Center> : null;
 
   return (
@@ -59,7 +83,7 @@ export const ReportList = ({ reports }: { reports: Report[] }) => {
   );
 };
 
-const ReportListItem = ({ report, isLast }: { report: Report; isLast?: boolean }) => {
+const ReportListItem = ({ report, isLast }: { report: ReportWithUser; isLast?: boolean }) => {
   // const mutation = useMutation({ mutationFn: () => db.report.delete({ where: { id: report.id } }) });
 
   return (
@@ -75,9 +99,9 @@ const ReportListItem = ({ report, isLast }: { report: Report; isLast?: boolean }
         >
           <Flex>
             <styled.span fontWeight="bold">{report.title}</styled.span>
-            <styled.span ml="5px">{report.created_at.toLocaleDateString()}</styled.span>
+            <styled.span ml="5px">{report.createdAt.toLocaleDateString()}</styled.span>
           </Flex>
-          <styled.span>Rédigé par {report.created_by_username}</styled.span>
+          <styled.span>Rédigé par {report.user?.name ?? report.createdByEmail.split("@")[0]}</styled.span>
           {/* TODO: set correct status */}
           <styled.div mt="8px">
             <ReportBadge status="draft" />

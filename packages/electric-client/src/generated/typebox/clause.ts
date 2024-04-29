@@ -7,8 +7,8 @@ export const clause = Type.Object({
   report_to_clause: Type.Array(
     Type.Object({
       id: Type.String(),
-      report_id: Type.String(),
-      clause_id: Type.String(),
+      reportId: Type.String(),
+      clauseId: Type.String(),
     })
   ),
 });
