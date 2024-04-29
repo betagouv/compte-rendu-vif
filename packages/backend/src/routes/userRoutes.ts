@@ -9,7 +9,8 @@ export const userPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
   });
 
   fastify.post("/login", { schema: loginTSchema }, async (request) => {
-    return request.services.user.login(request.body);
+    const result = await request.services.user.login(request.body);
+    return result;
   });
 
   fastify.get("/verify-token", { schema: verifyTokenTSchema }, async (request) => {
@@ -18,11 +19,11 @@ export const userPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
 };
 
 export const createUserTSchema = {
-  body: Type.Pick(usersInput, ["name", "email", "password"]),
+  body: Type.Pick(usersInput, ["name", "email", "password", "udap_id"]),
   response: { 200: userAndTokenTSchema },
 };
 export const loginTSchema = {
-  body: Type.Pick(usersInput, ["email", "password"]),
+  body: Type.Pick(usersInput, ["email", "password", "udaps"]),
   response: { 200: userAndTokenTSchema },
 };
 export const verifyTokenTSchema = {

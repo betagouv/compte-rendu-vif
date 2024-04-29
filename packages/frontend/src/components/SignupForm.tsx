@@ -7,8 +7,10 @@ import { css } from "#styled-system/css";
 import { InputGroup } from "./InputGroup";
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import { useAuthContext } from "../contexts/AuthContext";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { type RouterInputs, api } from "../api";
+import { db } from "../db";
+import Select from "@codegouvfr/react-dsfr/Select";
 
 export const SignupForm = () => {
   const form = useForm<SignupFormProps>({
@@ -16,12 +18,24 @@ export const SignupForm = () => {
       name: "",
       email: "",
       password: "",
+      udap_id: "",
     },
   });
 
   const [_, setData] = useAuthContext();
 
   const mutation = useMutation((body: SignupFormProps) => api.post("/api/create-user", { body }));
+
+  const udapsQuery = useQuery({
+    queryKey: ["udaps"],
+    queryFn: async () => {
+      const response = await api.get("/api/udaps");
+      return response;
+    },
+    onError: (error) => console.error(error),
+  });
+
+  console.log(udapsQuery.data);
 
   const signup = async (values: SignupFormProps) => {
     const response = await mutation.mutateAsync(values);
@@ -71,6 +85,22 @@ export const SignupForm = () => {
 
           <SignupPasswordInput form={form} />
         </InputGroup>
+
+        <Select
+          label="UDAP"
+          nativeSelectProps={form.register("udap_id", { required: "L'UDAP est requis" })}
+          state={formErrors.udap_id ? "error" : undefined}
+          stateRelatedMessage={formErrors.udap_id?.message}
+        >
+          <option value="" disabled hidden>
+            Sélectionnez une UDAP
+          </option>
+          {udapsQuery.data?.map((udap) => (
+            <option key={udap.id} value={udap.id}>
+              {udap.name}
+            </option>
+          ))}
+        </Select>
 
         <FullWidthButton className={css({ mt: "1.5rem" })} type="submit" nativeButtonProps={{ type: "submit" }}>
           Valider

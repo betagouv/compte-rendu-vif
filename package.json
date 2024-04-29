@@ -10,9 +10,9 @@
     "db:create": "pnpm backend migration:create",
     "db:migrate": "pnpm db:create",
     "electric:up": "pnpm electric-sql with-config \"pnpm pg-migrations apply --database {{ELECTRIC_PROXY}} --directory ./db/migrations\"",
-    "electric:migrate": "pnpm electric:up && pnpm electric-client generate",
-    "client:ts": "typed-openapi ./packages/backend/openapi.json --output ./packages/frontend/src/api.gen.ts",
+    "electric:migrate": "pnpm electric:up && pnpm electric-client generate:front && pnpm electric-client generate:back",
     "client:json": "pnpm backend dev --create-only",
+    "client:ts": "typed-openapi ./packages/backend/openapi.json --output ./packages/frontend/src/api.gen.ts",
     "client:generate": "pnpm client:json && pnpm client:ts",
     "salut": "docker ps",
     "e2e": "playwright test"

@@ -94,4 +94,20 @@ model users {
   temporaryLink          String?
   temporaryLinkExpiresAt String?
   password               String
+  udap_id                String?
+  udaps                  udaps?  @relation(fields: [udap_id], references: [id], onUpdate: NoAction, map: "fk_udap_id")
+}
+
+model udaps {
+  id              String   @id
+  department      String
+  complete_coords String?
+  address         String?
+  visible         Boolean?
+  name            String?
+  zip_code        Int?
+  city            String?
+  phone           String?
+  email           String?
+  users           users[]
 }

@@ -171,7 +171,9 @@ export type report_to_clausePayload<ExtArgs extends $Extensions.Args = $Extensio
 export type report_to_clause = runtime.Types.DefaultSelection<report_to_clausePayload>
 export type usersPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
   name: "users"
-  objects: {}
+  objects: {
+    udaps: udapsPayload<ExtArgs> | null
+  }
   scalars: $Extensions.GetResult<{
     id: string
     email: string
@@ -179,6 +181,7 @@ export type usersPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultA
     temporaryLink: string | null
     temporaryLinkExpiresAt: string | null
     password: string
+    udap_id: string | null
   }, ExtArgs["result"]["users"]>
   composites: {}
 }
@@ -188,6 +191,31 @@ export type usersPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultA
  * 
  */
 export type users = runtime.Types.DefaultSelection<usersPayload>
+export type udapsPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  name: "udaps"
+  objects: {
+    users: usersPayload<ExtArgs>[]
+  }
+  scalars: $Extensions.GetResult<{
+    id: string
+    department: string
+    complete_coords: string | null
+    address: string | null
+    visible: boolean | null
+    name: string | null
+    zip_code: number | null
+    city: string | null
+    phone: string | null
+    email: string | null
+  }, ExtArgs["result"]["udaps"]>
+  composites: {}
+}
+
+/**
+ * Model udaps
+ * 
+ */
+export type udaps = runtime.Types.DefaultSelection<udapsPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -403,6 +431,16 @@ export class PrismaClient<
     * ```
     */
   get users(): Prisma.usersDelegate<GlobalReject, ExtArgs>;
+
+  /**
+   * `prisma.udaps`: Exposes CRUD operations for the **udaps** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Udaps
+    * const udaps = await prisma.udaps.findMany()
+    * ```
+    */
+  get udaps(): Prisma.udapsDelegate<GlobalReject, ExtArgs>;
 }
 
 export namespace Prisma {
@@ -894,7 +932,8 @@ export namespace Prisma {
     report: 'report',
     report_to_chip: 'report_to_chip',
     report_to_clause: 'report_to_clause',
-    users: 'users'
+    users: 'users',
+    udaps: 'udaps'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -911,7 +950,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     meta: {
-      modelProps: 'atdatabases_migrations_applied' | 'atdatabases_migrations_version' | 'chip' | 'clause' | 'delegations' | 'report' | 'report_to_chip' | 'report_to_clause' | 'users'
+      modelProps: 'atdatabases_migrations_applied' | 'atdatabases_migrations_version' | 'chip' | 'clause' | 'delegations' | 'report' | 'report_to_chip' | 'report_to_clause' | 'users' | 'udaps'
       txIsolationLevel: Prisma.TransactionIsolationLevel
     },
     model: {
@@ -1500,6 +1539,71 @@ export namespace Prisma {
           }
         }
       }
+      udaps: {
+        payload: udapsPayload<ExtArgs>
+        operations: {
+          findUnique: {
+            args: Prisma.udapsFindUniqueArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<udapsPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.udapsFindUniqueOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<udapsPayload>
+          }
+          findFirst: {
+            args: Prisma.udapsFindFirstArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<udapsPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.udapsFindFirstOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<udapsPayload>
+          }
+          findMany: {
+            args: Prisma.udapsFindManyArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<udapsPayload>[]
+          }
+          create: {
+            args: Prisma.udapsCreateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<udapsPayload>
+          }
+          createMany: {
+            args: Prisma.udapsCreateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          delete: {
+            args: Prisma.udapsDeleteArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<udapsPayload>
+          }
+          update: {
+            args: Prisma.udapsUpdateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<udapsPayload>
+          }
+          deleteMany: {
+            args: Prisma.udapsDeleteManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          updateMany: {
+            args: Prisma.udapsUpdateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          upsert: {
+            args: Prisma.udapsUpsertArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<udapsPayload>
+          }
+          aggregate: {
+            args: Prisma.UdapsAggregateArgs<ExtArgs>,
+            result: $Utils.Optional<AggregateUdaps>
+          }
+          groupBy: {
+            args: Prisma.UdapsGroupByArgs<ExtArgs>,
+            result: $Utils.Optional<UdapsGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.udapsCountArgs<ExtArgs>,
+            result: $Utils.Optional<UdapsCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1787,6 +1891,41 @@ export namespace Prisma {
    */
   export type ReportCountOutputTypeCountReport_to_clauseArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     where?: report_to_clauseWhereInput
+  }
+
+
+
+  /**
+   * Count Type UdapsCountOutputType
+   */
+
+
+  export type UdapsCountOutputType = {
+    users: number
+  }
+
+  export type UdapsCountOutputTypeSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    users?: boolean | UdapsCountOutputTypeCountUsersArgs
+  }
+
+  // Custom InputTypes
+
+  /**
+   * UdapsCountOutputType without action
+   */
+  export type UdapsCountOutputTypeArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UdapsCountOutputType
+     */
+    select?: UdapsCountOutputTypeSelect<ExtArgs> | null
+  }
+
+
+  /**
+   * UdapsCountOutputType without action
+   */
+  export type UdapsCountOutputTypeCountUsersArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    where?: usersWhereInput
   }
 
 
@@ -9241,6 +9380,7 @@ export namespace Prisma {
     temporaryLink: string | null
     temporaryLinkExpiresAt: string | null
     password: string | null
+    udap_id: string | null
   }
 
   export type UsersMaxAggregateOutputType = {
@@ -9250,6 +9390,7 @@ export namespace Prisma {
     temporaryLink: string | null
     temporaryLinkExpiresAt: string | null
     password: string | null
+    udap_id: string | null
   }
 
   export type UsersCountAggregateOutputType = {
@@ -9259,6 +9400,7 @@ export namespace Prisma {
     temporaryLink: number
     temporaryLinkExpiresAt: number
     password: number
+    udap_id: number
     _all: number
   }
 
@@ -9270,6 +9412,7 @@ export namespace Prisma {
     temporaryLink?: true
     temporaryLinkExpiresAt?: true
     password?: true
+    udap_id?: true
   }
 
   export type UsersMaxAggregateInputType = {
@@ -9279,6 +9422,7 @@ export namespace Prisma {
     temporaryLink?: true
     temporaryLinkExpiresAt?: true
     password?: true
+    udap_id?: true
   }
 
   export type UsersCountAggregateInputType = {
@@ -9288,6 +9432,7 @@ export namespace Prisma {
     temporaryLink?: true
     temporaryLinkExpiresAt?: true
     password?: true
+    udap_id?: true
     _all?: true
   }
 
@@ -9371,6 +9516,7 @@ export namespace Prisma {
     temporaryLink: string | null
     temporaryLinkExpiresAt: string | null
     password: string
+    udap_id: string | null
     _count: UsersCountAggregateOutputType | null
     _min: UsersMinAggregateOutputType | null
     _max: UsersMaxAggregateOutputType | null
@@ -9397,6 +9543,8 @@ export namespace Prisma {
     temporaryLink?: boolean
     temporaryLinkExpiresAt?: boolean
     password?: boolean
+    udap_id?: boolean
+    udaps?: boolean | udapsArgs<ExtArgs>
   }, ExtArgs["result"]["users"]>
 
   export type usersSelectScalar = {
@@ -9406,6 +9554,11 @@ export namespace Prisma {
     temporaryLink?: boolean
     temporaryLinkExpiresAt?: boolean
     password?: boolean
+    udap_id?: boolean
+  }
+
+  export type usersInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    udaps?: boolean | udapsArgs<ExtArgs>
   }
 
 
@@ -9778,6 +9931,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: 'PrismaPromise';
     constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
 
+    udaps<T extends udapsArgs<ExtArgs> = {}>(args?: Subset<T, udapsArgs<ExtArgs>>): Prisma__udapsClient<$Types.GetResult<udapsPayload<ExtArgs>, T, 'findUnique', never> | Null, never, ExtArgs>;
 
     private get _document();
     /**
@@ -9815,6 +9969,10 @@ export namespace Prisma {
      */
     select?: usersSelect<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: usersInclude<ExtArgs> | null
+    /**
      * Filter, which users to fetch.
      */
     where: usersWhereUniqueInput
@@ -9841,6 +9999,10 @@ export namespace Prisma {
      */
     select?: usersSelect<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: usersInclude<ExtArgs> | null
+    /**
      * Filter, which users to fetch.
      */
     where: usersWhereUniqueInput
@@ -9855,6 +10017,10 @@ export namespace Prisma {
      * Select specific fields to fetch from the users
      */
     select?: usersSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: usersInclude<ExtArgs> | null
     /**
      * Filter, which users to fetch.
      */
@@ -9912,6 +10078,10 @@ export namespace Prisma {
      */
     select?: usersSelect<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: usersInclude<ExtArgs> | null
+    /**
      * Filter, which users to fetch.
      */
     where?: usersWhereInput
@@ -9957,6 +10127,10 @@ export namespace Prisma {
      */
     select?: usersSelect<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: usersInclude<ExtArgs> | null
+    /**
      * Filter, which users to fetch.
      */
     where?: usersWhereInput
@@ -9997,6 +10171,10 @@ export namespace Prisma {
      */
     select?: usersSelect<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: usersInclude<ExtArgs> | null
+    /**
      * The data needed to create a users.
      */
     data: XOR<usersCreateInput, usersUncheckedCreateInput>
@@ -10023,6 +10201,10 @@ export namespace Prisma {
      * Select specific fields to fetch from the users
      */
     select?: usersSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: usersInclude<ExtArgs> | null
     /**
      * The data needed to update a users.
      */
@@ -10058,6 +10240,10 @@ export namespace Prisma {
      */
     select?: usersSelect<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: usersInclude<ExtArgs> | null
+    /**
      * The filter to search for the users to update in case it exists.
      */
     where: usersWhereUniqueInput
@@ -10080,6 +10266,10 @@ export namespace Prisma {
      * Select specific fields to fetch from the users
      */
     select?: usersSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: usersInclude<ExtArgs> | null
     /**
      * Filter which users to delete.
      */
@@ -10106,6 +10296,1036 @@ export namespace Prisma {
      * Select specific fields to fetch from the users
      */
     select?: usersSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: usersInclude<ExtArgs> | null
+  }
+
+
+
+  /**
+   * Model udaps
+   */
+
+
+  export type AggregateUdaps = {
+    _count: UdapsCountAggregateOutputType | null
+    _avg: UdapsAvgAggregateOutputType | null
+    _sum: UdapsSumAggregateOutputType | null
+    _min: UdapsMinAggregateOutputType | null
+    _max: UdapsMaxAggregateOutputType | null
+  }
+
+  export type UdapsAvgAggregateOutputType = {
+    zip_code: number | null
+  }
+
+  export type UdapsSumAggregateOutputType = {
+    zip_code: number | null
+  }
+
+  export type UdapsMinAggregateOutputType = {
+    id: string | null
+    department: string | null
+    complete_coords: string | null
+    address: string | null
+    visible: boolean | null
+    name: string | null
+    zip_code: number | null
+    city: string | null
+    phone: string | null
+    email: string | null
+  }
+
+  export type UdapsMaxAggregateOutputType = {
+    id: string | null
+    department: string | null
+    complete_coords: string | null
+    address: string | null
+    visible: boolean | null
+    name: string | null
+    zip_code: number | null
+    city: string | null
+    phone: string | null
+    email: string | null
+  }
+
+  export type UdapsCountAggregateOutputType = {
+    id: number
+    department: number
+    complete_coords: number
+    address: number
+    visible: number
+    name: number
+    zip_code: number
+    city: number
+    phone: number
+    email: number
+    _all: number
+  }
+
+
+  export type UdapsAvgAggregateInputType = {
+    zip_code?: true
+  }
+
+  export type UdapsSumAggregateInputType = {
+    zip_code?: true
+  }
+
+  export type UdapsMinAggregateInputType = {
+    id?: true
+    department?: true
+    complete_coords?: true
+    address?: true
+    visible?: true
+    name?: true
+    zip_code?: true
+    city?: true
+    phone?: true
+    email?: true
+  }
+
+  export type UdapsMaxAggregateInputType = {
+    id?: true
+    department?: true
+    complete_coords?: true
+    address?: true
+    visible?: true
+    name?: true
+    zip_code?: true
+    city?: true
+    phone?: true
+    email?: true
+  }
+
+  export type UdapsCountAggregateInputType = {
+    id?: true
+    department?: true
+    complete_coords?: true
+    address?: true
+    visible?: true
+    name?: true
+    zip_code?: true
+    city?: true
+    phone?: true
+    email?: true
+    _all?: true
+  }
+
+  export type UdapsAggregateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which udaps to aggregate.
+     */
+    where?: udapsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of udaps to fetch.
+     */
+    orderBy?: Enumerable<udapsOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: udapsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` udaps from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` udaps.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned udaps
+    **/
+    _count?: true | UdapsCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: UdapsAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: UdapsSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: UdapsMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: UdapsMaxAggregateInputType
+  }
+
+  export type GetUdapsAggregateType<T extends UdapsAggregateArgs> = {
+        [P in keyof T & keyof AggregateUdaps]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateUdaps[P]>
+      : GetScalarType<T[P], AggregateUdaps[P]>
+  }
+
+
+
+
+  export type UdapsGroupByArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    where?: udapsWhereInput
+    orderBy?: Enumerable<udapsOrderByWithAggregationInput>
+    by: UdapsScalarFieldEnum[]
+    having?: udapsScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: UdapsCountAggregateInputType | true
+    _avg?: UdapsAvgAggregateInputType
+    _sum?: UdapsSumAggregateInputType
+    _min?: UdapsMinAggregateInputType
+    _max?: UdapsMaxAggregateInputType
+  }
+
+
+  export type UdapsGroupByOutputType = {
+    id: string
+    department: string
+    complete_coords: string | null
+    address: string | null
+    visible: boolean | null
+    name: string | null
+    zip_code: number | null
+    city: string | null
+    phone: string | null
+    email: string | null
+    _count: UdapsCountAggregateOutputType | null
+    _avg: UdapsAvgAggregateOutputType | null
+    _sum: UdapsSumAggregateOutputType | null
+    _min: UdapsMinAggregateOutputType | null
+    _max: UdapsMaxAggregateOutputType | null
+  }
+
+  type GetUdapsGroupByPayload<T extends UdapsGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickArray<UdapsGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof UdapsGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], UdapsGroupByOutputType[P]>
+            : GetScalarType<T[P], UdapsGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type udapsSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    department?: boolean
+    complete_coords?: boolean
+    address?: boolean
+    visible?: boolean
+    name?: boolean
+    zip_code?: boolean
+    city?: boolean
+    phone?: boolean
+    email?: boolean
+    users?: boolean | udaps$usersArgs<ExtArgs>
+    _count?: boolean | UdapsCountOutputTypeArgs<ExtArgs>
+  }, ExtArgs["result"]["udaps"]>
+
+  export type udapsSelectScalar = {
+    id?: boolean
+    department?: boolean
+    complete_coords?: boolean
+    address?: boolean
+    visible?: boolean
+    name?: boolean
+    zip_code?: boolean
+    city?: boolean
+    phone?: boolean
+    email?: boolean
+  }
+
+  export type udapsInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    users?: boolean | udaps$usersArgs<ExtArgs>
+    _count?: boolean | UdapsCountOutputTypeArgs<ExtArgs>
+  }
+
+
+  type udapsGetPayload<S extends boolean | null | undefined | udapsArgs> = $Types.GetResult<udapsPayload, S>
+
+  type udapsCountArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = 
+    Omit<udapsFindManyArgs, 'select' | 'include'> & {
+      select?: UdapsCountAggregateInputType | true
+    }
+
+  export interface udapsDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['udaps'], meta: { name: 'udaps' } }
+    /**
+     * Find zero or one Udaps that matches the filter.
+     * @param {udapsFindUniqueArgs} args - Arguments to find a Udaps
+     * @example
+     * // Get one Udaps
+     * const udaps = await prisma.udaps.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends udapsFindUniqueArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, udapsFindUniqueArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'udaps'> extends True ? Prisma__udapsClient<$Types.GetResult<udapsPayload<ExtArgs>, T, 'findUnique', never>, never, ExtArgs> : Prisma__udapsClient<$Types.GetResult<udapsPayload<ExtArgs>, T, 'findUnique', never> | null, null, ExtArgs>
+
+    /**
+     * Find one Udaps that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {udapsFindUniqueOrThrowArgs} args - Arguments to find a Udaps
+     * @example
+     * // Get one Udaps
+     * const udaps = await prisma.udaps.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends udapsFindUniqueOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, udapsFindUniqueOrThrowArgs<ExtArgs>>
+    ): Prisma__udapsClient<$Types.GetResult<udapsPayload<ExtArgs>, T, 'findUniqueOrThrow', never>, never, ExtArgs>
+
+    /**
+     * Find the first Udaps that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {udapsFindFirstArgs} args - Arguments to find a Udaps
+     * @example
+     * // Get one Udaps
+     * const udaps = await prisma.udaps.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends udapsFindFirstArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, udapsFindFirstArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'udaps'> extends True ? Prisma__udapsClient<$Types.GetResult<udapsPayload<ExtArgs>, T, 'findFirst', never>, never, ExtArgs> : Prisma__udapsClient<$Types.GetResult<udapsPayload<ExtArgs>, T, 'findFirst', never> | null, null, ExtArgs>
+
+    /**
+     * Find the first Udaps that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {udapsFindFirstOrThrowArgs} args - Arguments to find a Udaps
+     * @example
+     * // Get one Udaps
+     * const udaps = await prisma.udaps.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends udapsFindFirstOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, udapsFindFirstOrThrowArgs<ExtArgs>>
+    ): Prisma__udapsClient<$Types.GetResult<udapsPayload<ExtArgs>, T, 'findFirstOrThrow', never>, never, ExtArgs>
+
+    /**
+     * Find zero or more Udaps that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {udapsFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Udaps
+     * const udaps = await prisma.udaps.findMany()
+     * 
+     * // Get first 10 Udaps
+     * const udaps = await prisma.udaps.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const udapsWithIdOnly = await prisma.udaps.findMany({ select: { id: true } })
+     * 
+    **/
+    findMany<T extends udapsFindManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, udapsFindManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Types.GetResult<udapsPayload<ExtArgs>, T, 'findMany', never>>
+
+    /**
+     * Create a Udaps.
+     * @param {udapsCreateArgs} args - Arguments to create a Udaps.
+     * @example
+     * // Create one Udaps
+     * const Udaps = await prisma.udaps.create({
+     *   data: {
+     *     // ... data to create a Udaps
+     *   }
+     * })
+     * 
+    **/
+    create<T extends udapsCreateArgs<ExtArgs>>(
+      args: SelectSubset<T, udapsCreateArgs<ExtArgs>>
+    ): Prisma__udapsClient<$Types.GetResult<udapsPayload<ExtArgs>, T, 'create', never>, never, ExtArgs>
+
+    /**
+     * Create many Udaps.
+     *     @param {udapsCreateManyArgs} args - Arguments to create many Udaps.
+     *     @example
+     *     // Create many Udaps
+     *     const udaps = await prisma.udaps.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
+     *     
+    **/
+    createMany<T extends udapsCreateManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, udapsCreateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Udaps.
+     * @param {udapsDeleteArgs} args - Arguments to delete one Udaps.
+     * @example
+     * // Delete one Udaps
+     * const Udaps = await prisma.udaps.delete({
+     *   where: {
+     *     // ... filter to delete one Udaps
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends udapsDeleteArgs<ExtArgs>>(
+      args: SelectSubset<T, udapsDeleteArgs<ExtArgs>>
+    ): Prisma__udapsClient<$Types.GetResult<udapsPayload<ExtArgs>, T, 'delete', never>, never, ExtArgs>
+
+    /**
+     * Update one Udaps.
+     * @param {udapsUpdateArgs} args - Arguments to update one Udaps.
+     * @example
+     * // Update one Udaps
+     * const udaps = await prisma.udaps.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends udapsUpdateArgs<ExtArgs>>(
+      args: SelectSubset<T, udapsUpdateArgs<ExtArgs>>
+    ): Prisma__udapsClient<$Types.GetResult<udapsPayload<ExtArgs>, T, 'update', never>, never, ExtArgs>
+
+    /**
+     * Delete zero or more Udaps.
+     * @param {udapsDeleteManyArgs} args - Arguments to filter Udaps to delete.
+     * @example
+     * // Delete a few Udaps
+     * const { count } = await prisma.udaps.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends udapsDeleteManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, udapsDeleteManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Udaps.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {udapsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Udaps
+     * const udaps = await prisma.udaps.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends udapsUpdateManyArgs<ExtArgs>>(
+      args: SelectSubset<T, udapsUpdateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Udaps.
+     * @param {udapsUpsertArgs} args - Arguments to update or create a Udaps.
+     * @example
+     * // Update or create a Udaps
+     * const udaps = await prisma.udaps.upsert({
+     *   create: {
+     *     // ... data to create a Udaps
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Udaps we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends udapsUpsertArgs<ExtArgs>>(
+      args: SelectSubset<T, udapsUpsertArgs<ExtArgs>>
+    ): Prisma__udapsClient<$Types.GetResult<udapsPayload<ExtArgs>, T, 'upsert', never>, never, ExtArgs>
+
+    /**
+     * Count the number of Udaps.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {udapsCountArgs} args - Arguments to filter Udaps to count.
+     * @example
+     * // Count the number of Udaps
+     * const count = await prisma.udaps.count({
+     *   where: {
+     *     // ... the filter for the Udaps we want to count
+     *   }
+     * })
+    **/
+    count<T extends udapsCountArgs>(
+      args?: Subset<T, udapsCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], UdapsCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Udaps.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UdapsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends UdapsAggregateArgs>(args: Subset<T, UdapsAggregateArgs>): Prisma.PrismaPromise<GetUdapsAggregateType<T>>
+
+    /**
+     * Group by Udaps.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UdapsGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends UdapsGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: UdapsGroupByArgs['orderBy'] }
+        : { orderBy?: UdapsGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends TupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, UdapsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUdapsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for udaps.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export class Prisma__udapsClient<T, Null = never, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> implements Prisma.PrismaPromise<T> {
+    private readonly _dmmf;
+    private readonly _queryType;
+    private readonly _rootField;
+    private readonly _clientMethod;
+    private readonly _args;
+    private readonly _dataPath;
+    private readonly _errorFormat;
+    private readonly _measurePerformance?;
+    private _isList;
+    private _callsite;
+    private _requestPromise?;
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+    constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
+
+    users<T extends udaps$usersArgs<ExtArgs> = {}>(args?: Subset<T, udaps$usersArgs<ExtArgs>>): Prisma.PrismaPromise<$Types.GetResult<usersPayload<ExtArgs>, T, 'findMany', never>| Null>;
+
+    private get _document();
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): Promise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): Promise<T>;
+  }
+
+
+
+  // Custom InputTypes
+
+  /**
+   * udaps base type for findUnique actions
+   */
+  export type udapsFindUniqueArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the udaps
+     */
+    select?: udapsSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: udapsInclude<ExtArgs> | null
+    /**
+     * Filter, which udaps to fetch.
+     */
+    where: udapsWhereUniqueInput
+  }
+
+  /**
+   * udaps findUnique
+   */
+  export interface udapsFindUniqueArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends udapsFindUniqueArgsBase<ExtArgs> {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * udaps findUniqueOrThrow
+   */
+  export type udapsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the udaps
+     */
+    select?: udapsSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: udapsInclude<ExtArgs> | null
+    /**
+     * Filter, which udaps to fetch.
+     */
+    where: udapsWhereUniqueInput
+  }
+
+
+  /**
+   * udaps base type for findFirst actions
+   */
+  export type udapsFindFirstArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the udaps
+     */
+    select?: udapsSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: udapsInclude<ExtArgs> | null
+    /**
+     * Filter, which udaps to fetch.
+     */
+    where?: udapsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of udaps to fetch.
+     */
+    orderBy?: Enumerable<udapsOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for udaps.
+     */
+    cursor?: udapsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` udaps from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` udaps.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of udaps.
+     */
+    distinct?: Enumerable<UdapsScalarFieldEnum>
+  }
+
+  /**
+   * udaps findFirst
+   */
+  export interface udapsFindFirstArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends udapsFindFirstArgsBase<ExtArgs> {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * udaps findFirstOrThrow
+   */
+  export type udapsFindFirstOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the udaps
+     */
+    select?: udapsSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: udapsInclude<ExtArgs> | null
+    /**
+     * Filter, which udaps to fetch.
+     */
+    where?: udapsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of udaps to fetch.
+     */
+    orderBy?: Enumerable<udapsOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for udaps.
+     */
+    cursor?: udapsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` udaps from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` udaps.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of udaps.
+     */
+    distinct?: Enumerable<UdapsScalarFieldEnum>
+  }
+
+
+  /**
+   * udaps findMany
+   */
+  export type udapsFindManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the udaps
+     */
+    select?: udapsSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: udapsInclude<ExtArgs> | null
+    /**
+     * Filter, which udaps to fetch.
+     */
+    where?: udapsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of udaps to fetch.
+     */
+    orderBy?: Enumerable<udapsOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing udaps.
+     */
+    cursor?: udapsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` udaps from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` udaps.
+     */
+    skip?: number
+    distinct?: Enumerable<UdapsScalarFieldEnum>
+  }
+
+
+  /**
+   * udaps create
+   */
+  export type udapsCreateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the udaps
+     */
+    select?: udapsSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: udapsInclude<ExtArgs> | null
+    /**
+     * The data needed to create a udaps.
+     */
+    data: XOR<udapsCreateInput, udapsUncheckedCreateInput>
+  }
+
+
+  /**
+   * udaps createMany
+   */
+  export type udapsCreateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many udaps.
+     */
+    data: Enumerable<udapsCreateManyInput>
+    skipDuplicates?: boolean
+  }
+
+
+  /**
+   * udaps update
+   */
+  export type udapsUpdateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the udaps
+     */
+    select?: udapsSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: udapsInclude<ExtArgs> | null
+    /**
+     * The data needed to update a udaps.
+     */
+    data: XOR<udapsUpdateInput, udapsUncheckedUpdateInput>
+    /**
+     * Choose, which udaps to update.
+     */
+    where: udapsWhereUniqueInput
+  }
+
+
+  /**
+   * udaps updateMany
+   */
+  export type udapsUpdateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update udaps.
+     */
+    data: XOR<udapsUpdateManyMutationInput, udapsUncheckedUpdateManyInput>
+    /**
+     * Filter which udaps to update
+     */
+    where?: udapsWhereInput
+  }
+
+
+  /**
+   * udaps upsert
+   */
+  export type udapsUpsertArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the udaps
+     */
+    select?: udapsSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: udapsInclude<ExtArgs> | null
+    /**
+     * The filter to search for the udaps to update in case it exists.
+     */
+    where: udapsWhereUniqueInput
+    /**
+     * In case the udaps found by the `where` argument doesn't exist, create a new udaps with this data.
+     */
+    create: XOR<udapsCreateInput, udapsUncheckedCreateInput>
+    /**
+     * In case the udaps was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<udapsUpdateInput, udapsUncheckedUpdateInput>
+  }
+
+
+  /**
+   * udaps delete
+   */
+  export type udapsDeleteArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the udaps
+     */
+    select?: udapsSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: udapsInclude<ExtArgs> | null
+    /**
+     * Filter which udaps to delete.
+     */
+    where: udapsWhereUniqueInput
+  }
+
+
+  /**
+   * udaps deleteMany
+   */
+  export type udapsDeleteManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which udaps to delete
+     */
+    where?: udapsWhereInput
+  }
+
+
+  /**
+   * udaps.users
+   */
+  export type udaps$usersArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the users
+     */
+    select?: usersSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: usersInclude<ExtArgs> | null
+    where?: usersWhereInput
+    orderBy?: Enumerable<usersOrderByWithRelationInput>
+    cursor?: usersWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Enumerable<UsersScalarFieldEnum>
+  }
+
+
+  /**
+   * udaps without action
+   */
+  export type udapsArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the udaps
+     */
+    select?: udapsSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: udapsInclude<ExtArgs> | null
   }
 
 
@@ -10218,10 +11438,27 @@ export namespace Prisma {
     name: 'name',
     temporaryLink: 'temporaryLink',
     temporaryLinkExpiresAt: 'temporaryLinkExpiresAt',
-    password: 'password'
+    password: 'password',
+    udap_id: 'udap_id'
   };
 
   export type UsersScalarFieldEnum = (typeof UsersScalarFieldEnum)[keyof typeof UsersScalarFieldEnum]
+
+
+  export const UdapsScalarFieldEnum: {
+    id: 'id',
+    department: 'department',
+    complete_coords: 'complete_coords',
+    address: 'address',
+    visible: 'visible',
+    name: 'name',
+    zip_code: 'zip_code',
+    city: 'city',
+    phone: 'phone',
+    email: 'email'
+  };
+
+  export type UdapsScalarFieldEnum = (typeof UdapsScalarFieldEnum)[keyof typeof UdapsScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -10643,6 +11880,8 @@ export namespace Prisma {
     temporaryLink?: StringNullableFilter | string | null
     temporaryLinkExpiresAt?: StringNullableFilter | string | null
     password?: StringFilter | string
+    udap_id?: StringNullableFilter | string | null
+    udaps?: XOR<UdapsRelationFilter, udapsWhereInput> | null
   }
 
   export type usersOrderByWithRelationInput = {
@@ -10652,6 +11891,8 @@ export namespace Prisma {
     temporaryLink?: SortOrderInput | SortOrder
     temporaryLinkExpiresAt?: SortOrderInput | SortOrder
     password?: SortOrder
+    udap_id?: SortOrderInput | SortOrder
+    udaps?: udapsOrderByWithRelationInput
   }
 
   export type usersWhereUniqueInput = {
@@ -10666,6 +11907,7 @@ export namespace Prisma {
     temporaryLink?: SortOrderInput | SortOrder
     temporaryLinkExpiresAt?: SortOrderInput | SortOrder
     password?: SortOrder
+    udap_id?: SortOrderInput | SortOrder
     _count?: usersCountOrderByAggregateInput
     _max?: usersMaxOrderByAggregateInput
     _min?: usersMinOrderByAggregateInput
@@ -10681,6 +11923,76 @@ export namespace Prisma {
     temporaryLink?: StringNullableWithAggregatesFilter | string | null
     temporaryLinkExpiresAt?: StringNullableWithAggregatesFilter | string | null
     password?: StringWithAggregatesFilter | string
+    udap_id?: StringNullableWithAggregatesFilter | string | null
+  }
+
+  export type udapsWhereInput = {
+    AND?: Enumerable<udapsWhereInput>
+    OR?: Enumerable<udapsWhereInput>
+    NOT?: Enumerable<udapsWhereInput>
+    id?: StringFilter | string
+    department?: StringFilter | string
+    complete_coords?: StringNullableFilter | string | null
+    address?: StringNullableFilter | string | null
+    visible?: BoolNullableFilter | boolean | null
+    name?: StringNullableFilter | string | null
+    zip_code?: IntNullableFilter | number | null
+    city?: StringNullableFilter | string | null
+    phone?: StringNullableFilter | string | null
+    email?: StringNullableFilter | string | null
+    users?: UsersListRelationFilter
+  }
+
+  export type udapsOrderByWithRelationInput = {
+    id?: SortOrder
+    department?: SortOrder
+    complete_coords?: SortOrderInput | SortOrder
+    address?: SortOrderInput | SortOrder
+    visible?: SortOrderInput | SortOrder
+    name?: SortOrderInput | SortOrder
+    zip_code?: SortOrderInput | SortOrder
+    city?: SortOrderInput | SortOrder
+    phone?: SortOrderInput | SortOrder
+    email?: SortOrderInput | SortOrder
+    users?: usersOrderByRelationAggregateInput
+  }
+
+  export type udapsWhereUniqueInput = {
+    id?: string
+  }
+
+  export type udapsOrderByWithAggregationInput = {
+    id?: SortOrder
+    department?: SortOrder
+    complete_coords?: SortOrderInput | SortOrder
+    address?: SortOrderInput | SortOrder
+    visible?: SortOrderInput | SortOrder
+    name?: SortOrderInput | SortOrder
+    zip_code?: SortOrderInput | SortOrder
+    city?: SortOrderInput | SortOrder
+    phone?: SortOrderInput | SortOrder
+    email?: SortOrderInput | SortOrder
+    _count?: udapsCountOrderByAggregateInput
+    _avg?: udapsAvgOrderByAggregateInput
+    _max?: udapsMaxOrderByAggregateInput
+    _min?: udapsMinOrderByAggregateInput
+    _sum?: udapsSumOrderByAggregateInput
+  }
+
+  export type udapsScalarWhereWithAggregatesInput = {
+    AND?: Enumerable<udapsScalarWhereWithAggregatesInput>
+    OR?: Enumerable<udapsScalarWhereWithAggregatesInput>
+    NOT?: Enumerable<udapsScalarWhereWithAggregatesInput>
+    id?: StringWithAggregatesFilter | string
+    department?: StringWithAggregatesFilter | string
+    complete_coords?: StringNullableWithAggregatesFilter | string | null
+    address?: StringNullableWithAggregatesFilter | string | null
+    visible?: BoolNullableWithAggregatesFilter | boolean | null
+    name?: StringNullableWithAggregatesFilter | string | null
+    zip_code?: IntNullableWithAggregatesFilter | number | null
+    city?: StringNullableWithAggregatesFilter | string | null
+    phone?: StringNullableWithAggregatesFilter | string | null
+    email?: StringNullableWithAggregatesFilter | string | null
   }
 
   export type atdatabases_migrations_appliedCreateInput = {
@@ -11150,6 +12462,7 @@ export namespace Prisma {
     temporaryLink?: string | null
     temporaryLinkExpiresAt?: string | null
     password: string
+    udaps?: udapsCreateNestedOneWithoutUsersInput
   }
 
   export type usersUncheckedCreateInput = {
@@ -11159,6 +12472,7 @@ export namespace Prisma {
     temporaryLink?: string | null
     temporaryLinkExpiresAt?: string | null
     password: string
+    udap_id?: string | null
   }
 
   export type usersUpdateInput = {
@@ -11168,6 +12482,7 @@ export namespace Prisma {
     temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
     temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
     password?: StringFieldUpdateOperationsInput | string
+    udaps?: udapsUpdateOneWithoutUsersNestedInput
   }
 
   export type usersUncheckedUpdateInput = {
@@ -11177,6 +12492,7 @@ export namespace Prisma {
     temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
     temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
     password?: StringFieldUpdateOperationsInput | string
+    udap_id?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type usersCreateManyInput = {
@@ -11186,6 +12502,7 @@ export namespace Prisma {
     temporaryLink?: string | null
     temporaryLinkExpiresAt?: string | null
     password: string
+    udap_id?: string | null
   }
 
   export type usersUpdateManyMutationInput = {
@@ -11204,6 +12521,102 @@ export namespace Prisma {
     temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
     temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
     password?: StringFieldUpdateOperationsInput | string
+    udap_id?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type udapsCreateInput = {
+    id: string
+    department: string
+    complete_coords?: string | null
+    address?: string | null
+    visible?: boolean | null
+    name?: string | null
+    zip_code?: number | null
+    city?: string | null
+    phone?: string | null
+    email?: string | null
+    users?: usersCreateNestedManyWithoutUdapsInput
+  }
+
+  export type udapsUncheckedCreateInput = {
+    id: string
+    department: string
+    complete_coords?: string | null
+    address?: string | null
+    visible?: boolean | null
+    name?: string | null
+    zip_code?: number | null
+    city?: string | null
+    phone?: string | null
+    email?: string | null
+    users?: usersUncheckedCreateNestedManyWithoutUdapsInput
+  }
+
+  export type udapsUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    department?: StringFieldUpdateOperationsInput | string
+    complete_coords?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    visible?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    zip_code?: NullableIntFieldUpdateOperationsInput | number | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    users?: usersUpdateManyWithoutUdapsNestedInput
+  }
+
+  export type udapsUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    department?: StringFieldUpdateOperationsInput | string
+    complete_coords?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    visible?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    zip_code?: NullableIntFieldUpdateOperationsInput | number | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    users?: usersUncheckedUpdateManyWithoutUdapsNestedInput
+  }
+
+  export type udapsCreateManyInput = {
+    id: string
+    department: string
+    complete_coords?: string | null
+    address?: string | null
+    visible?: boolean | null
+    name?: string | null
+    zip_code?: number | null
+    city?: string | null
+    phone?: string | null
+    email?: string | null
+  }
+
+  export type udapsUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    department?: StringFieldUpdateOperationsInput | string
+    complete_coords?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    visible?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    zip_code?: NullableIntFieldUpdateOperationsInput | number | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type udapsUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    department?: StringFieldUpdateOperationsInput | string
+    complete_coords?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    visible?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    zip_code?: NullableIntFieldUpdateOperationsInput | number | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type BigIntFilter = {
@@ -11644,6 +13057,11 @@ export namespace Prisma {
     clause_id?: SortOrder
   }
 
+  export type UdapsRelationFilter = {
+    is?: udapsWhereInput | null
+    isNot?: udapsWhereInput | null
+  }
+
   export type usersCountOrderByAggregateInput = {
     id?: SortOrder
     email?: SortOrder
@@ -11651,6 +13069,7 @@ export namespace Prisma {
     temporaryLink?: SortOrder
     temporaryLinkExpiresAt?: SortOrder
     password?: SortOrder
+    udap_id?: SortOrder
   }
 
   export type usersMaxOrderByAggregateInput = {
@@ -11660,6 +13079,7 @@ export namespace Prisma {
     temporaryLink?: SortOrder
     temporaryLinkExpiresAt?: SortOrder
     password?: SortOrder
+    udap_id?: SortOrder
   }
 
   export type usersMinOrderByAggregateInput = {
@@ -11669,6 +13089,104 @@ export namespace Prisma {
     temporaryLink?: SortOrder
     temporaryLinkExpiresAt?: SortOrder
     password?: SortOrder
+    udap_id?: SortOrder
+  }
+
+  export type BoolNullableFilter = {
+    equals?: boolean | null
+    not?: NestedBoolNullableFilter | boolean | null
+  }
+
+  export type IntNullableFilter = {
+    equals?: number | null
+    in?: Enumerable<number> | number | null
+    notIn?: Enumerable<number> | number | null
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedIntNullableFilter | number | null
+  }
+
+  export type UsersListRelationFilter = {
+    every?: usersWhereInput
+    some?: usersWhereInput
+    none?: usersWhereInput
+  }
+
+  export type usersOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type udapsCountOrderByAggregateInput = {
+    id?: SortOrder
+    department?: SortOrder
+    complete_coords?: SortOrder
+    address?: SortOrder
+    visible?: SortOrder
+    name?: SortOrder
+    zip_code?: SortOrder
+    city?: SortOrder
+    phone?: SortOrder
+    email?: SortOrder
+  }
+
+  export type udapsAvgOrderByAggregateInput = {
+    zip_code?: SortOrder
+  }
+
+  export type udapsMaxOrderByAggregateInput = {
+    id?: SortOrder
+    department?: SortOrder
+    complete_coords?: SortOrder
+    address?: SortOrder
+    visible?: SortOrder
+    name?: SortOrder
+    zip_code?: SortOrder
+    city?: SortOrder
+    phone?: SortOrder
+    email?: SortOrder
+  }
+
+  export type udapsMinOrderByAggregateInput = {
+    id?: SortOrder
+    department?: SortOrder
+    complete_coords?: SortOrder
+    address?: SortOrder
+    visible?: SortOrder
+    name?: SortOrder
+    zip_code?: SortOrder
+    city?: SortOrder
+    phone?: SortOrder
+    email?: SortOrder
+  }
+
+  export type udapsSumOrderByAggregateInput = {
+    zip_code?: SortOrder
+  }
+
+  export type BoolNullableWithAggregatesFilter = {
+    equals?: boolean | null
+    not?: NestedBoolNullableWithAggregatesFilter | boolean | null
+    _count?: NestedIntNullableFilter
+    _min?: NestedBoolNullableFilter
+    _max?: NestedBoolNullableFilter
+  }
+
+  export type IntNullableWithAggregatesFilter = {
+    equals?: number | null
+    in?: Enumerable<number> | number | null
+    notIn?: Enumerable<number> | number | null
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedIntNullableWithAggregatesFilter | number | null
+    _count?: NestedIntNullableFilter
+    _avg?: NestedFloatNullableFilter
+    _sum?: NestedIntNullableFilter
+    _min?: NestedIntNullableFilter
+    _max?: NestedIntNullableFilter
   }
 
   export type BigIntFieldUpdateOperationsInput = {
@@ -11931,6 +13449,76 @@ export namespace Prisma {
     update?: XOR<reportUpdateWithoutReport_to_clauseInput, reportUncheckedUpdateWithoutReport_to_clauseInput>
   }
 
+  export type udapsCreateNestedOneWithoutUsersInput = {
+    create?: XOR<udapsCreateWithoutUsersInput, udapsUncheckedCreateWithoutUsersInput>
+    connectOrCreate?: udapsCreateOrConnectWithoutUsersInput
+    connect?: udapsWhereUniqueInput
+  }
+
+  export type udapsUpdateOneWithoutUsersNestedInput = {
+    create?: XOR<udapsCreateWithoutUsersInput, udapsUncheckedCreateWithoutUsersInput>
+    connectOrCreate?: udapsCreateOrConnectWithoutUsersInput
+    upsert?: udapsUpsertWithoutUsersInput
+    disconnect?: boolean
+    delete?: boolean
+    connect?: udapsWhereUniqueInput
+    update?: XOR<udapsUpdateWithoutUsersInput, udapsUncheckedUpdateWithoutUsersInput>
+  }
+
+  export type usersCreateNestedManyWithoutUdapsInput = {
+    create?: XOR<Enumerable<usersCreateWithoutUdapsInput>, Enumerable<usersUncheckedCreateWithoutUdapsInput>>
+    connectOrCreate?: Enumerable<usersCreateOrConnectWithoutUdapsInput>
+    createMany?: usersCreateManyUdapsInputEnvelope
+    connect?: Enumerable<usersWhereUniqueInput>
+  }
+
+  export type usersUncheckedCreateNestedManyWithoutUdapsInput = {
+    create?: XOR<Enumerable<usersCreateWithoutUdapsInput>, Enumerable<usersUncheckedCreateWithoutUdapsInput>>
+    connectOrCreate?: Enumerable<usersCreateOrConnectWithoutUdapsInput>
+    createMany?: usersCreateManyUdapsInputEnvelope
+    connect?: Enumerable<usersWhereUniqueInput>
+  }
+
+  export type NullableBoolFieldUpdateOperationsInput = {
+    set?: boolean | null
+  }
+
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type usersUpdateManyWithoutUdapsNestedInput = {
+    create?: XOR<Enumerable<usersCreateWithoutUdapsInput>, Enumerable<usersUncheckedCreateWithoutUdapsInput>>
+    connectOrCreate?: Enumerable<usersCreateOrConnectWithoutUdapsInput>
+    upsert?: Enumerable<usersUpsertWithWhereUniqueWithoutUdapsInput>
+    createMany?: usersCreateManyUdapsInputEnvelope
+    set?: Enumerable<usersWhereUniqueInput>
+    disconnect?: Enumerable<usersWhereUniqueInput>
+    delete?: Enumerable<usersWhereUniqueInput>
+    connect?: Enumerable<usersWhereUniqueInput>
+    update?: Enumerable<usersUpdateWithWhereUniqueWithoutUdapsInput>
+    updateMany?: Enumerable<usersUpdateManyWithWhereWithoutUdapsInput>
+    deleteMany?: Enumerable<usersScalarWhereInput>
+  }
+
+  export type usersUncheckedUpdateManyWithoutUdapsNestedInput = {
+    create?: XOR<Enumerable<usersCreateWithoutUdapsInput>, Enumerable<usersUncheckedCreateWithoutUdapsInput>>
+    connectOrCreate?: Enumerable<usersCreateOrConnectWithoutUdapsInput>
+    upsert?: Enumerable<usersUpsertWithWhereUniqueWithoutUdapsInput>
+    createMany?: usersCreateManyUdapsInputEnvelope
+    set?: Enumerable<usersWhereUniqueInput>
+    disconnect?: Enumerable<usersWhereUniqueInput>
+    delete?: Enumerable<usersWhereUniqueInput>
+    connect?: Enumerable<usersWhereUniqueInput>
+    update?: Enumerable<usersUpdateWithWhereUniqueWithoutUdapsInput>
+    updateMany?: Enumerable<usersUpdateManyWithWhereWithoutUdapsInput>
+    deleteMany?: Enumerable<usersScalarWhereInput>
+  }
+
   export type NestedBigIntFilter = {
     equals?: bigint | number
     in?: Enumerable<bigint> | Enumerable<number> | bigint | number
@@ -12130,6 +13718,46 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter
     _min?: NestedDateTimeNullableFilter
     _max?: NestedDateTimeNullableFilter
+  }
+
+  export type NestedBoolNullableFilter = {
+    equals?: boolean | null
+    not?: NestedBoolNullableFilter | boolean | null
+  }
+
+  export type NestedBoolNullableWithAggregatesFilter = {
+    equals?: boolean | null
+    not?: NestedBoolNullableWithAggregatesFilter | boolean | null
+    _count?: NestedIntNullableFilter
+    _min?: NestedBoolNullableFilter
+    _max?: NestedBoolNullableFilter
+  }
+
+  export type NestedIntNullableWithAggregatesFilter = {
+    equals?: number | null
+    in?: Enumerable<number> | number | null
+    notIn?: Enumerable<number> | number | null
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedIntNullableWithAggregatesFilter | number | null
+    _count?: NestedIntNullableFilter
+    _avg?: NestedFloatNullableFilter
+    _sum?: NestedIntNullableFilter
+    _min?: NestedIntNullableFilter
+    _max?: NestedIntNullableFilter
+  }
+
+  export type NestedFloatNullableFilter = {
+    equals?: number | null
+    in?: Enumerable<number> | number | null
+    notIn?: Enumerable<number> | number | null
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedFloatNullableFilter | number | null
   }
 
   export type report_to_chipCreateWithoutChipInput = {
@@ -12550,6 +14178,125 @@ export namespace Prisma {
     report_to_chip?: report_to_chipUncheckedUpdateManyWithoutReportNestedInput
   }
 
+  export type udapsCreateWithoutUsersInput = {
+    id: string
+    department: string
+    complete_coords?: string | null
+    address?: string | null
+    visible?: boolean | null
+    name?: string | null
+    zip_code?: number | null
+    city?: string | null
+    phone?: string | null
+    email?: string | null
+  }
+
+  export type udapsUncheckedCreateWithoutUsersInput = {
+    id: string
+    department: string
+    complete_coords?: string | null
+    address?: string | null
+    visible?: boolean | null
+    name?: string | null
+    zip_code?: number | null
+    city?: string | null
+    phone?: string | null
+    email?: string | null
+  }
+
+  export type udapsCreateOrConnectWithoutUsersInput = {
+    where: udapsWhereUniqueInput
+    create: XOR<udapsCreateWithoutUsersInput, udapsUncheckedCreateWithoutUsersInput>
+  }
+
+  export type udapsUpsertWithoutUsersInput = {
+    update: XOR<udapsUpdateWithoutUsersInput, udapsUncheckedUpdateWithoutUsersInput>
+    create: XOR<udapsCreateWithoutUsersInput, udapsUncheckedCreateWithoutUsersInput>
+  }
+
+  export type udapsUpdateWithoutUsersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    department?: StringFieldUpdateOperationsInput | string
+    complete_coords?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    visible?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    zip_code?: NullableIntFieldUpdateOperationsInput | number | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type udapsUncheckedUpdateWithoutUsersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    department?: StringFieldUpdateOperationsInput | string
+    complete_coords?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    visible?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    zip_code?: NullableIntFieldUpdateOperationsInput | number | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type usersCreateWithoutUdapsInput = {
+    id: string
+    email: string
+    name: string
+    temporaryLink?: string | null
+    temporaryLinkExpiresAt?: string | null
+    password: string
+  }
+
+  export type usersUncheckedCreateWithoutUdapsInput = {
+    id: string
+    email: string
+    name: string
+    temporaryLink?: string | null
+    temporaryLinkExpiresAt?: string | null
+    password: string
+  }
+
+  export type usersCreateOrConnectWithoutUdapsInput = {
+    where: usersWhereUniqueInput
+    create: XOR<usersCreateWithoutUdapsInput, usersUncheckedCreateWithoutUdapsInput>
+  }
+
+  export type usersCreateManyUdapsInputEnvelope = {
+    data: Enumerable<usersCreateManyUdapsInput>
+    skipDuplicates?: boolean
+  }
+
+  export type usersUpsertWithWhereUniqueWithoutUdapsInput = {
+    where: usersWhereUniqueInput
+    update: XOR<usersUpdateWithoutUdapsInput, usersUncheckedUpdateWithoutUdapsInput>
+    create: XOR<usersCreateWithoutUdapsInput, usersUncheckedCreateWithoutUdapsInput>
+  }
+
+  export type usersUpdateWithWhereUniqueWithoutUdapsInput = {
+    where: usersWhereUniqueInput
+    data: XOR<usersUpdateWithoutUdapsInput, usersUncheckedUpdateWithoutUdapsInput>
+  }
+
+  export type usersUpdateManyWithWhereWithoutUdapsInput = {
+    where: usersScalarWhereInput
+    data: XOR<usersUpdateManyMutationInput, usersUncheckedUpdateManyWithoutUsersInput>
+  }
+
+  export type usersScalarWhereInput = {
+    AND?: Enumerable<usersScalarWhereInput>
+    OR?: Enumerable<usersScalarWhereInput>
+    NOT?: Enumerable<usersScalarWhereInput>
+    id?: StringFilter | string
+    email?: StringFilter | string
+    name?: StringFilter | string
+    temporaryLink?: StringNullableFilter | string | null
+    temporaryLinkExpiresAt?: StringNullableFilter | string | null
+    password?: StringFilter | string
+    udap_id?: StringNullableFilter | string | null
+  }
+
   export type report_to_chipCreateManyChipInput = {
     id: string
     report_id: string
@@ -12618,6 +14365,42 @@ export namespace Prisma {
   export type report_to_clauseUncheckedUpdateWithoutReportInput = {
     id?: StringFieldUpdateOperationsInput | string
     clause_id?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type usersCreateManyUdapsInput = {
+    id: string
+    email: string
+    name: string
+    temporaryLink?: string | null
+    temporaryLinkExpiresAt?: string | null
+    password: string
+  }
+
+  export type usersUpdateWithoutUdapsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type usersUncheckedUpdateWithoutUdapsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type usersUncheckedUpdateManyWithoutUsersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
   }
 
 

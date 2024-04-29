@@ -175,7 +175,21 @@ exports.Prisma.UsersScalarFieldEnum = {
   name: 'name',
   temporaryLink: 'temporaryLink',
   temporaryLinkExpiresAt: 'temporaryLinkExpiresAt',
-  password: 'password'
+  password: 'password',
+  udap_id: 'udap_id'
+};
+
+exports.Prisma.UdapsScalarFieldEnum = {
+  id: 'id',
+  department: 'department',
+  complete_coords: 'complete_coords',
+  address: 'address',
+  visible: 'visible',
+  name: 'name',
+  zip_code: 'zip_code',
+  city: 'city',
+  phone: 'phone',
+  email: 'email'
 };
 
 exports.Prisma.SortOrder = {
@@ -203,7 +217,8 @@ exports.Prisma.ModelName = {
   report: 'report',
   report_to_chip: 'report_to_chip',
   report_to_clause: 'report_to_clause',
-  users: 'users'
+  users: 'users',
+  udaps: 'udaps'
 };
 
 /**

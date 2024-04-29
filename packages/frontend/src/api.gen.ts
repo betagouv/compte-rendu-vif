@@ -10,7 +10,7 @@ export namespace Endpoints {
     method: "POST";
     path: "/api/create-user";
     parameters: {
-      body: { name: string; email: string; password: string };
+      body: { name: string; email: string; password: string; udap_id?: string | undefined };
     };
     response: { user: { id: string; name: string; email: string }; token: string };
   };
@@ -18,7 +18,24 @@ export namespace Endpoints {
     method: "POST";
     path: "/api/login";
     parameters: {
-      body: { email: string; password: string };
+      body: {
+        email: string;
+        password: string;
+        udaps?:
+          | {
+              id: string;
+              department: string;
+              complete_coords?: string | undefined;
+              address?: string | undefined;
+              visible?: boolean | undefined;
+              name?: string | undefined;
+              zip_code?: number | undefined;
+              city?: string | undefined;
+              phone?: string | undefined;
+              email?: string | undefined;
+            }
+          | undefined;
+      };
     };
     response: { user: { id: string; name: string; email: string }; token: string };
   };
@@ -29,6 +46,23 @@ export namespace Endpoints {
       query: { token: string };
     };
     response: { id: string; name: string; email: string };
+  };
+  export type get_Apiudaps = {
+    method: "GET";
+    path: "/api/udaps";
+    parameters: never;
+    response: Array<{
+      id: string;
+      department: string;
+      complete_coords?: string | undefined;
+      address?: string | undefined;
+      visible?: boolean | undefined;
+      name?: string | undefined;
+      zip_code?: number | undefined;
+      city?: string | undefined;
+      phone?: string | undefined;
+      email?: string | undefined;
+    }>;
   };
 
   // </Endpoints>
@@ -42,6 +76,7 @@ export type EndpointByMethod = {
   };
   get: {
     "/api/verify-token": Endpoints.get_ApiverifyToken;
+    "/api/udaps": Endpoints.get_Apiudaps;
   };
 };
 

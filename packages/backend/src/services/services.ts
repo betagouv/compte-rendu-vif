@@ -1,3 +1,4 @@
+import { StaticDataService } from "./staticDataService";
 import { UserService } from "./userService";
 
 const ref = {
@@ -6,6 +7,7 @@ const ref = {
 
 const makeServices = () => ({
   user: new UserService(),
+  staticData: new StaticDataService(),
 });
 
 export const getServices = () => {

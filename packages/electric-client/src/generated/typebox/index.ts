@@ -16,3 +16,5 @@ export * from './report_to_clause';
 export * from './report_to_clauseInput';
 export * from './users';
 export * from './usersInput';
+export * from './udaps';
+export * from './udapsInput';

@@ -23,7 +23,8 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
       await electric.connect(data.token!);
 
       await electric.db.report.sync();
-      await electric.db.clause.sync();
+      // await electric.db.clause.sync();
+      await electric.db.chip.sync();
 
       return true;
     },

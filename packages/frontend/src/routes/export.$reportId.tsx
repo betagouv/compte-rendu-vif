@@ -9,7 +9,6 @@ import { TextEditor, textEditorClassName } from "../features/text-editor/TextEdi
 import { useState } from "react";
 import Html from "react-pdf-html";
 import useDebounce from "react-use/lib/useDebounce";
-import { Font } from "@react-pdf/renderer";
 
 const ExportPdf = () => {
   const { reportId } = Route.useParams();
@@ -23,7 +22,7 @@ const WithReport = ({ report }: { report: Report }) => {
   const [debouncedValue, setDebouncedValue] = useState(value);
 
   useDebounce(() => void console.log(value) || setDebouncedValue(value), 1000, [value]);
-
+  console.log(debouncedValue);
   return (
     <Flex direction="column">
       <TextEditor defaultValue={value} onChange={(e) => setValue(e)} />
