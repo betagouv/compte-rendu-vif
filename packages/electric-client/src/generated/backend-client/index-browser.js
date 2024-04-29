@@ -120,21 +120,10 @@ exports.Prisma.Atdatabases_migrations_versionScalarFieldEnum = {
   version: 'version'
 };
 
-exports.Prisma.ChipScalarFieldEnum = {
-  id: 'id',
-  label: 'label',
-  value: 'value'
-};
-
 exports.Prisma.ClauseScalarFieldEnum = {
   id: 'id',
   label: 'label',
   value: 'value'
-};
-
-exports.Prisma.DelegationsScalarFieldEnum = {
-  createdBy: 'createdBy',
-  delegatedTo: 'delegatedTo'
 };
 
 exports.Prisma.ReportScalarFieldEnum = {
@@ -157,19 +146,38 @@ exports.Prisma.ReportScalarFieldEnum = {
   service_instructeur: 'service_instructeur'
 };
 
-exports.Prisma.Report_to_chipScalarFieldEnum = {
-  id: 'id',
-  report_id: 'report_id',
-  chip_id: 'chip_id'
-};
-
 exports.Prisma.Report_to_clauseScalarFieldEnum = {
   id: 'id',
   report_id: 'report_id',
   clause_id: 'clause_id'
 };
 
-exports.Prisma.UsersScalarFieldEnum = {
+exports.Prisma.ChipScalarFieldEnum = {
+  key: 'key',
+  value: 'value',
+  udap_id: 'udap_id',
+  text: 'text'
+};
+
+exports.Prisma.DelegationScalarFieldEnum = {
+  createdBy: 'createdBy',
+  delegatedTo: 'delegatedTo'
+};
+
+exports.Prisma.UdapScalarFieldEnum = {
+  id: 'id',
+  department: 'department',
+  complete_coords: 'complete_coords',
+  visible: 'visible',
+  name: 'name',
+  address: 'address',
+  zip_code: 'zip_code',
+  city: 'city',
+  phone: 'phone',
+  email: 'email'
+};
+
+exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
   email: 'email',
   name: 'name',
@@ -177,19 +185,6 @@ exports.Prisma.UsersScalarFieldEnum = {
   temporaryLinkExpiresAt: 'temporaryLinkExpiresAt',
   password: 'password',
   udap_id: 'udap_id'
-};
-
-exports.Prisma.UdapsScalarFieldEnum = {
-  id: 'id',
-  department: 'department',
-  complete_coords: 'complete_coords',
-  address: 'address',
-  visible: 'visible',
-  name: 'name',
-  zip_code: 'zip_code',
-  city: 'city',
-  phone: 'phone',
-  email: 'email'
 };
 
 exports.Prisma.SortOrder = {
@@ -211,14 +206,13 @@ exports.Prisma.NullsOrder = {
 exports.Prisma.ModelName = {
   atdatabases_migrations_applied: 'atdatabases_migrations_applied',
   atdatabases_migrations_version: 'atdatabases_migrations_version',
-  chip: 'chip',
   clause: 'clause',
-  delegations: 'delegations',
   report: 'report',
-  report_to_chip: 'report_to_chip',
   report_to_clause: 'report_to_clause',
-  users: 'users',
-  udaps: 'udaps'
+  chip: 'chip',
+  delegation: 'delegation',
+  udap: 'udap',
+  user: 'user'
 };
 
 /**

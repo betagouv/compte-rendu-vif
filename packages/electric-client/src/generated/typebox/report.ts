@@ -18,13 +18,6 @@ export const report = Type.Object({
   created_by_username: Type.String(),
   created_at: Type.String(),
   service_instructeur: Type.Optional(Type.String()),
-  report_to_chip: Type.Array(
-    Type.Object({
-      id: Type.String(),
-      report_id: Type.String(),
-      chip_id: Type.String(),
-    })
-  ),
   report_to_clause: Type.Array(
     Type.Object({
       id: Type.String(),

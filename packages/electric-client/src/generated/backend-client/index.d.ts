@@ -47,24 +47,6 @@ export type atdatabases_migrations_versionPayload<ExtArgs extends $Extensions.Ar
  * 
  */
 export type atdatabases_migrations_version = runtime.Types.DefaultSelection<atdatabases_migrations_versionPayload>
-export type chipPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-  name: "chip"
-  objects: {
-    report_to_chip: report_to_chipPayload<ExtArgs>[]
-  }
-  scalars: $Extensions.GetResult<{
-    id: string
-    label: string
-    value: string
-  }, ExtArgs["result"]["chip"]>
-  composites: {}
-}
-
-/**
- * Model chip
- * 
- */
-export type chip = runtime.Types.DefaultSelection<chipPayload>
 export type clausePayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
   name: "clause"
   objects: {
@@ -83,25 +65,9 @@ export type clausePayload<ExtArgs extends $Extensions.Args = $Extensions.Default
  * 
  */
 export type clause = runtime.Types.DefaultSelection<clausePayload>
-export type delegationsPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-  name: "delegations"
-  objects: {}
-  scalars: $Extensions.GetResult<{
-    createdBy: string
-    delegatedTo: string
-  }, ExtArgs["result"]["delegations"]>
-  composites: {}
-}
-
-/**
- * Model delegations
- * 
- */
-export type delegations = runtime.Types.DefaultSelection<delegationsPayload>
 export type reportPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
   name: "report"
   objects: {
-    report_to_chip: report_to_chipPayload<ExtArgs>[]
     report_to_clause: report_to_clausePayload<ExtArgs>[]
   }
   scalars: $Extensions.GetResult<{
@@ -131,25 +97,6 @@ export type reportPayload<ExtArgs extends $Extensions.Args = $Extensions.Default
  * 
  */
 export type report = runtime.Types.DefaultSelection<reportPayload>
-export type report_to_chipPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-  name: "report_to_chip"
-  objects: {
-    chip: chipPayload<ExtArgs>
-    report: reportPayload<ExtArgs>
-  }
-  scalars: $Extensions.GetResult<{
-    id: string
-    report_id: string
-    chip_id: string
-  }, ExtArgs["result"]["report_to_chip"]>
-  composites: {}
-}
-
-/**
- * Model report_to_chip
- * 
- */
-export type report_to_chip = runtime.Types.DefaultSelection<report_to_chipPayload>
 export type report_to_clausePayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
   name: "report_to_clause"
   objects: {
@@ -169,10 +116,67 @@ export type report_to_clausePayload<ExtArgs extends $Extensions.Args = $Extensio
  * 
  */
 export type report_to_clause = runtime.Types.DefaultSelection<report_to_clausePayload>
-export type usersPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-  name: "users"
+export type chipPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  name: "chip"
+  objects: {}
+  scalars: $Extensions.GetResult<{
+    key: string
+    value: string
+    udap_id: string
+    text: string
+  }, ExtArgs["result"]["chip"]>
+  composites: {}
+}
+
+/**
+ * Model chip
+ * 
+ */
+export type chip = runtime.Types.DefaultSelection<chipPayload>
+export type delegationPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  name: "delegation"
+  objects: {}
+  scalars: $Extensions.GetResult<{
+    createdBy: string
+    delegatedTo: string
+  }, ExtArgs["result"]["delegation"]>
+  composites: {}
+}
+
+/**
+ * Model delegation
+ * 
+ */
+export type delegation = runtime.Types.DefaultSelection<delegationPayload>
+export type udapPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  name: "udap"
   objects: {
-    udaps: udapsPayload<ExtArgs> | null
+    user: userPayload<ExtArgs>[]
+  }
+  scalars: $Extensions.GetResult<{
+    id: string
+    department: string
+    complete_coords: string | null
+    visible: boolean | null
+    name: string | null
+    address: string | null
+    zip_code: string | null
+    city: string | null
+    phone: string | null
+    email: string | null
+  }, ExtArgs["result"]["udap"]>
+  composites: {}
+}
+
+/**
+ * Model udap
+ * 
+ */
+export type udap = runtime.Types.DefaultSelection<udapPayload>
+export type userPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  name: "user"
+  objects: {
+    udap: udapPayload<ExtArgs> | null
   }
   scalars: $Extensions.GetResult<{
     id: string
@@ -182,40 +186,15 @@ export type usersPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultA
     temporaryLinkExpiresAt: string | null
     password: string
     udap_id: string | null
-  }, ExtArgs["result"]["users"]>
+  }, ExtArgs["result"]["user"]>
   composites: {}
 }
 
 /**
- * Model users
+ * Model user
  * 
  */
-export type users = runtime.Types.DefaultSelection<usersPayload>
-export type udapsPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-  name: "udaps"
-  objects: {
-    users: usersPayload<ExtArgs>[]
-  }
-  scalars: $Extensions.GetResult<{
-    id: string
-    department: string
-    complete_coords: string | null
-    address: string | null
-    visible: boolean | null
-    name: string | null
-    zip_code: number | null
-    city: string | null
-    phone: string | null
-    email: string | null
-  }, ExtArgs["result"]["udaps"]>
-  composites: {}
-}
-
-/**
- * Model udaps
- * 
- */
-export type udaps = runtime.Types.DefaultSelection<udapsPayload>
+export type user = runtime.Types.DefaultSelection<userPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -363,16 +342,6 @@ export class PrismaClient<
   get atdatabases_migrations_version(): Prisma.atdatabases_migrations_versionDelegate<GlobalReject, ExtArgs>;
 
   /**
-   * `prisma.chip`: Exposes CRUD operations for the **chip** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more Chips
-    * const chips = await prisma.chip.findMany()
-    * ```
-    */
-  get chip(): Prisma.chipDelegate<GlobalReject, ExtArgs>;
-
-  /**
    * `prisma.clause`: Exposes CRUD operations for the **clause** model.
     * Example usage:
     * ```ts
@@ -381,16 +350,6 @@ export class PrismaClient<
     * ```
     */
   get clause(): Prisma.clauseDelegate<GlobalReject, ExtArgs>;
-
-  /**
-   * `prisma.delegations`: Exposes CRUD operations for the **delegations** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more Delegations
-    * const delegations = await prisma.delegations.findMany()
-    * ```
-    */
-  get delegations(): Prisma.delegationsDelegate<GlobalReject, ExtArgs>;
 
   /**
    * `prisma.report`: Exposes CRUD operations for the **report** model.
@@ -403,16 +362,6 @@ export class PrismaClient<
   get report(): Prisma.reportDelegate<GlobalReject, ExtArgs>;
 
   /**
-   * `prisma.report_to_chip`: Exposes CRUD operations for the **report_to_chip** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more Report_to_chips
-    * const report_to_chips = await prisma.report_to_chip.findMany()
-    * ```
-    */
-  get report_to_chip(): Prisma.report_to_chipDelegate<GlobalReject, ExtArgs>;
-
-  /**
    * `prisma.report_to_clause`: Exposes CRUD operations for the **report_to_clause** model.
     * Example usage:
     * ```ts
@@ -423,24 +372,44 @@ export class PrismaClient<
   get report_to_clause(): Prisma.report_to_clauseDelegate<GlobalReject, ExtArgs>;
 
   /**
-   * `prisma.users`: Exposes CRUD operations for the **users** model.
+   * `prisma.chip`: Exposes CRUD operations for the **chip** model.
     * Example usage:
     * ```ts
-    * // Fetch zero or more Users
-    * const users = await prisma.users.findMany()
+    * // Fetch zero or more Chips
+    * const chips = await prisma.chip.findMany()
     * ```
     */
-  get users(): Prisma.usersDelegate<GlobalReject, ExtArgs>;
+  get chip(): Prisma.chipDelegate<GlobalReject, ExtArgs>;
 
   /**
-   * `prisma.udaps`: Exposes CRUD operations for the **udaps** model.
+   * `prisma.delegation`: Exposes CRUD operations for the **delegation** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Delegations
+    * const delegations = await prisma.delegation.findMany()
+    * ```
+    */
+  get delegation(): Prisma.delegationDelegate<GlobalReject, ExtArgs>;
+
+  /**
+   * `prisma.udap`: Exposes CRUD operations for the **udap** model.
     * Example usage:
     * ```ts
     * // Fetch zero or more Udaps
-    * const udaps = await prisma.udaps.findMany()
+    * const udaps = await prisma.udap.findMany()
     * ```
     */
-  get udaps(): Prisma.udapsDelegate<GlobalReject, ExtArgs>;
+  get udap(): Prisma.udapDelegate<GlobalReject, ExtArgs>;
+
+  /**
+   * `prisma.user`: Exposes CRUD operations for the **user** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Users
+    * const users = await prisma.user.findMany()
+    * ```
+    */
+  get user(): Prisma.userDelegate<GlobalReject, ExtArgs>;
 }
 
 export namespace Prisma {
@@ -926,14 +895,13 @@ export namespace Prisma {
   export const ModelName: {
     atdatabases_migrations_applied: 'atdatabases_migrations_applied',
     atdatabases_migrations_version: 'atdatabases_migrations_version',
-    chip: 'chip',
     clause: 'clause',
-    delegations: 'delegations',
     report: 'report',
-    report_to_chip: 'report_to_chip',
     report_to_clause: 'report_to_clause',
-    users: 'users',
-    udaps: 'udaps'
+    chip: 'chip',
+    delegation: 'delegation',
+    udap: 'udap',
+    user: 'user'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -950,7 +918,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     meta: {
-      modelProps: 'atdatabases_migrations_applied' | 'atdatabases_migrations_version' | 'chip' | 'clause' | 'delegations' | 'report' | 'report_to_chip' | 'report_to_clause' | 'users' | 'udaps'
+      modelProps: 'atdatabases_migrations_applied' | 'atdatabases_migrations_version' | 'clause' | 'report' | 'report_to_clause' | 'chip' | 'delegation' | 'udap' | 'user'
       txIsolationLevel: Prisma.TransactionIsolationLevel
     },
     model: {
@@ -1084,71 +1052,6 @@ export namespace Prisma {
           }
         }
       }
-      chip: {
-        payload: chipPayload<ExtArgs>
-        operations: {
-          findUnique: {
-            args: Prisma.chipFindUniqueArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<chipPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.chipFindUniqueOrThrowArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<chipPayload>
-          }
-          findFirst: {
-            args: Prisma.chipFindFirstArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<chipPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.chipFindFirstOrThrowArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<chipPayload>
-          }
-          findMany: {
-            args: Prisma.chipFindManyArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<chipPayload>[]
-          }
-          create: {
-            args: Prisma.chipCreateArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<chipPayload>
-          }
-          createMany: {
-            args: Prisma.chipCreateManyArgs<ExtArgs>,
-            result: Prisma.BatchPayload
-          }
-          delete: {
-            args: Prisma.chipDeleteArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<chipPayload>
-          }
-          update: {
-            args: Prisma.chipUpdateArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<chipPayload>
-          }
-          deleteMany: {
-            args: Prisma.chipDeleteManyArgs<ExtArgs>,
-            result: Prisma.BatchPayload
-          }
-          updateMany: {
-            args: Prisma.chipUpdateManyArgs<ExtArgs>,
-            result: Prisma.BatchPayload
-          }
-          upsert: {
-            args: Prisma.chipUpsertArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<chipPayload>
-          }
-          aggregate: {
-            args: Prisma.ChipAggregateArgs<ExtArgs>,
-            result: $Utils.Optional<AggregateChip>
-          }
-          groupBy: {
-            args: Prisma.ChipGroupByArgs<ExtArgs>,
-            result: $Utils.Optional<ChipGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.chipCountArgs<ExtArgs>,
-            result: $Utils.Optional<ChipCountAggregateOutputType> | number
-          }
-        }
-      }
       clause: {
         payload: clausePayload<ExtArgs>
         operations: {
@@ -1211,71 +1114,6 @@ export namespace Prisma {
           count: {
             args: Prisma.clauseCountArgs<ExtArgs>,
             result: $Utils.Optional<ClauseCountAggregateOutputType> | number
-          }
-        }
-      }
-      delegations: {
-        payload: delegationsPayload<ExtArgs>
-        operations: {
-          findUnique: {
-            args: Prisma.delegationsFindUniqueArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<delegationsPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.delegationsFindUniqueOrThrowArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<delegationsPayload>
-          }
-          findFirst: {
-            args: Prisma.delegationsFindFirstArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<delegationsPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.delegationsFindFirstOrThrowArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<delegationsPayload>
-          }
-          findMany: {
-            args: Prisma.delegationsFindManyArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<delegationsPayload>[]
-          }
-          create: {
-            args: Prisma.delegationsCreateArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<delegationsPayload>
-          }
-          createMany: {
-            args: Prisma.delegationsCreateManyArgs<ExtArgs>,
-            result: Prisma.BatchPayload
-          }
-          delete: {
-            args: Prisma.delegationsDeleteArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<delegationsPayload>
-          }
-          update: {
-            args: Prisma.delegationsUpdateArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<delegationsPayload>
-          }
-          deleteMany: {
-            args: Prisma.delegationsDeleteManyArgs<ExtArgs>,
-            result: Prisma.BatchPayload
-          }
-          updateMany: {
-            args: Prisma.delegationsUpdateManyArgs<ExtArgs>,
-            result: Prisma.BatchPayload
-          }
-          upsert: {
-            args: Prisma.delegationsUpsertArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<delegationsPayload>
-          }
-          aggregate: {
-            args: Prisma.DelegationsAggregateArgs<ExtArgs>,
-            result: $Utils.Optional<AggregateDelegations>
-          }
-          groupBy: {
-            args: Prisma.DelegationsGroupByArgs<ExtArgs>,
-            result: $Utils.Optional<DelegationsGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.delegationsCountArgs<ExtArgs>,
-            result: $Utils.Optional<DelegationsCountAggregateOutputType> | number
           }
         }
       }
@@ -1344,71 +1182,6 @@ export namespace Prisma {
           }
         }
       }
-      report_to_chip: {
-        payload: report_to_chipPayload<ExtArgs>
-        operations: {
-          findUnique: {
-            args: Prisma.report_to_chipFindUniqueArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<report_to_chipPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.report_to_chipFindUniqueOrThrowArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<report_to_chipPayload>
-          }
-          findFirst: {
-            args: Prisma.report_to_chipFindFirstArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<report_to_chipPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.report_to_chipFindFirstOrThrowArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<report_to_chipPayload>
-          }
-          findMany: {
-            args: Prisma.report_to_chipFindManyArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<report_to_chipPayload>[]
-          }
-          create: {
-            args: Prisma.report_to_chipCreateArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<report_to_chipPayload>
-          }
-          createMany: {
-            args: Prisma.report_to_chipCreateManyArgs<ExtArgs>,
-            result: Prisma.BatchPayload
-          }
-          delete: {
-            args: Prisma.report_to_chipDeleteArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<report_to_chipPayload>
-          }
-          update: {
-            args: Prisma.report_to_chipUpdateArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<report_to_chipPayload>
-          }
-          deleteMany: {
-            args: Prisma.report_to_chipDeleteManyArgs<ExtArgs>,
-            result: Prisma.BatchPayload
-          }
-          updateMany: {
-            args: Prisma.report_to_chipUpdateManyArgs<ExtArgs>,
-            result: Prisma.BatchPayload
-          }
-          upsert: {
-            args: Prisma.report_to_chipUpsertArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<report_to_chipPayload>
-          }
-          aggregate: {
-            args: Prisma.Report_to_chipAggregateArgs<ExtArgs>,
-            result: $Utils.Optional<AggregateReport_to_chip>
-          }
-          groupBy: {
-            args: Prisma.Report_to_chipGroupByArgs<ExtArgs>,
-            result: $Utils.Optional<Report_to_chipGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.report_to_chipCountArgs<ExtArgs>,
-            result: $Utils.Optional<Report_to_chipCountAggregateOutputType> | number
-          }
-        }
-      }
       report_to_clause: {
         payload: report_to_clausePayload<ExtArgs>
         operations: {
@@ -1474,133 +1247,263 @@ export namespace Prisma {
           }
         }
       }
-      users: {
-        payload: usersPayload<ExtArgs>
+      chip: {
+        payload: chipPayload<ExtArgs>
         operations: {
           findUnique: {
-            args: Prisma.usersFindUniqueArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<usersPayload> | null
+            args: Prisma.chipFindUniqueArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<chipPayload> | null
           }
           findUniqueOrThrow: {
-            args: Prisma.usersFindUniqueOrThrowArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<usersPayload>
+            args: Prisma.chipFindUniqueOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<chipPayload>
           }
           findFirst: {
-            args: Prisma.usersFindFirstArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<usersPayload> | null
+            args: Prisma.chipFindFirstArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<chipPayload> | null
           }
           findFirstOrThrow: {
-            args: Prisma.usersFindFirstOrThrowArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<usersPayload>
+            args: Prisma.chipFindFirstOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<chipPayload>
           }
           findMany: {
-            args: Prisma.usersFindManyArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<usersPayload>[]
+            args: Prisma.chipFindManyArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<chipPayload>[]
           }
           create: {
-            args: Prisma.usersCreateArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<usersPayload>
+            args: Prisma.chipCreateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<chipPayload>
           }
           createMany: {
-            args: Prisma.usersCreateManyArgs<ExtArgs>,
+            args: Prisma.chipCreateManyArgs<ExtArgs>,
             result: Prisma.BatchPayload
           }
           delete: {
-            args: Prisma.usersDeleteArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<usersPayload>
+            args: Prisma.chipDeleteArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<chipPayload>
           }
           update: {
-            args: Prisma.usersUpdateArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<usersPayload>
+            args: Prisma.chipUpdateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<chipPayload>
           }
           deleteMany: {
-            args: Prisma.usersDeleteManyArgs<ExtArgs>,
+            args: Prisma.chipDeleteManyArgs<ExtArgs>,
             result: Prisma.BatchPayload
           }
           updateMany: {
-            args: Prisma.usersUpdateManyArgs<ExtArgs>,
+            args: Prisma.chipUpdateManyArgs<ExtArgs>,
             result: Prisma.BatchPayload
           }
           upsert: {
-            args: Prisma.usersUpsertArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<usersPayload>
+            args: Prisma.chipUpsertArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<chipPayload>
           }
           aggregate: {
-            args: Prisma.UsersAggregateArgs<ExtArgs>,
-            result: $Utils.Optional<AggregateUsers>
+            args: Prisma.ChipAggregateArgs<ExtArgs>,
+            result: $Utils.Optional<AggregateChip>
           }
           groupBy: {
-            args: Prisma.UsersGroupByArgs<ExtArgs>,
-            result: $Utils.Optional<UsersGroupByOutputType>[]
+            args: Prisma.ChipGroupByArgs<ExtArgs>,
+            result: $Utils.Optional<ChipGroupByOutputType>[]
           }
           count: {
-            args: Prisma.usersCountArgs<ExtArgs>,
-            result: $Utils.Optional<UsersCountAggregateOutputType> | number
+            args: Prisma.chipCountArgs<ExtArgs>,
+            result: $Utils.Optional<ChipCountAggregateOutputType> | number
           }
         }
       }
-      udaps: {
-        payload: udapsPayload<ExtArgs>
+      delegation: {
+        payload: delegationPayload<ExtArgs>
         operations: {
           findUnique: {
-            args: Prisma.udapsFindUniqueArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<udapsPayload> | null
+            args: Prisma.delegationFindUniqueArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<delegationPayload> | null
           }
           findUniqueOrThrow: {
-            args: Prisma.udapsFindUniqueOrThrowArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<udapsPayload>
+            args: Prisma.delegationFindUniqueOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<delegationPayload>
           }
           findFirst: {
-            args: Prisma.udapsFindFirstArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<udapsPayload> | null
+            args: Prisma.delegationFindFirstArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<delegationPayload> | null
           }
           findFirstOrThrow: {
-            args: Prisma.udapsFindFirstOrThrowArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<udapsPayload>
+            args: Prisma.delegationFindFirstOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<delegationPayload>
           }
           findMany: {
-            args: Prisma.udapsFindManyArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<udapsPayload>[]
+            args: Prisma.delegationFindManyArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<delegationPayload>[]
           }
           create: {
-            args: Prisma.udapsCreateArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<udapsPayload>
+            args: Prisma.delegationCreateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<delegationPayload>
           }
           createMany: {
-            args: Prisma.udapsCreateManyArgs<ExtArgs>,
+            args: Prisma.delegationCreateManyArgs<ExtArgs>,
             result: Prisma.BatchPayload
           }
           delete: {
-            args: Prisma.udapsDeleteArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<udapsPayload>
+            args: Prisma.delegationDeleteArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<delegationPayload>
           }
           update: {
-            args: Prisma.udapsUpdateArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<udapsPayload>
+            args: Prisma.delegationUpdateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<delegationPayload>
           }
           deleteMany: {
-            args: Prisma.udapsDeleteManyArgs<ExtArgs>,
+            args: Prisma.delegationDeleteManyArgs<ExtArgs>,
             result: Prisma.BatchPayload
           }
           updateMany: {
-            args: Prisma.udapsUpdateManyArgs<ExtArgs>,
+            args: Prisma.delegationUpdateManyArgs<ExtArgs>,
             result: Prisma.BatchPayload
           }
           upsert: {
-            args: Prisma.udapsUpsertArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<udapsPayload>
+            args: Prisma.delegationUpsertArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<delegationPayload>
           }
           aggregate: {
-            args: Prisma.UdapsAggregateArgs<ExtArgs>,
-            result: $Utils.Optional<AggregateUdaps>
+            args: Prisma.DelegationAggregateArgs<ExtArgs>,
+            result: $Utils.Optional<AggregateDelegation>
           }
           groupBy: {
-            args: Prisma.UdapsGroupByArgs<ExtArgs>,
-            result: $Utils.Optional<UdapsGroupByOutputType>[]
+            args: Prisma.DelegationGroupByArgs<ExtArgs>,
+            result: $Utils.Optional<DelegationGroupByOutputType>[]
           }
           count: {
-            args: Prisma.udapsCountArgs<ExtArgs>,
-            result: $Utils.Optional<UdapsCountAggregateOutputType> | number
+            args: Prisma.delegationCountArgs<ExtArgs>,
+            result: $Utils.Optional<DelegationCountAggregateOutputType> | number
+          }
+        }
+      }
+      udap: {
+        payload: udapPayload<ExtArgs>
+        operations: {
+          findUnique: {
+            args: Prisma.udapFindUniqueArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<udapPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.udapFindUniqueOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<udapPayload>
+          }
+          findFirst: {
+            args: Prisma.udapFindFirstArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<udapPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.udapFindFirstOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<udapPayload>
+          }
+          findMany: {
+            args: Prisma.udapFindManyArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<udapPayload>[]
+          }
+          create: {
+            args: Prisma.udapCreateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<udapPayload>
+          }
+          createMany: {
+            args: Prisma.udapCreateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          delete: {
+            args: Prisma.udapDeleteArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<udapPayload>
+          }
+          update: {
+            args: Prisma.udapUpdateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<udapPayload>
+          }
+          deleteMany: {
+            args: Prisma.udapDeleteManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          updateMany: {
+            args: Prisma.udapUpdateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          upsert: {
+            args: Prisma.udapUpsertArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<udapPayload>
+          }
+          aggregate: {
+            args: Prisma.UdapAggregateArgs<ExtArgs>,
+            result: $Utils.Optional<AggregateUdap>
+          }
+          groupBy: {
+            args: Prisma.UdapGroupByArgs<ExtArgs>,
+            result: $Utils.Optional<UdapGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.udapCountArgs<ExtArgs>,
+            result: $Utils.Optional<UdapCountAggregateOutputType> | number
+          }
+        }
+      }
+      user: {
+        payload: userPayload<ExtArgs>
+        operations: {
+          findUnique: {
+            args: Prisma.userFindUniqueArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<userPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.userFindUniqueOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<userPayload>
+          }
+          findFirst: {
+            args: Prisma.userFindFirstArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<userPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.userFindFirstOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<userPayload>
+          }
+          findMany: {
+            args: Prisma.userFindManyArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<userPayload>[]
+          }
+          create: {
+            args: Prisma.userCreateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<userPayload>
+          }
+          createMany: {
+            args: Prisma.userCreateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          delete: {
+            args: Prisma.userDeleteArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<userPayload>
+          }
+          update: {
+            args: Prisma.userUpdateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<userPayload>
+          }
+          deleteMany: {
+            args: Prisma.userDeleteManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          updateMany: {
+            args: Prisma.userUpdateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          upsert: {
+            args: Prisma.userUpsertArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<userPayload>
+          }
+          aggregate: {
+            args: Prisma.UserAggregateArgs<ExtArgs>,
+            result: $Utils.Optional<AggregateUser>
+          }
+          groupBy: {
+            args: Prisma.UserGroupByArgs<ExtArgs>,
+            result: $Utils.Optional<UserGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.userCountArgs<ExtArgs>,
+            result: $Utils.Optional<UserCountAggregateOutputType> | number
           }
         }
       }
@@ -1781,41 +1684,6 @@ export namespace Prisma {
 
 
   /**
-   * Count Type ChipCountOutputType
-   */
-
-
-  export type ChipCountOutputType = {
-    report_to_chip: number
-  }
-
-  export type ChipCountOutputTypeSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    report_to_chip?: boolean | ChipCountOutputTypeCountReport_to_chipArgs
-  }
-
-  // Custom InputTypes
-
-  /**
-   * ChipCountOutputType without action
-   */
-  export type ChipCountOutputTypeArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ChipCountOutputType
-     */
-    select?: ChipCountOutputTypeSelect<ExtArgs> | null
-  }
-
-
-  /**
-   * ChipCountOutputType without action
-   */
-  export type ChipCountOutputTypeCountReport_to_chipArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    where?: report_to_chipWhereInput
-  }
-
-
-
-  /**
    * Count Type ClauseCountOutputType
    */
 
@@ -1856,12 +1724,10 @@ export namespace Prisma {
 
 
   export type ReportCountOutputType = {
-    report_to_chip: number
     report_to_clause: number
   }
 
   export type ReportCountOutputTypeSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    report_to_chip?: boolean | ReportCountOutputTypeCountReport_to_chipArgs
     report_to_clause?: boolean | ReportCountOutputTypeCountReport_to_clauseArgs
   }
 
@@ -1881,14 +1747,6 @@ export namespace Prisma {
   /**
    * ReportCountOutputType without action
    */
-  export type ReportCountOutputTypeCountReport_to_chipArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    where?: report_to_chipWhereInput
-  }
-
-
-  /**
-   * ReportCountOutputType without action
-   */
   export type ReportCountOutputTypeCountReport_to_clauseArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     where?: report_to_clauseWhereInput
   }
@@ -1896,36 +1754,36 @@ export namespace Prisma {
 
 
   /**
-   * Count Type UdapsCountOutputType
+   * Count Type UdapCountOutputType
    */
 
 
-  export type UdapsCountOutputType = {
-    users: number
+  export type UdapCountOutputType = {
+    user: number
   }
 
-  export type UdapsCountOutputTypeSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    users?: boolean | UdapsCountOutputTypeCountUsersArgs
+  export type UdapCountOutputTypeSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    user?: boolean | UdapCountOutputTypeCountUserArgs
   }
 
   // Custom InputTypes
 
   /**
-   * UdapsCountOutputType without action
+   * UdapCountOutputType without action
    */
-  export type UdapsCountOutputTypeArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  export type UdapCountOutputTypeArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the UdapsCountOutputType
+     * Select specific fields to fetch from the UdapCountOutputType
      */
-    select?: UdapsCountOutputTypeSelect<ExtArgs> | null
+    select?: UdapCountOutputTypeSelect<ExtArgs> | null
   }
 
 
   /**
-   * UdapsCountOutputType without action
+   * UdapCountOutputType without action
    */
-  export type UdapsCountOutputTypeCountUsersArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    where?: usersWhereInput
+  export type UdapCountOutputTypeCountUserArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    where?: userWhereInput
   }
 
 
@@ -3754,935 +3612,6 @@ export namespace Prisma {
 
 
   /**
-   * Model chip
-   */
-
-
-  export type AggregateChip = {
-    _count: ChipCountAggregateOutputType | null
-    _min: ChipMinAggregateOutputType | null
-    _max: ChipMaxAggregateOutputType | null
-  }
-
-  export type ChipMinAggregateOutputType = {
-    id: string | null
-    label: string | null
-    value: string | null
-  }
-
-  export type ChipMaxAggregateOutputType = {
-    id: string | null
-    label: string | null
-    value: string | null
-  }
-
-  export type ChipCountAggregateOutputType = {
-    id: number
-    label: number
-    value: number
-    _all: number
-  }
-
-
-  export type ChipMinAggregateInputType = {
-    id?: true
-    label?: true
-    value?: true
-  }
-
-  export type ChipMaxAggregateInputType = {
-    id?: true
-    label?: true
-    value?: true
-  }
-
-  export type ChipCountAggregateInputType = {
-    id?: true
-    label?: true
-    value?: true
-    _all?: true
-  }
-
-  export type ChipAggregateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which chip to aggregate.
-     */
-    where?: chipWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of chips to fetch.
-     */
-    orderBy?: Enumerable<chipOrderByWithRelationInput>
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: chipWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` chips from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` chips.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned chips
-    **/
-    _count?: true | ChipCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: ChipMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: ChipMaxAggregateInputType
-  }
-
-  export type GetChipAggregateType<T extends ChipAggregateArgs> = {
-        [P in keyof T & keyof AggregateChip]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateChip[P]>
-      : GetScalarType<T[P], AggregateChip[P]>
-  }
-
-
-
-
-  export type ChipGroupByArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    where?: chipWhereInput
-    orderBy?: Enumerable<chipOrderByWithAggregationInput>
-    by: ChipScalarFieldEnum[]
-    having?: chipScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: ChipCountAggregateInputType | true
-    _min?: ChipMinAggregateInputType
-    _max?: ChipMaxAggregateInputType
-  }
-
-
-  export type ChipGroupByOutputType = {
-    id: string
-    label: string
-    value: string
-    _count: ChipCountAggregateOutputType | null
-    _min: ChipMinAggregateOutputType | null
-    _max: ChipMaxAggregateOutputType | null
-  }
-
-  type GetChipGroupByPayload<T extends ChipGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickArray<ChipGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof ChipGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], ChipGroupByOutputType[P]>
-            : GetScalarType<T[P], ChipGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type chipSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    label?: boolean
-    value?: boolean
-    report_to_chip?: boolean | chip$report_to_chipArgs<ExtArgs>
-    _count?: boolean | ChipCountOutputTypeArgs<ExtArgs>
-  }, ExtArgs["result"]["chip"]>
-
-  export type chipSelectScalar = {
-    id?: boolean
-    label?: boolean
-    value?: boolean
-  }
-
-  export type chipInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    report_to_chip?: boolean | chip$report_to_chipArgs<ExtArgs>
-    _count?: boolean | ChipCountOutputTypeArgs<ExtArgs>
-  }
-
-
-  type chipGetPayload<S extends boolean | null | undefined | chipArgs> = $Types.GetResult<chipPayload, S>
-
-  type chipCountArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = 
-    Omit<chipFindManyArgs, 'select' | 'include'> & {
-      select?: ChipCountAggregateInputType | true
-    }
-
-  export interface chipDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['chip'], meta: { name: 'chip' } }
-    /**
-     * Find zero or one Chip that matches the filter.
-     * @param {chipFindUniqueArgs} args - Arguments to find a Chip
-     * @example
-     * // Get one Chip
-     * const chip = await prisma.chip.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findUnique<T extends chipFindUniqueArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
-      args: SelectSubset<T, chipFindUniqueArgs<ExtArgs>>
-    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'chip'> extends True ? Prisma__chipClient<$Types.GetResult<chipPayload<ExtArgs>, T, 'findUnique', never>, never, ExtArgs> : Prisma__chipClient<$Types.GetResult<chipPayload<ExtArgs>, T, 'findUnique', never> | null, null, ExtArgs>
-
-    /**
-     * Find one Chip that matches the filter or throw an error  with `error.code='P2025'` 
-     *     if no matches were found.
-     * @param {chipFindUniqueOrThrowArgs} args - Arguments to find a Chip
-     * @example
-     * // Get one Chip
-     * const chip = await prisma.chip.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findUniqueOrThrow<T extends chipFindUniqueOrThrowArgs<ExtArgs>>(
-      args?: SelectSubset<T, chipFindUniqueOrThrowArgs<ExtArgs>>
-    ): Prisma__chipClient<$Types.GetResult<chipPayload<ExtArgs>, T, 'findUniqueOrThrow', never>, never, ExtArgs>
-
-    /**
-     * Find the first Chip that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {chipFindFirstArgs} args - Arguments to find a Chip
-     * @example
-     * // Get one Chip
-     * const chip = await prisma.chip.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findFirst<T extends chipFindFirstArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
-      args?: SelectSubset<T, chipFindFirstArgs<ExtArgs>>
-    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'chip'> extends True ? Prisma__chipClient<$Types.GetResult<chipPayload<ExtArgs>, T, 'findFirst', never>, never, ExtArgs> : Prisma__chipClient<$Types.GetResult<chipPayload<ExtArgs>, T, 'findFirst', never> | null, null, ExtArgs>
-
-    /**
-     * Find the first Chip that matches the filter or
-     * throw `NotFoundError` if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {chipFindFirstOrThrowArgs} args - Arguments to find a Chip
-     * @example
-     * // Get one Chip
-     * const chip = await prisma.chip.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findFirstOrThrow<T extends chipFindFirstOrThrowArgs<ExtArgs>>(
-      args?: SelectSubset<T, chipFindFirstOrThrowArgs<ExtArgs>>
-    ): Prisma__chipClient<$Types.GetResult<chipPayload<ExtArgs>, T, 'findFirstOrThrow', never>, never, ExtArgs>
-
-    /**
-     * Find zero or more Chips that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {chipFindManyArgs=} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all Chips
-     * const chips = await prisma.chip.findMany()
-     * 
-     * // Get first 10 Chips
-     * const chips = await prisma.chip.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const chipWithIdOnly = await prisma.chip.findMany({ select: { id: true } })
-     * 
-    **/
-    findMany<T extends chipFindManyArgs<ExtArgs>>(
-      args?: SelectSubset<T, chipFindManyArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<$Types.GetResult<chipPayload<ExtArgs>, T, 'findMany', never>>
-
-    /**
-     * Create a Chip.
-     * @param {chipCreateArgs} args - Arguments to create a Chip.
-     * @example
-     * // Create one Chip
-     * const Chip = await prisma.chip.create({
-     *   data: {
-     *     // ... data to create a Chip
-     *   }
-     * })
-     * 
-    **/
-    create<T extends chipCreateArgs<ExtArgs>>(
-      args: SelectSubset<T, chipCreateArgs<ExtArgs>>
-    ): Prisma__chipClient<$Types.GetResult<chipPayload<ExtArgs>, T, 'create', never>, never, ExtArgs>
-
-    /**
-     * Create many Chips.
-     *     @param {chipCreateManyArgs} args - Arguments to create many Chips.
-     *     @example
-     *     // Create many Chips
-     *     const chip = await prisma.chip.createMany({
-     *       data: {
-     *         // ... provide data here
-     *       }
-     *     })
-     *     
-    **/
-    createMany<T extends chipCreateManyArgs<ExtArgs>>(
-      args?: SelectSubset<T, chipCreateManyArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Delete a Chip.
-     * @param {chipDeleteArgs} args - Arguments to delete one Chip.
-     * @example
-     * // Delete one Chip
-     * const Chip = await prisma.chip.delete({
-     *   where: {
-     *     // ... filter to delete one Chip
-     *   }
-     * })
-     * 
-    **/
-    delete<T extends chipDeleteArgs<ExtArgs>>(
-      args: SelectSubset<T, chipDeleteArgs<ExtArgs>>
-    ): Prisma__chipClient<$Types.GetResult<chipPayload<ExtArgs>, T, 'delete', never>, never, ExtArgs>
-
-    /**
-     * Update one Chip.
-     * @param {chipUpdateArgs} args - Arguments to update one Chip.
-     * @example
-     * // Update one Chip
-     * const chip = await prisma.chip.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-    **/
-    update<T extends chipUpdateArgs<ExtArgs>>(
-      args: SelectSubset<T, chipUpdateArgs<ExtArgs>>
-    ): Prisma__chipClient<$Types.GetResult<chipPayload<ExtArgs>, T, 'update', never>, never, ExtArgs>
-
-    /**
-     * Delete zero or more Chips.
-     * @param {chipDeleteManyArgs} args - Arguments to filter Chips to delete.
-     * @example
-     * // Delete a few Chips
-     * const { count } = await prisma.chip.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-    **/
-    deleteMany<T extends chipDeleteManyArgs<ExtArgs>>(
-      args?: SelectSubset<T, chipDeleteManyArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Chips.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {chipUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many Chips
-     * const chip = await prisma.chip.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-    **/
-    updateMany<T extends chipUpdateManyArgs<ExtArgs>>(
-      args: SelectSubset<T, chipUpdateManyArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create or update one Chip.
-     * @param {chipUpsertArgs} args - Arguments to update or create a Chip.
-     * @example
-     * // Update or create a Chip
-     * const chip = await prisma.chip.upsert({
-     *   create: {
-     *     // ... data to create a Chip
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the Chip we want to update
-     *   }
-     * })
-    **/
-    upsert<T extends chipUpsertArgs<ExtArgs>>(
-      args: SelectSubset<T, chipUpsertArgs<ExtArgs>>
-    ): Prisma__chipClient<$Types.GetResult<chipPayload<ExtArgs>, T, 'upsert', never>, never, ExtArgs>
-
-    /**
-     * Count the number of Chips.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {chipCountArgs} args - Arguments to filter Chips to count.
-     * @example
-     * // Count the number of Chips
-     * const count = await prisma.chip.count({
-     *   where: {
-     *     // ... the filter for the Chips we want to count
-     *   }
-     * })
-    **/
-    count<T extends chipCountArgs>(
-      args?: Subset<T, chipCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], ChipCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a Chip.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {ChipAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends ChipAggregateArgs>(args: Subset<T, ChipAggregateArgs>): Prisma.PrismaPromise<GetChipAggregateType<T>>
-
-    /**
-     * Group by Chip.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {ChipGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends ChipGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: ChipGroupByArgs['orderBy'] }
-        : { orderBy?: ChipGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends TupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, ChipGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetChipGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for chip.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export class Prisma__chipClient<T, Null = never, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> implements Prisma.PrismaPromise<T> {
-    private readonly _dmmf;
-    private readonly _queryType;
-    private readonly _rootField;
-    private readonly _clientMethod;
-    private readonly _args;
-    private readonly _dataPath;
-    private readonly _errorFormat;
-    private readonly _measurePerformance?;
-    private _isList;
-    private _callsite;
-    private _requestPromise?;
-    readonly [Symbol.toStringTag]: 'PrismaPromise';
-    constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
-
-    report_to_chip<T extends chip$report_to_chipArgs<ExtArgs> = {}>(args?: Subset<T, chip$report_to_chipArgs<ExtArgs>>): Prisma.PrismaPromise<$Types.GetResult<report_to_chipPayload<ExtArgs>, T, 'findMany', never>| Null>;
-
-    private get _document();
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): Promise<TResult1 | TResult2>;
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>;
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): Promise<T>;
-  }
-
-
-
-  // Custom InputTypes
-
-  /**
-   * chip base type for findUnique actions
-   */
-  export type chipFindUniqueArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the chip
-     */
-    select?: chipSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well.
-     */
-    include?: chipInclude<ExtArgs> | null
-    /**
-     * Filter, which chip to fetch.
-     */
-    where: chipWhereUniqueInput
-  }
-
-  /**
-   * chip findUnique
-   */
-  export interface chipFindUniqueArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends chipFindUniqueArgsBase<ExtArgs> {
-   /**
-    * Throw an Error if query returns no results
-    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
-    */
-    rejectOnNotFound?: RejectOnNotFound
-  }
-      
-
-  /**
-   * chip findUniqueOrThrow
-   */
-  export type chipFindUniqueOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the chip
-     */
-    select?: chipSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well.
-     */
-    include?: chipInclude<ExtArgs> | null
-    /**
-     * Filter, which chip to fetch.
-     */
-    where: chipWhereUniqueInput
-  }
-
-
-  /**
-   * chip base type for findFirst actions
-   */
-  export type chipFindFirstArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the chip
-     */
-    select?: chipSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well.
-     */
-    include?: chipInclude<ExtArgs> | null
-    /**
-     * Filter, which chip to fetch.
-     */
-    where?: chipWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of chips to fetch.
-     */
-    orderBy?: Enumerable<chipOrderByWithRelationInput>
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for chips.
-     */
-    cursor?: chipWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` chips from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` chips.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of chips.
-     */
-    distinct?: Enumerable<ChipScalarFieldEnum>
-  }
-
-  /**
-   * chip findFirst
-   */
-  export interface chipFindFirstArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends chipFindFirstArgsBase<ExtArgs> {
-   /**
-    * Throw an Error if query returns no results
-    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
-    */
-    rejectOnNotFound?: RejectOnNotFound
-  }
-      
-
-  /**
-   * chip findFirstOrThrow
-   */
-  export type chipFindFirstOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the chip
-     */
-    select?: chipSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well.
-     */
-    include?: chipInclude<ExtArgs> | null
-    /**
-     * Filter, which chip to fetch.
-     */
-    where?: chipWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of chips to fetch.
-     */
-    orderBy?: Enumerable<chipOrderByWithRelationInput>
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for chips.
-     */
-    cursor?: chipWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` chips from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` chips.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of chips.
-     */
-    distinct?: Enumerable<ChipScalarFieldEnum>
-  }
-
-
-  /**
-   * chip findMany
-   */
-  export type chipFindManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the chip
-     */
-    select?: chipSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well.
-     */
-    include?: chipInclude<ExtArgs> | null
-    /**
-     * Filter, which chips to fetch.
-     */
-    where?: chipWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of chips to fetch.
-     */
-    orderBy?: Enumerable<chipOrderByWithRelationInput>
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing chips.
-     */
-    cursor?: chipWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` chips from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` chips.
-     */
-    skip?: number
-    distinct?: Enumerable<ChipScalarFieldEnum>
-  }
-
-
-  /**
-   * chip create
-   */
-  export type chipCreateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the chip
-     */
-    select?: chipSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well.
-     */
-    include?: chipInclude<ExtArgs> | null
-    /**
-     * The data needed to create a chip.
-     */
-    data: XOR<chipCreateInput, chipUncheckedCreateInput>
-  }
-
-
-  /**
-   * chip createMany
-   */
-  export type chipCreateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many chips.
-     */
-    data: Enumerable<chipCreateManyInput>
-    skipDuplicates?: boolean
-  }
-
-
-  /**
-   * chip update
-   */
-  export type chipUpdateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the chip
-     */
-    select?: chipSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well.
-     */
-    include?: chipInclude<ExtArgs> | null
-    /**
-     * The data needed to update a chip.
-     */
-    data: XOR<chipUpdateInput, chipUncheckedUpdateInput>
-    /**
-     * Choose, which chip to update.
-     */
-    where: chipWhereUniqueInput
-  }
-
-
-  /**
-   * chip updateMany
-   */
-  export type chipUpdateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update chips.
-     */
-    data: XOR<chipUpdateManyMutationInput, chipUncheckedUpdateManyInput>
-    /**
-     * Filter which chips to update
-     */
-    where?: chipWhereInput
-  }
-
-
-  /**
-   * chip upsert
-   */
-  export type chipUpsertArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the chip
-     */
-    select?: chipSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well.
-     */
-    include?: chipInclude<ExtArgs> | null
-    /**
-     * The filter to search for the chip to update in case it exists.
-     */
-    where: chipWhereUniqueInput
-    /**
-     * In case the chip found by the `where` argument doesn't exist, create a new chip with this data.
-     */
-    create: XOR<chipCreateInput, chipUncheckedCreateInput>
-    /**
-     * In case the chip was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<chipUpdateInput, chipUncheckedUpdateInput>
-  }
-
-
-  /**
-   * chip delete
-   */
-  export type chipDeleteArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the chip
-     */
-    select?: chipSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well.
-     */
-    include?: chipInclude<ExtArgs> | null
-    /**
-     * Filter which chip to delete.
-     */
-    where: chipWhereUniqueInput
-  }
-
-
-  /**
-   * chip deleteMany
-   */
-  export type chipDeleteManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which chips to delete
-     */
-    where?: chipWhereInput
-  }
-
-
-  /**
-   * chip.report_to_chip
-   */
-  export type chip$report_to_chipArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the report_to_chip
-     */
-    select?: report_to_chipSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well.
-     */
-    include?: report_to_chipInclude<ExtArgs> | null
-    where?: report_to_chipWhereInput
-    orderBy?: Enumerable<report_to_chipOrderByWithRelationInput>
-    cursor?: report_to_chipWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: Enumerable<Report_to_chipScalarFieldEnum>
-  }
-
-
-  /**
-   * chip without action
-   */
-  export type chipArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the chip
-     */
-    select?: chipSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well.
-     */
-    include?: chipInclude<ExtArgs> | null
-  }
-
-
-
-  /**
    * Model clause
    */
 
@@ -5612,857 +4541,6 @@ export namespace Prisma {
 
 
   /**
-   * Model delegations
-   */
-
-
-  export type AggregateDelegations = {
-    _count: DelegationsCountAggregateOutputType | null
-    _min: DelegationsMinAggregateOutputType | null
-    _max: DelegationsMaxAggregateOutputType | null
-  }
-
-  export type DelegationsMinAggregateOutputType = {
-    createdBy: string | null
-    delegatedTo: string | null
-  }
-
-  export type DelegationsMaxAggregateOutputType = {
-    createdBy: string | null
-    delegatedTo: string | null
-  }
-
-  export type DelegationsCountAggregateOutputType = {
-    createdBy: number
-    delegatedTo: number
-    _all: number
-  }
-
-
-  export type DelegationsMinAggregateInputType = {
-    createdBy?: true
-    delegatedTo?: true
-  }
-
-  export type DelegationsMaxAggregateInputType = {
-    createdBy?: true
-    delegatedTo?: true
-  }
-
-  export type DelegationsCountAggregateInputType = {
-    createdBy?: true
-    delegatedTo?: true
-    _all?: true
-  }
-
-  export type DelegationsAggregateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which delegations to aggregate.
-     */
-    where?: delegationsWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of delegations to fetch.
-     */
-    orderBy?: Enumerable<delegationsOrderByWithRelationInput>
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: delegationsWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` delegations from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` delegations.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned delegations
-    **/
-    _count?: true | DelegationsCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: DelegationsMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: DelegationsMaxAggregateInputType
-  }
-
-  export type GetDelegationsAggregateType<T extends DelegationsAggregateArgs> = {
-        [P in keyof T & keyof AggregateDelegations]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateDelegations[P]>
-      : GetScalarType<T[P], AggregateDelegations[P]>
-  }
-
-
-
-
-  export type DelegationsGroupByArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    where?: delegationsWhereInput
-    orderBy?: Enumerable<delegationsOrderByWithAggregationInput>
-    by: DelegationsScalarFieldEnum[]
-    having?: delegationsScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: DelegationsCountAggregateInputType | true
-    _min?: DelegationsMinAggregateInputType
-    _max?: DelegationsMaxAggregateInputType
-  }
-
-
-  export type DelegationsGroupByOutputType = {
-    createdBy: string
-    delegatedTo: string
-    _count: DelegationsCountAggregateOutputType | null
-    _min: DelegationsMinAggregateOutputType | null
-    _max: DelegationsMaxAggregateOutputType | null
-  }
-
-  type GetDelegationsGroupByPayload<T extends DelegationsGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickArray<DelegationsGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof DelegationsGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], DelegationsGroupByOutputType[P]>
-            : GetScalarType<T[P], DelegationsGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type delegationsSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    createdBy?: boolean
-    delegatedTo?: boolean
-  }, ExtArgs["result"]["delegations"]>
-
-  export type delegationsSelectScalar = {
-    createdBy?: boolean
-    delegatedTo?: boolean
-  }
-
-
-  type delegationsGetPayload<S extends boolean | null | undefined | delegationsArgs> = $Types.GetResult<delegationsPayload, S>
-
-  type delegationsCountArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = 
-    Omit<delegationsFindManyArgs, 'select' | 'include'> & {
-      select?: DelegationsCountAggregateInputType | true
-    }
-
-  export interface delegationsDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['delegations'], meta: { name: 'delegations' } }
-    /**
-     * Find zero or one Delegations that matches the filter.
-     * @param {delegationsFindUniqueArgs} args - Arguments to find a Delegations
-     * @example
-     * // Get one Delegations
-     * const delegations = await prisma.delegations.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findUnique<T extends delegationsFindUniqueArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
-      args: SelectSubset<T, delegationsFindUniqueArgs<ExtArgs>>
-    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'delegations'> extends True ? Prisma__delegationsClient<$Types.GetResult<delegationsPayload<ExtArgs>, T, 'findUnique', never>, never, ExtArgs> : Prisma__delegationsClient<$Types.GetResult<delegationsPayload<ExtArgs>, T, 'findUnique', never> | null, null, ExtArgs>
-
-    /**
-     * Find one Delegations that matches the filter or throw an error  with `error.code='P2025'` 
-     *     if no matches were found.
-     * @param {delegationsFindUniqueOrThrowArgs} args - Arguments to find a Delegations
-     * @example
-     * // Get one Delegations
-     * const delegations = await prisma.delegations.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findUniqueOrThrow<T extends delegationsFindUniqueOrThrowArgs<ExtArgs>>(
-      args?: SelectSubset<T, delegationsFindUniqueOrThrowArgs<ExtArgs>>
-    ): Prisma__delegationsClient<$Types.GetResult<delegationsPayload<ExtArgs>, T, 'findUniqueOrThrow', never>, never, ExtArgs>
-
-    /**
-     * Find the first Delegations that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {delegationsFindFirstArgs} args - Arguments to find a Delegations
-     * @example
-     * // Get one Delegations
-     * const delegations = await prisma.delegations.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findFirst<T extends delegationsFindFirstArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
-      args?: SelectSubset<T, delegationsFindFirstArgs<ExtArgs>>
-    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'delegations'> extends True ? Prisma__delegationsClient<$Types.GetResult<delegationsPayload<ExtArgs>, T, 'findFirst', never>, never, ExtArgs> : Prisma__delegationsClient<$Types.GetResult<delegationsPayload<ExtArgs>, T, 'findFirst', never> | null, null, ExtArgs>
-
-    /**
-     * Find the first Delegations that matches the filter or
-     * throw `NotFoundError` if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {delegationsFindFirstOrThrowArgs} args - Arguments to find a Delegations
-     * @example
-     * // Get one Delegations
-     * const delegations = await prisma.delegations.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findFirstOrThrow<T extends delegationsFindFirstOrThrowArgs<ExtArgs>>(
-      args?: SelectSubset<T, delegationsFindFirstOrThrowArgs<ExtArgs>>
-    ): Prisma__delegationsClient<$Types.GetResult<delegationsPayload<ExtArgs>, T, 'findFirstOrThrow', never>, never, ExtArgs>
-
-    /**
-     * Find zero or more Delegations that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {delegationsFindManyArgs=} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all Delegations
-     * const delegations = await prisma.delegations.findMany()
-     * 
-     * // Get first 10 Delegations
-     * const delegations = await prisma.delegations.findMany({ take: 10 })
-     * 
-     * // Only select the `createdBy`
-     * const delegationsWithCreatedByOnly = await prisma.delegations.findMany({ select: { createdBy: true } })
-     * 
-    **/
-    findMany<T extends delegationsFindManyArgs<ExtArgs>>(
-      args?: SelectSubset<T, delegationsFindManyArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<$Types.GetResult<delegationsPayload<ExtArgs>, T, 'findMany', never>>
-
-    /**
-     * Create a Delegations.
-     * @param {delegationsCreateArgs} args - Arguments to create a Delegations.
-     * @example
-     * // Create one Delegations
-     * const Delegations = await prisma.delegations.create({
-     *   data: {
-     *     // ... data to create a Delegations
-     *   }
-     * })
-     * 
-    **/
-    create<T extends delegationsCreateArgs<ExtArgs>>(
-      args: SelectSubset<T, delegationsCreateArgs<ExtArgs>>
-    ): Prisma__delegationsClient<$Types.GetResult<delegationsPayload<ExtArgs>, T, 'create', never>, never, ExtArgs>
-
-    /**
-     * Create many Delegations.
-     *     @param {delegationsCreateManyArgs} args - Arguments to create many Delegations.
-     *     @example
-     *     // Create many Delegations
-     *     const delegations = await prisma.delegations.createMany({
-     *       data: {
-     *         // ... provide data here
-     *       }
-     *     })
-     *     
-    **/
-    createMany<T extends delegationsCreateManyArgs<ExtArgs>>(
-      args?: SelectSubset<T, delegationsCreateManyArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Delete a Delegations.
-     * @param {delegationsDeleteArgs} args - Arguments to delete one Delegations.
-     * @example
-     * // Delete one Delegations
-     * const Delegations = await prisma.delegations.delete({
-     *   where: {
-     *     // ... filter to delete one Delegations
-     *   }
-     * })
-     * 
-    **/
-    delete<T extends delegationsDeleteArgs<ExtArgs>>(
-      args: SelectSubset<T, delegationsDeleteArgs<ExtArgs>>
-    ): Prisma__delegationsClient<$Types.GetResult<delegationsPayload<ExtArgs>, T, 'delete', never>, never, ExtArgs>
-
-    /**
-     * Update one Delegations.
-     * @param {delegationsUpdateArgs} args - Arguments to update one Delegations.
-     * @example
-     * // Update one Delegations
-     * const delegations = await prisma.delegations.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-    **/
-    update<T extends delegationsUpdateArgs<ExtArgs>>(
-      args: SelectSubset<T, delegationsUpdateArgs<ExtArgs>>
-    ): Prisma__delegationsClient<$Types.GetResult<delegationsPayload<ExtArgs>, T, 'update', never>, never, ExtArgs>
-
-    /**
-     * Delete zero or more Delegations.
-     * @param {delegationsDeleteManyArgs} args - Arguments to filter Delegations to delete.
-     * @example
-     * // Delete a few Delegations
-     * const { count } = await prisma.delegations.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-    **/
-    deleteMany<T extends delegationsDeleteManyArgs<ExtArgs>>(
-      args?: SelectSubset<T, delegationsDeleteManyArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Delegations.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {delegationsUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many Delegations
-     * const delegations = await prisma.delegations.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-    **/
-    updateMany<T extends delegationsUpdateManyArgs<ExtArgs>>(
-      args: SelectSubset<T, delegationsUpdateManyArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create or update one Delegations.
-     * @param {delegationsUpsertArgs} args - Arguments to update or create a Delegations.
-     * @example
-     * // Update or create a Delegations
-     * const delegations = await prisma.delegations.upsert({
-     *   create: {
-     *     // ... data to create a Delegations
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the Delegations we want to update
-     *   }
-     * })
-    **/
-    upsert<T extends delegationsUpsertArgs<ExtArgs>>(
-      args: SelectSubset<T, delegationsUpsertArgs<ExtArgs>>
-    ): Prisma__delegationsClient<$Types.GetResult<delegationsPayload<ExtArgs>, T, 'upsert', never>, never, ExtArgs>
-
-    /**
-     * Count the number of Delegations.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {delegationsCountArgs} args - Arguments to filter Delegations to count.
-     * @example
-     * // Count the number of Delegations
-     * const count = await prisma.delegations.count({
-     *   where: {
-     *     // ... the filter for the Delegations we want to count
-     *   }
-     * })
-    **/
-    count<T extends delegationsCountArgs>(
-      args?: Subset<T, delegationsCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], DelegationsCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a Delegations.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {DelegationsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends DelegationsAggregateArgs>(args: Subset<T, DelegationsAggregateArgs>): Prisma.PrismaPromise<GetDelegationsAggregateType<T>>
-
-    /**
-     * Group by Delegations.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {DelegationsGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends DelegationsGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: DelegationsGroupByArgs['orderBy'] }
-        : { orderBy?: DelegationsGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends TupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, DelegationsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDelegationsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for delegations.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export class Prisma__delegationsClient<T, Null = never, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> implements Prisma.PrismaPromise<T> {
-    private readonly _dmmf;
-    private readonly _queryType;
-    private readonly _rootField;
-    private readonly _clientMethod;
-    private readonly _args;
-    private readonly _dataPath;
-    private readonly _errorFormat;
-    private readonly _measurePerformance?;
-    private _isList;
-    private _callsite;
-    private _requestPromise?;
-    readonly [Symbol.toStringTag]: 'PrismaPromise';
-    constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
-
-
-    private get _document();
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): Promise<TResult1 | TResult2>;
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>;
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): Promise<T>;
-  }
-
-
-
-  // Custom InputTypes
-
-  /**
-   * delegations base type for findUnique actions
-   */
-  export type delegationsFindUniqueArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the delegations
-     */
-    select?: delegationsSelect<ExtArgs> | null
-    /**
-     * Filter, which delegations to fetch.
-     */
-    where: delegationsWhereUniqueInput
-  }
-
-  /**
-   * delegations findUnique
-   */
-  export interface delegationsFindUniqueArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends delegationsFindUniqueArgsBase<ExtArgs> {
-   /**
-    * Throw an Error if query returns no results
-    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
-    */
-    rejectOnNotFound?: RejectOnNotFound
-  }
-      
-
-  /**
-   * delegations findUniqueOrThrow
-   */
-  export type delegationsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the delegations
-     */
-    select?: delegationsSelect<ExtArgs> | null
-    /**
-     * Filter, which delegations to fetch.
-     */
-    where: delegationsWhereUniqueInput
-  }
-
-
-  /**
-   * delegations base type for findFirst actions
-   */
-  export type delegationsFindFirstArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the delegations
-     */
-    select?: delegationsSelect<ExtArgs> | null
-    /**
-     * Filter, which delegations to fetch.
-     */
-    where?: delegationsWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of delegations to fetch.
-     */
-    orderBy?: Enumerable<delegationsOrderByWithRelationInput>
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for delegations.
-     */
-    cursor?: delegationsWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` delegations from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` delegations.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of delegations.
-     */
-    distinct?: Enumerable<DelegationsScalarFieldEnum>
-  }
-
-  /**
-   * delegations findFirst
-   */
-  export interface delegationsFindFirstArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends delegationsFindFirstArgsBase<ExtArgs> {
-   /**
-    * Throw an Error if query returns no results
-    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
-    */
-    rejectOnNotFound?: RejectOnNotFound
-  }
-      
-
-  /**
-   * delegations findFirstOrThrow
-   */
-  export type delegationsFindFirstOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the delegations
-     */
-    select?: delegationsSelect<ExtArgs> | null
-    /**
-     * Filter, which delegations to fetch.
-     */
-    where?: delegationsWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of delegations to fetch.
-     */
-    orderBy?: Enumerable<delegationsOrderByWithRelationInput>
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for delegations.
-     */
-    cursor?: delegationsWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` delegations from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` delegations.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of delegations.
-     */
-    distinct?: Enumerable<DelegationsScalarFieldEnum>
-  }
-
-
-  /**
-   * delegations findMany
-   */
-  export type delegationsFindManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the delegations
-     */
-    select?: delegationsSelect<ExtArgs> | null
-    /**
-     * Filter, which delegations to fetch.
-     */
-    where?: delegationsWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of delegations to fetch.
-     */
-    orderBy?: Enumerable<delegationsOrderByWithRelationInput>
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing delegations.
-     */
-    cursor?: delegationsWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` delegations from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` delegations.
-     */
-    skip?: number
-    distinct?: Enumerable<DelegationsScalarFieldEnum>
-  }
-
-
-  /**
-   * delegations create
-   */
-  export type delegationsCreateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the delegations
-     */
-    select?: delegationsSelect<ExtArgs> | null
-    /**
-     * The data needed to create a delegations.
-     */
-    data: XOR<delegationsCreateInput, delegationsUncheckedCreateInput>
-  }
-
-
-  /**
-   * delegations createMany
-   */
-  export type delegationsCreateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many delegations.
-     */
-    data: Enumerable<delegationsCreateManyInput>
-    skipDuplicates?: boolean
-  }
-
-
-  /**
-   * delegations update
-   */
-  export type delegationsUpdateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the delegations
-     */
-    select?: delegationsSelect<ExtArgs> | null
-    /**
-     * The data needed to update a delegations.
-     */
-    data: XOR<delegationsUpdateInput, delegationsUncheckedUpdateInput>
-    /**
-     * Choose, which delegations to update.
-     */
-    where: delegationsWhereUniqueInput
-  }
-
-
-  /**
-   * delegations updateMany
-   */
-  export type delegationsUpdateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update delegations.
-     */
-    data: XOR<delegationsUpdateManyMutationInput, delegationsUncheckedUpdateManyInput>
-    /**
-     * Filter which delegations to update
-     */
-    where?: delegationsWhereInput
-  }
-
-
-  /**
-   * delegations upsert
-   */
-  export type delegationsUpsertArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the delegations
-     */
-    select?: delegationsSelect<ExtArgs> | null
-    /**
-     * The filter to search for the delegations to update in case it exists.
-     */
-    where: delegationsWhereUniqueInput
-    /**
-     * In case the delegations found by the `where` argument doesn't exist, create a new delegations with this data.
-     */
-    create: XOR<delegationsCreateInput, delegationsUncheckedCreateInput>
-    /**
-     * In case the delegations was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<delegationsUpdateInput, delegationsUncheckedUpdateInput>
-  }
-
-
-  /**
-   * delegations delete
-   */
-  export type delegationsDeleteArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the delegations
-     */
-    select?: delegationsSelect<ExtArgs> | null
-    /**
-     * Filter which delegations to delete.
-     */
-    where: delegationsWhereUniqueInput
-  }
-
-
-  /**
-   * delegations deleteMany
-   */
-  export type delegationsDeleteManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which delegations to delete
-     */
-    where?: delegationsWhereInput
-  }
-
-
-  /**
-   * delegations without action
-   */
-  export type delegationsArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the delegations
-     */
-    select?: delegationsSelect<ExtArgs> | null
-  }
-
-
-
-  /**
    * Model report
    */
 
@@ -6724,7 +4802,6 @@ export namespace Prisma {
     created_by_username?: boolean
     created_at?: boolean
     service_instructeur?: boolean
-    report_to_chip?: boolean | report$report_to_chipArgs<ExtArgs>
     report_to_clause?: boolean | report$report_to_clauseArgs<ExtArgs>
     _count?: boolean | ReportCountOutputTypeArgs<ExtArgs>
   }, ExtArgs["result"]["report"]>
@@ -6750,7 +4827,6 @@ export namespace Prisma {
   }
 
   export type reportInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    report_to_chip?: boolean | report$report_to_chipArgs<ExtArgs>
     report_to_clause?: boolean | report$report_to_clauseArgs<ExtArgs>
     _count?: boolean | ReportCountOutputTypeArgs<ExtArgs>
   }
@@ -7125,8 +5201,6 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: 'PrismaPromise';
     constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
 
-    report_to_chip<T extends report$report_to_chipArgs<ExtArgs> = {}>(args?: Subset<T, report$report_to_chipArgs<ExtArgs>>): Prisma.PrismaPromise<$Types.GetResult<report_to_chipPayload<ExtArgs>, T, 'findMany', never>| Null>;
-
     report_to_clause<T extends report$report_to_clauseArgs<ExtArgs> = {}>(args?: Subset<T, report$report_to_clauseArgs<ExtArgs>>): Prisma.PrismaPromise<$Types.GetResult<report_to_clausePayload<ExtArgs>, T, 'findMany', never>| Null>;
 
     private get _document();
@@ -7485,27 +5559,6 @@ export namespace Prisma {
 
 
   /**
-   * report.report_to_chip
-   */
-  export type report$report_to_chipArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the report_to_chip
-     */
-    select?: report_to_chipSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well.
-     */
-    include?: report_to_chipInclude<ExtArgs> | null
-    where?: report_to_chipWhereInput
-    orderBy?: Enumerable<report_to_chipOrderByWithRelationInput>
-    cursor?: report_to_chipWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: Enumerable<Report_to_chipScalarFieldEnum>
-  }
-
-
-  /**
    * report.report_to_clause
    */
   export type report$report_to_clauseArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
@@ -7538,916 +5591,6 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well.
      */
     include?: reportInclude<ExtArgs> | null
-  }
-
-
-
-  /**
-   * Model report_to_chip
-   */
-
-
-  export type AggregateReport_to_chip = {
-    _count: Report_to_chipCountAggregateOutputType | null
-    _min: Report_to_chipMinAggregateOutputType | null
-    _max: Report_to_chipMaxAggregateOutputType | null
-  }
-
-  export type Report_to_chipMinAggregateOutputType = {
-    id: string | null
-    report_id: string | null
-    chip_id: string | null
-  }
-
-  export type Report_to_chipMaxAggregateOutputType = {
-    id: string | null
-    report_id: string | null
-    chip_id: string | null
-  }
-
-  export type Report_to_chipCountAggregateOutputType = {
-    id: number
-    report_id: number
-    chip_id: number
-    _all: number
-  }
-
-
-  export type Report_to_chipMinAggregateInputType = {
-    id?: true
-    report_id?: true
-    chip_id?: true
-  }
-
-  export type Report_to_chipMaxAggregateInputType = {
-    id?: true
-    report_id?: true
-    chip_id?: true
-  }
-
-  export type Report_to_chipCountAggregateInputType = {
-    id?: true
-    report_id?: true
-    chip_id?: true
-    _all?: true
-  }
-
-  export type Report_to_chipAggregateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which report_to_chip to aggregate.
-     */
-    where?: report_to_chipWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of report_to_chips to fetch.
-     */
-    orderBy?: Enumerable<report_to_chipOrderByWithRelationInput>
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: report_to_chipWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` report_to_chips from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` report_to_chips.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned report_to_chips
-    **/
-    _count?: true | Report_to_chipCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: Report_to_chipMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: Report_to_chipMaxAggregateInputType
-  }
-
-  export type GetReport_to_chipAggregateType<T extends Report_to_chipAggregateArgs> = {
-        [P in keyof T & keyof AggregateReport_to_chip]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateReport_to_chip[P]>
-      : GetScalarType<T[P], AggregateReport_to_chip[P]>
-  }
-
-
-
-
-  export type Report_to_chipGroupByArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    where?: report_to_chipWhereInput
-    orderBy?: Enumerable<report_to_chipOrderByWithAggregationInput>
-    by: Report_to_chipScalarFieldEnum[]
-    having?: report_to_chipScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: Report_to_chipCountAggregateInputType | true
-    _min?: Report_to_chipMinAggregateInputType
-    _max?: Report_to_chipMaxAggregateInputType
-  }
-
-
-  export type Report_to_chipGroupByOutputType = {
-    id: string
-    report_id: string
-    chip_id: string
-    _count: Report_to_chipCountAggregateOutputType | null
-    _min: Report_to_chipMinAggregateOutputType | null
-    _max: Report_to_chipMaxAggregateOutputType | null
-  }
-
-  type GetReport_to_chipGroupByPayload<T extends Report_to_chipGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickArray<Report_to_chipGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof Report_to_chipGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], Report_to_chipGroupByOutputType[P]>
-            : GetScalarType<T[P], Report_to_chipGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type report_to_chipSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    report_id?: boolean
-    chip_id?: boolean
-    chip?: boolean | chipArgs<ExtArgs>
-    report?: boolean | reportArgs<ExtArgs>
-  }, ExtArgs["result"]["report_to_chip"]>
-
-  export type report_to_chipSelectScalar = {
-    id?: boolean
-    report_id?: boolean
-    chip_id?: boolean
-  }
-
-  export type report_to_chipInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    chip?: boolean | chipArgs<ExtArgs>
-    report?: boolean | reportArgs<ExtArgs>
-  }
-
-
-  type report_to_chipGetPayload<S extends boolean | null | undefined | report_to_chipArgs> = $Types.GetResult<report_to_chipPayload, S>
-
-  type report_to_chipCountArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = 
-    Omit<report_to_chipFindManyArgs, 'select' | 'include'> & {
-      select?: Report_to_chipCountAggregateInputType | true
-    }
-
-  export interface report_to_chipDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['report_to_chip'], meta: { name: 'report_to_chip' } }
-    /**
-     * Find zero or one Report_to_chip that matches the filter.
-     * @param {report_to_chipFindUniqueArgs} args - Arguments to find a Report_to_chip
-     * @example
-     * // Get one Report_to_chip
-     * const report_to_chip = await prisma.report_to_chip.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findUnique<T extends report_to_chipFindUniqueArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
-      args: SelectSubset<T, report_to_chipFindUniqueArgs<ExtArgs>>
-    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'report_to_chip'> extends True ? Prisma__report_to_chipClient<$Types.GetResult<report_to_chipPayload<ExtArgs>, T, 'findUnique', never>, never, ExtArgs> : Prisma__report_to_chipClient<$Types.GetResult<report_to_chipPayload<ExtArgs>, T, 'findUnique', never> | null, null, ExtArgs>
-
-    /**
-     * Find one Report_to_chip that matches the filter or throw an error  with `error.code='P2025'` 
-     *     if no matches were found.
-     * @param {report_to_chipFindUniqueOrThrowArgs} args - Arguments to find a Report_to_chip
-     * @example
-     * // Get one Report_to_chip
-     * const report_to_chip = await prisma.report_to_chip.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findUniqueOrThrow<T extends report_to_chipFindUniqueOrThrowArgs<ExtArgs>>(
-      args?: SelectSubset<T, report_to_chipFindUniqueOrThrowArgs<ExtArgs>>
-    ): Prisma__report_to_chipClient<$Types.GetResult<report_to_chipPayload<ExtArgs>, T, 'findUniqueOrThrow', never>, never, ExtArgs>
-
-    /**
-     * Find the first Report_to_chip that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {report_to_chipFindFirstArgs} args - Arguments to find a Report_to_chip
-     * @example
-     * // Get one Report_to_chip
-     * const report_to_chip = await prisma.report_to_chip.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findFirst<T extends report_to_chipFindFirstArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
-      args?: SelectSubset<T, report_to_chipFindFirstArgs<ExtArgs>>
-    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'report_to_chip'> extends True ? Prisma__report_to_chipClient<$Types.GetResult<report_to_chipPayload<ExtArgs>, T, 'findFirst', never>, never, ExtArgs> : Prisma__report_to_chipClient<$Types.GetResult<report_to_chipPayload<ExtArgs>, T, 'findFirst', never> | null, null, ExtArgs>
-
-    /**
-     * Find the first Report_to_chip that matches the filter or
-     * throw `NotFoundError` if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {report_to_chipFindFirstOrThrowArgs} args - Arguments to find a Report_to_chip
-     * @example
-     * // Get one Report_to_chip
-     * const report_to_chip = await prisma.report_to_chip.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findFirstOrThrow<T extends report_to_chipFindFirstOrThrowArgs<ExtArgs>>(
-      args?: SelectSubset<T, report_to_chipFindFirstOrThrowArgs<ExtArgs>>
-    ): Prisma__report_to_chipClient<$Types.GetResult<report_to_chipPayload<ExtArgs>, T, 'findFirstOrThrow', never>, never, ExtArgs>
-
-    /**
-     * Find zero or more Report_to_chips that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {report_to_chipFindManyArgs=} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all Report_to_chips
-     * const report_to_chips = await prisma.report_to_chip.findMany()
-     * 
-     * // Get first 10 Report_to_chips
-     * const report_to_chips = await prisma.report_to_chip.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const report_to_chipWithIdOnly = await prisma.report_to_chip.findMany({ select: { id: true } })
-     * 
-    **/
-    findMany<T extends report_to_chipFindManyArgs<ExtArgs>>(
-      args?: SelectSubset<T, report_to_chipFindManyArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<$Types.GetResult<report_to_chipPayload<ExtArgs>, T, 'findMany', never>>
-
-    /**
-     * Create a Report_to_chip.
-     * @param {report_to_chipCreateArgs} args - Arguments to create a Report_to_chip.
-     * @example
-     * // Create one Report_to_chip
-     * const Report_to_chip = await prisma.report_to_chip.create({
-     *   data: {
-     *     // ... data to create a Report_to_chip
-     *   }
-     * })
-     * 
-    **/
-    create<T extends report_to_chipCreateArgs<ExtArgs>>(
-      args: SelectSubset<T, report_to_chipCreateArgs<ExtArgs>>
-    ): Prisma__report_to_chipClient<$Types.GetResult<report_to_chipPayload<ExtArgs>, T, 'create', never>, never, ExtArgs>
-
-    /**
-     * Create many Report_to_chips.
-     *     @param {report_to_chipCreateManyArgs} args - Arguments to create many Report_to_chips.
-     *     @example
-     *     // Create many Report_to_chips
-     *     const report_to_chip = await prisma.report_to_chip.createMany({
-     *       data: {
-     *         // ... provide data here
-     *       }
-     *     })
-     *     
-    **/
-    createMany<T extends report_to_chipCreateManyArgs<ExtArgs>>(
-      args?: SelectSubset<T, report_to_chipCreateManyArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Delete a Report_to_chip.
-     * @param {report_to_chipDeleteArgs} args - Arguments to delete one Report_to_chip.
-     * @example
-     * // Delete one Report_to_chip
-     * const Report_to_chip = await prisma.report_to_chip.delete({
-     *   where: {
-     *     // ... filter to delete one Report_to_chip
-     *   }
-     * })
-     * 
-    **/
-    delete<T extends report_to_chipDeleteArgs<ExtArgs>>(
-      args: SelectSubset<T, report_to_chipDeleteArgs<ExtArgs>>
-    ): Prisma__report_to_chipClient<$Types.GetResult<report_to_chipPayload<ExtArgs>, T, 'delete', never>, never, ExtArgs>
-
-    /**
-     * Update one Report_to_chip.
-     * @param {report_to_chipUpdateArgs} args - Arguments to update one Report_to_chip.
-     * @example
-     * // Update one Report_to_chip
-     * const report_to_chip = await prisma.report_to_chip.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-    **/
-    update<T extends report_to_chipUpdateArgs<ExtArgs>>(
-      args: SelectSubset<T, report_to_chipUpdateArgs<ExtArgs>>
-    ): Prisma__report_to_chipClient<$Types.GetResult<report_to_chipPayload<ExtArgs>, T, 'update', never>, never, ExtArgs>
-
-    /**
-     * Delete zero or more Report_to_chips.
-     * @param {report_to_chipDeleteManyArgs} args - Arguments to filter Report_to_chips to delete.
-     * @example
-     * // Delete a few Report_to_chips
-     * const { count } = await prisma.report_to_chip.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-    **/
-    deleteMany<T extends report_to_chipDeleteManyArgs<ExtArgs>>(
-      args?: SelectSubset<T, report_to_chipDeleteManyArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Report_to_chips.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {report_to_chipUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many Report_to_chips
-     * const report_to_chip = await prisma.report_to_chip.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-    **/
-    updateMany<T extends report_to_chipUpdateManyArgs<ExtArgs>>(
-      args: SelectSubset<T, report_to_chipUpdateManyArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create or update one Report_to_chip.
-     * @param {report_to_chipUpsertArgs} args - Arguments to update or create a Report_to_chip.
-     * @example
-     * // Update or create a Report_to_chip
-     * const report_to_chip = await prisma.report_to_chip.upsert({
-     *   create: {
-     *     // ... data to create a Report_to_chip
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the Report_to_chip we want to update
-     *   }
-     * })
-    **/
-    upsert<T extends report_to_chipUpsertArgs<ExtArgs>>(
-      args: SelectSubset<T, report_to_chipUpsertArgs<ExtArgs>>
-    ): Prisma__report_to_chipClient<$Types.GetResult<report_to_chipPayload<ExtArgs>, T, 'upsert', never>, never, ExtArgs>
-
-    /**
-     * Count the number of Report_to_chips.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {report_to_chipCountArgs} args - Arguments to filter Report_to_chips to count.
-     * @example
-     * // Count the number of Report_to_chips
-     * const count = await prisma.report_to_chip.count({
-     *   where: {
-     *     // ... the filter for the Report_to_chips we want to count
-     *   }
-     * })
-    **/
-    count<T extends report_to_chipCountArgs>(
-      args?: Subset<T, report_to_chipCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], Report_to_chipCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a Report_to_chip.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {Report_to_chipAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends Report_to_chipAggregateArgs>(args: Subset<T, Report_to_chipAggregateArgs>): Prisma.PrismaPromise<GetReport_to_chipAggregateType<T>>
-
-    /**
-     * Group by Report_to_chip.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {Report_to_chipGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends Report_to_chipGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: Report_to_chipGroupByArgs['orderBy'] }
-        : { orderBy?: Report_to_chipGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends TupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, Report_to_chipGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetReport_to_chipGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for report_to_chip.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export class Prisma__report_to_chipClient<T, Null = never, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> implements Prisma.PrismaPromise<T> {
-    private readonly _dmmf;
-    private readonly _queryType;
-    private readonly _rootField;
-    private readonly _clientMethod;
-    private readonly _args;
-    private readonly _dataPath;
-    private readonly _errorFormat;
-    private readonly _measurePerformance?;
-    private _isList;
-    private _callsite;
-    private _requestPromise?;
-    readonly [Symbol.toStringTag]: 'PrismaPromise';
-    constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
-
-    chip<T extends chipArgs<ExtArgs> = {}>(args?: Subset<T, chipArgs<ExtArgs>>): Prisma__chipClient<$Types.GetResult<chipPayload<ExtArgs>, T, 'findUnique', never> | Null, never, ExtArgs>;
-
-    report<T extends reportArgs<ExtArgs> = {}>(args?: Subset<T, reportArgs<ExtArgs>>): Prisma__reportClient<$Types.GetResult<reportPayload<ExtArgs>, T, 'findUnique', never> | Null, never, ExtArgs>;
-
-    private get _document();
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): Promise<TResult1 | TResult2>;
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>;
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): Promise<T>;
-  }
-
-
-
-  // Custom InputTypes
-
-  /**
-   * report_to_chip base type for findUnique actions
-   */
-  export type report_to_chipFindUniqueArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the report_to_chip
-     */
-    select?: report_to_chipSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well.
-     */
-    include?: report_to_chipInclude<ExtArgs> | null
-    /**
-     * Filter, which report_to_chip to fetch.
-     */
-    where: report_to_chipWhereUniqueInput
-  }
-
-  /**
-   * report_to_chip findUnique
-   */
-  export interface report_to_chipFindUniqueArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends report_to_chipFindUniqueArgsBase<ExtArgs> {
-   /**
-    * Throw an Error if query returns no results
-    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
-    */
-    rejectOnNotFound?: RejectOnNotFound
-  }
-      
-
-  /**
-   * report_to_chip findUniqueOrThrow
-   */
-  export type report_to_chipFindUniqueOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the report_to_chip
-     */
-    select?: report_to_chipSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well.
-     */
-    include?: report_to_chipInclude<ExtArgs> | null
-    /**
-     * Filter, which report_to_chip to fetch.
-     */
-    where: report_to_chipWhereUniqueInput
-  }
-
-
-  /**
-   * report_to_chip base type for findFirst actions
-   */
-  export type report_to_chipFindFirstArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the report_to_chip
-     */
-    select?: report_to_chipSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well.
-     */
-    include?: report_to_chipInclude<ExtArgs> | null
-    /**
-     * Filter, which report_to_chip to fetch.
-     */
-    where?: report_to_chipWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of report_to_chips to fetch.
-     */
-    orderBy?: Enumerable<report_to_chipOrderByWithRelationInput>
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for report_to_chips.
-     */
-    cursor?: report_to_chipWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` report_to_chips from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` report_to_chips.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of report_to_chips.
-     */
-    distinct?: Enumerable<Report_to_chipScalarFieldEnum>
-  }
-
-  /**
-   * report_to_chip findFirst
-   */
-  export interface report_to_chipFindFirstArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends report_to_chipFindFirstArgsBase<ExtArgs> {
-   /**
-    * Throw an Error if query returns no results
-    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
-    */
-    rejectOnNotFound?: RejectOnNotFound
-  }
-      
-
-  /**
-   * report_to_chip findFirstOrThrow
-   */
-  export type report_to_chipFindFirstOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the report_to_chip
-     */
-    select?: report_to_chipSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well.
-     */
-    include?: report_to_chipInclude<ExtArgs> | null
-    /**
-     * Filter, which report_to_chip to fetch.
-     */
-    where?: report_to_chipWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of report_to_chips to fetch.
-     */
-    orderBy?: Enumerable<report_to_chipOrderByWithRelationInput>
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for report_to_chips.
-     */
-    cursor?: report_to_chipWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` report_to_chips from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` report_to_chips.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of report_to_chips.
-     */
-    distinct?: Enumerable<Report_to_chipScalarFieldEnum>
-  }
-
-
-  /**
-   * report_to_chip findMany
-   */
-  export type report_to_chipFindManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the report_to_chip
-     */
-    select?: report_to_chipSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well.
-     */
-    include?: report_to_chipInclude<ExtArgs> | null
-    /**
-     * Filter, which report_to_chips to fetch.
-     */
-    where?: report_to_chipWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of report_to_chips to fetch.
-     */
-    orderBy?: Enumerable<report_to_chipOrderByWithRelationInput>
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing report_to_chips.
-     */
-    cursor?: report_to_chipWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` report_to_chips from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` report_to_chips.
-     */
-    skip?: number
-    distinct?: Enumerable<Report_to_chipScalarFieldEnum>
-  }
-
-
-  /**
-   * report_to_chip create
-   */
-  export type report_to_chipCreateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the report_to_chip
-     */
-    select?: report_to_chipSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well.
-     */
-    include?: report_to_chipInclude<ExtArgs> | null
-    /**
-     * The data needed to create a report_to_chip.
-     */
-    data: XOR<report_to_chipCreateInput, report_to_chipUncheckedCreateInput>
-  }
-
-
-  /**
-   * report_to_chip createMany
-   */
-  export type report_to_chipCreateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many report_to_chips.
-     */
-    data: Enumerable<report_to_chipCreateManyInput>
-    skipDuplicates?: boolean
-  }
-
-
-  /**
-   * report_to_chip update
-   */
-  export type report_to_chipUpdateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the report_to_chip
-     */
-    select?: report_to_chipSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well.
-     */
-    include?: report_to_chipInclude<ExtArgs> | null
-    /**
-     * The data needed to update a report_to_chip.
-     */
-    data: XOR<report_to_chipUpdateInput, report_to_chipUncheckedUpdateInput>
-    /**
-     * Choose, which report_to_chip to update.
-     */
-    where: report_to_chipWhereUniqueInput
-  }
-
-
-  /**
-   * report_to_chip updateMany
-   */
-  export type report_to_chipUpdateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update report_to_chips.
-     */
-    data: XOR<report_to_chipUpdateManyMutationInput, report_to_chipUncheckedUpdateManyInput>
-    /**
-     * Filter which report_to_chips to update
-     */
-    where?: report_to_chipWhereInput
-  }
-
-
-  /**
-   * report_to_chip upsert
-   */
-  export type report_to_chipUpsertArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the report_to_chip
-     */
-    select?: report_to_chipSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well.
-     */
-    include?: report_to_chipInclude<ExtArgs> | null
-    /**
-     * The filter to search for the report_to_chip to update in case it exists.
-     */
-    where: report_to_chipWhereUniqueInput
-    /**
-     * In case the report_to_chip found by the `where` argument doesn't exist, create a new report_to_chip with this data.
-     */
-    create: XOR<report_to_chipCreateInput, report_to_chipUncheckedCreateInput>
-    /**
-     * In case the report_to_chip was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<report_to_chipUpdateInput, report_to_chipUncheckedUpdateInput>
-  }
-
-
-  /**
-   * report_to_chip delete
-   */
-  export type report_to_chipDeleteArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the report_to_chip
-     */
-    select?: report_to_chipSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well.
-     */
-    include?: report_to_chipInclude<ExtArgs> | null
-    /**
-     * Filter which report_to_chip to delete.
-     */
-    where: report_to_chipWhereUniqueInput
-  }
-
-
-  /**
-   * report_to_chip deleteMany
-   */
-  export type report_to_chipDeleteManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which report_to_chips to delete
-     */
-    where?: report_to_chipWhereInput
-  }
-
-
-  /**
-   * report_to_chip without action
-   */
-  export type report_to_chipArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the report_to_chip
-     */
-    select?: report_to_chipSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well.
-     */
-    include?: report_to_chipInclude<ExtArgs> | null
   }
 
 
@@ -9363,354 +6506,322 @@ export namespace Prisma {
 
 
   /**
-   * Model users
+   * Model chip
    */
 
 
-  export type AggregateUsers = {
-    _count: UsersCountAggregateOutputType | null
-    _min: UsersMinAggregateOutputType | null
-    _max: UsersMaxAggregateOutputType | null
+  export type AggregateChip = {
+    _count: ChipCountAggregateOutputType | null
+    _min: ChipMinAggregateOutputType | null
+    _max: ChipMaxAggregateOutputType | null
   }
 
-  export type UsersMinAggregateOutputType = {
-    id: string | null
-    email: string | null
-    name: string | null
-    temporaryLink: string | null
-    temporaryLinkExpiresAt: string | null
-    password: string | null
+  export type ChipMinAggregateOutputType = {
+    key: string | null
+    value: string | null
     udap_id: string | null
+    text: string | null
   }
 
-  export type UsersMaxAggregateOutputType = {
-    id: string | null
-    email: string | null
-    name: string | null
-    temporaryLink: string | null
-    temporaryLinkExpiresAt: string | null
-    password: string | null
+  export type ChipMaxAggregateOutputType = {
+    key: string | null
+    value: string | null
     udap_id: string | null
+    text: string | null
   }
 
-  export type UsersCountAggregateOutputType = {
-    id: number
-    email: number
-    name: number
-    temporaryLink: number
-    temporaryLinkExpiresAt: number
-    password: number
+  export type ChipCountAggregateOutputType = {
+    key: number
+    value: number
     udap_id: number
+    text: number
     _all: number
   }
 
 
-  export type UsersMinAggregateInputType = {
-    id?: true
-    email?: true
-    name?: true
-    temporaryLink?: true
-    temporaryLinkExpiresAt?: true
-    password?: true
+  export type ChipMinAggregateInputType = {
+    key?: true
+    value?: true
     udap_id?: true
+    text?: true
   }
 
-  export type UsersMaxAggregateInputType = {
-    id?: true
-    email?: true
-    name?: true
-    temporaryLink?: true
-    temporaryLinkExpiresAt?: true
-    password?: true
+  export type ChipMaxAggregateInputType = {
+    key?: true
+    value?: true
     udap_id?: true
+    text?: true
   }
 
-  export type UsersCountAggregateInputType = {
-    id?: true
-    email?: true
-    name?: true
-    temporaryLink?: true
-    temporaryLinkExpiresAt?: true
-    password?: true
+  export type ChipCountAggregateInputType = {
+    key?: true
+    value?: true
     udap_id?: true
+    text?: true
     _all?: true
   }
 
-  export type UsersAggregateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  export type ChipAggregateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
-     * Filter which users to aggregate.
+     * Filter which chip to aggregate.
      */
-    where?: usersWhereInput
+    where?: chipWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of users to fetch.
+     * Determine the order of chips to fetch.
      */
-    orderBy?: Enumerable<usersOrderByWithRelationInput>
+    orderBy?: Enumerable<chipOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the start position
      */
-    cursor?: usersWhereUniqueInput
+    cursor?: chipWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` users from the position of the cursor.
+     * Take `±n` chips from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` users.
+     * Skip the first `n` chips.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
-     * Count returned users
+     * Count returned chips
     **/
-    _count?: true | UsersCountAggregateInputType
+    _count?: true | ChipCountAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the minimum value
     **/
-    _min?: UsersMinAggregateInputType
+    _min?: ChipMinAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the maximum value
     **/
-    _max?: UsersMaxAggregateInputType
+    _max?: ChipMaxAggregateInputType
   }
 
-  export type GetUsersAggregateType<T extends UsersAggregateArgs> = {
-        [P in keyof T & keyof AggregateUsers]: P extends '_count' | 'count'
+  export type GetChipAggregateType<T extends ChipAggregateArgs> = {
+        [P in keyof T & keyof AggregateChip]: P extends '_count' | 'count'
       ? T[P] extends true
         ? number
-        : GetScalarType<T[P], AggregateUsers[P]>
-      : GetScalarType<T[P], AggregateUsers[P]>
+        : GetScalarType<T[P], AggregateChip[P]>
+      : GetScalarType<T[P], AggregateChip[P]>
   }
 
 
 
 
-  export type UsersGroupByArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    where?: usersWhereInput
-    orderBy?: Enumerable<usersOrderByWithAggregationInput>
-    by: UsersScalarFieldEnum[]
-    having?: usersScalarWhereWithAggregatesInput
+  export type ChipGroupByArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    where?: chipWhereInput
+    orderBy?: Enumerable<chipOrderByWithAggregationInput>
+    by: ChipScalarFieldEnum[]
+    having?: chipScalarWhereWithAggregatesInput
     take?: number
     skip?: number
-    _count?: UsersCountAggregateInputType | true
-    _min?: UsersMinAggregateInputType
-    _max?: UsersMaxAggregateInputType
+    _count?: ChipCountAggregateInputType | true
+    _min?: ChipMinAggregateInputType
+    _max?: ChipMaxAggregateInputType
   }
 
 
-  export type UsersGroupByOutputType = {
-    id: string
-    email: string
-    name: string
-    temporaryLink: string | null
-    temporaryLinkExpiresAt: string | null
-    password: string
-    udap_id: string | null
-    _count: UsersCountAggregateOutputType | null
-    _min: UsersMinAggregateOutputType | null
-    _max: UsersMaxAggregateOutputType | null
+  export type ChipGroupByOutputType = {
+    key: string
+    value: string
+    udap_id: string
+    text: string
+    _count: ChipCountAggregateOutputType | null
+    _min: ChipMinAggregateOutputType | null
+    _max: ChipMaxAggregateOutputType | null
   }
 
-  type GetUsersGroupByPayload<T extends UsersGroupByArgs> = Prisma.PrismaPromise<
+  type GetChipGroupByPayload<T extends ChipGroupByArgs> = Prisma.PrismaPromise<
     Array<
-      PickArray<UsersGroupByOutputType, T['by']> &
+      PickArray<ChipGroupByOutputType, T['by']> &
         {
-          [P in ((keyof T) & (keyof UsersGroupByOutputType))]: P extends '_count'
+          [P in ((keyof T) & (keyof ChipGroupByOutputType))]: P extends '_count'
             ? T[P] extends boolean
               ? number
-              : GetScalarType<T[P], UsersGroupByOutputType[P]>
-            : GetScalarType<T[P], UsersGroupByOutputType[P]>
+              : GetScalarType<T[P], ChipGroupByOutputType[P]>
+            : GetScalarType<T[P], ChipGroupByOutputType[P]>
         }
       >
     >
 
 
-  export type usersSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    email?: boolean
-    name?: boolean
-    temporaryLink?: boolean
-    temporaryLinkExpiresAt?: boolean
-    password?: boolean
+  export type chipSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    key?: boolean
+    value?: boolean
     udap_id?: boolean
-    udaps?: boolean | udapsArgs<ExtArgs>
-  }, ExtArgs["result"]["users"]>
+    text?: boolean
+  }, ExtArgs["result"]["chip"]>
 
-  export type usersSelectScalar = {
-    id?: boolean
-    email?: boolean
-    name?: boolean
-    temporaryLink?: boolean
-    temporaryLinkExpiresAt?: boolean
-    password?: boolean
+  export type chipSelectScalar = {
+    key?: boolean
+    value?: boolean
     udap_id?: boolean
-  }
-
-  export type usersInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    udaps?: boolean | udapsArgs<ExtArgs>
+    text?: boolean
   }
 
 
-  type usersGetPayload<S extends boolean | null | undefined | usersArgs> = $Types.GetResult<usersPayload, S>
+  type chipGetPayload<S extends boolean | null | undefined | chipArgs> = $Types.GetResult<chipPayload, S>
 
-  type usersCountArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = 
-    Omit<usersFindManyArgs, 'select' | 'include'> & {
-      select?: UsersCountAggregateInputType | true
+  type chipCountArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = 
+    Omit<chipFindManyArgs, 'select' | 'include'> & {
+      select?: ChipCountAggregateInputType | true
     }
 
-  export interface usersDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['users'], meta: { name: 'users' } }
+  export interface chipDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['chip'], meta: { name: 'chip' } }
     /**
-     * Find zero or one Users that matches the filter.
-     * @param {usersFindUniqueArgs} args - Arguments to find a Users
+     * Find zero or one Chip that matches the filter.
+     * @param {chipFindUniqueArgs} args - Arguments to find a Chip
      * @example
-     * // Get one Users
-     * const users = await prisma.users.findUnique({
+     * // Get one Chip
+     * const chip = await prisma.chip.findUnique({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
     **/
-    findUnique<T extends usersFindUniqueArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
-      args: SelectSubset<T, usersFindUniqueArgs<ExtArgs>>
-    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'users'> extends True ? Prisma__usersClient<$Types.GetResult<usersPayload<ExtArgs>, T, 'findUnique', never>, never, ExtArgs> : Prisma__usersClient<$Types.GetResult<usersPayload<ExtArgs>, T, 'findUnique', never> | null, null, ExtArgs>
+    findUnique<T extends chipFindUniqueArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, chipFindUniqueArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'chip'> extends True ? Prisma__chipClient<$Types.GetResult<chipPayload<ExtArgs>, T, 'findUnique', never>, never, ExtArgs> : Prisma__chipClient<$Types.GetResult<chipPayload<ExtArgs>, T, 'findUnique', never> | null, null, ExtArgs>
 
     /**
-     * Find one Users that matches the filter or throw an error  with `error.code='P2025'` 
+     * Find one Chip that matches the filter or throw an error  with `error.code='P2025'` 
      *     if no matches were found.
-     * @param {usersFindUniqueOrThrowArgs} args - Arguments to find a Users
+     * @param {chipFindUniqueOrThrowArgs} args - Arguments to find a Chip
      * @example
-     * // Get one Users
-     * const users = await prisma.users.findUniqueOrThrow({
+     * // Get one Chip
+     * const chip = await prisma.chip.findUniqueOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
     **/
-    findUniqueOrThrow<T extends usersFindUniqueOrThrowArgs<ExtArgs>>(
-      args?: SelectSubset<T, usersFindUniqueOrThrowArgs<ExtArgs>>
-    ): Prisma__usersClient<$Types.GetResult<usersPayload<ExtArgs>, T, 'findUniqueOrThrow', never>, never, ExtArgs>
+    findUniqueOrThrow<T extends chipFindUniqueOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, chipFindUniqueOrThrowArgs<ExtArgs>>
+    ): Prisma__chipClient<$Types.GetResult<chipPayload<ExtArgs>, T, 'findUniqueOrThrow', never>, never, ExtArgs>
 
     /**
-     * Find the first Users that matches the filter.
+     * Find the first Chip that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {usersFindFirstArgs} args - Arguments to find a Users
+     * @param {chipFindFirstArgs} args - Arguments to find a Chip
      * @example
-     * // Get one Users
-     * const users = await prisma.users.findFirst({
+     * // Get one Chip
+     * const chip = await prisma.chip.findFirst({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
     **/
-    findFirst<T extends usersFindFirstArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
-      args?: SelectSubset<T, usersFindFirstArgs<ExtArgs>>
-    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'users'> extends True ? Prisma__usersClient<$Types.GetResult<usersPayload<ExtArgs>, T, 'findFirst', never>, never, ExtArgs> : Prisma__usersClient<$Types.GetResult<usersPayload<ExtArgs>, T, 'findFirst', never> | null, null, ExtArgs>
+    findFirst<T extends chipFindFirstArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, chipFindFirstArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'chip'> extends True ? Prisma__chipClient<$Types.GetResult<chipPayload<ExtArgs>, T, 'findFirst', never>, never, ExtArgs> : Prisma__chipClient<$Types.GetResult<chipPayload<ExtArgs>, T, 'findFirst', never> | null, null, ExtArgs>
 
     /**
-     * Find the first Users that matches the filter or
+     * Find the first Chip that matches the filter or
      * throw `NotFoundError` if no matches were found.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {usersFindFirstOrThrowArgs} args - Arguments to find a Users
+     * @param {chipFindFirstOrThrowArgs} args - Arguments to find a Chip
      * @example
-     * // Get one Users
-     * const users = await prisma.users.findFirstOrThrow({
+     * // Get one Chip
+     * const chip = await prisma.chip.findFirstOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
     **/
-    findFirstOrThrow<T extends usersFindFirstOrThrowArgs<ExtArgs>>(
-      args?: SelectSubset<T, usersFindFirstOrThrowArgs<ExtArgs>>
-    ): Prisma__usersClient<$Types.GetResult<usersPayload<ExtArgs>, T, 'findFirstOrThrow', never>, never, ExtArgs>
+    findFirstOrThrow<T extends chipFindFirstOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, chipFindFirstOrThrowArgs<ExtArgs>>
+    ): Prisma__chipClient<$Types.GetResult<chipPayload<ExtArgs>, T, 'findFirstOrThrow', never>, never, ExtArgs>
 
     /**
-     * Find zero or more Users that matches the filter.
+     * Find zero or more Chips that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {usersFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @param {chipFindManyArgs=} args - Arguments to filter and select certain fields only.
      * @example
-     * // Get all Users
-     * const users = await prisma.users.findMany()
+     * // Get all Chips
+     * const chips = await prisma.chip.findMany()
      * 
-     * // Get first 10 Users
-     * const users = await prisma.users.findMany({ take: 10 })
+     * // Get first 10 Chips
+     * const chips = await prisma.chip.findMany({ take: 10 })
      * 
-     * // Only select the `id`
-     * const usersWithIdOnly = await prisma.users.findMany({ select: { id: true } })
+     * // Only select the `key`
+     * const chipWithKeyOnly = await prisma.chip.findMany({ select: { key: true } })
      * 
     **/
-    findMany<T extends usersFindManyArgs<ExtArgs>>(
-      args?: SelectSubset<T, usersFindManyArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<$Types.GetResult<usersPayload<ExtArgs>, T, 'findMany', never>>
+    findMany<T extends chipFindManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, chipFindManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Types.GetResult<chipPayload<ExtArgs>, T, 'findMany', never>>
 
     /**
-     * Create a Users.
-     * @param {usersCreateArgs} args - Arguments to create a Users.
+     * Create a Chip.
+     * @param {chipCreateArgs} args - Arguments to create a Chip.
      * @example
-     * // Create one Users
-     * const Users = await prisma.users.create({
+     * // Create one Chip
+     * const Chip = await prisma.chip.create({
      *   data: {
-     *     // ... data to create a Users
+     *     // ... data to create a Chip
      *   }
      * })
      * 
     **/
-    create<T extends usersCreateArgs<ExtArgs>>(
-      args: SelectSubset<T, usersCreateArgs<ExtArgs>>
-    ): Prisma__usersClient<$Types.GetResult<usersPayload<ExtArgs>, T, 'create', never>, never, ExtArgs>
+    create<T extends chipCreateArgs<ExtArgs>>(
+      args: SelectSubset<T, chipCreateArgs<ExtArgs>>
+    ): Prisma__chipClient<$Types.GetResult<chipPayload<ExtArgs>, T, 'create', never>, never, ExtArgs>
 
     /**
-     * Create many Users.
-     *     @param {usersCreateManyArgs} args - Arguments to create many Users.
+     * Create many Chips.
+     *     @param {chipCreateManyArgs} args - Arguments to create many Chips.
      *     @example
-     *     // Create many Users
-     *     const users = await prisma.users.createMany({
+     *     // Create many Chips
+     *     const chip = await prisma.chip.createMany({
      *       data: {
      *         // ... provide data here
      *       }
      *     })
      *     
     **/
-    createMany<T extends usersCreateManyArgs<ExtArgs>>(
-      args?: SelectSubset<T, usersCreateManyArgs<ExtArgs>>
+    createMany<T extends chipCreateManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, chipCreateManyArgs<ExtArgs>>
     ): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Delete a Users.
-     * @param {usersDeleteArgs} args - Arguments to delete one Users.
+     * Delete a Chip.
+     * @param {chipDeleteArgs} args - Arguments to delete one Chip.
      * @example
-     * // Delete one Users
-     * const Users = await prisma.users.delete({
+     * // Delete one Chip
+     * const Chip = await prisma.chip.delete({
      *   where: {
-     *     // ... filter to delete one Users
+     *     // ... filter to delete one Chip
      *   }
      * })
      * 
     **/
-    delete<T extends usersDeleteArgs<ExtArgs>>(
-      args: SelectSubset<T, usersDeleteArgs<ExtArgs>>
-    ): Prisma__usersClient<$Types.GetResult<usersPayload<ExtArgs>, T, 'delete', never>, never, ExtArgs>
+    delete<T extends chipDeleteArgs<ExtArgs>>(
+      args: SelectSubset<T, chipDeleteArgs<ExtArgs>>
+    ): Prisma__chipClient<$Types.GetResult<chipPayload<ExtArgs>, T, 'delete', never>, never, ExtArgs>
 
     /**
-     * Update one Users.
-     * @param {usersUpdateArgs} args - Arguments to update one Users.
+     * Update one Chip.
+     * @param {chipUpdateArgs} args - Arguments to update one Chip.
      * @example
-     * // Update one Users
-     * const users = await prisma.users.update({
+     * // Update one Chip
+     * const chip = await prisma.chip.update({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -9720,34 +6831,34 @@ export namespace Prisma {
      * })
      * 
     **/
-    update<T extends usersUpdateArgs<ExtArgs>>(
-      args: SelectSubset<T, usersUpdateArgs<ExtArgs>>
-    ): Prisma__usersClient<$Types.GetResult<usersPayload<ExtArgs>, T, 'update', never>, never, ExtArgs>
+    update<T extends chipUpdateArgs<ExtArgs>>(
+      args: SelectSubset<T, chipUpdateArgs<ExtArgs>>
+    ): Prisma__chipClient<$Types.GetResult<chipPayload<ExtArgs>, T, 'update', never>, never, ExtArgs>
 
     /**
-     * Delete zero or more Users.
-     * @param {usersDeleteManyArgs} args - Arguments to filter Users to delete.
+     * Delete zero or more Chips.
+     * @param {chipDeleteManyArgs} args - Arguments to filter Chips to delete.
      * @example
-     * // Delete a few Users
-     * const { count } = await prisma.users.deleteMany({
+     * // Delete a few Chips
+     * const { count } = await prisma.chip.deleteMany({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      * 
     **/
-    deleteMany<T extends usersDeleteManyArgs<ExtArgs>>(
-      args?: SelectSubset<T, usersDeleteManyArgs<ExtArgs>>
+    deleteMany<T extends chipDeleteManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, chipDeleteManyArgs<ExtArgs>>
     ): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Update zero or more Users.
+     * Update zero or more Chips.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {usersUpdateManyArgs} args - Arguments to update one or more rows.
+     * @param {chipUpdateManyArgs} args - Arguments to update one or more rows.
      * @example
-     * // Update many Users
-     * const users = await prisma.users.updateMany({
+     * // Update many Chips
+     * const chip = await prisma.chip.updateMany({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -9757,59 +6868,59 @@ export namespace Prisma {
      * })
      * 
     **/
-    updateMany<T extends usersUpdateManyArgs<ExtArgs>>(
-      args: SelectSubset<T, usersUpdateManyArgs<ExtArgs>>
+    updateMany<T extends chipUpdateManyArgs<ExtArgs>>(
+      args: SelectSubset<T, chipUpdateManyArgs<ExtArgs>>
     ): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Create or update one Users.
-     * @param {usersUpsertArgs} args - Arguments to update or create a Users.
+     * Create or update one Chip.
+     * @param {chipUpsertArgs} args - Arguments to update or create a Chip.
      * @example
-     * // Update or create a Users
-     * const users = await prisma.users.upsert({
+     * // Update or create a Chip
+     * const chip = await prisma.chip.upsert({
      *   create: {
-     *     // ... data to create a Users
+     *     // ... data to create a Chip
      *   },
      *   update: {
      *     // ... in case it already exists, update
      *   },
      *   where: {
-     *     // ... the filter for the Users we want to update
+     *     // ... the filter for the Chip we want to update
      *   }
      * })
     **/
-    upsert<T extends usersUpsertArgs<ExtArgs>>(
-      args: SelectSubset<T, usersUpsertArgs<ExtArgs>>
-    ): Prisma__usersClient<$Types.GetResult<usersPayload<ExtArgs>, T, 'upsert', never>, never, ExtArgs>
+    upsert<T extends chipUpsertArgs<ExtArgs>>(
+      args: SelectSubset<T, chipUpsertArgs<ExtArgs>>
+    ): Prisma__chipClient<$Types.GetResult<chipPayload<ExtArgs>, T, 'upsert', never>, never, ExtArgs>
 
     /**
-     * Count the number of Users.
+     * Count the number of Chips.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {usersCountArgs} args - Arguments to filter Users to count.
+     * @param {chipCountArgs} args - Arguments to filter Chips to count.
      * @example
-     * // Count the number of Users
-     * const count = await prisma.users.count({
+     * // Count the number of Chips
+     * const count = await prisma.chip.count({
      *   where: {
-     *     // ... the filter for the Users we want to count
+     *     // ... the filter for the Chips we want to count
      *   }
      * })
     **/
-    count<T extends usersCountArgs>(
-      args?: Subset<T, usersCountArgs>,
+    count<T extends chipCountArgs>(
+      args?: Subset<T, chipCountArgs>,
     ): Prisma.PrismaPromise<
       T extends $Utils.Record<'select', any>
         ? T['select'] extends true
           ? number
-          : GetScalarType<T['select'], UsersCountAggregateOutputType>
+          : GetScalarType<T['select'], ChipCountAggregateOutputType>
         : number
     >
 
     /**
-     * Allows you to perform aggregations operations on a Users.
+     * Allows you to perform aggregations operations on a Chip.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {UsersAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @param {ChipAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
      * @example
      * // Ordered by age ascending
      * // Where email contains prisma.io
@@ -9829,13 +6940,13 @@ export namespace Prisma {
      *   take: 10,
      * })
     **/
-    aggregate<T extends UsersAggregateArgs>(args: Subset<T, UsersAggregateArgs>): Prisma.PrismaPromise<GetUsersAggregateType<T>>
+    aggregate<T extends ChipAggregateArgs>(args: Subset<T, ChipAggregateArgs>): Prisma.PrismaPromise<GetChipAggregateType<T>>
 
     /**
-     * Group by Users.
+     * Group by Chip.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {UsersGroupByArgs} args - Group by arguments.
+     * @param {ChipGroupByArgs} args - Group by arguments.
      * @example
      * // Group by city, order by createdAt, get count
      * const result = await prisma.user.groupBy({
@@ -9850,14 +6961,14 @@ export namespace Prisma {
      * 
     **/
     groupBy<
-      T extends UsersGroupByArgs,
+      T extends ChipGroupByArgs,
       HasSelectOrTake extends Or<
         Extends<'skip', Keys<T>>,
         Extends<'take', Keys<T>>
       >,
       OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: UsersGroupByArgs['orderBy'] }
-        : { orderBy?: UsersGroupByArgs['orderBy'] },
+        ? { orderBy: ChipGroupByArgs['orderBy'] }
+        : { orderBy?: ChipGroupByArgs['orderBy'] },
       OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
       ByFields extends TupleToUnion<T['by']>,
       ByValid extends Has<ByFields, OrderFields>,
@@ -9906,17 +7017,17 @@ export namespace Prisma {
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-    >(args: SubsetIntersection<T, UsersGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUsersGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+    >(args: SubsetIntersection<T, ChipGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetChipGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
 
   }
 
   /**
-   * The delegate class that acts as a "Promise-like" for users.
+   * The delegate class that acts as a "Promise-like" for chip.
    * Why is this prefixed with `Prisma__`?
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export class Prisma__usersClient<T, Null = never, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> implements Prisma.PrismaPromise<T> {
+  export class Prisma__chipClient<T, Null = never, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> implements Prisma.PrismaPromise<T> {
     private readonly _dmmf;
     private readonly _queryType;
     private readonly _rootField;
@@ -9931,7 +7042,6 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: 'PrismaPromise';
     constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
 
-    udaps<T extends udapsArgs<ExtArgs> = {}>(args?: Subset<T, udapsArgs<ExtArgs>>): Prisma__udapsClient<$Types.GetResult<udapsPayload<ExtArgs>, T, 'findUnique', never> | Null, never, ExtArgs>;
 
     private get _document();
     /**
@@ -9961,27 +7071,23 @@ export namespace Prisma {
   // Custom InputTypes
 
   /**
-   * users base type for findUnique actions
+   * chip base type for findUnique actions
    */
-  export type usersFindUniqueArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  export type chipFindUniqueArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the users
+     * Select specific fields to fetch from the chip
      */
-    select?: usersSelect<ExtArgs> | null
+    select?: chipSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * Filter, which chip to fetch.
      */
-    include?: usersInclude<ExtArgs> | null
-    /**
-     * Filter, which users to fetch.
-     */
-    where: usersWhereUniqueInput
+    where: chipWhereUniqueInput
   }
 
   /**
-   * users findUnique
+   * chip findUnique
    */
-  export interface usersFindUniqueArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends usersFindUniqueArgsBase<ExtArgs> {
+  export interface chipFindUniqueArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends chipFindUniqueArgsBase<ExtArgs> {
    /**
     * Throw an Error if query returns no results
     * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
@@ -9991,76 +7097,68 @@ export namespace Prisma {
       
 
   /**
-   * users findUniqueOrThrow
+   * chip findUniqueOrThrow
    */
-  export type usersFindUniqueOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  export type chipFindUniqueOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the users
+     * Select specific fields to fetch from the chip
      */
-    select?: usersSelect<ExtArgs> | null
+    select?: chipSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * Filter, which chip to fetch.
      */
-    include?: usersInclude<ExtArgs> | null
-    /**
-     * Filter, which users to fetch.
-     */
-    where: usersWhereUniqueInput
+    where: chipWhereUniqueInput
   }
 
 
   /**
-   * users base type for findFirst actions
+   * chip base type for findFirst actions
    */
-  export type usersFindFirstArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  export type chipFindFirstArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the users
+     * Select specific fields to fetch from the chip
      */
-    select?: usersSelect<ExtArgs> | null
+    select?: chipSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * Filter, which chip to fetch.
      */
-    include?: usersInclude<ExtArgs> | null
-    /**
-     * Filter, which users to fetch.
-     */
-    where?: usersWhereInput
+    where?: chipWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of users to fetch.
+     * Determine the order of chips to fetch.
      */
-    orderBy?: Enumerable<usersOrderByWithRelationInput>
+    orderBy?: Enumerable<chipOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for users.
+     * Sets the position for searching for chips.
      */
-    cursor?: usersWhereUniqueInput
+    cursor?: chipWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` users from the position of the cursor.
+     * Take `±n` chips from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` users.
+     * Skip the first `n` chips.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of users.
+     * Filter by unique combinations of chips.
      */
-    distinct?: Enumerable<UsersScalarFieldEnum>
+    distinct?: Enumerable<ChipScalarFieldEnum>
   }
 
   /**
-   * users findFirst
+   * chip findFirst
    */
-  export interface usersFindFirstArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends usersFindFirstArgsBase<ExtArgs> {
+  export interface chipFindFirstArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends chipFindFirstArgsBase<ExtArgs> {
    /**
     * Throw an Error if query returns no results
     * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
@@ -10070,294 +7168,1107 @@ export namespace Prisma {
       
 
   /**
-   * users findFirstOrThrow
+   * chip findFirstOrThrow
    */
-  export type usersFindFirstOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  export type chipFindFirstOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the users
+     * Select specific fields to fetch from the chip
      */
-    select?: usersSelect<ExtArgs> | null
+    select?: chipSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * Filter, which chip to fetch.
      */
-    include?: usersInclude<ExtArgs> | null
-    /**
-     * Filter, which users to fetch.
-     */
-    where?: usersWhereInput
+    where?: chipWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of users to fetch.
+     * Determine the order of chips to fetch.
      */
-    orderBy?: Enumerable<usersOrderByWithRelationInput>
+    orderBy?: Enumerable<chipOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for users.
+     * Sets the position for searching for chips.
      */
-    cursor?: usersWhereUniqueInput
+    cursor?: chipWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` users from the position of the cursor.
+     * Take `±n` chips from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` users.
+     * Skip the first `n` chips.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of users.
+     * Filter by unique combinations of chips.
      */
-    distinct?: Enumerable<UsersScalarFieldEnum>
+    distinct?: Enumerable<ChipScalarFieldEnum>
   }
 
 
   /**
-   * users findMany
+   * chip findMany
    */
-  export type usersFindManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  export type chipFindManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the users
+     * Select specific fields to fetch from the chip
      */
-    select?: usersSelect<ExtArgs> | null
+    select?: chipSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * Filter, which chips to fetch.
      */
-    include?: usersInclude<ExtArgs> | null
-    /**
-     * Filter, which users to fetch.
-     */
-    where?: usersWhereInput
+    where?: chipWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of users to fetch.
+     * Determine the order of chips to fetch.
      */
-    orderBy?: Enumerable<usersOrderByWithRelationInput>
+    orderBy?: Enumerable<chipOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for listing users.
+     * Sets the position for listing chips.
      */
-    cursor?: usersWhereUniqueInput
+    cursor?: chipWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` users from the position of the cursor.
+     * Take `±n` chips from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` users.
+     * Skip the first `n` chips.
      */
     skip?: number
-    distinct?: Enumerable<UsersScalarFieldEnum>
+    distinct?: Enumerable<ChipScalarFieldEnum>
   }
 
 
   /**
-   * users create
+   * chip create
    */
-  export type usersCreateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  export type chipCreateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the users
+     * Select specific fields to fetch from the chip
      */
-    select?: usersSelect<ExtArgs> | null
+    select?: chipSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * The data needed to create a chip.
      */
-    include?: usersInclude<ExtArgs> | null
-    /**
-     * The data needed to create a users.
-     */
-    data: XOR<usersCreateInput, usersUncheckedCreateInput>
+    data: XOR<chipCreateInput, chipUncheckedCreateInput>
   }
 
 
   /**
-   * users createMany
+   * chip createMany
    */
-  export type usersCreateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  export type chipCreateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
-     * The data used to create many users.
+     * The data used to create many chips.
      */
-    data: Enumerable<usersCreateManyInput>
+    data: Enumerable<chipCreateManyInput>
     skipDuplicates?: boolean
   }
 
 
   /**
-   * users update
+   * chip update
    */
-  export type usersUpdateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  export type chipUpdateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the users
+     * Select specific fields to fetch from the chip
      */
-    select?: usersSelect<ExtArgs> | null
+    select?: chipSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * The data needed to update a chip.
      */
-    include?: usersInclude<ExtArgs> | null
+    data: XOR<chipUpdateInput, chipUncheckedUpdateInput>
     /**
-     * The data needed to update a users.
+     * Choose, which chip to update.
      */
-    data: XOR<usersUpdateInput, usersUncheckedUpdateInput>
-    /**
-     * Choose, which users to update.
-     */
-    where: usersWhereUniqueInput
+    where: chipWhereUniqueInput
   }
 
 
   /**
-   * users updateMany
+   * chip updateMany
    */
-  export type usersUpdateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  export type chipUpdateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
-     * The data used to update users.
+     * The data used to update chips.
      */
-    data: XOR<usersUpdateManyMutationInput, usersUncheckedUpdateManyInput>
+    data: XOR<chipUpdateManyMutationInput, chipUncheckedUpdateManyInput>
     /**
-     * Filter which users to update
+     * Filter which chips to update
      */
-    where?: usersWhereInput
+    where?: chipWhereInput
   }
 
 
   /**
-   * users upsert
+   * chip upsert
    */
-  export type usersUpsertArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  export type chipUpsertArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the users
+     * Select specific fields to fetch from the chip
      */
-    select?: usersSelect<ExtArgs> | null
+    select?: chipSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * The filter to search for the chip to update in case it exists.
      */
-    include?: usersInclude<ExtArgs> | null
+    where: chipWhereUniqueInput
     /**
-     * The filter to search for the users to update in case it exists.
+     * In case the chip found by the `where` argument doesn't exist, create a new chip with this data.
      */
-    where: usersWhereUniqueInput
+    create: XOR<chipCreateInput, chipUncheckedCreateInput>
     /**
-     * In case the users found by the `where` argument doesn't exist, create a new users with this data.
+     * In case the chip was found with the provided `where` argument, update it with this data.
      */
-    create: XOR<usersCreateInput, usersUncheckedCreateInput>
-    /**
-     * In case the users was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<usersUpdateInput, usersUncheckedUpdateInput>
+    update: XOR<chipUpdateInput, chipUncheckedUpdateInput>
   }
 
 
   /**
-   * users delete
+   * chip delete
    */
-  export type usersDeleteArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  export type chipDeleteArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the users
+     * Select specific fields to fetch from the chip
      */
-    select?: usersSelect<ExtArgs> | null
+    select?: chipSelect<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well.
+     * Filter which chip to delete.
      */
-    include?: usersInclude<ExtArgs> | null
-    /**
-     * Filter which users to delete.
-     */
-    where: usersWhereUniqueInput
+    where: chipWhereUniqueInput
   }
 
 
   /**
-   * users deleteMany
+   * chip deleteMany
    */
-  export type usersDeleteManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  export type chipDeleteManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
-     * Filter which users to delete
+     * Filter which chips to delete
      */
-    where?: usersWhereInput
+    where?: chipWhereInput
   }
 
 
   /**
-   * users without action
+   * chip without action
    */
-  export type usersArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  export type chipArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the users
+     * Select specific fields to fetch from the chip
      */
-    select?: usersSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well.
-     */
-    include?: usersInclude<ExtArgs> | null
+    select?: chipSelect<ExtArgs> | null
   }
 
 
 
   /**
-   * Model udaps
+   * Model delegation
    */
 
 
-  export type AggregateUdaps = {
-    _count: UdapsCountAggregateOutputType | null
-    _avg: UdapsAvgAggregateOutputType | null
-    _sum: UdapsSumAggregateOutputType | null
-    _min: UdapsMinAggregateOutputType | null
-    _max: UdapsMaxAggregateOutputType | null
+  export type AggregateDelegation = {
+    _count: DelegationCountAggregateOutputType | null
+    _min: DelegationMinAggregateOutputType | null
+    _max: DelegationMaxAggregateOutputType | null
   }
 
-  export type UdapsAvgAggregateOutputType = {
-    zip_code: number | null
+  export type DelegationMinAggregateOutputType = {
+    createdBy: string | null
+    delegatedTo: string | null
   }
 
-  export type UdapsSumAggregateOutputType = {
-    zip_code: number | null
+  export type DelegationMaxAggregateOutputType = {
+    createdBy: string | null
+    delegatedTo: string | null
   }
 
-  export type UdapsMinAggregateOutputType = {
+  export type DelegationCountAggregateOutputType = {
+    createdBy: number
+    delegatedTo: number
+    _all: number
+  }
+
+
+  export type DelegationMinAggregateInputType = {
+    createdBy?: true
+    delegatedTo?: true
+  }
+
+  export type DelegationMaxAggregateInputType = {
+    createdBy?: true
+    delegatedTo?: true
+  }
+
+  export type DelegationCountAggregateInputType = {
+    createdBy?: true
+    delegatedTo?: true
+    _all?: true
+  }
+
+  export type DelegationAggregateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which delegation to aggregate.
+     */
+    where?: delegationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of delegations to fetch.
+     */
+    orderBy?: Enumerable<delegationOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: delegationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` delegations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` delegations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned delegations
+    **/
+    _count?: true | DelegationCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: DelegationMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: DelegationMaxAggregateInputType
+  }
+
+  export type GetDelegationAggregateType<T extends DelegationAggregateArgs> = {
+        [P in keyof T & keyof AggregateDelegation]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateDelegation[P]>
+      : GetScalarType<T[P], AggregateDelegation[P]>
+  }
+
+
+
+
+  export type DelegationGroupByArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    where?: delegationWhereInput
+    orderBy?: Enumerable<delegationOrderByWithAggregationInput>
+    by: DelegationScalarFieldEnum[]
+    having?: delegationScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: DelegationCountAggregateInputType | true
+    _min?: DelegationMinAggregateInputType
+    _max?: DelegationMaxAggregateInputType
+  }
+
+
+  export type DelegationGroupByOutputType = {
+    createdBy: string
+    delegatedTo: string
+    _count: DelegationCountAggregateOutputType | null
+    _min: DelegationMinAggregateOutputType | null
+    _max: DelegationMaxAggregateOutputType | null
+  }
+
+  type GetDelegationGroupByPayload<T extends DelegationGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickArray<DelegationGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof DelegationGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], DelegationGroupByOutputType[P]>
+            : GetScalarType<T[P], DelegationGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type delegationSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    createdBy?: boolean
+    delegatedTo?: boolean
+  }, ExtArgs["result"]["delegation"]>
+
+  export type delegationSelectScalar = {
+    createdBy?: boolean
+    delegatedTo?: boolean
+  }
+
+
+  type delegationGetPayload<S extends boolean | null | undefined | delegationArgs> = $Types.GetResult<delegationPayload, S>
+
+  type delegationCountArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = 
+    Omit<delegationFindManyArgs, 'select' | 'include'> & {
+      select?: DelegationCountAggregateInputType | true
+    }
+
+  export interface delegationDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['delegation'], meta: { name: 'delegation' } }
+    /**
+     * Find zero or one Delegation that matches the filter.
+     * @param {delegationFindUniqueArgs} args - Arguments to find a Delegation
+     * @example
+     * // Get one Delegation
+     * const delegation = await prisma.delegation.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends delegationFindUniqueArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, delegationFindUniqueArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'delegation'> extends True ? Prisma__delegationClient<$Types.GetResult<delegationPayload<ExtArgs>, T, 'findUnique', never>, never, ExtArgs> : Prisma__delegationClient<$Types.GetResult<delegationPayload<ExtArgs>, T, 'findUnique', never> | null, null, ExtArgs>
+
+    /**
+     * Find one Delegation that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {delegationFindUniqueOrThrowArgs} args - Arguments to find a Delegation
+     * @example
+     * // Get one Delegation
+     * const delegation = await prisma.delegation.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends delegationFindUniqueOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, delegationFindUniqueOrThrowArgs<ExtArgs>>
+    ): Prisma__delegationClient<$Types.GetResult<delegationPayload<ExtArgs>, T, 'findUniqueOrThrow', never>, never, ExtArgs>
+
+    /**
+     * Find the first Delegation that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {delegationFindFirstArgs} args - Arguments to find a Delegation
+     * @example
+     * // Get one Delegation
+     * const delegation = await prisma.delegation.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends delegationFindFirstArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, delegationFindFirstArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'delegation'> extends True ? Prisma__delegationClient<$Types.GetResult<delegationPayload<ExtArgs>, T, 'findFirst', never>, never, ExtArgs> : Prisma__delegationClient<$Types.GetResult<delegationPayload<ExtArgs>, T, 'findFirst', never> | null, null, ExtArgs>
+
+    /**
+     * Find the first Delegation that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {delegationFindFirstOrThrowArgs} args - Arguments to find a Delegation
+     * @example
+     * // Get one Delegation
+     * const delegation = await prisma.delegation.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends delegationFindFirstOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, delegationFindFirstOrThrowArgs<ExtArgs>>
+    ): Prisma__delegationClient<$Types.GetResult<delegationPayload<ExtArgs>, T, 'findFirstOrThrow', never>, never, ExtArgs>
+
+    /**
+     * Find zero or more Delegations that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {delegationFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Delegations
+     * const delegations = await prisma.delegation.findMany()
+     * 
+     * // Get first 10 Delegations
+     * const delegations = await prisma.delegation.findMany({ take: 10 })
+     * 
+     * // Only select the `createdBy`
+     * const delegationWithCreatedByOnly = await prisma.delegation.findMany({ select: { createdBy: true } })
+     * 
+    **/
+    findMany<T extends delegationFindManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, delegationFindManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Types.GetResult<delegationPayload<ExtArgs>, T, 'findMany', never>>
+
+    /**
+     * Create a Delegation.
+     * @param {delegationCreateArgs} args - Arguments to create a Delegation.
+     * @example
+     * // Create one Delegation
+     * const Delegation = await prisma.delegation.create({
+     *   data: {
+     *     // ... data to create a Delegation
+     *   }
+     * })
+     * 
+    **/
+    create<T extends delegationCreateArgs<ExtArgs>>(
+      args: SelectSubset<T, delegationCreateArgs<ExtArgs>>
+    ): Prisma__delegationClient<$Types.GetResult<delegationPayload<ExtArgs>, T, 'create', never>, never, ExtArgs>
+
+    /**
+     * Create many Delegations.
+     *     @param {delegationCreateManyArgs} args - Arguments to create many Delegations.
+     *     @example
+     *     // Create many Delegations
+     *     const delegation = await prisma.delegation.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
+     *     
+    **/
+    createMany<T extends delegationCreateManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, delegationCreateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Delegation.
+     * @param {delegationDeleteArgs} args - Arguments to delete one Delegation.
+     * @example
+     * // Delete one Delegation
+     * const Delegation = await prisma.delegation.delete({
+     *   where: {
+     *     // ... filter to delete one Delegation
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends delegationDeleteArgs<ExtArgs>>(
+      args: SelectSubset<T, delegationDeleteArgs<ExtArgs>>
+    ): Prisma__delegationClient<$Types.GetResult<delegationPayload<ExtArgs>, T, 'delete', never>, never, ExtArgs>
+
+    /**
+     * Update one Delegation.
+     * @param {delegationUpdateArgs} args - Arguments to update one Delegation.
+     * @example
+     * // Update one Delegation
+     * const delegation = await prisma.delegation.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends delegationUpdateArgs<ExtArgs>>(
+      args: SelectSubset<T, delegationUpdateArgs<ExtArgs>>
+    ): Prisma__delegationClient<$Types.GetResult<delegationPayload<ExtArgs>, T, 'update', never>, never, ExtArgs>
+
+    /**
+     * Delete zero or more Delegations.
+     * @param {delegationDeleteManyArgs} args - Arguments to filter Delegations to delete.
+     * @example
+     * // Delete a few Delegations
+     * const { count } = await prisma.delegation.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends delegationDeleteManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, delegationDeleteManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Delegations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {delegationUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Delegations
+     * const delegation = await prisma.delegation.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends delegationUpdateManyArgs<ExtArgs>>(
+      args: SelectSubset<T, delegationUpdateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Delegation.
+     * @param {delegationUpsertArgs} args - Arguments to update or create a Delegation.
+     * @example
+     * // Update or create a Delegation
+     * const delegation = await prisma.delegation.upsert({
+     *   create: {
+     *     // ... data to create a Delegation
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Delegation we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends delegationUpsertArgs<ExtArgs>>(
+      args: SelectSubset<T, delegationUpsertArgs<ExtArgs>>
+    ): Prisma__delegationClient<$Types.GetResult<delegationPayload<ExtArgs>, T, 'upsert', never>, never, ExtArgs>
+
+    /**
+     * Count the number of Delegations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {delegationCountArgs} args - Arguments to filter Delegations to count.
+     * @example
+     * // Count the number of Delegations
+     * const count = await prisma.delegation.count({
+     *   where: {
+     *     // ... the filter for the Delegations we want to count
+     *   }
+     * })
+    **/
+    count<T extends delegationCountArgs>(
+      args?: Subset<T, delegationCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], DelegationCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Delegation.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DelegationAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends DelegationAggregateArgs>(args: Subset<T, DelegationAggregateArgs>): Prisma.PrismaPromise<GetDelegationAggregateType<T>>
+
+    /**
+     * Group by Delegation.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DelegationGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends DelegationGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: DelegationGroupByArgs['orderBy'] }
+        : { orderBy?: DelegationGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends TupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, DelegationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDelegationGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for delegation.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export class Prisma__delegationClient<T, Null = never, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> implements Prisma.PrismaPromise<T> {
+    private readonly _dmmf;
+    private readonly _queryType;
+    private readonly _rootField;
+    private readonly _clientMethod;
+    private readonly _args;
+    private readonly _dataPath;
+    private readonly _errorFormat;
+    private readonly _measurePerformance?;
+    private _isList;
+    private _callsite;
+    private _requestPromise?;
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+    constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
+
+
+    private get _document();
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): Promise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): Promise<T>;
+  }
+
+
+
+  // Custom InputTypes
+
+  /**
+   * delegation base type for findUnique actions
+   */
+  export type delegationFindUniqueArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the delegation
+     */
+    select?: delegationSelect<ExtArgs> | null
+    /**
+     * Filter, which delegation to fetch.
+     */
+    where: delegationWhereUniqueInput
+  }
+
+  /**
+   * delegation findUnique
+   */
+  export interface delegationFindUniqueArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends delegationFindUniqueArgsBase<ExtArgs> {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * delegation findUniqueOrThrow
+   */
+  export type delegationFindUniqueOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the delegation
+     */
+    select?: delegationSelect<ExtArgs> | null
+    /**
+     * Filter, which delegation to fetch.
+     */
+    where: delegationWhereUniqueInput
+  }
+
+
+  /**
+   * delegation base type for findFirst actions
+   */
+  export type delegationFindFirstArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the delegation
+     */
+    select?: delegationSelect<ExtArgs> | null
+    /**
+     * Filter, which delegation to fetch.
+     */
+    where?: delegationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of delegations to fetch.
+     */
+    orderBy?: Enumerable<delegationOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for delegations.
+     */
+    cursor?: delegationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` delegations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` delegations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of delegations.
+     */
+    distinct?: Enumerable<DelegationScalarFieldEnum>
+  }
+
+  /**
+   * delegation findFirst
+   */
+  export interface delegationFindFirstArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends delegationFindFirstArgsBase<ExtArgs> {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * delegation findFirstOrThrow
+   */
+  export type delegationFindFirstOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the delegation
+     */
+    select?: delegationSelect<ExtArgs> | null
+    /**
+     * Filter, which delegation to fetch.
+     */
+    where?: delegationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of delegations to fetch.
+     */
+    orderBy?: Enumerable<delegationOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for delegations.
+     */
+    cursor?: delegationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` delegations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` delegations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of delegations.
+     */
+    distinct?: Enumerable<DelegationScalarFieldEnum>
+  }
+
+
+  /**
+   * delegation findMany
+   */
+  export type delegationFindManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the delegation
+     */
+    select?: delegationSelect<ExtArgs> | null
+    /**
+     * Filter, which delegations to fetch.
+     */
+    where?: delegationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of delegations to fetch.
+     */
+    orderBy?: Enumerable<delegationOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing delegations.
+     */
+    cursor?: delegationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` delegations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` delegations.
+     */
+    skip?: number
+    distinct?: Enumerable<DelegationScalarFieldEnum>
+  }
+
+
+  /**
+   * delegation create
+   */
+  export type delegationCreateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the delegation
+     */
+    select?: delegationSelect<ExtArgs> | null
+    /**
+     * The data needed to create a delegation.
+     */
+    data: XOR<delegationCreateInput, delegationUncheckedCreateInput>
+  }
+
+
+  /**
+   * delegation createMany
+   */
+  export type delegationCreateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many delegations.
+     */
+    data: Enumerable<delegationCreateManyInput>
+    skipDuplicates?: boolean
+  }
+
+
+  /**
+   * delegation update
+   */
+  export type delegationUpdateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the delegation
+     */
+    select?: delegationSelect<ExtArgs> | null
+    /**
+     * The data needed to update a delegation.
+     */
+    data: XOR<delegationUpdateInput, delegationUncheckedUpdateInput>
+    /**
+     * Choose, which delegation to update.
+     */
+    where: delegationWhereUniqueInput
+  }
+
+
+  /**
+   * delegation updateMany
+   */
+  export type delegationUpdateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update delegations.
+     */
+    data: XOR<delegationUpdateManyMutationInput, delegationUncheckedUpdateManyInput>
+    /**
+     * Filter which delegations to update
+     */
+    where?: delegationWhereInput
+  }
+
+
+  /**
+   * delegation upsert
+   */
+  export type delegationUpsertArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the delegation
+     */
+    select?: delegationSelect<ExtArgs> | null
+    /**
+     * The filter to search for the delegation to update in case it exists.
+     */
+    where: delegationWhereUniqueInput
+    /**
+     * In case the delegation found by the `where` argument doesn't exist, create a new delegation with this data.
+     */
+    create: XOR<delegationCreateInput, delegationUncheckedCreateInput>
+    /**
+     * In case the delegation was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<delegationUpdateInput, delegationUncheckedUpdateInput>
+  }
+
+
+  /**
+   * delegation delete
+   */
+  export type delegationDeleteArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the delegation
+     */
+    select?: delegationSelect<ExtArgs> | null
+    /**
+     * Filter which delegation to delete.
+     */
+    where: delegationWhereUniqueInput
+  }
+
+
+  /**
+   * delegation deleteMany
+   */
+  export type delegationDeleteManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which delegations to delete
+     */
+    where?: delegationWhereInput
+  }
+
+
+  /**
+   * delegation without action
+   */
+  export type delegationArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the delegation
+     */
+    select?: delegationSelect<ExtArgs> | null
+  }
+
+
+
+  /**
+   * Model udap
+   */
+
+
+  export type AggregateUdap = {
+    _count: UdapCountAggregateOutputType | null
+    _min: UdapMinAggregateOutputType | null
+    _max: UdapMaxAggregateOutputType | null
+  }
+
+  export type UdapMinAggregateOutputType = {
     id: string | null
     department: string | null
     complete_coords: string | null
-    address: string | null
     visible: boolean | null
     name: string | null
-    zip_code: number | null
+    address: string | null
+    zip_code: string | null
     city: string | null
     phone: string | null
     email: string | null
   }
 
-  export type UdapsMaxAggregateOutputType = {
+  export type UdapMaxAggregateOutputType = {
     id: string | null
     department: string | null
     complete_coords: string | null
-    address: string | null
     visible: boolean | null
     name: string | null
-    zip_code: number | null
+    address: string | null
+    zip_code: string | null
     city: string | null
     phone: string | null
     email: string | null
   }
 
-  export type UdapsCountAggregateOutputType = {
+  export type UdapCountAggregateOutputType = {
     id: number
     department: number
     complete_coords: number
-    address: number
     visible: number
     name: number
+    address: number
     zip_code: number
     city: number
     phone: number
@@ -10366,47 +8277,39 @@ export namespace Prisma {
   }
 
 
-  export type UdapsAvgAggregateInputType = {
-    zip_code?: true
-  }
-
-  export type UdapsSumAggregateInputType = {
-    zip_code?: true
-  }
-
-  export type UdapsMinAggregateInputType = {
+  export type UdapMinAggregateInputType = {
     id?: true
     department?: true
     complete_coords?: true
-    address?: true
     visible?: true
     name?: true
+    address?: true
     zip_code?: true
     city?: true
     phone?: true
     email?: true
   }
 
-  export type UdapsMaxAggregateInputType = {
+  export type UdapMaxAggregateInputType = {
     id?: true
     department?: true
     complete_coords?: true
-    address?: true
     visible?: true
     name?: true
+    address?: true
     zip_code?: true
     city?: true
     phone?: true
     email?: true
   }
 
-  export type UdapsCountAggregateInputType = {
+  export type UdapCountAggregateInputType = {
     id?: true
     department?: true
     complete_coords?: true
-    address?: true
     visible?: true
     name?: true
+    address?: true
     zip_code?: true
     city?: true
     phone?: true
@@ -10414,23 +8317,23 @@ export namespace Prisma {
     _all?: true
   }
 
-  export type UdapsAggregateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  export type UdapAggregateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
-     * Filter which udaps to aggregate.
+     * Filter which udap to aggregate.
      */
-    where?: udapsWhereInput
+    where?: udapWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
      * Determine the order of udaps to fetch.
      */
-    orderBy?: Enumerable<udapsOrderByWithRelationInput>
+    orderBy?: Enumerable<udapOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the start position
      */
-    cursor?: udapsWhereUniqueInput
+    cursor?: udapWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
@@ -10448,274 +8351,258 @@ export namespace Prisma {
      * 
      * Count returned udaps
     **/
-    _count?: true | UdapsCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: UdapsAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: UdapsSumAggregateInputType
+    _count?: true | UdapCountAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the minimum value
     **/
-    _min?: UdapsMinAggregateInputType
+    _min?: UdapMinAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the maximum value
     **/
-    _max?: UdapsMaxAggregateInputType
+    _max?: UdapMaxAggregateInputType
   }
 
-  export type GetUdapsAggregateType<T extends UdapsAggregateArgs> = {
-        [P in keyof T & keyof AggregateUdaps]: P extends '_count' | 'count'
+  export type GetUdapAggregateType<T extends UdapAggregateArgs> = {
+        [P in keyof T & keyof AggregateUdap]: P extends '_count' | 'count'
       ? T[P] extends true
         ? number
-        : GetScalarType<T[P], AggregateUdaps[P]>
-      : GetScalarType<T[P], AggregateUdaps[P]>
+        : GetScalarType<T[P], AggregateUdap[P]>
+      : GetScalarType<T[P], AggregateUdap[P]>
   }
 
 
 
 
-  export type UdapsGroupByArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    where?: udapsWhereInput
-    orderBy?: Enumerable<udapsOrderByWithAggregationInput>
-    by: UdapsScalarFieldEnum[]
-    having?: udapsScalarWhereWithAggregatesInput
+  export type UdapGroupByArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    where?: udapWhereInput
+    orderBy?: Enumerable<udapOrderByWithAggregationInput>
+    by: UdapScalarFieldEnum[]
+    having?: udapScalarWhereWithAggregatesInput
     take?: number
     skip?: number
-    _count?: UdapsCountAggregateInputType | true
-    _avg?: UdapsAvgAggregateInputType
-    _sum?: UdapsSumAggregateInputType
-    _min?: UdapsMinAggregateInputType
-    _max?: UdapsMaxAggregateInputType
+    _count?: UdapCountAggregateInputType | true
+    _min?: UdapMinAggregateInputType
+    _max?: UdapMaxAggregateInputType
   }
 
 
-  export type UdapsGroupByOutputType = {
+  export type UdapGroupByOutputType = {
     id: string
     department: string
     complete_coords: string | null
-    address: string | null
     visible: boolean | null
     name: string | null
-    zip_code: number | null
+    address: string | null
+    zip_code: string | null
     city: string | null
     phone: string | null
     email: string | null
-    _count: UdapsCountAggregateOutputType | null
-    _avg: UdapsAvgAggregateOutputType | null
-    _sum: UdapsSumAggregateOutputType | null
-    _min: UdapsMinAggregateOutputType | null
-    _max: UdapsMaxAggregateOutputType | null
+    _count: UdapCountAggregateOutputType | null
+    _min: UdapMinAggregateOutputType | null
+    _max: UdapMaxAggregateOutputType | null
   }
 
-  type GetUdapsGroupByPayload<T extends UdapsGroupByArgs> = Prisma.PrismaPromise<
+  type GetUdapGroupByPayload<T extends UdapGroupByArgs> = Prisma.PrismaPromise<
     Array<
-      PickArray<UdapsGroupByOutputType, T['by']> &
+      PickArray<UdapGroupByOutputType, T['by']> &
         {
-          [P in ((keyof T) & (keyof UdapsGroupByOutputType))]: P extends '_count'
+          [P in ((keyof T) & (keyof UdapGroupByOutputType))]: P extends '_count'
             ? T[P] extends boolean
               ? number
-              : GetScalarType<T[P], UdapsGroupByOutputType[P]>
-            : GetScalarType<T[P], UdapsGroupByOutputType[P]>
+              : GetScalarType<T[P], UdapGroupByOutputType[P]>
+            : GetScalarType<T[P], UdapGroupByOutputType[P]>
         }
       >
     >
 
 
-  export type udapsSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type udapSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     department?: boolean
     complete_coords?: boolean
-    address?: boolean
     visible?: boolean
     name?: boolean
+    address?: boolean
     zip_code?: boolean
     city?: boolean
     phone?: boolean
     email?: boolean
-    users?: boolean | udaps$usersArgs<ExtArgs>
-    _count?: boolean | UdapsCountOutputTypeArgs<ExtArgs>
-  }, ExtArgs["result"]["udaps"]>
+    user?: boolean | udap$userArgs<ExtArgs>
+    _count?: boolean | UdapCountOutputTypeArgs<ExtArgs>
+  }, ExtArgs["result"]["udap"]>
 
-  export type udapsSelectScalar = {
+  export type udapSelectScalar = {
     id?: boolean
     department?: boolean
     complete_coords?: boolean
-    address?: boolean
     visible?: boolean
     name?: boolean
+    address?: boolean
     zip_code?: boolean
     city?: boolean
     phone?: boolean
     email?: boolean
   }
 
-  export type udapsInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    users?: boolean | udaps$usersArgs<ExtArgs>
-    _count?: boolean | UdapsCountOutputTypeArgs<ExtArgs>
+  export type udapInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    user?: boolean | udap$userArgs<ExtArgs>
+    _count?: boolean | UdapCountOutputTypeArgs<ExtArgs>
   }
 
 
-  type udapsGetPayload<S extends boolean | null | undefined | udapsArgs> = $Types.GetResult<udapsPayload, S>
+  type udapGetPayload<S extends boolean | null | undefined | udapArgs> = $Types.GetResult<udapPayload, S>
 
-  type udapsCountArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = 
-    Omit<udapsFindManyArgs, 'select' | 'include'> & {
-      select?: UdapsCountAggregateInputType | true
+  type udapCountArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = 
+    Omit<udapFindManyArgs, 'select' | 'include'> & {
+      select?: UdapCountAggregateInputType | true
     }
 
-  export interface udapsDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['udaps'], meta: { name: 'udaps' } }
+  export interface udapDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['udap'], meta: { name: 'udap' } }
     /**
-     * Find zero or one Udaps that matches the filter.
-     * @param {udapsFindUniqueArgs} args - Arguments to find a Udaps
+     * Find zero or one Udap that matches the filter.
+     * @param {udapFindUniqueArgs} args - Arguments to find a Udap
      * @example
-     * // Get one Udaps
-     * const udaps = await prisma.udaps.findUnique({
+     * // Get one Udap
+     * const udap = await prisma.udap.findUnique({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
     **/
-    findUnique<T extends udapsFindUniqueArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
-      args: SelectSubset<T, udapsFindUniqueArgs<ExtArgs>>
-    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'udaps'> extends True ? Prisma__udapsClient<$Types.GetResult<udapsPayload<ExtArgs>, T, 'findUnique', never>, never, ExtArgs> : Prisma__udapsClient<$Types.GetResult<udapsPayload<ExtArgs>, T, 'findUnique', never> | null, null, ExtArgs>
+    findUnique<T extends udapFindUniqueArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, udapFindUniqueArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'udap'> extends True ? Prisma__udapClient<$Types.GetResult<udapPayload<ExtArgs>, T, 'findUnique', never>, never, ExtArgs> : Prisma__udapClient<$Types.GetResult<udapPayload<ExtArgs>, T, 'findUnique', never> | null, null, ExtArgs>
 
     /**
-     * Find one Udaps that matches the filter or throw an error  with `error.code='P2025'` 
+     * Find one Udap that matches the filter or throw an error  with `error.code='P2025'` 
      *     if no matches were found.
-     * @param {udapsFindUniqueOrThrowArgs} args - Arguments to find a Udaps
+     * @param {udapFindUniqueOrThrowArgs} args - Arguments to find a Udap
      * @example
-     * // Get one Udaps
-     * const udaps = await prisma.udaps.findUniqueOrThrow({
+     * // Get one Udap
+     * const udap = await prisma.udap.findUniqueOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
     **/
-    findUniqueOrThrow<T extends udapsFindUniqueOrThrowArgs<ExtArgs>>(
-      args?: SelectSubset<T, udapsFindUniqueOrThrowArgs<ExtArgs>>
-    ): Prisma__udapsClient<$Types.GetResult<udapsPayload<ExtArgs>, T, 'findUniqueOrThrow', never>, never, ExtArgs>
+    findUniqueOrThrow<T extends udapFindUniqueOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, udapFindUniqueOrThrowArgs<ExtArgs>>
+    ): Prisma__udapClient<$Types.GetResult<udapPayload<ExtArgs>, T, 'findUniqueOrThrow', never>, never, ExtArgs>
 
     /**
-     * Find the first Udaps that matches the filter.
+     * Find the first Udap that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {udapsFindFirstArgs} args - Arguments to find a Udaps
+     * @param {udapFindFirstArgs} args - Arguments to find a Udap
      * @example
-     * // Get one Udaps
-     * const udaps = await prisma.udaps.findFirst({
+     * // Get one Udap
+     * const udap = await prisma.udap.findFirst({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
     **/
-    findFirst<T extends udapsFindFirstArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
-      args?: SelectSubset<T, udapsFindFirstArgs<ExtArgs>>
-    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'udaps'> extends True ? Prisma__udapsClient<$Types.GetResult<udapsPayload<ExtArgs>, T, 'findFirst', never>, never, ExtArgs> : Prisma__udapsClient<$Types.GetResult<udapsPayload<ExtArgs>, T, 'findFirst', never> | null, null, ExtArgs>
+    findFirst<T extends udapFindFirstArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, udapFindFirstArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'udap'> extends True ? Prisma__udapClient<$Types.GetResult<udapPayload<ExtArgs>, T, 'findFirst', never>, never, ExtArgs> : Prisma__udapClient<$Types.GetResult<udapPayload<ExtArgs>, T, 'findFirst', never> | null, null, ExtArgs>
 
     /**
-     * Find the first Udaps that matches the filter or
+     * Find the first Udap that matches the filter or
      * throw `NotFoundError` if no matches were found.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {udapsFindFirstOrThrowArgs} args - Arguments to find a Udaps
+     * @param {udapFindFirstOrThrowArgs} args - Arguments to find a Udap
      * @example
-     * // Get one Udaps
-     * const udaps = await prisma.udaps.findFirstOrThrow({
+     * // Get one Udap
+     * const udap = await prisma.udap.findFirstOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
     **/
-    findFirstOrThrow<T extends udapsFindFirstOrThrowArgs<ExtArgs>>(
-      args?: SelectSubset<T, udapsFindFirstOrThrowArgs<ExtArgs>>
-    ): Prisma__udapsClient<$Types.GetResult<udapsPayload<ExtArgs>, T, 'findFirstOrThrow', never>, never, ExtArgs>
+    findFirstOrThrow<T extends udapFindFirstOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, udapFindFirstOrThrowArgs<ExtArgs>>
+    ): Prisma__udapClient<$Types.GetResult<udapPayload<ExtArgs>, T, 'findFirstOrThrow', never>, never, ExtArgs>
 
     /**
      * Find zero or more Udaps that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {udapsFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @param {udapFindManyArgs=} args - Arguments to filter and select certain fields only.
      * @example
      * // Get all Udaps
-     * const udaps = await prisma.udaps.findMany()
+     * const udaps = await prisma.udap.findMany()
      * 
      * // Get first 10 Udaps
-     * const udaps = await prisma.udaps.findMany({ take: 10 })
+     * const udaps = await prisma.udap.findMany({ take: 10 })
      * 
      * // Only select the `id`
-     * const udapsWithIdOnly = await prisma.udaps.findMany({ select: { id: true } })
+     * const udapWithIdOnly = await prisma.udap.findMany({ select: { id: true } })
      * 
     **/
-    findMany<T extends udapsFindManyArgs<ExtArgs>>(
-      args?: SelectSubset<T, udapsFindManyArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<$Types.GetResult<udapsPayload<ExtArgs>, T, 'findMany', never>>
+    findMany<T extends udapFindManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, udapFindManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Types.GetResult<udapPayload<ExtArgs>, T, 'findMany', never>>
 
     /**
-     * Create a Udaps.
-     * @param {udapsCreateArgs} args - Arguments to create a Udaps.
+     * Create a Udap.
+     * @param {udapCreateArgs} args - Arguments to create a Udap.
      * @example
-     * // Create one Udaps
-     * const Udaps = await prisma.udaps.create({
+     * // Create one Udap
+     * const Udap = await prisma.udap.create({
      *   data: {
-     *     // ... data to create a Udaps
+     *     // ... data to create a Udap
      *   }
      * })
      * 
     **/
-    create<T extends udapsCreateArgs<ExtArgs>>(
-      args: SelectSubset<T, udapsCreateArgs<ExtArgs>>
-    ): Prisma__udapsClient<$Types.GetResult<udapsPayload<ExtArgs>, T, 'create', never>, never, ExtArgs>
+    create<T extends udapCreateArgs<ExtArgs>>(
+      args: SelectSubset<T, udapCreateArgs<ExtArgs>>
+    ): Prisma__udapClient<$Types.GetResult<udapPayload<ExtArgs>, T, 'create', never>, never, ExtArgs>
 
     /**
      * Create many Udaps.
-     *     @param {udapsCreateManyArgs} args - Arguments to create many Udaps.
+     *     @param {udapCreateManyArgs} args - Arguments to create many Udaps.
      *     @example
      *     // Create many Udaps
-     *     const udaps = await prisma.udaps.createMany({
+     *     const udap = await prisma.udap.createMany({
      *       data: {
      *         // ... provide data here
      *       }
      *     })
      *     
     **/
-    createMany<T extends udapsCreateManyArgs<ExtArgs>>(
-      args?: SelectSubset<T, udapsCreateManyArgs<ExtArgs>>
+    createMany<T extends udapCreateManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, udapCreateManyArgs<ExtArgs>>
     ): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Delete a Udaps.
-     * @param {udapsDeleteArgs} args - Arguments to delete one Udaps.
+     * Delete a Udap.
+     * @param {udapDeleteArgs} args - Arguments to delete one Udap.
      * @example
-     * // Delete one Udaps
-     * const Udaps = await prisma.udaps.delete({
+     * // Delete one Udap
+     * const Udap = await prisma.udap.delete({
      *   where: {
-     *     // ... filter to delete one Udaps
+     *     // ... filter to delete one Udap
      *   }
      * })
      * 
     **/
-    delete<T extends udapsDeleteArgs<ExtArgs>>(
-      args: SelectSubset<T, udapsDeleteArgs<ExtArgs>>
-    ): Prisma__udapsClient<$Types.GetResult<udapsPayload<ExtArgs>, T, 'delete', never>, never, ExtArgs>
+    delete<T extends udapDeleteArgs<ExtArgs>>(
+      args: SelectSubset<T, udapDeleteArgs<ExtArgs>>
+    ): Prisma__udapClient<$Types.GetResult<udapPayload<ExtArgs>, T, 'delete', never>, never, ExtArgs>
 
     /**
-     * Update one Udaps.
-     * @param {udapsUpdateArgs} args - Arguments to update one Udaps.
+     * Update one Udap.
+     * @param {udapUpdateArgs} args - Arguments to update one Udap.
      * @example
-     * // Update one Udaps
-     * const udaps = await prisma.udaps.update({
+     * // Update one Udap
+     * const udap = await prisma.udap.update({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -10725,34 +8612,34 @@ export namespace Prisma {
      * })
      * 
     **/
-    update<T extends udapsUpdateArgs<ExtArgs>>(
-      args: SelectSubset<T, udapsUpdateArgs<ExtArgs>>
-    ): Prisma__udapsClient<$Types.GetResult<udapsPayload<ExtArgs>, T, 'update', never>, never, ExtArgs>
+    update<T extends udapUpdateArgs<ExtArgs>>(
+      args: SelectSubset<T, udapUpdateArgs<ExtArgs>>
+    ): Prisma__udapClient<$Types.GetResult<udapPayload<ExtArgs>, T, 'update', never>, never, ExtArgs>
 
     /**
      * Delete zero or more Udaps.
-     * @param {udapsDeleteManyArgs} args - Arguments to filter Udaps to delete.
+     * @param {udapDeleteManyArgs} args - Arguments to filter Udaps to delete.
      * @example
      * // Delete a few Udaps
-     * const { count } = await prisma.udaps.deleteMany({
+     * const { count } = await prisma.udap.deleteMany({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      * 
     **/
-    deleteMany<T extends udapsDeleteManyArgs<ExtArgs>>(
-      args?: SelectSubset<T, udapsDeleteManyArgs<ExtArgs>>
+    deleteMany<T extends udapDeleteManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, udapDeleteManyArgs<ExtArgs>>
     ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Update zero or more Udaps.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {udapsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @param {udapUpdateManyArgs} args - Arguments to update one or more rows.
      * @example
      * // Update many Udaps
-     * const udaps = await prisma.udaps.updateMany({
+     * const udap = await prisma.udap.updateMany({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -10762,59 +8649,59 @@ export namespace Prisma {
      * })
      * 
     **/
-    updateMany<T extends udapsUpdateManyArgs<ExtArgs>>(
-      args: SelectSubset<T, udapsUpdateManyArgs<ExtArgs>>
+    updateMany<T extends udapUpdateManyArgs<ExtArgs>>(
+      args: SelectSubset<T, udapUpdateManyArgs<ExtArgs>>
     ): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Create or update one Udaps.
-     * @param {udapsUpsertArgs} args - Arguments to update or create a Udaps.
+     * Create or update one Udap.
+     * @param {udapUpsertArgs} args - Arguments to update or create a Udap.
      * @example
-     * // Update or create a Udaps
-     * const udaps = await prisma.udaps.upsert({
+     * // Update or create a Udap
+     * const udap = await prisma.udap.upsert({
      *   create: {
-     *     // ... data to create a Udaps
+     *     // ... data to create a Udap
      *   },
      *   update: {
      *     // ... in case it already exists, update
      *   },
      *   where: {
-     *     // ... the filter for the Udaps we want to update
+     *     // ... the filter for the Udap we want to update
      *   }
      * })
     **/
-    upsert<T extends udapsUpsertArgs<ExtArgs>>(
-      args: SelectSubset<T, udapsUpsertArgs<ExtArgs>>
-    ): Prisma__udapsClient<$Types.GetResult<udapsPayload<ExtArgs>, T, 'upsert', never>, never, ExtArgs>
+    upsert<T extends udapUpsertArgs<ExtArgs>>(
+      args: SelectSubset<T, udapUpsertArgs<ExtArgs>>
+    ): Prisma__udapClient<$Types.GetResult<udapPayload<ExtArgs>, T, 'upsert', never>, never, ExtArgs>
 
     /**
      * Count the number of Udaps.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {udapsCountArgs} args - Arguments to filter Udaps to count.
+     * @param {udapCountArgs} args - Arguments to filter Udaps to count.
      * @example
      * // Count the number of Udaps
-     * const count = await prisma.udaps.count({
+     * const count = await prisma.udap.count({
      *   where: {
      *     // ... the filter for the Udaps we want to count
      *   }
      * })
     **/
-    count<T extends udapsCountArgs>(
-      args?: Subset<T, udapsCountArgs>,
+    count<T extends udapCountArgs>(
+      args?: Subset<T, udapCountArgs>,
     ): Prisma.PrismaPromise<
       T extends $Utils.Record<'select', any>
         ? T['select'] extends true
           ? number
-          : GetScalarType<T['select'], UdapsCountAggregateOutputType>
+          : GetScalarType<T['select'], UdapCountAggregateOutputType>
         : number
     >
 
     /**
-     * Allows you to perform aggregations operations on a Udaps.
+     * Allows you to perform aggregations operations on a Udap.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {UdapsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @param {UdapAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
      * @example
      * // Ordered by age ascending
      * // Where email contains prisma.io
@@ -10834,13 +8721,13 @@ export namespace Prisma {
      *   take: 10,
      * })
     **/
-    aggregate<T extends UdapsAggregateArgs>(args: Subset<T, UdapsAggregateArgs>): Prisma.PrismaPromise<GetUdapsAggregateType<T>>
+    aggregate<T extends UdapAggregateArgs>(args: Subset<T, UdapAggregateArgs>): Prisma.PrismaPromise<GetUdapAggregateType<T>>
 
     /**
-     * Group by Udaps.
+     * Group by Udap.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {UdapsGroupByArgs} args - Group by arguments.
+     * @param {UdapGroupByArgs} args - Group by arguments.
      * @example
      * // Group by city, order by createdAt, get count
      * const result = await prisma.user.groupBy({
@@ -10855,14 +8742,14 @@ export namespace Prisma {
      * 
     **/
     groupBy<
-      T extends UdapsGroupByArgs,
+      T extends UdapGroupByArgs,
       HasSelectOrTake extends Or<
         Extends<'skip', Keys<T>>,
         Extends<'take', Keys<T>>
       >,
       OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: UdapsGroupByArgs['orderBy'] }
-        : { orderBy?: UdapsGroupByArgs['orderBy'] },
+        ? { orderBy: UdapGroupByArgs['orderBy'] }
+        : { orderBy?: UdapGroupByArgs['orderBy'] },
       OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
       ByFields extends TupleToUnion<T['by']>,
       ByValid extends Has<ByFields, OrderFields>,
@@ -10911,17 +8798,17 @@ export namespace Prisma {
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-    >(args: SubsetIntersection<T, UdapsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUdapsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+    >(args: SubsetIntersection<T, UdapGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUdapGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
 
   }
 
   /**
-   * The delegate class that acts as a "Promise-like" for udaps.
+   * The delegate class that acts as a "Promise-like" for udap.
    * Why is this prefixed with `Prisma__`?
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export class Prisma__udapsClient<T, Null = never, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> implements Prisma.PrismaPromise<T> {
+  export class Prisma__udapClient<T, Null = never, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> implements Prisma.PrismaPromise<T> {
     private readonly _dmmf;
     private readonly _queryType;
     private readonly _rootField;
@@ -10936,7 +8823,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: 'PrismaPromise';
     constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
 
-    users<T extends udaps$usersArgs<ExtArgs> = {}>(args?: Subset<T, udaps$usersArgs<ExtArgs>>): Prisma.PrismaPromise<$Types.GetResult<usersPayload<ExtArgs>, T, 'findMany', never>| Null>;
+    user<T extends udap$userArgs<ExtArgs> = {}>(args?: Subset<T, udap$userArgs<ExtArgs>>): Prisma.PrismaPromise<$Types.GetResult<userPayload<ExtArgs>, T, 'findMany', never>| Null>;
 
     private get _document();
     /**
@@ -10966,27 +8853,27 @@ export namespace Prisma {
   // Custom InputTypes
 
   /**
-   * udaps base type for findUnique actions
+   * udap base type for findUnique actions
    */
-  export type udapsFindUniqueArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  export type udapFindUniqueArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the udaps
+     * Select specific fields to fetch from the udap
      */
-    select?: udapsSelect<ExtArgs> | null
+    select?: udapSelect<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well.
      */
-    include?: udapsInclude<ExtArgs> | null
+    include?: udapInclude<ExtArgs> | null
     /**
-     * Filter, which udaps to fetch.
+     * Filter, which udap to fetch.
      */
-    where: udapsWhereUniqueInput
+    where: udapWhereUniqueInput
   }
 
   /**
-   * udaps findUnique
+   * udap findUnique
    */
-  export interface udapsFindUniqueArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends udapsFindUniqueArgsBase<ExtArgs> {
+  export interface udapFindUniqueArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends udapFindUniqueArgsBase<ExtArgs> {
    /**
     * Throw an Error if query returns no results
     * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
@@ -10996,52 +8883,52 @@ export namespace Prisma {
       
 
   /**
-   * udaps findUniqueOrThrow
+   * udap findUniqueOrThrow
    */
-  export type udapsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  export type udapFindUniqueOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the udaps
+     * Select specific fields to fetch from the udap
      */
-    select?: udapsSelect<ExtArgs> | null
+    select?: udapSelect<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well.
      */
-    include?: udapsInclude<ExtArgs> | null
+    include?: udapInclude<ExtArgs> | null
     /**
-     * Filter, which udaps to fetch.
+     * Filter, which udap to fetch.
      */
-    where: udapsWhereUniqueInput
+    where: udapWhereUniqueInput
   }
 
 
   /**
-   * udaps base type for findFirst actions
+   * udap base type for findFirst actions
    */
-  export type udapsFindFirstArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  export type udapFindFirstArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the udaps
+     * Select specific fields to fetch from the udap
      */
-    select?: udapsSelect<ExtArgs> | null
+    select?: udapSelect<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well.
      */
-    include?: udapsInclude<ExtArgs> | null
+    include?: udapInclude<ExtArgs> | null
     /**
-     * Filter, which udaps to fetch.
+     * Filter, which udap to fetch.
      */
-    where?: udapsWhereInput
+    where?: udapWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
      * Determine the order of udaps to fetch.
      */
-    orderBy?: Enumerable<udapsOrderByWithRelationInput>
+    orderBy?: Enumerable<udapOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the position for searching for udaps.
      */
-    cursor?: udapsWhereUniqueInput
+    cursor?: udapWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
@@ -11059,13 +8946,13 @@ export namespace Prisma {
      * 
      * Filter by unique combinations of udaps.
      */
-    distinct?: Enumerable<UdapsScalarFieldEnum>
+    distinct?: Enumerable<UdapScalarFieldEnum>
   }
 
   /**
-   * udaps findFirst
+   * udap findFirst
    */
-  export interface udapsFindFirstArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends udapsFindFirstArgsBase<ExtArgs> {
+  export interface udapFindFirstArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends udapFindFirstArgsBase<ExtArgs> {
    /**
     * Throw an Error if query returns no results
     * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
@@ -11075,33 +8962,33 @@ export namespace Prisma {
       
 
   /**
-   * udaps findFirstOrThrow
+   * udap findFirstOrThrow
    */
-  export type udapsFindFirstOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  export type udapFindFirstOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the udaps
+     * Select specific fields to fetch from the udap
      */
-    select?: udapsSelect<ExtArgs> | null
+    select?: udapSelect<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well.
      */
-    include?: udapsInclude<ExtArgs> | null
+    include?: udapInclude<ExtArgs> | null
     /**
-     * Filter, which udaps to fetch.
+     * Filter, which udap to fetch.
      */
-    where?: udapsWhereInput
+    where?: udapWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
      * Determine the order of udaps to fetch.
      */
-    orderBy?: Enumerable<udapsOrderByWithRelationInput>
+    orderBy?: Enumerable<udapOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the position for searching for udaps.
      */
-    cursor?: udapsWhereUniqueInput
+    cursor?: udapWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
@@ -11119,38 +9006,38 @@ export namespace Prisma {
      * 
      * Filter by unique combinations of udaps.
      */
-    distinct?: Enumerable<UdapsScalarFieldEnum>
+    distinct?: Enumerable<UdapScalarFieldEnum>
   }
 
 
   /**
-   * udaps findMany
+   * udap findMany
    */
-  export type udapsFindManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  export type udapFindManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the udaps
+     * Select specific fields to fetch from the udap
      */
-    select?: udapsSelect<ExtArgs> | null
+    select?: udapSelect<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well.
      */
-    include?: udapsInclude<ExtArgs> | null
+    include?: udapInclude<ExtArgs> | null
     /**
      * Filter, which udaps to fetch.
      */
-    where?: udapsWhereInput
+    where?: udapWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
      * Determine the order of udaps to fetch.
      */
-    orderBy?: Enumerable<udapsOrderByWithRelationInput>
+    orderBy?: Enumerable<udapOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the position for listing udaps.
      */
-    cursor?: udapsWhereUniqueInput
+    cursor?: udapWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
@@ -11163,169 +9050,1111 @@ export namespace Prisma {
      * Skip the first `n` udaps.
      */
     skip?: number
-    distinct?: Enumerable<UdapsScalarFieldEnum>
+    distinct?: Enumerable<UdapScalarFieldEnum>
   }
 
 
   /**
-   * udaps create
+   * udap create
    */
-  export type udapsCreateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  export type udapCreateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the udaps
+     * Select specific fields to fetch from the udap
      */
-    select?: udapsSelect<ExtArgs> | null
+    select?: udapSelect<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well.
      */
-    include?: udapsInclude<ExtArgs> | null
+    include?: udapInclude<ExtArgs> | null
     /**
-     * The data needed to create a udaps.
+     * The data needed to create a udap.
      */
-    data: XOR<udapsCreateInput, udapsUncheckedCreateInput>
+    data: XOR<udapCreateInput, udapUncheckedCreateInput>
   }
 
 
   /**
-   * udaps createMany
+   * udap createMany
    */
-  export type udapsCreateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  export type udapCreateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * The data used to create many udaps.
      */
-    data: Enumerable<udapsCreateManyInput>
+    data: Enumerable<udapCreateManyInput>
     skipDuplicates?: boolean
   }
 
 
   /**
-   * udaps update
+   * udap update
    */
-  export type udapsUpdateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  export type udapUpdateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the udaps
+     * Select specific fields to fetch from the udap
      */
-    select?: udapsSelect<ExtArgs> | null
+    select?: udapSelect<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well.
      */
-    include?: udapsInclude<ExtArgs> | null
+    include?: udapInclude<ExtArgs> | null
     /**
-     * The data needed to update a udaps.
+     * The data needed to update a udap.
      */
-    data: XOR<udapsUpdateInput, udapsUncheckedUpdateInput>
+    data: XOR<udapUpdateInput, udapUncheckedUpdateInput>
     /**
-     * Choose, which udaps to update.
+     * Choose, which udap to update.
      */
-    where: udapsWhereUniqueInput
+    where: udapWhereUniqueInput
   }
 
 
   /**
-   * udaps updateMany
+   * udap updateMany
    */
-  export type udapsUpdateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  export type udapUpdateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * The data used to update udaps.
      */
-    data: XOR<udapsUpdateManyMutationInput, udapsUncheckedUpdateManyInput>
+    data: XOR<udapUpdateManyMutationInput, udapUncheckedUpdateManyInput>
     /**
      * Filter which udaps to update
      */
-    where?: udapsWhereInput
+    where?: udapWhereInput
   }
 
 
   /**
-   * udaps upsert
+   * udap upsert
    */
-  export type udapsUpsertArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  export type udapUpsertArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the udaps
+     * Select specific fields to fetch from the udap
      */
-    select?: udapsSelect<ExtArgs> | null
+    select?: udapSelect<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well.
      */
-    include?: udapsInclude<ExtArgs> | null
+    include?: udapInclude<ExtArgs> | null
     /**
-     * The filter to search for the udaps to update in case it exists.
+     * The filter to search for the udap to update in case it exists.
      */
-    where: udapsWhereUniqueInput
+    where: udapWhereUniqueInput
     /**
-     * In case the udaps found by the `where` argument doesn't exist, create a new udaps with this data.
+     * In case the udap found by the `where` argument doesn't exist, create a new udap with this data.
      */
-    create: XOR<udapsCreateInput, udapsUncheckedCreateInput>
+    create: XOR<udapCreateInput, udapUncheckedCreateInput>
     /**
-     * In case the udaps was found with the provided `where` argument, update it with this data.
+     * In case the udap was found with the provided `where` argument, update it with this data.
      */
-    update: XOR<udapsUpdateInput, udapsUncheckedUpdateInput>
+    update: XOR<udapUpdateInput, udapUncheckedUpdateInput>
   }
 
 
   /**
-   * udaps delete
+   * udap delete
    */
-  export type udapsDeleteArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  export type udapDeleteArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the udaps
+     * Select specific fields to fetch from the udap
      */
-    select?: udapsSelect<ExtArgs> | null
+    select?: udapSelect<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well.
      */
-    include?: udapsInclude<ExtArgs> | null
+    include?: udapInclude<ExtArgs> | null
     /**
-     * Filter which udaps to delete.
+     * Filter which udap to delete.
      */
-    where: udapsWhereUniqueInput
+    where: udapWhereUniqueInput
   }
 
 
   /**
-   * udaps deleteMany
+   * udap deleteMany
    */
-  export type udapsDeleteManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  export type udapDeleteManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Filter which udaps to delete
      */
-    where?: udapsWhereInput
+    where?: udapWhereInput
   }
 
 
   /**
-   * udaps.users
+   * udap.user
    */
-  export type udaps$usersArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  export type udap$userArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the users
+     * Select specific fields to fetch from the user
      */
-    select?: usersSelect<ExtArgs> | null
+    select?: userSelect<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well.
      */
-    include?: usersInclude<ExtArgs> | null
-    where?: usersWhereInput
-    orderBy?: Enumerable<usersOrderByWithRelationInput>
-    cursor?: usersWhereUniqueInput
+    include?: userInclude<ExtArgs> | null
+    where?: userWhereInput
+    orderBy?: Enumerable<userOrderByWithRelationInput>
+    cursor?: userWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: Enumerable<UsersScalarFieldEnum>
+    distinct?: Enumerable<UserScalarFieldEnum>
   }
 
 
   /**
-   * udaps without action
+   * udap without action
    */
-  export type udapsArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  export type udapArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the udaps
+     * Select specific fields to fetch from the udap
      */
-    select?: udapsSelect<ExtArgs> | null
+    select?: udapSelect<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well.
      */
-    include?: udapsInclude<ExtArgs> | null
+    include?: udapInclude<ExtArgs> | null
+  }
+
+
+
+  /**
+   * Model user
+   */
+
+
+  export type AggregateUser = {
+    _count: UserCountAggregateOutputType | null
+    _min: UserMinAggregateOutputType | null
+    _max: UserMaxAggregateOutputType | null
+  }
+
+  export type UserMinAggregateOutputType = {
+    id: string | null
+    email: string | null
+    name: string | null
+    temporaryLink: string | null
+    temporaryLinkExpiresAt: string | null
+    password: string | null
+    udap_id: string | null
+  }
+
+  export type UserMaxAggregateOutputType = {
+    id: string | null
+    email: string | null
+    name: string | null
+    temporaryLink: string | null
+    temporaryLinkExpiresAt: string | null
+    password: string | null
+    udap_id: string | null
+  }
+
+  export type UserCountAggregateOutputType = {
+    id: number
+    email: number
+    name: number
+    temporaryLink: number
+    temporaryLinkExpiresAt: number
+    password: number
+    udap_id: number
+    _all: number
+  }
+
+
+  export type UserMinAggregateInputType = {
+    id?: true
+    email?: true
+    name?: true
+    temporaryLink?: true
+    temporaryLinkExpiresAt?: true
+    password?: true
+    udap_id?: true
+  }
+
+  export type UserMaxAggregateInputType = {
+    id?: true
+    email?: true
+    name?: true
+    temporaryLink?: true
+    temporaryLinkExpiresAt?: true
+    password?: true
+    udap_id?: true
+  }
+
+  export type UserCountAggregateInputType = {
+    id?: true
+    email?: true
+    name?: true
+    temporaryLink?: true
+    temporaryLinkExpiresAt?: true
+    password?: true
+    udap_id?: true
+    _all?: true
+  }
+
+  export type UserAggregateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which user to aggregate.
+     */
+    where?: userWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of users to fetch.
+     */
+    orderBy?: Enumerable<userOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: userWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` users from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` users.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned users
+    **/
+    _count?: true | UserCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: UserMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: UserMaxAggregateInputType
+  }
+
+  export type GetUserAggregateType<T extends UserAggregateArgs> = {
+        [P in keyof T & keyof AggregateUser]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateUser[P]>
+      : GetScalarType<T[P], AggregateUser[P]>
+  }
+
+
+
+
+  export type UserGroupByArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    where?: userWhereInput
+    orderBy?: Enumerable<userOrderByWithAggregationInput>
+    by: UserScalarFieldEnum[]
+    having?: userScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: UserCountAggregateInputType | true
+    _min?: UserMinAggregateInputType
+    _max?: UserMaxAggregateInputType
+  }
+
+
+  export type UserGroupByOutputType = {
+    id: string
+    email: string
+    name: string
+    temporaryLink: string | null
+    temporaryLinkExpiresAt: string | null
+    password: string
+    udap_id: string | null
+    _count: UserCountAggregateOutputType | null
+    _min: UserMinAggregateOutputType | null
+    _max: UserMaxAggregateOutputType | null
+  }
+
+  type GetUserGroupByPayload<T extends UserGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickArray<UserGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof UserGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], UserGroupByOutputType[P]>
+            : GetScalarType<T[P], UserGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type userSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    email?: boolean
+    name?: boolean
+    temporaryLink?: boolean
+    temporaryLinkExpiresAt?: boolean
+    password?: boolean
+    udap_id?: boolean
+    udap?: boolean | udapArgs<ExtArgs>
+  }, ExtArgs["result"]["user"]>
+
+  export type userSelectScalar = {
+    id?: boolean
+    email?: boolean
+    name?: boolean
+    temporaryLink?: boolean
+    temporaryLinkExpiresAt?: boolean
+    password?: boolean
+    udap_id?: boolean
+  }
+
+  export type userInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    udap?: boolean | udapArgs<ExtArgs>
+  }
+
+
+  type userGetPayload<S extends boolean | null | undefined | userArgs> = $Types.GetResult<userPayload, S>
+
+  type userCountArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = 
+    Omit<userFindManyArgs, 'select' | 'include'> & {
+      select?: UserCountAggregateInputType | true
+    }
+
+  export interface userDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['user'], meta: { name: 'user' } }
+    /**
+     * Find zero or one User that matches the filter.
+     * @param {userFindUniqueArgs} args - Arguments to find a User
+     * @example
+     * // Get one User
+     * const user = await prisma.user.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends userFindUniqueArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, userFindUniqueArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'user'> extends True ? Prisma__userClient<$Types.GetResult<userPayload<ExtArgs>, T, 'findUnique', never>, never, ExtArgs> : Prisma__userClient<$Types.GetResult<userPayload<ExtArgs>, T, 'findUnique', never> | null, null, ExtArgs>
+
+    /**
+     * Find one User that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {userFindUniqueOrThrowArgs} args - Arguments to find a User
+     * @example
+     * // Get one User
+     * const user = await prisma.user.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends userFindUniqueOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, userFindUniqueOrThrowArgs<ExtArgs>>
+    ): Prisma__userClient<$Types.GetResult<userPayload<ExtArgs>, T, 'findUniqueOrThrow', never>, never, ExtArgs>
+
+    /**
+     * Find the first User that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {userFindFirstArgs} args - Arguments to find a User
+     * @example
+     * // Get one User
+     * const user = await prisma.user.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends userFindFirstArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, userFindFirstArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'user'> extends True ? Prisma__userClient<$Types.GetResult<userPayload<ExtArgs>, T, 'findFirst', never>, never, ExtArgs> : Prisma__userClient<$Types.GetResult<userPayload<ExtArgs>, T, 'findFirst', never> | null, null, ExtArgs>
+
+    /**
+     * Find the first User that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {userFindFirstOrThrowArgs} args - Arguments to find a User
+     * @example
+     * // Get one User
+     * const user = await prisma.user.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends userFindFirstOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, userFindFirstOrThrowArgs<ExtArgs>>
+    ): Prisma__userClient<$Types.GetResult<userPayload<ExtArgs>, T, 'findFirstOrThrow', never>, never, ExtArgs>
+
+    /**
+     * Find zero or more Users that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {userFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Users
+     * const users = await prisma.user.findMany()
+     * 
+     * // Get first 10 Users
+     * const users = await prisma.user.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const userWithIdOnly = await prisma.user.findMany({ select: { id: true } })
+     * 
+    **/
+    findMany<T extends userFindManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, userFindManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Types.GetResult<userPayload<ExtArgs>, T, 'findMany', never>>
+
+    /**
+     * Create a User.
+     * @param {userCreateArgs} args - Arguments to create a User.
+     * @example
+     * // Create one User
+     * const User = await prisma.user.create({
+     *   data: {
+     *     // ... data to create a User
+     *   }
+     * })
+     * 
+    **/
+    create<T extends userCreateArgs<ExtArgs>>(
+      args: SelectSubset<T, userCreateArgs<ExtArgs>>
+    ): Prisma__userClient<$Types.GetResult<userPayload<ExtArgs>, T, 'create', never>, never, ExtArgs>
+
+    /**
+     * Create many Users.
+     *     @param {userCreateManyArgs} args - Arguments to create many Users.
+     *     @example
+     *     // Create many Users
+     *     const user = await prisma.user.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
+     *     
+    **/
+    createMany<T extends userCreateManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, userCreateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a User.
+     * @param {userDeleteArgs} args - Arguments to delete one User.
+     * @example
+     * // Delete one User
+     * const User = await prisma.user.delete({
+     *   where: {
+     *     // ... filter to delete one User
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends userDeleteArgs<ExtArgs>>(
+      args: SelectSubset<T, userDeleteArgs<ExtArgs>>
+    ): Prisma__userClient<$Types.GetResult<userPayload<ExtArgs>, T, 'delete', never>, never, ExtArgs>
+
+    /**
+     * Update one User.
+     * @param {userUpdateArgs} args - Arguments to update one User.
+     * @example
+     * // Update one User
+     * const user = await prisma.user.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends userUpdateArgs<ExtArgs>>(
+      args: SelectSubset<T, userUpdateArgs<ExtArgs>>
+    ): Prisma__userClient<$Types.GetResult<userPayload<ExtArgs>, T, 'update', never>, never, ExtArgs>
+
+    /**
+     * Delete zero or more Users.
+     * @param {userDeleteManyArgs} args - Arguments to filter Users to delete.
+     * @example
+     * // Delete a few Users
+     * const { count } = await prisma.user.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends userDeleteManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, userDeleteManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Users.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {userUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Users
+     * const user = await prisma.user.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends userUpdateManyArgs<ExtArgs>>(
+      args: SelectSubset<T, userUpdateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one User.
+     * @param {userUpsertArgs} args - Arguments to update or create a User.
+     * @example
+     * // Update or create a User
+     * const user = await prisma.user.upsert({
+     *   create: {
+     *     // ... data to create a User
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the User we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends userUpsertArgs<ExtArgs>>(
+      args: SelectSubset<T, userUpsertArgs<ExtArgs>>
+    ): Prisma__userClient<$Types.GetResult<userPayload<ExtArgs>, T, 'upsert', never>, never, ExtArgs>
+
+    /**
+     * Count the number of Users.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {userCountArgs} args - Arguments to filter Users to count.
+     * @example
+     * // Count the number of Users
+     * const count = await prisma.user.count({
+     *   where: {
+     *     // ... the filter for the Users we want to count
+     *   }
+     * })
+    **/
+    count<T extends userCountArgs>(
+      args?: Subset<T, userCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], UserCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a User.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends UserAggregateArgs>(args: Subset<T, UserAggregateArgs>): Prisma.PrismaPromise<GetUserAggregateType<T>>
+
+    /**
+     * Group by User.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends UserGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: UserGroupByArgs['orderBy'] }
+        : { orderBy?: UserGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends TupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, UserGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUserGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for user.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export class Prisma__userClient<T, Null = never, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> implements Prisma.PrismaPromise<T> {
+    private readonly _dmmf;
+    private readonly _queryType;
+    private readonly _rootField;
+    private readonly _clientMethod;
+    private readonly _args;
+    private readonly _dataPath;
+    private readonly _errorFormat;
+    private readonly _measurePerformance?;
+    private _isList;
+    private _callsite;
+    private _requestPromise?;
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+    constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
+
+    udap<T extends udapArgs<ExtArgs> = {}>(args?: Subset<T, udapArgs<ExtArgs>>): Prisma__udapClient<$Types.GetResult<udapPayload<ExtArgs>, T, 'findUnique', never> | Null, never, ExtArgs>;
+
+    private get _document();
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): Promise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): Promise<T>;
+  }
+
+
+
+  // Custom InputTypes
+
+  /**
+   * user base type for findUnique actions
+   */
+  export type userFindUniqueArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the user
+     */
+    select?: userSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: userInclude<ExtArgs> | null
+    /**
+     * Filter, which user to fetch.
+     */
+    where: userWhereUniqueInput
+  }
+
+  /**
+   * user findUnique
+   */
+  export interface userFindUniqueArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends userFindUniqueArgsBase<ExtArgs> {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * user findUniqueOrThrow
+   */
+  export type userFindUniqueOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the user
+     */
+    select?: userSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: userInclude<ExtArgs> | null
+    /**
+     * Filter, which user to fetch.
+     */
+    where: userWhereUniqueInput
+  }
+
+
+  /**
+   * user base type for findFirst actions
+   */
+  export type userFindFirstArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the user
+     */
+    select?: userSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: userInclude<ExtArgs> | null
+    /**
+     * Filter, which user to fetch.
+     */
+    where?: userWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of users to fetch.
+     */
+    orderBy?: Enumerable<userOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for users.
+     */
+    cursor?: userWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` users from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` users.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of users.
+     */
+    distinct?: Enumerable<UserScalarFieldEnum>
+  }
+
+  /**
+   * user findFirst
+   */
+  export interface userFindFirstArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends userFindFirstArgsBase<ExtArgs> {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * user findFirstOrThrow
+   */
+  export type userFindFirstOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the user
+     */
+    select?: userSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: userInclude<ExtArgs> | null
+    /**
+     * Filter, which user to fetch.
+     */
+    where?: userWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of users to fetch.
+     */
+    orderBy?: Enumerable<userOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for users.
+     */
+    cursor?: userWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` users from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` users.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of users.
+     */
+    distinct?: Enumerable<UserScalarFieldEnum>
+  }
+
+
+  /**
+   * user findMany
+   */
+  export type userFindManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the user
+     */
+    select?: userSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: userInclude<ExtArgs> | null
+    /**
+     * Filter, which users to fetch.
+     */
+    where?: userWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of users to fetch.
+     */
+    orderBy?: Enumerable<userOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing users.
+     */
+    cursor?: userWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` users from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` users.
+     */
+    skip?: number
+    distinct?: Enumerable<UserScalarFieldEnum>
+  }
+
+
+  /**
+   * user create
+   */
+  export type userCreateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the user
+     */
+    select?: userSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: userInclude<ExtArgs> | null
+    /**
+     * The data needed to create a user.
+     */
+    data: XOR<userCreateInput, userUncheckedCreateInput>
+  }
+
+
+  /**
+   * user createMany
+   */
+  export type userCreateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many users.
+     */
+    data: Enumerable<userCreateManyInput>
+    skipDuplicates?: boolean
+  }
+
+
+  /**
+   * user update
+   */
+  export type userUpdateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the user
+     */
+    select?: userSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: userInclude<ExtArgs> | null
+    /**
+     * The data needed to update a user.
+     */
+    data: XOR<userUpdateInput, userUncheckedUpdateInput>
+    /**
+     * Choose, which user to update.
+     */
+    where: userWhereUniqueInput
+  }
+
+
+  /**
+   * user updateMany
+   */
+  export type userUpdateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update users.
+     */
+    data: XOR<userUpdateManyMutationInput, userUncheckedUpdateManyInput>
+    /**
+     * Filter which users to update
+     */
+    where?: userWhereInput
+  }
+
+
+  /**
+   * user upsert
+   */
+  export type userUpsertArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the user
+     */
+    select?: userSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: userInclude<ExtArgs> | null
+    /**
+     * The filter to search for the user to update in case it exists.
+     */
+    where: userWhereUniqueInput
+    /**
+     * In case the user found by the `where` argument doesn't exist, create a new user with this data.
+     */
+    create: XOR<userCreateInput, userUncheckedCreateInput>
+    /**
+     * In case the user was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<userUpdateInput, userUncheckedUpdateInput>
+  }
+
+
+  /**
+   * user delete
+   */
+  export type userDeleteArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the user
+     */
+    select?: userSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: userInclude<ExtArgs> | null
+    /**
+     * Filter which user to delete.
+     */
+    where: userWhereUniqueInput
+  }
+
+
+  /**
+   * user deleteMany
+   */
+  export type userDeleteManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which users to delete
+     */
+    where?: userWhereInput
+  }
+
+
+  /**
+   * user without action
+   */
+  export type userArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the user
+     */
+    select?: userSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: userInclude<ExtArgs> | null
   }
 
 
@@ -11365,15 +10194,6 @@ export namespace Prisma {
   export type Atdatabases_migrations_versionScalarFieldEnum = (typeof Atdatabases_migrations_versionScalarFieldEnum)[keyof typeof Atdatabases_migrations_versionScalarFieldEnum]
 
 
-  export const ChipScalarFieldEnum: {
-    id: 'id',
-    label: 'label',
-    value: 'value'
-  };
-
-  export type ChipScalarFieldEnum = (typeof ChipScalarFieldEnum)[keyof typeof ChipScalarFieldEnum]
-
-
   export const ClauseScalarFieldEnum: {
     id: 'id',
     label: 'label',
@@ -11381,14 +10201,6 @@ export namespace Prisma {
   };
 
   export type ClauseScalarFieldEnum = (typeof ClauseScalarFieldEnum)[keyof typeof ClauseScalarFieldEnum]
-
-
-  export const DelegationsScalarFieldEnum: {
-    createdBy: 'createdBy',
-    delegatedTo: 'delegatedTo'
-  };
-
-  export type DelegationsScalarFieldEnum = (typeof DelegationsScalarFieldEnum)[keyof typeof DelegationsScalarFieldEnum]
 
 
   export const ReportScalarFieldEnum: {
@@ -11414,15 +10226,6 @@ export namespace Prisma {
   export type ReportScalarFieldEnum = (typeof ReportScalarFieldEnum)[keyof typeof ReportScalarFieldEnum]
 
 
-  export const Report_to_chipScalarFieldEnum: {
-    id: 'id',
-    report_id: 'report_id',
-    chip_id: 'chip_id'
-  };
-
-  export type Report_to_chipScalarFieldEnum = (typeof Report_to_chipScalarFieldEnum)[keyof typeof Report_to_chipScalarFieldEnum]
-
-
   export const Report_to_clauseScalarFieldEnum: {
     id: 'id',
     report_id: 'report_id',
@@ -11432,7 +10235,41 @@ export namespace Prisma {
   export type Report_to_clauseScalarFieldEnum = (typeof Report_to_clauseScalarFieldEnum)[keyof typeof Report_to_clauseScalarFieldEnum]
 
 
-  export const UsersScalarFieldEnum: {
+  export const ChipScalarFieldEnum: {
+    key: 'key',
+    value: 'value',
+    udap_id: 'udap_id',
+    text: 'text'
+  };
+
+  export type ChipScalarFieldEnum = (typeof ChipScalarFieldEnum)[keyof typeof ChipScalarFieldEnum]
+
+
+  export const DelegationScalarFieldEnum: {
+    createdBy: 'createdBy',
+    delegatedTo: 'delegatedTo'
+  };
+
+  export type DelegationScalarFieldEnum = (typeof DelegationScalarFieldEnum)[keyof typeof DelegationScalarFieldEnum]
+
+
+  export const UdapScalarFieldEnum: {
+    id: 'id',
+    department: 'department',
+    complete_coords: 'complete_coords',
+    visible: 'visible',
+    name: 'name',
+    address: 'address',
+    zip_code: 'zip_code',
+    city: 'city',
+    phone: 'phone',
+    email: 'email'
+  };
+
+  export type UdapScalarFieldEnum = (typeof UdapScalarFieldEnum)[keyof typeof UdapScalarFieldEnum]
+
+
+  export const UserScalarFieldEnum: {
     id: 'id',
     email: 'email',
     name: 'name',
@@ -11442,23 +10279,7 @@ export namespace Prisma {
     udap_id: 'udap_id'
   };
 
-  export type UsersScalarFieldEnum = (typeof UsersScalarFieldEnum)[keyof typeof UsersScalarFieldEnum]
-
-
-  export const UdapsScalarFieldEnum: {
-    id: 'id',
-    department: 'department',
-    complete_coords: 'complete_coords',
-    address: 'address',
-    visible: 'visible',
-    name: 'name',
-    zip_code: 'zip_code',
-    city: 'city',
-    phone: 'phone',
-    email: 'email'
-  };
-
-  export type UdapsScalarFieldEnum = (typeof UdapsScalarFieldEnum)[keyof typeof UdapsScalarFieldEnum]
+  export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -11580,45 +10401,6 @@ export namespace Prisma {
     version?: StringNullableWithAggregatesFilter | string | null
   }
 
-  export type chipWhereInput = {
-    AND?: Enumerable<chipWhereInput>
-    OR?: Enumerable<chipWhereInput>
-    NOT?: Enumerable<chipWhereInput>
-    id?: StringFilter | string
-    label?: StringFilter | string
-    value?: StringFilter | string
-    report_to_chip?: Report_to_chipListRelationFilter
-  }
-
-  export type chipOrderByWithRelationInput = {
-    id?: SortOrder
-    label?: SortOrder
-    value?: SortOrder
-    report_to_chip?: report_to_chipOrderByRelationAggregateInput
-  }
-
-  export type chipWhereUniqueInput = {
-    id?: string
-  }
-
-  export type chipOrderByWithAggregationInput = {
-    id?: SortOrder
-    label?: SortOrder
-    value?: SortOrder
-    _count?: chipCountOrderByAggregateInput
-    _max?: chipMaxOrderByAggregateInput
-    _min?: chipMinOrderByAggregateInput
-  }
-
-  export type chipScalarWhereWithAggregatesInput = {
-    AND?: Enumerable<chipScalarWhereWithAggregatesInput>
-    OR?: Enumerable<chipScalarWhereWithAggregatesInput>
-    NOT?: Enumerable<chipScalarWhereWithAggregatesInput>
-    id?: StringWithAggregatesFilter | string
-    label?: StringWithAggregatesFilter | string
-    value?: StringWithAggregatesFilter | string
-  }
-
   export type clauseWhereInput = {
     AND?: Enumerable<clauseWhereInput>
     OR?: Enumerable<clauseWhereInput>
@@ -11658,39 +10440,6 @@ export namespace Prisma {
     value?: StringWithAggregatesFilter | string
   }
 
-  export type delegationsWhereInput = {
-    AND?: Enumerable<delegationsWhereInput>
-    OR?: Enumerable<delegationsWhereInput>
-    NOT?: Enumerable<delegationsWhereInput>
-    createdBy?: StringFilter | string
-    delegatedTo?: StringFilter | string
-  }
-
-  export type delegationsOrderByWithRelationInput = {
-    createdBy?: SortOrder
-    delegatedTo?: SortOrder
-  }
-
-  export type delegationsWhereUniqueInput = {
-    createdBy_delegatedTo?: delegationsCreatedByDelegatedToCompoundUniqueInput
-  }
-
-  export type delegationsOrderByWithAggregationInput = {
-    createdBy?: SortOrder
-    delegatedTo?: SortOrder
-    _count?: delegationsCountOrderByAggregateInput
-    _max?: delegationsMaxOrderByAggregateInput
-    _min?: delegationsMinOrderByAggregateInput
-  }
-
-  export type delegationsScalarWhereWithAggregatesInput = {
-    AND?: Enumerable<delegationsScalarWhereWithAggregatesInput>
-    OR?: Enumerable<delegationsScalarWhereWithAggregatesInput>
-    NOT?: Enumerable<delegationsScalarWhereWithAggregatesInput>
-    createdBy?: StringWithAggregatesFilter | string
-    delegatedTo?: StringWithAggregatesFilter | string
-  }
-
   export type reportWhereInput = {
     AND?: Enumerable<reportWhereInput>
     OR?: Enumerable<reportWhereInput>
@@ -11712,7 +10461,6 @@ export namespace Prisma {
     created_by_username?: StringFilter | string
     created_at?: DateTimeFilter | Date | string
     service_instructeur?: StringNullableFilter | string | null
-    report_to_chip?: Report_to_chipListRelationFilter
     report_to_clause?: Report_to_clauseListRelationFilter
   }
 
@@ -11734,7 +10482,6 @@ export namespace Prisma {
     created_by_username?: SortOrder
     created_at?: SortOrder
     service_instructeur?: SortOrderInput | SortOrder
-    report_to_chip?: report_to_chipOrderByRelationAggregateInput
     report_to_clause?: report_to_clauseOrderByRelationAggregateInput
   }
 
@@ -11788,47 +10535,6 @@ export namespace Prisma {
     service_instructeur?: StringNullableWithAggregatesFilter | string | null
   }
 
-  export type report_to_chipWhereInput = {
-    AND?: Enumerable<report_to_chipWhereInput>
-    OR?: Enumerable<report_to_chipWhereInput>
-    NOT?: Enumerable<report_to_chipWhereInput>
-    id?: StringFilter | string
-    report_id?: StringFilter | string
-    chip_id?: StringFilter | string
-    chip?: XOR<ChipRelationFilter, chipWhereInput>
-    report?: XOR<ReportRelationFilter, reportWhereInput>
-  }
-
-  export type report_to_chipOrderByWithRelationInput = {
-    id?: SortOrder
-    report_id?: SortOrder
-    chip_id?: SortOrder
-    chip?: chipOrderByWithRelationInput
-    report?: reportOrderByWithRelationInput
-  }
-
-  export type report_to_chipWhereUniqueInput = {
-    id?: string
-  }
-
-  export type report_to_chipOrderByWithAggregationInput = {
-    id?: SortOrder
-    report_id?: SortOrder
-    chip_id?: SortOrder
-    _count?: report_to_chipCountOrderByAggregateInput
-    _max?: report_to_chipMaxOrderByAggregateInput
-    _min?: report_to_chipMinOrderByAggregateInput
-  }
-
-  export type report_to_chipScalarWhereWithAggregatesInput = {
-    AND?: Enumerable<report_to_chipScalarWhereWithAggregatesInput>
-    OR?: Enumerable<report_to_chipScalarWhereWithAggregatesInput>
-    NOT?: Enumerable<report_to_chipScalarWhereWithAggregatesInput>
-    id?: StringWithAggregatesFilter | string
-    report_id?: StringWithAggregatesFilter | string
-    chip_id?: StringWithAggregatesFilter | string
-  }
-
   export type report_to_clauseWhereInput = {
     AND?: Enumerable<report_to_clauseWhereInput>
     OR?: Enumerable<report_to_clauseWhereInput>
@@ -11870,10 +10576,151 @@ export namespace Prisma {
     clause_id?: StringWithAggregatesFilter | string
   }
 
-  export type usersWhereInput = {
-    AND?: Enumerable<usersWhereInput>
-    OR?: Enumerable<usersWhereInput>
-    NOT?: Enumerable<usersWhereInput>
+  export type chipWhereInput = {
+    AND?: Enumerable<chipWhereInput>
+    OR?: Enumerable<chipWhereInput>
+    NOT?: Enumerable<chipWhereInput>
+    key?: StringFilter | string
+    value?: StringFilter | string
+    udap_id?: StringFilter | string
+    text?: StringFilter | string
+  }
+
+  export type chipOrderByWithRelationInput = {
+    key?: SortOrder
+    value?: SortOrder
+    udap_id?: SortOrder
+    text?: SortOrder
+  }
+
+  export type chipWhereUniqueInput = {
+    key_value_udap_id?: chipKeyValueUdap_idCompoundUniqueInput
+  }
+
+  export type chipOrderByWithAggregationInput = {
+    key?: SortOrder
+    value?: SortOrder
+    udap_id?: SortOrder
+    text?: SortOrder
+    _count?: chipCountOrderByAggregateInput
+    _max?: chipMaxOrderByAggregateInput
+    _min?: chipMinOrderByAggregateInput
+  }
+
+  export type chipScalarWhereWithAggregatesInput = {
+    AND?: Enumerable<chipScalarWhereWithAggregatesInput>
+    OR?: Enumerable<chipScalarWhereWithAggregatesInput>
+    NOT?: Enumerable<chipScalarWhereWithAggregatesInput>
+    key?: StringWithAggregatesFilter | string
+    value?: StringWithAggregatesFilter | string
+    udap_id?: StringWithAggregatesFilter | string
+    text?: StringWithAggregatesFilter | string
+  }
+
+  export type delegationWhereInput = {
+    AND?: Enumerable<delegationWhereInput>
+    OR?: Enumerable<delegationWhereInput>
+    NOT?: Enumerable<delegationWhereInput>
+    createdBy?: StringFilter | string
+    delegatedTo?: StringFilter | string
+  }
+
+  export type delegationOrderByWithRelationInput = {
+    createdBy?: SortOrder
+    delegatedTo?: SortOrder
+  }
+
+  export type delegationWhereUniqueInput = {
+    createdBy_delegatedTo?: delegationCreatedByDelegatedToCompoundUniqueInput
+  }
+
+  export type delegationOrderByWithAggregationInput = {
+    createdBy?: SortOrder
+    delegatedTo?: SortOrder
+    _count?: delegationCountOrderByAggregateInput
+    _max?: delegationMaxOrderByAggregateInput
+    _min?: delegationMinOrderByAggregateInput
+  }
+
+  export type delegationScalarWhereWithAggregatesInput = {
+    AND?: Enumerable<delegationScalarWhereWithAggregatesInput>
+    OR?: Enumerable<delegationScalarWhereWithAggregatesInput>
+    NOT?: Enumerable<delegationScalarWhereWithAggregatesInput>
+    createdBy?: StringWithAggregatesFilter | string
+    delegatedTo?: StringWithAggregatesFilter | string
+  }
+
+  export type udapWhereInput = {
+    AND?: Enumerable<udapWhereInput>
+    OR?: Enumerable<udapWhereInput>
+    NOT?: Enumerable<udapWhereInput>
+    id?: StringFilter | string
+    department?: StringFilter | string
+    complete_coords?: StringNullableFilter | string | null
+    visible?: BoolNullableFilter | boolean | null
+    name?: StringNullableFilter | string | null
+    address?: StringNullableFilter | string | null
+    zip_code?: StringNullableFilter | string | null
+    city?: StringNullableFilter | string | null
+    phone?: StringNullableFilter | string | null
+    email?: StringNullableFilter | string | null
+    user?: UserListRelationFilter
+  }
+
+  export type udapOrderByWithRelationInput = {
+    id?: SortOrder
+    department?: SortOrder
+    complete_coords?: SortOrderInput | SortOrder
+    visible?: SortOrderInput | SortOrder
+    name?: SortOrderInput | SortOrder
+    address?: SortOrderInput | SortOrder
+    zip_code?: SortOrderInput | SortOrder
+    city?: SortOrderInput | SortOrder
+    phone?: SortOrderInput | SortOrder
+    email?: SortOrderInput | SortOrder
+    user?: userOrderByRelationAggregateInput
+  }
+
+  export type udapWhereUniqueInput = {
+    id?: string
+  }
+
+  export type udapOrderByWithAggregationInput = {
+    id?: SortOrder
+    department?: SortOrder
+    complete_coords?: SortOrderInput | SortOrder
+    visible?: SortOrderInput | SortOrder
+    name?: SortOrderInput | SortOrder
+    address?: SortOrderInput | SortOrder
+    zip_code?: SortOrderInput | SortOrder
+    city?: SortOrderInput | SortOrder
+    phone?: SortOrderInput | SortOrder
+    email?: SortOrderInput | SortOrder
+    _count?: udapCountOrderByAggregateInput
+    _max?: udapMaxOrderByAggregateInput
+    _min?: udapMinOrderByAggregateInput
+  }
+
+  export type udapScalarWhereWithAggregatesInput = {
+    AND?: Enumerable<udapScalarWhereWithAggregatesInput>
+    OR?: Enumerable<udapScalarWhereWithAggregatesInput>
+    NOT?: Enumerable<udapScalarWhereWithAggregatesInput>
+    id?: StringWithAggregatesFilter | string
+    department?: StringWithAggregatesFilter | string
+    complete_coords?: StringNullableWithAggregatesFilter | string | null
+    visible?: BoolNullableWithAggregatesFilter | boolean | null
+    name?: StringNullableWithAggregatesFilter | string | null
+    address?: StringNullableWithAggregatesFilter | string | null
+    zip_code?: StringNullableWithAggregatesFilter | string | null
+    city?: StringNullableWithAggregatesFilter | string | null
+    phone?: StringNullableWithAggregatesFilter | string | null
+    email?: StringNullableWithAggregatesFilter | string | null
+  }
+
+  export type userWhereInput = {
+    AND?: Enumerable<userWhereInput>
+    OR?: Enumerable<userWhereInput>
+    NOT?: Enumerable<userWhereInput>
     id?: StringFilter | string
     email?: StringFilter | string
     name?: StringFilter | string
@@ -11881,10 +10728,10 @@ export namespace Prisma {
     temporaryLinkExpiresAt?: StringNullableFilter | string | null
     password?: StringFilter | string
     udap_id?: StringNullableFilter | string | null
-    udaps?: XOR<UdapsRelationFilter, udapsWhereInput> | null
+    udap?: XOR<UdapRelationFilter, udapWhereInput> | null
   }
 
-  export type usersOrderByWithRelationInput = {
+  export type userOrderByWithRelationInput = {
     id?: SortOrder
     email?: SortOrder
     name?: SortOrder
@@ -11892,15 +10739,15 @@ export namespace Prisma {
     temporaryLinkExpiresAt?: SortOrderInput | SortOrder
     password?: SortOrder
     udap_id?: SortOrderInput | SortOrder
-    udaps?: udapsOrderByWithRelationInput
+    udap?: udapOrderByWithRelationInput
   }
 
-  export type usersWhereUniqueInput = {
+  export type userWhereUniqueInput = {
     id?: string
     email?: string
   }
 
-  export type usersOrderByWithAggregationInput = {
+  export type userOrderByWithAggregationInput = {
     id?: SortOrder
     email?: SortOrder
     name?: SortOrder
@@ -11908,15 +10755,15 @@ export namespace Prisma {
     temporaryLinkExpiresAt?: SortOrderInput | SortOrder
     password?: SortOrder
     udap_id?: SortOrderInput | SortOrder
-    _count?: usersCountOrderByAggregateInput
-    _max?: usersMaxOrderByAggregateInput
-    _min?: usersMinOrderByAggregateInput
+    _count?: userCountOrderByAggregateInput
+    _max?: userMaxOrderByAggregateInput
+    _min?: userMinOrderByAggregateInput
   }
 
-  export type usersScalarWhereWithAggregatesInput = {
-    AND?: Enumerable<usersScalarWhereWithAggregatesInput>
-    OR?: Enumerable<usersScalarWhereWithAggregatesInput>
-    NOT?: Enumerable<usersScalarWhereWithAggregatesInput>
+  export type userScalarWhereWithAggregatesInput = {
+    AND?: Enumerable<userScalarWhereWithAggregatesInput>
+    OR?: Enumerable<userScalarWhereWithAggregatesInput>
+    NOT?: Enumerable<userScalarWhereWithAggregatesInput>
     id?: StringWithAggregatesFilter | string
     email?: StringWithAggregatesFilter | string
     name?: StringWithAggregatesFilter | string
@@ -11924,75 +10771,6 @@ export namespace Prisma {
     temporaryLinkExpiresAt?: StringNullableWithAggregatesFilter | string | null
     password?: StringWithAggregatesFilter | string
     udap_id?: StringNullableWithAggregatesFilter | string | null
-  }
-
-  export type udapsWhereInput = {
-    AND?: Enumerable<udapsWhereInput>
-    OR?: Enumerable<udapsWhereInput>
-    NOT?: Enumerable<udapsWhereInput>
-    id?: StringFilter | string
-    department?: StringFilter | string
-    complete_coords?: StringNullableFilter | string | null
-    address?: StringNullableFilter | string | null
-    visible?: BoolNullableFilter | boolean | null
-    name?: StringNullableFilter | string | null
-    zip_code?: IntNullableFilter | number | null
-    city?: StringNullableFilter | string | null
-    phone?: StringNullableFilter | string | null
-    email?: StringNullableFilter | string | null
-    users?: UsersListRelationFilter
-  }
-
-  export type udapsOrderByWithRelationInput = {
-    id?: SortOrder
-    department?: SortOrder
-    complete_coords?: SortOrderInput | SortOrder
-    address?: SortOrderInput | SortOrder
-    visible?: SortOrderInput | SortOrder
-    name?: SortOrderInput | SortOrder
-    zip_code?: SortOrderInput | SortOrder
-    city?: SortOrderInput | SortOrder
-    phone?: SortOrderInput | SortOrder
-    email?: SortOrderInput | SortOrder
-    users?: usersOrderByRelationAggregateInput
-  }
-
-  export type udapsWhereUniqueInput = {
-    id?: string
-  }
-
-  export type udapsOrderByWithAggregationInput = {
-    id?: SortOrder
-    department?: SortOrder
-    complete_coords?: SortOrderInput | SortOrder
-    address?: SortOrderInput | SortOrder
-    visible?: SortOrderInput | SortOrder
-    name?: SortOrderInput | SortOrder
-    zip_code?: SortOrderInput | SortOrder
-    city?: SortOrderInput | SortOrder
-    phone?: SortOrderInput | SortOrder
-    email?: SortOrderInput | SortOrder
-    _count?: udapsCountOrderByAggregateInput
-    _avg?: udapsAvgOrderByAggregateInput
-    _max?: udapsMaxOrderByAggregateInput
-    _min?: udapsMinOrderByAggregateInput
-    _sum?: udapsSumOrderByAggregateInput
-  }
-
-  export type udapsScalarWhereWithAggregatesInput = {
-    AND?: Enumerable<udapsScalarWhereWithAggregatesInput>
-    OR?: Enumerable<udapsScalarWhereWithAggregatesInput>
-    NOT?: Enumerable<udapsScalarWhereWithAggregatesInput>
-    id?: StringWithAggregatesFilter | string
-    department?: StringWithAggregatesFilter | string
-    complete_coords?: StringNullableWithAggregatesFilter | string | null
-    address?: StringNullableWithAggregatesFilter | string | null
-    visible?: BoolNullableWithAggregatesFilter | boolean | null
-    name?: StringNullableWithAggregatesFilter | string | null
-    zip_code?: IntNullableWithAggregatesFilter | number | null
-    city?: StringNullableWithAggregatesFilter | string | null
-    phone?: StringNullableWithAggregatesFilter | string | null
-    email?: StringNullableWithAggregatesFilter | string | null
   }
 
   export type atdatabases_migrations_appliedCreateInput = {
@@ -12100,52 +10878,6 @@ export namespace Prisma {
     version?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
-  export type chipCreateInput = {
-    id: string
-    label: string
-    value: string
-    report_to_chip?: report_to_chipCreateNestedManyWithoutChipInput
-  }
-
-  export type chipUncheckedCreateInput = {
-    id: string
-    label: string
-    value: string
-    report_to_chip?: report_to_chipUncheckedCreateNestedManyWithoutChipInput
-  }
-
-  export type chipUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    label?: StringFieldUpdateOperationsInput | string
-    value?: StringFieldUpdateOperationsInput | string
-    report_to_chip?: report_to_chipUpdateManyWithoutChipNestedInput
-  }
-
-  export type chipUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    label?: StringFieldUpdateOperationsInput | string
-    value?: StringFieldUpdateOperationsInput | string
-    report_to_chip?: report_to_chipUncheckedUpdateManyWithoutChipNestedInput
-  }
-
-  export type chipCreateManyInput = {
-    id: string
-    label: string
-    value: string
-  }
-
-  export type chipUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    label?: StringFieldUpdateOperationsInput | string
-    value?: StringFieldUpdateOperationsInput | string
-  }
-
-  export type chipUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    label?: StringFieldUpdateOperationsInput | string
-    value?: StringFieldUpdateOperationsInput | string
-  }
-
   export type clauseCreateInput = {
     id: string
     label: string
@@ -12192,41 +10924,6 @@ export namespace Prisma {
     value?: StringFieldUpdateOperationsInput | string
   }
 
-  export type delegationsCreateInput = {
-    createdBy: string
-    delegatedTo: string
-  }
-
-  export type delegationsUncheckedCreateInput = {
-    createdBy: string
-    delegatedTo: string
-  }
-
-  export type delegationsUpdateInput = {
-    createdBy?: StringFieldUpdateOperationsInput | string
-    delegatedTo?: StringFieldUpdateOperationsInput | string
-  }
-
-  export type delegationsUncheckedUpdateInput = {
-    createdBy?: StringFieldUpdateOperationsInput | string
-    delegatedTo?: StringFieldUpdateOperationsInput | string
-  }
-
-  export type delegationsCreateManyInput = {
-    createdBy: string
-    delegatedTo: string
-  }
-
-  export type delegationsUpdateManyMutationInput = {
-    createdBy?: StringFieldUpdateOperationsInput | string
-    delegatedTo?: StringFieldUpdateOperationsInput | string
-  }
-
-  export type delegationsUncheckedUpdateManyInput = {
-    createdBy?: StringFieldUpdateOperationsInput | string
-    delegatedTo?: StringFieldUpdateOperationsInput | string
-  }
-
   export type reportCreateInput = {
     id: string
     title?: string | null
@@ -12245,7 +10942,6 @@ export namespace Prisma {
     created_by_username: string
     created_at: Date | string
     service_instructeur?: string | null
-    report_to_chip?: report_to_chipCreateNestedManyWithoutReportInput
     report_to_clause?: report_to_clauseCreateNestedManyWithoutReportInput
   }
 
@@ -12267,7 +10963,6 @@ export namespace Prisma {
     created_by_username: string
     created_at: Date | string
     service_instructeur?: string | null
-    report_to_chip?: report_to_chipUncheckedCreateNestedManyWithoutReportInput
     report_to_clause?: report_to_clauseUncheckedCreateNestedManyWithoutReportInput
   }
 
@@ -12289,7 +10984,6 @@ export namespace Prisma {
     created_by_username?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     service_instructeur?: NullableStringFieldUpdateOperationsInput | string | null
-    report_to_chip?: report_to_chipUpdateManyWithoutReportNestedInput
     report_to_clause?: report_to_clauseUpdateManyWithoutReportNestedInput
   }
 
@@ -12311,7 +11005,6 @@ export namespace Prisma {
     created_by_username?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     service_instructeur?: NullableStringFieldUpdateOperationsInput | string | null
-    report_to_chip?: report_to_chipUncheckedUpdateManyWithoutReportNestedInput
     report_to_clause?: report_to_clauseUncheckedUpdateManyWithoutReportNestedInput
   }
 
@@ -12375,46 +11068,6 @@ export namespace Prisma {
     service_instructeur?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
-  export type report_to_chipCreateInput = {
-    id: string
-    chip: chipCreateNestedOneWithoutReport_to_chipInput
-    report: reportCreateNestedOneWithoutReport_to_chipInput
-  }
-
-  export type report_to_chipUncheckedCreateInput = {
-    id: string
-    report_id: string
-    chip_id: string
-  }
-
-  export type report_to_chipUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    chip?: chipUpdateOneRequiredWithoutReport_to_chipNestedInput
-    report?: reportUpdateOneRequiredWithoutReport_to_chipNestedInput
-  }
-
-  export type report_to_chipUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    report_id?: StringFieldUpdateOperationsInput | string
-    chip_id?: StringFieldUpdateOperationsInput | string
-  }
-
-  export type report_to_chipCreateManyInput = {
-    id: string
-    report_id: string
-    chip_id: string
-  }
-
-  export type report_to_chipUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-  }
-
-  export type report_to_chipUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    report_id?: StringFieldUpdateOperationsInput | string
-    chip_id?: StringFieldUpdateOperationsInput | string
-  }
-
   export type report_to_clauseCreateInput = {
     id: string
     clause: clauseCreateNestedOneWithoutReport_to_clauseInput
@@ -12455,17 +11108,196 @@ export namespace Prisma {
     clause_id?: StringFieldUpdateOperationsInput | string
   }
 
-  export type usersCreateInput = {
+  export type chipCreateInput = {
+    key: string
+    value: string
+    udap_id: string
+    text: string
+  }
+
+  export type chipUncheckedCreateInput = {
+    key: string
+    value: string
+    udap_id: string
+    text: string
+  }
+
+  export type chipUpdateInput = {
+    key?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+    udap_id?: StringFieldUpdateOperationsInput | string
+    text?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type chipUncheckedUpdateInput = {
+    key?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+    udap_id?: StringFieldUpdateOperationsInput | string
+    text?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type chipCreateManyInput = {
+    key: string
+    value: string
+    udap_id: string
+    text: string
+  }
+
+  export type chipUpdateManyMutationInput = {
+    key?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+    udap_id?: StringFieldUpdateOperationsInput | string
+    text?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type chipUncheckedUpdateManyInput = {
+    key?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+    udap_id?: StringFieldUpdateOperationsInput | string
+    text?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type delegationCreateInput = {
+    createdBy: string
+    delegatedTo: string
+  }
+
+  export type delegationUncheckedCreateInput = {
+    createdBy: string
+    delegatedTo: string
+  }
+
+  export type delegationUpdateInput = {
+    createdBy?: StringFieldUpdateOperationsInput | string
+    delegatedTo?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type delegationUncheckedUpdateInput = {
+    createdBy?: StringFieldUpdateOperationsInput | string
+    delegatedTo?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type delegationCreateManyInput = {
+    createdBy: string
+    delegatedTo: string
+  }
+
+  export type delegationUpdateManyMutationInput = {
+    createdBy?: StringFieldUpdateOperationsInput | string
+    delegatedTo?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type delegationUncheckedUpdateManyInput = {
+    createdBy?: StringFieldUpdateOperationsInput | string
+    delegatedTo?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type udapCreateInput = {
+    id: string
+    department: string
+    complete_coords?: string | null
+    visible?: boolean | null
+    name?: string | null
+    address?: string | null
+    zip_code?: string | null
+    city?: string | null
+    phone?: string | null
+    email?: string | null
+    user?: userCreateNestedManyWithoutUdapInput
+  }
+
+  export type udapUncheckedCreateInput = {
+    id: string
+    department: string
+    complete_coords?: string | null
+    visible?: boolean | null
+    name?: string | null
+    address?: string | null
+    zip_code?: string | null
+    city?: string | null
+    phone?: string | null
+    email?: string | null
+    user?: userUncheckedCreateNestedManyWithoutUdapInput
+  }
+
+  export type udapUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    department?: StringFieldUpdateOperationsInput | string
+    complete_coords?: NullableStringFieldUpdateOperationsInput | string | null
+    visible?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    zip_code?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    user?: userUpdateManyWithoutUdapNestedInput
+  }
+
+  export type udapUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    department?: StringFieldUpdateOperationsInput | string
+    complete_coords?: NullableStringFieldUpdateOperationsInput | string | null
+    visible?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    zip_code?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    user?: userUncheckedUpdateManyWithoutUdapNestedInput
+  }
+
+  export type udapCreateManyInput = {
+    id: string
+    department: string
+    complete_coords?: string | null
+    visible?: boolean | null
+    name?: string | null
+    address?: string | null
+    zip_code?: string | null
+    city?: string | null
+    phone?: string | null
+    email?: string | null
+  }
+
+  export type udapUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    department?: StringFieldUpdateOperationsInput | string
+    complete_coords?: NullableStringFieldUpdateOperationsInput | string | null
+    visible?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    zip_code?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type udapUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    department?: StringFieldUpdateOperationsInput | string
+    complete_coords?: NullableStringFieldUpdateOperationsInput | string | null
+    visible?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    zip_code?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type userCreateInput = {
     id: string
     email: string
     name: string
     temporaryLink?: string | null
     temporaryLinkExpiresAt?: string | null
     password: string
-    udaps?: udapsCreateNestedOneWithoutUsersInput
+    udap?: udapCreateNestedOneWithoutUserInput
   }
 
-  export type usersUncheckedCreateInput = {
+  export type userUncheckedCreateInput = {
     id: string
     email: string
     name: string
@@ -12475,17 +11307,17 @@ export namespace Prisma {
     udap_id?: string | null
   }
 
-  export type usersUpdateInput = {
+  export type userUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
     temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
     password?: StringFieldUpdateOperationsInput | string
-    udaps?: udapsUpdateOneWithoutUsersNestedInput
+    udap?: udapUpdateOneWithoutUserNestedInput
   }
 
-  export type usersUncheckedUpdateInput = {
+  export type userUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
@@ -12495,7 +11327,7 @@ export namespace Prisma {
     udap_id?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
-  export type usersCreateManyInput = {
+  export type userCreateManyInput = {
     id: string
     email: string
     name: string
@@ -12505,7 +11337,7 @@ export namespace Prisma {
     udap_id?: string | null
   }
 
-  export type usersUpdateManyMutationInput = {
+  export type userUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
@@ -12514,7 +11346,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
   }
 
-  export type usersUncheckedUpdateManyInput = {
+  export type userUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
@@ -12522,101 +11354,6 @@ export namespace Prisma {
     temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
     password?: StringFieldUpdateOperationsInput | string
     udap_id?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type udapsCreateInput = {
-    id: string
-    department: string
-    complete_coords?: string | null
-    address?: string | null
-    visible?: boolean | null
-    name?: string | null
-    zip_code?: number | null
-    city?: string | null
-    phone?: string | null
-    email?: string | null
-    users?: usersCreateNestedManyWithoutUdapsInput
-  }
-
-  export type udapsUncheckedCreateInput = {
-    id: string
-    department: string
-    complete_coords?: string | null
-    address?: string | null
-    visible?: boolean | null
-    name?: string | null
-    zip_code?: number | null
-    city?: string | null
-    phone?: string | null
-    email?: string | null
-    users?: usersUncheckedCreateNestedManyWithoutUdapsInput
-  }
-
-  export type udapsUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    department?: StringFieldUpdateOperationsInput | string
-    complete_coords?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    visible?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    name?: NullableStringFieldUpdateOperationsInput | string | null
-    zip_code?: NullableIntFieldUpdateOperationsInput | number | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    users?: usersUpdateManyWithoutUdapsNestedInput
-  }
-
-  export type udapsUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    department?: StringFieldUpdateOperationsInput | string
-    complete_coords?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    visible?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    name?: NullableStringFieldUpdateOperationsInput | string | null
-    zip_code?: NullableIntFieldUpdateOperationsInput | number | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    users?: usersUncheckedUpdateManyWithoutUdapsNestedInput
-  }
-
-  export type udapsCreateManyInput = {
-    id: string
-    department: string
-    complete_coords?: string | null
-    address?: string | null
-    visible?: boolean | null
-    name?: string | null
-    zip_code?: number | null
-    city?: string | null
-    phone?: string | null
-    email?: string | null
-  }
-
-  export type udapsUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    department?: StringFieldUpdateOperationsInput | string
-    complete_coords?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    visible?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    name?: NullableStringFieldUpdateOperationsInput | string | null
-    zip_code?: NullableIntFieldUpdateOperationsInput | number | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type udapsUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    department?: StringFieldUpdateOperationsInput | string
-    complete_coords?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    visible?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    name?: NullableStringFieldUpdateOperationsInput | string | null
-    zip_code?: NullableIntFieldUpdateOperationsInput | number | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type BigIntFilter = {
@@ -12845,34 +11582,6 @@ export namespace Prisma {
     id?: SortOrder
   }
 
-  export type Report_to_chipListRelationFilter = {
-    every?: report_to_chipWhereInput
-    some?: report_to_chipWhereInput
-    none?: report_to_chipWhereInput
-  }
-
-  export type report_to_chipOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type chipCountOrderByAggregateInput = {
-    id?: SortOrder
-    label?: SortOrder
-    value?: SortOrder
-  }
-
-  export type chipMaxOrderByAggregateInput = {
-    id?: SortOrder
-    label?: SortOrder
-    value?: SortOrder
-  }
-
-  export type chipMinOrderByAggregateInput = {
-    id?: SortOrder
-    label?: SortOrder
-    value?: SortOrder
-  }
-
   export type Report_to_clauseListRelationFilter = {
     every?: report_to_clauseWhereInput
     some?: report_to_clauseWhereInput
@@ -12899,26 +11608,6 @@ export namespace Prisma {
     id?: SortOrder
     label?: SortOrder
     value?: SortOrder
-  }
-
-  export type delegationsCreatedByDelegatedToCompoundUniqueInput = {
-    createdBy: string
-    delegatedTo: string
-  }
-
-  export type delegationsCountOrderByAggregateInput = {
-    createdBy?: SortOrder
-    delegatedTo?: SortOrder
-  }
-
-  export type delegationsMaxOrderByAggregateInput = {
-    createdBy?: SortOrder
-    delegatedTo?: SortOrder
-  }
-
-  export type delegationsMinOrderByAggregateInput = {
-    createdBy?: SortOrder
-    delegatedTo?: SortOrder
   }
 
   export type DateTimeNullableFilter = {
@@ -13006,37 +11695,14 @@ export namespace Prisma {
     _max?: NestedDateTimeNullableFilter
   }
 
-  export type ChipRelationFilter = {
-    is?: chipWhereInput | null
-    isNot?: chipWhereInput | null
+  export type ClauseRelationFilter = {
+    is?: clauseWhereInput | null
+    isNot?: clauseWhereInput | null
   }
 
   export type ReportRelationFilter = {
     is?: reportWhereInput | null
     isNot?: reportWhereInput | null
-  }
-
-  export type report_to_chipCountOrderByAggregateInput = {
-    id?: SortOrder
-    report_id?: SortOrder
-    chip_id?: SortOrder
-  }
-
-  export type report_to_chipMaxOrderByAggregateInput = {
-    id?: SortOrder
-    report_id?: SortOrder
-    chip_id?: SortOrder
-  }
-
-  export type report_to_chipMinOrderByAggregateInput = {
-    id?: SortOrder
-    report_id?: SortOrder
-    chip_id?: SortOrder
-  }
-
-  export type ClauseRelationFilter = {
-    is?: clauseWhereInput | null
-    isNot?: clauseWhereInput | null
   }
 
   export type report_to_clauseCountOrderByAggregateInput = {
@@ -13057,39 +11723,51 @@ export namespace Prisma {
     clause_id?: SortOrder
   }
 
-  export type UdapsRelationFilter = {
-    is?: udapsWhereInput | null
-    isNot?: udapsWhereInput | null
+  export type chipKeyValueUdap_idCompoundUniqueInput = {
+    key: string
+    value: string
+    udap_id: string
   }
 
-  export type usersCountOrderByAggregateInput = {
-    id?: SortOrder
-    email?: SortOrder
-    name?: SortOrder
-    temporaryLink?: SortOrder
-    temporaryLinkExpiresAt?: SortOrder
-    password?: SortOrder
+  export type chipCountOrderByAggregateInput = {
+    key?: SortOrder
+    value?: SortOrder
     udap_id?: SortOrder
+    text?: SortOrder
   }
 
-  export type usersMaxOrderByAggregateInput = {
-    id?: SortOrder
-    email?: SortOrder
-    name?: SortOrder
-    temporaryLink?: SortOrder
-    temporaryLinkExpiresAt?: SortOrder
-    password?: SortOrder
+  export type chipMaxOrderByAggregateInput = {
+    key?: SortOrder
+    value?: SortOrder
     udap_id?: SortOrder
+    text?: SortOrder
   }
 
-  export type usersMinOrderByAggregateInput = {
-    id?: SortOrder
-    email?: SortOrder
-    name?: SortOrder
-    temporaryLink?: SortOrder
-    temporaryLinkExpiresAt?: SortOrder
-    password?: SortOrder
+  export type chipMinOrderByAggregateInput = {
+    key?: SortOrder
+    value?: SortOrder
     udap_id?: SortOrder
+    text?: SortOrder
+  }
+
+  export type delegationCreatedByDelegatedToCompoundUniqueInput = {
+    createdBy: string
+    delegatedTo: string
+  }
+
+  export type delegationCountOrderByAggregateInput = {
+    createdBy?: SortOrder
+    delegatedTo?: SortOrder
+  }
+
+  export type delegationMaxOrderByAggregateInput = {
+    createdBy?: SortOrder
+    delegatedTo?: SortOrder
+  }
+
+  export type delegationMinOrderByAggregateInput = {
+    createdBy?: SortOrder
+    delegatedTo?: SortOrder
   }
 
   export type BoolNullableFilter = {
@@ -13097,72 +11775,53 @@ export namespace Prisma {
     not?: NestedBoolNullableFilter | boolean | null
   }
 
-  export type IntNullableFilter = {
-    equals?: number | null
-    in?: Enumerable<number> | number | null
-    notIn?: Enumerable<number> | number | null
-    lt?: number
-    lte?: number
-    gt?: number
-    gte?: number
-    not?: NestedIntNullableFilter | number | null
+  export type UserListRelationFilter = {
+    every?: userWhereInput
+    some?: userWhereInput
+    none?: userWhereInput
   }
 
-  export type UsersListRelationFilter = {
-    every?: usersWhereInput
-    some?: usersWhereInput
-    none?: usersWhereInput
-  }
-
-  export type usersOrderByRelationAggregateInput = {
+  export type userOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
-  export type udapsCountOrderByAggregateInput = {
+  export type udapCountOrderByAggregateInput = {
     id?: SortOrder
     department?: SortOrder
     complete_coords?: SortOrder
-    address?: SortOrder
     visible?: SortOrder
     name?: SortOrder
+    address?: SortOrder
     zip_code?: SortOrder
     city?: SortOrder
     phone?: SortOrder
     email?: SortOrder
   }
 
-  export type udapsAvgOrderByAggregateInput = {
-    zip_code?: SortOrder
-  }
-
-  export type udapsMaxOrderByAggregateInput = {
+  export type udapMaxOrderByAggregateInput = {
     id?: SortOrder
     department?: SortOrder
     complete_coords?: SortOrder
-    address?: SortOrder
     visible?: SortOrder
     name?: SortOrder
+    address?: SortOrder
     zip_code?: SortOrder
     city?: SortOrder
     phone?: SortOrder
     email?: SortOrder
   }
 
-  export type udapsMinOrderByAggregateInput = {
+  export type udapMinOrderByAggregateInput = {
     id?: SortOrder
     department?: SortOrder
     complete_coords?: SortOrder
-    address?: SortOrder
     visible?: SortOrder
     name?: SortOrder
+    address?: SortOrder
     zip_code?: SortOrder
     city?: SortOrder
     phone?: SortOrder
     email?: SortOrder
-  }
-
-  export type udapsSumOrderByAggregateInput = {
-    zip_code?: SortOrder
   }
 
   export type BoolNullableWithAggregatesFilter = {
@@ -13173,20 +11832,39 @@ export namespace Prisma {
     _max?: NestedBoolNullableFilter
   }
 
-  export type IntNullableWithAggregatesFilter = {
-    equals?: number | null
-    in?: Enumerable<number> | number | null
-    notIn?: Enumerable<number> | number | null
-    lt?: number
-    lte?: number
-    gt?: number
-    gte?: number
-    not?: NestedIntNullableWithAggregatesFilter | number | null
-    _count?: NestedIntNullableFilter
-    _avg?: NestedFloatNullableFilter
-    _sum?: NestedIntNullableFilter
-    _min?: NestedIntNullableFilter
-    _max?: NestedIntNullableFilter
+  export type UdapRelationFilter = {
+    is?: udapWhereInput | null
+    isNot?: udapWhereInput | null
+  }
+
+  export type userCountOrderByAggregateInput = {
+    id?: SortOrder
+    email?: SortOrder
+    name?: SortOrder
+    temporaryLink?: SortOrder
+    temporaryLinkExpiresAt?: SortOrder
+    password?: SortOrder
+    udap_id?: SortOrder
+  }
+
+  export type userMaxOrderByAggregateInput = {
+    id?: SortOrder
+    email?: SortOrder
+    name?: SortOrder
+    temporaryLink?: SortOrder
+    temporaryLinkExpiresAt?: SortOrder
+    password?: SortOrder
+    udap_id?: SortOrder
+  }
+
+  export type userMinOrderByAggregateInput = {
+    id?: SortOrder
+    email?: SortOrder
+    name?: SortOrder
+    temporaryLink?: SortOrder
+    temporaryLinkExpiresAt?: SortOrder
+    password?: SortOrder
+    udap_id?: SortOrder
   }
 
   export type BigIntFieldUpdateOperationsInput = {
@@ -13219,48 +11897,6 @@ export namespace Prisma {
 
   export type BoolFieldUpdateOperationsInput = {
     set?: boolean
-  }
-
-  export type report_to_chipCreateNestedManyWithoutChipInput = {
-    create?: XOR<Enumerable<report_to_chipCreateWithoutChipInput>, Enumerable<report_to_chipUncheckedCreateWithoutChipInput>>
-    connectOrCreate?: Enumerable<report_to_chipCreateOrConnectWithoutChipInput>
-    createMany?: report_to_chipCreateManyChipInputEnvelope
-    connect?: Enumerable<report_to_chipWhereUniqueInput>
-  }
-
-  export type report_to_chipUncheckedCreateNestedManyWithoutChipInput = {
-    create?: XOR<Enumerable<report_to_chipCreateWithoutChipInput>, Enumerable<report_to_chipUncheckedCreateWithoutChipInput>>
-    connectOrCreate?: Enumerable<report_to_chipCreateOrConnectWithoutChipInput>
-    createMany?: report_to_chipCreateManyChipInputEnvelope
-    connect?: Enumerable<report_to_chipWhereUniqueInput>
-  }
-
-  export type report_to_chipUpdateManyWithoutChipNestedInput = {
-    create?: XOR<Enumerable<report_to_chipCreateWithoutChipInput>, Enumerable<report_to_chipUncheckedCreateWithoutChipInput>>
-    connectOrCreate?: Enumerable<report_to_chipCreateOrConnectWithoutChipInput>
-    upsert?: Enumerable<report_to_chipUpsertWithWhereUniqueWithoutChipInput>
-    createMany?: report_to_chipCreateManyChipInputEnvelope
-    set?: Enumerable<report_to_chipWhereUniqueInput>
-    disconnect?: Enumerable<report_to_chipWhereUniqueInput>
-    delete?: Enumerable<report_to_chipWhereUniqueInput>
-    connect?: Enumerable<report_to_chipWhereUniqueInput>
-    update?: Enumerable<report_to_chipUpdateWithWhereUniqueWithoutChipInput>
-    updateMany?: Enumerable<report_to_chipUpdateManyWithWhereWithoutChipInput>
-    deleteMany?: Enumerable<report_to_chipScalarWhereInput>
-  }
-
-  export type report_to_chipUncheckedUpdateManyWithoutChipNestedInput = {
-    create?: XOR<Enumerable<report_to_chipCreateWithoutChipInput>, Enumerable<report_to_chipUncheckedCreateWithoutChipInput>>
-    connectOrCreate?: Enumerable<report_to_chipCreateOrConnectWithoutChipInput>
-    upsert?: Enumerable<report_to_chipUpsertWithWhereUniqueWithoutChipInput>
-    createMany?: report_to_chipCreateManyChipInputEnvelope
-    set?: Enumerable<report_to_chipWhereUniqueInput>
-    disconnect?: Enumerable<report_to_chipWhereUniqueInput>
-    delete?: Enumerable<report_to_chipWhereUniqueInput>
-    connect?: Enumerable<report_to_chipWhereUniqueInput>
-    update?: Enumerable<report_to_chipUpdateWithWhereUniqueWithoutChipInput>
-    updateMany?: Enumerable<report_to_chipUpdateManyWithWhereWithoutChipInput>
-    deleteMany?: Enumerable<report_to_chipScalarWhereInput>
   }
 
   export type report_to_clauseCreateNestedManyWithoutClauseInput = {
@@ -13305,25 +11941,11 @@ export namespace Prisma {
     deleteMany?: Enumerable<report_to_clauseScalarWhereInput>
   }
 
-  export type report_to_chipCreateNestedManyWithoutReportInput = {
-    create?: XOR<Enumerable<report_to_chipCreateWithoutReportInput>, Enumerable<report_to_chipUncheckedCreateWithoutReportInput>>
-    connectOrCreate?: Enumerable<report_to_chipCreateOrConnectWithoutReportInput>
-    createMany?: report_to_chipCreateManyReportInputEnvelope
-    connect?: Enumerable<report_to_chipWhereUniqueInput>
-  }
-
   export type report_to_clauseCreateNestedManyWithoutReportInput = {
     create?: XOR<Enumerable<report_to_clauseCreateWithoutReportInput>, Enumerable<report_to_clauseUncheckedCreateWithoutReportInput>>
     connectOrCreate?: Enumerable<report_to_clauseCreateOrConnectWithoutReportInput>
     createMany?: report_to_clauseCreateManyReportInputEnvelope
     connect?: Enumerable<report_to_clauseWhereUniqueInput>
-  }
-
-  export type report_to_chipUncheckedCreateNestedManyWithoutReportInput = {
-    create?: XOR<Enumerable<report_to_chipCreateWithoutReportInput>, Enumerable<report_to_chipUncheckedCreateWithoutReportInput>>
-    connectOrCreate?: Enumerable<report_to_chipCreateOrConnectWithoutReportInput>
-    createMany?: report_to_chipCreateManyReportInputEnvelope
-    connect?: Enumerable<report_to_chipWhereUniqueInput>
   }
 
   export type report_to_clauseUncheckedCreateNestedManyWithoutReportInput = {
@@ -13335,20 +11957,6 @@ export namespace Prisma {
 
   export type NullableDateTimeFieldUpdateOperationsInput = {
     set?: Date | string | null
-  }
-
-  export type report_to_chipUpdateManyWithoutReportNestedInput = {
-    create?: XOR<Enumerable<report_to_chipCreateWithoutReportInput>, Enumerable<report_to_chipUncheckedCreateWithoutReportInput>>
-    connectOrCreate?: Enumerable<report_to_chipCreateOrConnectWithoutReportInput>
-    upsert?: Enumerable<report_to_chipUpsertWithWhereUniqueWithoutReportInput>
-    createMany?: report_to_chipCreateManyReportInputEnvelope
-    set?: Enumerable<report_to_chipWhereUniqueInput>
-    disconnect?: Enumerable<report_to_chipWhereUniqueInput>
-    delete?: Enumerable<report_to_chipWhereUniqueInput>
-    connect?: Enumerable<report_to_chipWhereUniqueInput>
-    update?: Enumerable<report_to_chipUpdateWithWhereUniqueWithoutReportInput>
-    updateMany?: Enumerable<report_to_chipUpdateManyWithWhereWithoutReportInput>
-    deleteMany?: Enumerable<report_to_chipScalarWhereInput>
   }
 
   export type report_to_clauseUpdateManyWithoutReportNestedInput = {
@@ -13365,20 +11973,6 @@ export namespace Prisma {
     deleteMany?: Enumerable<report_to_clauseScalarWhereInput>
   }
 
-  export type report_to_chipUncheckedUpdateManyWithoutReportNestedInput = {
-    create?: XOR<Enumerable<report_to_chipCreateWithoutReportInput>, Enumerable<report_to_chipUncheckedCreateWithoutReportInput>>
-    connectOrCreate?: Enumerable<report_to_chipCreateOrConnectWithoutReportInput>
-    upsert?: Enumerable<report_to_chipUpsertWithWhereUniqueWithoutReportInput>
-    createMany?: report_to_chipCreateManyReportInputEnvelope
-    set?: Enumerable<report_to_chipWhereUniqueInput>
-    disconnect?: Enumerable<report_to_chipWhereUniqueInput>
-    delete?: Enumerable<report_to_chipWhereUniqueInput>
-    connect?: Enumerable<report_to_chipWhereUniqueInput>
-    update?: Enumerable<report_to_chipUpdateWithWhereUniqueWithoutReportInput>
-    updateMany?: Enumerable<report_to_chipUpdateManyWithWhereWithoutReportInput>
-    deleteMany?: Enumerable<report_to_chipScalarWhereInput>
-  }
-
   export type report_to_clauseUncheckedUpdateManyWithoutReportNestedInput = {
     create?: XOR<Enumerable<report_to_clauseCreateWithoutReportInput>, Enumerable<report_to_clauseUncheckedCreateWithoutReportInput>>
     connectOrCreate?: Enumerable<report_to_clauseCreateOrConnectWithoutReportInput>
@@ -13391,34 +11985,6 @@ export namespace Prisma {
     update?: Enumerable<report_to_clauseUpdateWithWhereUniqueWithoutReportInput>
     updateMany?: Enumerable<report_to_clauseUpdateManyWithWhereWithoutReportInput>
     deleteMany?: Enumerable<report_to_clauseScalarWhereInput>
-  }
-
-  export type chipCreateNestedOneWithoutReport_to_chipInput = {
-    create?: XOR<chipCreateWithoutReport_to_chipInput, chipUncheckedCreateWithoutReport_to_chipInput>
-    connectOrCreate?: chipCreateOrConnectWithoutReport_to_chipInput
-    connect?: chipWhereUniqueInput
-  }
-
-  export type reportCreateNestedOneWithoutReport_to_chipInput = {
-    create?: XOR<reportCreateWithoutReport_to_chipInput, reportUncheckedCreateWithoutReport_to_chipInput>
-    connectOrCreate?: reportCreateOrConnectWithoutReport_to_chipInput
-    connect?: reportWhereUniqueInput
-  }
-
-  export type chipUpdateOneRequiredWithoutReport_to_chipNestedInput = {
-    create?: XOR<chipCreateWithoutReport_to_chipInput, chipUncheckedCreateWithoutReport_to_chipInput>
-    connectOrCreate?: chipCreateOrConnectWithoutReport_to_chipInput
-    upsert?: chipUpsertWithoutReport_to_chipInput
-    connect?: chipWhereUniqueInput
-    update?: XOR<chipUpdateWithoutReport_to_chipInput, chipUncheckedUpdateWithoutReport_to_chipInput>
-  }
-
-  export type reportUpdateOneRequiredWithoutReport_to_chipNestedInput = {
-    create?: XOR<reportCreateWithoutReport_to_chipInput, reportUncheckedCreateWithoutReport_to_chipInput>
-    connectOrCreate?: reportCreateOrConnectWithoutReport_to_chipInput
-    upsert?: reportUpsertWithoutReport_to_chipInput
-    connect?: reportWhereUniqueInput
-    update?: XOR<reportUpdateWithoutReport_to_chipInput, reportUncheckedUpdateWithoutReport_to_chipInput>
   }
 
   export type clauseCreateNestedOneWithoutReport_to_clauseInput = {
@@ -13449,74 +12015,66 @@ export namespace Prisma {
     update?: XOR<reportUpdateWithoutReport_to_clauseInput, reportUncheckedUpdateWithoutReport_to_clauseInput>
   }
 
-  export type udapsCreateNestedOneWithoutUsersInput = {
-    create?: XOR<udapsCreateWithoutUsersInput, udapsUncheckedCreateWithoutUsersInput>
-    connectOrCreate?: udapsCreateOrConnectWithoutUsersInput
-    connect?: udapsWhereUniqueInput
+  export type userCreateNestedManyWithoutUdapInput = {
+    create?: XOR<Enumerable<userCreateWithoutUdapInput>, Enumerable<userUncheckedCreateWithoutUdapInput>>
+    connectOrCreate?: Enumerable<userCreateOrConnectWithoutUdapInput>
+    createMany?: userCreateManyUdapInputEnvelope
+    connect?: Enumerable<userWhereUniqueInput>
   }
 
-  export type udapsUpdateOneWithoutUsersNestedInput = {
-    create?: XOR<udapsCreateWithoutUsersInput, udapsUncheckedCreateWithoutUsersInput>
-    connectOrCreate?: udapsCreateOrConnectWithoutUsersInput
-    upsert?: udapsUpsertWithoutUsersInput
-    disconnect?: boolean
-    delete?: boolean
-    connect?: udapsWhereUniqueInput
-    update?: XOR<udapsUpdateWithoutUsersInput, udapsUncheckedUpdateWithoutUsersInput>
-  }
-
-  export type usersCreateNestedManyWithoutUdapsInput = {
-    create?: XOR<Enumerable<usersCreateWithoutUdapsInput>, Enumerable<usersUncheckedCreateWithoutUdapsInput>>
-    connectOrCreate?: Enumerable<usersCreateOrConnectWithoutUdapsInput>
-    createMany?: usersCreateManyUdapsInputEnvelope
-    connect?: Enumerable<usersWhereUniqueInput>
-  }
-
-  export type usersUncheckedCreateNestedManyWithoutUdapsInput = {
-    create?: XOR<Enumerable<usersCreateWithoutUdapsInput>, Enumerable<usersUncheckedCreateWithoutUdapsInput>>
-    connectOrCreate?: Enumerable<usersCreateOrConnectWithoutUdapsInput>
-    createMany?: usersCreateManyUdapsInputEnvelope
-    connect?: Enumerable<usersWhereUniqueInput>
+  export type userUncheckedCreateNestedManyWithoutUdapInput = {
+    create?: XOR<Enumerable<userCreateWithoutUdapInput>, Enumerable<userUncheckedCreateWithoutUdapInput>>
+    connectOrCreate?: Enumerable<userCreateOrConnectWithoutUdapInput>
+    createMany?: userCreateManyUdapInputEnvelope
+    connect?: Enumerable<userWhereUniqueInput>
   }
 
   export type NullableBoolFieldUpdateOperationsInput = {
     set?: boolean | null
   }
 
-  export type NullableIntFieldUpdateOperationsInput = {
-    set?: number | null
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
+  export type userUpdateManyWithoutUdapNestedInput = {
+    create?: XOR<Enumerable<userCreateWithoutUdapInput>, Enumerable<userUncheckedCreateWithoutUdapInput>>
+    connectOrCreate?: Enumerable<userCreateOrConnectWithoutUdapInput>
+    upsert?: Enumerable<userUpsertWithWhereUniqueWithoutUdapInput>
+    createMany?: userCreateManyUdapInputEnvelope
+    set?: Enumerable<userWhereUniqueInput>
+    disconnect?: Enumerable<userWhereUniqueInput>
+    delete?: Enumerable<userWhereUniqueInput>
+    connect?: Enumerable<userWhereUniqueInput>
+    update?: Enumerable<userUpdateWithWhereUniqueWithoutUdapInput>
+    updateMany?: Enumerable<userUpdateManyWithWhereWithoutUdapInput>
+    deleteMany?: Enumerable<userScalarWhereInput>
   }
 
-  export type usersUpdateManyWithoutUdapsNestedInput = {
-    create?: XOR<Enumerable<usersCreateWithoutUdapsInput>, Enumerable<usersUncheckedCreateWithoutUdapsInput>>
-    connectOrCreate?: Enumerable<usersCreateOrConnectWithoutUdapsInput>
-    upsert?: Enumerable<usersUpsertWithWhereUniqueWithoutUdapsInput>
-    createMany?: usersCreateManyUdapsInputEnvelope
-    set?: Enumerable<usersWhereUniqueInput>
-    disconnect?: Enumerable<usersWhereUniqueInput>
-    delete?: Enumerable<usersWhereUniqueInput>
-    connect?: Enumerable<usersWhereUniqueInput>
-    update?: Enumerable<usersUpdateWithWhereUniqueWithoutUdapsInput>
-    updateMany?: Enumerable<usersUpdateManyWithWhereWithoutUdapsInput>
-    deleteMany?: Enumerable<usersScalarWhereInput>
+  export type userUncheckedUpdateManyWithoutUdapNestedInput = {
+    create?: XOR<Enumerable<userCreateWithoutUdapInput>, Enumerable<userUncheckedCreateWithoutUdapInput>>
+    connectOrCreate?: Enumerable<userCreateOrConnectWithoutUdapInput>
+    upsert?: Enumerable<userUpsertWithWhereUniqueWithoutUdapInput>
+    createMany?: userCreateManyUdapInputEnvelope
+    set?: Enumerable<userWhereUniqueInput>
+    disconnect?: Enumerable<userWhereUniqueInput>
+    delete?: Enumerable<userWhereUniqueInput>
+    connect?: Enumerable<userWhereUniqueInput>
+    update?: Enumerable<userUpdateWithWhereUniqueWithoutUdapInput>
+    updateMany?: Enumerable<userUpdateManyWithWhereWithoutUdapInput>
+    deleteMany?: Enumerable<userScalarWhereInput>
   }
 
-  export type usersUncheckedUpdateManyWithoutUdapsNestedInput = {
-    create?: XOR<Enumerable<usersCreateWithoutUdapsInput>, Enumerable<usersUncheckedCreateWithoutUdapsInput>>
-    connectOrCreate?: Enumerable<usersCreateOrConnectWithoutUdapsInput>
-    upsert?: Enumerable<usersUpsertWithWhereUniqueWithoutUdapsInput>
-    createMany?: usersCreateManyUdapsInputEnvelope
-    set?: Enumerable<usersWhereUniqueInput>
-    disconnect?: Enumerable<usersWhereUniqueInput>
-    delete?: Enumerable<usersWhereUniqueInput>
-    connect?: Enumerable<usersWhereUniqueInput>
-    update?: Enumerable<usersUpdateWithWhereUniqueWithoutUdapsInput>
-    updateMany?: Enumerable<usersUpdateManyWithWhereWithoutUdapsInput>
-    deleteMany?: Enumerable<usersScalarWhereInput>
+  export type udapCreateNestedOneWithoutUserInput = {
+    create?: XOR<udapCreateWithoutUserInput, udapUncheckedCreateWithoutUserInput>
+    connectOrCreate?: udapCreateOrConnectWithoutUserInput
+    connect?: udapWhereUniqueInput
+  }
+
+  export type udapUpdateOneWithoutUserNestedInput = {
+    create?: XOR<udapCreateWithoutUserInput, udapUncheckedCreateWithoutUserInput>
+    connectOrCreate?: udapCreateOrConnectWithoutUserInput
+    upsert?: udapUpsertWithoutUserInput
+    disconnect?: boolean
+    delete?: boolean
+    connect?: udapWhereUniqueInput
+    update?: XOR<udapUpdateWithoutUserInput, udapUncheckedUpdateWithoutUserInput>
   }
 
   export type NestedBigIntFilter = {
@@ -13733,78 +12291,6 @@ export namespace Prisma {
     _max?: NestedBoolNullableFilter
   }
 
-  export type NestedIntNullableWithAggregatesFilter = {
-    equals?: number | null
-    in?: Enumerable<number> | number | null
-    notIn?: Enumerable<number> | number | null
-    lt?: number
-    lte?: number
-    gt?: number
-    gte?: number
-    not?: NestedIntNullableWithAggregatesFilter | number | null
-    _count?: NestedIntNullableFilter
-    _avg?: NestedFloatNullableFilter
-    _sum?: NestedIntNullableFilter
-    _min?: NestedIntNullableFilter
-    _max?: NestedIntNullableFilter
-  }
-
-  export type NestedFloatNullableFilter = {
-    equals?: number | null
-    in?: Enumerable<number> | number | null
-    notIn?: Enumerable<number> | number | null
-    lt?: number
-    lte?: number
-    gt?: number
-    gte?: number
-    not?: NestedFloatNullableFilter | number | null
-  }
-
-  export type report_to_chipCreateWithoutChipInput = {
-    id: string
-    report: reportCreateNestedOneWithoutReport_to_chipInput
-  }
-
-  export type report_to_chipUncheckedCreateWithoutChipInput = {
-    id: string
-    report_id: string
-  }
-
-  export type report_to_chipCreateOrConnectWithoutChipInput = {
-    where: report_to_chipWhereUniqueInput
-    create: XOR<report_to_chipCreateWithoutChipInput, report_to_chipUncheckedCreateWithoutChipInput>
-  }
-
-  export type report_to_chipCreateManyChipInputEnvelope = {
-    data: Enumerable<report_to_chipCreateManyChipInput>
-    skipDuplicates?: boolean
-  }
-
-  export type report_to_chipUpsertWithWhereUniqueWithoutChipInput = {
-    where: report_to_chipWhereUniqueInput
-    update: XOR<report_to_chipUpdateWithoutChipInput, report_to_chipUncheckedUpdateWithoutChipInput>
-    create: XOR<report_to_chipCreateWithoutChipInput, report_to_chipUncheckedCreateWithoutChipInput>
-  }
-
-  export type report_to_chipUpdateWithWhereUniqueWithoutChipInput = {
-    where: report_to_chipWhereUniqueInput
-    data: XOR<report_to_chipUpdateWithoutChipInput, report_to_chipUncheckedUpdateWithoutChipInput>
-  }
-
-  export type report_to_chipUpdateManyWithWhereWithoutChipInput = {
-    where: report_to_chipScalarWhereInput
-    data: XOR<report_to_chipUpdateManyMutationInput, report_to_chipUncheckedUpdateManyWithoutReport_to_chipInput>
-  }
-
-  export type report_to_chipScalarWhereInput = {
-    AND?: Enumerable<report_to_chipScalarWhereInput>
-    OR?: Enumerable<report_to_chipScalarWhereInput>
-    NOT?: Enumerable<report_to_chipScalarWhereInput>
-    id?: StringFilter | string
-    report_id?: StringFilter | string
-    chip_id?: StringFilter | string
-  }
-
   export type report_to_clauseCreateWithoutClauseInput = {
     id: string
     report: reportCreateNestedOneWithoutReport_to_clauseInput
@@ -13850,26 +12336,6 @@ export namespace Prisma {
     clause_id?: StringFilter | string
   }
 
-  export type report_to_chipCreateWithoutReportInput = {
-    id: string
-    chip: chipCreateNestedOneWithoutReport_to_chipInput
-  }
-
-  export type report_to_chipUncheckedCreateWithoutReportInput = {
-    id: string
-    chip_id: string
-  }
-
-  export type report_to_chipCreateOrConnectWithoutReportInput = {
-    where: report_to_chipWhereUniqueInput
-    create: XOR<report_to_chipCreateWithoutReportInput, report_to_chipUncheckedCreateWithoutReportInput>
-  }
-
-  export type report_to_chipCreateManyReportInputEnvelope = {
-    data: Enumerable<report_to_chipCreateManyReportInput>
-    skipDuplicates?: boolean
-  }
-
   export type report_to_clauseCreateWithoutReportInput = {
     id: string
     clause: clauseCreateNestedOneWithoutReport_to_clauseInput
@@ -13890,22 +12356,6 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type report_to_chipUpsertWithWhereUniqueWithoutReportInput = {
-    where: report_to_chipWhereUniqueInput
-    update: XOR<report_to_chipUpdateWithoutReportInput, report_to_chipUncheckedUpdateWithoutReportInput>
-    create: XOR<report_to_chipCreateWithoutReportInput, report_to_chipUncheckedCreateWithoutReportInput>
-  }
-
-  export type report_to_chipUpdateWithWhereUniqueWithoutReportInput = {
-    where: report_to_chipWhereUniqueInput
-    data: XOR<report_to_chipUpdateWithoutReportInput, report_to_chipUncheckedUpdateWithoutReportInput>
-  }
-
-  export type report_to_chipUpdateManyWithWhereWithoutReportInput = {
-    where: report_to_chipScalarWhereInput
-    data: XOR<report_to_chipUpdateManyMutationInput, report_to_chipUncheckedUpdateManyWithoutReport_to_chipInput>
-  }
-
   export type report_to_clauseUpsertWithWhereUniqueWithoutReportInput = {
     where: report_to_clauseWhereUniqueInput
     update: XOR<report_to_clauseUpdateWithoutReportInput, report_to_clauseUncheckedUpdateWithoutReportInput>
@@ -13920,134 +12370,6 @@ export namespace Prisma {
   export type report_to_clauseUpdateManyWithWhereWithoutReportInput = {
     where: report_to_clauseScalarWhereInput
     data: XOR<report_to_clauseUpdateManyMutationInput, report_to_clauseUncheckedUpdateManyWithoutReport_to_clauseInput>
-  }
-
-  export type chipCreateWithoutReport_to_chipInput = {
-    id: string
-    label: string
-    value: string
-  }
-
-  export type chipUncheckedCreateWithoutReport_to_chipInput = {
-    id: string
-    label: string
-    value: string
-  }
-
-  export type chipCreateOrConnectWithoutReport_to_chipInput = {
-    where: chipWhereUniqueInput
-    create: XOR<chipCreateWithoutReport_to_chipInput, chipUncheckedCreateWithoutReport_to_chipInput>
-  }
-
-  export type reportCreateWithoutReport_to_chipInput = {
-    id: string
-    title?: string | null
-    project_description?: string | null
-    redacted_by?: string | null
-    meet_date?: Date | string | null
-    applicant_name?: string | null
-    applicant_address?: string | null
-    project_cadastral_ref?: string | null
-    project_space_type?: string | null
-    decision?: string | null
-    precisions?: string | null
-    contacts?: string | null
-    further_information?: string | null
-    created_by_id: string
-    created_by_username: string
-    created_at: Date | string
-    service_instructeur?: string | null
-    report_to_clause?: report_to_clauseCreateNestedManyWithoutReportInput
-  }
-
-  export type reportUncheckedCreateWithoutReport_to_chipInput = {
-    id: string
-    title?: string | null
-    project_description?: string | null
-    redacted_by?: string | null
-    meet_date?: Date | string | null
-    applicant_name?: string | null
-    applicant_address?: string | null
-    project_cadastral_ref?: string | null
-    project_space_type?: string | null
-    decision?: string | null
-    precisions?: string | null
-    contacts?: string | null
-    further_information?: string | null
-    created_by_id: string
-    created_by_username: string
-    created_at: Date | string
-    service_instructeur?: string | null
-    report_to_clause?: report_to_clauseUncheckedCreateNestedManyWithoutReportInput
-  }
-
-  export type reportCreateOrConnectWithoutReport_to_chipInput = {
-    where: reportWhereUniqueInput
-    create: XOR<reportCreateWithoutReport_to_chipInput, reportUncheckedCreateWithoutReport_to_chipInput>
-  }
-
-  export type chipUpsertWithoutReport_to_chipInput = {
-    update: XOR<chipUpdateWithoutReport_to_chipInput, chipUncheckedUpdateWithoutReport_to_chipInput>
-    create: XOR<chipCreateWithoutReport_to_chipInput, chipUncheckedCreateWithoutReport_to_chipInput>
-  }
-
-  export type chipUpdateWithoutReport_to_chipInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    label?: StringFieldUpdateOperationsInput | string
-    value?: StringFieldUpdateOperationsInput | string
-  }
-
-  export type chipUncheckedUpdateWithoutReport_to_chipInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    label?: StringFieldUpdateOperationsInput | string
-    value?: StringFieldUpdateOperationsInput | string
-  }
-
-  export type reportUpsertWithoutReport_to_chipInput = {
-    update: XOR<reportUpdateWithoutReport_to_chipInput, reportUncheckedUpdateWithoutReport_to_chipInput>
-    create: XOR<reportCreateWithoutReport_to_chipInput, reportUncheckedCreateWithoutReport_to_chipInput>
-  }
-
-  export type reportUpdateWithoutReport_to_chipInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    title?: NullableStringFieldUpdateOperationsInput | string | null
-    project_description?: NullableStringFieldUpdateOperationsInput | string | null
-    redacted_by?: NullableStringFieldUpdateOperationsInput | string | null
-    meet_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    applicant_name?: NullableStringFieldUpdateOperationsInput | string | null
-    applicant_address?: NullableStringFieldUpdateOperationsInput | string | null
-    project_cadastral_ref?: NullableStringFieldUpdateOperationsInput | string | null
-    project_space_type?: NullableStringFieldUpdateOperationsInput | string | null
-    decision?: NullableStringFieldUpdateOperationsInput | string | null
-    precisions?: NullableStringFieldUpdateOperationsInput | string | null
-    contacts?: NullableStringFieldUpdateOperationsInput | string | null
-    further_information?: NullableStringFieldUpdateOperationsInput | string | null
-    created_by_id?: StringFieldUpdateOperationsInput | string
-    created_by_username?: StringFieldUpdateOperationsInput | string
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    service_instructeur?: NullableStringFieldUpdateOperationsInput | string | null
-    report_to_clause?: report_to_clauseUpdateManyWithoutReportNestedInput
-  }
-
-  export type reportUncheckedUpdateWithoutReport_to_chipInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    title?: NullableStringFieldUpdateOperationsInput | string | null
-    project_description?: NullableStringFieldUpdateOperationsInput | string | null
-    redacted_by?: NullableStringFieldUpdateOperationsInput | string | null
-    meet_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    applicant_name?: NullableStringFieldUpdateOperationsInput | string | null
-    applicant_address?: NullableStringFieldUpdateOperationsInput | string | null
-    project_cadastral_ref?: NullableStringFieldUpdateOperationsInput | string | null
-    project_space_type?: NullableStringFieldUpdateOperationsInput | string | null
-    decision?: NullableStringFieldUpdateOperationsInput | string | null
-    precisions?: NullableStringFieldUpdateOperationsInput | string | null
-    contacts?: NullableStringFieldUpdateOperationsInput | string | null
-    further_information?: NullableStringFieldUpdateOperationsInput | string | null
-    created_by_id?: StringFieldUpdateOperationsInput | string
-    created_by_username?: StringFieldUpdateOperationsInput | string
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    service_instructeur?: NullableStringFieldUpdateOperationsInput | string | null
-    report_to_clause?: report_to_clauseUncheckedUpdateManyWithoutReportNestedInput
   }
 
   export type clauseCreateWithoutReport_to_clauseInput = {
@@ -14085,7 +12407,6 @@ export namespace Prisma {
     created_by_username: string
     created_at: Date | string
     service_instructeur?: string | null
-    report_to_chip?: report_to_chipCreateNestedManyWithoutReportInput
   }
 
   export type reportUncheckedCreateWithoutReport_to_clauseInput = {
@@ -14106,7 +12427,6 @@ export namespace Prisma {
     created_by_username: string
     created_at: Date | string
     service_instructeur?: string | null
-    report_to_chip?: report_to_chipUncheckedCreateNestedManyWithoutReportInput
   }
 
   export type reportCreateOrConnectWithoutReport_to_clauseInput = {
@@ -14154,7 +12474,6 @@ export namespace Prisma {
     created_by_username?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     service_instructeur?: NullableStringFieldUpdateOperationsInput | string | null
-    report_to_chip?: report_to_chipUpdateManyWithoutReportNestedInput
   }
 
   export type reportUncheckedUpdateWithoutReport_to_clauseInput = {
@@ -14175,72 +12494,9 @@ export namespace Prisma {
     created_by_username?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     service_instructeur?: NullableStringFieldUpdateOperationsInput | string | null
-    report_to_chip?: report_to_chipUncheckedUpdateManyWithoutReportNestedInput
   }
 
-  export type udapsCreateWithoutUsersInput = {
-    id: string
-    department: string
-    complete_coords?: string | null
-    address?: string | null
-    visible?: boolean | null
-    name?: string | null
-    zip_code?: number | null
-    city?: string | null
-    phone?: string | null
-    email?: string | null
-  }
-
-  export type udapsUncheckedCreateWithoutUsersInput = {
-    id: string
-    department: string
-    complete_coords?: string | null
-    address?: string | null
-    visible?: boolean | null
-    name?: string | null
-    zip_code?: number | null
-    city?: string | null
-    phone?: string | null
-    email?: string | null
-  }
-
-  export type udapsCreateOrConnectWithoutUsersInput = {
-    where: udapsWhereUniqueInput
-    create: XOR<udapsCreateWithoutUsersInput, udapsUncheckedCreateWithoutUsersInput>
-  }
-
-  export type udapsUpsertWithoutUsersInput = {
-    update: XOR<udapsUpdateWithoutUsersInput, udapsUncheckedUpdateWithoutUsersInput>
-    create: XOR<udapsCreateWithoutUsersInput, udapsUncheckedCreateWithoutUsersInput>
-  }
-
-  export type udapsUpdateWithoutUsersInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    department?: StringFieldUpdateOperationsInput | string
-    complete_coords?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    visible?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    name?: NullableStringFieldUpdateOperationsInput | string | null
-    zip_code?: NullableIntFieldUpdateOperationsInput | number | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type udapsUncheckedUpdateWithoutUsersInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    department?: StringFieldUpdateOperationsInput | string
-    complete_coords?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    visible?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    name?: NullableStringFieldUpdateOperationsInput | string | null
-    zip_code?: NullableIntFieldUpdateOperationsInput | number | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type usersCreateWithoutUdapsInput = {
+  export type userCreateWithoutUdapInput = {
     id: string
     email: string
     name: string
@@ -14249,7 +12505,7 @@ export namespace Prisma {
     password: string
   }
 
-  export type usersUncheckedCreateWithoutUdapsInput = {
+  export type userUncheckedCreateWithoutUdapInput = {
     id: string
     email: string
     name: string
@@ -14258,36 +12514,36 @@ export namespace Prisma {
     password: string
   }
 
-  export type usersCreateOrConnectWithoutUdapsInput = {
-    where: usersWhereUniqueInput
-    create: XOR<usersCreateWithoutUdapsInput, usersUncheckedCreateWithoutUdapsInput>
+  export type userCreateOrConnectWithoutUdapInput = {
+    where: userWhereUniqueInput
+    create: XOR<userCreateWithoutUdapInput, userUncheckedCreateWithoutUdapInput>
   }
 
-  export type usersCreateManyUdapsInputEnvelope = {
-    data: Enumerable<usersCreateManyUdapsInput>
+  export type userCreateManyUdapInputEnvelope = {
+    data: Enumerable<userCreateManyUdapInput>
     skipDuplicates?: boolean
   }
 
-  export type usersUpsertWithWhereUniqueWithoutUdapsInput = {
-    where: usersWhereUniqueInput
-    update: XOR<usersUpdateWithoutUdapsInput, usersUncheckedUpdateWithoutUdapsInput>
-    create: XOR<usersCreateWithoutUdapsInput, usersUncheckedCreateWithoutUdapsInput>
+  export type userUpsertWithWhereUniqueWithoutUdapInput = {
+    where: userWhereUniqueInput
+    update: XOR<userUpdateWithoutUdapInput, userUncheckedUpdateWithoutUdapInput>
+    create: XOR<userCreateWithoutUdapInput, userUncheckedCreateWithoutUdapInput>
   }
 
-  export type usersUpdateWithWhereUniqueWithoutUdapsInput = {
-    where: usersWhereUniqueInput
-    data: XOR<usersUpdateWithoutUdapsInput, usersUncheckedUpdateWithoutUdapsInput>
+  export type userUpdateWithWhereUniqueWithoutUdapInput = {
+    where: userWhereUniqueInput
+    data: XOR<userUpdateWithoutUdapInput, userUncheckedUpdateWithoutUdapInput>
   }
 
-  export type usersUpdateManyWithWhereWithoutUdapsInput = {
-    where: usersScalarWhereInput
-    data: XOR<usersUpdateManyMutationInput, usersUncheckedUpdateManyWithoutUsersInput>
+  export type userUpdateManyWithWhereWithoutUdapInput = {
+    where: userScalarWhereInput
+    data: XOR<userUpdateManyMutationInput, userUncheckedUpdateManyWithoutUserInput>
   }
 
-  export type usersScalarWhereInput = {
-    AND?: Enumerable<usersScalarWhereInput>
-    OR?: Enumerable<usersScalarWhereInput>
-    NOT?: Enumerable<usersScalarWhereInput>
+  export type userScalarWhereInput = {
+    AND?: Enumerable<userScalarWhereInput>
+    OR?: Enumerable<userScalarWhereInput>
+    NOT?: Enumerable<userScalarWhereInput>
     id?: StringFilter | string
     email?: StringFilter | string
     name?: StringFilter | string
@@ -14297,24 +12553,66 @@ export namespace Prisma {
     udap_id?: StringNullableFilter | string | null
   }
 
-  export type report_to_chipCreateManyChipInput = {
+  export type udapCreateWithoutUserInput = {
     id: string
-    report_id: string
+    department: string
+    complete_coords?: string | null
+    visible?: boolean | null
+    name?: string | null
+    address?: string | null
+    zip_code?: string | null
+    city?: string | null
+    phone?: string | null
+    email?: string | null
   }
 
-  export type report_to_chipUpdateWithoutChipInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    report?: reportUpdateOneRequiredWithoutReport_to_chipNestedInput
+  export type udapUncheckedCreateWithoutUserInput = {
+    id: string
+    department: string
+    complete_coords?: string | null
+    visible?: boolean | null
+    name?: string | null
+    address?: string | null
+    zip_code?: string | null
+    city?: string | null
+    phone?: string | null
+    email?: string | null
   }
 
-  export type report_to_chipUncheckedUpdateWithoutChipInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    report_id?: StringFieldUpdateOperationsInput | string
+  export type udapCreateOrConnectWithoutUserInput = {
+    where: udapWhereUniqueInput
+    create: XOR<udapCreateWithoutUserInput, udapUncheckedCreateWithoutUserInput>
   }
 
-  export type report_to_chipUncheckedUpdateManyWithoutReport_to_chipInput = {
+  export type udapUpsertWithoutUserInput = {
+    update: XOR<udapUpdateWithoutUserInput, udapUncheckedUpdateWithoutUserInput>
+    create: XOR<udapCreateWithoutUserInput, udapUncheckedCreateWithoutUserInput>
+  }
+
+  export type udapUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
-    report_id?: StringFieldUpdateOperationsInput | string
+    department?: StringFieldUpdateOperationsInput | string
+    complete_coords?: NullableStringFieldUpdateOperationsInput | string | null
+    visible?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    zip_code?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type udapUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    department?: StringFieldUpdateOperationsInput | string
+    complete_coords?: NullableStringFieldUpdateOperationsInput | string | null
+    visible?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    zip_code?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type report_to_clauseCreateManyClauseInput = {
@@ -14337,24 +12635,9 @@ export namespace Prisma {
     report_id?: StringFieldUpdateOperationsInput | string
   }
 
-  export type report_to_chipCreateManyReportInput = {
-    id: string
-    chip_id: string
-  }
-
   export type report_to_clauseCreateManyReportInput = {
     id: string
     clause_id: string
-  }
-
-  export type report_to_chipUpdateWithoutReportInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    chip?: chipUpdateOneRequiredWithoutReport_to_chipNestedInput
-  }
-
-  export type report_to_chipUncheckedUpdateWithoutReportInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    chip_id?: StringFieldUpdateOperationsInput | string
   }
 
   export type report_to_clauseUpdateWithoutReportInput = {
@@ -14367,7 +12650,7 @@ export namespace Prisma {
     clause_id?: StringFieldUpdateOperationsInput | string
   }
 
-  export type usersCreateManyUdapsInput = {
+  export type userCreateManyUdapInput = {
     id: string
     email: string
     name: string
@@ -14376,7 +12659,7 @@ export namespace Prisma {
     password: string
   }
 
-  export type usersUpdateWithoutUdapsInput = {
+  export type userUpdateWithoutUdapInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
@@ -14385,7 +12668,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
   }
 
-  export type usersUncheckedUpdateWithoutUdapsInput = {
+  export type userUncheckedUpdateWithoutUdapInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
@@ -14394,7 +12677,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
   }
 
-  export type usersUncheckedUpdateManyWithoutUsersInput = {
+  export type userUncheckedUpdateManyWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string

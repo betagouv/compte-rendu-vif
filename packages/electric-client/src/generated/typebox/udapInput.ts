@@ -1,6 +1,6 @@
 import { Type, Static } from "@sinclair/typebox";
 
-export const udaps = Type.Object({
+export const udapInput = Type.Object({
   id: Type.String(),
   department: Type.String(),
   complete_coords: Type.Optional(Type.String()),
@@ -11,7 +11,7 @@ export const udaps = Type.Object({
   city: Type.Optional(Type.String()),
   phone: Type.Optional(Type.String()),
   email: Type.Optional(Type.String()),
-  users: Type.Array(
+  user: Type.Array(
     Type.Object({
       id: Type.String(),
       email: Type.String(),
@@ -24,4 +24,4 @@ export const udaps = Type.Object({
   ),
 });
 
-export type udapsType = Static<typeof udaps>;
+export type udapInputType = Static<typeof udapInput>;

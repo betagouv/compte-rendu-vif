@@ -1,6 +1,6 @@
 import { Type, Static } from "@sinclair/typebox";
 
-export const users = Type.Object({
+export const userInput = Type.Object({
   id: Type.String(),
   email: Type.String(),
   name: Type.String(),
@@ -8,7 +8,7 @@ export const users = Type.Object({
   temporaryLinkExpiresAt: Type.Optional(Type.String()),
   password: Type.String(),
   udap_id: Type.Optional(Type.String()),
-  udaps: Type.Optional(
+  udap: Type.Optional(
     Type.Object({
       id: Type.String(),
       department: Type.String(),
@@ -24,4 +24,4 @@ export const users = Type.Object({
   ),
 });
 
-export type usersType = Static<typeof users>;
+export type userInputType = Static<typeof userInput>;
