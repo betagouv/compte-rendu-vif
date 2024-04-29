@@ -6,7 +6,6 @@ import crypto from "node:crypto";
 import jwt from "jsonwebtoken";
 import { addDays } from "date-fns";
 
-import { createInsertSchema, createSelectSchema } from "drizzle-typebox";
 import { ENV, isDev } from "../envVars";
 import { AppError } from "../features/errors";
 import { Type, type Static } from "@sinclair/typebox";
@@ -23,7 +22,6 @@ export class UserService {
       data: {
         ...payload,
         password,
-        id: crypto.randomUUID(),
       },
       include: { udap: true },
     });
@@ -38,19 +36,12 @@ export class UserService {
     return serializeUser(user as any);
   }
 
-  async getUserById(id: string) {
-    const user = await db.user.findFirst({ where: { id } });
-    assertUserExists(user);
-
-    return serializeUser(user!);
-  }
-
-  async updateUser(id: string, payload: Partial<Prisma.userUncheckedCreateInput>) {
+  async updateUser(email: string, payload: Partial<Prisma.userUncheckedCreateInput>) {
     const changes = pick(payload, ["name", "email", "password"]);
 
-    const user = await db.user.update({ where: { id }, data: changes });
+    const user = await db.user.update({ where: { email }, data: changes, include: { udap: true } });
 
-    return serializeUser(user!);
+    return serializeUser(user as any);
   }
 
   async login(payload: Pick<Prisma.userUncheckedCreateInput, "email" | "password">) {
@@ -80,7 +71,7 @@ export class UserService {
     const password = await encryptPassword(newPassword);
 
     await db.user.update({
-      where: { id: user!.id },
+      where: { email: user!.email },
       data: { password, temporaryLink: null, temporaryLinkExpiresAt: null },
     });
 
@@ -88,14 +79,14 @@ export class UserService {
   }
 
   verifyJWT(token: string) {
-    const { id } = this.validateJWT(token);
-    return this.getUserById(id);
+    const { email } = this.validateJWT(token);
+    return this.getUserByEmail(email);
   }
 
   generateJWT(user: Prisma.userUncheckedCreateInput) {
     return jwt.sign(
       {
-        sub: user.id,
+        sub: user.email,
       },
       ENV.JWT_SECRET,
       {
@@ -105,21 +96,20 @@ export class UserService {
   }
 
   validateJWT(token: string) {
-    return jwt.verify(token, ENV.JWT_SECRET) as { id: string };
+    return jwt.verify(token, ENV.JWT_SECRET) as { email: string };
   }
 }
 
 const serializeUser = (user: Prisma.userCreateInput) => {
-  const data = pick(user, ["id", "name", "email", "udap"]);
+  const data = pick(user, ["name", "email", "udap"]);
   return {
-    id: data.id,
     name: data.name,
     email: data.email,
     udap: data.udap!,
   } as Static<typeof Schemas.userInput>;
 };
 
-export const serializedUserTSchema = Type.Pick(Schemas.user, ["id", "name", "email", "udap"]);
+export const serializedUserTSchema = Type.Pick(Schemas.user, ["name", "email", "udap"]);
 export const userAndTokenTSchema = Type.Object({
   user: serializedUserTSchema,
   token: Type.String(),

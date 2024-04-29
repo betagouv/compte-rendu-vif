@@ -1,26 +1,3 @@
-CREATE TABLE udap(
-   id              TEXT NOT NULL PRIMARY KEY
-  ,department      TEXT NOT NULL
-  ,complete_coords TEXT
-  ,visible         BOOLEAN
-  ,name            TEXT
-  ,address         TEXT
-  ,zip_code        TEXT 
-  ,city            TEXT
-  ,phone           TEXT 
-  ,email           TEXT
-);
-
-
-
-ALTER TABLE "user" ADD COLUMN "udap_id" text;
-
-ALTER TABLE "user" ADD CONSTRAINT "fk_udap_id"
-    FOREIGN KEY ("udap_id")
-    REFERENCES "udap" ("id")
-    ON DELETE SET NULL;
-    
-
 INSERT INTO udap(id,department,complete_coords,visible,name,address,zip_code,city,phone,email) VALUES ('udap-ain','Ain',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 INSERT INTO udap(id,department,complete_coords,visible,name,address,zip_code,city,phone,email) VALUES ('udap-aisne','Aisne',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 INSERT INTO udap(id,department,complete_coords,visible,name,address,zip_code,city,phone,email) VALUES ('udap-allier','Allier',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);

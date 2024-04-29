@@ -178,7 +178,6 @@ exports.Prisma.UdapScalarFieldEnum = {
 };
 
 exports.Prisma.UserScalarFieldEnum = {
-  id: 'id',
   email: 'email',
   name: 'name',
   temporaryLink: 'temporaryLink',

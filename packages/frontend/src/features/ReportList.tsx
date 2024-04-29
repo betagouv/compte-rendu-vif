@@ -32,7 +32,7 @@ export const MyReports = () => {
 
 export const AllReports = () => {
   const user = useUser()!;
-  const allReports = useLiveQuery(db.report.liveMany({ where: { created_by_id: { not: user.id } } }));
+  const allReports = useLiveQuery(db.report.liveMany({ where: { created_by_id: { not: user.email } } }));
 
   if (allReports.error) {
     console.error(allReports.error);

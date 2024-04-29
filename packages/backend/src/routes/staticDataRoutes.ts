@@ -1,6 +1,6 @@
 import type { FastifyPluginAsyncTypebox } from "@fastify/type-provider-typebox";
 import { Type } from "@sinclair/typebox";
-import { udaps } from "@cr-vif/electric-client/typebox";
+import { udap } from "@cr-vif/electric-client/typebox";
 
 export const staticDataPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
   // @ts-ignore - null/undefined mismatch
@@ -10,5 +10,5 @@ export const staticDataPlugin: FastifyPluginAsyncTypebox = async (fastify, _) =>
 };
 
 export const getUDAPsTSchema = {
-  response: { 200: Type.Array(Type.Omit(udaps, ["users"])) },
+  response: { 200: Type.Array(Type.Omit(udap, ["user"])) },
 };

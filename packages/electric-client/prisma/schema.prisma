@@ -74,10 +74,12 @@ model chip {
 }
 
 model delegation {
-  createdBy   String
-  delegatedTo String
+  createdBy                         String
+  delegatedTo                       String
+  user_delegation_createdByTouser   user   @relation("delegation_createdByTouser", fields: [createdBy], references: [email], onDelete: Cascade, onUpdate: NoAction)
+  user_delegation_delegatedToTouser user   @relation("delegation_delegatedToTouser", fields: [delegatedTo], references: [email], onDelete: Cascade, onUpdate: NoAction)
 
-  @@id([createdBy, delegatedTo], map: "delegation_createdBy_delegatedTo_pk")
+  @@id([createdBy, delegatedTo])
 }
 
 model udap {
@@ -95,12 +97,13 @@ model udap {
 }
 
 model user {
-  id                     String  @id
-  email                  String  @unique(map: "user_email_unique")
-  name                   String
-  temporaryLink          String?
-  temporaryLinkExpiresAt String?
-  password               String
-  udap_id                String?
-  udap                   udap?   @relation(fields: [udap_id], references: [id], onUpdate: NoAction, map: "fk_udap_id")
+  email                                   String       @id
+  name                                    String
+  temporaryLink                           String?
+  temporaryLinkExpiresAt                  String?
+  password                                String
+  udap_id                                 String
+  delegation_delegation_createdByTouser   delegation[] @relation("delegation_createdByTouser")
+  delegation_delegation_delegatedToTouser delegation[] @relation("delegation_delegatedToTouser")
+  udap                                    udap         @relation(fields: [udap_id], references: [id], onDelete: SetNull, onUpdate: NoAction, map: "fk_udap_id")
 }

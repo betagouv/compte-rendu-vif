@@ -135,7 +135,10 @@ export type chipPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultAr
 export type chip = runtime.Types.DefaultSelection<chipPayload>
 export type delegationPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
   name: "delegation"
-  objects: {}
+  objects: {
+    user_delegation_createdByTouser: userPayload<ExtArgs>
+    user_delegation_delegatedToTouser: userPayload<ExtArgs>
+  }
   scalars: $Extensions.GetResult<{
     createdBy: string
     delegatedTo: string
@@ -176,16 +179,17 @@ export type udap = runtime.Types.DefaultSelection<udapPayload>
 export type userPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
   name: "user"
   objects: {
-    udap: udapPayload<ExtArgs> | null
+    delegation_delegation_createdByTouser: delegationPayload<ExtArgs>[]
+    delegation_delegation_delegatedToTouser: delegationPayload<ExtArgs>[]
+    udap: udapPayload<ExtArgs>
   }
   scalars: $Extensions.GetResult<{
-    id: string
     email: string
     name: string
     temporaryLink: string | null
     temporaryLinkExpiresAt: string | null
     password: string
-    udap_id: string | null
+    udap_id: string
   }, ExtArgs["result"]["user"]>
   composites: {}
 }
@@ -1784,6 +1788,51 @@ export namespace Prisma {
    */
   export type UdapCountOutputTypeCountUserArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     where?: userWhereInput
+  }
+
+
+
+  /**
+   * Count Type UserCountOutputType
+   */
+
+
+  export type UserCountOutputType = {
+    delegation_delegation_createdByTouser: number
+    delegation_delegation_delegatedToTouser: number
+  }
+
+  export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    delegation_delegation_createdByTouser?: boolean | UserCountOutputTypeCountDelegation_delegation_createdByTouserArgs
+    delegation_delegation_delegatedToTouser?: boolean | UserCountOutputTypeCountDelegation_delegation_delegatedToTouserArgs
+  }
+
+  // Custom InputTypes
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserCountOutputType
+     */
+    select?: UserCountOutputTypeSelect<ExtArgs> | null
+  }
+
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountDelegation_delegation_createdByTouserArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    where?: delegationWhereInput
+  }
+
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountDelegation_delegation_delegatedToTouserArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    where?: delegationWhereInput
   }
 
 
@@ -7516,11 +7565,18 @@ export namespace Prisma {
   export type delegationSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     createdBy?: boolean
     delegatedTo?: boolean
+    user_delegation_createdByTouser?: boolean | userArgs<ExtArgs>
+    user_delegation_delegatedToTouser?: boolean | userArgs<ExtArgs>
   }, ExtArgs["result"]["delegation"]>
 
   export type delegationSelectScalar = {
     createdBy?: boolean
     delegatedTo?: boolean
+  }
+
+  export type delegationInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    user_delegation_createdByTouser?: boolean | userArgs<ExtArgs>
+    user_delegation_delegatedToTouser?: boolean | userArgs<ExtArgs>
   }
 
 
@@ -7893,6 +7949,9 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: 'PrismaPromise';
     constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
 
+    user_delegation_createdByTouser<T extends userArgs<ExtArgs> = {}>(args?: Subset<T, userArgs<ExtArgs>>): Prisma__userClient<$Types.GetResult<userPayload<ExtArgs>, T, 'findUnique', never> | Null, never, ExtArgs>;
+
+    user_delegation_delegatedToTouser<T extends userArgs<ExtArgs> = {}>(args?: Subset<T, userArgs<ExtArgs>>): Prisma__userClient<$Types.GetResult<userPayload<ExtArgs>, T, 'findUnique', never> | Null, never, ExtArgs>;
 
     private get _document();
     /**
@@ -7930,6 +7989,10 @@ export namespace Prisma {
      */
     select?: delegationSelect<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: delegationInclude<ExtArgs> | null
+    /**
      * Filter, which delegation to fetch.
      */
     where: delegationWhereUniqueInput
@@ -7956,6 +8019,10 @@ export namespace Prisma {
      */
     select?: delegationSelect<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: delegationInclude<ExtArgs> | null
+    /**
      * Filter, which delegation to fetch.
      */
     where: delegationWhereUniqueInput
@@ -7970,6 +8037,10 @@ export namespace Prisma {
      * Select specific fields to fetch from the delegation
      */
     select?: delegationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: delegationInclude<ExtArgs> | null
     /**
      * Filter, which delegation to fetch.
      */
@@ -8027,6 +8098,10 @@ export namespace Prisma {
      */
     select?: delegationSelect<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: delegationInclude<ExtArgs> | null
+    /**
      * Filter, which delegation to fetch.
      */
     where?: delegationWhereInput
@@ -8072,6 +8147,10 @@ export namespace Prisma {
      */
     select?: delegationSelect<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: delegationInclude<ExtArgs> | null
+    /**
      * Filter, which delegations to fetch.
      */
     where?: delegationWhereInput
@@ -8112,6 +8191,10 @@ export namespace Prisma {
      */
     select?: delegationSelect<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: delegationInclude<ExtArgs> | null
+    /**
      * The data needed to create a delegation.
      */
     data: XOR<delegationCreateInput, delegationUncheckedCreateInput>
@@ -8138,6 +8221,10 @@ export namespace Prisma {
      * Select specific fields to fetch from the delegation
      */
     select?: delegationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: delegationInclude<ExtArgs> | null
     /**
      * The data needed to update a delegation.
      */
@@ -8173,6 +8260,10 @@ export namespace Prisma {
      */
     select?: delegationSelect<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: delegationInclude<ExtArgs> | null
+    /**
      * The filter to search for the delegation to update in case it exists.
      */
     where: delegationWhereUniqueInput
@@ -8195,6 +8286,10 @@ export namespace Prisma {
      * Select specific fields to fetch from the delegation
      */
     select?: delegationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: delegationInclude<ExtArgs> | null
     /**
      * Filter which delegation to delete.
      */
@@ -8221,6 +8316,10 @@ export namespace Prisma {
      * Select specific fields to fetch from the delegation
      */
     select?: delegationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: delegationInclude<ExtArgs> | null
   }
 
 
@@ -9229,7 +9328,6 @@ export namespace Prisma {
   }
 
   export type UserMinAggregateOutputType = {
-    id: string | null
     email: string | null
     name: string | null
     temporaryLink: string | null
@@ -9239,7 +9337,6 @@ export namespace Prisma {
   }
 
   export type UserMaxAggregateOutputType = {
-    id: string | null
     email: string | null
     name: string | null
     temporaryLink: string | null
@@ -9249,7 +9346,6 @@ export namespace Prisma {
   }
 
   export type UserCountAggregateOutputType = {
-    id: number
     email: number
     name: number
     temporaryLink: number
@@ -9261,7 +9357,6 @@ export namespace Prisma {
 
 
   export type UserMinAggregateInputType = {
-    id?: true
     email?: true
     name?: true
     temporaryLink?: true
@@ -9271,7 +9366,6 @@ export namespace Prisma {
   }
 
   export type UserMaxAggregateInputType = {
-    id?: true
     email?: true
     name?: true
     temporaryLink?: true
@@ -9281,7 +9375,6 @@ export namespace Prisma {
   }
 
   export type UserCountAggregateInputType = {
-    id?: true
     email?: true
     name?: true
     temporaryLink?: true
@@ -9365,13 +9458,12 @@ export namespace Prisma {
 
 
   export type UserGroupByOutputType = {
-    id: string
     email: string
     name: string
     temporaryLink: string | null
     temporaryLinkExpiresAt: string | null
     password: string
-    udap_id: string | null
+    udap_id: string
     _count: UserCountAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
@@ -9392,18 +9484,19 @@ export namespace Prisma {
 
 
   export type userSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
     email?: boolean
     name?: boolean
     temporaryLink?: boolean
     temporaryLinkExpiresAt?: boolean
     password?: boolean
     udap_id?: boolean
+    delegation_delegation_createdByTouser?: boolean | user$delegation_delegation_createdByTouserArgs<ExtArgs>
+    delegation_delegation_delegatedToTouser?: boolean | user$delegation_delegation_delegatedToTouserArgs<ExtArgs>
     udap?: boolean | udapArgs<ExtArgs>
+    _count?: boolean | UserCountOutputTypeArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
   export type userSelectScalar = {
-    id?: boolean
     email?: boolean
     name?: boolean
     temporaryLink?: boolean
@@ -9413,7 +9506,10 @@ export namespace Prisma {
   }
 
   export type userInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    delegation_delegation_createdByTouser?: boolean | user$delegation_delegation_createdByTouserArgs<ExtArgs>
+    delegation_delegation_delegatedToTouser?: boolean | user$delegation_delegation_delegatedToTouserArgs<ExtArgs>
     udap?: boolean | udapArgs<ExtArgs>
+    _count?: boolean | UserCountOutputTypeArgs<ExtArgs>
   }
 
 
@@ -9504,8 +9600,8 @@ export namespace Prisma {
      * // Get first 10 Users
      * const users = await prisma.user.findMany({ take: 10 })
      * 
-     * // Only select the `id`
-     * const userWithIdOnly = await prisma.user.findMany({ select: { id: true } })
+     * // Only select the `email`
+     * const userWithEmailOnly = await prisma.user.findMany({ select: { email: true } })
      * 
     **/
     findMany<T extends userFindManyArgs<ExtArgs>>(
@@ -9785,6 +9881,10 @@ export namespace Prisma {
     private _requestPromise?;
     readonly [Symbol.toStringTag]: 'PrismaPromise';
     constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
+
+    delegation_delegation_createdByTouser<T extends user$delegation_delegation_createdByTouserArgs<ExtArgs> = {}>(args?: Subset<T, user$delegation_delegation_createdByTouserArgs<ExtArgs>>): Prisma.PrismaPromise<$Types.GetResult<delegationPayload<ExtArgs>, T, 'findMany', never>| Null>;
+
+    delegation_delegation_delegatedToTouser<T extends user$delegation_delegation_delegatedToTouserArgs<ExtArgs> = {}>(args?: Subset<T, user$delegation_delegation_delegatedToTouserArgs<ExtArgs>>): Prisma.PrismaPromise<$Types.GetResult<delegationPayload<ExtArgs>, T, 'findMany', never>| Null>;
 
     udap<T extends udapArgs<ExtArgs> = {}>(args?: Subset<T, udapArgs<ExtArgs>>): Prisma__udapClient<$Types.GetResult<udapPayload<ExtArgs>, T, 'findUnique', never> | Null, never, ExtArgs>;
 
@@ -10144,6 +10244,48 @@ export namespace Prisma {
 
 
   /**
+   * user.delegation_delegation_createdByTouser
+   */
+  export type user$delegation_delegation_createdByTouserArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the delegation
+     */
+    select?: delegationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: delegationInclude<ExtArgs> | null
+    where?: delegationWhereInput
+    orderBy?: Enumerable<delegationOrderByWithRelationInput>
+    cursor?: delegationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Enumerable<DelegationScalarFieldEnum>
+  }
+
+
+  /**
+   * user.delegation_delegation_delegatedToTouser
+   */
+  export type user$delegation_delegation_delegatedToTouserArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the delegation
+     */
+    select?: delegationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: delegationInclude<ExtArgs> | null
+    where?: delegationWhereInput
+    orderBy?: Enumerable<delegationOrderByWithRelationInput>
+    cursor?: delegationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Enumerable<DelegationScalarFieldEnum>
+  }
+
+
+  /**
    * user without action
    */
   export type userArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
@@ -10270,7 +10412,6 @@ export namespace Prisma {
 
 
   export const UserScalarFieldEnum: {
-    id: 'id',
     email: 'email',
     name: 'name',
     temporaryLink: 'temporaryLink',
@@ -10623,11 +10764,15 @@ export namespace Prisma {
     NOT?: Enumerable<delegationWhereInput>
     createdBy?: StringFilter | string
     delegatedTo?: StringFilter | string
+    user_delegation_createdByTouser?: XOR<UserRelationFilter, userWhereInput>
+    user_delegation_delegatedToTouser?: XOR<UserRelationFilter, userWhereInput>
   }
 
   export type delegationOrderByWithRelationInput = {
     createdBy?: SortOrder
     delegatedTo?: SortOrder
+    user_delegation_createdByTouser?: userOrderByWithRelationInput
+    user_delegation_delegatedToTouser?: userOrderByWithRelationInput
   }
 
   export type delegationWhereUniqueInput = {
@@ -10721,40 +10866,40 @@ export namespace Prisma {
     AND?: Enumerable<userWhereInput>
     OR?: Enumerable<userWhereInput>
     NOT?: Enumerable<userWhereInput>
-    id?: StringFilter | string
     email?: StringFilter | string
     name?: StringFilter | string
     temporaryLink?: StringNullableFilter | string | null
     temporaryLinkExpiresAt?: StringNullableFilter | string | null
     password?: StringFilter | string
-    udap_id?: StringNullableFilter | string | null
-    udap?: XOR<UdapRelationFilter, udapWhereInput> | null
+    udap_id?: StringFilter | string
+    delegation_delegation_createdByTouser?: DelegationListRelationFilter
+    delegation_delegation_delegatedToTouser?: DelegationListRelationFilter
+    udap?: XOR<UdapRelationFilter, udapWhereInput>
   }
 
   export type userOrderByWithRelationInput = {
-    id?: SortOrder
     email?: SortOrder
     name?: SortOrder
     temporaryLink?: SortOrderInput | SortOrder
     temporaryLinkExpiresAt?: SortOrderInput | SortOrder
     password?: SortOrder
-    udap_id?: SortOrderInput | SortOrder
+    udap_id?: SortOrder
+    delegation_delegation_createdByTouser?: delegationOrderByRelationAggregateInput
+    delegation_delegation_delegatedToTouser?: delegationOrderByRelationAggregateInput
     udap?: udapOrderByWithRelationInput
   }
 
   export type userWhereUniqueInput = {
-    id?: string
     email?: string
   }
 
   export type userOrderByWithAggregationInput = {
-    id?: SortOrder
     email?: SortOrder
     name?: SortOrder
     temporaryLink?: SortOrderInput | SortOrder
     temporaryLinkExpiresAt?: SortOrderInput | SortOrder
     password?: SortOrder
-    udap_id?: SortOrderInput | SortOrder
+    udap_id?: SortOrder
     _count?: userCountOrderByAggregateInput
     _max?: userMaxOrderByAggregateInput
     _min?: userMinOrderByAggregateInput
@@ -10764,13 +10909,12 @@ export namespace Prisma {
     AND?: Enumerable<userScalarWhereWithAggregatesInput>
     OR?: Enumerable<userScalarWhereWithAggregatesInput>
     NOT?: Enumerable<userScalarWhereWithAggregatesInput>
-    id?: StringWithAggregatesFilter | string
     email?: StringWithAggregatesFilter | string
     name?: StringWithAggregatesFilter | string
     temporaryLink?: StringNullableWithAggregatesFilter | string | null
     temporaryLinkExpiresAt?: StringNullableWithAggregatesFilter | string | null
     password?: StringWithAggregatesFilter | string
-    udap_id?: StringNullableWithAggregatesFilter | string | null
+    udap_id?: StringWithAggregatesFilter | string
   }
 
   export type atdatabases_migrations_appliedCreateInput = {
@@ -11158,8 +11302,8 @@ export namespace Prisma {
   }
 
   export type delegationCreateInput = {
-    createdBy: string
-    delegatedTo: string
+    user_delegation_createdByTouser: userCreateNestedOneWithoutDelegation_delegation_createdByTouserInput
+    user_delegation_delegatedToTouser: userCreateNestedOneWithoutDelegation_delegation_delegatedToTouserInput
   }
 
   export type delegationUncheckedCreateInput = {
@@ -11168,8 +11312,8 @@ export namespace Prisma {
   }
 
   export type delegationUpdateInput = {
-    createdBy?: StringFieldUpdateOperationsInput | string
-    delegatedTo?: StringFieldUpdateOperationsInput | string
+    user_delegation_createdByTouser?: userUpdateOneRequiredWithoutDelegation_delegation_createdByTouserNestedInput
+    user_delegation_delegatedToTouser?: userUpdateOneRequiredWithoutDelegation_delegation_delegatedToTouserNestedInput
   }
 
   export type delegationUncheckedUpdateInput = {
@@ -11183,8 +11327,7 @@ export namespace Prisma {
   }
 
   export type delegationUpdateManyMutationInput = {
-    createdBy?: StringFieldUpdateOperationsInput | string
-    delegatedTo?: StringFieldUpdateOperationsInput | string
+
   }
 
   export type delegationUncheckedUpdateManyInput = {
@@ -11288,57 +11431,59 @@ export namespace Prisma {
   }
 
   export type userCreateInput = {
-    id: string
     email: string
     name: string
     temporaryLink?: string | null
     temporaryLinkExpiresAt?: string | null
     password: string
-    udap?: udapCreateNestedOneWithoutUserInput
+    delegation_delegation_createdByTouser?: delegationCreateNestedManyWithoutUser_delegation_createdByTouserInput
+    delegation_delegation_delegatedToTouser?: delegationCreateNestedManyWithoutUser_delegation_delegatedToTouserInput
+    udap: udapCreateNestedOneWithoutUserInput
   }
 
   export type userUncheckedCreateInput = {
-    id: string
     email: string
     name: string
     temporaryLink?: string | null
     temporaryLinkExpiresAt?: string | null
     password: string
-    udap_id?: string | null
+    udap_id: string
+    delegation_delegation_createdByTouser?: delegationUncheckedCreateNestedManyWithoutUser_delegation_createdByTouserInput
+    delegation_delegation_delegatedToTouser?: delegationUncheckedCreateNestedManyWithoutUser_delegation_delegatedToTouserInput
   }
 
   export type userUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
     temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
     password?: StringFieldUpdateOperationsInput | string
-    udap?: udapUpdateOneWithoutUserNestedInput
+    delegation_delegation_createdByTouser?: delegationUpdateManyWithoutUser_delegation_createdByTouserNestedInput
+    delegation_delegation_delegatedToTouser?: delegationUpdateManyWithoutUser_delegation_delegatedToTouserNestedInput
+    udap?: udapUpdateOneRequiredWithoutUserNestedInput
   }
 
   export type userUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
     temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
     password?: StringFieldUpdateOperationsInput | string
-    udap_id?: NullableStringFieldUpdateOperationsInput | string | null
+    udap_id?: StringFieldUpdateOperationsInput | string
+    delegation_delegation_createdByTouser?: delegationUncheckedUpdateManyWithoutUser_delegation_createdByTouserNestedInput
+    delegation_delegation_delegatedToTouser?: delegationUncheckedUpdateManyWithoutUser_delegation_delegatedToTouserNestedInput
   }
 
   export type userCreateManyInput = {
-    id: string
     email: string
     name: string
     temporaryLink?: string | null
     temporaryLinkExpiresAt?: string | null
     password: string
-    udap_id?: string | null
+    udap_id: string
   }
 
   export type userUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
@@ -11347,13 +11492,12 @@ export namespace Prisma {
   }
 
   export type userUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
     temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
     password?: StringFieldUpdateOperationsInput | string
-    udap_id?: NullableStringFieldUpdateOperationsInput | string | null
+    udap_id?: StringFieldUpdateOperationsInput | string
   }
 
   export type BigIntFilter = {
@@ -11750,6 +11894,11 @@ export namespace Prisma {
     text?: SortOrder
   }
 
+  export type UserRelationFilter = {
+    is?: userWhereInput | null
+    isNot?: userWhereInput | null
+  }
+
   export type delegationCreatedByDelegatedToCompoundUniqueInput = {
     createdBy: string
     delegatedTo: string
@@ -11832,13 +11981,22 @@ export namespace Prisma {
     _max?: NestedBoolNullableFilter
   }
 
+  export type DelegationListRelationFilter = {
+    every?: delegationWhereInput
+    some?: delegationWhereInput
+    none?: delegationWhereInput
+  }
+
   export type UdapRelationFilter = {
     is?: udapWhereInput | null
     isNot?: udapWhereInput | null
   }
 
+  export type delegationOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type userCountOrderByAggregateInput = {
-    id?: SortOrder
     email?: SortOrder
     name?: SortOrder
     temporaryLink?: SortOrder
@@ -11848,7 +12006,6 @@ export namespace Prisma {
   }
 
   export type userMaxOrderByAggregateInput = {
-    id?: SortOrder
     email?: SortOrder
     name?: SortOrder
     temporaryLink?: SortOrder
@@ -11858,7 +12015,6 @@ export namespace Prisma {
   }
 
   export type userMinOrderByAggregateInput = {
-    id?: SortOrder
     email?: SortOrder
     name?: SortOrder
     temporaryLink?: SortOrder
@@ -12015,6 +12171,34 @@ export namespace Prisma {
     update?: XOR<reportUpdateWithoutReport_to_clauseInput, reportUncheckedUpdateWithoutReport_to_clauseInput>
   }
 
+  export type userCreateNestedOneWithoutDelegation_delegation_createdByTouserInput = {
+    create?: XOR<userCreateWithoutDelegation_delegation_createdByTouserInput, userUncheckedCreateWithoutDelegation_delegation_createdByTouserInput>
+    connectOrCreate?: userCreateOrConnectWithoutDelegation_delegation_createdByTouserInput
+    connect?: userWhereUniqueInput
+  }
+
+  export type userCreateNestedOneWithoutDelegation_delegation_delegatedToTouserInput = {
+    create?: XOR<userCreateWithoutDelegation_delegation_delegatedToTouserInput, userUncheckedCreateWithoutDelegation_delegation_delegatedToTouserInput>
+    connectOrCreate?: userCreateOrConnectWithoutDelegation_delegation_delegatedToTouserInput
+    connect?: userWhereUniqueInput
+  }
+
+  export type userUpdateOneRequiredWithoutDelegation_delegation_createdByTouserNestedInput = {
+    create?: XOR<userCreateWithoutDelegation_delegation_createdByTouserInput, userUncheckedCreateWithoutDelegation_delegation_createdByTouserInput>
+    connectOrCreate?: userCreateOrConnectWithoutDelegation_delegation_createdByTouserInput
+    upsert?: userUpsertWithoutDelegation_delegation_createdByTouserInput
+    connect?: userWhereUniqueInput
+    update?: XOR<userUpdateWithoutDelegation_delegation_createdByTouserInput, userUncheckedUpdateWithoutDelegation_delegation_createdByTouserInput>
+  }
+
+  export type userUpdateOneRequiredWithoutDelegation_delegation_delegatedToTouserNestedInput = {
+    create?: XOR<userCreateWithoutDelegation_delegation_delegatedToTouserInput, userUncheckedCreateWithoutDelegation_delegation_delegatedToTouserInput>
+    connectOrCreate?: userCreateOrConnectWithoutDelegation_delegation_delegatedToTouserInput
+    upsert?: userUpsertWithoutDelegation_delegation_delegatedToTouserInput
+    connect?: userWhereUniqueInput
+    update?: XOR<userUpdateWithoutDelegation_delegation_delegatedToTouserInput, userUncheckedUpdateWithoutDelegation_delegation_delegatedToTouserInput>
+  }
+
   export type userCreateNestedManyWithoutUdapInput = {
     create?: XOR<Enumerable<userCreateWithoutUdapInput>, Enumerable<userUncheckedCreateWithoutUdapInput>>
     connectOrCreate?: Enumerable<userCreateOrConnectWithoutUdapInput>
@@ -12061,20 +12245,102 @@ export namespace Prisma {
     deleteMany?: Enumerable<userScalarWhereInput>
   }
 
+  export type delegationCreateNestedManyWithoutUser_delegation_createdByTouserInput = {
+    create?: XOR<Enumerable<delegationCreateWithoutUser_delegation_createdByTouserInput>, Enumerable<delegationUncheckedCreateWithoutUser_delegation_createdByTouserInput>>
+    connectOrCreate?: Enumerable<delegationCreateOrConnectWithoutUser_delegation_createdByTouserInput>
+    createMany?: delegationCreateManyUser_delegation_createdByTouserInputEnvelope
+    connect?: Enumerable<delegationWhereUniqueInput>
+  }
+
+  export type delegationCreateNestedManyWithoutUser_delegation_delegatedToTouserInput = {
+    create?: XOR<Enumerable<delegationCreateWithoutUser_delegation_delegatedToTouserInput>, Enumerable<delegationUncheckedCreateWithoutUser_delegation_delegatedToTouserInput>>
+    connectOrCreate?: Enumerable<delegationCreateOrConnectWithoutUser_delegation_delegatedToTouserInput>
+    createMany?: delegationCreateManyUser_delegation_delegatedToTouserInputEnvelope
+    connect?: Enumerable<delegationWhereUniqueInput>
+  }
+
   export type udapCreateNestedOneWithoutUserInput = {
     create?: XOR<udapCreateWithoutUserInput, udapUncheckedCreateWithoutUserInput>
     connectOrCreate?: udapCreateOrConnectWithoutUserInput
     connect?: udapWhereUniqueInput
   }
 
-  export type udapUpdateOneWithoutUserNestedInput = {
+  export type delegationUncheckedCreateNestedManyWithoutUser_delegation_createdByTouserInput = {
+    create?: XOR<Enumerable<delegationCreateWithoutUser_delegation_createdByTouserInput>, Enumerable<delegationUncheckedCreateWithoutUser_delegation_createdByTouserInput>>
+    connectOrCreate?: Enumerable<delegationCreateOrConnectWithoutUser_delegation_createdByTouserInput>
+    createMany?: delegationCreateManyUser_delegation_createdByTouserInputEnvelope
+    connect?: Enumerable<delegationWhereUniqueInput>
+  }
+
+  export type delegationUncheckedCreateNestedManyWithoutUser_delegation_delegatedToTouserInput = {
+    create?: XOR<Enumerable<delegationCreateWithoutUser_delegation_delegatedToTouserInput>, Enumerable<delegationUncheckedCreateWithoutUser_delegation_delegatedToTouserInput>>
+    connectOrCreate?: Enumerable<delegationCreateOrConnectWithoutUser_delegation_delegatedToTouserInput>
+    createMany?: delegationCreateManyUser_delegation_delegatedToTouserInputEnvelope
+    connect?: Enumerable<delegationWhereUniqueInput>
+  }
+
+  export type delegationUpdateManyWithoutUser_delegation_createdByTouserNestedInput = {
+    create?: XOR<Enumerable<delegationCreateWithoutUser_delegation_createdByTouserInput>, Enumerable<delegationUncheckedCreateWithoutUser_delegation_createdByTouserInput>>
+    connectOrCreate?: Enumerable<delegationCreateOrConnectWithoutUser_delegation_createdByTouserInput>
+    upsert?: Enumerable<delegationUpsertWithWhereUniqueWithoutUser_delegation_createdByTouserInput>
+    createMany?: delegationCreateManyUser_delegation_createdByTouserInputEnvelope
+    set?: Enumerable<delegationWhereUniqueInput>
+    disconnect?: Enumerable<delegationWhereUniqueInput>
+    delete?: Enumerable<delegationWhereUniqueInput>
+    connect?: Enumerable<delegationWhereUniqueInput>
+    update?: Enumerable<delegationUpdateWithWhereUniqueWithoutUser_delegation_createdByTouserInput>
+    updateMany?: Enumerable<delegationUpdateManyWithWhereWithoutUser_delegation_createdByTouserInput>
+    deleteMany?: Enumerable<delegationScalarWhereInput>
+  }
+
+  export type delegationUpdateManyWithoutUser_delegation_delegatedToTouserNestedInput = {
+    create?: XOR<Enumerable<delegationCreateWithoutUser_delegation_delegatedToTouserInput>, Enumerable<delegationUncheckedCreateWithoutUser_delegation_delegatedToTouserInput>>
+    connectOrCreate?: Enumerable<delegationCreateOrConnectWithoutUser_delegation_delegatedToTouserInput>
+    upsert?: Enumerable<delegationUpsertWithWhereUniqueWithoutUser_delegation_delegatedToTouserInput>
+    createMany?: delegationCreateManyUser_delegation_delegatedToTouserInputEnvelope
+    set?: Enumerable<delegationWhereUniqueInput>
+    disconnect?: Enumerable<delegationWhereUniqueInput>
+    delete?: Enumerable<delegationWhereUniqueInput>
+    connect?: Enumerable<delegationWhereUniqueInput>
+    update?: Enumerable<delegationUpdateWithWhereUniqueWithoutUser_delegation_delegatedToTouserInput>
+    updateMany?: Enumerable<delegationUpdateManyWithWhereWithoutUser_delegation_delegatedToTouserInput>
+    deleteMany?: Enumerable<delegationScalarWhereInput>
+  }
+
+  export type udapUpdateOneRequiredWithoutUserNestedInput = {
     create?: XOR<udapCreateWithoutUserInput, udapUncheckedCreateWithoutUserInput>
     connectOrCreate?: udapCreateOrConnectWithoutUserInput
     upsert?: udapUpsertWithoutUserInput
-    disconnect?: boolean
-    delete?: boolean
     connect?: udapWhereUniqueInput
     update?: XOR<udapUpdateWithoutUserInput, udapUncheckedUpdateWithoutUserInput>
+  }
+
+  export type delegationUncheckedUpdateManyWithoutUser_delegation_createdByTouserNestedInput = {
+    create?: XOR<Enumerable<delegationCreateWithoutUser_delegation_createdByTouserInput>, Enumerable<delegationUncheckedCreateWithoutUser_delegation_createdByTouserInput>>
+    connectOrCreate?: Enumerable<delegationCreateOrConnectWithoutUser_delegation_createdByTouserInput>
+    upsert?: Enumerable<delegationUpsertWithWhereUniqueWithoutUser_delegation_createdByTouserInput>
+    createMany?: delegationCreateManyUser_delegation_createdByTouserInputEnvelope
+    set?: Enumerable<delegationWhereUniqueInput>
+    disconnect?: Enumerable<delegationWhereUniqueInput>
+    delete?: Enumerable<delegationWhereUniqueInput>
+    connect?: Enumerable<delegationWhereUniqueInput>
+    update?: Enumerable<delegationUpdateWithWhereUniqueWithoutUser_delegation_createdByTouserInput>
+    updateMany?: Enumerable<delegationUpdateManyWithWhereWithoutUser_delegation_createdByTouserInput>
+    deleteMany?: Enumerable<delegationScalarWhereInput>
+  }
+
+  export type delegationUncheckedUpdateManyWithoutUser_delegation_delegatedToTouserNestedInput = {
+    create?: XOR<Enumerable<delegationCreateWithoutUser_delegation_delegatedToTouserInput>, Enumerable<delegationUncheckedCreateWithoutUser_delegation_delegatedToTouserInput>>
+    connectOrCreate?: Enumerable<delegationCreateOrConnectWithoutUser_delegation_delegatedToTouserInput>
+    upsert?: Enumerable<delegationUpsertWithWhereUniqueWithoutUser_delegation_delegatedToTouserInput>
+    createMany?: delegationCreateManyUser_delegation_delegatedToTouserInputEnvelope
+    set?: Enumerable<delegationWhereUniqueInput>
+    disconnect?: Enumerable<delegationWhereUniqueInput>
+    delete?: Enumerable<delegationWhereUniqueInput>
+    connect?: Enumerable<delegationWhereUniqueInput>
+    update?: Enumerable<delegationUpdateWithWhereUniqueWithoutUser_delegation_delegatedToTouserInput>
+    updateMany?: Enumerable<delegationUpdateManyWithWhereWithoutUser_delegation_delegatedToTouserInput>
+    deleteMany?: Enumerable<delegationScalarWhereInput>
   }
 
   export type NestedBigIntFilter = {
@@ -12496,22 +12762,124 @@ export namespace Prisma {
     service_instructeur?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
-  export type userCreateWithoutUdapInput = {
-    id: string
+  export type userCreateWithoutDelegation_delegation_createdByTouserInput = {
     email: string
     name: string
     temporaryLink?: string | null
     temporaryLinkExpiresAt?: string | null
     password: string
+    delegation_delegation_delegatedToTouser?: delegationCreateNestedManyWithoutUser_delegation_delegatedToTouserInput
+    udap: udapCreateNestedOneWithoutUserInput
+  }
+
+  export type userUncheckedCreateWithoutDelegation_delegation_createdByTouserInput = {
+    email: string
+    name: string
+    temporaryLink?: string | null
+    temporaryLinkExpiresAt?: string | null
+    password: string
+    udap_id: string
+    delegation_delegation_delegatedToTouser?: delegationUncheckedCreateNestedManyWithoutUser_delegation_delegatedToTouserInput
+  }
+
+  export type userCreateOrConnectWithoutDelegation_delegation_createdByTouserInput = {
+    where: userWhereUniqueInput
+    create: XOR<userCreateWithoutDelegation_delegation_createdByTouserInput, userUncheckedCreateWithoutDelegation_delegation_createdByTouserInput>
+  }
+
+  export type userCreateWithoutDelegation_delegation_delegatedToTouserInput = {
+    email: string
+    name: string
+    temporaryLink?: string | null
+    temporaryLinkExpiresAt?: string | null
+    password: string
+    delegation_delegation_createdByTouser?: delegationCreateNestedManyWithoutUser_delegation_createdByTouserInput
+    udap: udapCreateNestedOneWithoutUserInput
+  }
+
+  export type userUncheckedCreateWithoutDelegation_delegation_delegatedToTouserInput = {
+    email: string
+    name: string
+    temporaryLink?: string | null
+    temporaryLinkExpiresAt?: string | null
+    password: string
+    udap_id: string
+    delegation_delegation_createdByTouser?: delegationUncheckedCreateNestedManyWithoutUser_delegation_createdByTouserInput
+  }
+
+  export type userCreateOrConnectWithoutDelegation_delegation_delegatedToTouserInput = {
+    where: userWhereUniqueInput
+    create: XOR<userCreateWithoutDelegation_delegation_delegatedToTouserInput, userUncheckedCreateWithoutDelegation_delegation_delegatedToTouserInput>
+  }
+
+  export type userUpsertWithoutDelegation_delegation_createdByTouserInput = {
+    update: XOR<userUpdateWithoutDelegation_delegation_createdByTouserInput, userUncheckedUpdateWithoutDelegation_delegation_createdByTouserInput>
+    create: XOR<userCreateWithoutDelegation_delegation_createdByTouserInput, userUncheckedCreateWithoutDelegation_delegation_createdByTouserInput>
+  }
+
+  export type userUpdateWithoutDelegation_delegation_createdByTouserInput = {
+    email?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    delegation_delegation_delegatedToTouser?: delegationUpdateManyWithoutUser_delegation_delegatedToTouserNestedInput
+    udap?: udapUpdateOneRequiredWithoutUserNestedInput
+  }
+
+  export type userUncheckedUpdateWithoutDelegation_delegation_createdByTouserInput = {
+    email?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    udap_id?: StringFieldUpdateOperationsInput | string
+    delegation_delegation_delegatedToTouser?: delegationUncheckedUpdateManyWithoutUser_delegation_delegatedToTouserNestedInput
+  }
+
+  export type userUpsertWithoutDelegation_delegation_delegatedToTouserInput = {
+    update: XOR<userUpdateWithoutDelegation_delegation_delegatedToTouserInput, userUncheckedUpdateWithoutDelegation_delegation_delegatedToTouserInput>
+    create: XOR<userCreateWithoutDelegation_delegation_delegatedToTouserInput, userUncheckedCreateWithoutDelegation_delegation_delegatedToTouserInput>
+  }
+
+  export type userUpdateWithoutDelegation_delegation_delegatedToTouserInput = {
+    email?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    delegation_delegation_createdByTouser?: delegationUpdateManyWithoutUser_delegation_createdByTouserNestedInput
+    udap?: udapUpdateOneRequiredWithoutUserNestedInput
+  }
+
+  export type userUncheckedUpdateWithoutDelegation_delegation_delegatedToTouserInput = {
+    email?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    udap_id?: StringFieldUpdateOperationsInput | string
+    delegation_delegation_createdByTouser?: delegationUncheckedUpdateManyWithoutUser_delegation_createdByTouserNestedInput
+  }
+
+  export type userCreateWithoutUdapInput = {
+    email: string
+    name: string
+    temporaryLink?: string | null
+    temporaryLinkExpiresAt?: string | null
+    password: string
+    delegation_delegation_createdByTouser?: delegationCreateNestedManyWithoutUser_delegation_createdByTouserInput
+    delegation_delegation_delegatedToTouser?: delegationCreateNestedManyWithoutUser_delegation_delegatedToTouserInput
   }
 
   export type userUncheckedCreateWithoutUdapInput = {
-    id: string
     email: string
     name: string
     temporaryLink?: string | null
     temporaryLinkExpiresAt?: string | null
     password: string
+    delegation_delegation_createdByTouser?: delegationUncheckedCreateNestedManyWithoutUser_delegation_createdByTouserInput
+    delegation_delegation_delegatedToTouser?: delegationUncheckedCreateNestedManyWithoutUser_delegation_delegatedToTouserInput
   }
 
   export type userCreateOrConnectWithoutUdapInput = {
@@ -12544,13 +12912,48 @@ export namespace Prisma {
     AND?: Enumerable<userScalarWhereInput>
     OR?: Enumerable<userScalarWhereInput>
     NOT?: Enumerable<userScalarWhereInput>
-    id?: StringFilter | string
     email?: StringFilter | string
     name?: StringFilter | string
     temporaryLink?: StringNullableFilter | string | null
     temporaryLinkExpiresAt?: StringNullableFilter | string | null
     password?: StringFilter | string
-    udap_id?: StringNullableFilter | string | null
+    udap_id?: StringFilter | string
+  }
+
+  export type delegationCreateWithoutUser_delegation_createdByTouserInput = {
+    user_delegation_delegatedToTouser: userCreateNestedOneWithoutDelegation_delegation_delegatedToTouserInput
+  }
+
+  export type delegationUncheckedCreateWithoutUser_delegation_createdByTouserInput = {
+    delegatedTo: string
+  }
+
+  export type delegationCreateOrConnectWithoutUser_delegation_createdByTouserInput = {
+    where: delegationWhereUniqueInput
+    create: XOR<delegationCreateWithoutUser_delegation_createdByTouserInput, delegationUncheckedCreateWithoutUser_delegation_createdByTouserInput>
+  }
+
+  export type delegationCreateManyUser_delegation_createdByTouserInputEnvelope = {
+    data: Enumerable<delegationCreateManyUser_delegation_createdByTouserInput>
+    skipDuplicates?: boolean
+  }
+
+  export type delegationCreateWithoutUser_delegation_delegatedToTouserInput = {
+    user_delegation_createdByTouser: userCreateNestedOneWithoutDelegation_delegation_createdByTouserInput
+  }
+
+  export type delegationUncheckedCreateWithoutUser_delegation_delegatedToTouserInput = {
+    createdBy: string
+  }
+
+  export type delegationCreateOrConnectWithoutUser_delegation_delegatedToTouserInput = {
+    where: delegationWhereUniqueInput
+    create: XOR<delegationCreateWithoutUser_delegation_delegatedToTouserInput, delegationUncheckedCreateWithoutUser_delegation_delegatedToTouserInput>
+  }
+
+  export type delegationCreateManyUser_delegation_delegatedToTouserInputEnvelope = {
+    data: Enumerable<delegationCreateManyUser_delegation_delegatedToTouserInput>
+    skipDuplicates?: boolean
   }
 
   export type udapCreateWithoutUserInput = {
@@ -12582,6 +12985,46 @@ export namespace Prisma {
   export type udapCreateOrConnectWithoutUserInput = {
     where: udapWhereUniqueInput
     create: XOR<udapCreateWithoutUserInput, udapUncheckedCreateWithoutUserInput>
+  }
+
+  export type delegationUpsertWithWhereUniqueWithoutUser_delegation_createdByTouserInput = {
+    where: delegationWhereUniqueInput
+    update: XOR<delegationUpdateWithoutUser_delegation_createdByTouserInput, delegationUncheckedUpdateWithoutUser_delegation_createdByTouserInput>
+    create: XOR<delegationCreateWithoutUser_delegation_createdByTouserInput, delegationUncheckedCreateWithoutUser_delegation_createdByTouserInput>
+  }
+
+  export type delegationUpdateWithWhereUniqueWithoutUser_delegation_createdByTouserInput = {
+    where: delegationWhereUniqueInput
+    data: XOR<delegationUpdateWithoutUser_delegation_createdByTouserInput, delegationUncheckedUpdateWithoutUser_delegation_createdByTouserInput>
+  }
+
+  export type delegationUpdateManyWithWhereWithoutUser_delegation_createdByTouserInput = {
+    where: delegationScalarWhereInput
+    data: XOR<delegationUpdateManyMutationInput, delegationUncheckedUpdateManyWithoutDelegation_delegation_createdByTouserInput>
+  }
+
+  export type delegationScalarWhereInput = {
+    AND?: Enumerable<delegationScalarWhereInput>
+    OR?: Enumerable<delegationScalarWhereInput>
+    NOT?: Enumerable<delegationScalarWhereInput>
+    createdBy?: StringFilter | string
+    delegatedTo?: StringFilter | string
+  }
+
+  export type delegationUpsertWithWhereUniqueWithoutUser_delegation_delegatedToTouserInput = {
+    where: delegationWhereUniqueInput
+    update: XOR<delegationUpdateWithoutUser_delegation_delegatedToTouserInput, delegationUncheckedUpdateWithoutUser_delegation_delegatedToTouserInput>
+    create: XOR<delegationCreateWithoutUser_delegation_delegatedToTouserInput, delegationUncheckedCreateWithoutUser_delegation_delegatedToTouserInput>
+  }
+
+  export type delegationUpdateWithWhereUniqueWithoutUser_delegation_delegatedToTouserInput = {
+    where: delegationWhereUniqueInput
+    data: XOR<delegationUpdateWithoutUser_delegation_delegatedToTouserInput, delegationUncheckedUpdateWithoutUser_delegation_delegatedToTouserInput>
+  }
+
+  export type delegationUpdateManyWithWhereWithoutUser_delegation_delegatedToTouserInput = {
+    where: delegationScalarWhereInput
+    data: XOR<delegationUpdateManyMutationInput, delegationUncheckedUpdateManyWithoutDelegation_delegation_delegatedToTouserInput>
   }
 
   export type udapUpsertWithoutUserInput = {
@@ -12651,7 +13094,6 @@ export namespace Prisma {
   }
 
   export type userCreateManyUdapInput = {
-    id: string
     email: string
     name: string
     temporaryLink?: string | null
@@ -12660,16 +13102,26 @@ export namespace Prisma {
   }
 
   export type userUpdateWithoutUdapInput = {
-    id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
     temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
     password?: StringFieldUpdateOperationsInput | string
+    delegation_delegation_createdByTouser?: delegationUpdateManyWithoutUser_delegation_createdByTouserNestedInput
+    delegation_delegation_delegatedToTouser?: delegationUpdateManyWithoutUser_delegation_delegatedToTouserNestedInput
   }
 
   export type userUncheckedUpdateWithoutUdapInput = {
-    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    delegation_delegation_createdByTouser?: delegationUncheckedUpdateManyWithoutUser_delegation_createdByTouserNestedInput
+    delegation_delegation_delegatedToTouser?: delegationUncheckedUpdateManyWithoutUser_delegation_delegatedToTouserNestedInput
+  }
+
+  export type userUncheckedUpdateManyWithoutUserInput = {
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
@@ -12677,13 +13129,36 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
   }
 
-  export type userUncheckedUpdateManyWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
-    temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: StringFieldUpdateOperationsInput | string
+  export type delegationCreateManyUser_delegation_createdByTouserInput = {
+    delegatedTo: string
+  }
+
+  export type delegationCreateManyUser_delegation_delegatedToTouserInput = {
+    createdBy: string
+  }
+
+  export type delegationUpdateWithoutUser_delegation_createdByTouserInput = {
+    user_delegation_delegatedToTouser?: userUpdateOneRequiredWithoutDelegation_delegation_delegatedToTouserNestedInput
+  }
+
+  export type delegationUncheckedUpdateWithoutUser_delegation_createdByTouserInput = {
+    delegatedTo?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type delegationUncheckedUpdateManyWithoutDelegation_delegation_createdByTouserInput = {
+    delegatedTo?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type delegationUpdateWithoutUser_delegation_delegatedToTouserInput = {
+    user_delegation_createdByTouser?: userUpdateOneRequiredWithoutDelegation_delegation_createdByTouserNestedInput
+  }
+
+  export type delegationUncheckedUpdateWithoutUser_delegation_delegatedToTouserInput = {
+    createdBy?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type delegationUncheckedUpdateManyWithoutDelegation_delegation_delegatedToTouserInput = {
+    createdBy?: StringFieldUpdateOperationsInput | string
   }
 
 

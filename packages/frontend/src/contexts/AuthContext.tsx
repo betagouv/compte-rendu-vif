@@ -22,7 +22,9 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
       if (electric.isConnected) electric.disconnect();
       await electric.connect(data.token!);
 
-      await electric.db.report.sync();
+      await electric.db.report.sync({
+        include: {},
+      });
       // await electric.db.clause.sync();
       await electric.db.chip.sync();
 

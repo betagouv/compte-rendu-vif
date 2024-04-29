@@ -13,13 +13,12 @@ export const udapInput = Type.Object({
   email: Type.Optional(Type.String()),
   user: Type.Array(
     Type.Object({
-      id: Type.String(),
       email: Type.String(),
       name: Type.String(),
       temporaryLink: Type.Optional(Type.String()),
       temporaryLinkExpiresAt: Type.Optional(Type.String()),
       password: Type.String(),
-      udap_id: Type.Optional(Type.String()),
+      udap_id: Type.String(),
     })
   ),
 });

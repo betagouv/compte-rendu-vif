@@ -12,9 +12,9 @@ CREATE TABLE IF NOT EXISTS "report" (
   precisions TEXT,
   contacts TEXT,
   further_information TEXT,
-  created_by_id TEXT NOT NULL,
-  created_by_username TEXT NOT NULL,
-  created_at TIMESTAMP NOT NULL
+  created_by_email TEXT NOT NULL REFERENCES "user"(email) ON DELETE SET NULL,
+  created_at TIMESTAMP NOT NULL,
+  service_instructeur TEXT
 );
 
 CREATE TABLE IF NOT EXISTS "clause" (

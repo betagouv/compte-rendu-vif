@@ -47,6 +47,24 @@ export type ClausePayload<ExtArgs extends $Extensions.Args = $Extensions.Default
  * 
  */
 export type Clause = runtime.Types.DefaultSelection<ClausePayload>
+export type DelegationPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  name: "Delegation"
+  objects: {
+    user_delegation_createdByTouser: UserPayload<ExtArgs>
+    user_delegation_delegatedToTouser: UserPayload<ExtArgs>
+  }
+  scalars: $Extensions.GetResult<{
+    createdBy: string
+    delegatedTo: string
+  }, ExtArgs["result"]["delegation"]>
+  composites: {}
+}
+
+/**
+ * Model Delegation
+ * 
+ */
+export type Delegation = runtime.Types.DefaultSelection<DelegationPayload>
 export type ReportPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
   name: "Report"
   objects: {
@@ -98,6 +116,54 @@ export type Report_to_clausePayload<ExtArgs extends $Extensions.Args = $Extensio
  * 
  */
 export type Report_to_clause = runtime.Types.DefaultSelection<Report_to_clausePayload>
+export type UdapPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  name: "Udap"
+  objects: {
+    user: UserPayload<ExtArgs>[]
+  }
+  scalars: $Extensions.GetResult<{
+    id: string
+    department: string
+    complete_coords: string | null
+    visible: boolean | null
+    name: string | null
+    address: string | null
+    zip_code: string | null
+    city: string | null
+    phone: string | null
+    email: string | null
+  }, ExtArgs["result"]["udap"]>
+  composites: {}
+}
+
+/**
+ * Model Udap
+ * 
+ */
+export type Udap = runtime.Types.DefaultSelection<UdapPayload>
+export type UserPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  name: "User"
+  objects: {
+    delegation_delegation_createdByTouser: DelegationPayload<ExtArgs>[]
+    delegation_delegation_delegatedToTouser: DelegationPayload<ExtArgs>[]
+    udap: UdapPayload<ExtArgs>
+  }
+  scalars: $Extensions.GetResult<{
+    email: string
+    name: string
+    temporaryLink: string | null
+    temporaryLinkExpiresAt: string | null
+    password: string
+    udap_id: string
+  }, ExtArgs["result"]["user"]>
+  composites: {}
+}
+
+/**
+ * Model User
+ * 
+ */
+export type User = runtime.Types.DefaultSelection<UserPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -245,6 +311,16 @@ export class PrismaClient<
   get clause(): Prisma.ClauseDelegate<GlobalReject, ExtArgs>;
 
   /**
+   * `prisma.delegation`: Exposes CRUD operations for the **Delegation** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Delegations
+    * const delegations = await prisma.delegation.findMany()
+    * ```
+    */
+  get delegation(): Prisma.DelegationDelegate<GlobalReject, ExtArgs>;
+
+  /**
    * `prisma.report`: Exposes CRUD operations for the **Report** model.
     * Example usage:
     * ```ts
@@ -263,6 +339,26 @@ export class PrismaClient<
     * ```
     */
   get report_to_clause(): Prisma.Report_to_clauseDelegate<GlobalReject, ExtArgs>;
+
+  /**
+   * `prisma.udap`: Exposes CRUD operations for the **Udap** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Udaps
+    * const udaps = await prisma.udap.findMany()
+    * ```
+    */
+  get udap(): Prisma.UdapDelegate<GlobalReject, ExtArgs>;
+
+  /**
+   * `prisma.user`: Exposes CRUD operations for the **User** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Users
+    * const users = await prisma.user.findMany()
+    * ```
+    */
+  get user(): Prisma.UserDelegate<GlobalReject, ExtArgs>;
 }
 
 export namespace Prisma {
@@ -748,8 +844,11 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export const ModelName: {
     Chip: 'Chip',
     Clause: 'Clause',
+    Delegation: 'Delegation',
     Report: 'Report',
-    Report_to_clause: 'Report_to_clause'
+    Report_to_clause: 'Report_to_clause',
+    Udap: 'Udap',
+    User: 'User'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -766,7 +865,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type TypeMap<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     meta: {
-      modelProps: 'chip' | 'clause' | 'report' | 'report_to_clause'
+      modelProps: 'chip' | 'clause' | 'delegation' | 'report' | 'report_to_clause' | 'udap' | 'user'
       txIsolationLevel: Prisma.TransactionIsolationLevel
     },
     model: {
@@ -900,6 +999,71 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
           }
         }
       }
+      Delegation: {
+        payload: DelegationPayload<ExtArgs>
+        operations: {
+          findUnique: {
+            args: Prisma.DelegationFindUniqueArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<DelegationPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.DelegationFindUniqueOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<DelegationPayload>
+          }
+          findFirst: {
+            args: Prisma.DelegationFindFirstArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<DelegationPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.DelegationFindFirstOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<DelegationPayload>
+          }
+          findMany: {
+            args: Prisma.DelegationFindManyArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<DelegationPayload>[]
+          }
+          create: {
+            args: Prisma.DelegationCreateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<DelegationPayload>
+          }
+          createMany: {
+            args: Prisma.DelegationCreateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          delete: {
+            args: Prisma.DelegationDeleteArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<DelegationPayload>
+          }
+          update: {
+            args: Prisma.DelegationUpdateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<DelegationPayload>
+          }
+          deleteMany: {
+            args: Prisma.DelegationDeleteManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          updateMany: {
+            args: Prisma.DelegationUpdateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          upsert: {
+            args: Prisma.DelegationUpsertArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<DelegationPayload>
+          }
+          aggregate: {
+            args: Prisma.DelegationAggregateArgs<ExtArgs>,
+            result: $Utils.Optional<AggregateDelegation>
+          }
+          groupBy: {
+            args: Prisma.DelegationGroupByArgs<ExtArgs>,
+            result: $Utils.Optional<DelegationGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.DelegationCountArgs<ExtArgs>,
+            result: $Utils.Optional<DelegationCountAggregateOutputType> | number
+          }
+        }
+      }
       Report: {
         payload: ReportPayload<ExtArgs>
         operations: {
@@ -1027,6 +1191,136 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
           count: {
             args: Prisma.Report_to_clauseCountArgs<ExtArgs>,
             result: $Utils.Optional<Report_to_clauseCountAggregateOutputType> | number
+          }
+        }
+      }
+      Udap: {
+        payload: UdapPayload<ExtArgs>
+        operations: {
+          findUnique: {
+            args: Prisma.UdapFindUniqueArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<UdapPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.UdapFindUniqueOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<UdapPayload>
+          }
+          findFirst: {
+            args: Prisma.UdapFindFirstArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<UdapPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.UdapFindFirstOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<UdapPayload>
+          }
+          findMany: {
+            args: Prisma.UdapFindManyArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<UdapPayload>[]
+          }
+          create: {
+            args: Prisma.UdapCreateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<UdapPayload>
+          }
+          createMany: {
+            args: Prisma.UdapCreateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          delete: {
+            args: Prisma.UdapDeleteArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<UdapPayload>
+          }
+          update: {
+            args: Prisma.UdapUpdateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<UdapPayload>
+          }
+          deleteMany: {
+            args: Prisma.UdapDeleteManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          updateMany: {
+            args: Prisma.UdapUpdateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          upsert: {
+            args: Prisma.UdapUpsertArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<UdapPayload>
+          }
+          aggregate: {
+            args: Prisma.UdapAggregateArgs<ExtArgs>,
+            result: $Utils.Optional<AggregateUdap>
+          }
+          groupBy: {
+            args: Prisma.UdapGroupByArgs<ExtArgs>,
+            result: $Utils.Optional<UdapGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.UdapCountArgs<ExtArgs>,
+            result: $Utils.Optional<UdapCountAggregateOutputType> | number
+          }
+        }
+      }
+      User: {
+        payload: UserPayload<ExtArgs>
+        operations: {
+          findUnique: {
+            args: Prisma.UserFindUniqueArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<UserPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.UserFindUniqueOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<UserPayload>
+          }
+          findFirst: {
+            args: Prisma.UserFindFirstArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<UserPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.UserFindFirstOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<UserPayload>
+          }
+          findMany: {
+            args: Prisma.UserFindManyArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<UserPayload>[]
+          }
+          create: {
+            args: Prisma.UserCreateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<UserPayload>
+          }
+          createMany: {
+            args: Prisma.UserCreateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          delete: {
+            args: Prisma.UserDeleteArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<UserPayload>
+          }
+          update: {
+            args: Prisma.UserUpdateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<UserPayload>
+          }
+          deleteMany: {
+            args: Prisma.UserDeleteManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          updateMany: {
+            args: Prisma.UserUpdateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          upsert: {
+            args: Prisma.UserUpsertArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<UserPayload>
+          }
+          aggregate: {
+            args: Prisma.UserAggregateArgs<ExtArgs>,
+            result: $Utils.Optional<AggregateUser>
+          }
+          groupBy: {
+            args: Prisma.UserGroupByArgs<ExtArgs>,
+            result: $Utils.Optional<UserGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.UserCountArgs<ExtArgs>,
+            result: $Utils.Optional<UserCountAggregateOutputType> | number
           }
         }
       }
@@ -1272,6 +1566,86 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
    */
   export type ReportCountOutputTypeCountReport_to_clauseArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     where?: Report_to_clauseWhereInput
+  }
+
+
+
+  /**
+   * Count Type UdapCountOutputType
+   */
+
+
+  export type UdapCountOutputType = {
+    user: number
+  }
+
+  export type UdapCountOutputTypeSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    user?: boolean | UdapCountOutputTypeCountUserArgs
+  }
+
+  // Custom InputTypes
+
+  /**
+   * UdapCountOutputType without action
+   */
+  export type UdapCountOutputTypeArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UdapCountOutputType
+     */
+    select?: UdapCountOutputTypeSelect<ExtArgs> | null
+  }
+
+
+  /**
+   * UdapCountOutputType without action
+   */
+  export type UdapCountOutputTypeCountUserArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    where?: UserWhereInput
+  }
+
+
+
+  /**
+   * Count Type UserCountOutputType
+   */
+
+
+  export type UserCountOutputType = {
+    delegation_delegation_createdByTouser: number
+    delegation_delegation_delegatedToTouser: number
+  }
+
+  export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    delegation_delegation_createdByTouser?: boolean | UserCountOutputTypeCountDelegation_delegation_createdByTouserArgs
+    delegation_delegation_delegatedToTouser?: boolean | UserCountOutputTypeCountDelegation_delegation_delegatedToTouserArgs
+  }
+
+  // Custom InputTypes
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserCountOutputType
+     */
+    select?: UserCountOutputTypeSelect<ExtArgs> | null
+  }
+
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountDelegation_delegation_createdByTouserArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    where?: DelegationWhereInput
+  }
+
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountDelegation_delegation_delegatedToTouserArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    where?: DelegationWhereInput
   }
 
 
@@ -3074,6 +3448,907 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      * Choose, which related nodes to fetch as well.
      */
     include?: ClauseInclude<ExtArgs> | null
+  }
+
+
+
+  /**
+   * Model Delegation
+   */
+
+
+  export type AggregateDelegation = {
+    _count: DelegationCountAggregateOutputType | null
+    _min: DelegationMinAggregateOutputType | null
+    _max: DelegationMaxAggregateOutputType | null
+  }
+
+  export type DelegationMinAggregateOutputType = {
+    createdBy: string | null
+    delegatedTo: string | null
+  }
+
+  export type DelegationMaxAggregateOutputType = {
+    createdBy: string | null
+    delegatedTo: string | null
+  }
+
+  export type DelegationCountAggregateOutputType = {
+    createdBy: number
+    delegatedTo: number
+    _all: number
+  }
+
+
+  export type DelegationMinAggregateInputType = {
+    createdBy?: true
+    delegatedTo?: true
+  }
+
+  export type DelegationMaxAggregateInputType = {
+    createdBy?: true
+    delegatedTo?: true
+  }
+
+  export type DelegationCountAggregateInputType = {
+    createdBy?: true
+    delegatedTo?: true
+    _all?: true
+  }
+
+  export type DelegationAggregateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Delegation to aggregate.
+     */
+    where?: DelegationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Delegations to fetch.
+     */
+    orderBy?: Enumerable<DelegationOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: DelegationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Delegations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Delegations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Delegations
+    **/
+    _count?: true | DelegationCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: DelegationMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: DelegationMaxAggregateInputType
+  }
+
+  export type GetDelegationAggregateType<T extends DelegationAggregateArgs> = {
+        [P in keyof T & keyof AggregateDelegation]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateDelegation[P]>
+      : GetScalarType<T[P], AggregateDelegation[P]>
+  }
+
+
+
+
+  export type DelegationGroupByArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    where?: DelegationWhereInput
+    orderBy?: Enumerable<DelegationOrderByWithAggregationInput>
+    by: DelegationScalarFieldEnum[]
+    having?: DelegationScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: DelegationCountAggregateInputType | true
+    _min?: DelegationMinAggregateInputType
+    _max?: DelegationMaxAggregateInputType
+  }
+
+
+  export type DelegationGroupByOutputType = {
+    createdBy: string
+    delegatedTo: string
+    _count: DelegationCountAggregateOutputType | null
+    _min: DelegationMinAggregateOutputType | null
+    _max: DelegationMaxAggregateOutputType | null
+  }
+
+  type GetDelegationGroupByPayload<T extends DelegationGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickArray<DelegationGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof DelegationGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], DelegationGroupByOutputType[P]>
+            : GetScalarType<T[P], DelegationGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type DelegationSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    createdBy?: boolean
+    delegatedTo?: boolean
+    user_delegation_createdByTouser?: boolean | UserArgs<ExtArgs>
+    user_delegation_delegatedToTouser?: boolean | UserArgs<ExtArgs>
+  }, ExtArgs["result"]["delegation"]>
+
+  export type DelegationSelectScalar = {
+    createdBy?: boolean
+    delegatedTo?: boolean
+  }
+
+  export type DelegationInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    user_delegation_createdByTouser?: boolean | UserArgs<ExtArgs>
+    user_delegation_delegatedToTouser?: boolean | UserArgs<ExtArgs>
+  }
+
+
+  type DelegationGetPayload<S extends boolean | null | undefined | DelegationArgs> = $Types.GetResult<DelegationPayload, S>
+
+  type DelegationCountArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = 
+    Omit<DelegationFindManyArgs, 'select' | 'include'> & {
+      select?: DelegationCountAggregateInputType | true
+    }
+
+  export interface DelegationDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Delegation'], meta: { name: 'Delegation' } }
+    /**
+     * Find zero or one Delegation that matches the filter.
+     * @param {DelegationFindUniqueArgs} args - Arguments to find a Delegation
+     * @example
+     * // Get one Delegation
+     * const delegation = await prisma.delegation.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends DelegationFindUniqueArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, DelegationFindUniqueArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'Delegation'> extends True ? Prisma__DelegationClient<$Types.GetResult<DelegationPayload<ExtArgs>, T, 'findUnique', never>, never, ExtArgs> : Prisma__DelegationClient<$Types.GetResult<DelegationPayload<ExtArgs>, T, 'findUnique', never> | null, null, ExtArgs>
+
+    /**
+     * Find one Delegation that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {DelegationFindUniqueOrThrowArgs} args - Arguments to find a Delegation
+     * @example
+     * // Get one Delegation
+     * const delegation = await prisma.delegation.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends DelegationFindUniqueOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, DelegationFindUniqueOrThrowArgs<ExtArgs>>
+    ): Prisma__DelegationClient<$Types.GetResult<DelegationPayload<ExtArgs>, T, 'findUniqueOrThrow', never>, never, ExtArgs>
+
+    /**
+     * Find the first Delegation that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DelegationFindFirstArgs} args - Arguments to find a Delegation
+     * @example
+     * // Get one Delegation
+     * const delegation = await prisma.delegation.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends DelegationFindFirstArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, DelegationFindFirstArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'Delegation'> extends True ? Prisma__DelegationClient<$Types.GetResult<DelegationPayload<ExtArgs>, T, 'findFirst', never>, never, ExtArgs> : Prisma__DelegationClient<$Types.GetResult<DelegationPayload<ExtArgs>, T, 'findFirst', never> | null, null, ExtArgs>
+
+    /**
+     * Find the first Delegation that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DelegationFindFirstOrThrowArgs} args - Arguments to find a Delegation
+     * @example
+     * // Get one Delegation
+     * const delegation = await prisma.delegation.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends DelegationFindFirstOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, DelegationFindFirstOrThrowArgs<ExtArgs>>
+    ): Prisma__DelegationClient<$Types.GetResult<DelegationPayload<ExtArgs>, T, 'findFirstOrThrow', never>, never, ExtArgs>
+
+    /**
+     * Find zero or more Delegations that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DelegationFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Delegations
+     * const delegations = await prisma.delegation.findMany()
+     * 
+     * // Get first 10 Delegations
+     * const delegations = await prisma.delegation.findMany({ take: 10 })
+     * 
+     * // Only select the `createdBy`
+     * const delegationWithCreatedByOnly = await prisma.delegation.findMany({ select: { createdBy: true } })
+     * 
+    **/
+    findMany<T extends DelegationFindManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, DelegationFindManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Types.GetResult<DelegationPayload<ExtArgs>, T, 'findMany', never>>
+
+    /**
+     * Create a Delegation.
+     * @param {DelegationCreateArgs} args - Arguments to create a Delegation.
+     * @example
+     * // Create one Delegation
+     * const Delegation = await prisma.delegation.create({
+     *   data: {
+     *     // ... data to create a Delegation
+     *   }
+     * })
+     * 
+    **/
+    create<T extends DelegationCreateArgs<ExtArgs>>(
+      args: SelectSubset<T, DelegationCreateArgs<ExtArgs>>
+    ): Prisma__DelegationClient<$Types.GetResult<DelegationPayload<ExtArgs>, T, 'create', never>, never, ExtArgs>
+
+    /**
+     * Create many Delegations.
+     *     @param {DelegationCreateManyArgs} args - Arguments to create many Delegations.
+     *     @example
+     *     // Create many Delegations
+     *     const delegation = await prisma.delegation.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
+     *     
+    **/
+    createMany<T extends DelegationCreateManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, DelegationCreateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Delegation.
+     * @param {DelegationDeleteArgs} args - Arguments to delete one Delegation.
+     * @example
+     * // Delete one Delegation
+     * const Delegation = await prisma.delegation.delete({
+     *   where: {
+     *     // ... filter to delete one Delegation
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends DelegationDeleteArgs<ExtArgs>>(
+      args: SelectSubset<T, DelegationDeleteArgs<ExtArgs>>
+    ): Prisma__DelegationClient<$Types.GetResult<DelegationPayload<ExtArgs>, T, 'delete', never>, never, ExtArgs>
+
+    /**
+     * Update one Delegation.
+     * @param {DelegationUpdateArgs} args - Arguments to update one Delegation.
+     * @example
+     * // Update one Delegation
+     * const delegation = await prisma.delegation.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends DelegationUpdateArgs<ExtArgs>>(
+      args: SelectSubset<T, DelegationUpdateArgs<ExtArgs>>
+    ): Prisma__DelegationClient<$Types.GetResult<DelegationPayload<ExtArgs>, T, 'update', never>, never, ExtArgs>
+
+    /**
+     * Delete zero or more Delegations.
+     * @param {DelegationDeleteManyArgs} args - Arguments to filter Delegations to delete.
+     * @example
+     * // Delete a few Delegations
+     * const { count } = await prisma.delegation.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends DelegationDeleteManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, DelegationDeleteManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Delegations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DelegationUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Delegations
+     * const delegation = await prisma.delegation.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends DelegationUpdateManyArgs<ExtArgs>>(
+      args: SelectSubset<T, DelegationUpdateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Delegation.
+     * @param {DelegationUpsertArgs} args - Arguments to update or create a Delegation.
+     * @example
+     * // Update or create a Delegation
+     * const delegation = await prisma.delegation.upsert({
+     *   create: {
+     *     // ... data to create a Delegation
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Delegation we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends DelegationUpsertArgs<ExtArgs>>(
+      args: SelectSubset<T, DelegationUpsertArgs<ExtArgs>>
+    ): Prisma__DelegationClient<$Types.GetResult<DelegationPayload<ExtArgs>, T, 'upsert', never>, never, ExtArgs>
+
+    /**
+     * Count the number of Delegations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DelegationCountArgs} args - Arguments to filter Delegations to count.
+     * @example
+     * // Count the number of Delegations
+     * const count = await prisma.delegation.count({
+     *   where: {
+     *     // ... the filter for the Delegations we want to count
+     *   }
+     * })
+    **/
+    count<T extends DelegationCountArgs>(
+      args?: Subset<T, DelegationCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], DelegationCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Delegation.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DelegationAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends DelegationAggregateArgs>(args: Subset<T, DelegationAggregateArgs>): Prisma.PrismaPromise<GetDelegationAggregateType<T>>
+
+    /**
+     * Group by Delegation.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DelegationGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends DelegationGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: DelegationGroupByArgs['orderBy'] }
+        : { orderBy?: DelegationGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends TupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, DelegationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDelegationGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Delegation.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export class Prisma__DelegationClient<T, Null = never, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> implements Prisma.PrismaPromise<T> {
+    private readonly _dmmf;
+    private readonly _queryType;
+    private readonly _rootField;
+    private readonly _clientMethod;
+    private readonly _args;
+    private readonly _dataPath;
+    private readonly _errorFormat;
+    private readonly _measurePerformance?;
+    private _isList;
+    private _callsite;
+    private _requestPromise?;
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+    constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
+
+    user_delegation_createdByTouser<T extends UserArgs<ExtArgs> = {}>(args?: Subset<T, UserArgs<ExtArgs>>): Prisma__UserClient<$Types.GetResult<UserPayload<ExtArgs>, T, 'findUnique', never> | Null, never, ExtArgs>;
+
+    user_delegation_delegatedToTouser<T extends UserArgs<ExtArgs> = {}>(args?: Subset<T, UserArgs<ExtArgs>>): Prisma__UserClient<$Types.GetResult<UserPayload<ExtArgs>, T, 'findUnique', never> | Null, never, ExtArgs>;
+
+    private get _document();
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): Promise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): Promise<T>;
+  }
+
+
+
+  // Custom InputTypes
+
+  /**
+   * Delegation base type for findUnique actions
+   */
+  export type DelegationFindUniqueArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Delegation
+     */
+    select?: DelegationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: DelegationInclude<ExtArgs> | null
+    /**
+     * Filter, which Delegation to fetch.
+     */
+    where: DelegationWhereUniqueInput
+  }
+
+  /**
+   * Delegation findUnique
+   */
+  export interface DelegationFindUniqueArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends DelegationFindUniqueArgsBase<ExtArgs> {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * Delegation findUniqueOrThrow
+   */
+  export type DelegationFindUniqueOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Delegation
+     */
+    select?: DelegationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: DelegationInclude<ExtArgs> | null
+    /**
+     * Filter, which Delegation to fetch.
+     */
+    where: DelegationWhereUniqueInput
+  }
+
+
+  /**
+   * Delegation base type for findFirst actions
+   */
+  export type DelegationFindFirstArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Delegation
+     */
+    select?: DelegationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: DelegationInclude<ExtArgs> | null
+    /**
+     * Filter, which Delegation to fetch.
+     */
+    where?: DelegationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Delegations to fetch.
+     */
+    orderBy?: Enumerable<DelegationOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Delegations.
+     */
+    cursor?: DelegationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Delegations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Delegations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Delegations.
+     */
+    distinct?: Enumerable<DelegationScalarFieldEnum>
+  }
+
+  /**
+   * Delegation findFirst
+   */
+  export interface DelegationFindFirstArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends DelegationFindFirstArgsBase<ExtArgs> {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * Delegation findFirstOrThrow
+   */
+  export type DelegationFindFirstOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Delegation
+     */
+    select?: DelegationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: DelegationInclude<ExtArgs> | null
+    /**
+     * Filter, which Delegation to fetch.
+     */
+    where?: DelegationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Delegations to fetch.
+     */
+    orderBy?: Enumerable<DelegationOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Delegations.
+     */
+    cursor?: DelegationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Delegations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Delegations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Delegations.
+     */
+    distinct?: Enumerable<DelegationScalarFieldEnum>
+  }
+
+
+  /**
+   * Delegation findMany
+   */
+  export type DelegationFindManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Delegation
+     */
+    select?: DelegationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: DelegationInclude<ExtArgs> | null
+    /**
+     * Filter, which Delegations to fetch.
+     */
+    where?: DelegationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Delegations to fetch.
+     */
+    orderBy?: Enumerable<DelegationOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Delegations.
+     */
+    cursor?: DelegationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Delegations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Delegations.
+     */
+    skip?: number
+    distinct?: Enumerable<DelegationScalarFieldEnum>
+  }
+
+
+  /**
+   * Delegation create
+   */
+  export type DelegationCreateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Delegation
+     */
+    select?: DelegationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: DelegationInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Delegation.
+     */
+    data: XOR<DelegationCreateInput, DelegationUncheckedCreateInput>
+  }
+
+
+  /**
+   * Delegation createMany
+   */
+  export type DelegationCreateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Delegations.
+     */
+    data: Enumerable<DelegationCreateManyInput>
+    skipDuplicates?: boolean
+  }
+
+
+  /**
+   * Delegation update
+   */
+  export type DelegationUpdateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Delegation
+     */
+    select?: DelegationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: DelegationInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Delegation.
+     */
+    data: XOR<DelegationUpdateInput, DelegationUncheckedUpdateInput>
+    /**
+     * Choose, which Delegation to update.
+     */
+    where: DelegationWhereUniqueInput
+  }
+
+
+  /**
+   * Delegation updateMany
+   */
+  export type DelegationUpdateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Delegations.
+     */
+    data: XOR<DelegationUpdateManyMutationInput, DelegationUncheckedUpdateManyInput>
+    /**
+     * Filter which Delegations to update
+     */
+    where?: DelegationWhereInput
+  }
+
+
+  /**
+   * Delegation upsert
+   */
+  export type DelegationUpsertArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Delegation
+     */
+    select?: DelegationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: DelegationInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Delegation to update in case it exists.
+     */
+    where: DelegationWhereUniqueInput
+    /**
+     * In case the Delegation found by the `where` argument doesn't exist, create a new Delegation with this data.
+     */
+    create: XOR<DelegationCreateInput, DelegationUncheckedCreateInput>
+    /**
+     * In case the Delegation was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<DelegationUpdateInput, DelegationUncheckedUpdateInput>
+  }
+
+
+  /**
+   * Delegation delete
+   */
+  export type DelegationDeleteArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Delegation
+     */
+    select?: DelegationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: DelegationInclude<ExtArgs> | null
+    /**
+     * Filter which Delegation to delete.
+     */
+    where: DelegationWhereUniqueInput
+  }
+
+
+  /**
+   * Delegation deleteMany
+   */
+  export type DelegationDeleteManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Delegations to delete
+     */
+    where?: DelegationWhereInput
+  }
+
+
+  /**
+   * Delegation without action
+   */
+  export type DelegationArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Delegation
+     */
+    select?: DelegationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: DelegationInclude<ExtArgs> | null
   }
 
 
@@ -5044,6 +6319,1983 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
 
   /**
+   * Model Udap
+   */
+
+
+  export type AggregateUdap = {
+    _count: UdapCountAggregateOutputType | null
+    _min: UdapMinAggregateOutputType | null
+    _max: UdapMaxAggregateOutputType | null
+  }
+
+  export type UdapMinAggregateOutputType = {
+    id: string | null
+    department: string | null
+    complete_coords: string | null
+    visible: boolean | null
+    name: string | null
+    address: string | null
+    zip_code: string | null
+    city: string | null
+    phone: string | null
+    email: string | null
+  }
+
+  export type UdapMaxAggregateOutputType = {
+    id: string | null
+    department: string | null
+    complete_coords: string | null
+    visible: boolean | null
+    name: string | null
+    address: string | null
+    zip_code: string | null
+    city: string | null
+    phone: string | null
+    email: string | null
+  }
+
+  export type UdapCountAggregateOutputType = {
+    id: number
+    department: number
+    complete_coords: number
+    visible: number
+    name: number
+    address: number
+    zip_code: number
+    city: number
+    phone: number
+    email: number
+    _all: number
+  }
+
+
+  export type UdapMinAggregateInputType = {
+    id?: true
+    department?: true
+    complete_coords?: true
+    visible?: true
+    name?: true
+    address?: true
+    zip_code?: true
+    city?: true
+    phone?: true
+    email?: true
+  }
+
+  export type UdapMaxAggregateInputType = {
+    id?: true
+    department?: true
+    complete_coords?: true
+    visible?: true
+    name?: true
+    address?: true
+    zip_code?: true
+    city?: true
+    phone?: true
+    email?: true
+  }
+
+  export type UdapCountAggregateInputType = {
+    id?: true
+    department?: true
+    complete_coords?: true
+    visible?: true
+    name?: true
+    address?: true
+    zip_code?: true
+    city?: true
+    phone?: true
+    email?: true
+    _all?: true
+  }
+
+  export type UdapAggregateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Udap to aggregate.
+     */
+    where?: UdapWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Udaps to fetch.
+     */
+    orderBy?: Enumerable<UdapOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: UdapWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Udaps from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Udaps.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Udaps
+    **/
+    _count?: true | UdapCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: UdapMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: UdapMaxAggregateInputType
+  }
+
+  export type GetUdapAggregateType<T extends UdapAggregateArgs> = {
+        [P in keyof T & keyof AggregateUdap]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateUdap[P]>
+      : GetScalarType<T[P], AggregateUdap[P]>
+  }
+
+
+
+
+  export type UdapGroupByArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    where?: UdapWhereInput
+    orderBy?: Enumerable<UdapOrderByWithAggregationInput>
+    by: UdapScalarFieldEnum[]
+    having?: UdapScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: UdapCountAggregateInputType | true
+    _min?: UdapMinAggregateInputType
+    _max?: UdapMaxAggregateInputType
+  }
+
+
+  export type UdapGroupByOutputType = {
+    id: string
+    department: string
+    complete_coords: string | null
+    visible: boolean | null
+    name: string | null
+    address: string | null
+    zip_code: string | null
+    city: string | null
+    phone: string | null
+    email: string | null
+    _count: UdapCountAggregateOutputType | null
+    _min: UdapMinAggregateOutputType | null
+    _max: UdapMaxAggregateOutputType | null
+  }
+
+  type GetUdapGroupByPayload<T extends UdapGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickArray<UdapGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof UdapGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], UdapGroupByOutputType[P]>
+            : GetScalarType<T[P], UdapGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type UdapSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    department?: boolean
+    complete_coords?: boolean
+    visible?: boolean
+    name?: boolean
+    address?: boolean
+    zip_code?: boolean
+    city?: boolean
+    phone?: boolean
+    email?: boolean
+    user?: boolean | Udap$userArgs<ExtArgs>
+    _count?: boolean | UdapCountOutputTypeArgs<ExtArgs>
+  }, ExtArgs["result"]["udap"]>
+
+  export type UdapSelectScalar = {
+    id?: boolean
+    department?: boolean
+    complete_coords?: boolean
+    visible?: boolean
+    name?: boolean
+    address?: boolean
+    zip_code?: boolean
+    city?: boolean
+    phone?: boolean
+    email?: boolean
+  }
+
+  export type UdapInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    user?: boolean | Udap$userArgs<ExtArgs>
+    _count?: boolean | UdapCountOutputTypeArgs<ExtArgs>
+  }
+
+
+  type UdapGetPayload<S extends boolean | null | undefined | UdapArgs> = $Types.GetResult<UdapPayload, S>
+
+  type UdapCountArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = 
+    Omit<UdapFindManyArgs, 'select' | 'include'> & {
+      select?: UdapCountAggregateInputType | true
+    }
+
+  export interface UdapDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Udap'], meta: { name: 'Udap' } }
+    /**
+     * Find zero or one Udap that matches the filter.
+     * @param {UdapFindUniqueArgs} args - Arguments to find a Udap
+     * @example
+     * // Get one Udap
+     * const udap = await prisma.udap.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends UdapFindUniqueArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, UdapFindUniqueArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'Udap'> extends True ? Prisma__UdapClient<$Types.GetResult<UdapPayload<ExtArgs>, T, 'findUnique', never>, never, ExtArgs> : Prisma__UdapClient<$Types.GetResult<UdapPayload<ExtArgs>, T, 'findUnique', never> | null, null, ExtArgs>
+
+    /**
+     * Find one Udap that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {UdapFindUniqueOrThrowArgs} args - Arguments to find a Udap
+     * @example
+     * // Get one Udap
+     * const udap = await prisma.udap.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends UdapFindUniqueOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, UdapFindUniqueOrThrowArgs<ExtArgs>>
+    ): Prisma__UdapClient<$Types.GetResult<UdapPayload<ExtArgs>, T, 'findUniqueOrThrow', never>, never, ExtArgs>
+
+    /**
+     * Find the first Udap that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UdapFindFirstArgs} args - Arguments to find a Udap
+     * @example
+     * // Get one Udap
+     * const udap = await prisma.udap.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends UdapFindFirstArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, UdapFindFirstArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'Udap'> extends True ? Prisma__UdapClient<$Types.GetResult<UdapPayload<ExtArgs>, T, 'findFirst', never>, never, ExtArgs> : Prisma__UdapClient<$Types.GetResult<UdapPayload<ExtArgs>, T, 'findFirst', never> | null, null, ExtArgs>
+
+    /**
+     * Find the first Udap that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UdapFindFirstOrThrowArgs} args - Arguments to find a Udap
+     * @example
+     * // Get one Udap
+     * const udap = await prisma.udap.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends UdapFindFirstOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, UdapFindFirstOrThrowArgs<ExtArgs>>
+    ): Prisma__UdapClient<$Types.GetResult<UdapPayload<ExtArgs>, T, 'findFirstOrThrow', never>, never, ExtArgs>
+
+    /**
+     * Find zero or more Udaps that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UdapFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Udaps
+     * const udaps = await prisma.udap.findMany()
+     * 
+     * // Get first 10 Udaps
+     * const udaps = await prisma.udap.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const udapWithIdOnly = await prisma.udap.findMany({ select: { id: true } })
+     * 
+    **/
+    findMany<T extends UdapFindManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, UdapFindManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Types.GetResult<UdapPayload<ExtArgs>, T, 'findMany', never>>
+
+    /**
+     * Create a Udap.
+     * @param {UdapCreateArgs} args - Arguments to create a Udap.
+     * @example
+     * // Create one Udap
+     * const Udap = await prisma.udap.create({
+     *   data: {
+     *     // ... data to create a Udap
+     *   }
+     * })
+     * 
+    **/
+    create<T extends UdapCreateArgs<ExtArgs>>(
+      args: SelectSubset<T, UdapCreateArgs<ExtArgs>>
+    ): Prisma__UdapClient<$Types.GetResult<UdapPayload<ExtArgs>, T, 'create', never>, never, ExtArgs>
+
+    /**
+     * Create many Udaps.
+     *     @param {UdapCreateManyArgs} args - Arguments to create many Udaps.
+     *     @example
+     *     // Create many Udaps
+     *     const udap = await prisma.udap.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
+     *     
+    **/
+    createMany<T extends UdapCreateManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, UdapCreateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Udap.
+     * @param {UdapDeleteArgs} args - Arguments to delete one Udap.
+     * @example
+     * // Delete one Udap
+     * const Udap = await prisma.udap.delete({
+     *   where: {
+     *     // ... filter to delete one Udap
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends UdapDeleteArgs<ExtArgs>>(
+      args: SelectSubset<T, UdapDeleteArgs<ExtArgs>>
+    ): Prisma__UdapClient<$Types.GetResult<UdapPayload<ExtArgs>, T, 'delete', never>, never, ExtArgs>
+
+    /**
+     * Update one Udap.
+     * @param {UdapUpdateArgs} args - Arguments to update one Udap.
+     * @example
+     * // Update one Udap
+     * const udap = await prisma.udap.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends UdapUpdateArgs<ExtArgs>>(
+      args: SelectSubset<T, UdapUpdateArgs<ExtArgs>>
+    ): Prisma__UdapClient<$Types.GetResult<UdapPayload<ExtArgs>, T, 'update', never>, never, ExtArgs>
+
+    /**
+     * Delete zero or more Udaps.
+     * @param {UdapDeleteManyArgs} args - Arguments to filter Udaps to delete.
+     * @example
+     * // Delete a few Udaps
+     * const { count } = await prisma.udap.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends UdapDeleteManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, UdapDeleteManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Udaps.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UdapUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Udaps
+     * const udap = await prisma.udap.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends UdapUpdateManyArgs<ExtArgs>>(
+      args: SelectSubset<T, UdapUpdateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Udap.
+     * @param {UdapUpsertArgs} args - Arguments to update or create a Udap.
+     * @example
+     * // Update or create a Udap
+     * const udap = await prisma.udap.upsert({
+     *   create: {
+     *     // ... data to create a Udap
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Udap we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends UdapUpsertArgs<ExtArgs>>(
+      args: SelectSubset<T, UdapUpsertArgs<ExtArgs>>
+    ): Prisma__UdapClient<$Types.GetResult<UdapPayload<ExtArgs>, T, 'upsert', never>, never, ExtArgs>
+
+    /**
+     * Count the number of Udaps.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UdapCountArgs} args - Arguments to filter Udaps to count.
+     * @example
+     * // Count the number of Udaps
+     * const count = await prisma.udap.count({
+     *   where: {
+     *     // ... the filter for the Udaps we want to count
+     *   }
+     * })
+    **/
+    count<T extends UdapCountArgs>(
+      args?: Subset<T, UdapCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], UdapCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Udap.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UdapAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends UdapAggregateArgs>(args: Subset<T, UdapAggregateArgs>): Prisma.PrismaPromise<GetUdapAggregateType<T>>
+
+    /**
+     * Group by Udap.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UdapGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends UdapGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: UdapGroupByArgs['orderBy'] }
+        : { orderBy?: UdapGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends TupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, UdapGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUdapGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Udap.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export class Prisma__UdapClient<T, Null = never, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> implements Prisma.PrismaPromise<T> {
+    private readonly _dmmf;
+    private readonly _queryType;
+    private readonly _rootField;
+    private readonly _clientMethod;
+    private readonly _args;
+    private readonly _dataPath;
+    private readonly _errorFormat;
+    private readonly _measurePerformance?;
+    private _isList;
+    private _callsite;
+    private _requestPromise?;
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+    constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
+
+    user<T extends Udap$userArgs<ExtArgs> = {}>(args?: Subset<T, Udap$userArgs<ExtArgs>>): Prisma.PrismaPromise<$Types.GetResult<UserPayload<ExtArgs>, T, 'findMany', never>| Null>;
+
+    private get _document();
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): Promise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): Promise<T>;
+  }
+
+
+
+  // Custom InputTypes
+
+  /**
+   * Udap base type for findUnique actions
+   */
+  export type UdapFindUniqueArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Udap
+     */
+    select?: UdapSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: UdapInclude<ExtArgs> | null
+    /**
+     * Filter, which Udap to fetch.
+     */
+    where: UdapWhereUniqueInput
+  }
+
+  /**
+   * Udap findUnique
+   */
+  export interface UdapFindUniqueArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends UdapFindUniqueArgsBase<ExtArgs> {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * Udap findUniqueOrThrow
+   */
+  export type UdapFindUniqueOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Udap
+     */
+    select?: UdapSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: UdapInclude<ExtArgs> | null
+    /**
+     * Filter, which Udap to fetch.
+     */
+    where: UdapWhereUniqueInput
+  }
+
+
+  /**
+   * Udap base type for findFirst actions
+   */
+  export type UdapFindFirstArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Udap
+     */
+    select?: UdapSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: UdapInclude<ExtArgs> | null
+    /**
+     * Filter, which Udap to fetch.
+     */
+    where?: UdapWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Udaps to fetch.
+     */
+    orderBy?: Enumerable<UdapOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Udaps.
+     */
+    cursor?: UdapWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Udaps from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Udaps.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Udaps.
+     */
+    distinct?: Enumerable<UdapScalarFieldEnum>
+  }
+
+  /**
+   * Udap findFirst
+   */
+  export interface UdapFindFirstArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends UdapFindFirstArgsBase<ExtArgs> {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * Udap findFirstOrThrow
+   */
+  export type UdapFindFirstOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Udap
+     */
+    select?: UdapSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: UdapInclude<ExtArgs> | null
+    /**
+     * Filter, which Udap to fetch.
+     */
+    where?: UdapWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Udaps to fetch.
+     */
+    orderBy?: Enumerable<UdapOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Udaps.
+     */
+    cursor?: UdapWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Udaps from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Udaps.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Udaps.
+     */
+    distinct?: Enumerable<UdapScalarFieldEnum>
+  }
+
+
+  /**
+   * Udap findMany
+   */
+  export type UdapFindManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Udap
+     */
+    select?: UdapSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: UdapInclude<ExtArgs> | null
+    /**
+     * Filter, which Udaps to fetch.
+     */
+    where?: UdapWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Udaps to fetch.
+     */
+    orderBy?: Enumerable<UdapOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Udaps.
+     */
+    cursor?: UdapWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Udaps from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Udaps.
+     */
+    skip?: number
+    distinct?: Enumerable<UdapScalarFieldEnum>
+  }
+
+
+  /**
+   * Udap create
+   */
+  export type UdapCreateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Udap
+     */
+    select?: UdapSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: UdapInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Udap.
+     */
+    data: XOR<UdapCreateInput, UdapUncheckedCreateInput>
+  }
+
+
+  /**
+   * Udap createMany
+   */
+  export type UdapCreateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Udaps.
+     */
+    data: Enumerable<UdapCreateManyInput>
+    skipDuplicates?: boolean
+  }
+
+
+  /**
+   * Udap update
+   */
+  export type UdapUpdateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Udap
+     */
+    select?: UdapSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: UdapInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Udap.
+     */
+    data: XOR<UdapUpdateInput, UdapUncheckedUpdateInput>
+    /**
+     * Choose, which Udap to update.
+     */
+    where: UdapWhereUniqueInput
+  }
+
+
+  /**
+   * Udap updateMany
+   */
+  export type UdapUpdateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Udaps.
+     */
+    data: XOR<UdapUpdateManyMutationInput, UdapUncheckedUpdateManyInput>
+    /**
+     * Filter which Udaps to update
+     */
+    where?: UdapWhereInput
+  }
+
+
+  /**
+   * Udap upsert
+   */
+  export type UdapUpsertArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Udap
+     */
+    select?: UdapSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: UdapInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Udap to update in case it exists.
+     */
+    where: UdapWhereUniqueInput
+    /**
+     * In case the Udap found by the `where` argument doesn't exist, create a new Udap with this data.
+     */
+    create: XOR<UdapCreateInput, UdapUncheckedCreateInput>
+    /**
+     * In case the Udap was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<UdapUpdateInput, UdapUncheckedUpdateInput>
+  }
+
+
+  /**
+   * Udap delete
+   */
+  export type UdapDeleteArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Udap
+     */
+    select?: UdapSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: UdapInclude<ExtArgs> | null
+    /**
+     * Filter which Udap to delete.
+     */
+    where: UdapWhereUniqueInput
+  }
+
+
+  /**
+   * Udap deleteMany
+   */
+  export type UdapDeleteManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Udaps to delete
+     */
+    where?: UdapWhereInput
+  }
+
+
+  /**
+   * Udap.user
+   */
+  export type Udap$userArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+    orderBy?: Enumerable<UserOrderByWithRelationInput>
+    cursor?: UserWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Enumerable<UserScalarFieldEnum>
+  }
+
+
+  /**
+   * Udap without action
+   */
+  export type UdapArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Udap
+     */
+    select?: UdapSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: UdapInclude<ExtArgs> | null
+  }
+
+
+
+  /**
+   * Model User
+   */
+
+
+  export type AggregateUser = {
+    _count: UserCountAggregateOutputType | null
+    _min: UserMinAggregateOutputType | null
+    _max: UserMaxAggregateOutputType | null
+  }
+
+  export type UserMinAggregateOutputType = {
+    email: string | null
+    name: string | null
+    temporaryLink: string | null
+    temporaryLinkExpiresAt: string | null
+    password: string | null
+    udap_id: string | null
+  }
+
+  export type UserMaxAggregateOutputType = {
+    email: string | null
+    name: string | null
+    temporaryLink: string | null
+    temporaryLinkExpiresAt: string | null
+    password: string | null
+    udap_id: string | null
+  }
+
+  export type UserCountAggregateOutputType = {
+    email: number
+    name: number
+    temporaryLink: number
+    temporaryLinkExpiresAt: number
+    password: number
+    udap_id: number
+    _all: number
+  }
+
+
+  export type UserMinAggregateInputType = {
+    email?: true
+    name?: true
+    temporaryLink?: true
+    temporaryLinkExpiresAt?: true
+    password?: true
+    udap_id?: true
+  }
+
+  export type UserMaxAggregateInputType = {
+    email?: true
+    name?: true
+    temporaryLink?: true
+    temporaryLinkExpiresAt?: true
+    password?: true
+    udap_id?: true
+  }
+
+  export type UserCountAggregateInputType = {
+    email?: true
+    name?: true
+    temporaryLink?: true
+    temporaryLinkExpiresAt?: true
+    password?: true
+    udap_id?: true
+    _all?: true
+  }
+
+  export type UserAggregateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which User to aggregate.
+     */
+    where?: UserWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Users to fetch.
+     */
+    orderBy?: Enumerable<UserOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: UserWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Users from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Users.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Users
+    **/
+    _count?: true | UserCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: UserMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: UserMaxAggregateInputType
+  }
+
+  export type GetUserAggregateType<T extends UserAggregateArgs> = {
+        [P in keyof T & keyof AggregateUser]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateUser[P]>
+      : GetScalarType<T[P], AggregateUser[P]>
+  }
+
+
+
+
+  export type UserGroupByArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    where?: UserWhereInput
+    orderBy?: Enumerable<UserOrderByWithAggregationInput>
+    by: UserScalarFieldEnum[]
+    having?: UserScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: UserCountAggregateInputType | true
+    _min?: UserMinAggregateInputType
+    _max?: UserMaxAggregateInputType
+  }
+
+
+  export type UserGroupByOutputType = {
+    email: string
+    name: string
+    temporaryLink: string | null
+    temporaryLinkExpiresAt: string | null
+    password: string
+    udap_id: string
+    _count: UserCountAggregateOutputType | null
+    _min: UserMinAggregateOutputType | null
+    _max: UserMaxAggregateOutputType | null
+  }
+
+  type GetUserGroupByPayload<T extends UserGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickArray<UserGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof UserGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], UserGroupByOutputType[P]>
+            : GetScalarType<T[P], UserGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type UserSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    email?: boolean
+    name?: boolean
+    temporaryLink?: boolean
+    temporaryLinkExpiresAt?: boolean
+    password?: boolean
+    udap_id?: boolean
+    delegation_delegation_createdByTouser?: boolean | User$delegation_delegation_createdByTouserArgs<ExtArgs>
+    delegation_delegation_delegatedToTouser?: boolean | User$delegation_delegation_delegatedToTouserArgs<ExtArgs>
+    udap?: boolean | UdapArgs<ExtArgs>
+    _count?: boolean | UserCountOutputTypeArgs<ExtArgs>
+  }, ExtArgs["result"]["user"]>
+
+  export type UserSelectScalar = {
+    email?: boolean
+    name?: boolean
+    temporaryLink?: boolean
+    temporaryLinkExpiresAt?: boolean
+    password?: boolean
+    udap_id?: boolean
+  }
+
+  export type UserInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    delegation_delegation_createdByTouser?: boolean | User$delegation_delegation_createdByTouserArgs<ExtArgs>
+    delegation_delegation_delegatedToTouser?: boolean | User$delegation_delegation_delegatedToTouserArgs<ExtArgs>
+    udap?: boolean | UdapArgs<ExtArgs>
+    _count?: boolean | UserCountOutputTypeArgs<ExtArgs>
+  }
+
+
+  type UserGetPayload<S extends boolean | null | undefined | UserArgs> = $Types.GetResult<UserPayload, S>
+
+  type UserCountArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = 
+    Omit<UserFindManyArgs, 'select' | 'include'> & {
+      select?: UserCountAggregateInputType | true
+    }
+
+  export interface UserDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['User'], meta: { name: 'User' } }
+    /**
+     * Find zero or one User that matches the filter.
+     * @param {UserFindUniqueArgs} args - Arguments to find a User
+     * @example
+     * // Get one User
+     * const user = await prisma.user.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends UserFindUniqueArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, UserFindUniqueArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'User'> extends True ? Prisma__UserClient<$Types.GetResult<UserPayload<ExtArgs>, T, 'findUnique', never>, never, ExtArgs> : Prisma__UserClient<$Types.GetResult<UserPayload<ExtArgs>, T, 'findUnique', never> | null, null, ExtArgs>
+
+    /**
+     * Find one User that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {UserFindUniqueOrThrowArgs} args - Arguments to find a User
+     * @example
+     * // Get one User
+     * const user = await prisma.user.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends UserFindUniqueOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, UserFindUniqueOrThrowArgs<ExtArgs>>
+    ): Prisma__UserClient<$Types.GetResult<UserPayload<ExtArgs>, T, 'findUniqueOrThrow', never>, never, ExtArgs>
+
+    /**
+     * Find the first User that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserFindFirstArgs} args - Arguments to find a User
+     * @example
+     * // Get one User
+     * const user = await prisma.user.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends UserFindFirstArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, UserFindFirstArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'User'> extends True ? Prisma__UserClient<$Types.GetResult<UserPayload<ExtArgs>, T, 'findFirst', never>, never, ExtArgs> : Prisma__UserClient<$Types.GetResult<UserPayload<ExtArgs>, T, 'findFirst', never> | null, null, ExtArgs>
+
+    /**
+     * Find the first User that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserFindFirstOrThrowArgs} args - Arguments to find a User
+     * @example
+     * // Get one User
+     * const user = await prisma.user.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends UserFindFirstOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, UserFindFirstOrThrowArgs<ExtArgs>>
+    ): Prisma__UserClient<$Types.GetResult<UserPayload<ExtArgs>, T, 'findFirstOrThrow', never>, never, ExtArgs>
+
+    /**
+     * Find zero or more Users that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Users
+     * const users = await prisma.user.findMany()
+     * 
+     * // Get first 10 Users
+     * const users = await prisma.user.findMany({ take: 10 })
+     * 
+     * // Only select the `email`
+     * const userWithEmailOnly = await prisma.user.findMany({ select: { email: true } })
+     * 
+    **/
+    findMany<T extends UserFindManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, UserFindManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Types.GetResult<UserPayload<ExtArgs>, T, 'findMany', never>>
+
+    /**
+     * Create a User.
+     * @param {UserCreateArgs} args - Arguments to create a User.
+     * @example
+     * // Create one User
+     * const User = await prisma.user.create({
+     *   data: {
+     *     // ... data to create a User
+     *   }
+     * })
+     * 
+    **/
+    create<T extends UserCreateArgs<ExtArgs>>(
+      args: SelectSubset<T, UserCreateArgs<ExtArgs>>
+    ): Prisma__UserClient<$Types.GetResult<UserPayload<ExtArgs>, T, 'create', never>, never, ExtArgs>
+
+    /**
+     * Create many Users.
+     *     @param {UserCreateManyArgs} args - Arguments to create many Users.
+     *     @example
+     *     // Create many Users
+     *     const user = await prisma.user.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
+     *     
+    **/
+    createMany<T extends UserCreateManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, UserCreateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a User.
+     * @param {UserDeleteArgs} args - Arguments to delete one User.
+     * @example
+     * // Delete one User
+     * const User = await prisma.user.delete({
+     *   where: {
+     *     // ... filter to delete one User
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends UserDeleteArgs<ExtArgs>>(
+      args: SelectSubset<T, UserDeleteArgs<ExtArgs>>
+    ): Prisma__UserClient<$Types.GetResult<UserPayload<ExtArgs>, T, 'delete', never>, never, ExtArgs>
+
+    /**
+     * Update one User.
+     * @param {UserUpdateArgs} args - Arguments to update one User.
+     * @example
+     * // Update one User
+     * const user = await prisma.user.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends UserUpdateArgs<ExtArgs>>(
+      args: SelectSubset<T, UserUpdateArgs<ExtArgs>>
+    ): Prisma__UserClient<$Types.GetResult<UserPayload<ExtArgs>, T, 'update', never>, never, ExtArgs>
+
+    /**
+     * Delete zero or more Users.
+     * @param {UserDeleteManyArgs} args - Arguments to filter Users to delete.
+     * @example
+     * // Delete a few Users
+     * const { count } = await prisma.user.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends UserDeleteManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, UserDeleteManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Users.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Users
+     * const user = await prisma.user.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends UserUpdateManyArgs<ExtArgs>>(
+      args: SelectSubset<T, UserUpdateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one User.
+     * @param {UserUpsertArgs} args - Arguments to update or create a User.
+     * @example
+     * // Update or create a User
+     * const user = await prisma.user.upsert({
+     *   create: {
+     *     // ... data to create a User
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the User we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends UserUpsertArgs<ExtArgs>>(
+      args: SelectSubset<T, UserUpsertArgs<ExtArgs>>
+    ): Prisma__UserClient<$Types.GetResult<UserPayload<ExtArgs>, T, 'upsert', never>, never, ExtArgs>
+
+    /**
+     * Count the number of Users.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserCountArgs} args - Arguments to filter Users to count.
+     * @example
+     * // Count the number of Users
+     * const count = await prisma.user.count({
+     *   where: {
+     *     // ... the filter for the Users we want to count
+     *   }
+     * })
+    **/
+    count<T extends UserCountArgs>(
+      args?: Subset<T, UserCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], UserCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a User.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends UserAggregateArgs>(args: Subset<T, UserAggregateArgs>): Prisma.PrismaPromise<GetUserAggregateType<T>>
+
+    /**
+     * Group by User.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends UserGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: UserGroupByArgs['orderBy'] }
+        : { orderBy?: UserGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends TupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, UserGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUserGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for User.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export class Prisma__UserClient<T, Null = never, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> implements Prisma.PrismaPromise<T> {
+    private readonly _dmmf;
+    private readonly _queryType;
+    private readonly _rootField;
+    private readonly _clientMethod;
+    private readonly _args;
+    private readonly _dataPath;
+    private readonly _errorFormat;
+    private readonly _measurePerformance?;
+    private _isList;
+    private _callsite;
+    private _requestPromise?;
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+    constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
+
+    delegation_delegation_createdByTouser<T extends User$delegation_delegation_createdByTouserArgs<ExtArgs> = {}>(args?: Subset<T, User$delegation_delegation_createdByTouserArgs<ExtArgs>>): Prisma.PrismaPromise<$Types.GetResult<DelegationPayload<ExtArgs>, T, 'findMany', never>| Null>;
+
+    delegation_delegation_delegatedToTouser<T extends User$delegation_delegation_delegatedToTouserArgs<ExtArgs> = {}>(args?: Subset<T, User$delegation_delegation_delegatedToTouserArgs<ExtArgs>>): Prisma.PrismaPromise<$Types.GetResult<DelegationPayload<ExtArgs>, T, 'findMany', never>| Null>;
+
+    udap<T extends UdapArgs<ExtArgs> = {}>(args?: Subset<T, UdapArgs<ExtArgs>>): Prisma__UdapClient<$Types.GetResult<UdapPayload<ExtArgs>, T, 'findUnique', never> | Null, never, ExtArgs>;
+
+    private get _document();
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): Promise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): Promise<T>;
+  }
+
+
+
+  // Custom InputTypes
+
+  /**
+   * User base type for findUnique actions
+   */
+  export type UserFindUniqueArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
+     * Filter, which User to fetch.
+     */
+    where: UserWhereUniqueInput
+  }
+
+  /**
+   * User findUnique
+   */
+  export interface UserFindUniqueArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends UserFindUniqueArgsBase<ExtArgs> {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * User findUniqueOrThrow
+   */
+  export type UserFindUniqueOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
+     * Filter, which User to fetch.
+     */
+    where: UserWhereUniqueInput
+  }
+
+
+  /**
+   * User base type for findFirst actions
+   */
+  export type UserFindFirstArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
+     * Filter, which User to fetch.
+     */
+    where?: UserWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Users to fetch.
+     */
+    orderBy?: Enumerable<UserOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Users.
+     */
+    cursor?: UserWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Users from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Users.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Users.
+     */
+    distinct?: Enumerable<UserScalarFieldEnum>
+  }
+
+  /**
+   * User findFirst
+   */
+  export interface UserFindFirstArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends UserFindFirstArgsBase<ExtArgs> {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * User findFirstOrThrow
+   */
+  export type UserFindFirstOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
+     * Filter, which User to fetch.
+     */
+    where?: UserWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Users to fetch.
+     */
+    orderBy?: Enumerable<UserOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Users.
+     */
+    cursor?: UserWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Users from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Users.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Users.
+     */
+    distinct?: Enumerable<UserScalarFieldEnum>
+  }
+
+
+  /**
+   * User findMany
+   */
+  export type UserFindManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
+     * Filter, which Users to fetch.
+     */
+    where?: UserWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Users to fetch.
+     */
+    orderBy?: Enumerable<UserOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Users.
+     */
+    cursor?: UserWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Users from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Users.
+     */
+    skip?: number
+    distinct?: Enumerable<UserScalarFieldEnum>
+  }
+
+
+  /**
+   * User create
+   */
+  export type UserCreateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
+     * The data needed to create a User.
+     */
+    data: XOR<UserCreateInput, UserUncheckedCreateInput>
+  }
+
+
+  /**
+   * User createMany
+   */
+  export type UserCreateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Users.
+     */
+    data: Enumerable<UserCreateManyInput>
+    skipDuplicates?: boolean
+  }
+
+
+  /**
+   * User update
+   */
+  export type UserUpdateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
+     * The data needed to update a User.
+     */
+    data: XOR<UserUpdateInput, UserUncheckedUpdateInput>
+    /**
+     * Choose, which User to update.
+     */
+    where: UserWhereUniqueInput
+  }
+
+
+  /**
+   * User updateMany
+   */
+  export type UserUpdateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Users.
+     */
+    data: XOR<UserUpdateManyMutationInput, UserUncheckedUpdateManyInput>
+    /**
+     * Filter which Users to update
+     */
+    where?: UserWhereInput
+  }
+
+
+  /**
+   * User upsert
+   */
+  export type UserUpsertArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
+     * The filter to search for the User to update in case it exists.
+     */
+    where: UserWhereUniqueInput
+    /**
+     * In case the User found by the `where` argument doesn't exist, create a new User with this data.
+     */
+    create: XOR<UserCreateInput, UserUncheckedCreateInput>
+    /**
+     * In case the User was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<UserUpdateInput, UserUncheckedUpdateInput>
+  }
+
+
+  /**
+   * User delete
+   */
+  export type UserDeleteArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
+     * Filter which User to delete.
+     */
+    where: UserWhereUniqueInput
+  }
+
+
+  /**
+   * User deleteMany
+   */
+  export type UserDeleteManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Users to delete
+     */
+    where?: UserWhereInput
+  }
+
+
+  /**
+   * User.delegation_delegation_createdByTouser
+   */
+  export type User$delegation_delegation_createdByTouserArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Delegation
+     */
+    select?: DelegationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: DelegationInclude<ExtArgs> | null
+    where?: DelegationWhereInput
+    orderBy?: Enumerable<DelegationOrderByWithRelationInput>
+    cursor?: DelegationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Enumerable<DelegationScalarFieldEnum>
+  }
+
+
+  /**
+   * User.delegation_delegation_delegatedToTouser
+   */
+  export type User$delegation_delegation_delegatedToTouserArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Delegation
+     */
+    select?: DelegationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: DelegationInclude<ExtArgs> | null
+    where?: DelegationWhereInput
+    orderBy?: Enumerable<DelegationOrderByWithRelationInput>
+    cursor?: DelegationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Enumerable<DelegationScalarFieldEnum>
+  }
+
+
+  /**
+   * User without action
+   */
+  export type UserArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: UserInclude<ExtArgs> | null
+  }
+
+
+
+  /**
    * Enums
    */
 
@@ -5076,6 +8328,14 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type ClauseScalarFieldEnum = (typeof ClauseScalarFieldEnum)[keyof typeof ClauseScalarFieldEnum]
 
 
+  export const DelegationScalarFieldEnum: {
+    createdBy: 'createdBy',
+    delegatedTo: 'delegatedTo'
+  };
+
+  export type DelegationScalarFieldEnum = (typeof DelegationScalarFieldEnum)[keyof typeof DelegationScalarFieldEnum]
+
+
   export const ReportScalarFieldEnum: {
     id: 'id',
     title: 'title',
@@ -5106,6 +8366,34 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   };
 
   export type Report_to_clauseScalarFieldEnum = (typeof Report_to_clauseScalarFieldEnum)[keyof typeof Report_to_clauseScalarFieldEnum]
+
+
+  export const UdapScalarFieldEnum: {
+    id: 'id',
+    department: 'department',
+    complete_coords: 'complete_coords',
+    visible: 'visible',
+    name: 'name',
+    address: 'address',
+    zip_code: 'zip_code',
+    city: 'city',
+    phone: 'phone',
+    email: 'email'
+  };
+
+  export type UdapScalarFieldEnum = (typeof UdapScalarFieldEnum)[keyof typeof UdapScalarFieldEnum]
+
+
+  export const UserScalarFieldEnum: {
+    email: 'email',
+    name: 'name',
+    temporaryLink: 'temporaryLink',
+    temporaryLinkExpiresAt: 'temporaryLinkExpiresAt',
+    password: 'password',
+    udap_id: 'udap_id'
+  };
+
+  export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -5215,6 +8503,43 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id?: StringWithAggregatesFilter | string
     label?: StringWithAggregatesFilter | string
     value?: StringWithAggregatesFilter | string
+  }
+
+  export type DelegationWhereInput = {
+    AND?: Enumerable<DelegationWhereInput>
+    OR?: Enumerable<DelegationWhereInput>
+    NOT?: Enumerable<DelegationWhereInput>
+    createdBy?: StringFilter | string
+    delegatedTo?: StringFilter | string
+    user_delegation_createdByTouser?: XOR<UserRelationFilter, UserWhereInput>
+    user_delegation_delegatedToTouser?: XOR<UserRelationFilter, UserWhereInput>
+  }
+
+  export type DelegationOrderByWithRelationInput = {
+    createdBy?: SortOrder
+    delegatedTo?: SortOrder
+    user_delegation_createdByTouser?: UserOrderByWithRelationInput
+    user_delegation_delegatedToTouser?: UserOrderByWithRelationInput
+  }
+
+  export type DelegationWhereUniqueInput = {
+    createdBy_delegatedTo?: DelegationCreatedByDelegatedToCompoundUniqueInput
+  }
+
+  export type DelegationOrderByWithAggregationInput = {
+    createdBy?: SortOrder
+    delegatedTo?: SortOrder
+    _count?: DelegationCountOrderByAggregateInput
+    _max?: DelegationMaxOrderByAggregateInput
+    _min?: DelegationMinOrderByAggregateInput
+  }
+
+  export type DelegationScalarWhereWithAggregatesInput = {
+    AND?: Enumerable<DelegationScalarWhereWithAggregatesInput>
+    OR?: Enumerable<DelegationScalarWhereWithAggregatesInput>
+    NOT?: Enumerable<DelegationScalarWhereWithAggregatesInput>
+    createdBy?: StringWithAggregatesFilter | string
+    delegatedTo?: StringWithAggregatesFilter | string
   }
 
   export type ReportWhereInput = {
@@ -5353,6 +8678,128 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     clause_id?: StringWithAggregatesFilter | string
   }
 
+  export type UdapWhereInput = {
+    AND?: Enumerable<UdapWhereInput>
+    OR?: Enumerable<UdapWhereInput>
+    NOT?: Enumerable<UdapWhereInput>
+    id?: StringFilter | string
+    department?: StringFilter | string
+    complete_coords?: StringNullableFilter | string | null
+    visible?: BoolNullableFilter | boolean | null
+    name?: StringNullableFilter | string | null
+    address?: StringNullableFilter | string | null
+    zip_code?: StringNullableFilter | string | null
+    city?: StringNullableFilter | string | null
+    phone?: StringNullableFilter | string | null
+    email?: StringNullableFilter | string | null
+    user?: UserListRelationFilter
+  }
+
+  export type UdapOrderByWithRelationInput = {
+    id?: SortOrder
+    department?: SortOrder
+    complete_coords?: SortOrderInput | SortOrder
+    visible?: SortOrderInput | SortOrder
+    name?: SortOrderInput | SortOrder
+    address?: SortOrderInput | SortOrder
+    zip_code?: SortOrderInput | SortOrder
+    city?: SortOrderInput | SortOrder
+    phone?: SortOrderInput | SortOrder
+    email?: SortOrderInput | SortOrder
+    user?: UserOrderByRelationAggregateInput
+  }
+
+  export type UdapWhereUniqueInput = {
+    id?: string
+  }
+
+  export type UdapOrderByWithAggregationInput = {
+    id?: SortOrder
+    department?: SortOrder
+    complete_coords?: SortOrderInput | SortOrder
+    visible?: SortOrderInput | SortOrder
+    name?: SortOrderInput | SortOrder
+    address?: SortOrderInput | SortOrder
+    zip_code?: SortOrderInput | SortOrder
+    city?: SortOrderInput | SortOrder
+    phone?: SortOrderInput | SortOrder
+    email?: SortOrderInput | SortOrder
+    _count?: UdapCountOrderByAggregateInput
+    _max?: UdapMaxOrderByAggregateInput
+    _min?: UdapMinOrderByAggregateInput
+  }
+
+  export type UdapScalarWhereWithAggregatesInput = {
+    AND?: Enumerable<UdapScalarWhereWithAggregatesInput>
+    OR?: Enumerable<UdapScalarWhereWithAggregatesInput>
+    NOT?: Enumerable<UdapScalarWhereWithAggregatesInput>
+    id?: StringWithAggregatesFilter | string
+    department?: StringWithAggregatesFilter | string
+    complete_coords?: StringNullableWithAggregatesFilter | string | null
+    visible?: BoolNullableWithAggregatesFilter | boolean | null
+    name?: StringNullableWithAggregatesFilter | string | null
+    address?: StringNullableWithAggregatesFilter | string | null
+    zip_code?: StringNullableWithAggregatesFilter | string | null
+    city?: StringNullableWithAggregatesFilter | string | null
+    phone?: StringNullableWithAggregatesFilter | string | null
+    email?: StringNullableWithAggregatesFilter | string | null
+  }
+
+  export type UserWhereInput = {
+    AND?: Enumerable<UserWhereInput>
+    OR?: Enumerable<UserWhereInput>
+    NOT?: Enumerable<UserWhereInput>
+    email?: StringFilter | string
+    name?: StringFilter | string
+    temporaryLink?: StringNullableFilter | string | null
+    temporaryLinkExpiresAt?: StringNullableFilter | string | null
+    password?: StringFilter | string
+    udap_id?: StringFilter | string
+    delegation_delegation_createdByTouser?: DelegationListRelationFilter
+    delegation_delegation_delegatedToTouser?: DelegationListRelationFilter
+    udap?: XOR<UdapRelationFilter, UdapWhereInput>
+  }
+
+  export type UserOrderByWithRelationInput = {
+    email?: SortOrder
+    name?: SortOrder
+    temporaryLink?: SortOrderInput | SortOrder
+    temporaryLinkExpiresAt?: SortOrderInput | SortOrder
+    password?: SortOrder
+    udap_id?: SortOrder
+    delegation_delegation_createdByTouser?: DelegationOrderByRelationAggregateInput
+    delegation_delegation_delegatedToTouser?: DelegationOrderByRelationAggregateInput
+    udap?: UdapOrderByWithRelationInput
+  }
+
+  export type UserWhereUniqueInput = {
+    email?: string
+  }
+
+  export type UserOrderByWithAggregationInput = {
+    email?: SortOrder
+    name?: SortOrder
+    temporaryLink?: SortOrderInput | SortOrder
+    temporaryLinkExpiresAt?: SortOrderInput | SortOrder
+    password?: SortOrder
+    udap_id?: SortOrder
+    _count?: UserCountOrderByAggregateInput
+    _max?: UserMaxOrderByAggregateInput
+    _min?: UserMinOrderByAggregateInput
+  }
+
+  export type UserScalarWhereWithAggregatesInput = {
+    AND?: Enumerable<UserScalarWhereWithAggregatesInput>
+    OR?: Enumerable<UserScalarWhereWithAggregatesInput>
+    NOT?: Enumerable<UserScalarWhereWithAggregatesInput>
+    email?: StringWithAggregatesFilter | string
+    name?: StringWithAggregatesFilter | string
+    temporaryLink?: StringNullableWithAggregatesFilter | string | null
+    temporaryLinkExpiresAt?: StringNullableWithAggregatesFilter | string | null
+    password?: StringWithAggregatesFilter | string
+    udap_id?: StringWithAggregatesFilter | string
+  }
+
   export type ChipCreateInput = {
     key: string
     value: string
@@ -5446,6 +8893,40 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id?: StringFieldUpdateOperationsInput | string
     label?: StringFieldUpdateOperationsInput | string
     value?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type DelegationCreateInput = {
+    user_delegation_createdByTouser: UserCreateNestedOneWithoutDelegation_delegation_createdByTouserInput
+    user_delegation_delegatedToTouser: UserCreateNestedOneWithoutDelegation_delegation_delegatedToTouserInput
+  }
+
+  export type DelegationUncheckedCreateInput = {
+    createdBy: string
+    delegatedTo: string
+  }
+
+  export type DelegationUpdateInput = {
+    user_delegation_createdByTouser?: UserUpdateOneRequiredWithoutDelegation_delegation_createdByTouserNestedInput
+    user_delegation_delegatedToTouser?: UserUpdateOneRequiredWithoutDelegation_delegation_delegatedToTouserNestedInput
+  }
+
+  export type DelegationUncheckedUpdateInput = {
+    createdBy?: StringFieldUpdateOperationsInput | string
+    delegatedTo?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type DelegationCreateManyInput = {
+    createdBy: string
+    delegatedTo: string
+  }
+
+  export type DelegationUpdateManyMutationInput = {
+
+  }
+
+  export type DelegationUncheckedUpdateManyInput = {
+    createdBy?: StringFieldUpdateOperationsInput | string
+    delegatedTo?: StringFieldUpdateOperationsInput | string
   }
 
   export type ReportCreateInput = {
@@ -5632,6 +9113,171 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     clause_id?: StringFieldUpdateOperationsInput | string
   }
 
+  export type UdapCreateInput = {
+    id: string
+    department: string
+    complete_coords?: string | null
+    visible?: boolean | null
+    name?: string | null
+    address?: string | null
+    zip_code?: string | null
+    city?: string | null
+    phone?: string | null
+    email?: string | null
+    user?: UserCreateNestedManyWithoutUdapInput
+  }
+
+  export type UdapUncheckedCreateInput = {
+    id: string
+    department: string
+    complete_coords?: string | null
+    visible?: boolean | null
+    name?: string | null
+    address?: string | null
+    zip_code?: string | null
+    city?: string | null
+    phone?: string | null
+    email?: string | null
+    user?: UserUncheckedCreateNestedManyWithoutUdapInput
+  }
+
+  export type UdapUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    department?: StringFieldUpdateOperationsInput | string
+    complete_coords?: NullableStringFieldUpdateOperationsInput | string | null
+    visible?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    zip_code?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    user?: UserUpdateManyWithoutUdapNestedInput
+  }
+
+  export type UdapUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    department?: StringFieldUpdateOperationsInput | string
+    complete_coords?: NullableStringFieldUpdateOperationsInput | string | null
+    visible?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    zip_code?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    user?: UserUncheckedUpdateManyWithoutUdapNestedInput
+  }
+
+  export type UdapCreateManyInput = {
+    id: string
+    department: string
+    complete_coords?: string | null
+    visible?: boolean | null
+    name?: string | null
+    address?: string | null
+    zip_code?: string | null
+    city?: string | null
+    phone?: string | null
+    email?: string | null
+  }
+
+  export type UdapUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    department?: StringFieldUpdateOperationsInput | string
+    complete_coords?: NullableStringFieldUpdateOperationsInput | string | null
+    visible?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    zip_code?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type UdapUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    department?: StringFieldUpdateOperationsInput | string
+    complete_coords?: NullableStringFieldUpdateOperationsInput | string | null
+    visible?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    zip_code?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type UserCreateInput = {
+    email: string
+    name: string
+    temporaryLink?: string | null
+    temporaryLinkExpiresAt?: string | null
+    password: string
+    delegation_delegation_createdByTouser?: DelegationCreateNestedManyWithoutUser_delegation_createdByTouserInput
+    delegation_delegation_delegatedToTouser?: DelegationCreateNestedManyWithoutUser_delegation_delegatedToTouserInput
+    udap: UdapCreateNestedOneWithoutUserInput
+  }
+
+  export type UserUncheckedCreateInput = {
+    email: string
+    name: string
+    temporaryLink?: string | null
+    temporaryLinkExpiresAt?: string | null
+    password: string
+    udap_id: string
+    delegation_delegation_createdByTouser?: DelegationUncheckedCreateNestedManyWithoutUser_delegation_createdByTouserInput
+    delegation_delegation_delegatedToTouser?: DelegationUncheckedCreateNestedManyWithoutUser_delegation_delegatedToTouserInput
+  }
+
+  export type UserUpdateInput = {
+    email?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    delegation_delegation_createdByTouser?: DelegationUpdateManyWithoutUser_delegation_createdByTouserNestedInput
+    delegation_delegation_delegatedToTouser?: DelegationUpdateManyWithoutUser_delegation_delegatedToTouserNestedInput
+    udap?: UdapUpdateOneRequiredWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateInput = {
+    email?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    udap_id?: StringFieldUpdateOperationsInput | string
+    delegation_delegation_createdByTouser?: DelegationUncheckedUpdateManyWithoutUser_delegation_createdByTouserNestedInput
+    delegation_delegation_delegatedToTouser?: DelegationUncheckedUpdateManyWithoutUser_delegation_delegatedToTouserNestedInput
+  }
+
+  export type UserCreateManyInput = {
+    email: string
+    name: string
+    temporaryLink?: string | null
+    temporaryLinkExpiresAt?: string | null
+    password: string
+    udap_id: string
+  }
+
+  export type UserUpdateManyMutationInput = {
+    email?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type UserUncheckedUpdateManyInput = {
+    email?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    udap_id?: StringFieldUpdateOperationsInput | string
+  }
+
   export type StringFilter = {
     equals?: string
     in?: Enumerable<string> | string
@@ -5718,6 +9364,31 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id?: SortOrder
     label?: SortOrder
     value?: SortOrder
+  }
+
+  export type UserRelationFilter = {
+    is?: UserWhereInput | null
+    isNot?: UserWhereInput | null
+  }
+
+  export type DelegationCreatedByDelegatedToCompoundUniqueInput = {
+    createdBy: string
+    delegatedTo: string
+  }
+
+  export type DelegationCountOrderByAggregateInput = {
+    createdBy?: SortOrder
+    delegatedTo?: SortOrder
+  }
+
+  export type DelegationMaxOrderByAggregateInput = {
+    createdBy?: SortOrder
+    delegatedTo?: SortOrder
+  }
+
+  export type DelegationMinOrderByAggregateInput = {
+    createdBy?: SortOrder
+    delegatedTo?: SortOrder
   }
 
   export type StringNullableFilter = {
@@ -5896,6 +9567,110 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     clause_id?: SortOrder
   }
 
+  export type BoolNullableFilter = {
+    equals?: boolean | null
+    not?: NestedBoolNullableFilter | boolean | null
+  }
+
+  export type UserListRelationFilter = {
+    every?: UserWhereInput
+    some?: UserWhereInput
+    none?: UserWhereInput
+  }
+
+  export type UserOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type UdapCountOrderByAggregateInput = {
+    id?: SortOrder
+    department?: SortOrder
+    complete_coords?: SortOrder
+    visible?: SortOrder
+    name?: SortOrder
+    address?: SortOrder
+    zip_code?: SortOrder
+    city?: SortOrder
+    phone?: SortOrder
+    email?: SortOrder
+  }
+
+  export type UdapMaxOrderByAggregateInput = {
+    id?: SortOrder
+    department?: SortOrder
+    complete_coords?: SortOrder
+    visible?: SortOrder
+    name?: SortOrder
+    address?: SortOrder
+    zip_code?: SortOrder
+    city?: SortOrder
+    phone?: SortOrder
+    email?: SortOrder
+  }
+
+  export type UdapMinOrderByAggregateInput = {
+    id?: SortOrder
+    department?: SortOrder
+    complete_coords?: SortOrder
+    visible?: SortOrder
+    name?: SortOrder
+    address?: SortOrder
+    zip_code?: SortOrder
+    city?: SortOrder
+    phone?: SortOrder
+    email?: SortOrder
+  }
+
+  export type BoolNullableWithAggregatesFilter = {
+    equals?: boolean | null
+    not?: NestedBoolNullableWithAggregatesFilter | boolean | null
+    _count?: NestedIntNullableFilter
+    _min?: NestedBoolNullableFilter
+    _max?: NestedBoolNullableFilter
+  }
+
+  export type DelegationListRelationFilter = {
+    every?: DelegationWhereInput
+    some?: DelegationWhereInput
+    none?: DelegationWhereInput
+  }
+
+  export type UdapRelationFilter = {
+    is?: UdapWhereInput | null
+    isNot?: UdapWhereInput | null
+  }
+
+  export type DelegationOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type UserCountOrderByAggregateInput = {
+    email?: SortOrder
+    name?: SortOrder
+    temporaryLink?: SortOrder
+    temporaryLinkExpiresAt?: SortOrder
+    password?: SortOrder
+    udap_id?: SortOrder
+  }
+
+  export type UserMaxOrderByAggregateInput = {
+    email?: SortOrder
+    name?: SortOrder
+    temporaryLink?: SortOrder
+    temporaryLinkExpiresAt?: SortOrder
+    password?: SortOrder
+    udap_id?: SortOrder
+  }
+
+  export type UserMinOrderByAggregateInput = {
+    email?: SortOrder
+    name?: SortOrder
+    temporaryLink?: SortOrder
+    temporaryLinkExpiresAt?: SortOrder
+    password?: SortOrder
+    udap_id?: SortOrder
+  }
+
   export type StringFieldUpdateOperationsInput = {
     set?: string
   }
@@ -5940,6 +9715,34 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     update?: Enumerable<Report_to_clauseUpdateWithWhereUniqueWithoutClauseInput>
     updateMany?: Enumerable<Report_to_clauseUpdateManyWithWhereWithoutClauseInput>
     deleteMany?: Enumerable<Report_to_clauseScalarWhereInput>
+  }
+
+  export type UserCreateNestedOneWithoutDelegation_delegation_createdByTouserInput = {
+    create?: XOR<UserCreateWithoutDelegation_delegation_createdByTouserInput, UserUncheckedCreateWithoutDelegation_delegation_createdByTouserInput>
+    connectOrCreate?: UserCreateOrConnectWithoutDelegation_delegation_createdByTouserInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutDelegation_delegation_delegatedToTouserInput = {
+    create?: XOR<UserCreateWithoutDelegation_delegation_delegatedToTouserInput, UserUncheckedCreateWithoutDelegation_delegation_delegatedToTouserInput>
+    connectOrCreate?: UserCreateOrConnectWithoutDelegation_delegation_delegatedToTouserInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutDelegation_delegation_createdByTouserNestedInput = {
+    create?: XOR<UserCreateWithoutDelegation_delegation_createdByTouserInput, UserUncheckedCreateWithoutDelegation_delegation_createdByTouserInput>
+    connectOrCreate?: UserCreateOrConnectWithoutDelegation_delegation_createdByTouserInput
+    upsert?: UserUpsertWithoutDelegation_delegation_createdByTouserInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<UserUpdateWithoutDelegation_delegation_createdByTouserInput, UserUncheckedUpdateWithoutDelegation_delegation_createdByTouserInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutDelegation_delegation_delegatedToTouserNestedInput = {
+    create?: XOR<UserCreateWithoutDelegation_delegation_delegatedToTouserInput, UserUncheckedCreateWithoutDelegation_delegation_delegatedToTouserInput>
+    connectOrCreate?: UserCreateOrConnectWithoutDelegation_delegation_delegatedToTouserInput
+    upsert?: UserUpsertWithoutDelegation_delegation_delegatedToTouserInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<UserUpdateWithoutDelegation_delegation_delegatedToTouserInput, UserUncheckedUpdateWithoutDelegation_delegation_delegatedToTouserInput>
   }
 
   export type Report_to_clauseCreateNestedManyWithoutReportInput = {
@@ -6022,6 +9825,150 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     upsert?: ReportUpsertWithoutReport_to_clauseInput
     connect?: ReportWhereUniqueInput
     update?: XOR<ReportUpdateWithoutReport_to_clauseInput, ReportUncheckedUpdateWithoutReport_to_clauseInput>
+  }
+
+  export type UserCreateNestedManyWithoutUdapInput = {
+    create?: XOR<Enumerable<UserCreateWithoutUdapInput>, Enumerable<UserUncheckedCreateWithoutUdapInput>>
+    connectOrCreate?: Enumerable<UserCreateOrConnectWithoutUdapInput>
+    createMany?: UserCreateManyUdapInputEnvelope
+    connect?: Enumerable<UserWhereUniqueInput>
+  }
+
+  export type UserUncheckedCreateNestedManyWithoutUdapInput = {
+    create?: XOR<Enumerable<UserCreateWithoutUdapInput>, Enumerable<UserUncheckedCreateWithoutUdapInput>>
+    connectOrCreate?: Enumerable<UserCreateOrConnectWithoutUdapInput>
+    createMany?: UserCreateManyUdapInputEnvelope
+    connect?: Enumerable<UserWhereUniqueInput>
+  }
+
+  export type NullableBoolFieldUpdateOperationsInput = {
+    set?: boolean | null
+  }
+
+  export type UserUpdateManyWithoutUdapNestedInput = {
+    create?: XOR<Enumerable<UserCreateWithoutUdapInput>, Enumerable<UserUncheckedCreateWithoutUdapInput>>
+    connectOrCreate?: Enumerable<UserCreateOrConnectWithoutUdapInput>
+    upsert?: Enumerable<UserUpsertWithWhereUniqueWithoutUdapInput>
+    createMany?: UserCreateManyUdapInputEnvelope
+    set?: Enumerable<UserWhereUniqueInput>
+    disconnect?: Enumerable<UserWhereUniqueInput>
+    delete?: Enumerable<UserWhereUniqueInput>
+    connect?: Enumerable<UserWhereUniqueInput>
+    update?: Enumerable<UserUpdateWithWhereUniqueWithoutUdapInput>
+    updateMany?: Enumerable<UserUpdateManyWithWhereWithoutUdapInput>
+    deleteMany?: Enumerable<UserScalarWhereInput>
+  }
+
+  export type UserUncheckedUpdateManyWithoutUdapNestedInput = {
+    create?: XOR<Enumerable<UserCreateWithoutUdapInput>, Enumerable<UserUncheckedCreateWithoutUdapInput>>
+    connectOrCreate?: Enumerable<UserCreateOrConnectWithoutUdapInput>
+    upsert?: Enumerable<UserUpsertWithWhereUniqueWithoutUdapInput>
+    createMany?: UserCreateManyUdapInputEnvelope
+    set?: Enumerable<UserWhereUniqueInput>
+    disconnect?: Enumerable<UserWhereUniqueInput>
+    delete?: Enumerable<UserWhereUniqueInput>
+    connect?: Enumerable<UserWhereUniqueInput>
+    update?: Enumerable<UserUpdateWithWhereUniqueWithoutUdapInput>
+    updateMany?: Enumerable<UserUpdateManyWithWhereWithoutUdapInput>
+    deleteMany?: Enumerable<UserScalarWhereInput>
+  }
+
+  export type DelegationCreateNestedManyWithoutUser_delegation_createdByTouserInput = {
+    create?: XOR<Enumerable<DelegationCreateWithoutUser_delegation_createdByTouserInput>, Enumerable<DelegationUncheckedCreateWithoutUser_delegation_createdByTouserInput>>
+    connectOrCreate?: Enumerable<DelegationCreateOrConnectWithoutUser_delegation_createdByTouserInput>
+    createMany?: DelegationCreateManyUser_delegation_createdByTouserInputEnvelope
+    connect?: Enumerable<DelegationWhereUniqueInput>
+  }
+
+  export type DelegationCreateNestedManyWithoutUser_delegation_delegatedToTouserInput = {
+    create?: XOR<Enumerable<DelegationCreateWithoutUser_delegation_delegatedToTouserInput>, Enumerable<DelegationUncheckedCreateWithoutUser_delegation_delegatedToTouserInput>>
+    connectOrCreate?: Enumerable<DelegationCreateOrConnectWithoutUser_delegation_delegatedToTouserInput>
+    createMany?: DelegationCreateManyUser_delegation_delegatedToTouserInputEnvelope
+    connect?: Enumerable<DelegationWhereUniqueInput>
+  }
+
+  export type UdapCreateNestedOneWithoutUserInput = {
+    create?: XOR<UdapCreateWithoutUserInput, UdapUncheckedCreateWithoutUserInput>
+    connectOrCreate?: UdapCreateOrConnectWithoutUserInput
+    connect?: UdapWhereUniqueInput
+  }
+
+  export type DelegationUncheckedCreateNestedManyWithoutUser_delegation_createdByTouserInput = {
+    create?: XOR<Enumerable<DelegationCreateWithoutUser_delegation_createdByTouserInput>, Enumerable<DelegationUncheckedCreateWithoutUser_delegation_createdByTouserInput>>
+    connectOrCreate?: Enumerable<DelegationCreateOrConnectWithoutUser_delegation_createdByTouserInput>
+    createMany?: DelegationCreateManyUser_delegation_createdByTouserInputEnvelope
+    connect?: Enumerable<DelegationWhereUniqueInput>
+  }
+
+  export type DelegationUncheckedCreateNestedManyWithoutUser_delegation_delegatedToTouserInput = {
+    create?: XOR<Enumerable<DelegationCreateWithoutUser_delegation_delegatedToTouserInput>, Enumerable<DelegationUncheckedCreateWithoutUser_delegation_delegatedToTouserInput>>
+    connectOrCreate?: Enumerable<DelegationCreateOrConnectWithoutUser_delegation_delegatedToTouserInput>
+    createMany?: DelegationCreateManyUser_delegation_delegatedToTouserInputEnvelope
+    connect?: Enumerable<DelegationWhereUniqueInput>
+  }
+
+  export type DelegationUpdateManyWithoutUser_delegation_createdByTouserNestedInput = {
+    create?: XOR<Enumerable<DelegationCreateWithoutUser_delegation_createdByTouserInput>, Enumerable<DelegationUncheckedCreateWithoutUser_delegation_createdByTouserInput>>
+    connectOrCreate?: Enumerable<DelegationCreateOrConnectWithoutUser_delegation_createdByTouserInput>
+    upsert?: Enumerable<DelegationUpsertWithWhereUniqueWithoutUser_delegation_createdByTouserInput>
+    createMany?: DelegationCreateManyUser_delegation_createdByTouserInputEnvelope
+    set?: Enumerable<DelegationWhereUniqueInput>
+    disconnect?: Enumerable<DelegationWhereUniqueInput>
+    delete?: Enumerable<DelegationWhereUniqueInput>
+    connect?: Enumerable<DelegationWhereUniqueInput>
+    update?: Enumerable<DelegationUpdateWithWhereUniqueWithoutUser_delegation_createdByTouserInput>
+    updateMany?: Enumerable<DelegationUpdateManyWithWhereWithoutUser_delegation_createdByTouserInput>
+    deleteMany?: Enumerable<DelegationScalarWhereInput>
+  }
+
+  export type DelegationUpdateManyWithoutUser_delegation_delegatedToTouserNestedInput = {
+    create?: XOR<Enumerable<DelegationCreateWithoutUser_delegation_delegatedToTouserInput>, Enumerable<DelegationUncheckedCreateWithoutUser_delegation_delegatedToTouserInput>>
+    connectOrCreate?: Enumerable<DelegationCreateOrConnectWithoutUser_delegation_delegatedToTouserInput>
+    upsert?: Enumerable<DelegationUpsertWithWhereUniqueWithoutUser_delegation_delegatedToTouserInput>
+    createMany?: DelegationCreateManyUser_delegation_delegatedToTouserInputEnvelope
+    set?: Enumerable<DelegationWhereUniqueInput>
+    disconnect?: Enumerable<DelegationWhereUniqueInput>
+    delete?: Enumerable<DelegationWhereUniqueInput>
+    connect?: Enumerable<DelegationWhereUniqueInput>
+    update?: Enumerable<DelegationUpdateWithWhereUniqueWithoutUser_delegation_delegatedToTouserInput>
+    updateMany?: Enumerable<DelegationUpdateManyWithWhereWithoutUser_delegation_delegatedToTouserInput>
+    deleteMany?: Enumerable<DelegationScalarWhereInput>
+  }
+
+  export type UdapUpdateOneRequiredWithoutUserNestedInput = {
+    create?: XOR<UdapCreateWithoutUserInput, UdapUncheckedCreateWithoutUserInput>
+    connectOrCreate?: UdapCreateOrConnectWithoutUserInput
+    upsert?: UdapUpsertWithoutUserInput
+    connect?: UdapWhereUniqueInput
+    update?: XOR<UdapUpdateWithoutUserInput, UdapUncheckedUpdateWithoutUserInput>
+  }
+
+  export type DelegationUncheckedUpdateManyWithoutUser_delegation_createdByTouserNestedInput = {
+    create?: XOR<Enumerable<DelegationCreateWithoutUser_delegation_createdByTouserInput>, Enumerable<DelegationUncheckedCreateWithoutUser_delegation_createdByTouserInput>>
+    connectOrCreate?: Enumerable<DelegationCreateOrConnectWithoutUser_delegation_createdByTouserInput>
+    upsert?: Enumerable<DelegationUpsertWithWhereUniqueWithoutUser_delegation_createdByTouserInput>
+    createMany?: DelegationCreateManyUser_delegation_createdByTouserInputEnvelope
+    set?: Enumerable<DelegationWhereUniqueInput>
+    disconnect?: Enumerable<DelegationWhereUniqueInput>
+    delete?: Enumerable<DelegationWhereUniqueInput>
+    connect?: Enumerable<DelegationWhereUniqueInput>
+    update?: Enumerable<DelegationUpdateWithWhereUniqueWithoutUser_delegation_createdByTouserInput>
+    updateMany?: Enumerable<DelegationUpdateManyWithWhereWithoutUser_delegation_createdByTouserInput>
+    deleteMany?: Enumerable<DelegationScalarWhereInput>
+  }
+
+  export type DelegationUncheckedUpdateManyWithoutUser_delegation_delegatedToTouserNestedInput = {
+    create?: XOR<Enumerable<DelegationCreateWithoutUser_delegation_delegatedToTouserInput>, Enumerable<DelegationUncheckedCreateWithoutUser_delegation_delegatedToTouserInput>>
+    connectOrCreate?: Enumerable<DelegationCreateOrConnectWithoutUser_delegation_delegatedToTouserInput>
+    upsert?: Enumerable<DelegationUpsertWithWhereUniqueWithoutUser_delegation_delegatedToTouserInput>
+    createMany?: DelegationCreateManyUser_delegation_delegatedToTouserInputEnvelope
+    set?: Enumerable<DelegationWhereUniqueInput>
+    disconnect?: Enumerable<DelegationWhereUniqueInput>
+    delete?: Enumerable<DelegationWhereUniqueInput>
+    connect?: Enumerable<DelegationWhereUniqueInput>
+    update?: Enumerable<DelegationUpdateWithWhereUniqueWithoutUser_delegation_delegatedToTouserInput>
+    updateMany?: Enumerable<DelegationUpdateManyWithWhereWithoutUser_delegation_delegatedToTouserInput>
+    deleteMany?: Enumerable<DelegationScalarWhereInput>
   }
 
   export type NestedStringFilter = {
@@ -6158,6 +10105,19 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     _max?: NestedDateTimeFilter
   }
 
+  export type NestedBoolNullableFilter = {
+    equals?: boolean | null
+    not?: NestedBoolNullableFilter | boolean | null
+  }
+
+  export type NestedBoolNullableWithAggregatesFilter = {
+    equals?: boolean | null
+    not?: NestedBoolNullableWithAggregatesFilter | boolean | null
+    _count?: NestedIntNullableFilter
+    _min?: NestedBoolNullableFilter
+    _max?: NestedBoolNullableFilter
+  }
+
   export type Report_to_clauseCreateWithoutClauseInput = {
     id: string
     report: ReportCreateNestedOneWithoutReport_to_clauseInput
@@ -6201,6 +10161,106 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id?: StringFilter | string
     report_id?: StringFilter | string
     clause_id?: StringFilter | string
+  }
+
+  export type UserCreateWithoutDelegation_delegation_createdByTouserInput = {
+    email: string
+    name: string
+    temporaryLink?: string | null
+    temporaryLinkExpiresAt?: string | null
+    password: string
+    delegation_delegation_delegatedToTouser?: DelegationCreateNestedManyWithoutUser_delegation_delegatedToTouserInput
+    udap: UdapCreateNestedOneWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutDelegation_delegation_createdByTouserInput = {
+    email: string
+    name: string
+    temporaryLink?: string | null
+    temporaryLinkExpiresAt?: string | null
+    password: string
+    udap_id: string
+    delegation_delegation_delegatedToTouser?: DelegationUncheckedCreateNestedManyWithoutUser_delegation_delegatedToTouserInput
+  }
+
+  export type UserCreateOrConnectWithoutDelegation_delegation_createdByTouserInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutDelegation_delegation_createdByTouserInput, UserUncheckedCreateWithoutDelegation_delegation_createdByTouserInput>
+  }
+
+  export type UserCreateWithoutDelegation_delegation_delegatedToTouserInput = {
+    email: string
+    name: string
+    temporaryLink?: string | null
+    temporaryLinkExpiresAt?: string | null
+    password: string
+    delegation_delegation_createdByTouser?: DelegationCreateNestedManyWithoutUser_delegation_createdByTouserInput
+    udap: UdapCreateNestedOneWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutDelegation_delegation_delegatedToTouserInput = {
+    email: string
+    name: string
+    temporaryLink?: string | null
+    temporaryLinkExpiresAt?: string | null
+    password: string
+    udap_id: string
+    delegation_delegation_createdByTouser?: DelegationUncheckedCreateNestedManyWithoutUser_delegation_createdByTouserInput
+  }
+
+  export type UserCreateOrConnectWithoutDelegation_delegation_delegatedToTouserInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutDelegation_delegation_delegatedToTouserInput, UserUncheckedCreateWithoutDelegation_delegation_delegatedToTouserInput>
+  }
+
+  export type UserUpsertWithoutDelegation_delegation_createdByTouserInput = {
+    update: XOR<UserUpdateWithoutDelegation_delegation_createdByTouserInput, UserUncheckedUpdateWithoutDelegation_delegation_createdByTouserInput>
+    create: XOR<UserCreateWithoutDelegation_delegation_createdByTouserInput, UserUncheckedCreateWithoutDelegation_delegation_createdByTouserInput>
+  }
+
+  export type UserUpdateWithoutDelegation_delegation_createdByTouserInput = {
+    email?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    delegation_delegation_delegatedToTouser?: DelegationUpdateManyWithoutUser_delegation_delegatedToTouserNestedInput
+    udap?: UdapUpdateOneRequiredWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutDelegation_delegation_createdByTouserInput = {
+    email?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    udap_id?: StringFieldUpdateOperationsInput | string
+    delegation_delegation_delegatedToTouser?: DelegationUncheckedUpdateManyWithoutUser_delegation_delegatedToTouserNestedInput
+  }
+
+  export type UserUpsertWithoutDelegation_delegation_delegatedToTouserInput = {
+    update: XOR<UserUpdateWithoutDelegation_delegation_delegatedToTouserInput, UserUncheckedUpdateWithoutDelegation_delegation_delegatedToTouserInput>
+    create: XOR<UserCreateWithoutDelegation_delegation_delegatedToTouserInput, UserUncheckedCreateWithoutDelegation_delegation_delegatedToTouserInput>
+  }
+
+  export type UserUpdateWithoutDelegation_delegation_delegatedToTouserInput = {
+    email?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    delegation_delegation_createdByTouser?: DelegationUpdateManyWithoutUser_delegation_createdByTouserNestedInput
+    udap?: UdapUpdateOneRequiredWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutDelegation_delegation_delegatedToTouserInput = {
+    email?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    udap_id?: StringFieldUpdateOperationsInput | string
+    delegation_delegation_createdByTouser?: DelegationUncheckedUpdateManyWithoutUser_delegation_createdByTouserNestedInput
   }
 
   export type Report_to_clauseCreateWithoutReportInput = {
@@ -6363,6 +10423,202 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     service_instructeur?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type UserCreateWithoutUdapInput = {
+    email: string
+    name: string
+    temporaryLink?: string | null
+    temporaryLinkExpiresAt?: string | null
+    password: string
+    delegation_delegation_createdByTouser?: DelegationCreateNestedManyWithoutUser_delegation_createdByTouserInput
+    delegation_delegation_delegatedToTouser?: DelegationCreateNestedManyWithoutUser_delegation_delegatedToTouserInput
+  }
+
+  export type UserUncheckedCreateWithoutUdapInput = {
+    email: string
+    name: string
+    temporaryLink?: string | null
+    temporaryLinkExpiresAt?: string | null
+    password: string
+    delegation_delegation_createdByTouser?: DelegationUncheckedCreateNestedManyWithoutUser_delegation_createdByTouserInput
+    delegation_delegation_delegatedToTouser?: DelegationUncheckedCreateNestedManyWithoutUser_delegation_delegatedToTouserInput
+  }
+
+  export type UserCreateOrConnectWithoutUdapInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutUdapInput, UserUncheckedCreateWithoutUdapInput>
+  }
+
+  export type UserCreateManyUdapInputEnvelope = {
+    data: Enumerable<UserCreateManyUdapInput>
+    skipDuplicates?: boolean
+  }
+
+  export type UserUpsertWithWhereUniqueWithoutUdapInput = {
+    where: UserWhereUniqueInput
+    update: XOR<UserUpdateWithoutUdapInput, UserUncheckedUpdateWithoutUdapInput>
+    create: XOR<UserCreateWithoutUdapInput, UserUncheckedCreateWithoutUdapInput>
+  }
+
+  export type UserUpdateWithWhereUniqueWithoutUdapInput = {
+    where: UserWhereUniqueInput
+    data: XOR<UserUpdateWithoutUdapInput, UserUncheckedUpdateWithoutUdapInput>
+  }
+
+  export type UserUpdateManyWithWhereWithoutUdapInput = {
+    where: UserScalarWhereInput
+    data: XOR<UserUpdateManyMutationInput, UserUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type UserScalarWhereInput = {
+    AND?: Enumerable<UserScalarWhereInput>
+    OR?: Enumerable<UserScalarWhereInput>
+    NOT?: Enumerable<UserScalarWhereInput>
+    email?: StringFilter | string
+    name?: StringFilter | string
+    temporaryLink?: StringNullableFilter | string | null
+    temporaryLinkExpiresAt?: StringNullableFilter | string | null
+    password?: StringFilter | string
+    udap_id?: StringFilter | string
+  }
+
+  export type DelegationCreateWithoutUser_delegation_createdByTouserInput = {
+    user_delegation_delegatedToTouser: UserCreateNestedOneWithoutDelegation_delegation_delegatedToTouserInput
+  }
+
+  export type DelegationUncheckedCreateWithoutUser_delegation_createdByTouserInput = {
+    delegatedTo: string
+  }
+
+  export type DelegationCreateOrConnectWithoutUser_delegation_createdByTouserInput = {
+    where: DelegationWhereUniqueInput
+    create: XOR<DelegationCreateWithoutUser_delegation_createdByTouserInput, DelegationUncheckedCreateWithoutUser_delegation_createdByTouserInput>
+  }
+
+  export type DelegationCreateManyUser_delegation_createdByTouserInputEnvelope = {
+    data: Enumerable<DelegationCreateManyUser_delegation_createdByTouserInput>
+    skipDuplicates?: boolean
+  }
+
+  export type DelegationCreateWithoutUser_delegation_delegatedToTouserInput = {
+    user_delegation_createdByTouser: UserCreateNestedOneWithoutDelegation_delegation_createdByTouserInput
+  }
+
+  export type DelegationUncheckedCreateWithoutUser_delegation_delegatedToTouserInput = {
+    createdBy: string
+  }
+
+  export type DelegationCreateOrConnectWithoutUser_delegation_delegatedToTouserInput = {
+    where: DelegationWhereUniqueInput
+    create: XOR<DelegationCreateWithoutUser_delegation_delegatedToTouserInput, DelegationUncheckedCreateWithoutUser_delegation_delegatedToTouserInput>
+  }
+
+  export type DelegationCreateManyUser_delegation_delegatedToTouserInputEnvelope = {
+    data: Enumerable<DelegationCreateManyUser_delegation_delegatedToTouserInput>
+    skipDuplicates?: boolean
+  }
+
+  export type UdapCreateWithoutUserInput = {
+    id: string
+    department: string
+    complete_coords?: string | null
+    visible?: boolean | null
+    name?: string | null
+    address?: string | null
+    zip_code?: string | null
+    city?: string | null
+    phone?: string | null
+    email?: string | null
+  }
+
+  export type UdapUncheckedCreateWithoutUserInput = {
+    id: string
+    department: string
+    complete_coords?: string | null
+    visible?: boolean | null
+    name?: string | null
+    address?: string | null
+    zip_code?: string | null
+    city?: string | null
+    phone?: string | null
+    email?: string | null
+  }
+
+  export type UdapCreateOrConnectWithoutUserInput = {
+    where: UdapWhereUniqueInput
+    create: XOR<UdapCreateWithoutUserInput, UdapUncheckedCreateWithoutUserInput>
+  }
+
+  export type DelegationUpsertWithWhereUniqueWithoutUser_delegation_createdByTouserInput = {
+    where: DelegationWhereUniqueInput
+    update: XOR<DelegationUpdateWithoutUser_delegation_createdByTouserInput, DelegationUncheckedUpdateWithoutUser_delegation_createdByTouserInput>
+    create: XOR<DelegationCreateWithoutUser_delegation_createdByTouserInput, DelegationUncheckedCreateWithoutUser_delegation_createdByTouserInput>
+  }
+
+  export type DelegationUpdateWithWhereUniqueWithoutUser_delegation_createdByTouserInput = {
+    where: DelegationWhereUniqueInput
+    data: XOR<DelegationUpdateWithoutUser_delegation_createdByTouserInput, DelegationUncheckedUpdateWithoutUser_delegation_createdByTouserInput>
+  }
+
+  export type DelegationUpdateManyWithWhereWithoutUser_delegation_createdByTouserInput = {
+    where: DelegationScalarWhereInput
+    data: XOR<DelegationUpdateManyMutationInput, DelegationUncheckedUpdateManyWithoutDelegation_delegation_createdByTouserInput>
+  }
+
+  export type DelegationScalarWhereInput = {
+    AND?: Enumerable<DelegationScalarWhereInput>
+    OR?: Enumerable<DelegationScalarWhereInput>
+    NOT?: Enumerable<DelegationScalarWhereInput>
+    createdBy?: StringFilter | string
+    delegatedTo?: StringFilter | string
+  }
+
+  export type DelegationUpsertWithWhereUniqueWithoutUser_delegation_delegatedToTouserInput = {
+    where: DelegationWhereUniqueInput
+    update: XOR<DelegationUpdateWithoutUser_delegation_delegatedToTouserInput, DelegationUncheckedUpdateWithoutUser_delegation_delegatedToTouserInput>
+    create: XOR<DelegationCreateWithoutUser_delegation_delegatedToTouserInput, DelegationUncheckedCreateWithoutUser_delegation_delegatedToTouserInput>
+  }
+
+  export type DelegationUpdateWithWhereUniqueWithoutUser_delegation_delegatedToTouserInput = {
+    where: DelegationWhereUniqueInput
+    data: XOR<DelegationUpdateWithoutUser_delegation_delegatedToTouserInput, DelegationUncheckedUpdateWithoutUser_delegation_delegatedToTouserInput>
+  }
+
+  export type DelegationUpdateManyWithWhereWithoutUser_delegation_delegatedToTouserInput = {
+    where: DelegationScalarWhereInput
+    data: XOR<DelegationUpdateManyMutationInput, DelegationUncheckedUpdateManyWithoutDelegation_delegation_delegatedToTouserInput>
+  }
+
+  export type UdapUpsertWithoutUserInput = {
+    update: XOR<UdapUpdateWithoutUserInput, UdapUncheckedUpdateWithoutUserInput>
+    create: XOR<UdapCreateWithoutUserInput, UdapUncheckedCreateWithoutUserInput>
+  }
+
+  export type UdapUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    department?: StringFieldUpdateOperationsInput | string
+    complete_coords?: NullableStringFieldUpdateOperationsInput | string | null
+    visible?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    zip_code?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type UdapUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    department?: StringFieldUpdateOperationsInput | string
+    complete_coords?: NullableStringFieldUpdateOperationsInput | string | null
+    visible?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    zip_code?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
   export type Report_to_clauseCreateManyClauseInput = {
     id: string
     report_id: string
@@ -6396,6 +10652,74 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type Report_to_clauseUncheckedUpdateWithoutReportInput = {
     id?: StringFieldUpdateOperationsInput | string
     clause_id?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type UserCreateManyUdapInput = {
+    email: string
+    name: string
+    temporaryLink?: string | null
+    temporaryLinkExpiresAt?: string | null
+    password: string
+  }
+
+  export type UserUpdateWithoutUdapInput = {
+    email?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    delegation_delegation_createdByTouser?: DelegationUpdateManyWithoutUser_delegation_createdByTouserNestedInput
+    delegation_delegation_delegatedToTouser?: DelegationUpdateManyWithoutUser_delegation_delegatedToTouserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutUdapInput = {
+    email?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    delegation_delegation_createdByTouser?: DelegationUncheckedUpdateManyWithoutUser_delegation_createdByTouserNestedInput
+    delegation_delegation_delegatedToTouser?: DelegationUncheckedUpdateManyWithoutUser_delegation_delegatedToTouserNestedInput
+  }
+
+  export type UserUncheckedUpdateManyWithoutUserInput = {
+    email?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type DelegationCreateManyUser_delegation_createdByTouserInput = {
+    delegatedTo: string
+  }
+
+  export type DelegationCreateManyUser_delegation_delegatedToTouserInput = {
+    createdBy: string
+  }
+
+  export type DelegationUpdateWithoutUser_delegation_createdByTouserInput = {
+    user_delegation_delegatedToTouser?: UserUpdateOneRequiredWithoutDelegation_delegation_delegatedToTouserNestedInput
+  }
+
+  export type DelegationUncheckedUpdateWithoutUser_delegation_createdByTouserInput = {
+    delegatedTo?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type DelegationUncheckedUpdateManyWithoutDelegation_delegation_createdByTouserInput = {
+    delegatedTo?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type DelegationUpdateWithoutUser_delegation_delegatedToTouserInput = {
+    user_delegation_createdByTouser?: UserUpdateOneRequiredWithoutDelegation_delegation_createdByTouserNestedInput
+  }
+
+  export type DelegationUncheckedUpdateWithoutUser_delegation_delegatedToTouserInput = {
+    createdBy?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type DelegationUncheckedUpdateManyWithoutDelegation_delegation_delegatedToTouserInput = {
+    createdBy?: StringFieldUpdateOperationsInput | string
   }
 
 

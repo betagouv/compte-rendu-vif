@@ -35,12 +35,9 @@ export const SignupForm = () => {
     onError: (error) => console.error(error),
   });
 
-  console.log(udapsQuery.data);
-
   const signup = async (values: SignupFormProps) => {
     const response = await mutation.mutateAsync(values);
     setData(response);
-    console.log(response?.user);
   };
 
   const { errors: formErrors } = form.formState;

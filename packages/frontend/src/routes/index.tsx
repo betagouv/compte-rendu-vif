@@ -22,11 +22,13 @@ const Index = () => {
   const createReportMutation = useMutation({
     mutationFn: () =>
       db.report.create({
-        data: { id: `report-${v4()}`, created_by_id: user.id, created_at: new Date(), created_by_username: user.name },
+        data: {
+          id: `report-${v4()}`,
+          created_by_id: user.email,
+          created_at: new Date(),
+          created_by_username: user.name,
+        },
       }),
-    onSuccess: () => {
-      console.log("success");
-    },
   });
 
   return (

@@ -5,6 +5,7 @@ CREATE TABLE chip(
   ,text    text NOT NULL
   , PRIMARY KEY (key, value, udap_id)
 );
+
 INSERT INTO chip(key,value,udap_id,text) VALUES ('demandeur','Particulier','ALL','Vous avez rencontré un agent de l’UDAP car votre projet se situe dans un espace protégé pour son patrimoine. Cet agent évalue si votre projet peut s’intégrer à cet espace. Ce jugement ne remplace pas les demandes d’autorisation de travaux. Ci-dessous le compte rendu de l’échange :');
 INSERT INTO chip(key,value,udap_id,text) VALUES ('demandeur','Maître d''oeuvre','ALL','Vous avez rencontré un agent de l’UDAP car votre projet se situe dans un espace protégé pour son patrimoine. Le jugement émis ne remplace pas les demandes d’autorisation de travaux. Si la décision est favorable, vous devrez contacter le service instructeur. Notez que le maître d’œuvre sera notre interlocuteur privilégié pour ce projet. Ci-dessous le compte rendu de l’échange :');
 INSERT INTO chip(key,value,udap_id,text) VALUES ('demandeur','Collectivité','ALL','Vous avez rencontré un agent de l’UDAP car votre projet se situe dans un espace protégé pour son patrimoine. Cet agent évalue si votre projet peut s’intégrer à cet espace. Le jugement émis ne remplace pas les demandes d’autorisation de travaux. Si la décision est favorable, vous devrez contacter le service instructeur. Ci-dessous le compte rendu de l’échange :');
