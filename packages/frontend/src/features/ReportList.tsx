@@ -9,7 +9,7 @@ import Badge from "@codegouvfr/react-dsfr/Badge";
 import { css } from "#styled-system/css";
 import { Link } from "@tanstack/react-router";
 
-type ReportWithUser = Report & { user?: { email: string; name: string } };
+export type ReportWithUser = Report & { user?: { email: string; name: string } };
 
 export const MyReports = () => {
   const user = useUser()!;

@@ -17,7 +17,7 @@ import { Tabs } from "../components/Tabs";
 import { db } from "../db";
 import { InfoForm } from "../features/InfoForm";
 import { NotesForm } from "../features/NotesForm";
-import type { Report } from "../generated/client";
+import type { Report } from "@cr-vif/electric-client/frontend";
 
 const EditReport = () => {
   const { reportId } = Route.useParams();

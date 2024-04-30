@@ -4,7 +4,7 @@ import { Box, Center } from "#styled-system/jsx";
 import { Tabs } from "../components/Tabs";
 import { InfoForm } from "../features/InfoForm";
 import { FormProvider, useForm } from "react-hook-form";
-import type { Report } from "../generated/client";
+import type { Report } from "@cr-vif/electric-client/frontend";
 import { useUser } from "../contexts/AuthContext";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { useMutation } from "@tanstack/react-query";

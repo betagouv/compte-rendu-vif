@@ -9,13 +9,13 @@ import { useFormContext, useWatch } from "react-hook-form";
 import { InputGroupWithTitle } from "../components/InputGroup";
 import { SpaceTypeChips } from "../components/chips/SpaceTypeChips";
 import { useUser } from "../contexts/AuthContext";
-import type { Report } from "../generated/client";
+import type { Report } from "@cr-vif/electric-client/frontend";
 
 export const InfoForm = () => {
   const form = useFormContext<Report>();
   const user = useUser()!;
 
-  const meetDate = useWatch({ control: form.control, name: "meet_date" });
+  const meetDate = useWatch({ control: form.control, name: "meetDate" });
 
   const meetDateRef = useRef({
     day: meetDate ? format(new Date(meetDate), "yyyy-MM-dd") : "",
@@ -29,11 +29,11 @@ export const InfoForm = () => {
     const date = parse(`${day}T${time}`, "yyyy-MM-dd'T'HH:mm", new Date());
 
     if (!day || !time || Number.isNaN(date.getTime())) {
-      form.setValue("meet_date", undefined as any);
+      form.setValue("meetDate", undefined as any);
       return;
     }
 
-    form.setValue("meet_date", date);
+    form.setValue("meetDate", date);
   };
 
   const setTime = (e: any) => {
@@ -55,8 +55,8 @@ export const InfoForm = () => {
       </Button>
       <InputGroupWithTitle title="Le rendez-vous">
         <Input label="Titre" nativeInputProps={form.register("title")} />
-        <Input label="Description" textArea nativeTextAreaProps={form.register("project_description")} />
-        <Select label="Rédigé par" nativeSelectProps={form.register("redacted_by")}>
+        <Input label="Description" textArea nativeTextAreaProps={form.register("projectDescription")} />
+        <Select label="Rédigé par" nativeSelectProps={form.register("redactedBy")}>
           <option value={user.name}>{user.name}</option>
         </Select>
         <Stack direction="row">
@@ -68,10 +68,10 @@ export const InfoForm = () => {
       <Divider mb="32px" />
 
       <InputGroupWithTitle title="Le projet">
-        <Input label="Nom du demandeur*" nativeInputProps={form.register("applicant_name")} />
-        <Input label="Adresse du projet*" nativeInputProps={form.register("applicant_address")} />
-        <Input label="Référence cadastrale du projet" nativeInputProps={form.register("project_cadastral_ref")} />
-        <Input label="Service instructeur*" nativeInputProps={form.register("service_instructeur")} />
+        <Input label="Nom du demandeur*" nativeInputProps={form.register("applicantName")} />
+        <Input label="Adresse du projet*" nativeInputProps={form.register("applicantAddress")} />
+        <Input label="Référence cadastrale du projet" nativeInputProps={form.register("projectCadastralRef")} />
+        <Input label="Service instructeur*" nativeInputProps={form.register("serviceInstructeur")} />
         <SpaceTypeChips />
       </InputGroupWithTitle>
 

@@ -1,7 +1,7 @@
 import { useLiveQuery } from "electric-sql/react";
 import { db } from "../../db";
 import { Flex, Stack, styled } from "#styled-system/jsx";
-import type { Chip } from "../../generated/client";
+import type { Chip } from "@cr-vif/electric-client/frontend";
 
 export const ChipList = () => {
   const chips = useLiveQuery(db.chip.liveMany());

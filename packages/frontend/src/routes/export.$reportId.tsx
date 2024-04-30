@@ -2,14 +2,14 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useLiveQuery } from "electric-sql/react";
 import { db } from "../db";
 import { Flex, styled } from "#styled-system/jsx";
-import type { Report } from "../generated/client";
 import { Document, Page, Text, View, StyleSheet, type Styles } from "@react-pdf/renderer";
 import { PDFViewer } from "@react-pdf/renderer";
+import type { Report } from "@cr-vif/electric-client/frontend";
 import { TextEditor, textEditorClassName } from "../features/text-editor/TextEditor";
 import { useState } from "react";
 import Html from "react-pdf-html";
 import useDebounce from "react-use/lib/useDebounce";
-
+import type { ReportWithUser } from "../features/ReportList";
 const ExportPdf = () => {
   const { reportId } = Route.useParams();
   const { results: report } = useLiveQuery(db.report.liveUnique({ where: { id: reportId } }));
@@ -69,13 +69,13 @@ const WithReport = ({ report }: { report: Report }) => {
   );
 };
 
-const getReportHtmlString = (report: Report) => {
+const getReportHtmlString = (report: ReportWithUser) => {
   return `<p>
     <span>Objet : ${report.title}</span><br/>
-    <span>Votre interlocuteur : ${report.created_by_username}</span><br/>
-    <span>Demandeur : ${report.applicant_name}</span><br/>
-    <span>Adresse du projet : ${report.applicant_address}</span><br/>
-    <span>Ref cadastrale : ${report.project_cadastral_ref}</span>
+    <span>Votre interlocuteur : ${report.user?.name ?? report.createdByEmail.split("@")[0]}</span><br/>
+    <span>Demandeur : ${report.applicantName}</span><br/>
+    <span>Adresse du projet : ${report.applicantAddress}</span><br/>
+    <span>Ref cadastrale : ${report.projectCadastralRef}</span>
   </p>`;
 };
 
