@@ -1,10 +1,21 @@
 import { type CenterProps, Center } from "#styled-system/jsx";
-import { cva } from "#styled-system/css";
+import { cva, cx } from "#styled-system/css";
 import { SyncFormStatus } from "./SyncForm";
+import { forwardRef } from "react";
 
-export const Banner = ({ status, ...props }: CenterProps & { status: SyncFormStatus }) => {
-  return <Center className={banner({ status })} flexDir="column" bgColor="background-open-blue-france" {...props} />;
-};
+export const Banner = forwardRef<HTMLDivElement, CenterProps & { status: SyncFormStatus }>(
+  ({ status, className, ...props }, ref) => {
+    return (
+      <Center
+        ref={ref}
+        className={cx(banner({ status }), className)}
+        flexDir="column"
+        bgColor="background-open-blue-france"
+        {...props}
+      />
+    );
+  },
+);
 
 const banner = cva({
   base: { bgColor: "background-open-blue-france" },

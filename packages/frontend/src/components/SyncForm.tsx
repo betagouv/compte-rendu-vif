@@ -5,17 +5,16 @@ import useDebounce from "react-use/lib/useDebounce";
 import { Banner } from "./Banner";
 import { useRouter } from "@tanstack/react-router";
 import Button from "@codegouvfr/react-dsfr/Button";
-import { styled } from "#styled-system/jsx";
+import { Flex, styled } from "#styled-system/jsx";
 import { fr } from "@codegouvfr/react-dsfr";
-import { css } from "#styled-system/css";
-import { useNetworkState } from "react-use";
-export function SyncFormBanner<TFieldValues extends FieldValues>({
-  form,
-  baseObject,
-}: {
-  form: UseFormReturn<TFieldValues>;
-  baseObject: Record<string, any>;
-}) {
+import { css, sva } from "#styled-system/css";
+import { useNetworkState, useObservable } from "react-use";
+import { useRef } from "react";
+import { useIntersectionObserver } from "../hooks/useIntersectionObserver";
+import Input from "@codegouvfr/react-dsfr/Input";
+import { Report } from "@cr-vif/electric-client/frontend";
+
+export function SyncFormBanner({ form, baseObject }: { form: UseFormReturn<Report>; baseObject: Record<string, any> }) {
   const newObject = useWatch({ control: form.control });
 
   const diff = getDiff(newObject, baseObject);
@@ -29,30 +28,105 @@ export function SyncFormBanner<TFieldValues extends FieldValues>({
 
   const status = !online ? "offline" : Object.keys(diff).length ? "pending" : "saved";
 
+  const { ref, isIntersecting } = useIntersectionObserver({
+    threshold: 0.999999,
+    initialIsIntersecting: true,
+  });
+
+  const isCollapsed = !isIntersecting;
+
+  const styles = syncFormBanner({ isCollapsed });
+
   return (
-    <Banner status={status} display="flex" flexDirection="row" justifyContent="space-between" w="100%" h="70px">
-      {/* @ts-ignore dsfr buttons props must have children */}
-      <Button
-        className={css({ color: "black", _hover: { bgColor: "transparent" } })}
-        priority="tertiary"
-        iconId="ri-arrow-left-line"
-        onClick={() => goBack()}
-        size="large"
-      />
-      <styled.div mr="10px" color="black" textTransform="uppercase" fontSize="sm" fontWeight="500">
-        <styled.span
-          className={fr.cx("fr-icon-wifi-line")}
-          aria-hidden={true}
-          mr="6px"
-          _before={{
-            animation: syncMutation.isLoading ? "spin 1s linear infinite" : undefined,
-          }}
-        />
-        {messages[status]}
-      </styled.div>
-    </Banner>
+    <>
+      <Banner className={styles.root} status={status}>
+        <Flex justifyContent="space-between" alignItems="center" w="100%" h="100%">
+          {/* @ts-ignore dsfr buttons props must have children */}
+          <Button
+            className={styles.back}
+            priority="tertiary"
+            iconId="ri-arrow-left-line"
+            onClick={() => goBack()}
+            size="large"
+          />
+          <styled.span nowrap>{isCollapsed ? newObject.title : "Titre compte-rendu :"}</styled.span>
+        </Flex>
+        <Input className={styles.input} label="" nativeInputProps={{ ...form.register("title") }} />
+      </Banner>
+      <Banner ref={ref} className={styles.collapsed} status={status} position="sticky" top="-1px">
+        {isCollapsed ? (
+          <>
+            {/* @ts-ignore dsfr buttons props must have children */}
+            <Button
+              className={styles.back}
+              priority="tertiary"
+              iconId="ri-arrow-left-line"
+              onClick={() => goBack()}
+              size="large"
+            />
+            <styled.span nowrap>{newObject.title}</styled.span>
+          </>
+        ) : null}
+        <Status className={styles.status} status={status} />
+      </Banner>
+    </>
   );
 }
+
+const Status = ({ status, className }: { status: SyncFormStatus; className?: string }) => {
+  return (
+    <styled.div className={className} color="black" textTransform="uppercase" fontSize="sm" fontWeight="500">
+      <styled.span className={fr.cx("fr-icon-wifi-line")} aria-hidden={true} mr="6px" />
+      {messages[status]}
+    </styled.div>
+  );
+};
+
+const syncFormBanner = sva({
+  slots: ["root", "collapsed", "back", "label", "input", "status"],
+  base: {
+    root: {
+      display: "flex",
+      zIndex: 2,
+      flexDirection: "column",
+      justifyContent: "space-between",
+      w: "100%",
+      px: "15px",
+    },
+    collapsed: {
+      display: "flex",
+      zIndex: 2,
+      flexDirection: "row",
+      justifyContent: "space-between",
+      w: "100%",
+      h: "48px",
+      px: "15px",
+    },
+    back: { ml: "-10px", color: "black", _hover: { bgColor: "transparent" } },
+    label: {},
+    input: {
+      w: "100%",
+      mt: "-5px !important",
+      mb: "1em",
+      "& input": {
+        bgColor: "rgba(50, 50, 50, .15) !important",
+      },
+    },
+    status: {
+      fontSize: "10px",
+      justifySelf: "flex-end",
+    },
+  },
+  variants: {
+    isCollapsed: {
+      false: {
+        collapsed: {
+          justifyContent: "flex-end",
+        },
+      },
+    },
+  },
+});
 
 const messages: Record<SyncFormStatus, string> = {
   offline: "Hors ligne",

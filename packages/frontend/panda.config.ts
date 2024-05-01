@@ -40,6 +40,26 @@ export default defineConfig({
       semanticTokens: {},
     },
   },
+  utilities: {
+    extend: {
+      nowrap: {
+        className: "text-nowrap",
+        shorthand: "nowrap",
+        values: { type: "boolean" },
+        transform: (value) => {
+          if (value) {
+            return {
+              whiteSpace: "nowrap",
+              textOverflow: "ellipsis",
+              overflow: "hidden",
+            };
+          }
+
+          return {};
+        },
+      },
+    },
+  },
 
   patterns: {
     extend: {
