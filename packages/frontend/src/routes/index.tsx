@@ -10,6 +10,7 @@ import { Tabs } from "../components/Tabs";
 import { useUser } from "../contexts/AuthContext";
 import { db } from "../db";
 import { AllReports, MyReports } from "../features/ReportList";
+import { useLiveQuery } from "electric-sql/react";
 
 const Index = () => {
   const user = useUser()!;
@@ -19,6 +20,8 @@ const Index = () => {
     { id: "udap", label: "UDAP" },
   ];
 
+  console.log("a", useLiveQuery(db.user.liveMany()));
+  console.log("b", useLiveQuery(db.report.liveMany({ include: { user: true } })));
   const createReportMutation = useMutation({
     mutationFn: () =>
       db.report.create({

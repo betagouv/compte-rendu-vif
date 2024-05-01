@@ -23,7 +23,7 @@ export const createUserTSchema = {
   response: { 200: userAndTokenTSchema },
 };
 export const loginTSchema = {
-  body: Type.Pick(userInput, ["email", "password", "udap"]),
+  body: Type.Pick(userInput, ["email", "password"]),
   response: { 200: userAndTokenTSchema },
 };
 export const verifyTokenTSchema = {

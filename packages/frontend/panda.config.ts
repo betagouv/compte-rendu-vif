@@ -31,7 +31,12 @@ export default defineConfig({
           "100%": { transform: "rotate(360deg)" },
         },
       },
-      tokens: {},
+      tokens: {
+        colors: {
+          "yellow-waiting": { value: "#FEECC2" },
+          "red-offline": { value: "#FFE9E6" },
+        },
+      },
       semanticTokens: {},
     },
   },

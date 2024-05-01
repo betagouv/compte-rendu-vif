@@ -26,6 +26,7 @@ const WithReport = ({ report }: { report: Report }) => {
   return (
     <Flex direction="column">
       <TextEditor defaultValue={value} onChange={(e) => setValue(e)} />
+
       <PDFViewer>
         <Document>
           <Page size="A4" style={styles.page}>

@@ -8,7 +8,7 @@ import Button from "@codegouvfr/react-dsfr/Button";
 import { styled } from "#styled-system/jsx";
 import { fr } from "@codegouvfr/react-dsfr";
 import { css } from "#styled-system/css";
-
+import { useNetworkState } from "react-use";
 export function SyncFormBanner<TFieldValues extends FieldValues>({
   form,
   baseObject,
@@ -25,9 +25,12 @@ export function SyncFormBanner<TFieldValues extends FieldValues>({
 
   const router = useRouter();
   const goBack = () => router.history.back();
+  const { online } = useNetworkState();
+
+  const status = !online ? "offline" : Object.keys(diff).length ? "pending" : "saved";
 
   return (
-    <Banner display="flex" flexDirection="row" justifyContent="space-between" w="100%" h="70px">
+    <Banner status={status} display="flex" flexDirection="row" justifyContent="space-between" w="100%" h="70px">
       {/* @ts-ignore dsfr buttons props must have children */}
       <Button
         className={css({ color: "black", _hover: { bgColor: "transparent" } })}
@@ -38,24 +41,27 @@ export function SyncFormBanner<TFieldValues extends FieldValues>({
       />
       <styled.div mr="10px" color="black" textTransform="uppercase" fontSize="sm" fontWeight="500">
         <styled.span
-          className={fr.cx("fr-icon-refresh-line")}
+          className={fr.cx("fr-icon-wifi-line")}
           aria-hidden={true}
           mr="6px"
           _before={{
             animation: syncMutation.isLoading ? "spin 1s linear infinite" : undefined,
           }}
         />
-        {syncMutation.isLoading
-          ? "Sauvegarde"
-          : syncMutation.isError
-            ? "Erreur"
-            : syncMutation.isSuccess
-              ? "Sauvegardé en ligne"
-              : "En attente"}
+        {messages[status]}
       </styled.div>
     </Banner>
   );
 }
+
+const messages: Record<SyncFormStatus, string> = {
+  offline: "Hors ligne",
+  pending: "En attente",
+  saved: "Connecté(e)",
+  saving: "Sauvegarde",
+};
+
+export type SyncFormStatus = "offline" | "pending" | "saved" | "saving";
 
 async function syncObject(id: string, diff: Record<string, any>) {
   if (!Object.keys(diff).length) return;
