@@ -50,7 +50,7 @@ export const InfoForm = () => {
   const tab = useTabsContext();
 
   return (
-    <Flex direction="column" padding="16px">
+    <Flex direction="column" w="100%" padding="16px">
       <InputGroupWithTitle title="Le rendez-vous">
         <Stack gap={{ base: "0", sm: "16px" }} direction={{ base: "column", sm: "row" }}>
           <Select
@@ -81,10 +81,10 @@ export const InfoForm = () => {
         </Stack>
       </InputGroupWithTitle>
 
-      <Divider mb="32px" />
+      <Divider mt="20px" mb="52px" />
 
       <InputGroupWithTitle title="Le projet">
-        <Input label="Description" textArea nativeTextAreaProps={form.register("projectDescription")} />
+        <Input label="Description" textArea nativeTextAreaProps={{ ...form.register("projectDescription"), rows: 5 }} />
         <Stack gap={{ base: "0", sm: "16px" }} direction={{ base: "column", sm: "row" }}>
           <Input
             className={css({ flex: { base: "none", sm: 1 } })}

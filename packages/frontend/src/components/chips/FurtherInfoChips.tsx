@@ -1,8 +1,9 @@
 import { useFormContext, useWatch } from "react-hook-form";
 import type { Report } from "@cr-vif/electric-client/frontend";
 import { ChipGroup, type ChipGroupOption } from "../Chip";
+import { FlexProps } from "#styled-system/jsx";
 
-export const FurtherInfoChips = () => {
+export const FurtherInfoChips = (props: FlexProps) => {
   const form = useFormContext<Report>();
 
   const selected = useWatch({ control: form.control, name: "furtherInformation" })?.split(",") ?? [];
@@ -24,6 +25,7 @@ export const FurtherInfoChips = () => {
       isMulti
       options={furtherInfoOptions}
       value={selected}
+      {...props}
       onChange={(values) => form.setValue("furtherInformation", values.join(","))}
       label="Pour aller plus loin"
     />

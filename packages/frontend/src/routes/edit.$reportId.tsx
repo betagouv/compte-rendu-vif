@@ -88,13 +88,14 @@ const WithReport = ({ report }: { report: Report }) => {
     const previousValues = previousValuesRef.current;
     const focused = getFocused();
 
+    // key is a string and a string cannot index previousValues or report
     for (const key in previousValues) {
-      if (previousValues[key] !== report[key]) {
-        const fieldState = form.getFieldState(key);
+      if ((previousValues as any)[key] !== (report as any)[key]) {
+        const fieldState = form.getFieldState(key as any);
         const hasFocus = key === focused;
 
         if (!hasFocus || !fieldState.isDirty) {
-          form.setValue(key, report[key]);
+          form.setValue(key as any, (report as any)[key]);
         }
       }
     }
@@ -127,15 +128,15 @@ const WithReport = ({ report }: { report: Report }) => {
               ))}
               <Tabs.Indicator />
             </Tabs.List>
-            <Tabs.Content value="info">
-              <Center w="100%">
-                <Box w="100%" maxWidth="800px">
-                  <InfoForm />
-                </Box>
-              </Center>
+            <Tabs.Content value="info" display="flex" justifyContent="center">
+              <Box w="100%" maxWidth="800px">
+                <InfoForm />
+              </Box>
             </Tabs.Content>
-            <Tabs.Content value="notes">
-              <NotesForm />
+            <Tabs.Content value="notes" display="flex" justifyContent="center">
+              <Box w="100%" maxWidth="800px">
+                <NotesForm />
+              </Box>
             </Tabs.Content>
           </Tabs.Root>
         </form>
