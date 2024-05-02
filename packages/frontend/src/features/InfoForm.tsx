@@ -10,6 +10,7 @@ import { InputGroupWithTitle } from "../components/InputGroup";
 import { SpaceTypeChips } from "../components/chips/SpaceTypeChips";
 import { useUser } from "../contexts/AuthContext";
 import type { Report } from "@cr-vif/electric-client/frontend";
+import { css } from "#styled-system/css";
 
 export const InfoForm = () => {
   const form = useFormContext<Report>();
@@ -51,25 +52,59 @@ export const InfoForm = () => {
   return (
     <Flex direction="column" padding="16px">
       <InputGroupWithTitle title="Le rendez-vous">
-        <Input label="Titre" nativeInputProps={form.register("title")} />
-        <Input label="Description" textArea nativeTextAreaProps={form.register("projectDescription")} />
-        <Select label="Rédigé par" nativeSelectProps={form.register("redactedBy")}>
-          <option value={user.name}>{user.name}</option>
-        </Select>
-        <Stack direction="row">
-          <Input label="Date" nativeInputProps={{ type: "date", onChange: setDay }} />
-          <Input label="Horaire" nativeInputProps={{ type: "time", onChange: setTime }} />
+        <Stack gap={{ base: "0", sm: "16px" }} direction={{ base: "column", sm: "row" }}>
+          <Select
+            className={css({ flex: { base: "none", sm: 1 } })}
+            label="Rédigé par"
+            nativeSelectProps={form.register("redactedBy")}
+          >
+            <option value={user.name}>{user.name}</option>
+          </Select>
+          <Input
+            className={css({ flex: { base: "none", sm: 1 } })}
+            label="Nom du demandeur*"
+            nativeInputProps={form.register("applicantName")}
+          />
+        </Stack>
+
+        <Stack direction="row" mt="16px">
+          <Input
+            className={css({ flex: { base: "none", sm: 1 } })}
+            label="Date"
+            nativeInputProps={{ type: "date", onChange: setDay }}
+          />
+          <Input
+            className={css({ flex: { base: "none", sm: 1 } })}
+            label="Horaire"
+            nativeInputProps={{ type: "time", onChange: setTime }}
+          />
         </Stack>
       </InputGroupWithTitle>
 
       <Divider mb="32px" />
 
       <InputGroupWithTitle title="Le projet">
-        <Input label="Nom du demandeur*" nativeInputProps={form.register("applicantName")} />
-        <Input label="Adresse du projet*" nativeInputProps={form.register("applicantAddress")} />
-        <Input label="Référence cadastrale du projet" nativeInputProps={form.register("projectCadastralRef")} />
-        <Input label="Service instructeur*" nativeInputProps={form.register("serviceInstructeur")} />
-        <SpaceTypeChips />
+        <Input label="Description" textArea nativeTextAreaProps={form.register("projectDescription")} />
+        <Stack gap={{ base: "0", sm: "16px" }} direction={{ base: "column", sm: "row" }}>
+          <Input
+            className={css({ flex: { base: "none", sm: 1 } })}
+            label="Adresse du projet*"
+            nativeInputProps={form.register("applicantAddress")}
+          />
+          <Input
+            className={css({ flex: { base: "none", sm: 1 } })}
+            label="Service instructeur*"
+            nativeInputProps={form.register("serviceInstructeur")}
+          />
+        </Stack>
+        <Stack gap={{ base: "0", sm: "16px" }} direction={{ base: "column", sm: "row" }} mt="16px">
+          <Input
+            className={css({ flex: { base: "none", sm: 1 } })}
+            label="Référence cadastrale du projet"
+            nativeInputProps={form.register("projectCadastralRef")}
+          />
+          <SpaceTypeChips className={css({ flex: { base: "none", sm: 1 } })} />
+        </Stack>
       </InputGroupWithTitle>
 
       <Center>

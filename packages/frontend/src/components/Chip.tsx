@@ -10,6 +10,7 @@ export const ChipGroup = ({
   canBeEmpty,
   value,
   onChange,
+  className,
   ...props
 }: {
   options: ChipGroupOption[];
@@ -52,7 +53,7 @@ export const ChipGroup = ({
   if (!label) return ChipGroupList;
 
   return (
-    <Flex direction="column" {...props} className={cx(props.className, "fr-input-group")}>
+    <Flex direction="column" {...props} className={cx(className, "fr-input-group")}>
       <label className="fr-label">{label}</label>
       {ChipGroupList}
     </Flex>

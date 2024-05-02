@@ -1,8 +1,9 @@
 import { useFormContext, useWatch } from "react-hook-form";
 import type { Report } from "@cr-vif/electric-client/frontend";
 import { ChipGroup, type ChipGroupOption } from "../Chip";
+import { FlexProps } from "#styled-system/jsx";
 
-export const SpaceTypeChips = () => {
+export const SpaceTypeChips = (props: FlexProps) => {
   const form = useFormContext<Report>();
 
   const selected = useWatch({ control: form.control, name: "projectSpaceType" })?.split(",") ?? [];
@@ -24,6 +25,7 @@ export const SpaceTypeChips = () => {
       isMulti
       options={spaceTypes}
       value={selected}
+      {...props}
       onChange={(values) => form.setValue("projectSpaceType", values.join(","))}
       label="Type d'espace"
     />

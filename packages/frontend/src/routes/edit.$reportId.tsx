@@ -1,4 +1,4 @@
-import { Flex } from "#styled-system/jsx";
+import { Box, Center, Flex } from "#styled-system/jsx";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useLiveQuery } from "electric-sql/react";
 import { useEffect, useRef } from "react";
@@ -128,7 +128,11 @@ const WithReport = ({ report }: { report: Report }) => {
               <Tabs.Indicator />
             </Tabs.List>
             <Tabs.Content value="info">
-              <InfoForm />
+              <Center w="100%">
+                <Box w="100%" maxWidth="800px">
+                  <InfoForm />
+                </Box>
+              </Center>
             </Tabs.Content>
             <Tabs.Content value="notes">
               <NotesForm />

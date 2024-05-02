@@ -1,5 +1,5 @@
 import { css } from "#styled-system/css";
-import { Flex, styled } from "#styled-system/jsx";
+import { CenterProps, Flex, styled } from "#styled-system/jsx";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, redirect } from "@tanstack/react-router";
@@ -10,7 +10,8 @@ import { Tabs } from "../components/Tabs";
 import { useUser } from "../contexts/AuthContext";
 import { db } from "../db";
 import { AllReports, MyReports } from "../features/ReportList";
-import { useLiveQuery } from "electric-sql/react";
+import { useNetworkState } from "react-use";
+import { SyncFormStatus } from "../components/SyncForm";
 
 const Index = () => {
   const user = useUser()!;
@@ -20,8 +21,6 @@ const Index = () => {
     { id: "udap", label: "UDAP" },
   ];
 
-  console.log("a", useLiveQuery(db.user.liveMany()));
-  console.log("b", useLiveQuery(db.report.liveMany({ include: { user: true } })));
   const createReportMutation = useMutation({
     mutationFn: () =>
       db.report.create({
@@ -35,7 +34,7 @@ const Index = () => {
 
   return (
     <Flex direction="column" color="text-label-grey">
-      <Banner pt="30px" pb="40px">
+      <SimpleBanner pt="30px" pb="40px">
         <styled.div color="text-title-blue-france" fontSize="18px" fontWeight="bold">
           Compte-rendu VIF
         </styled.div>
@@ -46,7 +45,7 @@ const Index = () => {
         >
           Créer un compte-rendu
         </Button>
-      </Banner>
+      </SimpleBanner>
 
       <Tabs.Root defaultValue="my">
         <Tabs.List>
@@ -66,6 +65,14 @@ const Index = () => {
       </Tabs.Root>
     </Flex>
   );
+};
+
+const SimpleBanner = (props: CenterProps) => {
+  const { online } = useNetworkState();
+
+  const status: SyncFormStatus = online ? "saved" : "offline";
+
+  return <Banner status={status} {...props} />;
 };
 
 export const Route = createFileRoute("/")({
