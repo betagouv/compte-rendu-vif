@@ -18,6 +18,7 @@ import { db } from "../db";
 import { InfoForm } from "../features/InfoForm";
 import { NotesForm } from "../features/NotesForm";
 import type { Report } from "@cr-vif/electric-client/frontend";
+import { css } from "#styled-system/css";
 
 const EditReport = () => {
   const { reportId } = Route.useParams();
@@ -76,8 +77,12 @@ const WithReport = ({ report }: { report: Report }) => {
   };
 
   const options = [
-    { id: "info", label: "Informations" },
-    { id: "notes", label: "Notes terrain" },
+    {
+      id: "info",
+      label: "RDV",
+      className: css({ mr: "calc(((100vw - 800px) / 2 + 16px) * -1)", pl: "calc((100vw - 800px) / 2 + 16px)" }),
+    },
+    { id: "notes", label: "Bilan", className: css({ mr: "-50px", pl: "50px" }) },
   ];
 
   const previousValuesRef = useRef<Report>(report);
@@ -119,26 +124,28 @@ const WithReport = ({ report }: { report: Report }) => {
       <FormProvider {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <SyncFormBanner form={form} baseObject={report} />
-          <Tabs.Root defaultValue="info" onValueChange={(e) => setTab(e.value)} value={tab}>
-            <Tabs.List>
-              {options.map((option) => (
-                <Tabs.Trigger key={option.id} value={option.id}>
-                  {option.label}
-                </Tabs.Trigger>
-              ))}
-              <Tabs.Indicator />
-            </Tabs.List>
-            <Tabs.Content value="info" display="flex" justifyContent="center">
-              <Box w="100%" maxWidth="800px">
-                <InfoForm />
-              </Box>
-            </Tabs.Content>
-            <Tabs.Content value="notes" display="flex" justifyContent="center">
-              <Box w="100%" maxWidth="800px">
-                <NotesForm />
-              </Box>
-            </Tabs.Content>
-          </Tabs.Root>
+          <Flex justifyContent="center" w="100%">
+            <Tabs.Root defaultValue="info" onValueChange={(e) => setTab(e.value)} value={tab}>
+              <Tabs.List>
+                {options.map((option) => (
+                  <Tabs.Trigger className={option.className} key={option.id} value={option.id}>
+                    {option.label}
+                  </Tabs.Trigger>
+                ))}
+                <Tabs.Indicator />
+              </Tabs.List>
+              <Tabs.Content value="info" display="flex" justifyContent="center">
+                <Box w="100%" maxWidth="800px">
+                  <InfoForm />
+                </Box>
+              </Tabs.Content>
+              <Tabs.Content value="notes" display="flex" justifyContent="center">
+                <Box w="100%" maxWidth="800px">
+                  <NotesForm />
+                </Box>
+              </Tabs.Content>
+            </Tabs.Root>
+          </Flex>
         </form>
       </FormProvider>
     </Flex>

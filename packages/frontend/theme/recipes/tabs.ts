@@ -13,23 +13,21 @@ export const tabs = defineSlotRecipe({
       gap: "0 !important",
     },
     trigger: {
+      display: "flex",
       flex: "1",
-      color: "text-title-blue-france",
+      justifyContent: "start",
+      color: "black",
       fontSize: "16px",
-      bgColor: "#C1C1FB",
+      fontWeight: "bold !important",
+      bgColor: "#ECECFE",
       _selected: {
-        color: "text-title-blue-france",
         bgColor: "white",
-        _hover: {
-          color: "text-title-blue-france",
-        },
+        _hover: {},
       },
       _horizontal: {
         pt: "2.5",
       },
-      _hover: {
-        color: "text-title-blue-france",
-      },
+      _hover: {},
     },
     content: {
       fontWeight: "regular",
