@@ -9,7 +9,7 @@ export const ContactChips = (props: FlexProps) => {
 
   const selected = useWatch({ control: form.control, name: "contacts" })?.split(",") ?? [];
 
-  const chipOptions = useChipOptions("contacts-utiles", true);
+  const chipOptions = useChipOptions("contacts-utiles");
   const options: ChipGroupOption[] = (chipOptions ?? []).map((chip) => ({
     label: chip.value,
     key: chip.value,
