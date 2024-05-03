@@ -87,6 +87,7 @@ const syncFormBanner = sva({
   base: {
     root: {
       display: "flex",
+
       zIndex: 2,
       flexDirection: "column",
       justifyContent: "space-between",

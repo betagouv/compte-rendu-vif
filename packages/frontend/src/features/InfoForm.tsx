@@ -113,7 +113,7 @@ export const InfoForm = () => {
           // iconId="ri-draft-line"
           nativeButtonProps={{ type: "button", onClick: () => tab.setValue("notes") }}
         >
-          Ajouter notes terrain
+          Rédiger le bilan
         </Button>
       </Center>
     </Flex>
