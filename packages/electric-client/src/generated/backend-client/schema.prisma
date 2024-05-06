@@ -108,3 +108,7 @@ model user {
   report                                  report[]
   udap                                    udap         @relation(fields: [udap_id], references: [id], onDelete: SetNull, onUpdate: NoAction, map: "fk_udap_id")
 }
+
+model whitelist {
+  email String @id
+}

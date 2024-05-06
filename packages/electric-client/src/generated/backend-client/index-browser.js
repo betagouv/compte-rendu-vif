@@ -185,6 +185,10 @@ exports.Prisma.UserScalarFieldEnum = {
   udap_id: 'udap_id'
 };
 
+exports.Prisma.WhitelistScalarFieldEnum = {
+  email: 'email'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -210,7 +214,8 @@ exports.Prisma.ModelName = {
   chip: 'chip',
   delegation: 'delegation',
   udap: 'udap',
-  user: 'user'
+  user: 'user',
+  whitelist: 'whitelist'
 };
 
 /**

@@ -15,6 +15,7 @@ import type { Prisma } from "@cr-vif/electric-client/backend";
 export class UserService {
   async createUser(payload: Omit<Prisma.userUncheckedCreateInput, "id">) {
     await assertEmailDoesNotAlreadyExist(payload);
+    await assertEmailInWhitelist(payload.email);
 
     const password = await encryptPassword(payload.password);
 
@@ -169,4 +170,13 @@ const assertEmailDoesNotAlreadyExist = async (user: Omit<Prisma.userUncheckedCre
   }
 
   return existingUser;
+};
+
+const assertEmailInWhitelist = async (email: string) => {
+  if (isDev) return;
+  const whitelist = await db.whitelist.findFirst({ where: { email } });
+
+  if (!whitelist) {
+    throw new AppError(403, "Votre courriel n'est pas autorisée à accéder à cette application");
+  }
 };

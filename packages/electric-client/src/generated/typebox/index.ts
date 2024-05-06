@@ -16,3 +16,5 @@ export * from './udap';
 export * from './udapInput';
 export * from './user';
 export * from './userInput';
+export * from './whitelist';
+export * from './whitelistInput';
