@@ -1,4 +1,4 @@
-import { Center, Divider, Flex, Grid, styled } from "#styled-system/jsx";
+import { Center, Divider, Flex, Grid, Stack, styled } from "#styled-system/jsx";
 import { flex } from "#styled-system/patterns";
 import { useLiveQuery } from "electric-sql/react";
 import { useUser } from "../contexts/AuthContext";
@@ -8,6 +8,7 @@ import Button from "@codegouvfr/react-dsfr/Button";
 import Badge from "@codegouvfr/react-dsfr/Badge";
 import { css } from "#styled-system/css";
 import { Link } from "@tanstack/react-router";
+import { Popover } from "#components/Popover";
 
 export type ReportWithUser = Report & { user?: { email: string; name: string } };
 
@@ -91,7 +92,16 @@ const ReportListItem = ({ report, isLast }: { report: ReportWithUser; isLast?: b
 
   return (
     <Flex direction="column" w="400px">
-      <Link className={css({ backgroundImage: "none" })} to={"/edit/$reportId"} params={{ reportId: report.id }}>
+      <Link
+        className={css({
+          backgroundImage: "none",
+          "&:active": {
+            backgroundColor: "initial !important",
+          },
+        })}
+        to={"/edit/$reportId"}
+        params={{ reportId: report.id }}
+      >
         <article
           className={flex({
             position: "relative",
@@ -111,13 +121,29 @@ const ReportListItem = ({ report, isLast }: { report: ReportWithUser; isLast?: b
           </styled.div>
           {/* <Button onClick={() => mutation.mutate()}>Supprimer</Button> */}
           <styled.div position="absolute" top="10px" right="10px">
-            <Button
-              className={css({ borderRadius: "50%" })}
-              iconId="ri-more-fill"
-              title="Label button"
-              size="small"
-              priority="secondary"
-            />
+            <Popover.Root>
+              <Popover.Trigger
+                asChild
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }}
+              >
+                <Button
+                  className={css({ borderRadius: "50%" })}
+                  iconId="ri-more-fill"
+                  title="Actions"
+                  size="small"
+                  priority="secondary"
+                  type="button"
+                />
+              </Popover.Trigger>
+              <Popover.Positioner>
+                <Popover.Content>
+                  <Stack h="200px" bgColor="red"></Stack>
+                </Popover.Content>
+              </Popover.Positioner>
+            </Popover.Root>
           </styled.div>
         </article>
       </Link>
