@@ -1,15 +1,14 @@
 import { useMutation } from "@tanstack/react-query";
 import { db } from "../db";
-import { type FieldValues, type UseFormReturn, useWatch } from "react-hook-form";
+import { type UseFormReturn, useWatch } from "react-hook-form";
 import useDebounce from "react-use/lib/useDebounce";
 import { Banner } from "./Banner";
 import { useRouter } from "@tanstack/react-router";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { Flex, styled } from "#styled-system/jsx";
 import { fr } from "@codegouvfr/react-dsfr";
-import { css, sva } from "#styled-system/css";
-import { useNetworkState, useObservable } from "react-use";
-import { useRef } from "react";
+import { sva } from "#styled-system/css";
+import { useNetworkState } from "react-use";
 import { useIntersectionObserver } from "../hooks/useIntersectionObserver";
 import Input from "@codegouvfr/react-dsfr/Input";
 import { Report } from "@cr-vif/electric-client/frontend";
@@ -40,7 +39,7 @@ export function SyncFormBanner({ form, baseObject }: { form: UseFormReturn<Repor
   return (
     <>
       <Banner className={styles.root} status={status}>
-        <Flex justifyContent="space-between" alignItems="center" w="100%" h="100%">
+        <Flex justifyContent="space-between" alignItems="center" w="100%" maxW={{ base: "100%", sm: "800px" }} h="100%">
           {/* @ts-ignore dsfr buttons props must have children */}
           <Button
             className={styles.back}
@@ -53,21 +52,23 @@ export function SyncFormBanner({ form, baseObject }: { form: UseFormReturn<Repor
         </Flex>
         <Input className={styles.input} label="" nativeInputProps={{ ...form.register("title") }} />
       </Banner>
-      <Banner ref={ref} className={styles.collapsed} status={status} position="sticky" top="-1px">
-        {isCollapsed ? (
-          <>
-            {/* @ts-ignore dsfr buttons props must have children */}
-            <Button
-              className={styles.back}
-              priority="tertiary no outline"
-              iconId="ri-arrow-left-line"
-              onClick={() => goBack()}
-              size="large"
-            />
-            <styled.span nowrap>{newObject.title}</styled.span>
-          </>
-        ) : null}
-        <Status className={styles.status} status={status} />
+      <Banner ref={ref} status={status} zIndex="2" position="sticky" top="-1px">
+        <Flex className={styles.collapsed}>
+          {isCollapsed ? (
+            <>
+              {/* @ts-ignore dsfr buttons props must have children */}
+              <Button
+                className={styles.back}
+                priority="tertiary no outline"
+                iconId="ri-arrow-left-line"
+                onClick={() => goBack()}
+                size="large"
+              />
+              <styled.span nowrap>{newObject.title}</styled.span>
+            </>
+          ) : null}
+          <Status className={styles.status} status={status} />
+        </Flex>
       </Banner>
     </>
   );
@@ -87,26 +88,26 @@ const syncFormBanner = sva({
   base: {
     root: {
       display: "flex",
-
       zIndex: 2,
       flexDirection: "column",
       justifyContent: "space-between",
-      w: "100%",
+      w: { base: "100%", sm: "100%" },
       px: "15px",
     },
     collapsed: {
       display: "flex",
-      zIndex: 2,
       flexDirection: "row",
-      justifyContent: "space-between",
+      justifyContent: "flex-end",
+
       w: "100%",
-      h: "48px",
+      maxW: { base: "unset", sm: "800px" },
+      h: "40px",
       px: "15px",
     },
     back: { ml: "-10px", color: "black", _hover: { bgColor: "transparent" } },
     label: {},
     input: {
-      w: "100%",
+      w: { base: "100%", sm: "800px" },
       mt: "-5px !important",
       mb: "1em",
       "& input": {
@@ -115,14 +116,14 @@ const syncFormBanner = sva({
     },
     status: {
       fontSize: "10px",
-      justifySelf: "flex-end",
     },
   },
   variants: {
     isCollapsed: {
-      false: {
+      true: {
         collapsed: {
-          justifyContent: "flex-end",
+          justifyContent: "space-between",
+          alignItems: "center",
         },
       },
     },
