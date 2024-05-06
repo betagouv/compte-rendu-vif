@@ -2,7 +2,7 @@ import { Center, Flex, styled } from "#styled-system/jsx";
 import Input from "@codegouvfr/react-dsfr/Input";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
-import { FullWidthButton } from "../components/FullWidthButton";
+import { FullWidthButton } from "#components/FullWidthButton";
 
 const ResetPasswordPage = () => {
   const form = useForm<ResetPasswordFormProps>();

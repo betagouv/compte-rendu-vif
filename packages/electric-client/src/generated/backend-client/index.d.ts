@@ -87,7 +87,7 @@ export type reportPayload<ExtArgs extends $Extensions.Args = $Extensions.Default
     furtherInformation: string | null
     createdByEmail: string
     createdAt: Date
-    serviceInstructeur: string | null
+    serviceInstructeur: number | null
   }, ExtArgs["result"]["report"]>
   composites: {}
 }
@@ -4607,8 +4607,18 @@ export namespace Prisma {
 
   export type AggregateReport = {
     _count: ReportCountAggregateOutputType | null
+    _avg: ReportAvgAggregateOutputType | null
+    _sum: ReportSumAggregateOutputType | null
     _min: ReportMinAggregateOutputType | null
     _max: ReportMaxAggregateOutputType | null
+  }
+
+  export type ReportAvgAggregateOutputType = {
+    serviceInstructeur: number | null
+  }
+
+  export type ReportSumAggregateOutputType = {
+    serviceInstructeur: number | null
   }
 
   export type ReportMinAggregateOutputType = {
@@ -4627,7 +4637,7 @@ export namespace Prisma {
     furtherInformation: string | null
     createdByEmail: string | null
     createdAt: Date | null
-    serviceInstructeur: string | null
+    serviceInstructeur: number | null
   }
 
   export type ReportMaxAggregateOutputType = {
@@ -4646,7 +4656,7 @@ export namespace Prisma {
     furtherInformation: string | null
     createdByEmail: string | null
     createdAt: Date | null
-    serviceInstructeur: string | null
+    serviceInstructeur: number | null
   }
 
   export type ReportCountAggregateOutputType = {
@@ -4669,6 +4679,14 @@ export namespace Prisma {
     _all: number
   }
 
+
+  export type ReportAvgAggregateInputType = {
+    serviceInstructeur?: true
+  }
+
+  export type ReportSumAggregateInputType = {
+    serviceInstructeur?: true
+  }
 
   export type ReportMinAggregateInputType = {
     id?: true
@@ -4766,6 +4784,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: ReportAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ReportSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: ReportMinAggregateInputType
@@ -4796,6 +4826,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: ReportCountAggregateInputType | true
+    _avg?: ReportAvgAggregateInputType
+    _sum?: ReportSumAggregateInputType
     _min?: ReportMinAggregateInputType
     _max?: ReportMaxAggregateInputType
   }
@@ -4817,8 +4849,10 @@ export namespace Prisma {
     furtherInformation: string | null
     createdByEmail: string
     createdAt: Date
-    serviceInstructeur: string | null
+    serviceInstructeur: number | null
     _count: ReportCountAggregateOutputType | null
+    _avg: ReportAvgAggregateOutputType | null
+    _sum: ReportSumAggregateOutputType | null
     _min: ReportMinAggregateOutputType | null
     _max: ReportMaxAggregateOutputType | null
   }
@@ -10630,7 +10664,7 @@ export namespace Prisma {
     furtherInformation?: StringNullableFilter | string | null
     createdByEmail?: StringFilter | string
     createdAt?: DateTimeFilter | Date | string
-    serviceInstructeur?: StringNullableFilter | string | null
+    serviceInstructeur?: IntNullableFilter | number | null
     user?: XOR<UserRelationFilter, userWhereInput>
     report_to_clause?: Report_to_clauseListRelationFilter
   }
@@ -10678,8 +10712,10 @@ export namespace Prisma {
     createdAt?: SortOrder
     serviceInstructeur?: SortOrderInput | SortOrder
     _count?: reportCountOrderByAggregateInput
+    _avg?: reportAvgOrderByAggregateInput
     _max?: reportMaxOrderByAggregateInput
     _min?: reportMinOrderByAggregateInput
+    _sum?: reportSumOrderByAggregateInput
   }
 
   export type reportScalarWhereWithAggregatesInput = {
@@ -10701,7 +10737,7 @@ export namespace Prisma {
     furtherInformation?: StringNullableWithAggregatesFilter | string | null
     createdByEmail?: StringWithAggregatesFilter | string
     createdAt?: DateTimeWithAggregatesFilter | Date | string
-    serviceInstructeur?: StringNullableWithAggregatesFilter | string | null
+    serviceInstructeur?: IntNullableWithAggregatesFilter | number | null
   }
 
   export type report_to_clauseWhereInput = {
@@ -11113,7 +11149,7 @@ export namespace Prisma {
     contacts?: string | null
     furtherInformation?: string | null
     createdAt: Date | string
-    serviceInstructeur?: string | null
+    serviceInstructeur?: number | null
     user: userCreateNestedOneWithoutReportInput
     report_to_clause?: report_to_clauseCreateNestedManyWithoutReportInput
   }
@@ -11134,7 +11170,7 @@ export namespace Prisma {
     furtherInformation?: string | null
     createdByEmail: string
     createdAt: Date | string
-    serviceInstructeur?: string | null
+    serviceInstructeur?: number | null
     report_to_clause?: report_to_clauseUncheckedCreateNestedManyWithoutReportInput
   }
 
@@ -11153,7 +11189,7 @@ export namespace Prisma {
     contacts?: NullableStringFieldUpdateOperationsInput | string | null
     furtherInformation?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    serviceInstructeur?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceInstructeur?: NullableIntFieldUpdateOperationsInput | number | null
     user?: userUpdateOneRequiredWithoutReportNestedInput
     report_to_clause?: report_to_clauseUpdateManyWithoutReportNestedInput
   }
@@ -11174,7 +11210,7 @@ export namespace Prisma {
     furtherInformation?: NullableStringFieldUpdateOperationsInput | string | null
     createdByEmail?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    serviceInstructeur?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceInstructeur?: NullableIntFieldUpdateOperationsInput | number | null
     report_to_clause?: report_to_clauseUncheckedUpdateManyWithoutReportNestedInput
   }
 
@@ -11194,7 +11230,7 @@ export namespace Prisma {
     furtherInformation?: string | null
     createdByEmail: string
     createdAt: Date | string
-    serviceInstructeur?: string | null
+    serviceInstructeur?: number | null
   }
 
   export type reportUpdateManyMutationInput = {
@@ -11212,7 +11248,7 @@ export namespace Prisma {
     contacts?: NullableStringFieldUpdateOperationsInput | string | null
     furtherInformation?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    serviceInstructeur?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceInstructeur?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type reportUncheckedUpdateManyInput = {
@@ -11231,7 +11267,7 @@ export namespace Prisma {
     furtherInformation?: NullableStringFieldUpdateOperationsInput | string | null
     createdByEmail?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    serviceInstructeur?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceInstructeur?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type report_to_clauseCreateInput = {
@@ -11791,6 +11827,17 @@ export namespace Prisma {
     not?: NestedDateTimeNullableFilter | Date | string | null
   }
 
+  export type IntNullableFilter = {
+    equals?: number | null
+    in?: Enumerable<number> | number | null
+    notIn?: Enumerable<number> | number | null
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedIntNullableFilter | number | null
+  }
+
   export type UserRelationFilter = {
     is?: userWhereInput | null
     isNot?: userWhereInput | null
@@ -11812,6 +11859,10 @@ export namespace Prisma {
     furtherInformation?: SortOrder
     createdByEmail?: SortOrder
     createdAt?: SortOrder
+    serviceInstructeur?: SortOrder
+  }
+
+  export type reportAvgOrderByAggregateInput = {
     serviceInstructeur?: SortOrder
   }
 
@@ -11853,6 +11904,10 @@ export namespace Prisma {
     serviceInstructeur?: SortOrder
   }
 
+  export type reportSumOrderByAggregateInput = {
+    serviceInstructeur?: SortOrder
+  }
+
   export type DateTimeNullableWithAggregatesFilter = {
     equals?: Date | string | null
     in?: Enumerable<Date> | Enumerable<string> | Date | string | null
@@ -11865,6 +11920,22 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter
     _min?: NestedDateTimeNullableFilter
     _max?: NestedDateTimeNullableFilter
+  }
+
+  export type IntNullableWithAggregatesFilter = {
+    equals?: number | null
+    in?: Enumerable<number> | number | null
+    notIn?: Enumerable<number> | number | null
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedIntNullableWithAggregatesFilter | number | null
+    _count?: NestedIntNullableFilter
+    _avg?: NestedFloatNullableFilter
+    _sum?: NestedIntNullableFilter
+    _min?: NestedIntNullableFilter
+    _max?: NestedIntNullableFilter
   }
 
   export type ClauseRelationFilter = {
@@ -12152,6 +12223,14 @@ export namespace Prisma {
 
   export type NullableDateTimeFieldUpdateOperationsInput = {
     set?: Date | string | null
+  }
+
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
   }
 
   export type userUpdateOneRequiredWithoutReportNestedInput = {
@@ -12633,6 +12712,33 @@ export namespace Prisma {
     _max?: NestedDateTimeNullableFilter
   }
 
+  export type NestedIntNullableWithAggregatesFilter = {
+    equals?: number | null
+    in?: Enumerable<number> | number | null
+    notIn?: Enumerable<number> | number | null
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedIntNullableWithAggregatesFilter | number | null
+    _count?: NestedIntNullableFilter
+    _avg?: NestedFloatNullableFilter
+    _sum?: NestedIntNullableFilter
+    _min?: NestedIntNullableFilter
+    _max?: NestedIntNullableFilter
+  }
+
+  export type NestedFloatNullableFilter = {
+    equals?: number | null
+    in?: Enumerable<number> | number | null
+    notIn?: Enumerable<number> | number | null
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedFloatNullableFilter | number | null
+  }
+
   export type NestedBoolNullableFilter = {
     equals?: boolean | null
     not?: NestedBoolNullableFilter | boolean | null
@@ -12813,7 +12919,7 @@ export namespace Prisma {
     contacts?: string | null
     furtherInformation?: string | null
     createdAt: Date | string
-    serviceInstructeur?: string | null
+    serviceInstructeur?: number | null
     user: userCreateNestedOneWithoutReportInput
   }
 
@@ -12833,7 +12939,7 @@ export namespace Prisma {
     furtherInformation?: string | null
     createdByEmail: string
     createdAt: Date | string
-    serviceInstructeur?: string | null
+    serviceInstructeur?: number | null
   }
 
   export type reportCreateOrConnectWithoutReport_to_clauseInput = {
@@ -12878,7 +12984,7 @@ export namespace Prisma {
     contacts?: NullableStringFieldUpdateOperationsInput | string | null
     furtherInformation?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    serviceInstructeur?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceInstructeur?: NullableIntFieldUpdateOperationsInput | number | null
     user?: userUpdateOneRequiredWithoutReportNestedInput
   }
 
@@ -12898,7 +13004,7 @@ export namespace Prisma {
     furtherInformation?: NullableStringFieldUpdateOperationsInput | string | null
     createdByEmail?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    serviceInstructeur?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceInstructeur?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type userCreateWithoutDelegation_delegation_createdByTouserInput = {
@@ -13120,7 +13226,7 @@ export namespace Prisma {
     contacts?: string | null
     furtherInformation?: string | null
     createdAt: Date | string
-    serviceInstructeur?: string | null
+    serviceInstructeur?: number | null
     report_to_clause?: report_to_clauseCreateNestedManyWithoutReportInput
   }
 
@@ -13139,7 +13245,7 @@ export namespace Prisma {
     contacts?: string | null
     furtherInformation?: string | null
     createdAt: Date | string
-    serviceInstructeur?: string | null
+    serviceInstructeur?: number | null
     report_to_clause?: report_to_clauseUncheckedCreateNestedManyWithoutReportInput
   }
 
@@ -13259,7 +13365,7 @@ export namespace Prisma {
     furtherInformation?: StringNullableFilter | string | null
     createdByEmail?: StringFilter | string
     createdAt?: DateTimeFilter | Date | string
-    serviceInstructeur?: StringNullableFilter | string | null
+    serviceInstructeur?: IntNullableFilter | number | null
   }
 
   export type udapUpsertWithoutUserInput = {
@@ -13389,7 +13495,7 @@ export namespace Prisma {
     contacts?: string | null
     furtherInformation?: string | null
     createdAt: Date | string
-    serviceInstructeur?: string | null
+    serviceInstructeur?: number | null
   }
 
   export type delegationUpdateWithoutUser_delegation_createdByTouserInput = {
@@ -13431,7 +13537,7 @@ export namespace Prisma {
     contacts?: NullableStringFieldUpdateOperationsInput | string | null
     furtherInformation?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    serviceInstructeur?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceInstructeur?: NullableIntFieldUpdateOperationsInput | number | null
     report_to_clause?: report_to_clauseUpdateManyWithoutReportNestedInput
   }
 
@@ -13450,7 +13556,7 @@ export namespace Prisma {
     contacts?: NullableStringFieldUpdateOperationsInput | string | null
     furtherInformation?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    serviceInstructeur?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceInstructeur?: NullableIntFieldUpdateOperationsInput | number | null
     report_to_clause?: report_to_clauseUncheckedUpdateManyWithoutReportNestedInput
   }
 
@@ -13469,7 +13575,7 @@ export namespace Prisma {
     contacts?: NullableStringFieldUpdateOperationsInput | string | null
     furtherInformation?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    serviceInstructeur?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceInstructeur?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
 

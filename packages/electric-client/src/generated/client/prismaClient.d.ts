@@ -87,7 +87,10 @@ export type ReportPayload<ExtArgs extends $Extensions.Args = $Extensions.Default
     furtherInformation: string | null
     createdByEmail: string
     createdAt: Date
-    serviceInstructeur: string | null
+    /**
+     * @zod.number.int().gte(-2147483648).lte(2147483647)
+     */
+    serviceInstructeur: number | null
   }, ExtArgs["result"]["report"]>
   composites: {}
 }
@@ -4371,8 +4374,18 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type AggregateReport = {
     _count: ReportCountAggregateOutputType | null
+    _avg: ReportAvgAggregateOutputType | null
+    _sum: ReportSumAggregateOutputType | null
     _min: ReportMinAggregateOutputType | null
     _max: ReportMaxAggregateOutputType | null
+  }
+
+  export type ReportAvgAggregateOutputType = {
+    serviceInstructeur: number | null
+  }
+
+  export type ReportSumAggregateOutputType = {
+    serviceInstructeur: number | null
   }
 
   export type ReportMinAggregateOutputType = {
@@ -4391,7 +4404,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     furtherInformation: string | null
     createdByEmail: string | null
     createdAt: Date | null
-    serviceInstructeur: string | null
+    serviceInstructeur: number | null
   }
 
   export type ReportMaxAggregateOutputType = {
@@ -4410,7 +4423,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     furtherInformation: string | null
     createdByEmail: string | null
     createdAt: Date | null
-    serviceInstructeur: string | null
+    serviceInstructeur: number | null
   }
 
   export type ReportCountAggregateOutputType = {
@@ -4433,6 +4446,14 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     _all: number
   }
 
+
+  export type ReportAvgAggregateInputType = {
+    serviceInstructeur?: true
+  }
+
+  export type ReportSumAggregateInputType = {
+    serviceInstructeur?: true
+  }
 
   export type ReportMinAggregateInputType = {
     id?: true
@@ -4530,6 +4551,18 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: ReportAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ReportSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: ReportMinAggregateInputType
@@ -4560,6 +4593,8 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     take?: number
     skip?: number
     _count?: ReportCountAggregateInputType | true
+    _avg?: ReportAvgAggregateInputType
+    _sum?: ReportSumAggregateInputType
     _min?: ReportMinAggregateInputType
     _max?: ReportMaxAggregateInputType
   }
@@ -4581,8 +4616,10 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     furtherInformation: string | null
     createdByEmail: string
     createdAt: Date
-    serviceInstructeur: string | null
+    serviceInstructeur: number | null
     _count: ReportCountAggregateOutputType | null
+    _avg: ReportAvgAggregateOutputType | null
+    _sum: ReportSumAggregateOutputType | null
     _min: ReportMinAggregateOutputType | null
     _max: ReportMaxAggregateOutputType | null
   }
@@ -8591,7 +8628,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     furtherInformation?: StringNullableFilter | string | null
     createdByEmail?: StringFilter | string
     createdAt?: DateTimeFilter | Date | string
-    serviceInstructeur?: StringNullableFilter | string | null
+    serviceInstructeur?: IntNullableFilter | number | null
     user?: XOR<UserRelationFilter, UserWhereInput>
     report_to_clause?: Report_to_clauseListRelationFilter
   }
@@ -8639,8 +8676,10 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     createdAt?: SortOrder
     serviceInstructeur?: SortOrderInput | SortOrder
     _count?: ReportCountOrderByAggregateInput
+    _avg?: ReportAvgOrderByAggregateInput
     _max?: ReportMaxOrderByAggregateInput
     _min?: ReportMinOrderByAggregateInput
+    _sum?: ReportSumOrderByAggregateInput
   }
 
   export type ReportScalarWhereWithAggregatesInput = {
@@ -8662,7 +8701,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     furtherInformation?: StringNullableWithAggregatesFilter | string | null
     createdByEmail?: StringWithAggregatesFilter | string
     createdAt?: DateTimeWithAggregatesFilter | Date | string
-    serviceInstructeur?: StringNullableWithAggregatesFilter | string | null
+    serviceInstructeur?: IntNullableWithAggregatesFilter | number | null
   }
 
   export type Report_to_clauseWhereInput = {
@@ -8974,7 +9013,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     contacts?: string | null
     furtherInformation?: string | null
     createdAt: Date | string
-    serviceInstructeur?: string | null
+    serviceInstructeur?: number | null
     user: UserCreateNestedOneWithoutReportInput
     report_to_clause?: Report_to_clauseCreateNestedManyWithoutReportInput
   }
@@ -8995,7 +9034,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     furtherInformation?: string | null
     createdByEmail: string
     createdAt: Date | string
-    serviceInstructeur?: string | null
+    serviceInstructeur?: number | null
     report_to_clause?: Report_to_clauseUncheckedCreateNestedManyWithoutReportInput
   }
 
@@ -9014,7 +9053,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     contacts?: NullableStringFieldUpdateOperationsInput | string | null
     furtherInformation?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    serviceInstructeur?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceInstructeur?: NullableIntFieldUpdateOperationsInput | number | null
     user?: UserUpdateOneRequiredWithoutReportNestedInput
     report_to_clause?: Report_to_clauseUpdateManyWithoutReportNestedInput
   }
@@ -9035,7 +9074,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     furtherInformation?: NullableStringFieldUpdateOperationsInput | string | null
     createdByEmail?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    serviceInstructeur?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceInstructeur?: NullableIntFieldUpdateOperationsInput | number | null
     report_to_clause?: Report_to_clauseUncheckedUpdateManyWithoutReportNestedInput
   }
 
@@ -9055,7 +9094,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     furtherInformation?: string | null
     createdByEmail: string
     createdAt: Date | string
-    serviceInstructeur?: string | null
+    serviceInstructeur?: number | null
   }
 
   export type ReportUpdateManyMutationInput = {
@@ -9073,7 +9112,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     contacts?: NullableStringFieldUpdateOperationsInput | string | null
     furtherInformation?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    serviceInstructeur?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceInstructeur?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type ReportUncheckedUpdateManyInput = {
@@ -9092,7 +9131,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     furtherInformation?: NullableStringFieldUpdateOperationsInput | string | null
     createdByEmail?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    serviceInstructeur?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceInstructeur?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type Report_to_clauseCreateInput = {
@@ -9454,6 +9493,17 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     not?: NestedDateTimeFilter | Date | string
   }
 
+  export type IntNullableFilter = {
+    equals?: number | null
+    in?: Enumerable<number> | number | null
+    notIn?: Enumerable<number> | number | null
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedIntNullableFilter | number | null
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -9475,6 +9525,10 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     furtherInformation?: SortOrder
     createdByEmail?: SortOrder
     createdAt?: SortOrder
+    serviceInstructeur?: SortOrder
+  }
+
+  export type ReportAvgOrderByAggregateInput = {
     serviceInstructeur?: SortOrder
   }
 
@@ -9513,6 +9567,10 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     furtherInformation?: SortOrder
     createdByEmail?: SortOrder
     createdAt?: SortOrder
+    serviceInstructeur?: SortOrder
+  }
+
+  export type ReportSumOrderByAggregateInput = {
     serviceInstructeur?: SortOrder
   }
 
@@ -9560,6 +9618,22 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     _count?: NestedIntFilter
     _min?: NestedDateTimeFilter
     _max?: NestedDateTimeFilter
+  }
+
+  export type IntNullableWithAggregatesFilter = {
+    equals?: number | null
+    in?: Enumerable<number> | number | null
+    notIn?: Enumerable<number> | number | null
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedIntNullableWithAggregatesFilter | number | null
+    _count?: NestedIntNullableFilter
+    _avg?: NestedFloatNullableFilter
+    _sum?: NestedIntNullableFilter
+    _min?: NestedIntNullableFilter
+    _max?: NestedIntNullableFilter
   }
 
   export type ClauseRelationFilter = {
@@ -9808,6 +9882,14 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type DateTimeFieldUpdateOperationsInput = {
     set?: Date | string
+  }
+
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
   }
 
   export type UserUpdateOneRequiredWithoutReportNestedInput = {
@@ -10138,6 +10220,17 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     not?: NestedDateTimeFilter | Date | string
   }
 
+  export type NestedIntNullableFilter = {
+    equals?: number | null
+    in?: Enumerable<number> | number | null
+    notIn?: Enumerable<number> | number | null
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedIntNullableFilter | number | null
+  }
+
   export type NestedStringNullableWithAggregatesFilter = {
     equals?: string | null
     in?: Enumerable<string> | string | null
@@ -10153,17 +10246,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     _count?: NestedIntNullableFilter
     _min?: NestedStringNullableFilter
     _max?: NestedStringNullableFilter
-  }
-
-  export type NestedIntNullableFilter = {
-    equals?: number | null
-    in?: Enumerable<number> | number | null
-    notIn?: Enumerable<number> | number | null
-    lt?: number
-    lte?: number
-    gt?: number
-    gte?: number
-    not?: NestedIntNullableFilter | number | null
   }
 
   export type NestedDateTimeNullableWithAggregatesFilter = {
@@ -10192,6 +10274,33 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     _count?: NestedIntFilter
     _min?: NestedDateTimeFilter
     _max?: NestedDateTimeFilter
+  }
+
+  export type NestedIntNullableWithAggregatesFilter = {
+    equals?: number | null
+    in?: Enumerable<number> | number | null
+    notIn?: Enumerable<number> | number | null
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedIntNullableWithAggregatesFilter | number | null
+    _count?: NestedIntNullableFilter
+    _avg?: NestedFloatNullableFilter
+    _sum?: NestedIntNullableFilter
+    _min?: NestedIntNullableFilter
+    _max?: NestedIntNullableFilter
+  }
+
+  export type NestedFloatNullableFilter = {
+    equals?: number | null
+    in?: Enumerable<number> | number | null
+    notIn?: Enumerable<number> | number | null
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedFloatNullableFilter | number | null
   }
 
   export type NestedBoolNullableFilter = {
@@ -10482,7 +10591,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     contacts?: string | null
     furtherInformation?: string | null
     createdAt: Date | string
-    serviceInstructeur?: string | null
+    serviceInstructeur?: number | null
     user: UserCreateNestedOneWithoutReportInput
   }
 
@@ -10502,7 +10611,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     furtherInformation?: string | null
     createdByEmail: string
     createdAt: Date | string
-    serviceInstructeur?: string | null
+    serviceInstructeur?: number | null
   }
 
   export type ReportCreateOrConnectWithoutReport_to_clauseInput = {
@@ -10547,7 +10656,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     contacts?: NullableStringFieldUpdateOperationsInput | string | null
     furtherInformation?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    serviceInstructeur?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceInstructeur?: NullableIntFieldUpdateOperationsInput | number | null
     user?: UserUpdateOneRequiredWithoutReportNestedInput
   }
 
@@ -10567,7 +10676,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     furtherInformation?: NullableStringFieldUpdateOperationsInput | string | null
     createdByEmail?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    serviceInstructeur?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceInstructeur?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type UserCreateWithoutUdapInput = {
@@ -10681,7 +10790,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     contacts?: string | null
     furtherInformation?: string | null
     createdAt: Date | string
-    serviceInstructeur?: string | null
+    serviceInstructeur?: number | null
     report_to_clause?: Report_to_clauseCreateNestedManyWithoutReportInput
   }
 
@@ -10700,7 +10809,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     contacts?: string | null
     furtherInformation?: string | null
     createdAt: Date | string
-    serviceInstructeur?: string | null
+    serviceInstructeur?: number | null
     report_to_clause?: Report_to_clauseUncheckedCreateNestedManyWithoutReportInput
   }
 
@@ -10820,7 +10929,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     furtherInformation?: StringNullableFilter | string | null
     createdByEmail?: StringFilter | string
     createdAt?: DateTimeFilter | Date | string
-    serviceInstructeur?: StringNullableFilter | string | null
+    serviceInstructeur?: IntNullableFilter | number | null
   }
 
   export type UdapUpsertWithoutUserInput = {
@@ -10950,7 +11059,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     contacts?: string | null
     furtherInformation?: string | null
     createdAt: Date | string
-    serviceInstructeur?: string | null
+    serviceInstructeur?: number | null
   }
 
   export type DelegationUpdateWithoutUser_delegation_createdByTouserInput = {
@@ -10992,7 +11101,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     contacts?: NullableStringFieldUpdateOperationsInput | string | null
     furtherInformation?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    serviceInstructeur?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceInstructeur?: NullableIntFieldUpdateOperationsInput | number | null
     report_to_clause?: Report_to_clauseUpdateManyWithoutReportNestedInput
   }
 
@@ -11011,7 +11120,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     contacts?: NullableStringFieldUpdateOperationsInput | string | null
     furtherInformation?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    serviceInstructeur?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceInstructeur?: NullableIntFieldUpdateOperationsInput | number | null
     report_to_clause?: Report_to_clauseUncheckedUpdateManyWithoutReportNestedInput
   }
 
@@ -11030,7 +11139,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     contacts?: NullableStringFieldUpdateOperationsInput | string | null
     furtherInformation?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    serviceInstructeur?: NullableStringFieldUpdateOperationsInput | string | null
+    serviceInstructeur?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
 

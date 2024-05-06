@@ -36,22 +36,7 @@ export namespace Endpoints {
     method: "POST";
     path: "/api/login";
     parameters: {
-      body: {
-        email: string;
-        password: string;
-        udap: {
-          id: string;
-          department: string;
-          completeCoords?: string | undefined;
-          visible?: boolean | undefined;
-          name?: string | undefined;
-          address?: string | undefined;
-          zipCode?: string | undefined;
-          city?: string | undefined;
-          phone?: string | undefined;
-          email?: string | undefined;
-        };
-      };
+      body: { email: string; password: string };
     };
     response: {
       user: {

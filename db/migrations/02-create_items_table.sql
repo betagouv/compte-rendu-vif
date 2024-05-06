@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS "report" (
   "furtherInformation" TEXT,
   "createdByEmail" TEXT NOT NULL REFERENCES "user"(email) ON DELETE SET NULL,
   "createdAt" TIMESTAMP NOT NULL,
-  "serviceInstructeur" TEXT
+  "serviceInstructeur" INT
 );
 
 CREATE TABLE IF NOT EXISTS "clause" (

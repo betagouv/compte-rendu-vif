@@ -9,7 +9,7 @@
     /* Bundler mode */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
-    "resolveJsonModule": false,
+    "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
@@ -20,7 +20,8 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "paths": {
-      "#styled-system/*": ["./styled-system/*"]
+      "#styled-system/*": ["./styled-system/*"],
+      "#components/*": ["./src/components/*"]
     }
   },
   "include": ["src/**/*.tsx", "src/**/*.ts"],

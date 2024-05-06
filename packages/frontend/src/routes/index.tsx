@@ -4,14 +4,14 @@ import Button from "@codegouvfr/react-dsfr/Button";
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { v4 } from "uuid";
-import { Banner } from "../components/Banner";
-import { EnsureUser } from "../components/EnsureUser";
-import { Tabs } from "../components/Tabs";
+import { Banner } from "#components/Banner";
+import { EnsureUser } from "#components/EnsureUser";
+import { Tabs } from "#components/Tabs";
 import { useUser } from "../contexts/AuthContext";
 import { db } from "../db";
 import { AllReports, MyReports } from "../features/ReportList";
 import { useNetworkState } from "react-use";
-import { SyncFormStatus } from "../components/SyncForm";
+import { SyncFormStatus } from "#components/SyncForm";
 
 const Index = () => {
   const user = useUser()!;

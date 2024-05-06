@@ -1,4 +1,4 @@
-import { Center, Divider, Flex, Stack } from "#styled-system/jsx";
+import { Box, Center, Divider, Flex, Stack } from "#styled-system/jsx";
 import { useTabsContext } from "@ark-ui/react/tabs";
 import Button from "@codegouvfr/react-dsfr/Button";
 import Input from "@codegouvfr/react-dsfr/Input";
@@ -6,11 +6,12 @@ import Select from "@codegouvfr/react-dsfr/Select";
 import { format, parse } from "date-fns";
 import { useRef } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
-import { InputGroupWithTitle } from "../components/InputGroup";
-import { SpaceTypeChips } from "../components/chips/SpaceTypeChips";
+import { InputGroupWithTitle } from "#components/InputGroup";
+import { SpaceTypeChips } from "#components/chips/SpaceTypeChips";
 import { useUser } from "../contexts/AuthContext";
 import type { Report } from "@cr-vif/electric-client/frontend";
 import { css } from "#styled-system/css";
+import { ServiceInstructeurSelect } from "./ServiceInstructeurSelect";
 
 export const InfoForm = () => {
   const form = useFormContext<Report>();
@@ -91,11 +92,21 @@ export const InfoForm = () => {
             label="Adresse du projet*"
             nativeInputProps={form.register("applicantAddress")}
           />
-          <Input
+          <Box
+            className={css({
+              flex: {
+                base: "none",
+                sm: 1,
+              },
+            })}
+          >
+            <ServiceInstructeurSelect />
+          </Box>
+          {/* <Input
             className={css({ flex: { base: "none", sm: 1 } })}
             label="Service instructeur*"
             nativeInputProps={form.register("serviceInstructeur")}
-          />
+          /> */}
         </Stack>
         <Stack gap={{ base: "0", sm: "16px" }} direction={{ base: "column", sm: "row" }} mt="16px">
           <Input

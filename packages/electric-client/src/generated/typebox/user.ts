@@ -36,7 +36,7 @@ export const user = Type.Object({
       furtherInformation: Type.Optional(Type.String()),
       createdByEmail: Type.String(),
       createdAt: Type.String(),
-      serviceInstructeur: Type.Optional(Type.String()),
+      serviceInstructeur: Type.Optional(Type.Number()),
     })
   ),
   udap: Type.Object({

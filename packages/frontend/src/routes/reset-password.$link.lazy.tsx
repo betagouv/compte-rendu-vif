@@ -1,8 +1,8 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import { Center, Flex, styled } from "#styled-system/jsx";
-import { FullWidthButton } from "../components/FullWidthButton";
-import { PasswordInput } from "../components/PasswordInput";
+import { FullWidthButton } from "#components/FullWidthButton";
+import { PasswordInput } from "#components/PasswordInput";
 
 const ResetPasswordAction = () => {
   const form = useForm<any>();

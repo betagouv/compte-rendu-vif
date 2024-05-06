@@ -11,9 +11,9 @@ import {
   type UseFormProps,
   type UseFormRegister,
 } from "react-hook-form";
-import { EnsureUser } from "../components/EnsureUser";
-import { SyncFormBanner } from "../components/SyncForm";
-import { Tabs } from "../components/Tabs";
+import { EnsureUser } from "#components/EnsureUser";
+import { SyncFormBanner } from "#components/SyncForm";
+import { Tabs } from "#components/Tabs";
 import { db } from "../db";
 import { InfoForm } from "../features/InfoForm";
 import { NotesForm } from "../features/NotesForm";
@@ -80,9 +80,21 @@ const WithReport = ({ report }: { report: Report }) => {
     {
       id: "info",
       label: "RDV",
-      className: css({ mr: "calc(((100vw - 800px) / 2 + 16px) * -1)", pl: "calc((100vw - 800px) / 2 + 16px)" }),
+      className: css({
+        position: "absolute",
+        left: "max(calc((100vw - 800px) / 2 + 8px), 16px)",
+        // mr: "calc(((100vw - 800px) / 2 + 16px) * -1)",
+        // pl: "min(calc((100vw - 800px) / 2 + 16px), calc(100vw / 2))",
+      }),
     },
-    { id: "notes", label: "Bilan", className: css({ mr: "-50px", pl: "50px" }) },
+    {
+      id: "notes",
+      label: "Bilan",
+      className: css({
+        position: "absolute",
+        left: "16px",
+      }),
+    },
   ];
 
   const previousValuesRef = useRef<Report>(report);
@@ -128,8 +140,8 @@ const WithReport = ({ report }: { report: Report }) => {
             <Tabs.Root defaultValue="info" onValueChange={(e) => setTab(e.value)} value={tab}>
               <Tabs.List>
                 {options.map((option) => (
-                  <Tabs.Trigger className={option.className} key={option.id} value={option.id}>
-                    {option.label}
+                  <Tabs.Trigger key={option.id} value={option.id} position="relative">
+                    <Box className={option.className}>{option.label}</Box>
                   </Tabs.Trigger>
                 ))}
                 <Tabs.Indicator />

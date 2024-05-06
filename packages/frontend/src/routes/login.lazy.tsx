@@ -1,7 +1,7 @@
 import { Center, Flex, styled } from "#styled-system/jsx";
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { LoginForm } from "../components/LoginForm";
-import { RedirectIfUser } from "../components/RedirectIfUser";
+import { LoginForm } from "#components/LoginForm";
+import { RedirectIfUser } from "#components/RedirectIfUser";
 
 const LoginPage = () => {
   return (

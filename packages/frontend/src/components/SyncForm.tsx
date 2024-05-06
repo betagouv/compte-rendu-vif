@@ -44,7 +44,7 @@ export function SyncFormBanner({ form, baseObject }: { form: UseFormReturn<Repor
           {/* @ts-ignore dsfr buttons props must have children */}
           <Button
             className={styles.back}
-            priority="tertiary"
+            priority="tertiary no outline"
             iconId="ri-arrow-left-line"
             onClick={() => goBack()}
             size="large"
@@ -59,7 +59,7 @@ export function SyncFormBanner({ form, baseObject }: { form: UseFormReturn<Repor
             {/* @ts-ignore dsfr buttons props must have children */}
             <Button
               className={styles.back}
-              priority="tertiary"
+              priority="tertiary no outline"
               iconId="ri-arrow-left-line"
               onClick={() => goBack()}
               size="large"

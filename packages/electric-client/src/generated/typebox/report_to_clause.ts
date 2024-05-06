@@ -25,7 +25,7 @@ export const report_to_clause = Type.Object({
     furtherInformation: Type.Optional(Type.String()),
     createdByEmail: Type.String(),
     createdAt: Type.String(),
-    serviceInstructeur: Type.Optional(Type.String()),
+    serviceInstructeur: Type.Optional(Type.Number()),
   }),
 });
 

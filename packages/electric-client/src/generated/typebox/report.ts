@@ -16,7 +16,7 @@ export const report = Type.Object({
   furtherInformation: Type.Optional(Type.String()),
   createdByEmail: Type.String(),
   createdAt: Type.String(),
-  serviceInstructeur: Type.Optional(Type.String()),
+  serviceInstructeur: Type.Optional(Type.Number()),
   user: Type.Object({
     email: Type.String(),
     name: Type.String(),

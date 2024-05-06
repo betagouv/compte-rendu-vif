@@ -19,6 +19,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   const electricQuery = useQuery({
     queryKey: ["electric", data?.token!],
     queryFn: async () => {
+      console.log(electric);
       if (electric.isConnected) electric.disconnect();
       await electric.connect(data.token!);
 
@@ -31,6 +32,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     },
     enabled: !!data?.token,
     refetchOnWindowFocus: false,
+    onError: (e) => console.error(e),
   });
 
   if (electricQuery.isError) {

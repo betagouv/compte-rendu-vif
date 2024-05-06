@@ -18,7 +18,7 @@
     "client:complete": "vite-node ./scripts/completePrismaClient.ts"
   },
   "dependencies": {
-    "@ark-ui/anatomy": "^2.3.1",
+    "@ark-ui/anatomy": "^3.0.0",
     "@ark-ui/react": "^2.2.3",
     "@codegouvfr/react-dsfr": "^1.9.2",
     "@cr-vif/electric-client": "workspace:*",
