@@ -58,7 +58,8 @@
     "zod": "^3.22.4"
   },
   "imports": {
-    "#styled-system/*": "./styled-system/*"
+    "#styled-system/*": "./styled-system/*",
+    "#components/*": "./src/components/*"
   },
   "devDependencies": {
     "@pandabox/unplugin": "^0.0.1",
