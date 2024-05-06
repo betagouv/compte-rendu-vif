@@ -106,6 +106,6 @@ export default [
       "DROP TRIGGER IF EXISTS delete_main_chip_into_oplog;",
       "CREATE TRIGGER delete_main_chip_into_oplog\n   AFTER DELETE ON \"main\".\"chip\"\n   WHEN 1 == (SELECT flag from _electric_trigger_settings WHERE tablename == 'main.chip')\nBEGIN\n  INSERT INTO _electric_oplog (namespace, tablename, optype, primaryKey, newRow, oldRow, timestamp)\n  VALUES ('main', 'chip', 'DELETE', json_object('key', old.\"key\", 'udap_id', old.\"udap_id\", 'value', old.\"value\"), NULL, json_object('key', old.\"key\", 'text', old.\"text\", 'udap_id', old.\"udap_id\", 'value', old.\"value\"), NULL);\nEND;"
     ],
-    "version": "5"
+    "version": "4"
   }
 ]

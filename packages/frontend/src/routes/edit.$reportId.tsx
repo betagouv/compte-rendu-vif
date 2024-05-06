@@ -83,8 +83,6 @@ const WithReport = ({ report }: { report: Report }) => {
       className: css({
         position: "absolute",
         left: "max(calc((100vw - 800px) / 2 + 8px), 16px)",
-        // mr: "calc(((100vw - 800px) / 2 + 16px) * -1)",
-        // pl: "min(calc((100vw - 800px) / 2 + 16px), calc(100vw / 2))",
       }),
     },
     {

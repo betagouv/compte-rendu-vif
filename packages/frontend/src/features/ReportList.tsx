@@ -1,4 +1,4 @@
-import { Center, Divider, Flex, styled } from "#styled-system/jsx";
+import { Center, Divider, Flex, Grid, styled } from "#styled-system/jsx";
 import { flex } from "#styled-system/patterns";
 import { useLiveQuery } from "electric-sql/react";
 import { useUser } from "../contexts/AuthContext";
@@ -35,11 +35,7 @@ export const MyReports = () => {
     return <Center>Une erreur s'est produite</Center>;
   }
 
-  return (
-    <Center>
-      <ReportList reports={myReports.results ?? []} />
-    </Center>
-  );
+  return <ReportList reports={myReports.results ?? []} />;
 };
 
 export const AllReports = () => {
@@ -63,23 +59,30 @@ export const AllReports = () => {
     return <Center>Une erreur s'est produite</Center>;
   }
 
-  return (
-    <Center>
-      <ReportList reports={allReports.results ?? []} />
-    </Center>
-  );
+  return <ReportList reports={allReports.results ?? []} />;
 };
 
 export const ReportList = ({ reports }: { reports: ReportWithUser[] }) => {
   const error = reports.length === 0 ? <Center>Aucun compte-rendu</Center> : null;
 
   return (
-    <Flex flexDir="column" w="484px">
+    <Grid
+      className={css({
+        "& > *:nth-child(-n+10)": {
+          gridColumn: 1 /* Place in the first column */,
+        },
+      })}
+      gap="8px 28px"
+      // gridTemplateColumns="repeat(2, 1fr)"
+      gridTemplateRows="repeat(10, 1fr)"
+      gridAutoFlow="column"
+      w="100%"
+    >
       {error ??
         reports.map((report, index) => (
           <ReportListItem key={report.id} report={report} isLast={index === reports.length - 1} />
         ))}
-    </Flex>
+    </Grid>
   );
 };
 
@@ -87,8 +90,8 @@ const ReportListItem = ({ report, isLast }: { report: ReportWithUser; isLast?: b
   // const mutation = useMutation({ mutationFn: () => db.report.delete({ where: { id: report.id } }) });
 
   return (
-    <>
-      <Link to={"/edit/$reportId"} params={{ reportId: report.id }}>
+    <Flex direction="column" w="400px">
+      <Link className={css({ backgroundImage: "none" })} to={"/edit/$reportId"} params={{ reportId: report.id }}>
         <article
           className={flex({
             position: "relative",
@@ -118,8 +121,8 @@ const ReportListItem = ({ report, isLast }: { report: ReportWithUser; isLast?: b
           </styled.div>
         </article>
       </Link>
-      {isLast ? null : <Divider mt="12px" mb="8px" />}
-    </>
+      {isLast ? null : <Divider mt="16px" mb="8px" />}
+    </Flex>
   );
 };
 

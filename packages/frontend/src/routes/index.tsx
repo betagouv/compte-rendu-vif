@@ -1,5 +1,5 @@
 import { css } from "#styled-system/css";
-import { CenterProps, Flex, styled } from "#styled-system/jsx";
+import { Box, Center, CenterProps, Flex, styled } from "#styled-system/jsx";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, redirect } from "@tanstack/react-router";
@@ -17,8 +17,22 @@ const Index = () => {
   const user = useUser()!;
 
   const options = [
-    { id: "my", label: user.name },
-    { id: "udap", label: "UDAP" },
+    {
+      id: "my",
+      label: user.name,
+      className: css({
+        position: "absolute",
+        left: "max(calc((100vw - 100%) / 2 + 24px), 16px)",
+      }),
+    },
+    {
+      id: "udap",
+      label: "UDAP",
+      className: css({
+        position: "absolute",
+        left: "16px",
+      }),
+    },
   ];
 
   const createReportMutation = useMutation({
@@ -50,18 +64,20 @@ const Index = () => {
       <Tabs.Root defaultValue="my">
         <Tabs.List>
           {options.map((option) => (
-            <Tabs.Trigger key={option.id} value={option.id}>
-              {option.label}
+            <Tabs.Trigger key={option.id} value={option.id} position="relative">
+              <Box className={option.className}>{option.label}</Box>
             </Tabs.Trigger>
           ))}
           <Tabs.Indicator />
         </Tabs.List>
-        <Tabs.Content value="my">
-          <MyReports />
-        </Tabs.Content>
-        <Tabs.Content value="udap">
-          <AllReports />
-        </Tabs.Content>
+        <Center>
+          <Tabs.Content value="my">
+            <MyReports />
+          </Tabs.Content>
+          <Tabs.Content value="udap">
+            <AllReports />
+          </Tabs.Content>
+        </Center>
       </Tabs.Root>
     </Flex>
   );
