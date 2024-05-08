@@ -32,7 +32,7 @@ jobs:
           context: .
           push: true
           target: backend
-          tags: ${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}/${{ env.IMAGE_NAME }}-backend:${{ env.BRANCH_NAME }}
+          tags: ${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}/backend:${{ env.BRANCH_NAME }}
 
   build-and-push-frontend:
     runs-on: ubuntu-latest
@@ -56,4 +56,4 @@ jobs:
           context: .
           push: true
           target: frontend
-          tags: ${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}/${{ env.IMAGE_NAME }}-frontend:${{ env.BRANCH_NAME }}
+          tags: ${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}/frontend:${{ env.BRANCH_NAME }}
