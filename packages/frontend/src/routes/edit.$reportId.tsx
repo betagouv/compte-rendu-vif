@@ -119,8 +119,6 @@ const WithReport = ({ report }: { report: Report }) => {
   }, [report]);
 
   const onSubmit = (values: Report) => {
-    console.log(values);
-
     navigate({
       to: "/export/$reportId",
       params: {

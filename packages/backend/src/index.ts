@@ -10,7 +10,6 @@ const debug = makeDebug("index");
 
 const start = async () => {
   await registerViteHmrServerRestart();
-  console.log(ENV.DATABASE_URL);
 
   debug("Starting fastify server");
   const fastifyInstance = await initFastify();

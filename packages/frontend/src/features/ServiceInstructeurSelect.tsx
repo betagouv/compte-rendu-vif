@@ -59,7 +59,6 @@ export const ServiceInstructeurSelect = () => {
 };
 
 const A = forwardRef((props, ref) => {
-  console.log(props);
   return <Input ref={ref} label="Service instructeur*" nativeInputProps={props} />;
 });
 

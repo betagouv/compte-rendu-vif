@@ -29,7 +29,6 @@ export const MyReports = () => {
   );
 
   const chips = useLiveQuery(db.chip.liveMany());
-  console.log(chips);
 
   if (myReports.error) {
     console.error(myReports.error);

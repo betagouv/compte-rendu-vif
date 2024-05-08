@@ -4,20 +4,20 @@ import { useLiveQuery } from "electric-sql/react";
 import { db } from "../../db";
 import { groupBy } from "pastable";
 
-export const useChipOptions = (key: string) => {
+export const useChipOptions = (key?: string) => {
   const user = useUser()!;
 
   // retrieve all chips with the given key
   const decisionsChipsQuery = useLiveQuery(
     db.chip.liveMany({
       where: {
-        key,
+        ...(key ? { key } : {}),
         udap_id: { in: ["ALL", user.udap.id] },
       },
     }),
   );
 
-  const grouped = groupBy(decisionsChipsQuery.results ?? [], "value");
+  const grouped = groupBy(decisionsChipsQuery.results ?? [], (item) => `${item.key}-${item.value}`);
 
   // keep only the most specific chip for each value
   return Object.values(grouped).map((value) => {

@@ -9,7 +9,7 @@ export const SpaceTypeChips = (props: FlexProps) => {
 
   const selected = useWatch({ control: form.control, name: "projectSpaceType" })?.split(",") ?? [];
 
-  const chipOptions = useChipOptions("contacts-utiles", true);
+  const chipOptions = useChipOptions("type-espace");
   const options: ChipGroupOption[] = (chipOptions ?? []).map((chip) => ({
     label: chip.value,
     key: chip.value,
@@ -17,7 +17,6 @@ export const SpaceTypeChips = (props: FlexProps) => {
 
   return (
     <ChipGroup
-      isMulti
       options={options}
       value={selected}
       {...props}
