@@ -67,7 +67,7 @@ Il s’agit d’un service déconcentré du ministère de la Culture mettant en 
 INSERT INTO chip(key,value,udap_id,text) VALUES ('bonnes-pratiques','SPR','ALL','Qu’est-ce qu’un SPR | site patrimonial remarquable ? 
 Il s’agit d’un ensemble urbain protégé par un règlement patrimonial spécifique pour mettre en valeur les espaces bâtis et non bâtis. (www.culture.gouv.fr/Thematiques/Monuments-Sites/Monuments-historiques-sites-patrimoniaux/Les-sites-patrimoniaux-remarquables).');
 INSERT INTO chip(key,value,udap_id,text) VALUES ('bonnes-pratiques','Site','ALL','Qu’est-ce qu’un site ? 
-Il s’agit d’une politique visant à préserver des lieux au regard de leur qualité paysagère. Consultez le site de la DREAL pour en savoir plus. (www.nouvelle-aquitaine.developpement-durable.gouv.fr/sites-r1150.html).');
+Il s’agit d’une politique visant à préserver des lieux au regard de leur qualité paysagère. Consultez le site de la DREAL pour en savoir plus.<br/>(www.nouvelle-aquitaine.developpement-durable.gouv.fr/sites-r1150.html).');
 INSERT INTO chip(key,value,udap_id,text) VALUES ('bonnes-pratiques','Des travaux','ALL','Vous souhaitez entreprendre des travaux ? 
 La démarche pour obtenir une autorisation de travaux varie selon le contexte de votre projet. 
 Consultez ce lien pour identifier la démarche adaptée à votre besoin. (www.culture.gouv.fr/Demarches-en-ligne/Par-thematique/Monuments-Sites/Mes-travaux-en-site-protege).');

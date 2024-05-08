@@ -20,7 +20,7 @@ const ExportPdf = () => {
   const chipOptions = useChipOptions();
 
   return (
-    <Flex direction="column">
+    <Flex direction="column" h="100%">
       {report && chipOptions?.length ? <WithReport report={report} chipOptions={chipOptions} /> : null}
     </Flex>
   );
@@ -32,49 +32,73 @@ const WithReport = ({ report, chipOptions }: { report: ReportWithUser; chipOptio
   const [debouncedValue, setDebouncedValue] = useState(value);
 
   useDebounce(() => setDebouncedValue(value), 1000, [value, chipOptions]);
+
   return (
-    <Flex direction="column">
+    <Flex direction="column" h="100%">
       <TextEditor defaultValue={value} onChange={(e) => setValue(e)} />
 
-      <PDFViewer>
+      <PDFViewer height={"100%"}>
         <Document>
           <Page size="A4">
-            <Html>{`
+            <Html
+              style={{
+                fontSize: "12px",
+                paddingLeft: "15px",
+                paddingRight: "15px",
+              }}
+            >{`
               <html>
                 <body>
-                  <style>
-                    * {
-                      font-family: Helvetica;
-                      font-size: 12px;
-                    }
+                <style>
+                * {
+                  font-family: Helvetica;
+                }
 
-                    strong {
-                      font-family: Helvetica-Bold;
-                    }
+                strong {
+                  font-family: Helvetica-Bold;
+                }
 
-                    em {
-                      font-family: Helvetica-Oblique;
-                    }
+                em {
+                  font-family: Helvetica-Oblique;
+                }
 
-                    strong > em {
-                      font-family: Helvetica-BoldOblique;
-                    }
+                strong > em {
+                  font-family: Helvetica-BoldOblique;
+                }
+
+                img {
+                  width: 150px;
+                }
+
+                .header {
+                  display: flex;
+                  flex-direction: row;
+                  width: 100%;
+                  justify-content: space-between;
+                  text-align: right;
+                  align-items: center;
+                  font-size: 18px;
+                  
+                }
+
+                .content {
+                }
 
 
-                  </style>
-
-                  ${debouncedValue}
+              </style>
+                  <div class="header">
+                    <img src="/pdf_header.png" />
+                    <div><strong>${udap.name?.replace("UDAP", "Union départementale de<br/>l'architecture et du<br/>patrimoine")}</strong></div>
+                  </div>
+                  <div class="content">
+                    ${debouncedValue}
+                  </div>
                 </body>
               </html>
             `}</Html>
           </Page>
         </Document>
       </PDFViewer>
-
-      <Flex direction="column">
-        {/* biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation> */}
-        <div dangerouslySetInnerHTML={{ __html: value }} />
-      </Flex>
     </Flex>
   );
 };
@@ -101,7 +125,7 @@ const getReportHtmlString = (report: ReportWithUser, chipOptions: Chip[], udap: 
   <p>${decision?.text}</p>
 
   <p>
-    <strong>Précisions : </strong>
+    <strong>Précisions : </strong><br/>
     <span>${report.precisions}</span>
   </p>
 
