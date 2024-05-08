@@ -13,9 +13,9 @@ const start = async () => {
 
   debug("Starting fastify server");
   const fastifyInstance = await initFastify();
-  await fastifyInstance.listen({ port: ENV.HTTP_PORT, host: "0.0.0.0" });
+  await fastifyInstance.listen({ port: ENV.PORT, host: "0.0.0.0" });
 
-  debug(`Server listening on ${ENV.HTTP_PORT}`);
+  debug(`Server listening on ${ENV.PORT}`);
 
   onHmr(async () => {
     await fastifyInstance.close();

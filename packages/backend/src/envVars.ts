@@ -16,7 +16,7 @@ const envSchema = z.object({
   TOKEN_LIFETIME: z.string().default("1w"),
   JWT_SECRET: z.string(),
   NODE_ENV: z.string().default("development"),
-  HTTP_PORT: stringOrNumberAsNumber.default(3001),
+  PORT: stringOrNumberAsNumber.default(3001),
   DEBUG: z.string().default("cr-vif:*"),
 });
 
