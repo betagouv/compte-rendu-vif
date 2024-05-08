@@ -1,4 +1,3 @@
-import Link from "@tiptap/extension-link";
 import { Placeholder } from "@tiptap/extension-placeholder";
 import { Color } from "@tiptap/extension-color";
 import { TextStyle } from "@tiptap/extension-text-style";

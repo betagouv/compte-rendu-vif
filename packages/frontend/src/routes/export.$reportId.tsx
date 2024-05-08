@@ -1,18 +1,17 @@
+import { Flex } from "#styled-system/jsx";
+import type { Udap } from "@cr-vif/electric-client/frontend";
+import { Chip } from "@cr-vif/electric-client/frontend";
+import { Document, PDFViewer, Page } from "@react-pdf/renderer";
 import { createFileRoute } from "@tanstack/react-router";
 import { useLiveQuery } from "electric-sql/react";
-import { db } from "../db";
-import { Flex, styled } from "#styled-system/jsx";
-import { Document, Page, Text, View, StyleSheet, type Styles } from "@react-pdf/renderer";
-import { PDFViewer } from "@react-pdf/renderer";
-import type { Report, Udap } from "@cr-vif/electric-client/frontend";
-import { TextEditor, textEditorClassName } from "../features/text-editor/TextEditor";
 import { useState } from "react";
 import Html from "react-pdf-html";
 import useDebounce from "react-use/lib/useDebounce";
+import { useUser } from "../contexts/AuthContext";
+import { db } from "../db";
 import type { ReportWithUser } from "../features/ReportList";
 import { useChipOptions } from "../features/chips/useChipOptions";
-import { Chip } from "@cr-vif/electric-client/frontend";
-import { useUser } from "../contexts/AuthContext";
+import { TextEditor } from "../features/text-editor/TextEditor";
 
 const ExportPdf = () => {
   const { reportId } = Route.useParams();

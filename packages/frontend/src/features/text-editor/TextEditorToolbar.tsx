@@ -1,19 +1,7 @@
-import type { Editor } from "@tiptap/react";
-import {
-  LuBold,
-  LuCode,
-  LuItalic,
-  LuLink,
-  LuList,
-  LuListOrdered,
-  LuQuote,
-  LuStrikethrough,
-  LuAlignLeft,
-  LuAlignCenter,
-  LuAlignRight,
-} from "react-icons/lu";
 import { cva } from "#styled-system/css";
 import { hstack } from "#styled-system/patterns";
+import type { Editor } from "@tiptap/react";
+import { LuBold, LuItalic, LuStrikethrough } from "react-icons/lu";
 
 const toolbar = hstack({
   gap: "0",

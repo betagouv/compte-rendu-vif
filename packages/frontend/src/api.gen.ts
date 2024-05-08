@@ -181,7 +181,7 @@ export class ApiClient {
     path: Path,
     ...params: MaybeOptionalArg<TEndpoint["parameters"]>
   ): Promise<TEndpoint["response"]> {
-    return this.fetcher("post", this.baseUrl + path, params[0]);
+    return this.fetcher("post", this.baseUrl + path, params[0]) as Promise<TEndpoint["response"]>;
   }
   // </ApiClient.post>
 
@@ -190,7 +190,7 @@ export class ApiClient {
     path: Path,
     ...params: MaybeOptionalArg<TEndpoint["parameters"]>
   ): Promise<TEndpoint["response"]> {
-    return this.fetcher("get", this.baseUrl + path, params[0]);
+    return this.fetcher("get", this.baseUrl + path, params[0]) as Promise<TEndpoint["response"]>;
   }
   // </ApiClient.get>
 }

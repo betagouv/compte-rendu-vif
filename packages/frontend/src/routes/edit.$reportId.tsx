@@ -1,4 +1,9 @@
-import { Box, Center, Flex } from "#styled-system/jsx";
+import { EnsureUser } from "#components/EnsureUser";
+import { SyncFormBanner } from "#components/SyncForm";
+import { Tabs } from "#components/Tabs";
+import { css } from "#styled-system/css";
+import { Box, Flex } from "#styled-system/jsx";
+import type { Report } from "@cr-vif/electric-client/frontend";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useLiveQuery } from "electric-sql/react";
 import { useEffect, useRef } from "react";
@@ -11,14 +16,9 @@ import {
   type UseFormProps,
   type UseFormRegister,
 } from "react-hook-form";
-import { EnsureUser } from "#components/EnsureUser";
-import { SyncFormBanner } from "#components/SyncForm";
-import { Tabs } from "#components/Tabs";
 import { db } from "../db";
 import { InfoForm } from "../features/InfoForm";
 import { NotesForm } from "../features/NotesForm";
-import type { Report } from "@cr-vif/electric-client/frontend";
-import { css } from "#styled-system/css";
 
 const EditReport = () => {
   const { reportId } = Route.useParams();
@@ -118,7 +118,7 @@ const WithReport = ({ report }: { report: Report }) => {
     previousValuesRef.current = report;
   }, [report]);
 
-  const onSubmit = (values: Report) => {
+  const onSubmit = (_values: Report) => {
     navigate({
       to: "/export/$reportId",
       params: {

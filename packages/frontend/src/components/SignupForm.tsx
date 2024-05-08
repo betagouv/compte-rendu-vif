@@ -9,7 +9,6 @@ import Alert from "@codegouvfr/react-dsfr/Alert";
 import { useAuthContext } from "../contexts/AuthContext";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { type RouterInputs, api } from "../api";
-import { db } from "../db";
 import Select from "@codegouvfr/react-dsfr/Select";
 
 export const SignupForm = () => {
