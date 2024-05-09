@@ -3,17 +3,7 @@ import { Html } from "react-pdf-html";
 import React from "react";
 import type { Udap, Report, Chip } from "@cr-vif/electric-client/frontend";
 
-export const ReportPDFDocument = async ({
-  udap,
-  chipOptions,
-  report,
-}: {
-  udap: Udap;
-  chipOptions: Chip[];
-  report: Report;
-}) => {
-  const htmlString = getReportHtmlString(report, chipOptions, udap);
-
+export const ReportPDFDocument = ({ udap, htmlString }: { udap: Udap; report: Report; htmlString: string }) => {
   return (
     <Document>
       <Page size="A4">
@@ -80,7 +70,7 @@ export const ReportPDFDocument = async ({
 
 export type ReportWithUser = Report & { user?: { email: string; name: string } };
 
-const getReportHtmlString = (report: ReportWithUser, chipOptions: Chip[], udap: Udap) => {
+export const getReportHtmlString = (report: ReportWithUser, chipOptions: Chip[], udap: Udap) => {
   const spaceType = chipOptions.find((chip) => chip.key === "type-espace" && chip.value === report.projectSpaceType);
   const decision = chipOptions.find((chip) => chip.key === "decision" && chip.value === report.decision);
   const contacts = report.contacts ? getMultipleChips(chipOptions, "contacts-utiles", report.contacts) : [];

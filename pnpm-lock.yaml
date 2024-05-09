@@ -187,6 +187,9 @@ importers:
       '@cr-vif/electric-client':
         specifier: workspace:*
         version: link:../electric-client
+      '@cr-vif/pdf':
+        specifier: workspace:*
+        version: link:../pdf
       '@emotion/react':
         specifier: ^11.11.4
         version: 11.11.4(@types/react@18.2.74)(react@18.2.0)

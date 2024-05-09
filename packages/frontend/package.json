@@ -22,6 +22,7 @@
     "@ark-ui/react": "^2.2.3",
     "@codegouvfr/react-dsfr": "^1.9.2",
     "@cr-vif/electric-client": "workspace:*",
+    "@cr-vif/pdf": "workspace:*",
     "@emotion/react": "^11.11.4",
     "@emotion/server": "^11.11.0",
     "@emotion/styled": "^11.11.0",

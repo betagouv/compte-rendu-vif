@@ -5,16 +5,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "main": "dist/index.cjs",
-  "module": "dist/index.js",
-  "types": "dist/index.d.ts",
   "exports": {
-    ".": {
-      "import": {
-        "default": "./src/generated/client/index.ts",
-        "types": "./src/generated/client/index.ts"
-      }
-    }
+    ".": "./src/index.ts"
   },
   "keywords": [],
   "author": "",
