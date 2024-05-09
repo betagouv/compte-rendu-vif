@@ -12,6 +12,7 @@ export const ReportPDFDocument = ({ udap, htmlString }: { udap: Udap; report: Re
             fontSize: "12px",
             paddingLeft: "15px",
             paddingRight: "15px",
+            whiteSpace: "pre-line",
           }}
         >{`
         <html>
@@ -46,9 +47,6 @@ export const ReportPDFDocument = ({ udap, htmlString }: { udap: Udap; report: Re
             align-items: center;
             font-size: 18px;
             
-          }
-
-          .content {
           }
 
 
