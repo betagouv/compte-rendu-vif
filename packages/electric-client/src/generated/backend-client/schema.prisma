@@ -53,6 +53,7 @@ model report {
   createdAt           DateTime           @db.Timestamp(6)
   serviceInstructeur  Int?
   pdf                 String?
+  disabled            Boolean?
   user                user               @relation(fields: [createdBy], references: [id], onDelete: SetNull, onUpdate: NoAction)
   report_to_clause    report_to_clause[]
 }

@@ -143,7 +143,8 @@ exports.Prisma.ReportScalarFieldEnum = {
   createdBy: 'createdBy',
   createdAt: 'createdAt',
   serviceInstructeur: 'serviceInstructeur',
-  pdf: 'pdf'
+  pdf: 'pdf',
+  disabled: 'disabled'
 };
 
 exports.Prisma.Report_to_clauseScalarFieldEnum = {

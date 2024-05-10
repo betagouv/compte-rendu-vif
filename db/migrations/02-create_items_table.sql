@@ -15,7 +15,8 @@ CREATE TABLE IF NOT EXISTS "report" (
   "createdBy" TEXT NOT NULL REFERENCES "user"(id) ON DELETE SET NULL,
   "createdAt" TIMESTAMP NOT NULL,
   "serviceInstructeur" INT,
-  "pdf" TEXT
+  "pdf" TEXT,
+  "disabled" BOOLEAN
 );
 
 CREATE TABLE IF NOT EXISTS "clause" (

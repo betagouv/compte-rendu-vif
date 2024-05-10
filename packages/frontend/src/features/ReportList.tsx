@@ -21,7 +21,7 @@ export const MyReports = () => {
   const user = useUser()!;
   const myReports = useLiveQuery(
     db.report.liveMany({
-      where: { createdBy: user.id },
+      where: { createdBy: user.id, disabled: false },
       include: {
         user: {
           select: {
@@ -45,7 +45,7 @@ export const AllReports = () => {
   const user = useUser()!;
   const allReports = useLiveQuery(
     db.report.liveMany({
-      where: { createdBy: user.id },
+      where: { createdBy: user.id, disabled: false },
       include: {
         user: {
           select: {

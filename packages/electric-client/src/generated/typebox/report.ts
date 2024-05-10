@@ -18,6 +18,7 @@ export const report = Type.Object({
   createdAt: Type.String(),
   serviceInstructeur: Type.Optional(Type.Number()),
   pdf: Type.Optional(Type.String()),
+  disabled: Type.Optional(Type.Boolean()),
   user: Type.Object({
     id: Type.String(),
     email: Type.String(),

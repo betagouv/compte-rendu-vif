@@ -39,6 +39,7 @@ export const userInput = Type.Object({
       createdAt: Type.String(),
       serviceInstructeur: Type.Optional(Type.Number()),
       pdf: Type.Optional(Type.String()),
+      disabled: Type.Optional(Type.Boolean()),
     })
   ),
   udap: Type.Object({
