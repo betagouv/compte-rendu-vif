@@ -98,6 +98,14 @@ export namespace Endpoints {
       email?: string | undefined;
     }>;
   };
+  export type post_Apipdfreport = {
+    method: "POST";
+    path: "/api/pdf/report";
+    parameters: {
+      body: { htmlString: string; reportId: string };
+    };
+    response: Partial<{}>;
+  };
 
   // </Endpoints>
 }
@@ -107,6 +115,7 @@ export type EndpointByMethod = {
   post: {
     "/api/create-user": Endpoints.post_ApicreateUser;
     "/api/login": Endpoints.post_Apilogin;
+    "/api/pdf/report": Endpoints.post_Apipdfreport;
   };
   get: {
     "/api/verify-token": Endpoints.get_ApiverifyToken;
@@ -181,7 +190,7 @@ export class ApiClient {
     path: Path,
     ...params: MaybeOptionalArg<TEndpoint["parameters"]>
   ): Promise<TEndpoint["response"]> {
-    return this.fetcher("post", this.baseUrl + path, params[0]) as Promise<TEndpoint["response"]>;
+    return this.fetcher("post", this.baseUrl + path, params[0]);
   }
   // </ApiClient.post>
 
@@ -190,7 +199,7 @@ export class ApiClient {
     path: Path,
     ...params: MaybeOptionalArg<TEndpoint["parameters"]>
   ): Promise<TEndpoint["response"]> {
-    return this.fetcher("get", this.baseUrl + path, params[0]) as Promise<TEndpoint["response"]>;
+    return this.fetcher("get", this.baseUrl + path, params[0]);
   }
   // </ApiClient.get>
 }

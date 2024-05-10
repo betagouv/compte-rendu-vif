@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "jsx": "react-jsx",
     /* Base Options: */
     "esModuleInterop": true,
     "skipLibCheck": true,
@@ -26,5 +27,5 @@
     "lib": ["es2022"],
     "types": ["node"]
   },
-  "include": ["src/**/*.ts"]
+  "include": ["src/**/*.ts", "src/**/*.tsx"]
 }

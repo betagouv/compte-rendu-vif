@@ -9,6 +9,7 @@ import swaggerUi from "@fastify/swagger";
 import fs from "node:fs/promises";
 import { makeDebug } from "./features/debug";
 import { staticDataPlugin } from "./routes/staticDataRoutes";
+import { pdfPlugin } from "./routes/pdfRoutes";
 
 const debug = makeDebug("fastify");
 
@@ -51,6 +52,7 @@ export const initFastify = async () => {
 
       await instance.register(userPlugin);
       await instance.register(staticDataPlugin);
+      await instance.register(pdfPlugin, { prefix: "/pdf" });
     },
     { prefix: "/api" },
   );

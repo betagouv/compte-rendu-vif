@@ -2,9 +2,10 @@ import { type PropsWithChildren, createContext, useContext, useState } from "rea
 import { safeParseLocalStorage } from "../utils";
 import { useQuery } from "@tanstack/react-query";
 import { electric } from "../db";
-import type { RouterOutputs } from "../api";
+import { setToken, type RouterOutputs } from "../api";
 
 const initialAuth = safeParseLocalStorage("crvif/auth");
+setToken(initialAuth?.token);
 
 const AuthContext = createContext<AuthContextProps>({
   token: initialAuth?.token,
@@ -41,6 +42,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
 
   const setDataAndSaveInStorage = (data: Omit<AuthContextProps, "setData" | "electricStatus">) => {
     setData((d) => ({ ...d, ...data }));
+    setToken(data?.token);
     if (data) {
       window.localStorage.setItem("crvif/auth", JSON.stringify(data));
     } else {

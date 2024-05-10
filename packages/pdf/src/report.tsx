@@ -3,7 +3,7 @@ import { Html } from "react-pdf-html";
 import React from "react";
 import type { Udap, Report, Chip } from "@cr-vif/electric-client/frontend";
 
-export const ReportPDFDocument = ({ udap, htmlString }: { udap: Udap; report: Report; htmlString: string }) => {
+export const ReportPDFDocument = ({ udap, htmlString, images }: { udap: Udap; htmlString: string; images: Images }) => {
   return (
     <Document>
       <Page size="A4">
@@ -52,7 +52,7 @@ export const ReportPDFDocument = ({ udap, htmlString }: { udap: Udap; report: Re
 
         </style>
             <div class="header">
-              <img src="/pdf_header.png" />
+              <img src="${images.header}" />
               <div><strong>${udap.name?.replace("UDAP", "Union départementale de<br/>l'architecture et du<br/>patrimoine")}</strong></div>
             </div>
             <div class="content">
@@ -64,6 +64,10 @@ export const ReportPDFDocument = ({ udap, htmlString }: { udap: Udap; report: Re
       </Page>
     </Document>
   );
+};
+
+type Images = {
+  header: string;
 };
 
 export type ReportWithUser = Report & { user?: { email: string; name: string } };

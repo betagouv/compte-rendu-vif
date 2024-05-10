@@ -107,8 +107,10 @@ const serializeUser = (user: Prisma.userCreateInput) => {
     name: data.name,
     email: data.email,
     udap: data.udap!,
-  } as Static<typeof Schemas.userInput>;
+  } as SerializedUser;
 };
+
+export type SerializedUser = Static<typeof Schemas.userInput>;
 
 export const serializedUserTSchema = Type.Pick(Schemas.user, ["name", "email", "udap"]);
 export const userAndTokenTSchema = Type.Object({

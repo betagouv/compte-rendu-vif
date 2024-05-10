@@ -12,6 +12,9 @@ import type { ReportWithUser } from "../features/ReportList";
 import { useChipOptions } from "../features/chips/useChipOptions";
 import { TextEditor } from "../features/text-editor/TextEditor";
 import { ReportPDFDocument, getReportHtmlString } from "@cr-vif/pdf";
+import Button from "@codegouvfr/react-dsfr/Button";
+import { useMutation } from "@tanstack/react-query";
+import { api } from "../api";
 
 const ExportPdf = () => {
   const { reportId } = Route.useParams();
@@ -30,6 +33,10 @@ const WithReport = ({ report, chipOptions }: { report: ReportWithUser; chipOptio
   const [value, setValue] = useState(getReportHtmlString(report, chipOptions, udap as Udap));
   const [debouncedValue, setDebouncedValue] = useState(value);
 
+  const generatePdfMutation = useMutation((htmlString: string) =>
+    api.post("/api/pdf/report", { body: { reportId: report.id, htmlString } }),
+  );
+
   useDebounce(() => setDebouncedValue(value), 1000, [value, chipOptions]);
 
   return (
@@ -37,8 +44,12 @@ const WithReport = ({ report, chipOptions }: { report: ReportWithUser; chipOptio
       <TextEditor defaultValue={value} onChange={(e) => setValue(e)} />
 
       <PDFViewer height={"100%"}>
-        <ReportPDFDocument udap={udap as Udap} report={report} htmlString={debouncedValue} />
+        <ReportPDFDocument udap={udap as Udap} htmlString={debouncedValue} images={{ header: "/pdf_header.png" }} />
       </PDFViewer>
+
+      <Button type="button" onClick={() => generatePdfMutation.mutate(debouncedValue)}>
+        Générer le PDF
+      </Button>
     </Flex>
   );
 };
