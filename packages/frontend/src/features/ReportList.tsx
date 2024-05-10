@@ -96,7 +96,7 @@ const ReportListItem = ({ report, isLast }: { report: ReportWithUser; isLast?: b
   const ref = useRef<HTMLAnchorElement>(null);
 
   const menuProps = {
-    createdBy: report.createdBy,
+    report,
     onClose: (e: Event) => {
       console.log(e);
       if (e.target !== ref.current) setIsOpen(false);
@@ -161,19 +161,19 @@ const useIsDesktop = () => {
   return useMedia(`(min-width: ${token("breakpoints.lg")})`);
 };
 
-const MenuDesktopPopover = ({ onClose, createdBy }: MenuProps) => {
+const MenuDesktopPopover = ({ onClose, report }: MenuProps) => {
   const isDesktop = useIsDesktop();
   const ref = useRef<HTMLDivElement>(null);
   useClickAway(ref, (e) => isDesktop && onClose(e));
 
   return (
     <Popover.Content>
-      <ReportActions ref={ref} createdBy={createdBy} />
+      <ReportActions ref={ref} report={report} />
     </Popover.Content>
   );
 };
 
-const MenuMobileModal = ({ onClose, createdBy }: MenuProps) => {
+const MenuMobileModal = ({ onClose, report }: MenuProps) => {
   const isDesktop = useIsDesktop();
   const ref = useRef<HTMLDivElement>(null);
 
@@ -182,13 +182,13 @@ const MenuMobileModal = ({ onClose, createdBy }: MenuProps) => {
   return (
     <styled.div hideFrom="lg" zIndex="modal" pos="fixed" top="0" left="0" right="0" bottom="0" bgColor="rgba(0,0,0,.8)">
       <styled.div ref={ref} position="absolute" left="0" right="0" bottom="0" bgColor="white">
-        <ReportActions createdBy={createdBy} />
+        <ReportActions report={report} />
       </styled.div>
     </styled.div>
   );
 };
 
-type MenuProps = { onClose: (e: Event) => void; createdBy: Report["createdBy"] };
+type MenuProps = { onClose: (e: Event) => void; report: Report };
 
 type ReportStatus = "draft" | "published";
 const ReportBadge = ({ status }: { status: ReportStatus }) => {

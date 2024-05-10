@@ -44,6 +44,7 @@ const Index = () => {
           id: `report-${v4()}`,
           createdBy: user.id,
           createdAt: new Date(),
+          disabled: false,
         },
       }),
   });
