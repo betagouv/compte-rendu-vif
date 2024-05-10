@@ -5,8 +5,7 @@ import { SerializedUser } from "../services/userService";
 import { renderToBuffer } from "@react-pdf/renderer";
 import { ReportPDFDocument } from "@cr-vif/pdf";
 import { Udap } from "@cr-vif/electric-client/frontend";
-import headerImg from "../assets/pdf_header.png";
-import fs from "node:fs/promises";
+import { db } from "../db/db";
 
 export const pdfPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
   fastify.addHook("preHandler", async (request: FastifyRequest) => {
@@ -26,20 +25,21 @@ export const pdfPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
 
     const pdf = await generatePdf({ htmlString, udap });
 
-    await fs.writeFile(`./src/assets/${reportId}.pdf`, pdf);
-    console.log(pdf);
-    return pdf;
+    const name = `${reportId}/compte_rendu.pdf`;
+
+    const url = await request.services.upload.addPDFToReport({
+      reportId,
+      buffer: pdf,
+      name,
+    });
+
+    return url;
   });
 };
 
 const generatePdf = async ({ htmlString, udap }: { htmlString: string; udap: SerializedUser["udap"] }) => {
-  const header = await fs.readFile("./src/assets/pdf_header.png", "base64");
   return renderToBuffer(
-    <ReportPDFDocument
-      udap={udap as Udap}
-      htmlString={htmlString}
-      images={{ header: "./src/assets/pdf_header.png" }}
-    />,
+    <ReportPDFDocument udap={udap as Udap} htmlString={htmlString} images={{ header: "./public/pdf_header.png" }} />,
   );
 };
 

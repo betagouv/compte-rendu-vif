@@ -19,11 +19,11 @@ export const uploadPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
         throw new AppError(400, "File is not an image");
       }
 
-      await request.services.upload.addImageToReport({
-        reportId: "",
-        buffer: await file.toBuffer(),
-        name: getFileName(file),
-      });
+      //   await request.services.upload.addImageToReport({
+      //     reportId: "",
+      //     buffer: await file.toBuffer(),
+      //     name: getFileName(file),
+      //   });
     }
 
     return "ok";

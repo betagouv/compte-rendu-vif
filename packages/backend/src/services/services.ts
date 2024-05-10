@@ -1,5 +1,5 @@
-import { Prisma } from "@cr-vif/electric-client/backend";
 import { StaticDataService } from "./staticDataService";
+import { UploadService } from "./uploadService";
 import { SerializedUser, UserService } from "./userService";
 
 const ref = {
@@ -9,6 +9,7 @@ const ref = {
 const makeServices = () => ({
   user: new UserService(),
   staticData: new StaticDataService(),
+  upload: new UploadService(),
 });
 
 export const getServices = () => {

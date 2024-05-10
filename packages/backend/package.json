@@ -5,7 +5,7 @@
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsup ./src/index.ts --format esm",
+    "build": "tsup ./src/index.ts --publicDir --format esm",
     "start": "node ./dist/index.js",
     "dev": "vite-node --watch ./src/index.ts",
     "migration:create": "pnpm drizzle-kit generate:pg"
