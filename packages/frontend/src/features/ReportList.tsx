@@ -1,4 +1,4 @@
-import { Center, Divider, Flex, Grid, Stack, styled } from "#styled-system/jsx";
+import { Center, Divider, Flex, Grid, styled } from "#styled-system/jsx";
 import { flex } from "#styled-system/patterns";
 import { useLiveQuery } from "electric-sql/react";
 import { useUser } from "../contexts/AuthContext";

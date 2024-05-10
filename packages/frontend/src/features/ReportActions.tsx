@@ -5,22 +5,20 @@ import { forwardRef } from "react";
 import { useUser } from "../contexts/AuthContext";
 import { Report } from "@cr-vif/electric-client/frontend";
 
-export const ReportActions = forwardRef(
-  ({ createdBy }: { createdBy: Report["createdBy"] }, ref: React.Ref<HTMLDivElement>) => {
-    const user = useUser()!;
+export const ReportActions = forwardRef<HTMLDivElement, { createdBy: Report["createdBy"] }>(({ createdBy }, ref) => {
+  const user = useUser()!;
 
-    const isOwner = createdBy === user.id;
+  const isOwner = createdBy === user.id;
 
-    return (
-      <Stack ref={ref} gap="0">
-        {isOwner ? <ReportAction iconId="ri-pencil-line" label="Editer" onClick={() => {}} /> : null}
-        {isOwner ? <ReportAction iconId="ri-delete-bin-2-line" label="Supprimer" onClick={() => {}} /> : null}
-        <ReportAction iconId="ri-download-line" label="Télécharger" onClick={() => {}} />
-        <ReportAction iconId="ri-file-add-line" label="Dupliquer" onClick={() => {}} />
-      </Stack>
-    );
-  },
-);
+  return (
+    <Stack ref={ref} gap="0">
+      {isOwner ? <ReportAction iconId="ri-pencil-line" label="Editer" onClick={() => {}} /> : null}
+      {isOwner ? <ReportAction iconId="ri-delete-bin-2-line" label="Supprimer" onClick={() => {}} /> : null}
+      <ReportAction iconId="ri-download-line" label="Télécharger" onClick={() => {}} />
+      <ReportAction iconId="ri-file-add-line" label="Dupliquer" onClick={() => {}} />
+    </Stack>
+  );
+});
 
 const ReportAction = ({
   iconId,
