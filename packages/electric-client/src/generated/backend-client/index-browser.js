@@ -140,7 +140,7 @@ exports.Prisma.ReportScalarFieldEnum = {
   precisions: 'precisions',
   contacts: 'contacts',
   furtherInformation: 'furtherInformation',
-  createdByEmail: 'createdByEmail',
+  createdBy: 'createdBy',
   createdAt: 'createdAt',
   serviceInstructeur: 'serviceInstructeur',
   pdf: 'pdf'
@@ -178,6 +178,7 @@ exports.Prisma.UdapScalarFieldEnum = {
 };
 
 exports.Prisma.UserScalarFieldEnum = {
+  id: 'id',
   email: 'email',
   name: 'name',
   temporaryLink: 'temporaryLink',

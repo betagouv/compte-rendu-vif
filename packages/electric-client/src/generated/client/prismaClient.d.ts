@@ -85,7 +85,7 @@ export type ReportPayload<ExtArgs extends $Extensions.Args = $Extensions.Default
     precisions: string | null
     contacts: string | null
     furtherInformation: string | null
-    createdByEmail: string
+    createdBy: string
     createdAt: Date
     /**
      * @zod.number.int().gte(-2147483648).lte(2147483647)
@@ -154,6 +154,7 @@ export type UserPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultAr
     udap: UdapPayload<ExtArgs>
   }
   scalars: $Extensions.GetResult<{
+    id: string
     email: string
     name: string
     temporaryLink: string | null
@@ -4403,7 +4404,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     precisions: string | null
     contacts: string | null
     furtherInformation: string | null
-    createdByEmail: string | null
+    createdBy: string | null
     createdAt: Date | null
     serviceInstructeur: number | null
     pdf: string | null
@@ -4423,7 +4424,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     precisions: string | null
     contacts: string | null
     furtherInformation: string | null
-    createdByEmail: string | null
+    createdBy: string | null
     createdAt: Date | null
     serviceInstructeur: number | null
     pdf: string | null
@@ -4443,7 +4444,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     precisions: number
     contacts: number
     furtherInformation: number
-    createdByEmail: number
+    createdBy: number
     createdAt: number
     serviceInstructeur: number
     pdf: number
@@ -4473,7 +4474,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     precisions?: true
     contacts?: true
     furtherInformation?: true
-    createdByEmail?: true
+    createdBy?: true
     createdAt?: true
     serviceInstructeur?: true
     pdf?: true
@@ -4493,7 +4494,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     precisions?: true
     contacts?: true
     furtherInformation?: true
-    createdByEmail?: true
+    createdBy?: true
     createdAt?: true
     serviceInstructeur?: true
     pdf?: true
@@ -4513,7 +4514,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     precisions?: true
     contacts?: true
     furtherInformation?: true
-    createdByEmail?: true
+    createdBy?: true
     createdAt?: true
     serviceInstructeur?: true
     pdf?: true
@@ -4621,7 +4622,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     precisions: string | null
     contacts: string | null
     furtherInformation: string | null
-    createdByEmail: string
+    createdBy: string
     createdAt: Date
     serviceInstructeur: number | null
     pdf: string | null
@@ -4660,7 +4661,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     precisions?: boolean
     contacts?: boolean
     furtherInformation?: boolean
-    createdByEmail?: boolean
+    createdBy?: boolean
     createdAt?: boolean
     serviceInstructeur?: boolean
     pdf?: boolean
@@ -4683,7 +4684,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     precisions?: boolean
     contacts?: boolean
     furtherInformation?: boolean
-    createdByEmail?: boolean
+    createdBy?: boolean
     createdAt?: boolean
     serviceInstructeur?: boolean
     pdf?: boolean
@@ -7375,6 +7376,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   }
 
   export type UserMinAggregateOutputType = {
+    id: string | null
     email: string | null
     name: string | null
     temporaryLink: string | null
@@ -7384,6 +7386,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   }
 
   export type UserMaxAggregateOutputType = {
+    id: string | null
     email: string | null
     name: string | null
     temporaryLink: string | null
@@ -7393,6 +7396,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   }
 
   export type UserCountAggregateOutputType = {
+    id: number
     email: number
     name: number
     temporaryLink: number
@@ -7404,6 +7408,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
 
   export type UserMinAggregateInputType = {
+    id?: true
     email?: true
     name?: true
     temporaryLink?: true
@@ -7413,6 +7418,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   }
 
   export type UserMaxAggregateInputType = {
+    id?: true
     email?: true
     name?: true
     temporaryLink?: true
@@ -7422,6 +7428,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   }
 
   export type UserCountAggregateInputType = {
+    id?: true
     email?: true
     name?: true
     temporaryLink?: true
@@ -7505,6 +7512,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
 
   export type UserGroupByOutputType = {
+    id: string
     email: string
     name: string
     temporaryLink: string | null
@@ -7531,6 +7539,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
 
   export type UserSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
     email?: boolean
     name?: boolean
     temporaryLink?: boolean
@@ -7545,6 +7554,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectScalar = {
+    id?: boolean
     email?: boolean
     name?: boolean
     temporaryLink?: boolean
@@ -7649,8 +7659,8 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      * // Get first 10 Users
      * const users = await prisma.user.findMany({ take: 10 })
      * 
-     * // Only select the `email`
-     * const userWithEmailOnly = await prisma.user.findMany({ select: { email: true } })
+     * // Only select the `id`
+     * const userWithIdOnly = await prisma.user.findMany({ select: { id: true } })
      * 
     **/
     findMany<T extends UserFindManyArgs<ExtArgs>>(
@@ -8428,7 +8438,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     precisions: 'precisions',
     contacts: 'contacts',
     furtherInformation: 'furtherInformation',
-    createdByEmail: 'createdByEmail',
+    createdBy: 'createdBy',
     createdAt: 'createdAt',
     serviceInstructeur: 'serviceInstructeur',
     pdf: 'pdf'
@@ -8463,6 +8473,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
 
   export const UserScalarFieldEnum: {
+    id: 'id',
     email: 'email',
     name: 'name',
     temporaryLink: 'temporaryLink',
@@ -8637,7 +8648,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     precisions?: StringNullableFilter | string | null
     contacts?: StringNullableFilter | string | null
     furtherInformation?: StringNullableFilter | string | null
-    createdByEmail?: StringFilter | string
+    createdBy?: StringFilter | string
     createdAt?: DateTimeFilter | Date | string
     serviceInstructeur?: IntNullableFilter | number | null
     pdf?: StringNullableFilter | string | null
@@ -8659,7 +8670,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     precisions?: SortOrderInput | SortOrder
     contacts?: SortOrderInput | SortOrder
     furtherInformation?: SortOrderInput | SortOrder
-    createdByEmail?: SortOrder
+    createdBy?: SortOrder
     createdAt?: SortOrder
     serviceInstructeur?: SortOrderInput | SortOrder
     pdf?: SortOrderInput | SortOrder
@@ -8685,7 +8696,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     precisions?: SortOrderInput | SortOrder
     contacts?: SortOrderInput | SortOrder
     furtherInformation?: SortOrderInput | SortOrder
-    createdByEmail?: SortOrder
+    createdBy?: SortOrder
     createdAt?: SortOrder
     serviceInstructeur?: SortOrderInput | SortOrder
     pdf?: SortOrderInput | SortOrder
@@ -8713,7 +8724,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     precisions?: StringNullableWithAggregatesFilter | string | null
     contacts?: StringNullableWithAggregatesFilter | string | null
     furtherInformation?: StringNullableWithAggregatesFilter | string | null
-    createdByEmail?: StringWithAggregatesFilter | string
+    createdBy?: StringWithAggregatesFilter | string
     createdAt?: DateTimeWithAggregatesFilter | Date | string
     serviceInstructeur?: IntNullableWithAggregatesFilter | number | null
     pdf?: StringNullableWithAggregatesFilter | string | null
@@ -8831,6 +8842,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     AND?: Enumerable<UserWhereInput>
     OR?: Enumerable<UserWhereInput>
     NOT?: Enumerable<UserWhereInput>
+    id?: StringFilter | string
     email?: StringFilter | string
     name?: StringFilter | string
     temporaryLink?: StringNullableFilter | string | null
@@ -8844,6 +8856,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   }
 
   export type UserOrderByWithRelationInput = {
+    id?: SortOrder
     email?: SortOrder
     name?: SortOrder
     temporaryLink?: SortOrderInput | SortOrder
@@ -8857,10 +8870,11 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   }
 
   export type UserWhereUniqueInput = {
-    email?: string
+    id?: string
   }
 
   export type UserOrderByWithAggregationInput = {
+    id?: SortOrder
     email?: SortOrder
     name?: SortOrder
     temporaryLink?: SortOrderInput | SortOrder
@@ -8876,6 +8890,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     AND?: Enumerable<UserScalarWhereWithAggregatesInput>
     OR?: Enumerable<UserScalarWhereWithAggregatesInput>
     NOT?: Enumerable<UserScalarWhereWithAggregatesInput>
+    id?: StringWithAggregatesFilter | string
     email?: StringWithAggregatesFilter | string
     name?: StringWithAggregatesFilter | string
     temporaryLink?: StringNullableWithAggregatesFilter | string | null
@@ -9048,7 +9063,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     precisions?: string | null
     contacts?: string | null
     furtherInformation?: string | null
-    createdByEmail: string
+    createdBy: string
     createdAt: Date | string
     serviceInstructeur?: number | null
     pdf?: string | null
@@ -9090,7 +9105,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     precisions?: NullableStringFieldUpdateOperationsInput | string | null
     contacts?: NullableStringFieldUpdateOperationsInput | string | null
     furtherInformation?: NullableStringFieldUpdateOperationsInput | string | null
-    createdByEmail?: StringFieldUpdateOperationsInput | string
+    createdBy?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     serviceInstructeur?: NullableIntFieldUpdateOperationsInput | number | null
     pdf?: NullableStringFieldUpdateOperationsInput | string | null
@@ -9111,7 +9126,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     precisions?: string | null
     contacts?: string | null
     furtherInformation?: string | null
-    createdByEmail: string
+    createdBy: string
     createdAt: Date | string
     serviceInstructeur?: number | null
     pdf?: string | null
@@ -9150,7 +9165,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     precisions?: NullableStringFieldUpdateOperationsInput | string | null
     contacts?: NullableStringFieldUpdateOperationsInput | string | null
     furtherInformation?: NullableStringFieldUpdateOperationsInput | string | null
-    createdByEmail?: StringFieldUpdateOperationsInput | string
+    createdBy?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     serviceInstructeur?: NullableIntFieldUpdateOperationsInput | number | null
     pdf?: NullableStringFieldUpdateOperationsInput | string | null
@@ -9292,6 +9307,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   }
 
   export type UserCreateInput = {
+    id: string
     email: string
     name: string
     temporaryLink?: string | null
@@ -9304,6 +9320,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   }
 
   export type UserUncheckedCreateInput = {
+    id: string
     email: string
     name: string
     temporaryLink?: string | null
@@ -9316,6 +9333,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   }
 
   export type UserUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
@@ -9328,6 +9346,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   }
 
   export type UserUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
@@ -9340,6 +9359,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   }
 
   export type UserCreateManyInput = {
+    id: string
     email: string
     name: string
     temporaryLink?: string | null
@@ -9349,6 +9369,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   }
 
   export type UserUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
@@ -9357,6 +9378,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   }
 
   export type UserUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
@@ -9545,7 +9567,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     precisions?: SortOrder
     contacts?: SortOrder
     furtherInformation?: SortOrder
-    createdByEmail?: SortOrder
+    createdBy?: SortOrder
     createdAt?: SortOrder
     serviceInstructeur?: SortOrder
     pdf?: SortOrder
@@ -9569,7 +9591,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     precisions?: SortOrder
     contacts?: SortOrder
     furtherInformation?: SortOrder
-    createdByEmail?: SortOrder
+    createdBy?: SortOrder
     createdAt?: SortOrder
     serviceInstructeur?: SortOrder
     pdf?: SortOrder
@@ -9589,7 +9611,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     precisions?: SortOrder
     contacts?: SortOrder
     furtherInformation?: SortOrder
-    createdByEmail?: SortOrder
+    createdBy?: SortOrder
     createdAt?: SortOrder
     serviceInstructeur?: SortOrder
     pdf?: SortOrder
@@ -9777,6 +9799,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   }
 
   export type UserCountOrderByAggregateInput = {
+    id?: SortOrder
     email?: SortOrder
     name?: SortOrder
     temporaryLink?: SortOrder
@@ -9786,6 +9809,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   }
 
   export type UserMaxOrderByAggregateInput = {
+    id?: SortOrder
     email?: SortOrder
     name?: SortOrder
     temporaryLink?: SortOrder
@@ -9795,6 +9819,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   }
 
   export type UserMinOrderByAggregateInput = {
+    id?: SortOrder
     email?: SortOrder
     name?: SortOrder
     temporaryLink?: SortOrder
@@ -10387,6 +10412,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   }
 
   export type UserCreateWithoutDelegation_delegation_createdByTouserInput = {
+    id: string
     email: string
     name: string
     temporaryLink?: string | null
@@ -10398,6 +10424,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   }
 
   export type UserUncheckedCreateWithoutDelegation_delegation_createdByTouserInput = {
+    id: string
     email: string
     name: string
     temporaryLink?: string | null
@@ -10414,6 +10441,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   }
 
   export type UserCreateWithoutDelegation_delegation_delegatedToTouserInput = {
+    id: string
     email: string
     name: string
     temporaryLink?: string | null
@@ -10425,6 +10453,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   }
 
   export type UserUncheckedCreateWithoutDelegation_delegation_delegatedToTouserInput = {
+    id: string
     email: string
     name: string
     temporaryLink?: string | null
@@ -10446,6 +10475,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   }
 
   export type UserUpdateWithoutDelegation_delegation_createdByTouserInput = {
+    id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
@@ -10457,6 +10487,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   }
 
   export type UserUncheckedUpdateWithoutDelegation_delegation_createdByTouserInput = {
+    id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
@@ -10473,6 +10504,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   }
 
   export type UserUpdateWithoutDelegation_delegation_delegatedToTouserInput = {
+    id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
@@ -10484,6 +10516,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   }
 
   export type UserUncheckedUpdateWithoutDelegation_delegation_delegatedToTouserInput = {
+    id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
@@ -10495,6 +10528,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   }
 
   export type UserCreateWithoutReportInput = {
+    id: string
     email: string
     name: string
     temporaryLink?: string | null
@@ -10506,6 +10540,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   }
 
   export type UserUncheckedCreateWithoutReportInput = {
+    id: string
     email: string
     name: string
     temporaryLink?: string | null
@@ -10547,6 +10582,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   }
 
   export type UserUpdateWithoutReportInput = {
+    id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
@@ -10558,6 +10594,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   }
 
   export type UserUncheckedUpdateWithoutReportInput = {
+    id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
@@ -10635,7 +10672,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     precisions?: string | null
     contacts?: string | null
     furtherInformation?: string | null
-    createdByEmail: string
+    createdBy: string
     createdAt: Date | string
     serviceInstructeur?: number | null
     pdf?: string | null
@@ -10702,13 +10739,14 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     precisions?: NullableStringFieldUpdateOperationsInput | string | null
     contacts?: NullableStringFieldUpdateOperationsInput | string | null
     furtherInformation?: NullableStringFieldUpdateOperationsInput | string | null
-    createdByEmail?: StringFieldUpdateOperationsInput | string
+    createdBy?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     serviceInstructeur?: NullableIntFieldUpdateOperationsInput | number | null
     pdf?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type UserCreateWithoutUdapInput = {
+    id: string
     email: string
     name: string
     temporaryLink?: string | null
@@ -10720,6 +10758,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   }
 
   export type UserUncheckedCreateWithoutUdapInput = {
+    id: string
     email: string
     name: string
     temporaryLink?: string | null
@@ -10760,6 +10799,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     AND?: Enumerable<UserScalarWhereInput>
     OR?: Enumerable<UserScalarWhereInput>
     NOT?: Enumerable<UserScalarWhereInput>
+    id?: StringFilter | string
     email?: StringFilter | string
     name?: StringFilter | string
     temporaryLink?: StringNullableFilter | string | null
@@ -10958,7 +10998,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     precisions?: StringNullableFilter | string | null
     contacts?: StringNullableFilter | string | null
     furtherInformation?: StringNullableFilter | string | null
-    createdByEmail?: StringFilter | string
+    createdBy?: StringFilter | string
     createdAt?: DateTimeFilter | Date | string
     serviceInstructeur?: IntNullableFilter | number | null
     pdf?: StringNullableFilter | string | null
@@ -11031,6 +11071,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   }
 
   export type UserCreateManyUdapInput = {
+    id: string
     email: string
     name: string
     temporaryLink?: string | null
@@ -11039,6 +11080,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   }
 
   export type UserUpdateWithoutUdapInput = {
+    id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
@@ -11050,6 +11092,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   }
 
   export type UserUncheckedUpdateWithoutUdapInput = {
+    id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
@@ -11061,6 +11104,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   }
 
   export type UserUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null

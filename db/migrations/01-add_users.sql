@@ -16,7 +16,8 @@ ALTER TABLE "udap" ENABLE ELECTRIC;
     
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "user" (
-    "email" text PRIMARY KEY NOT NULL,
+    "id" text PRIMARY KEY NOT NULL,
+    "email" text NOT NULL,
     "name" text NOT NULL,
     "temporaryLink" text,
     "temporaryLinkExpiresAt" text,
@@ -27,8 +28,8 @@ CREATE TABLE IF NOT EXISTS "user" (
 ALTER TABLE "user" ENABLE ELECTRIC;
 
 CREATE TABLE IF NOT EXISTS "delegation" (
-    "createdBy" text NOT NULL REFERENCES "user"(email) ON DELETE CASCADE,
-    "delegatedTo" text NOT NULL REFERENCES "user"(email) ON DELETE CASCADE,
+    "createdBy" text NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
+    "delegatedTo" text NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
     PRIMARY KEY("createdBy", "delegatedTo")
 );
 

@@ -67,7 +67,7 @@ const Layout = ({ children }: PropsWithChildren) => {
         ]}
       />
       <Box flex="1">{children}</Box>
-      <TanStackRouterDevtools />
+      {/* <TanStackRouterDevtools /> */}
       <Footer accessibility="partially compliant" />
     </Flex>
   );

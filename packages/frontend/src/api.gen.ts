@@ -14,6 +14,7 @@ export namespace Endpoints {
     };
     response: {
       user: {
+        id: string;
         name: string;
         email: string;
         udap: {
@@ -40,6 +41,7 @@ export namespace Endpoints {
     };
     response: {
       user: {
+        id: string;
         name: string;
         email: string;
         udap: {
@@ -65,6 +67,7 @@ export namespace Endpoints {
       query: { token: string };
     };
     response: {
+      id: string;
       name: string;
       email: string;
       udap: {

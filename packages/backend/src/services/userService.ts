@@ -21,6 +21,7 @@ export class UserService {
 
     const user = await db.user.create({
       data: {
+        id: crypto.randomUUID(),
         ...payload,
         password,
       },
@@ -37,10 +38,17 @@ export class UserService {
     return serializeUser(user as any);
   }
 
-  async updateUser(email: string, payload: Partial<Prisma.userUncheckedCreateInput>) {
+  async getUserById(id: string) {
+    const user = await db.user.findUnique({ where: { id }, include: { udap: true } });
+    assertUserExists(user);
+
+    return serializeUser(user as any);
+  }
+
+  async updateUser(id: string, payload: Partial<Prisma.userUncheckedCreateInput>) {
     const changes = pick(payload, ["name", "email", "password"]);
 
-    const user = await db.user.update({ where: { email }, data: changes, include: { udap: true } });
+    const user = await db.user.update({ where: { id }, data: changes, include: { udap: true } });
 
     return serializeUser(user as any);
   }
@@ -53,14 +61,14 @@ export class UserService {
     return { user: serializeUser(user as any), token: this.generateJWT(user!) };
   }
 
-  async generateResetLink(email: string) {
-    const user = await db.user.findFirst({ where: { email } });
+  async generateResetLink(id: string) {
+    const user = await db.user.findFirst({ where: { id } });
     assertUserExists(user);
 
     const temporaryLink = crypto.randomUUID();
     const temporaryLinkExpiresAt = addDays(new Date(), 1).toISOString();
 
-    await db.user.update({ where: { email }, data: { temporaryLink, temporaryLinkExpiresAt } });
+    await db.user.update({ where: { id }, data: { temporaryLink, temporaryLinkExpiresAt } });
   }
 
   async resetPassword({ temporaryLink, newPassword }: { temporaryLink: string; newPassword: string }) {
@@ -72,7 +80,7 @@ export class UserService {
     const password = await encryptPassword(newPassword);
 
     await db.user.update({
-      where: { email: user!.email },
+      where: { id: user!.id },
       data: { password, temporaryLink: null, temporaryLinkExpiresAt: null },
     });
 
@@ -80,14 +88,14 @@ export class UserService {
   }
 
   verifyJWT(token: string) {
-    const { email } = this.validateJWT(token);
-    return this.getUserByEmail(email);
+    const { id } = this.validateJWT(token);
+    return this.getUserByEmail(id);
   }
 
   generateJWT(user: Prisma.userUncheckedCreateInput) {
     return jwt.sign(
       {
-        sub: user.email,
+        sub: user.id,
       },
       ENV.JWT_SECRET,
       {
@@ -97,13 +105,14 @@ export class UserService {
   }
 
   validateJWT(token: string) {
-    return jwt.verify(token, ENV.JWT_SECRET) as { email: string };
+    return jwt.verify(token, ENV.JWT_SECRET) as { id: string };
   }
 }
 
 const serializeUser = (user: Prisma.userCreateInput) => {
   const data = pick(user, ["name", "email", "udap"]);
   return {
+    id: user.id,
     name: data.name,
     email: data.email,
     udap: data.udap!,
@@ -112,7 +121,7 @@ const serializeUser = (user: Prisma.userCreateInput) => {
 
 export type SerializedUser = Static<typeof Schemas.userInput>;
 
-export const serializedUserTSchema = Type.Pick(Schemas.user, ["name", "email", "udap"]);
+export const serializedUserTSchema = Type.Pick(Schemas.user, ["id", "name", "email", "udap"]);
 export const userAndTokenTSchema = Type.Object({
   user: serializedUserTSchema,
   token: Type.String(),

@@ -14,11 +14,12 @@ export const report = Type.Object({
   precisions: Type.Optional(Type.String()),
   contacts: Type.Optional(Type.String()),
   furtherInformation: Type.Optional(Type.String()),
-  createdByEmail: Type.String(),
+  createdBy: Type.String(),
   createdAt: Type.String(),
   serviceInstructeur: Type.Optional(Type.Number()),
   pdf: Type.Optional(Type.String()),
   user: Type.Object({
+    id: Type.String(),
     email: Type.String(),
     name: Type.String(),
     temporaryLink: Type.Optional(Type.String()),

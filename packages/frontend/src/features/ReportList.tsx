@@ -9,6 +9,11 @@ import Badge from "@codegouvfr/react-dsfr/Badge";
 import { css } from "#styled-system/css";
 import { Link } from "@tanstack/react-router";
 import { Popover } from "#components/Popover";
+import { useClickAway, useMedia } from "react-use";
+import { token } from "#styled-system/tokens";
+import { useRef, useState } from "react";
+import { PopoverTrigger } from "@ark-ui/react/popover";
+import { ReportActions } from "./ReportActions";
 
 export type ReportWithUser = Report & { user?: { email: string; name: string } };
 
@@ -16,7 +21,7 @@ export const MyReports = () => {
   const user = useUser()!;
   const myReports = useLiveQuery(
     db.report.liveMany({
-      where: { createdByEmail: user.email },
+      where: { createdBy: user.id },
       include: {
         user: {
           select: {
@@ -40,7 +45,7 @@ export const AllReports = () => {
   const user = useUser()!;
   const allReports = useLiveQuery(
     db.report.liveMany({
-      where: { createdByEmail: { not: user.email } },
+      where: { createdBy: user.id },
       include: {
         user: {
           select: {
@@ -69,13 +74,12 @@ export const ReportList = ({ reports }: { reports: ReportWithUser[] }) => {
         "& > *:nth-child(-n+10)": {
           gridColumn: {
             base: "0",
-            md: "1",
-          } /* Place in the first column */,
+            lg: "1",
+          },
         },
       })}
       gap="8px 28px"
-      // gridTemplateColumns="repeat(2, 1fr)"
-      gridTemplateRows={{ base: "repeat(20, 1fr)", md: "repeat(10, 1fr)" }}
+      gridTemplateRows={{ base: "repeat(20, 1fr)", lg: "repeat(10, 1fr)" }}
       gridAutoFlow="column"
       w="100%"
     >
@@ -88,10 +92,19 @@ export const ReportList = ({ reports }: { reports: ReportWithUser[] }) => {
 };
 
 const ReportListItem = ({ report, isLast }: { report: ReportWithUser; isLast?: boolean }) => {
-  // const mutation = useMutation({ mutationFn: () => db.report.delete({ where: { id: report.id } }) });
+  const [isOpen, setIsOpen] = useState(false);
+  const ref = useRef<HTMLAnchorElement>(null);
+
+  const menuProps = {
+    createdBy: report.createdBy,
+    onClose: (e: Event) => {
+      console.log(e);
+      if (e.target !== ref.current) setIsOpen(false);
+    },
+  };
 
   return (
-    <Flex direction="column" w="400px">
+    <Flex position="relative" direction="column" w="400px">
       <Link
         className={css({
           backgroundImage: "none",
@@ -104,7 +117,6 @@ const ReportListItem = ({ report, isLast }: { report: ReportWithUser; isLast?: b
       >
         <article
           className={flex({
-            position: "relative",
             flexDirection: "column",
             color: "text-action-high-blue-france",
             fontSize: "16px",
@@ -114,43 +126,69 @@ const ReportListItem = ({ report, isLast }: { report: ReportWithUser; isLast?: b
             <styled.span fontWeight="bold">{report.title}</styled.span>
             <styled.span ml="5px">{report.createdAt.toLocaleDateString()}</styled.span>
           </Flex>
-          <styled.span>Rédigé par {report.user?.name ?? report.createdByEmail.split("@")[0]}</styled.span>
-          {/* TODO: set correct status */}
+          <styled.span>Rédigé par {report.user?.name ?? ""}</styled.span>
           <styled.div mt="8px">
             <ReportBadge status={report.pdf ? "published" : "draft"} />
           </styled.div>
-          {/* <Button onClick={() => mutation.mutate()}>Supprimer</Button> */}
-          <styled.div position="absolute" top="10px" right="10px">
-            <Popover.Root>
-              <Popover.Trigger
-                asChild
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                }}
-              >
-                <Button
-                  className={css({ borderRadius: "50%" })}
-                  iconId="ri-more-fill"
-                  title="Actions"
-                  size="small"
-                  priority="secondary"
-                  type="button"
-                />
-              </Popover.Trigger>
-              <Popover.Positioner>
-                <Popover.Content>
-                  <Stack h="200px" bgColor="red"></Stack>
-                </Popover.Content>
-              </Popover.Positioner>
-            </Popover.Root>
-          </styled.div>
         </article>
       </Link>
+      <styled.div position="absolute" top="10px" right="10px">
+        <Popover.Root open={isOpen} positioning={{ placement: "left-start" }}>
+          <PopoverTrigger asChild>
+            <Button
+              ref={ref as any}
+              className={css({ borderRadius: "50%" })}
+              onClick={() => setIsOpen((prev) => !prev)}
+              iconId="ri-more-fill"
+              title="Actions"
+              size="small"
+              priority="secondary"
+              type="button"
+            />
+          </PopoverTrigger>
+          <Popover.Positioner hideBelow="lg">
+            <MenuDesktopPopover {...menuProps} />
+          </Popover.Positioner>
+        </Popover.Root>
+      </styled.div>
+      {isOpen ? <MenuMobileModal {...menuProps} /> : null}
       {isLast ? null : <Divider mt="16px" mb="8px" />}
     </Flex>
   );
 };
+
+const useIsDesktop = () => {
+  return useMedia(`(min-width: ${token("breakpoints.lg")})`);
+};
+
+const MenuDesktopPopover = ({ onClose, createdBy }: MenuProps) => {
+  const isDesktop = useIsDesktop();
+  const ref = useRef<HTMLDivElement>(null);
+  useClickAway(ref, (e) => isDesktop && onClose(e));
+
+  return (
+    <Popover.Content>
+      <ReportActions ref={ref} createdBy={createdBy} />
+    </Popover.Content>
+  );
+};
+
+const MenuMobileModal = ({ onClose, createdBy }: MenuProps) => {
+  const isDesktop = useIsDesktop();
+  const ref = useRef<HTMLDivElement>(null);
+
+  useClickAway(ref, (e) => !isDesktop && onClose(e));
+
+  return (
+    <styled.div hideFrom="lg" zIndex="modal" pos="fixed" top="0" left="0" right="0" bottom="0" bgColor="rgba(0,0,0,.8)">
+      <styled.div ref={ref} position="absolute" left="0" right="0" bottom="0" bgColor="white">
+        <ReportActions createdBy={createdBy} />
+      </styled.div>
+    </styled.div>
+  );
+};
+
+type MenuProps = { onClose: (e: Event) => void; createdBy: Report["createdBy"] };
 
 type ReportStatus = "draft" | "published";
 const ReportBadge = ({ status }: { status: ReportStatus }) => {

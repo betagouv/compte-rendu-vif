@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS "report" (
   precisions TEXT,
   contacts TEXT,
   "furtherInformation" TEXT,
-  "createdByEmail" TEXT NOT NULL REFERENCES "user"(email) ON DELETE SET NULL,
+  "createdBy" TEXT NOT NULL REFERENCES "user"(id) ON DELETE SET NULL,
   "createdAt" TIMESTAMP NOT NULL,
   "serviceInstructeur" INT,
   "pdf" TEXT

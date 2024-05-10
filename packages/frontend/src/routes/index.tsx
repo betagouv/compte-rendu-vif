@@ -22,8 +22,7 @@ const Index = () => {
       label: user.name,
       className: css({
         position: "absolute",
-        // left: { base: "16px", md: "max(calc((100vw - 100%) / 2 + 24px), 16px)" },
-        left: { base: "calc((100vw - 400px) / 2 - 8px)", md: "calc((100vw - 828px) / 2 - 8px)" },
+        left: { base: "calc((100vw - 400px) / 2 - 8px)", lg: "calc((100vw - 828px) / 2 - 8px)" },
       }),
     },
     {
@@ -36,12 +35,14 @@ const Index = () => {
     },
   ];
 
+  console.log(user);
+
   const createReportMutation = useMutation({
     mutationFn: () =>
       db.report.create({
         data: {
           id: `report-${v4()}`,
-          createdByEmail: user.email,
+          createdBy: user.id,
           createdAt: new Date(),
         },
       }),

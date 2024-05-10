@@ -85,7 +85,7 @@ export type reportPayload<ExtArgs extends $Extensions.Args = $Extensions.Default
     precisions: string | null
     contacts: string | null
     furtherInformation: string | null
-    createdByEmail: string
+    createdBy: string
     createdAt: Date
     serviceInstructeur: number | null
     pdf: string | null
@@ -186,6 +186,7 @@ export type userPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultAr
     udap: udapPayload<ExtArgs>
   }
   scalars: $Extensions.GetResult<{
+    id: string
     email: string
     name: string
     temporaryLink: string | null
@@ -4726,7 +4727,7 @@ export namespace Prisma {
     precisions: string | null
     contacts: string | null
     furtherInformation: string | null
-    createdByEmail: string | null
+    createdBy: string | null
     createdAt: Date | null
     serviceInstructeur: number | null
     pdf: string | null
@@ -4746,7 +4747,7 @@ export namespace Prisma {
     precisions: string | null
     contacts: string | null
     furtherInformation: string | null
-    createdByEmail: string | null
+    createdBy: string | null
     createdAt: Date | null
     serviceInstructeur: number | null
     pdf: string | null
@@ -4766,7 +4767,7 @@ export namespace Prisma {
     precisions: number
     contacts: number
     furtherInformation: number
-    createdByEmail: number
+    createdBy: number
     createdAt: number
     serviceInstructeur: number
     pdf: number
@@ -4796,7 +4797,7 @@ export namespace Prisma {
     precisions?: true
     contacts?: true
     furtherInformation?: true
-    createdByEmail?: true
+    createdBy?: true
     createdAt?: true
     serviceInstructeur?: true
     pdf?: true
@@ -4816,7 +4817,7 @@ export namespace Prisma {
     precisions?: true
     contacts?: true
     furtherInformation?: true
-    createdByEmail?: true
+    createdBy?: true
     createdAt?: true
     serviceInstructeur?: true
     pdf?: true
@@ -4836,7 +4837,7 @@ export namespace Prisma {
     precisions?: true
     contacts?: true
     furtherInformation?: true
-    createdByEmail?: true
+    createdBy?: true
     createdAt?: true
     serviceInstructeur?: true
     pdf?: true
@@ -4944,7 +4945,7 @@ export namespace Prisma {
     precisions: string | null
     contacts: string | null
     furtherInformation: string | null
-    createdByEmail: string
+    createdBy: string
     createdAt: Date
     serviceInstructeur: number | null
     pdf: string | null
@@ -4983,7 +4984,7 @@ export namespace Prisma {
     precisions?: boolean
     contacts?: boolean
     furtherInformation?: boolean
-    createdByEmail?: boolean
+    createdBy?: boolean
     createdAt?: boolean
     serviceInstructeur?: boolean
     pdf?: boolean
@@ -5006,7 +5007,7 @@ export namespace Prisma {
     precisions?: boolean
     contacts?: boolean
     furtherInformation?: boolean
-    createdByEmail?: boolean
+    createdBy?: boolean
     createdAt?: boolean
     serviceInstructeur?: boolean
     pdf?: boolean
@@ -9468,6 +9469,7 @@ export namespace Prisma {
   }
 
   export type UserMinAggregateOutputType = {
+    id: string | null
     email: string | null
     name: string | null
     temporaryLink: string | null
@@ -9477,6 +9479,7 @@ export namespace Prisma {
   }
 
   export type UserMaxAggregateOutputType = {
+    id: string | null
     email: string | null
     name: string | null
     temporaryLink: string | null
@@ -9486,6 +9489,7 @@ export namespace Prisma {
   }
 
   export type UserCountAggregateOutputType = {
+    id: number
     email: number
     name: number
     temporaryLink: number
@@ -9497,6 +9501,7 @@ export namespace Prisma {
 
 
   export type UserMinAggregateInputType = {
+    id?: true
     email?: true
     name?: true
     temporaryLink?: true
@@ -9506,6 +9511,7 @@ export namespace Prisma {
   }
 
   export type UserMaxAggregateInputType = {
+    id?: true
     email?: true
     name?: true
     temporaryLink?: true
@@ -9515,6 +9521,7 @@ export namespace Prisma {
   }
 
   export type UserCountAggregateInputType = {
+    id?: true
     email?: true
     name?: true
     temporaryLink?: true
@@ -9598,6 +9605,7 @@ export namespace Prisma {
 
 
   export type UserGroupByOutputType = {
+    id: string
     email: string
     name: string
     temporaryLink: string | null
@@ -9624,6 +9632,7 @@ export namespace Prisma {
 
 
   export type userSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
     email?: boolean
     name?: boolean
     temporaryLink?: boolean
@@ -9638,6 +9647,7 @@ export namespace Prisma {
   }, ExtArgs["result"]["user"]>
 
   export type userSelectScalar = {
+    id?: boolean
     email?: boolean
     name?: boolean
     temporaryLink?: boolean
@@ -9742,8 +9752,8 @@ export namespace Prisma {
      * // Get first 10 Users
      * const users = await prisma.user.findMany({ take: 10 })
      * 
-     * // Only select the `email`
-     * const userWithEmailOnly = await prisma.user.findMany({ select: { email: true } })
+     * // Only select the `id`
+     * const userWithIdOnly = await prisma.user.findMany({ select: { id: true } })
      * 
     **/
     findMany<T extends userFindManyArgs<ExtArgs>>(
@@ -11366,7 +11376,7 @@ export namespace Prisma {
     precisions: 'precisions',
     contacts: 'contacts',
     furtherInformation: 'furtherInformation',
-    createdByEmail: 'createdByEmail',
+    createdBy: 'createdBy',
     createdAt: 'createdAt',
     serviceInstructeur: 'serviceInstructeur',
     pdf: 'pdf'
@@ -11419,6 +11429,7 @@ export namespace Prisma {
 
 
   export const UserScalarFieldEnum: {
+    id: 'id',
     email: 'email',
     name: 'name',
     temporaryLink: 'temporaryLink',
@@ -11612,7 +11623,7 @@ export namespace Prisma {
     precisions?: StringNullableFilter | string | null
     contacts?: StringNullableFilter | string | null
     furtherInformation?: StringNullableFilter | string | null
-    createdByEmail?: StringFilter | string
+    createdBy?: StringFilter | string
     createdAt?: DateTimeFilter | Date | string
     serviceInstructeur?: IntNullableFilter | number | null
     pdf?: StringNullableFilter | string | null
@@ -11634,7 +11645,7 @@ export namespace Prisma {
     precisions?: SortOrderInput | SortOrder
     contacts?: SortOrderInput | SortOrder
     furtherInformation?: SortOrderInput | SortOrder
-    createdByEmail?: SortOrder
+    createdBy?: SortOrder
     createdAt?: SortOrder
     serviceInstructeur?: SortOrderInput | SortOrder
     pdf?: SortOrderInput | SortOrder
@@ -11660,7 +11671,7 @@ export namespace Prisma {
     precisions?: SortOrderInput | SortOrder
     contacts?: SortOrderInput | SortOrder
     furtherInformation?: SortOrderInput | SortOrder
-    createdByEmail?: SortOrder
+    createdBy?: SortOrder
     createdAt?: SortOrder
     serviceInstructeur?: SortOrderInput | SortOrder
     pdf?: SortOrderInput | SortOrder
@@ -11688,7 +11699,7 @@ export namespace Prisma {
     precisions?: StringNullableWithAggregatesFilter | string | null
     contacts?: StringNullableWithAggregatesFilter | string | null
     furtherInformation?: StringNullableWithAggregatesFilter | string | null
-    createdByEmail?: StringWithAggregatesFilter | string
+    createdBy?: StringWithAggregatesFilter | string
     createdAt?: DateTimeWithAggregatesFilter | Date | string
     serviceInstructeur?: IntNullableWithAggregatesFilter | number | null
     pdf?: StringNullableWithAggregatesFilter | string | null
@@ -11884,6 +11895,7 @@ export namespace Prisma {
     AND?: Enumerable<userWhereInput>
     OR?: Enumerable<userWhereInput>
     NOT?: Enumerable<userWhereInput>
+    id?: StringFilter | string
     email?: StringFilter | string
     name?: StringFilter | string
     temporaryLink?: StringNullableFilter | string | null
@@ -11897,6 +11909,7 @@ export namespace Prisma {
   }
 
   export type userOrderByWithRelationInput = {
+    id?: SortOrder
     email?: SortOrder
     name?: SortOrder
     temporaryLink?: SortOrderInput | SortOrder
@@ -11910,10 +11923,11 @@ export namespace Prisma {
   }
 
   export type userWhereUniqueInput = {
-    email?: string
+    id?: string
   }
 
   export type userOrderByWithAggregationInput = {
+    id?: SortOrder
     email?: SortOrder
     name?: SortOrder
     temporaryLink?: SortOrderInput | SortOrder
@@ -11929,6 +11943,7 @@ export namespace Prisma {
     AND?: Enumerable<userScalarWhereWithAggregatesInput>
     OR?: Enumerable<userScalarWhereWithAggregatesInput>
     NOT?: Enumerable<userScalarWhereWithAggregatesInput>
+    id?: StringWithAggregatesFilter | string
     email?: StringWithAggregatesFilter | string
     name?: StringWithAggregatesFilter | string
     temporaryLink?: StringNullableWithAggregatesFilter | string | null
@@ -12152,7 +12167,7 @@ export namespace Prisma {
     precisions?: string | null
     contacts?: string | null
     furtherInformation?: string | null
-    createdByEmail: string
+    createdBy: string
     createdAt: Date | string
     serviceInstructeur?: number | null
     pdf?: string | null
@@ -12194,7 +12209,7 @@ export namespace Prisma {
     precisions?: NullableStringFieldUpdateOperationsInput | string | null
     contacts?: NullableStringFieldUpdateOperationsInput | string | null
     furtherInformation?: NullableStringFieldUpdateOperationsInput | string | null
-    createdByEmail?: StringFieldUpdateOperationsInput | string
+    createdBy?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     serviceInstructeur?: NullableIntFieldUpdateOperationsInput | number | null
     pdf?: NullableStringFieldUpdateOperationsInput | string | null
@@ -12215,7 +12230,7 @@ export namespace Prisma {
     precisions?: string | null
     contacts?: string | null
     furtherInformation?: string | null
-    createdByEmail: string
+    createdBy: string
     createdAt: Date | string
     serviceInstructeur?: number | null
     pdf?: string | null
@@ -12254,7 +12269,7 @@ export namespace Prisma {
     precisions?: NullableStringFieldUpdateOperationsInput | string | null
     contacts?: NullableStringFieldUpdateOperationsInput | string | null
     furtherInformation?: NullableStringFieldUpdateOperationsInput | string | null
-    createdByEmail?: StringFieldUpdateOperationsInput | string
+    createdBy?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     serviceInstructeur?: NullableIntFieldUpdateOperationsInput | number | null
     pdf?: NullableStringFieldUpdateOperationsInput | string | null
@@ -12479,6 +12494,7 @@ export namespace Prisma {
   }
 
   export type userCreateInput = {
+    id: string
     email: string
     name: string
     temporaryLink?: string | null
@@ -12491,6 +12507,7 @@ export namespace Prisma {
   }
 
   export type userUncheckedCreateInput = {
+    id: string
     email: string
     name: string
     temporaryLink?: string | null
@@ -12503,6 +12520,7 @@ export namespace Prisma {
   }
 
   export type userUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
@@ -12515,6 +12533,7 @@ export namespace Prisma {
   }
 
   export type userUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
@@ -12527,6 +12546,7 @@ export namespace Prisma {
   }
 
   export type userCreateManyInput = {
+    id: string
     email: string
     name: string
     temporaryLink?: string | null
@@ -12536,6 +12556,7 @@ export namespace Prisma {
   }
 
   export type userUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
@@ -12544,6 +12565,7 @@ export namespace Prisma {
   }
 
   export type userUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
@@ -12875,7 +12897,7 @@ export namespace Prisma {
     precisions?: SortOrder
     contacts?: SortOrder
     furtherInformation?: SortOrder
-    createdByEmail?: SortOrder
+    createdBy?: SortOrder
     createdAt?: SortOrder
     serviceInstructeur?: SortOrder
     pdf?: SortOrder
@@ -12899,7 +12921,7 @@ export namespace Prisma {
     precisions?: SortOrder
     contacts?: SortOrder
     furtherInformation?: SortOrder
-    createdByEmail?: SortOrder
+    createdBy?: SortOrder
     createdAt?: SortOrder
     serviceInstructeur?: SortOrder
     pdf?: SortOrder
@@ -12919,7 +12941,7 @@ export namespace Prisma {
     precisions?: SortOrder
     contacts?: SortOrder
     furtherInformation?: SortOrder
-    createdByEmail?: SortOrder
+    createdBy?: SortOrder
     createdAt?: SortOrder
     serviceInstructeur?: SortOrder
     pdf?: SortOrder
@@ -13122,6 +13144,7 @@ export namespace Prisma {
   }
 
   export type userCountOrderByAggregateInput = {
+    id?: SortOrder
     email?: SortOrder
     name?: SortOrder
     temporaryLink?: SortOrder
@@ -13131,6 +13154,7 @@ export namespace Prisma {
   }
 
   export type userMaxOrderByAggregateInput = {
+    id?: SortOrder
     email?: SortOrder
     name?: SortOrder
     temporaryLink?: SortOrder
@@ -13140,6 +13164,7 @@ export namespace Prisma {
   }
 
   export type userMinOrderByAggregateInput = {
+    id?: SortOrder
     email?: SortOrder
     name?: SortOrder
     temporaryLink?: SortOrder
@@ -13831,6 +13856,7 @@ export namespace Prisma {
   }
 
   export type userCreateWithoutReportInput = {
+    id: string
     email: string
     name: string
     temporaryLink?: string | null
@@ -13842,6 +13868,7 @@ export namespace Prisma {
   }
 
   export type userUncheckedCreateWithoutReportInput = {
+    id: string
     email: string
     name: string
     temporaryLink?: string | null
@@ -13883,6 +13910,7 @@ export namespace Prisma {
   }
 
   export type userUpdateWithoutReportInput = {
+    id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
@@ -13894,6 +13922,7 @@ export namespace Prisma {
   }
 
   export type userUncheckedUpdateWithoutReportInput = {
+    id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
@@ -13971,7 +14000,7 @@ export namespace Prisma {
     precisions?: string | null
     contacts?: string | null
     furtherInformation?: string | null
-    createdByEmail: string
+    createdBy: string
     createdAt: Date | string
     serviceInstructeur?: number | null
     pdf?: string | null
@@ -14038,13 +14067,14 @@ export namespace Prisma {
     precisions?: NullableStringFieldUpdateOperationsInput | string | null
     contacts?: NullableStringFieldUpdateOperationsInput | string | null
     furtherInformation?: NullableStringFieldUpdateOperationsInput | string | null
-    createdByEmail?: StringFieldUpdateOperationsInput | string
+    createdBy?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     serviceInstructeur?: NullableIntFieldUpdateOperationsInput | number | null
     pdf?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type userCreateWithoutDelegation_delegation_createdByTouserInput = {
+    id: string
     email: string
     name: string
     temporaryLink?: string | null
@@ -14056,6 +14086,7 @@ export namespace Prisma {
   }
 
   export type userUncheckedCreateWithoutDelegation_delegation_createdByTouserInput = {
+    id: string
     email: string
     name: string
     temporaryLink?: string | null
@@ -14072,6 +14103,7 @@ export namespace Prisma {
   }
 
   export type userCreateWithoutDelegation_delegation_delegatedToTouserInput = {
+    id: string
     email: string
     name: string
     temporaryLink?: string | null
@@ -14083,6 +14115,7 @@ export namespace Prisma {
   }
 
   export type userUncheckedCreateWithoutDelegation_delegation_delegatedToTouserInput = {
+    id: string
     email: string
     name: string
     temporaryLink?: string | null
@@ -14104,6 +14137,7 @@ export namespace Prisma {
   }
 
   export type userUpdateWithoutDelegation_delegation_createdByTouserInput = {
+    id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
@@ -14115,6 +14149,7 @@ export namespace Prisma {
   }
 
   export type userUncheckedUpdateWithoutDelegation_delegation_createdByTouserInput = {
+    id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
@@ -14131,6 +14166,7 @@ export namespace Prisma {
   }
 
   export type userUpdateWithoutDelegation_delegation_delegatedToTouserInput = {
+    id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
@@ -14142,6 +14178,7 @@ export namespace Prisma {
   }
 
   export type userUncheckedUpdateWithoutDelegation_delegation_delegatedToTouserInput = {
+    id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
@@ -14153,6 +14190,7 @@ export namespace Prisma {
   }
 
   export type userCreateWithoutUdapInput = {
+    id: string
     email: string
     name: string
     temporaryLink?: string | null
@@ -14164,6 +14202,7 @@ export namespace Prisma {
   }
 
   export type userUncheckedCreateWithoutUdapInput = {
+    id: string
     email: string
     name: string
     temporaryLink?: string | null
@@ -14204,6 +14243,7 @@ export namespace Prisma {
     AND?: Enumerable<userScalarWhereInput>
     OR?: Enumerable<userScalarWhereInput>
     NOT?: Enumerable<userScalarWhereInput>
+    id?: StringFilter | string
     email?: StringFilter | string
     name?: StringFilter | string
     temporaryLink?: StringNullableFilter | string | null
@@ -14402,7 +14442,7 @@ export namespace Prisma {
     precisions?: StringNullableFilter | string | null
     contacts?: StringNullableFilter | string | null
     furtherInformation?: StringNullableFilter | string | null
-    createdByEmail?: StringFilter | string
+    createdBy?: StringFilter | string
     createdAt?: DateTimeFilter | Date | string
     serviceInstructeur?: IntNullableFilter | number | null
     pdf?: StringNullableFilter | string | null
@@ -14475,6 +14515,7 @@ export namespace Prisma {
   }
 
   export type userCreateManyUdapInput = {
+    id: string
     email: string
     name: string
     temporaryLink?: string | null
@@ -14483,6 +14524,7 @@ export namespace Prisma {
   }
 
   export type userUpdateWithoutUdapInput = {
+    id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
@@ -14494,6 +14536,7 @@ export namespace Prisma {
   }
 
   export type userUncheckedUpdateWithoutUdapInput = {
+    id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
@@ -14505,6 +14548,7 @@ export namespace Prisma {
   }
 
   export type userUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null

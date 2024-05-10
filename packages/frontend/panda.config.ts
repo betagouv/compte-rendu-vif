@@ -1,6 +1,7 @@
 import { defineConfig, definePreset } from "@pandacss/dev";
 import theme from "./dsfr-tokens.json";
 import { tabs } from "./theme/recipes/tabs";
+import { popover } from "./theme/recipes/popover";
 
 const dsfrPreset = definePreset(theme);
 
@@ -23,6 +24,7 @@ export default defineConfig({
     extend: {
       slotRecipes: {
         tabs: tabs,
+        popover: popover,
       },
       keyframes: {
         spin: {
