@@ -142,7 +142,8 @@ exports.Prisma.ReportScalarFieldEnum = {
   furtherInformation: 'furtherInformation',
   createdByEmail: 'createdByEmail',
   createdAt: 'createdAt',
-  serviceInstructeur: 'serviceInstructeur'
+  serviceInstructeur: 'serviceInstructeur',
+  pdf: 'pdf'
 };
 
 exports.Prisma.Report_to_clauseScalarFieldEnum = {

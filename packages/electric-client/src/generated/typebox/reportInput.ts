@@ -17,6 +17,7 @@ export const reportInput = Type.Object({
   createdByEmail: Type.String(),
   createdAt: Type.String(),
   serviceInstructeur: Type.Optional(Type.Number()),
+  pdf: Type.Optional(Type.String()),
   user: Type.Object({
     email: Type.String(),
     name: Type.String(),

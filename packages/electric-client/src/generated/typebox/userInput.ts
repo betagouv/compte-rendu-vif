@@ -37,6 +37,7 @@ export const userInput = Type.Object({
       createdByEmail: Type.String(),
       createdAt: Type.String(),
       serviceInstructeur: Type.Optional(Type.Number()),
+      pdf: Type.Optional(Type.String()),
     })
   ),
   udap: Type.Object({

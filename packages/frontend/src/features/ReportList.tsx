@@ -114,7 +114,7 @@ const ReportListItem = ({ report, isLast }: { report: ReportWithUser; isLast?: b
           <styled.span>Rédigé par {report.user?.name ?? report.createdByEmail.split("@")[0]}</styled.span>
           {/* TODO: set correct status */}
           <styled.div mt="8px">
-            <ReportBadge status="draft" />
+            <ReportBadge status={report.pdf ? "published" : "draft"} />
           </styled.div>
           {/* <Button onClick={() => mutation.mutate()}>Supprimer</Button> */}
           <styled.div position="absolute" top="10px" right="10px">
@@ -152,6 +152,6 @@ const ReportListItem = ({ report, isLast }: { report: ReportWithUser; isLast?: b
 type ReportStatus = "draft" | "published";
 const ReportBadge = ({ status }: { status: ReportStatus }) => {
   return (
-    <Badge severity={status === "draft" ? "info" : "success"}>{status === "draft" ? "Brouillon" : "Publié"}</Badge>
+    <Badge severity={status === "draft" ? "info" : "success"}>{status === "draft" ? "Brouillon" : "Envoyé"}</Badge>
   );
 };

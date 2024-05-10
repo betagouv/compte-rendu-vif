@@ -104,7 +104,7 @@ export namespace Endpoints {
     parameters: {
       body: { htmlString: string; reportId: string };
     };
-    response: Partial<{}>;
+    response: string;
   };
 
   // </Endpoints>

@@ -1,23 +1,13 @@
 import { Type, type FastifyPluginAsyncTypebox } from "@fastify/type-provider-typebox";
-import { AppError } from "../features/errors";
-import { FastifyRequest } from "fastify";
 import { SerializedUser } from "../services/userService";
 import { renderToBuffer } from "@react-pdf/renderer";
 import { ReportPDFDocument } from "@cr-vif/pdf";
 import { Udap } from "@cr-vif/electric-client/frontend";
+import { authenticate } from "./authMiddleware";
 import { db } from "../db/db";
 
 export const pdfPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
-  fastify.addHook("preHandler", async (request: FastifyRequest) => {
-    const auth = request.headers.authorization;
-    if (!auth) throw new AppError(403, "Unauthorized");
-
-    const [_, token] = auth.split(" ");
-    const user = await request.services.user.verifyJWT(token ?? "");
-
-    if (!user) throw new AppError(403, "Unauthorized");
-    request.user = user;
-  });
+  fastify.addHook("preHandler", authenticate);
 
   fastify.post("/report", { schema: createUserTSchema }, async (request) => {
     const { reportId, htmlString } = request.body;
@@ -32,6 +22,8 @@ export const pdfPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
       buffer: pdf,
       name,
     });
+
+    await db.report.update({ where: { id: reportId }, data: { pdf: url } });
 
     return url;
   });
@@ -48,5 +40,5 @@ export const createUserTSchema = {
     htmlString: Type.String(),
     reportId: Type.String(),
   }),
-  response: { 200: Type.Any() },
+  response: { 200: Type.String() },
 };

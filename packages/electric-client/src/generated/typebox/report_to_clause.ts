@@ -26,6 +26,7 @@ export const report_to_clause = Type.Object({
     createdByEmail: Type.String(),
     createdAt: Type.String(),
     serviceInstructeur: Type.Optional(Type.Number()),
+    pdf: Type.Optional(Type.String()),
   }),
 });
 

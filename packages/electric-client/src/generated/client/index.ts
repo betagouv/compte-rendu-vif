@@ -20,7 +20,7 @@ export const DelegationScalarFieldEnumSchema = z.enum(['createdBy','delegatedTo'
 
 export const QueryModeSchema = z.enum(['default','insensitive']);
 
-export const ReportScalarFieldEnumSchema = z.enum(['id','title','projectDescription','redactedBy','meetDate','applicantName','applicantAddress','projectCadastralRef','projectSpaceType','decision','precisions','contacts','furtherInformation','createdByEmail','createdAt','serviceInstructeur']);
+export const ReportScalarFieldEnumSchema = z.enum(['id','title','projectDescription','redactedBy','meetDate','applicantName','applicantAddress','projectCadastralRef','projectSpaceType','decision','precisions','contacts','furtherInformation','createdByEmail','createdAt','serviceInstructeur','pdf']);
 
 export const Report_to_clauseScalarFieldEnumSchema = z.enum(['id','reportId','clauseId']);
 
@@ -92,6 +92,7 @@ export const ReportSchema = z.object({
   createdByEmail: z.string(),
   createdAt: z.coerce.date(),
   serviceInstructeur: z.number().int().gte(-2147483648).lte(2147483647).nullable(),
+  pdf: z.string().nullable(),
 })
 
 export type Report = z.infer<typeof ReportSchema>
@@ -244,6 +245,7 @@ export const ReportSelectSchema: z.ZodType<Prisma.ReportSelect> = z.object({
   createdByEmail: z.boolean().optional(),
   createdAt: z.boolean().optional(),
   serviceInstructeur: z.boolean().optional(),
+  pdf: z.boolean().optional(),
   user: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
   report_to_clause: z.union([z.boolean(),z.lazy(() => Report_to_clauseFindManyArgsSchema)]).optional(),
   _count: z.union([z.boolean(),z.lazy(() => ReportCountOutputTypeArgsSchema)]).optional(),
@@ -488,6 +490,7 @@ export const ReportWhereInputSchema: z.ZodType<Prisma.ReportWhereInput> = z.obje
   createdByEmail: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   serviceInstructeur: z.union([ z.lazy(() => IntNullableFilterSchema),z.number() ]).optional().nullable(),
+  pdf: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   user: z.union([ z.lazy(() => UserRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional(),
   report_to_clause: z.lazy(() => Report_to_clauseListRelationFilterSchema).optional()
 }).strict();
@@ -509,6 +512,7 @@ export const ReportOrderByWithRelationInputSchema: z.ZodType<Prisma.ReportOrderB
   createdByEmail: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   serviceInstructeur: z.lazy(() => SortOrderSchema).optional(),
+  pdf: z.lazy(() => SortOrderSchema).optional(),
   user: z.lazy(() => UserOrderByWithRelationInputSchema).optional(),
   report_to_clause: z.lazy(() => Report_to_clauseOrderByRelationAggregateInputSchema).optional()
 }).strict();
@@ -534,6 +538,7 @@ export const ReportOrderByWithAggregationInputSchema: z.ZodType<Prisma.ReportOrd
   createdByEmail: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   serviceInstructeur: z.lazy(() => SortOrderSchema).optional(),
+  pdf: z.lazy(() => SortOrderSchema).optional(),
   _count: z.lazy(() => ReportCountOrderByAggregateInputSchema).optional(),
   _avg: z.lazy(() => ReportAvgOrderByAggregateInputSchema).optional(),
   _max: z.lazy(() => ReportMaxOrderByAggregateInputSchema).optional(),
@@ -561,6 +566,7 @@ export const ReportScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.Report
   createdByEmail: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
   serviceInstructeur: z.union([ z.lazy(() => IntNullableWithAggregatesFilterSchema),z.number() ]).optional().nullable(),
+  pdf: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
 }).strict();
 
 export const Report_to_clauseWhereInputSchema: z.ZodType<Prisma.Report_to_clauseWhereInput> = z.object({
@@ -872,6 +878,7 @@ export const ReportCreateInputSchema: z.ZodType<Prisma.ReportCreateInput> = z.ob
   furtherInformation: z.string().optional().nullable(),
   createdAt: z.coerce.date(),
   serviceInstructeur: z.number().int().gte(-2147483648).lte(2147483647).optional().nullable(),
+  pdf: z.string().optional().nullable(),
   user: z.lazy(() => UserCreateNestedOneWithoutReportInputSchema),
   report_to_clause: z.lazy(() => Report_to_clauseCreateNestedManyWithoutReportInputSchema).optional()
 }).strict();
@@ -893,6 +900,7 @@ export const ReportUncheckedCreateInputSchema: z.ZodType<Prisma.ReportUncheckedC
   createdByEmail: z.string(),
   createdAt: z.coerce.date(),
   serviceInstructeur: z.number().int().gte(-2147483648).lte(2147483647).optional().nullable(),
+  pdf: z.string().optional().nullable(),
   report_to_clause: z.lazy(() => Report_to_clauseUncheckedCreateNestedManyWithoutReportInputSchema).optional()
 }).strict();
 
@@ -912,6 +920,7 @@ export const ReportUpdateInputSchema: z.ZodType<Prisma.ReportUpdateInput> = z.ob
   furtherInformation: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   serviceInstructeur: z.union([ z.number().int().gte(-2147483648).lte(2147483647),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  pdf: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   user: z.lazy(() => UserUpdateOneRequiredWithoutReportNestedInputSchema).optional(),
   report_to_clause: z.lazy(() => Report_to_clauseUpdateManyWithoutReportNestedInputSchema).optional()
 }).strict();
@@ -933,6 +942,7 @@ export const ReportUncheckedUpdateInputSchema: z.ZodType<Prisma.ReportUncheckedU
   createdByEmail: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   serviceInstructeur: z.union([ z.number().int().gte(-2147483648).lte(2147483647),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  pdf: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   report_to_clause: z.lazy(() => Report_to_clauseUncheckedUpdateManyWithoutReportNestedInputSchema).optional()
 }).strict();
 
@@ -952,7 +962,8 @@ export const ReportCreateManyInputSchema: z.ZodType<Prisma.ReportCreateManyInput
   furtherInformation: z.string().optional().nullable(),
   createdByEmail: z.string(),
   createdAt: z.coerce.date(),
-  serviceInstructeur: z.number().int().gte(-2147483648).lte(2147483647).optional().nullable()
+  serviceInstructeur: z.number().int().gte(-2147483648).lte(2147483647).optional().nullable(),
+  pdf: z.string().optional().nullable()
 }).strict();
 
 export const ReportUpdateManyMutationInputSchema: z.ZodType<Prisma.ReportUpdateManyMutationInput> = z.object({
@@ -971,6 +982,7 @@ export const ReportUpdateManyMutationInputSchema: z.ZodType<Prisma.ReportUpdateM
   furtherInformation: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   serviceInstructeur: z.union([ z.number().int().gte(-2147483648).lte(2147483647),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  pdf: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const ReportUncheckedUpdateManyInputSchema: z.ZodType<Prisma.ReportUncheckedUpdateManyInput> = z.object({
@@ -990,6 +1002,7 @@ export const ReportUncheckedUpdateManyInputSchema: z.ZodType<Prisma.ReportUnchec
   createdByEmail: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   serviceInstructeur: z.union([ z.number().int().gte(-2147483648).lte(2147483647),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  pdf: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const Report_to_clauseCreateInputSchema: z.ZodType<Prisma.Report_to_clauseCreateInput> = z.object({
@@ -1378,7 +1391,8 @@ export const ReportCountOrderByAggregateInputSchema: z.ZodType<Prisma.ReportCoun
   furtherInformation: z.lazy(() => SortOrderSchema).optional(),
   createdByEmail: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
-  serviceInstructeur: z.lazy(() => SortOrderSchema).optional()
+  serviceInstructeur: z.lazy(() => SortOrderSchema).optional(),
+  pdf: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const ReportAvgOrderByAggregateInputSchema: z.ZodType<Prisma.ReportAvgOrderByAggregateInput> = z.object({
@@ -1401,7 +1415,8 @@ export const ReportMaxOrderByAggregateInputSchema: z.ZodType<Prisma.ReportMaxOrd
   furtherInformation: z.lazy(() => SortOrderSchema).optional(),
   createdByEmail: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
-  serviceInstructeur: z.lazy(() => SortOrderSchema).optional()
+  serviceInstructeur: z.lazy(() => SortOrderSchema).optional(),
+  pdf: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const ReportMinOrderByAggregateInputSchema: z.ZodType<Prisma.ReportMinOrderByAggregateInput> = z.object({
@@ -1420,7 +1435,8 @@ export const ReportMinOrderByAggregateInputSchema: z.ZodType<Prisma.ReportMinOrd
   furtherInformation: z.lazy(() => SortOrderSchema).optional(),
   createdByEmail: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
-  serviceInstructeur: z.lazy(() => SortOrderSchema).optional()
+  serviceInstructeur: z.lazy(() => SortOrderSchema).optional(),
+  pdf: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const ReportSumOrderByAggregateInputSchema: z.ZodType<Prisma.ReportSumOrderByAggregateInput> = z.object({
@@ -2445,6 +2461,7 @@ export const ReportCreateWithoutReport_to_clauseInputSchema: z.ZodType<Prisma.Re
   furtherInformation: z.string().optional().nullable(),
   createdAt: z.coerce.date(),
   serviceInstructeur: z.number().optional().nullable(),
+  pdf: z.string().optional().nullable(),
   user: z.lazy(() => UserCreateNestedOneWithoutReportInputSchema)
 }).strict();
 
@@ -2464,7 +2481,8 @@ export const ReportUncheckedCreateWithoutReport_to_clauseInputSchema: z.ZodType<
   furtherInformation: z.string().optional().nullable(),
   createdByEmail: z.string(),
   createdAt: z.coerce.date(),
-  serviceInstructeur: z.number().optional().nullable()
+  serviceInstructeur: z.number().optional().nullable(),
+  pdf: z.string().optional().nullable()
 }).strict();
 
 export const ReportCreateOrConnectWithoutReport_to_clauseInputSchema: z.ZodType<Prisma.ReportCreateOrConnectWithoutReport_to_clauseInput> = z.object({
@@ -2510,6 +2528,7 @@ export const ReportUpdateWithoutReport_to_clauseInputSchema: z.ZodType<Prisma.Re
   furtherInformation: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   serviceInstructeur: z.union([ z.number(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  pdf: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   user: z.lazy(() => UserUpdateOneRequiredWithoutReportNestedInputSchema).optional()
 }).strict();
 
@@ -2530,6 +2549,7 @@ export const ReportUncheckedUpdateWithoutReport_to_clauseInputSchema: z.ZodType<
   createdByEmail: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   serviceInstructeur: z.union([ z.number(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  pdf: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const UserCreateWithoutUdapInputSchema: z.ZodType<Prisma.UserCreateWithoutUdapInput> = z.object({
@@ -2644,6 +2664,7 @@ export const ReportCreateWithoutUserInputSchema: z.ZodType<Prisma.ReportCreateWi
   furtherInformation: z.string().optional().nullable(),
   createdAt: z.coerce.date(),
   serviceInstructeur: z.number().optional().nullable(),
+  pdf: z.string().optional().nullable(),
   report_to_clause: z.lazy(() => Report_to_clauseCreateNestedManyWithoutReportInputSchema).optional()
 }).strict();
 
@@ -2663,6 +2684,7 @@ export const ReportUncheckedCreateWithoutUserInputSchema: z.ZodType<Prisma.Repor
   furtherInformation: z.string().optional().nullable(),
   createdAt: z.coerce.date(),
   serviceInstructeur: z.number().optional().nullable(),
+  pdf: z.string().optional().nullable(),
   report_to_clause: z.lazy(() => Report_to_clauseUncheckedCreateNestedManyWithoutReportInputSchema).optional()
 }).strict();
 
@@ -2783,6 +2805,7 @@ export const ReportScalarWhereInputSchema: z.ZodType<Prisma.ReportScalarWhereInp
   createdByEmail: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   serviceInstructeur: z.union([ z.lazy(() => IntNullableFilterSchema),z.number() ]).optional().nullable(),
+  pdf: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
 }).strict();
 
 export const UdapUpsertWithoutUserInputSchema: z.ZodType<Prisma.UdapUpsertWithoutUserInput> = z.object({
@@ -2912,7 +2935,8 @@ export const ReportCreateManyUserInputSchema: z.ZodType<Prisma.ReportCreateManyU
   contacts: z.string().optional().nullable(),
   furtherInformation: z.string().optional().nullable(),
   createdAt: z.coerce.date(),
-  serviceInstructeur: z.number().int().gte(-2147483648).lte(2147483647).optional().nullable()
+  serviceInstructeur: z.number().int().gte(-2147483648).lte(2147483647).optional().nullable(),
+  pdf: z.string().optional().nullable()
 }).strict();
 
 export const DelegationUpdateWithoutUser_delegation_createdByTouserInputSchema: z.ZodType<Prisma.DelegationUpdateWithoutUser_delegation_createdByTouserInput> = z.object({
@@ -2955,6 +2979,7 @@ export const ReportUpdateWithoutUserInputSchema: z.ZodType<Prisma.ReportUpdateWi
   furtherInformation: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   serviceInstructeur: z.union([ z.number(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  pdf: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   report_to_clause: z.lazy(() => Report_to_clauseUpdateManyWithoutReportNestedInputSchema).optional()
 }).strict();
 
@@ -2974,6 +2999,7 @@ export const ReportUncheckedUpdateWithoutUserInputSchema: z.ZodType<Prisma.Repor
   furtherInformation: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   serviceInstructeur: z.union([ z.number(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  pdf: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   report_to_clause: z.lazy(() => Report_to_clauseUncheckedUpdateManyWithoutReportNestedInputSchema).optional()
 }).strict();
 
@@ -2993,6 +3019,7 @@ export const ReportUncheckedUpdateManyWithoutReportInputSchema: z.ZodType<Prisma
   furtherInformation: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   serviceInstructeur: z.union([ z.number().int().gte(-2147483648).lte(2147483647),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  pdf: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 /////////////////////////////////////////
@@ -3938,6 +3965,10 @@ export const tableSchemas = {
       [
         "serviceInstructeur",
         "INT4"
+      ],
+      [
+        "pdf",
+        "TEXT"
       ]
     ]),
     relations: [

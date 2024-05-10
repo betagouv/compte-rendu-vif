@@ -52,6 +52,7 @@ model report {
   createdByEmail      String
   createdAt           DateTime           @db.Timestamp(6)
   serviceInstructeur  Int?
+  pdf                 String?
   user                user               @relation(fields: [createdByEmail], references: [email], onDelete: SetNull, onUpdate: NoAction)
   report_to_clause    report_to_clause[]
 }
