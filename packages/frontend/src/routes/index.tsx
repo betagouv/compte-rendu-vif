@@ -22,7 +22,8 @@ const Index = () => {
       label: user.name,
       className: css({
         position: "absolute",
-        left: "max(calc((100vw - 100%) / 2 + 24px), 16px)",
+        // left: { base: "16px", md: "max(calc((100vw - 100%) / 2 + 24px), 16px)" },
+        left: { base: "calc((100vw - 400px) / 2 - 8px)", md: "calc((100vw - 828px) / 2 - 8px)" },
       }),
     },
     {

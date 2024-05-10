@@ -67,12 +67,15 @@ export const ReportList = ({ reports }: { reports: ReportWithUser[] }) => {
     <Grid
       className={css({
         "& > *:nth-child(-n+10)": {
-          gridColumn: 1 /* Place in the first column */,
+          gridColumn: {
+            base: "0",
+            md: "1",
+          } /* Place in the first column */,
         },
       })}
       gap="8px 28px"
       // gridTemplateColumns="repeat(2, 1fr)"
-      gridTemplateRows="repeat(10, 1fr)"
+      gridTemplateRows={{ base: "repeat(20, 1fr)", md: "repeat(10, 1fr)" }}
       gridAutoFlow="column"
       w="100%"
     >
