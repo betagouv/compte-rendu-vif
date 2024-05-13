@@ -35,7 +35,6 @@ const Index = () => {
     },
   ];
 
-  console.log(user);
 
   const createReportMutation = useMutation({
     mutationFn: () =>

@@ -82,21 +82,25 @@ export const getReportHtmlString = (report: ReportWithUser, chipOptions: Chip[],
 
   return minifyHtml(`
     <p>
-      Objet : ${report.title}<br/>
-      Votre interlocuteur : ${report.user?.name ?? report.createdByEmail.split("@")[0]}<br/>
-      Demandeur : ${report.applicantName}<br/>
-      Adresse du projet : ${report.applicantAddress}<br/>
-      Ref cadastrale : ${report.projectCadastralRef}<br/>
+      Objet : ${report.title ?? ""}<br/>
+      Votre interlocuteur : ${report.user?.name ?? ""}<br/>
+      Demandeur : ${report.applicantName ?? ""}<br/>
+      Adresse du projet : ${report.applicantAddress ?? ""}<br/>
+      Ref cadastrale : ${report.projectCadastralRef ?? ""}<br/>
     </p>
     
-    <p>${spaceType?.text}</p>
+    ${spaceType ? `<p>${spaceType?.text}</p>` : ""}
   
-    <p>${decision?.text}</p>
+    ${decision ? `<p>${decision?.text}</p>` : ""}
   
-    <p>
+    ${
+      report.precisions
+        ? `<p>
       <strong>Précisions : </strong><br/>
       <span>${report.precisions}</span>
-    </p>
+    </p>`
+        : ""
+    }
   
     <p>
       <strong>Contacts utiles : </strong><br/>
