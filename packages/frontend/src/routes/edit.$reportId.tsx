@@ -134,18 +134,20 @@ const WithReport = ({ report }: { report: Report }) => {
   const onSubmit = (_values: Report) => {
     setPdfValues(_values);
     modal.open();
+  };
 
-    // navigate({
-    //   to: "/export/$reportId",
-    //   params: {
-    //     reportId: report.id,
-    //   },
-    // });
+  const goToEditPage = () => {
+    navigate({
+      to: "/export/$reportId",
+      params: {
+        reportId: report.id,
+      },
+    });
   };
 
   return (
     <>
-      <PDFModal report={pdfValues} />
+      <PDFModal report={pdfValues} onDownload={() => {}} onEdit={goToEditPage} />
       <Flex direction="column">
         <FormProvider {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -179,16 +181,26 @@ const WithReport = ({ report }: { report: Report }) => {
   );
 };
 
-const PDFModal = ({ report }: { report: Report | null }) => {
+const PDFModal = ({
+  report,
+  onEdit,
+  onDownload,
+}: {
+  report: Report | null;
+  onEdit: () => void;
+  onDownload: () => void;
+}) => {
   return (
     <modal.Component title="">
       <Stack>
         <Center gap="10px" direction="row">
-          <Button iconId="ri-pencil-line" priority="secondary">
+          <Button iconId="ri-pencil-line" priority="secondary" onClick={onEdit}>
             Modifier
           </Button>
           {/* TODO: replace with "Envoyer" */}
-          <Button iconId="ri-download-line">Télécharger</Button>
+          <Button iconId="ri-download-line" onClick={onDownload}>
+            Télécharger
+          </Button>
         </Center>
         {report ? <PDFContent report={report} /> : null}
       </Stack>
