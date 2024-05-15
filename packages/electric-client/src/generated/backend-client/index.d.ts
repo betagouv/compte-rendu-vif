@@ -183,16 +183,13 @@ export type userPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultAr
   objects: {
     delegation_delegation_createdByTouser: delegationPayload<ExtArgs>[]
     delegation_delegation_delegatedToTouser: delegationPayload<ExtArgs>[]
+    internal_user: internal_userPayload<ExtArgs>[]
     report: reportPayload<ExtArgs>[]
     udap: udapPayload<ExtArgs>
   }
   scalars: $Extensions.GetResult<{
     id: string
-    email: string
     name: string
-    temporaryLink: string | null
-    temporaryLinkExpiresAt: string | null
-    password: string
     udap_id: string
   }, ExtArgs["result"]["user"]>
   composites: {}
@@ -217,6 +214,28 @@ export type whitelistPayload<ExtArgs extends $Extensions.Args = $Extensions.Defa
  * 
  */
 export type whitelist = runtime.Types.DefaultSelection<whitelistPayload>
+export type internal_userPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  name: "internal_user"
+  objects: {
+    user: userPayload<ExtArgs>
+  }
+  scalars: $Extensions.GetResult<{
+    id: string
+    email: string
+    role: string
+    password: string
+    temporaryLink: string | null
+    temporaryLinkExpiresAt: string | null
+    userId: string
+  }, ExtArgs["result"]["internal_user"]>
+  composites: {}
+}
+
+/**
+ * Model internal_user
+ * 
+ */
+export type internal_user = runtime.Types.DefaultSelection<internal_userPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -442,6 +461,16 @@ export class PrismaClient<
     * ```
     */
   get whitelist(): Prisma.whitelistDelegate<GlobalReject, ExtArgs>;
+
+  /**
+   * `prisma.internal_user`: Exposes CRUD operations for the **internal_user** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Internal_users
+    * const internal_users = await prisma.internal_user.findMany()
+    * ```
+    */
+  get internal_user(): Prisma.internal_userDelegate<GlobalReject, ExtArgs>;
 }
 
 export namespace Prisma {
@@ -934,7 +963,8 @@ export namespace Prisma {
     delegation: 'delegation',
     udap: 'udap',
     user: 'user',
-    whitelist: 'whitelist'
+    whitelist: 'whitelist',
+    internal_user: 'internal_user'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -951,7 +981,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     meta: {
-      modelProps: 'atdatabases_migrations_applied' | 'atdatabases_migrations_version' | 'clause' | 'report' | 'report_to_clause' | 'chip' | 'delegation' | 'udap' | 'user' | 'whitelist'
+      modelProps: 'atdatabases_migrations_applied' | 'atdatabases_migrations_version' | 'clause' | 'report' | 'report_to_clause' | 'chip' | 'delegation' | 'udap' | 'user' | 'whitelist' | 'internal_user'
       txIsolationLevel: Prisma.TransactionIsolationLevel
     },
     model: {
@@ -1605,6 +1635,71 @@ export namespace Prisma {
           }
         }
       }
+      internal_user: {
+        payload: internal_userPayload<ExtArgs>
+        operations: {
+          findUnique: {
+            args: Prisma.internal_userFindUniqueArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<internal_userPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.internal_userFindUniqueOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<internal_userPayload>
+          }
+          findFirst: {
+            args: Prisma.internal_userFindFirstArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<internal_userPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.internal_userFindFirstOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<internal_userPayload>
+          }
+          findMany: {
+            args: Prisma.internal_userFindManyArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<internal_userPayload>[]
+          }
+          create: {
+            args: Prisma.internal_userCreateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<internal_userPayload>
+          }
+          createMany: {
+            args: Prisma.internal_userCreateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          delete: {
+            args: Prisma.internal_userDeleteArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<internal_userPayload>
+          }
+          update: {
+            args: Prisma.internal_userUpdateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<internal_userPayload>
+          }
+          deleteMany: {
+            args: Prisma.internal_userDeleteManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          updateMany: {
+            args: Prisma.internal_userUpdateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          upsert: {
+            args: Prisma.internal_userUpsertArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<internal_userPayload>
+          }
+          aggregate: {
+            args: Prisma.Internal_userAggregateArgs<ExtArgs>,
+            result: $Utils.Optional<AggregateInternal_user>
+          }
+          groupBy: {
+            args: Prisma.Internal_userGroupByArgs<ExtArgs>,
+            result: $Utils.Optional<Internal_userGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.internal_userCountArgs<ExtArgs>,
+            result: $Utils.Optional<Internal_userCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1894,12 +1989,14 @@ export namespace Prisma {
   export type UserCountOutputType = {
     delegation_delegation_createdByTouser: number
     delegation_delegation_delegatedToTouser: number
+    internal_user: number
     report: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     delegation_delegation_createdByTouser?: boolean | UserCountOutputTypeCountDelegation_delegation_createdByTouserArgs
     delegation_delegation_delegatedToTouser?: boolean | UserCountOutputTypeCountDelegation_delegation_delegatedToTouserArgs
+    internal_user?: boolean | UserCountOutputTypeCountInternal_userArgs
     report?: boolean | UserCountOutputTypeCountReportArgs
   }
 
@@ -1929,6 +2026,14 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountDelegation_delegation_delegatedToTouserArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     where?: delegationWhereInput
+  }
+
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountInternal_userArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    where?: internal_userWhereInput
   }
 
 
@@ -9480,31 +9585,19 @@ export namespace Prisma {
 
   export type UserMinAggregateOutputType = {
     id: string | null
-    email: string | null
     name: string | null
-    temporaryLink: string | null
-    temporaryLinkExpiresAt: string | null
-    password: string | null
     udap_id: string | null
   }
 
   export type UserMaxAggregateOutputType = {
     id: string | null
-    email: string | null
     name: string | null
-    temporaryLink: string | null
-    temporaryLinkExpiresAt: string | null
-    password: string | null
     udap_id: string | null
   }
 
   export type UserCountAggregateOutputType = {
     id: number
-    email: number
     name: number
-    temporaryLink: number
-    temporaryLinkExpiresAt: number
-    password: number
     udap_id: number
     _all: number
   }
@@ -9512,31 +9605,19 @@ export namespace Prisma {
 
   export type UserMinAggregateInputType = {
     id?: true
-    email?: true
     name?: true
-    temporaryLink?: true
-    temporaryLinkExpiresAt?: true
-    password?: true
     udap_id?: true
   }
 
   export type UserMaxAggregateInputType = {
     id?: true
-    email?: true
     name?: true
-    temporaryLink?: true
-    temporaryLinkExpiresAt?: true
-    password?: true
     udap_id?: true
   }
 
   export type UserCountAggregateInputType = {
     id?: true
-    email?: true
     name?: true
-    temporaryLink?: true
-    temporaryLinkExpiresAt?: true
-    password?: true
     udap_id?: true
     _all?: true
   }
@@ -9616,11 +9697,7 @@ export namespace Prisma {
 
   export type UserGroupByOutputType = {
     id: string
-    email: string
     name: string
-    temporaryLink: string | null
-    temporaryLinkExpiresAt: string | null
-    password: string
     udap_id: string
     _count: UserCountAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
@@ -9643,14 +9720,11 @@ export namespace Prisma {
 
   export type userSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    email?: boolean
     name?: boolean
-    temporaryLink?: boolean
-    temporaryLinkExpiresAt?: boolean
-    password?: boolean
     udap_id?: boolean
     delegation_delegation_createdByTouser?: boolean | user$delegation_delegation_createdByTouserArgs<ExtArgs>
     delegation_delegation_delegatedToTouser?: boolean | user$delegation_delegation_delegatedToTouserArgs<ExtArgs>
+    internal_user?: boolean | user$internal_userArgs<ExtArgs>
     report?: boolean | user$reportArgs<ExtArgs>
     udap?: boolean | udapArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeArgs<ExtArgs>
@@ -9658,17 +9732,14 @@ export namespace Prisma {
 
   export type userSelectScalar = {
     id?: boolean
-    email?: boolean
     name?: boolean
-    temporaryLink?: boolean
-    temporaryLinkExpiresAt?: boolean
-    password?: boolean
     udap_id?: boolean
   }
 
   export type userInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     delegation_delegation_createdByTouser?: boolean | user$delegation_delegation_createdByTouserArgs<ExtArgs>
     delegation_delegation_delegatedToTouser?: boolean | user$delegation_delegation_delegatedToTouserArgs<ExtArgs>
+    internal_user?: boolean | user$internal_userArgs<ExtArgs>
     report?: boolean | user$reportArgs<ExtArgs>
     udap?: boolean | udapArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeArgs<ExtArgs>
@@ -10047,6 +10118,8 @@ export namespace Prisma {
     delegation_delegation_createdByTouser<T extends user$delegation_delegation_createdByTouserArgs<ExtArgs> = {}>(args?: Subset<T, user$delegation_delegation_createdByTouserArgs<ExtArgs>>): Prisma.PrismaPromise<$Types.GetResult<delegationPayload<ExtArgs>, T, 'findMany', never>| Null>;
 
     delegation_delegation_delegatedToTouser<T extends user$delegation_delegation_delegatedToTouserArgs<ExtArgs> = {}>(args?: Subset<T, user$delegation_delegation_delegatedToTouserArgs<ExtArgs>>): Prisma.PrismaPromise<$Types.GetResult<delegationPayload<ExtArgs>, T, 'findMany', never>| Null>;
+
+    internal_user<T extends user$internal_userArgs<ExtArgs> = {}>(args?: Subset<T, user$internal_userArgs<ExtArgs>>): Prisma.PrismaPromise<$Types.GetResult<internal_userPayload<ExtArgs>, T, 'findMany', never>| Null>;
 
     report<T extends user$reportArgs<ExtArgs> = {}>(args?: Subset<T, user$reportArgs<ExtArgs>>): Prisma.PrismaPromise<$Types.GetResult<reportPayload<ExtArgs>, T, 'findMany', never>| Null>;
 
@@ -10446,6 +10519,27 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: Enumerable<DelegationScalarFieldEnum>
+  }
+
+
+  /**
+   * user.internal_user
+   */
+  export type user$internal_userArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the internal_user
+     */
+    select?: internal_userSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: internal_userInclude<ExtArgs> | null
+    where?: internal_userWhereInput
+    orderBy?: Enumerable<internal_userOrderByWithRelationInput>
+    cursor?: internal_userWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Enumerable<Internal_userScalarFieldEnum>
   }
 
 
@@ -11329,6 +11423,948 @@ export namespace Prisma {
 
 
   /**
+   * Model internal_user
+   */
+
+
+  export type AggregateInternal_user = {
+    _count: Internal_userCountAggregateOutputType | null
+    _min: Internal_userMinAggregateOutputType | null
+    _max: Internal_userMaxAggregateOutputType | null
+  }
+
+  export type Internal_userMinAggregateOutputType = {
+    id: string | null
+    email: string | null
+    role: string | null
+    password: string | null
+    temporaryLink: string | null
+    temporaryLinkExpiresAt: string | null
+    userId: string | null
+  }
+
+  export type Internal_userMaxAggregateOutputType = {
+    id: string | null
+    email: string | null
+    role: string | null
+    password: string | null
+    temporaryLink: string | null
+    temporaryLinkExpiresAt: string | null
+    userId: string | null
+  }
+
+  export type Internal_userCountAggregateOutputType = {
+    id: number
+    email: number
+    role: number
+    password: number
+    temporaryLink: number
+    temporaryLinkExpiresAt: number
+    userId: number
+    _all: number
+  }
+
+
+  export type Internal_userMinAggregateInputType = {
+    id?: true
+    email?: true
+    role?: true
+    password?: true
+    temporaryLink?: true
+    temporaryLinkExpiresAt?: true
+    userId?: true
+  }
+
+  export type Internal_userMaxAggregateInputType = {
+    id?: true
+    email?: true
+    role?: true
+    password?: true
+    temporaryLink?: true
+    temporaryLinkExpiresAt?: true
+    userId?: true
+  }
+
+  export type Internal_userCountAggregateInputType = {
+    id?: true
+    email?: true
+    role?: true
+    password?: true
+    temporaryLink?: true
+    temporaryLinkExpiresAt?: true
+    userId?: true
+    _all?: true
+  }
+
+  export type Internal_userAggregateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which internal_user to aggregate.
+     */
+    where?: internal_userWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of internal_users to fetch.
+     */
+    orderBy?: Enumerable<internal_userOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: internal_userWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` internal_users from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` internal_users.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned internal_users
+    **/
+    _count?: true | Internal_userCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Internal_userMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Internal_userMaxAggregateInputType
+  }
+
+  export type GetInternal_userAggregateType<T extends Internal_userAggregateArgs> = {
+        [P in keyof T & keyof AggregateInternal_user]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateInternal_user[P]>
+      : GetScalarType<T[P], AggregateInternal_user[P]>
+  }
+
+
+
+
+  export type Internal_userGroupByArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    where?: internal_userWhereInput
+    orderBy?: Enumerable<internal_userOrderByWithAggregationInput>
+    by: Internal_userScalarFieldEnum[]
+    having?: internal_userScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Internal_userCountAggregateInputType | true
+    _min?: Internal_userMinAggregateInputType
+    _max?: Internal_userMaxAggregateInputType
+  }
+
+
+  export type Internal_userGroupByOutputType = {
+    id: string
+    email: string
+    role: string
+    password: string
+    temporaryLink: string | null
+    temporaryLinkExpiresAt: string | null
+    userId: string
+    _count: Internal_userCountAggregateOutputType | null
+    _min: Internal_userMinAggregateOutputType | null
+    _max: Internal_userMaxAggregateOutputType | null
+  }
+
+  type GetInternal_userGroupByPayload<T extends Internal_userGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickArray<Internal_userGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Internal_userGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Internal_userGroupByOutputType[P]>
+            : GetScalarType<T[P], Internal_userGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type internal_userSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    email?: boolean
+    role?: boolean
+    password?: boolean
+    temporaryLink?: boolean
+    temporaryLinkExpiresAt?: boolean
+    userId?: boolean
+    user?: boolean | userArgs<ExtArgs>
+  }, ExtArgs["result"]["internal_user"]>
+
+  export type internal_userSelectScalar = {
+    id?: boolean
+    email?: boolean
+    role?: boolean
+    password?: boolean
+    temporaryLink?: boolean
+    temporaryLinkExpiresAt?: boolean
+    userId?: boolean
+  }
+
+  export type internal_userInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    user?: boolean | userArgs<ExtArgs>
+  }
+
+
+  type internal_userGetPayload<S extends boolean | null | undefined | internal_userArgs> = $Types.GetResult<internal_userPayload, S>
+
+  type internal_userCountArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = 
+    Omit<internal_userFindManyArgs, 'select' | 'include'> & {
+      select?: Internal_userCountAggregateInputType | true
+    }
+
+  export interface internal_userDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['internal_user'], meta: { name: 'internal_user' } }
+    /**
+     * Find zero or one Internal_user that matches the filter.
+     * @param {internal_userFindUniqueArgs} args - Arguments to find a Internal_user
+     * @example
+     * // Get one Internal_user
+     * const internal_user = await prisma.internal_user.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends internal_userFindUniqueArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, internal_userFindUniqueArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'internal_user'> extends True ? Prisma__internal_userClient<$Types.GetResult<internal_userPayload<ExtArgs>, T, 'findUnique', never>, never, ExtArgs> : Prisma__internal_userClient<$Types.GetResult<internal_userPayload<ExtArgs>, T, 'findUnique', never> | null, null, ExtArgs>
+
+    /**
+     * Find one Internal_user that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {internal_userFindUniqueOrThrowArgs} args - Arguments to find a Internal_user
+     * @example
+     * // Get one Internal_user
+     * const internal_user = await prisma.internal_user.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends internal_userFindUniqueOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, internal_userFindUniqueOrThrowArgs<ExtArgs>>
+    ): Prisma__internal_userClient<$Types.GetResult<internal_userPayload<ExtArgs>, T, 'findUniqueOrThrow', never>, never, ExtArgs>
+
+    /**
+     * Find the first Internal_user that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {internal_userFindFirstArgs} args - Arguments to find a Internal_user
+     * @example
+     * // Get one Internal_user
+     * const internal_user = await prisma.internal_user.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends internal_userFindFirstArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, internal_userFindFirstArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'internal_user'> extends True ? Prisma__internal_userClient<$Types.GetResult<internal_userPayload<ExtArgs>, T, 'findFirst', never>, never, ExtArgs> : Prisma__internal_userClient<$Types.GetResult<internal_userPayload<ExtArgs>, T, 'findFirst', never> | null, null, ExtArgs>
+
+    /**
+     * Find the first Internal_user that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {internal_userFindFirstOrThrowArgs} args - Arguments to find a Internal_user
+     * @example
+     * // Get one Internal_user
+     * const internal_user = await prisma.internal_user.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends internal_userFindFirstOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, internal_userFindFirstOrThrowArgs<ExtArgs>>
+    ): Prisma__internal_userClient<$Types.GetResult<internal_userPayload<ExtArgs>, T, 'findFirstOrThrow', never>, never, ExtArgs>
+
+    /**
+     * Find zero or more Internal_users that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {internal_userFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Internal_users
+     * const internal_users = await prisma.internal_user.findMany()
+     * 
+     * // Get first 10 Internal_users
+     * const internal_users = await prisma.internal_user.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const internal_userWithIdOnly = await prisma.internal_user.findMany({ select: { id: true } })
+     * 
+    **/
+    findMany<T extends internal_userFindManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, internal_userFindManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Types.GetResult<internal_userPayload<ExtArgs>, T, 'findMany', never>>
+
+    /**
+     * Create a Internal_user.
+     * @param {internal_userCreateArgs} args - Arguments to create a Internal_user.
+     * @example
+     * // Create one Internal_user
+     * const Internal_user = await prisma.internal_user.create({
+     *   data: {
+     *     // ... data to create a Internal_user
+     *   }
+     * })
+     * 
+    **/
+    create<T extends internal_userCreateArgs<ExtArgs>>(
+      args: SelectSubset<T, internal_userCreateArgs<ExtArgs>>
+    ): Prisma__internal_userClient<$Types.GetResult<internal_userPayload<ExtArgs>, T, 'create', never>, never, ExtArgs>
+
+    /**
+     * Create many Internal_users.
+     *     @param {internal_userCreateManyArgs} args - Arguments to create many Internal_users.
+     *     @example
+     *     // Create many Internal_users
+     *     const internal_user = await prisma.internal_user.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
+     *     
+    **/
+    createMany<T extends internal_userCreateManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, internal_userCreateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Internal_user.
+     * @param {internal_userDeleteArgs} args - Arguments to delete one Internal_user.
+     * @example
+     * // Delete one Internal_user
+     * const Internal_user = await prisma.internal_user.delete({
+     *   where: {
+     *     // ... filter to delete one Internal_user
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends internal_userDeleteArgs<ExtArgs>>(
+      args: SelectSubset<T, internal_userDeleteArgs<ExtArgs>>
+    ): Prisma__internal_userClient<$Types.GetResult<internal_userPayload<ExtArgs>, T, 'delete', never>, never, ExtArgs>
+
+    /**
+     * Update one Internal_user.
+     * @param {internal_userUpdateArgs} args - Arguments to update one Internal_user.
+     * @example
+     * // Update one Internal_user
+     * const internal_user = await prisma.internal_user.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends internal_userUpdateArgs<ExtArgs>>(
+      args: SelectSubset<T, internal_userUpdateArgs<ExtArgs>>
+    ): Prisma__internal_userClient<$Types.GetResult<internal_userPayload<ExtArgs>, T, 'update', never>, never, ExtArgs>
+
+    /**
+     * Delete zero or more Internal_users.
+     * @param {internal_userDeleteManyArgs} args - Arguments to filter Internal_users to delete.
+     * @example
+     * // Delete a few Internal_users
+     * const { count } = await prisma.internal_user.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends internal_userDeleteManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, internal_userDeleteManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Internal_users.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {internal_userUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Internal_users
+     * const internal_user = await prisma.internal_user.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends internal_userUpdateManyArgs<ExtArgs>>(
+      args: SelectSubset<T, internal_userUpdateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Internal_user.
+     * @param {internal_userUpsertArgs} args - Arguments to update or create a Internal_user.
+     * @example
+     * // Update or create a Internal_user
+     * const internal_user = await prisma.internal_user.upsert({
+     *   create: {
+     *     // ... data to create a Internal_user
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Internal_user we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends internal_userUpsertArgs<ExtArgs>>(
+      args: SelectSubset<T, internal_userUpsertArgs<ExtArgs>>
+    ): Prisma__internal_userClient<$Types.GetResult<internal_userPayload<ExtArgs>, T, 'upsert', never>, never, ExtArgs>
+
+    /**
+     * Count the number of Internal_users.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {internal_userCountArgs} args - Arguments to filter Internal_users to count.
+     * @example
+     * // Count the number of Internal_users
+     * const count = await prisma.internal_user.count({
+     *   where: {
+     *     // ... the filter for the Internal_users we want to count
+     *   }
+     * })
+    **/
+    count<T extends internal_userCountArgs>(
+      args?: Subset<T, internal_userCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Internal_userCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Internal_user.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Internal_userAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Internal_userAggregateArgs>(args: Subset<T, Internal_userAggregateArgs>): Prisma.PrismaPromise<GetInternal_userAggregateType<T>>
+
+    /**
+     * Group by Internal_user.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Internal_userGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends Internal_userGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: Internal_userGroupByArgs['orderBy'] }
+        : { orderBy?: Internal_userGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends TupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, Internal_userGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetInternal_userGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for internal_user.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export class Prisma__internal_userClient<T, Null = never, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> implements Prisma.PrismaPromise<T> {
+    private readonly _dmmf;
+    private readonly _queryType;
+    private readonly _rootField;
+    private readonly _clientMethod;
+    private readonly _args;
+    private readonly _dataPath;
+    private readonly _errorFormat;
+    private readonly _measurePerformance?;
+    private _isList;
+    private _callsite;
+    private _requestPromise?;
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+    constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
+
+    user<T extends userArgs<ExtArgs> = {}>(args?: Subset<T, userArgs<ExtArgs>>): Prisma__userClient<$Types.GetResult<userPayload<ExtArgs>, T, 'findUnique', never> | Null, never, ExtArgs>;
+
+    private get _document();
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): Promise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): Promise<T>;
+  }
+
+
+
+  // Custom InputTypes
+
+  /**
+   * internal_user base type for findUnique actions
+   */
+  export type internal_userFindUniqueArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the internal_user
+     */
+    select?: internal_userSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: internal_userInclude<ExtArgs> | null
+    /**
+     * Filter, which internal_user to fetch.
+     */
+    where: internal_userWhereUniqueInput
+  }
+
+  /**
+   * internal_user findUnique
+   */
+  export interface internal_userFindUniqueArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends internal_userFindUniqueArgsBase<ExtArgs> {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * internal_user findUniqueOrThrow
+   */
+  export type internal_userFindUniqueOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the internal_user
+     */
+    select?: internal_userSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: internal_userInclude<ExtArgs> | null
+    /**
+     * Filter, which internal_user to fetch.
+     */
+    where: internal_userWhereUniqueInput
+  }
+
+
+  /**
+   * internal_user base type for findFirst actions
+   */
+  export type internal_userFindFirstArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the internal_user
+     */
+    select?: internal_userSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: internal_userInclude<ExtArgs> | null
+    /**
+     * Filter, which internal_user to fetch.
+     */
+    where?: internal_userWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of internal_users to fetch.
+     */
+    orderBy?: Enumerable<internal_userOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for internal_users.
+     */
+    cursor?: internal_userWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` internal_users from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` internal_users.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of internal_users.
+     */
+    distinct?: Enumerable<Internal_userScalarFieldEnum>
+  }
+
+  /**
+   * internal_user findFirst
+   */
+  export interface internal_userFindFirstArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends internal_userFindFirstArgsBase<ExtArgs> {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * internal_user findFirstOrThrow
+   */
+  export type internal_userFindFirstOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the internal_user
+     */
+    select?: internal_userSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: internal_userInclude<ExtArgs> | null
+    /**
+     * Filter, which internal_user to fetch.
+     */
+    where?: internal_userWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of internal_users to fetch.
+     */
+    orderBy?: Enumerable<internal_userOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for internal_users.
+     */
+    cursor?: internal_userWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` internal_users from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` internal_users.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of internal_users.
+     */
+    distinct?: Enumerable<Internal_userScalarFieldEnum>
+  }
+
+
+  /**
+   * internal_user findMany
+   */
+  export type internal_userFindManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the internal_user
+     */
+    select?: internal_userSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: internal_userInclude<ExtArgs> | null
+    /**
+     * Filter, which internal_users to fetch.
+     */
+    where?: internal_userWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of internal_users to fetch.
+     */
+    orderBy?: Enumerable<internal_userOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing internal_users.
+     */
+    cursor?: internal_userWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` internal_users from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` internal_users.
+     */
+    skip?: number
+    distinct?: Enumerable<Internal_userScalarFieldEnum>
+  }
+
+
+  /**
+   * internal_user create
+   */
+  export type internal_userCreateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the internal_user
+     */
+    select?: internal_userSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: internal_userInclude<ExtArgs> | null
+    /**
+     * The data needed to create a internal_user.
+     */
+    data: XOR<internal_userCreateInput, internal_userUncheckedCreateInput>
+  }
+
+
+  /**
+   * internal_user createMany
+   */
+  export type internal_userCreateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many internal_users.
+     */
+    data: Enumerable<internal_userCreateManyInput>
+    skipDuplicates?: boolean
+  }
+
+
+  /**
+   * internal_user update
+   */
+  export type internal_userUpdateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the internal_user
+     */
+    select?: internal_userSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: internal_userInclude<ExtArgs> | null
+    /**
+     * The data needed to update a internal_user.
+     */
+    data: XOR<internal_userUpdateInput, internal_userUncheckedUpdateInput>
+    /**
+     * Choose, which internal_user to update.
+     */
+    where: internal_userWhereUniqueInput
+  }
+
+
+  /**
+   * internal_user updateMany
+   */
+  export type internal_userUpdateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update internal_users.
+     */
+    data: XOR<internal_userUpdateManyMutationInput, internal_userUncheckedUpdateManyInput>
+    /**
+     * Filter which internal_users to update
+     */
+    where?: internal_userWhereInput
+  }
+
+
+  /**
+   * internal_user upsert
+   */
+  export type internal_userUpsertArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the internal_user
+     */
+    select?: internal_userSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: internal_userInclude<ExtArgs> | null
+    /**
+     * The filter to search for the internal_user to update in case it exists.
+     */
+    where: internal_userWhereUniqueInput
+    /**
+     * In case the internal_user found by the `where` argument doesn't exist, create a new internal_user with this data.
+     */
+    create: XOR<internal_userCreateInput, internal_userUncheckedCreateInput>
+    /**
+     * In case the internal_user was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<internal_userUpdateInput, internal_userUncheckedUpdateInput>
+  }
+
+
+  /**
+   * internal_user delete
+   */
+  export type internal_userDeleteArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the internal_user
+     */
+    select?: internal_userSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: internal_userInclude<ExtArgs> | null
+    /**
+     * Filter which internal_user to delete.
+     */
+    where: internal_userWhereUniqueInput
+  }
+
+
+  /**
+   * internal_user deleteMany
+   */
+  export type internal_userDeleteManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which internal_users to delete
+     */
+    where?: internal_userWhereInput
+  }
+
+
+  /**
+   * internal_user without action
+   */
+  export type internal_userArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the internal_user
+     */
+    select?: internal_userSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: internal_userInclude<ExtArgs> | null
+  }
+
+
+
+  /**
    * Enums
    */
 
@@ -11441,11 +12477,7 @@ export namespace Prisma {
 
   export const UserScalarFieldEnum: {
     id: 'id',
-    email: 'email',
     name: 'name',
-    temporaryLink: 'temporaryLink',
-    temporaryLinkExpiresAt: 'temporaryLinkExpiresAt',
-    password: 'password',
     udap_id: 'udap_id'
   };
 
@@ -11457,6 +12489,19 @@ export namespace Prisma {
   };
 
   export type WhitelistScalarFieldEnum = (typeof WhitelistScalarFieldEnum)[keyof typeof WhitelistScalarFieldEnum]
+
+
+  export const Internal_userScalarFieldEnum: {
+    id: 'id',
+    email: 'email',
+    role: 'role',
+    password: 'password',
+    temporaryLink: 'temporaryLink',
+    temporaryLinkExpiresAt: 'temporaryLinkExpiresAt',
+    userId: 'userId'
+  };
+
+  export type Internal_userScalarFieldEnum = (typeof Internal_userScalarFieldEnum)[keyof typeof Internal_userScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -11911,28 +12956,22 @@ export namespace Prisma {
     OR?: Enumerable<userWhereInput>
     NOT?: Enumerable<userWhereInput>
     id?: StringFilter | string
-    email?: StringFilter | string
     name?: StringFilter | string
-    temporaryLink?: StringNullableFilter | string | null
-    temporaryLinkExpiresAt?: StringNullableFilter | string | null
-    password?: StringFilter | string
     udap_id?: StringFilter | string
     delegation_delegation_createdByTouser?: DelegationListRelationFilter
     delegation_delegation_delegatedToTouser?: DelegationListRelationFilter
+    internal_user?: Internal_userListRelationFilter
     report?: ReportListRelationFilter
     udap?: XOR<UdapRelationFilter, udapWhereInput>
   }
 
   export type userOrderByWithRelationInput = {
     id?: SortOrder
-    email?: SortOrder
     name?: SortOrder
-    temporaryLink?: SortOrderInput | SortOrder
-    temporaryLinkExpiresAt?: SortOrderInput | SortOrder
-    password?: SortOrder
     udap_id?: SortOrder
     delegation_delegation_createdByTouser?: delegationOrderByRelationAggregateInput
     delegation_delegation_delegatedToTouser?: delegationOrderByRelationAggregateInput
+    internal_user?: internal_userOrderByRelationAggregateInput
     report?: reportOrderByRelationAggregateInput
     udap?: udapOrderByWithRelationInput
   }
@@ -11943,11 +12982,7 @@ export namespace Prisma {
 
   export type userOrderByWithAggregationInput = {
     id?: SortOrder
-    email?: SortOrder
     name?: SortOrder
-    temporaryLink?: SortOrderInput | SortOrder
-    temporaryLinkExpiresAt?: SortOrderInput | SortOrder
-    password?: SortOrder
     udap_id?: SortOrder
     _count?: userCountOrderByAggregateInput
     _max?: userMaxOrderByAggregateInput
@@ -11959,11 +12994,7 @@ export namespace Prisma {
     OR?: Enumerable<userScalarWhereWithAggregatesInput>
     NOT?: Enumerable<userScalarWhereWithAggregatesInput>
     id?: StringWithAggregatesFilter | string
-    email?: StringWithAggregatesFilter | string
     name?: StringWithAggregatesFilter | string
-    temporaryLink?: StringNullableWithAggregatesFilter | string | null
-    temporaryLinkExpiresAt?: StringNullableWithAggregatesFilter | string | null
-    password?: StringWithAggregatesFilter | string
     udap_id?: StringWithAggregatesFilter | string
   }
 
@@ -11994,6 +13025,61 @@ export namespace Prisma {
     OR?: Enumerable<whitelistScalarWhereWithAggregatesInput>
     NOT?: Enumerable<whitelistScalarWhereWithAggregatesInput>
     email?: StringWithAggregatesFilter | string
+  }
+
+  export type internal_userWhereInput = {
+    AND?: Enumerable<internal_userWhereInput>
+    OR?: Enumerable<internal_userWhereInput>
+    NOT?: Enumerable<internal_userWhereInput>
+    id?: StringFilter | string
+    email?: StringFilter | string
+    role?: StringFilter | string
+    password?: StringFilter | string
+    temporaryLink?: StringNullableFilter | string | null
+    temporaryLinkExpiresAt?: StringNullableFilter | string | null
+    userId?: StringFilter | string
+    user?: XOR<UserRelationFilter, userWhereInput>
+  }
+
+  export type internal_userOrderByWithRelationInput = {
+    id?: SortOrder
+    email?: SortOrder
+    role?: SortOrder
+    password?: SortOrder
+    temporaryLink?: SortOrderInput | SortOrder
+    temporaryLinkExpiresAt?: SortOrderInput | SortOrder
+    userId?: SortOrder
+    user?: userOrderByWithRelationInput
+  }
+
+  export type internal_userWhereUniqueInput = {
+    id?: string
+  }
+
+  export type internal_userOrderByWithAggregationInput = {
+    id?: SortOrder
+    email?: SortOrder
+    role?: SortOrder
+    password?: SortOrder
+    temporaryLink?: SortOrderInput | SortOrder
+    temporaryLinkExpiresAt?: SortOrderInput | SortOrder
+    userId?: SortOrder
+    _count?: internal_userCountOrderByAggregateInput
+    _max?: internal_userMaxOrderByAggregateInput
+    _min?: internal_userMinOrderByAggregateInput
+  }
+
+  export type internal_userScalarWhereWithAggregatesInput = {
+    AND?: Enumerable<internal_userScalarWhereWithAggregatesInput>
+    OR?: Enumerable<internal_userScalarWhereWithAggregatesInput>
+    NOT?: Enumerable<internal_userScalarWhereWithAggregatesInput>
+    id?: StringWithAggregatesFilter | string
+    email?: StringWithAggregatesFilter | string
+    role?: StringWithAggregatesFilter | string
+    password?: StringWithAggregatesFilter | string
+    temporaryLink?: StringNullableWithAggregatesFilter | string | null
+    temporaryLinkExpiresAt?: StringNullableWithAggregatesFilter | string | null
+    userId?: StringWithAggregatesFilter | string
   }
 
   export type atdatabases_migrations_appliedCreateInput = {
@@ -12517,82 +13603,58 @@ export namespace Prisma {
 
   export type userCreateInput = {
     id: string
-    email: string
     name: string
-    temporaryLink?: string | null
-    temporaryLinkExpiresAt?: string | null
-    password: string
     delegation_delegation_createdByTouser?: delegationCreateNestedManyWithoutUser_delegation_createdByTouserInput
     delegation_delegation_delegatedToTouser?: delegationCreateNestedManyWithoutUser_delegation_delegatedToTouserInput
+    internal_user?: internal_userCreateNestedManyWithoutUserInput
     report?: reportCreateNestedManyWithoutUserInput
     udap: udapCreateNestedOneWithoutUserInput
   }
 
   export type userUncheckedCreateInput = {
     id: string
-    email: string
     name: string
-    temporaryLink?: string | null
-    temporaryLinkExpiresAt?: string | null
-    password: string
     udap_id: string
     delegation_delegation_createdByTouser?: delegationUncheckedCreateNestedManyWithoutUser_delegation_createdByTouserInput
     delegation_delegation_delegatedToTouser?: delegationUncheckedCreateNestedManyWithoutUser_delegation_delegatedToTouserInput
+    internal_user?: internal_userUncheckedCreateNestedManyWithoutUserInput
     report?: reportUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type userUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
-    temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: StringFieldUpdateOperationsInput | string
     delegation_delegation_createdByTouser?: delegationUpdateManyWithoutUser_delegation_createdByTouserNestedInput
     delegation_delegation_delegatedToTouser?: delegationUpdateManyWithoutUser_delegation_delegatedToTouserNestedInput
+    internal_user?: internal_userUpdateManyWithoutUserNestedInput
     report?: reportUpdateManyWithoutUserNestedInput
     udap?: udapUpdateOneRequiredWithoutUserNestedInput
   }
 
   export type userUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
-    temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: StringFieldUpdateOperationsInput | string
     udap_id?: StringFieldUpdateOperationsInput | string
     delegation_delegation_createdByTouser?: delegationUncheckedUpdateManyWithoutUser_delegation_createdByTouserNestedInput
     delegation_delegation_delegatedToTouser?: delegationUncheckedUpdateManyWithoutUser_delegation_delegatedToTouserNestedInput
+    internal_user?: internal_userUncheckedUpdateManyWithoutUserNestedInput
     report?: reportUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type userCreateManyInput = {
     id: string
-    email: string
     name: string
-    temporaryLink?: string | null
-    temporaryLinkExpiresAt?: string | null
-    password: string
     udap_id: string
   }
 
   export type userUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
-    temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: StringFieldUpdateOperationsInput | string
   }
 
   export type userUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
-    temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: StringFieldUpdateOperationsInput | string
     udap_id?: StringFieldUpdateOperationsInput | string
   }
 
@@ -12622,6 +13684,75 @@ export namespace Prisma {
 
   export type whitelistUncheckedUpdateManyInput = {
     email?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type internal_userCreateInput = {
+    id: string
+    email: string
+    role: string
+    password: string
+    temporaryLink?: string | null
+    temporaryLinkExpiresAt?: string | null
+    user: userCreateNestedOneWithoutInternal_userInput
+  }
+
+  export type internal_userUncheckedCreateInput = {
+    id: string
+    email: string
+    role: string
+    password: string
+    temporaryLink?: string | null
+    temporaryLinkExpiresAt?: string | null
+    userId: string
+  }
+
+  export type internal_userUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
+    user?: userUpdateOneRequiredWithoutInternal_userNestedInput
+  }
+
+  export type internal_userUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type internal_userCreateManyInput = {
+    id: string
+    email: string
+    role: string
+    password: string
+    temporaryLink?: string | null
+    temporaryLinkExpiresAt?: string | null
+    userId: string
+  }
+
+  export type internal_userUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type internal_userUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: StringFieldUpdateOperationsInput | string
   }
 
   export type BigIntFilter = {
@@ -13149,6 +14280,12 @@ export namespace Prisma {
     none?: delegationWhereInput
   }
 
+  export type Internal_userListRelationFilter = {
+    every?: internal_userWhereInput
+    some?: internal_userWhereInput
+    none?: internal_userWhereInput
+  }
+
   export type ReportListRelationFilter = {
     every?: reportWhereInput
     some?: reportWhereInput
@@ -13164,37 +14301,29 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
+  export type internal_userOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type reportOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
   export type userCountOrderByAggregateInput = {
     id?: SortOrder
-    email?: SortOrder
     name?: SortOrder
-    temporaryLink?: SortOrder
-    temporaryLinkExpiresAt?: SortOrder
-    password?: SortOrder
     udap_id?: SortOrder
   }
 
   export type userMaxOrderByAggregateInput = {
     id?: SortOrder
-    email?: SortOrder
     name?: SortOrder
-    temporaryLink?: SortOrder
-    temporaryLinkExpiresAt?: SortOrder
-    password?: SortOrder
     udap_id?: SortOrder
   }
 
   export type userMinOrderByAggregateInput = {
     id?: SortOrder
-    email?: SortOrder
     name?: SortOrder
-    temporaryLink?: SortOrder
-    temporaryLinkExpiresAt?: SortOrder
-    password?: SortOrder
     udap_id?: SortOrder
   }
 
@@ -13208,6 +14337,36 @@ export namespace Prisma {
 
   export type whitelistMinOrderByAggregateInput = {
     email?: SortOrder
+  }
+
+  export type internal_userCountOrderByAggregateInput = {
+    id?: SortOrder
+    email?: SortOrder
+    role?: SortOrder
+    password?: SortOrder
+    temporaryLink?: SortOrder
+    temporaryLinkExpiresAt?: SortOrder
+    userId?: SortOrder
+  }
+
+  export type internal_userMaxOrderByAggregateInput = {
+    id?: SortOrder
+    email?: SortOrder
+    role?: SortOrder
+    password?: SortOrder
+    temporaryLink?: SortOrder
+    temporaryLinkExpiresAt?: SortOrder
+    userId?: SortOrder
+  }
+
+  export type internal_userMinOrderByAggregateInput = {
+    id?: SortOrder
+    email?: SortOrder
+    role?: SortOrder
+    password?: SortOrder
+    temporaryLink?: SortOrder
+    temporaryLinkExpiresAt?: SortOrder
+    userId?: SortOrder
   }
 
   export type BigIntFieldUpdateOperationsInput = {
@@ -13468,6 +14627,13 @@ export namespace Prisma {
     connect?: Enumerable<delegationWhereUniqueInput>
   }
 
+  export type internal_userCreateNestedManyWithoutUserInput = {
+    create?: XOR<Enumerable<internal_userCreateWithoutUserInput>, Enumerable<internal_userUncheckedCreateWithoutUserInput>>
+    connectOrCreate?: Enumerable<internal_userCreateOrConnectWithoutUserInput>
+    createMany?: internal_userCreateManyUserInputEnvelope
+    connect?: Enumerable<internal_userWhereUniqueInput>
+  }
+
   export type reportCreateNestedManyWithoutUserInput = {
     create?: XOR<Enumerable<reportCreateWithoutUserInput>, Enumerable<reportUncheckedCreateWithoutUserInput>>
     connectOrCreate?: Enumerable<reportCreateOrConnectWithoutUserInput>
@@ -13493,6 +14659,13 @@ export namespace Prisma {
     connectOrCreate?: Enumerable<delegationCreateOrConnectWithoutUser_delegation_delegatedToTouserInput>
     createMany?: delegationCreateManyUser_delegation_delegatedToTouserInputEnvelope
     connect?: Enumerable<delegationWhereUniqueInput>
+  }
+
+  export type internal_userUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<Enumerable<internal_userCreateWithoutUserInput>, Enumerable<internal_userUncheckedCreateWithoutUserInput>>
+    connectOrCreate?: Enumerable<internal_userCreateOrConnectWithoutUserInput>
+    createMany?: internal_userCreateManyUserInputEnvelope
+    connect?: Enumerable<internal_userWhereUniqueInput>
   }
 
   export type reportUncheckedCreateNestedManyWithoutUserInput = {
@@ -13528,6 +14701,20 @@ export namespace Prisma {
     update?: Enumerable<delegationUpdateWithWhereUniqueWithoutUser_delegation_delegatedToTouserInput>
     updateMany?: Enumerable<delegationUpdateManyWithWhereWithoutUser_delegation_delegatedToTouserInput>
     deleteMany?: Enumerable<delegationScalarWhereInput>
+  }
+
+  export type internal_userUpdateManyWithoutUserNestedInput = {
+    create?: XOR<Enumerable<internal_userCreateWithoutUserInput>, Enumerable<internal_userUncheckedCreateWithoutUserInput>>
+    connectOrCreate?: Enumerable<internal_userCreateOrConnectWithoutUserInput>
+    upsert?: Enumerable<internal_userUpsertWithWhereUniqueWithoutUserInput>
+    createMany?: internal_userCreateManyUserInputEnvelope
+    set?: Enumerable<internal_userWhereUniqueInput>
+    disconnect?: Enumerable<internal_userWhereUniqueInput>
+    delete?: Enumerable<internal_userWhereUniqueInput>
+    connect?: Enumerable<internal_userWhereUniqueInput>
+    update?: Enumerable<internal_userUpdateWithWhereUniqueWithoutUserInput>
+    updateMany?: Enumerable<internal_userUpdateManyWithWhereWithoutUserInput>
+    deleteMany?: Enumerable<internal_userScalarWhereInput>
   }
 
   export type reportUpdateManyWithoutUserNestedInput = {
@@ -13580,6 +14767,20 @@ export namespace Prisma {
     deleteMany?: Enumerable<delegationScalarWhereInput>
   }
 
+  export type internal_userUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<Enumerable<internal_userCreateWithoutUserInput>, Enumerable<internal_userUncheckedCreateWithoutUserInput>>
+    connectOrCreate?: Enumerable<internal_userCreateOrConnectWithoutUserInput>
+    upsert?: Enumerable<internal_userUpsertWithWhereUniqueWithoutUserInput>
+    createMany?: internal_userCreateManyUserInputEnvelope
+    set?: Enumerable<internal_userWhereUniqueInput>
+    disconnect?: Enumerable<internal_userWhereUniqueInput>
+    delete?: Enumerable<internal_userWhereUniqueInput>
+    connect?: Enumerable<internal_userWhereUniqueInput>
+    update?: Enumerable<internal_userUpdateWithWhereUniqueWithoutUserInput>
+    updateMany?: Enumerable<internal_userUpdateManyWithWhereWithoutUserInput>
+    deleteMany?: Enumerable<internal_userScalarWhereInput>
+  }
+
   export type reportUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<Enumerable<reportCreateWithoutUserInput>, Enumerable<reportUncheckedCreateWithoutUserInput>>
     connectOrCreate?: Enumerable<reportCreateOrConnectWithoutUserInput>
@@ -13592,6 +14793,20 @@ export namespace Prisma {
     update?: Enumerable<reportUpdateWithWhereUniqueWithoutUserInput>
     updateMany?: Enumerable<reportUpdateManyWithWhereWithoutUserInput>
     deleteMany?: Enumerable<reportScalarWhereInput>
+  }
+
+  export type userCreateNestedOneWithoutInternal_userInput = {
+    create?: XOR<userCreateWithoutInternal_userInput, userUncheckedCreateWithoutInternal_userInput>
+    connectOrCreate?: userCreateOrConnectWithoutInternal_userInput
+    connect?: userWhereUniqueInput
+  }
+
+  export type userUpdateOneRequiredWithoutInternal_userNestedInput = {
+    create?: XOR<userCreateWithoutInternal_userInput, userUncheckedCreateWithoutInternal_userInput>
+    connectOrCreate?: userCreateOrConnectWithoutInternal_userInput
+    upsert?: userUpsertWithoutInternal_userInput
+    connect?: userWhereUniqueInput
+    update?: XOR<userUpdateWithoutInternal_userInput, userUncheckedUpdateWithoutInternal_userInput>
   }
 
   export type NestedBigIntFilter = {
@@ -13882,26 +15097,20 @@ export namespace Prisma {
 
   export type userCreateWithoutReportInput = {
     id: string
-    email: string
     name: string
-    temporaryLink?: string | null
-    temporaryLinkExpiresAt?: string | null
-    password: string
     delegation_delegation_createdByTouser?: delegationCreateNestedManyWithoutUser_delegation_createdByTouserInput
     delegation_delegation_delegatedToTouser?: delegationCreateNestedManyWithoutUser_delegation_delegatedToTouserInput
+    internal_user?: internal_userCreateNestedManyWithoutUserInput
     udap: udapCreateNestedOneWithoutUserInput
   }
 
   export type userUncheckedCreateWithoutReportInput = {
     id: string
-    email: string
     name: string
-    temporaryLink?: string | null
-    temporaryLinkExpiresAt?: string | null
-    password: string
     udap_id: string
     delegation_delegation_createdByTouser?: delegationUncheckedCreateNestedManyWithoutUser_delegation_createdByTouserInput
     delegation_delegation_delegatedToTouser?: delegationUncheckedCreateNestedManyWithoutUser_delegation_delegatedToTouserInput
+    internal_user?: internal_userUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type userCreateOrConnectWithoutReportInput = {
@@ -13936,26 +15145,20 @@ export namespace Prisma {
 
   export type userUpdateWithoutReportInput = {
     id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
-    temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: StringFieldUpdateOperationsInput | string
     delegation_delegation_createdByTouser?: delegationUpdateManyWithoutUser_delegation_createdByTouserNestedInput
     delegation_delegation_delegatedToTouser?: delegationUpdateManyWithoutUser_delegation_delegatedToTouserNestedInput
+    internal_user?: internal_userUpdateManyWithoutUserNestedInput
     udap?: udapUpdateOneRequiredWithoutUserNestedInput
   }
 
   export type userUncheckedUpdateWithoutReportInput = {
     id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
-    temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: StringFieldUpdateOperationsInput | string
     udap_id?: StringFieldUpdateOperationsInput | string
     delegation_delegation_createdByTouser?: delegationUncheckedUpdateManyWithoutUser_delegation_createdByTouserNestedInput
     delegation_delegation_delegatedToTouser?: delegationUncheckedUpdateManyWithoutUser_delegation_delegatedToTouserNestedInput
+    internal_user?: internal_userUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type report_to_clauseUpsertWithWhereUniqueWithoutReportInput = {
@@ -14104,25 +15307,19 @@ export namespace Prisma {
 
   export type userCreateWithoutDelegation_delegation_createdByTouserInput = {
     id: string
-    email: string
     name: string
-    temporaryLink?: string | null
-    temporaryLinkExpiresAt?: string | null
-    password: string
     delegation_delegation_delegatedToTouser?: delegationCreateNestedManyWithoutUser_delegation_delegatedToTouserInput
+    internal_user?: internal_userCreateNestedManyWithoutUserInput
     report?: reportCreateNestedManyWithoutUserInput
     udap: udapCreateNestedOneWithoutUserInput
   }
 
   export type userUncheckedCreateWithoutDelegation_delegation_createdByTouserInput = {
     id: string
-    email: string
     name: string
-    temporaryLink?: string | null
-    temporaryLinkExpiresAt?: string | null
-    password: string
     udap_id: string
     delegation_delegation_delegatedToTouser?: delegationUncheckedCreateNestedManyWithoutUser_delegation_delegatedToTouserInput
+    internal_user?: internal_userUncheckedCreateNestedManyWithoutUserInput
     report?: reportUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -14133,25 +15330,19 @@ export namespace Prisma {
 
   export type userCreateWithoutDelegation_delegation_delegatedToTouserInput = {
     id: string
-    email: string
     name: string
-    temporaryLink?: string | null
-    temporaryLinkExpiresAt?: string | null
-    password: string
     delegation_delegation_createdByTouser?: delegationCreateNestedManyWithoutUser_delegation_createdByTouserInput
+    internal_user?: internal_userCreateNestedManyWithoutUserInput
     report?: reportCreateNestedManyWithoutUserInput
     udap: udapCreateNestedOneWithoutUserInput
   }
 
   export type userUncheckedCreateWithoutDelegation_delegation_delegatedToTouserInput = {
     id: string
-    email: string
     name: string
-    temporaryLink?: string | null
-    temporaryLinkExpiresAt?: string | null
-    password: string
     udap_id: string
     delegation_delegation_createdByTouser?: delegationUncheckedCreateNestedManyWithoutUser_delegation_createdByTouserInput
+    internal_user?: internal_userUncheckedCreateNestedManyWithoutUserInput
     report?: reportUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -14167,25 +15358,19 @@ export namespace Prisma {
 
   export type userUpdateWithoutDelegation_delegation_createdByTouserInput = {
     id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
-    temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: StringFieldUpdateOperationsInput | string
     delegation_delegation_delegatedToTouser?: delegationUpdateManyWithoutUser_delegation_delegatedToTouserNestedInput
+    internal_user?: internal_userUpdateManyWithoutUserNestedInput
     report?: reportUpdateManyWithoutUserNestedInput
     udap?: udapUpdateOneRequiredWithoutUserNestedInput
   }
 
   export type userUncheckedUpdateWithoutDelegation_delegation_createdByTouserInput = {
     id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
-    temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: StringFieldUpdateOperationsInput | string
     udap_id?: StringFieldUpdateOperationsInput | string
     delegation_delegation_delegatedToTouser?: delegationUncheckedUpdateManyWithoutUser_delegation_delegatedToTouserNestedInput
+    internal_user?: internal_userUncheckedUpdateManyWithoutUserNestedInput
     report?: reportUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -14196,49 +15381,37 @@ export namespace Prisma {
 
   export type userUpdateWithoutDelegation_delegation_delegatedToTouserInput = {
     id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
-    temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: StringFieldUpdateOperationsInput | string
     delegation_delegation_createdByTouser?: delegationUpdateManyWithoutUser_delegation_createdByTouserNestedInput
+    internal_user?: internal_userUpdateManyWithoutUserNestedInput
     report?: reportUpdateManyWithoutUserNestedInput
     udap?: udapUpdateOneRequiredWithoutUserNestedInput
   }
 
   export type userUncheckedUpdateWithoutDelegation_delegation_delegatedToTouserInput = {
     id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
-    temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: StringFieldUpdateOperationsInput | string
     udap_id?: StringFieldUpdateOperationsInput | string
     delegation_delegation_createdByTouser?: delegationUncheckedUpdateManyWithoutUser_delegation_createdByTouserNestedInput
+    internal_user?: internal_userUncheckedUpdateManyWithoutUserNestedInput
     report?: reportUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type userCreateWithoutUdapInput = {
     id: string
-    email: string
     name: string
-    temporaryLink?: string | null
-    temporaryLinkExpiresAt?: string | null
-    password: string
     delegation_delegation_createdByTouser?: delegationCreateNestedManyWithoutUser_delegation_createdByTouserInput
     delegation_delegation_delegatedToTouser?: delegationCreateNestedManyWithoutUser_delegation_delegatedToTouserInput
+    internal_user?: internal_userCreateNestedManyWithoutUserInput
     report?: reportCreateNestedManyWithoutUserInput
   }
 
   export type userUncheckedCreateWithoutUdapInput = {
     id: string
-    email: string
     name: string
-    temporaryLink?: string | null
-    temporaryLinkExpiresAt?: string | null
-    password: string
     delegation_delegation_createdByTouser?: delegationUncheckedCreateNestedManyWithoutUser_delegation_createdByTouserInput
     delegation_delegation_delegatedToTouser?: delegationUncheckedCreateNestedManyWithoutUser_delegation_delegatedToTouserInput
+    internal_user?: internal_userUncheckedCreateNestedManyWithoutUserInput
     report?: reportUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -14273,11 +15446,7 @@ export namespace Prisma {
     OR?: Enumerable<userScalarWhereInput>
     NOT?: Enumerable<userScalarWhereInput>
     id?: StringFilter | string
-    email?: StringFilter | string
     name?: StringFilter | string
-    temporaryLink?: StringNullableFilter | string | null
-    temporaryLinkExpiresAt?: StringNullableFilter | string | null
-    password?: StringFilter | string
     udap_id?: StringFilter | string
   }
 
@@ -14314,6 +15483,34 @@ export namespace Prisma {
 
   export type delegationCreateManyUser_delegation_delegatedToTouserInputEnvelope = {
     data: Enumerable<delegationCreateManyUser_delegation_delegatedToTouserInput>
+    skipDuplicates?: boolean
+  }
+
+  export type internal_userCreateWithoutUserInput = {
+    id: string
+    email: string
+    role: string
+    password: string
+    temporaryLink?: string | null
+    temporaryLinkExpiresAt?: string | null
+  }
+
+  export type internal_userUncheckedCreateWithoutUserInput = {
+    id: string
+    email: string
+    role: string
+    password: string
+    temporaryLink?: string | null
+    temporaryLinkExpiresAt?: string | null
+  }
+
+  export type internal_userCreateOrConnectWithoutUserInput = {
+    where: internal_userWhereUniqueInput
+    create: XOR<internal_userCreateWithoutUserInput, internal_userUncheckedCreateWithoutUserInput>
+  }
+
+  export type internal_userCreateManyUserInputEnvelope = {
+    data: Enumerable<internal_userCreateManyUserInput>
     skipDuplicates?: boolean
   }
 
@@ -14440,6 +15637,35 @@ export namespace Prisma {
     data: XOR<delegationUpdateManyMutationInput, delegationUncheckedUpdateManyWithoutDelegation_delegation_delegatedToTouserInput>
   }
 
+  export type internal_userUpsertWithWhereUniqueWithoutUserInput = {
+    where: internal_userWhereUniqueInput
+    update: XOR<internal_userUpdateWithoutUserInput, internal_userUncheckedUpdateWithoutUserInput>
+    create: XOR<internal_userCreateWithoutUserInput, internal_userUncheckedCreateWithoutUserInput>
+  }
+
+  export type internal_userUpdateWithWhereUniqueWithoutUserInput = {
+    where: internal_userWhereUniqueInput
+    data: XOR<internal_userUpdateWithoutUserInput, internal_userUncheckedUpdateWithoutUserInput>
+  }
+
+  export type internal_userUpdateManyWithWhereWithoutUserInput = {
+    where: internal_userScalarWhereInput
+    data: XOR<internal_userUpdateManyMutationInput, internal_userUncheckedUpdateManyWithoutInternal_userInput>
+  }
+
+  export type internal_userScalarWhereInput = {
+    AND?: Enumerable<internal_userScalarWhereInput>
+    OR?: Enumerable<internal_userScalarWhereInput>
+    NOT?: Enumerable<internal_userScalarWhereInput>
+    id?: StringFilter | string
+    email?: StringFilter | string
+    role?: StringFilter | string
+    password?: StringFilter | string
+    temporaryLink?: StringNullableFilter | string | null
+    temporaryLinkExpiresAt?: StringNullableFilter | string | null
+    userId?: StringFilter | string
+  }
+
   export type reportUpsertWithWhereUniqueWithoutUserInput = {
     where: reportWhereUniqueInput
     update: XOR<reportUpdateWithoutUserInput, reportUncheckedUpdateWithoutUserInput>
@@ -14511,6 +15737,52 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type userCreateWithoutInternal_userInput = {
+    id: string
+    name: string
+    delegation_delegation_createdByTouser?: delegationCreateNestedManyWithoutUser_delegation_createdByTouserInput
+    delegation_delegation_delegatedToTouser?: delegationCreateNestedManyWithoutUser_delegation_delegatedToTouserInput
+    report?: reportCreateNestedManyWithoutUserInput
+    udap: udapCreateNestedOneWithoutUserInput
+  }
+
+  export type userUncheckedCreateWithoutInternal_userInput = {
+    id: string
+    name: string
+    udap_id: string
+    delegation_delegation_createdByTouser?: delegationUncheckedCreateNestedManyWithoutUser_delegation_createdByTouserInput
+    delegation_delegation_delegatedToTouser?: delegationUncheckedCreateNestedManyWithoutUser_delegation_delegatedToTouserInput
+    report?: reportUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type userCreateOrConnectWithoutInternal_userInput = {
+    where: userWhereUniqueInput
+    create: XOR<userCreateWithoutInternal_userInput, userUncheckedCreateWithoutInternal_userInput>
+  }
+
+  export type userUpsertWithoutInternal_userInput = {
+    update: XOR<userUpdateWithoutInternal_userInput, userUncheckedUpdateWithoutInternal_userInput>
+    create: XOR<userCreateWithoutInternal_userInput, userUncheckedCreateWithoutInternal_userInput>
+  }
+
+  export type userUpdateWithoutInternal_userInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    delegation_delegation_createdByTouser?: delegationUpdateManyWithoutUser_delegation_createdByTouserNestedInput
+    delegation_delegation_delegatedToTouser?: delegationUpdateManyWithoutUser_delegation_delegatedToTouserNestedInput
+    report?: reportUpdateManyWithoutUserNestedInput
+    udap?: udapUpdateOneRequiredWithoutUserNestedInput
+  }
+
+  export type userUncheckedUpdateWithoutInternal_userInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    udap_id?: StringFieldUpdateOperationsInput | string
+    delegation_delegation_createdByTouser?: delegationUncheckedUpdateManyWithoutUser_delegation_createdByTouserNestedInput
+    delegation_delegation_delegatedToTouser?: delegationUncheckedUpdateManyWithoutUser_delegation_delegatedToTouserNestedInput
+    report?: reportUncheckedUpdateManyWithoutUserNestedInput
+  }
+
   export type report_to_clauseCreateManyClauseInput = {
     id: string
     reportId: string
@@ -14548,44 +15820,30 @@ export namespace Prisma {
 
   export type userCreateManyUdapInput = {
     id: string
-    email: string
     name: string
-    temporaryLink?: string | null
-    temporaryLinkExpiresAt?: string | null
-    password: string
   }
 
   export type userUpdateWithoutUdapInput = {
     id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
-    temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: StringFieldUpdateOperationsInput | string
     delegation_delegation_createdByTouser?: delegationUpdateManyWithoutUser_delegation_createdByTouserNestedInput
     delegation_delegation_delegatedToTouser?: delegationUpdateManyWithoutUser_delegation_delegatedToTouserNestedInput
+    internal_user?: internal_userUpdateManyWithoutUserNestedInput
     report?: reportUpdateManyWithoutUserNestedInput
   }
 
   export type userUncheckedUpdateWithoutUdapInput = {
     id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
-    temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: StringFieldUpdateOperationsInput | string
     delegation_delegation_createdByTouser?: delegationUncheckedUpdateManyWithoutUser_delegation_createdByTouserNestedInput
     delegation_delegation_delegatedToTouser?: delegationUncheckedUpdateManyWithoutUser_delegation_delegatedToTouserNestedInput
+    internal_user?: internal_userUncheckedUpdateManyWithoutUserNestedInput
     report?: reportUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type userUncheckedUpdateManyWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
-    temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: StringFieldUpdateOperationsInput | string
   }
 
   export type delegationCreateManyUser_delegation_createdByTouserInput = {
@@ -14594,6 +15852,15 @@ export namespace Prisma {
 
   export type delegationCreateManyUser_delegation_delegatedToTouserInput = {
     createdBy: string
+  }
+
+  export type internal_userCreateManyUserInput = {
+    id: string
+    email: string
+    role: string
+    password: string
+    temporaryLink?: string | null
+    temporaryLinkExpiresAt?: string | null
   }
 
   export type reportCreateManyUserInput = {
@@ -14638,6 +15905,33 @@ export namespace Prisma {
 
   export type delegationUncheckedUpdateManyWithoutDelegation_delegation_delegatedToTouserInput = {
     createdBy?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type internal_userUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type internal_userUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type internal_userUncheckedUpdateManyWithoutInternal_userInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
+    temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type reportUpdateWithoutUserInput = {

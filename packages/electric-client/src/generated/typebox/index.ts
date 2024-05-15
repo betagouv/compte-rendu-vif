@@ -18,3 +18,5 @@ export * from './user';
 export * from './userInput';
 export * from './whitelist';
 export * from './whitelistInput';
+export * from './internal_user';
+export * from './internal_userInput';

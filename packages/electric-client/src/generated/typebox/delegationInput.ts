@@ -5,20 +5,12 @@ export const delegationInput = Type.Object({
   delegatedTo: Type.String(),
   user_delegation_createdByTouser: Type.Object({
     id: Type.String(),
-    email: Type.String(),
     name: Type.String(),
-    temporaryLink: Type.Optional(Type.String()),
-    temporaryLinkExpiresAt: Type.Optional(Type.String()),
-    password: Type.String(),
     udap_id: Type.String(),
   }),
   user_delegation_delegatedToTouser: Type.Object({
     id: Type.String(),
-    email: Type.String(),
     name: Type.String(),
-    temporaryLink: Type.Optional(Type.String()),
-    temporaryLinkExpiresAt: Type.Optional(Type.String()),
-    password: Type.String(),
     udap_id: Type.String(),
   }),
 });

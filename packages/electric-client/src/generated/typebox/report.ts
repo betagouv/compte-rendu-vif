@@ -21,11 +21,7 @@ export const report = Type.Object({
   disabled: Type.Optional(Type.Boolean()),
   user: Type.Object({
     id: Type.String(),
-    email: Type.String(),
     name: Type.String(),
-    temporaryLink: Type.Optional(Type.String()),
-    temporaryLinkExpiresAt: Type.Optional(Type.String()),
-    password: Type.String(),
     udap_id: Type.String(),
   }),
   report_to_clause: Type.Array(

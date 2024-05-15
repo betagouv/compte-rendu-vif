@@ -2,11 +2,7 @@ import { Type, Static } from "@sinclair/typebox";
 
 export const user = Type.Object({
   id: Type.String(),
-  email: Type.String(),
   name: Type.String(),
-  temporaryLink: Type.Optional(Type.String()),
-  temporaryLinkExpiresAt: Type.Optional(Type.String()),
-  password: Type.String(),
   udap_id: Type.String(),
   delegation_delegation_createdByTouser: Type.Array(
     Type.Object({
@@ -18,6 +14,17 @@ export const user = Type.Object({
     Type.Object({
       createdBy: Type.String(),
       delegatedTo: Type.String(),
+    })
+  ),
+  internal_user: Type.Array(
+    Type.Object({
+      id: Type.String(),
+      email: Type.String(),
+      role: Type.String(),
+      password: Type.String(),
+      temporaryLink: Type.Optional(Type.String()),
+      temporaryLinkExpiresAt: Type.Optional(Type.String()),
+      userId: Type.String(),
     })
   ),
   report: Type.Array(

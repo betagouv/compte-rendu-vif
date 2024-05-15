@@ -156,11 +156,7 @@ export type UserPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultAr
   }
   scalars: $Extensions.GetResult<{
     id: string
-    email: string
     name: string
-    temporaryLink: string | null
-    temporaryLinkExpiresAt: string | null
-    password: string
     udap_id: string
   }, ExtArgs["result"]["user"]>
   composites: {}
@@ -7387,31 +7383,19 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type UserMinAggregateOutputType = {
     id: string | null
-    email: string | null
     name: string | null
-    temporaryLink: string | null
-    temporaryLinkExpiresAt: string | null
-    password: string | null
     udap_id: string | null
   }
 
   export type UserMaxAggregateOutputType = {
     id: string | null
-    email: string | null
     name: string | null
-    temporaryLink: string | null
-    temporaryLinkExpiresAt: string | null
-    password: string | null
     udap_id: string | null
   }
 
   export type UserCountAggregateOutputType = {
     id: number
-    email: number
     name: number
-    temporaryLink: number
-    temporaryLinkExpiresAt: number
-    password: number
     udap_id: number
     _all: number
   }
@@ -7419,31 +7403,19 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type UserMinAggregateInputType = {
     id?: true
-    email?: true
     name?: true
-    temporaryLink?: true
-    temporaryLinkExpiresAt?: true
-    password?: true
     udap_id?: true
   }
 
   export type UserMaxAggregateInputType = {
     id?: true
-    email?: true
     name?: true
-    temporaryLink?: true
-    temporaryLinkExpiresAt?: true
-    password?: true
     udap_id?: true
   }
 
   export type UserCountAggregateInputType = {
     id?: true
-    email?: true
     name?: true
-    temporaryLink?: true
-    temporaryLinkExpiresAt?: true
-    password?: true
     udap_id?: true
     _all?: true
   }
@@ -7523,11 +7495,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type UserGroupByOutputType = {
     id: string
-    email: string
     name: string
-    temporaryLink: string | null
-    temporaryLinkExpiresAt: string | null
-    password: string
     udap_id: string
     _count: UserCountAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
@@ -7550,11 +7518,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type UserSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    email?: boolean
     name?: boolean
-    temporaryLink?: boolean
-    temporaryLinkExpiresAt?: boolean
-    password?: boolean
     udap_id?: boolean
     delegation_delegation_createdByTouser?: boolean | User$delegation_delegation_createdByTouserArgs<ExtArgs>
     delegation_delegation_delegatedToTouser?: boolean | User$delegation_delegation_delegatedToTouserArgs<ExtArgs>
@@ -7565,11 +7529,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type UserSelectScalar = {
     id?: boolean
-    email?: boolean
     name?: boolean
-    temporaryLink?: boolean
-    temporaryLinkExpiresAt?: boolean
-    password?: boolean
     udap_id?: boolean
   }
 
@@ -8485,11 +8445,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export const UserScalarFieldEnum: {
     id: 'id',
-    email: 'email',
     name: 'name',
-    temporaryLink: 'temporaryLink',
-    temporaryLinkExpiresAt: 'temporaryLinkExpiresAt',
-    password: 'password',
     udap_id: 'udap_id'
   };
 
@@ -8858,11 +8814,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     OR?: Enumerable<UserWhereInput>
     NOT?: Enumerable<UserWhereInput>
     id?: StringFilter | string
-    email?: StringFilter | string
     name?: StringFilter | string
-    temporaryLink?: StringNullableFilter | string | null
-    temporaryLinkExpiresAt?: StringNullableFilter | string | null
-    password?: StringFilter | string
     udap_id?: StringFilter | string
     delegation_delegation_createdByTouser?: DelegationListRelationFilter
     delegation_delegation_delegatedToTouser?: DelegationListRelationFilter
@@ -8872,11 +8824,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type UserOrderByWithRelationInput = {
     id?: SortOrder
-    email?: SortOrder
     name?: SortOrder
-    temporaryLink?: SortOrderInput | SortOrder
-    temporaryLinkExpiresAt?: SortOrderInput | SortOrder
-    password?: SortOrder
     udap_id?: SortOrder
     delegation_delegation_createdByTouser?: DelegationOrderByRelationAggregateInput
     delegation_delegation_delegatedToTouser?: DelegationOrderByRelationAggregateInput
@@ -8890,11 +8838,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type UserOrderByWithAggregationInput = {
     id?: SortOrder
-    email?: SortOrder
     name?: SortOrder
-    temporaryLink?: SortOrderInput | SortOrder
-    temporaryLinkExpiresAt?: SortOrderInput | SortOrder
-    password?: SortOrder
     udap_id?: SortOrder
     _count?: UserCountOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
@@ -8906,11 +8850,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     OR?: Enumerable<UserScalarWhereWithAggregatesInput>
     NOT?: Enumerable<UserScalarWhereWithAggregatesInput>
     id?: StringWithAggregatesFilter | string
-    email?: StringWithAggregatesFilter | string
     name?: StringWithAggregatesFilter | string
-    temporaryLink?: StringNullableWithAggregatesFilter | string | null
-    temporaryLinkExpiresAt?: StringNullableWithAggregatesFilter | string | null
-    password?: StringWithAggregatesFilter | string
     udap_id?: StringWithAggregatesFilter | string
   }
 
@@ -9330,11 +9270,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type UserCreateInput = {
     id: string
-    email: string
     name: string
-    temporaryLink?: string | null
-    temporaryLinkExpiresAt?: string | null
-    password: string
     delegation_delegation_createdByTouser?: DelegationCreateNestedManyWithoutUser_delegation_createdByTouserInput
     delegation_delegation_delegatedToTouser?: DelegationCreateNestedManyWithoutUser_delegation_delegatedToTouserInput
     report?: ReportCreateNestedManyWithoutUserInput
@@ -9343,11 +9279,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type UserUncheckedCreateInput = {
     id: string
-    email: string
     name: string
-    temporaryLink?: string | null
-    temporaryLinkExpiresAt?: string | null
-    password: string
     udap_id: string
     delegation_delegation_createdByTouser?: DelegationUncheckedCreateNestedManyWithoutUser_delegation_createdByTouserInput
     delegation_delegation_delegatedToTouser?: DelegationUncheckedCreateNestedManyWithoutUser_delegation_delegatedToTouserInput
@@ -9356,11 +9288,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type UserUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
-    temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: StringFieldUpdateOperationsInput | string
     delegation_delegation_createdByTouser?: DelegationUpdateManyWithoutUser_delegation_createdByTouserNestedInput
     delegation_delegation_delegatedToTouser?: DelegationUpdateManyWithoutUser_delegation_delegatedToTouserNestedInput
     report?: ReportUpdateManyWithoutUserNestedInput
@@ -9369,11 +9297,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type UserUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
-    temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: StringFieldUpdateOperationsInput | string
     udap_id?: StringFieldUpdateOperationsInput | string
     delegation_delegation_createdByTouser?: DelegationUncheckedUpdateManyWithoutUser_delegation_createdByTouserNestedInput
     delegation_delegation_delegatedToTouser?: DelegationUncheckedUpdateManyWithoutUser_delegation_delegatedToTouserNestedInput
@@ -9382,30 +9306,18 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type UserCreateManyInput = {
     id: string
-    email: string
     name: string
-    temporaryLink?: string | null
-    temporaryLinkExpiresAt?: string | null
-    password: string
     udap_id: string
   }
 
   export type UserUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
-    temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: StringFieldUpdateOperationsInput | string
   }
 
   export type UserUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
-    temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: StringFieldUpdateOperationsInput | string
     udap_id?: StringFieldUpdateOperationsInput | string
   }
 
@@ -9825,31 +9737,19 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type UserCountOrderByAggregateInput = {
     id?: SortOrder
-    email?: SortOrder
     name?: SortOrder
-    temporaryLink?: SortOrder
-    temporaryLinkExpiresAt?: SortOrder
-    password?: SortOrder
     udap_id?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
     id?: SortOrder
-    email?: SortOrder
     name?: SortOrder
-    temporaryLink?: SortOrder
-    temporaryLinkExpiresAt?: SortOrder
-    password?: SortOrder
     udap_id?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
     id?: SortOrder
-    email?: SortOrder
     name?: SortOrder
-    temporaryLink?: SortOrder
-    temporaryLinkExpiresAt?: SortOrder
-    password?: SortOrder
     udap_id?: SortOrder
   }
 
@@ -10438,11 +10338,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type UserCreateWithoutDelegation_delegation_createdByTouserInput = {
     id: string
-    email: string
     name: string
-    temporaryLink?: string | null
-    temporaryLinkExpiresAt?: string | null
-    password: string
     delegation_delegation_delegatedToTouser?: DelegationCreateNestedManyWithoutUser_delegation_delegatedToTouserInput
     report?: ReportCreateNestedManyWithoutUserInput
     udap: UdapCreateNestedOneWithoutUserInput
@@ -10450,11 +10346,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type UserUncheckedCreateWithoutDelegation_delegation_createdByTouserInput = {
     id: string
-    email: string
     name: string
-    temporaryLink?: string | null
-    temporaryLinkExpiresAt?: string | null
-    password: string
     udap_id: string
     delegation_delegation_delegatedToTouser?: DelegationUncheckedCreateNestedManyWithoutUser_delegation_delegatedToTouserInput
     report?: ReportUncheckedCreateNestedManyWithoutUserInput
@@ -10467,11 +10359,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type UserCreateWithoutDelegation_delegation_delegatedToTouserInput = {
     id: string
-    email: string
     name: string
-    temporaryLink?: string | null
-    temporaryLinkExpiresAt?: string | null
-    password: string
     delegation_delegation_createdByTouser?: DelegationCreateNestedManyWithoutUser_delegation_createdByTouserInput
     report?: ReportCreateNestedManyWithoutUserInput
     udap: UdapCreateNestedOneWithoutUserInput
@@ -10479,11 +10367,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type UserUncheckedCreateWithoutDelegation_delegation_delegatedToTouserInput = {
     id: string
-    email: string
     name: string
-    temporaryLink?: string | null
-    temporaryLinkExpiresAt?: string | null
-    password: string
     udap_id: string
     delegation_delegation_createdByTouser?: DelegationUncheckedCreateNestedManyWithoutUser_delegation_createdByTouserInput
     report?: ReportUncheckedCreateNestedManyWithoutUserInput
@@ -10501,11 +10385,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type UserUpdateWithoutDelegation_delegation_createdByTouserInput = {
     id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
-    temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: StringFieldUpdateOperationsInput | string
     delegation_delegation_delegatedToTouser?: DelegationUpdateManyWithoutUser_delegation_delegatedToTouserNestedInput
     report?: ReportUpdateManyWithoutUserNestedInput
     udap?: UdapUpdateOneRequiredWithoutUserNestedInput
@@ -10513,11 +10393,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type UserUncheckedUpdateWithoutDelegation_delegation_createdByTouserInput = {
     id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
-    temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: StringFieldUpdateOperationsInput | string
     udap_id?: StringFieldUpdateOperationsInput | string
     delegation_delegation_delegatedToTouser?: DelegationUncheckedUpdateManyWithoutUser_delegation_delegatedToTouserNestedInput
     report?: ReportUncheckedUpdateManyWithoutUserNestedInput
@@ -10530,11 +10406,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type UserUpdateWithoutDelegation_delegation_delegatedToTouserInput = {
     id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
-    temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: StringFieldUpdateOperationsInput | string
     delegation_delegation_createdByTouser?: DelegationUpdateManyWithoutUser_delegation_createdByTouserNestedInput
     report?: ReportUpdateManyWithoutUserNestedInput
     udap?: UdapUpdateOneRequiredWithoutUserNestedInput
@@ -10542,11 +10414,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type UserUncheckedUpdateWithoutDelegation_delegation_delegatedToTouserInput = {
     id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
-    temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: StringFieldUpdateOperationsInput | string
     udap_id?: StringFieldUpdateOperationsInput | string
     delegation_delegation_createdByTouser?: DelegationUncheckedUpdateManyWithoutUser_delegation_createdByTouserNestedInput
     report?: ReportUncheckedUpdateManyWithoutUserNestedInput
@@ -10554,11 +10422,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type UserCreateWithoutReportInput = {
     id: string
-    email: string
     name: string
-    temporaryLink?: string | null
-    temporaryLinkExpiresAt?: string | null
-    password: string
     delegation_delegation_createdByTouser?: DelegationCreateNestedManyWithoutUser_delegation_createdByTouserInput
     delegation_delegation_delegatedToTouser?: DelegationCreateNestedManyWithoutUser_delegation_delegatedToTouserInput
     udap: UdapCreateNestedOneWithoutUserInput
@@ -10566,11 +10430,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type UserUncheckedCreateWithoutReportInput = {
     id: string
-    email: string
     name: string
-    temporaryLink?: string | null
-    temporaryLinkExpiresAt?: string | null
-    password: string
     udap_id: string
     delegation_delegation_createdByTouser?: DelegationUncheckedCreateNestedManyWithoutUser_delegation_createdByTouserInput
     delegation_delegation_delegatedToTouser?: DelegationUncheckedCreateNestedManyWithoutUser_delegation_delegatedToTouserInput
@@ -10608,11 +10468,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type UserUpdateWithoutReportInput = {
     id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
-    temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: StringFieldUpdateOperationsInput | string
     delegation_delegation_createdByTouser?: DelegationUpdateManyWithoutUser_delegation_createdByTouserNestedInput
     delegation_delegation_delegatedToTouser?: DelegationUpdateManyWithoutUser_delegation_delegatedToTouserNestedInput
     udap?: UdapUpdateOneRequiredWithoutUserNestedInput
@@ -10620,11 +10476,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type UserUncheckedUpdateWithoutReportInput = {
     id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
-    temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: StringFieldUpdateOperationsInput | string
     udap_id?: StringFieldUpdateOperationsInput | string
     delegation_delegation_createdByTouser?: DelegationUncheckedUpdateManyWithoutUser_delegation_createdByTouserNestedInput
     delegation_delegation_delegatedToTouser?: DelegationUncheckedUpdateManyWithoutUser_delegation_delegatedToTouserNestedInput
@@ -10776,11 +10628,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type UserCreateWithoutUdapInput = {
     id: string
-    email: string
     name: string
-    temporaryLink?: string | null
-    temporaryLinkExpiresAt?: string | null
-    password: string
     delegation_delegation_createdByTouser?: DelegationCreateNestedManyWithoutUser_delegation_createdByTouserInput
     delegation_delegation_delegatedToTouser?: DelegationCreateNestedManyWithoutUser_delegation_delegatedToTouserInput
     report?: ReportCreateNestedManyWithoutUserInput
@@ -10788,11 +10636,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type UserUncheckedCreateWithoutUdapInput = {
     id: string
-    email: string
     name: string
-    temporaryLink?: string | null
-    temporaryLinkExpiresAt?: string | null
-    password: string
     delegation_delegation_createdByTouser?: DelegationUncheckedCreateNestedManyWithoutUser_delegation_createdByTouserInput
     delegation_delegation_delegatedToTouser?: DelegationUncheckedCreateNestedManyWithoutUser_delegation_delegatedToTouserInput
     report?: ReportUncheckedCreateNestedManyWithoutUserInput
@@ -10829,11 +10673,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     OR?: Enumerable<UserScalarWhereInput>
     NOT?: Enumerable<UserScalarWhereInput>
     id?: StringFilter | string
-    email?: StringFilter | string
     name?: StringFilter | string
-    temporaryLink?: StringNullableFilter | string | null
-    temporaryLinkExpiresAt?: StringNullableFilter | string | null
-    password?: StringFilter | string
     udap_id?: StringFilter | string
   }
 
@@ -11104,20 +10944,12 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type UserCreateManyUdapInput = {
     id: string
-    email: string
     name: string
-    temporaryLink?: string | null
-    temporaryLinkExpiresAt?: string | null
-    password: string
   }
 
   export type UserUpdateWithoutUdapInput = {
     id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
-    temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: StringFieldUpdateOperationsInput | string
     delegation_delegation_createdByTouser?: DelegationUpdateManyWithoutUser_delegation_createdByTouserNestedInput
     delegation_delegation_delegatedToTouser?: DelegationUpdateManyWithoutUser_delegation_delegatedToTouserNestedInput
     report?: ReportUpdateManyWithoutUserNestedInput
@@ -11125,11 +10957,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type UserUncheckedUpdateWithoutUdapInput = {
     id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
-    temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: StringFieldUpdateOperationsInput | string
     delegation_delegation_createdByTouser?: DelegationUncheckedUpdateManyWithoutUser_delegation_createdByTouserNestedInput
     delegation_delegation_delegatedToTouser?: DelegationUncheckedUpdateManyWithoutUser_delegation_delegatedToTouserNestedInput
     report?: ReportUncheckedUpdateManyWithoutUserNestedInput
@@ -11137,11 +10965,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type UserUncheckedUpdateManyWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    temporaryLink?: NullableStringFieldUpdateOperationsInput | string | null
-    temporaryLinkExpiresAt?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: StringFieldUpdateOperationsInput | string
   }
 
   export type DelegationCreateManyUser_delegation_createdByTouserInput = {

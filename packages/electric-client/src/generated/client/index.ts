@@ -30,7 +30,7 @@ export const TransactionIsolationLevelSchema = z.enum(['ReadUncommitted','ReadCo
 
 export const UdapScalarFieldEnumSchema = z.enum(['id','department','completeCoords','visible','name','address','zipCode','city','phone','email']);
 
-export const UserScalarFieldEnumSchema = z.enum(['id','email','name','temporaryLink','temporaryLinkExpiresAt','password','udap_id']);
+export const UserScalarFieldEnumSchema = z.enum(['id','name','udap_id']);
 /////////////////////////////////////////
 // MODELS
 /////////////////////////////////////////
@@ -135,11 +135,7 @@ export type Udap = z.infer<typeof UdapSchema>
 
 export const UserSchema = z.object({
   id: z.string(),
-  email: z.string(),
   name: z.string(),
-  temporaryLink: z.string().nullable(),
-  temporaryLinkExpiresAt: z.string().nullable(),
-  password: z.string(),
   udap_id: z.string(),
 })
 
@@ -339,11 +335,7 @@ export const UserCountOutputTypeSelectSchema: z.ZodType<Prisma.UserCountOutputTy
 
 export const UserSelectSchema: z.ZodType<Prisma.UserSelect> = z.object({
   id: z.boolean().optional(),
-  email: z.boolean().optional(),
   name: z.boolean().optional(),
-  temporaryLink: z.boolean().optional(),
-  temporaryLinkExpiresAt: z.boolean().optional(),
-  password: z.boolean().optional(),
   udap_id: z.boolean().optional(),
   delegation_delegation_createdByTouser: z.union([z.boolean(),z.lazy(() => DelegationFindManyArgsSchema)]).optional(),
   delegation_delegation_delegatedToTouser: z.union([z.boolean(),z.lazy(() => DelegationFindManyArgsSchema)]).optional(),
@@ -690,11 +682,7 @@ export const UserWhereInputSchema: z.ZodType<Prisma.UserWhereInput> = z.object({
   OR: z.lazy(() => UserWhereInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => UserWhereInputSchema),z.lazy(() => UserWhereInputSchema).array() ]).optional(),
   id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
-  email: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   name: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
-  temporaryLink: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
-  temporaryLinkExpiresAt: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
-  password: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   udap_id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   delegation_delegation_createdByTouser: z.lazy(() => DelegationListRelationFilterSchema).optional(),
   delegation_delegation_delegatedToTouser: z.lazy(() => DelegationListRelationFilterSchema).optional(),
@@ -704,11 +692,7 @@ export const UserWhereInputSchema: z.ZodType<Prisma.UserWhereInput> = z.object({
 
 export const UserOrderByWithRelationInputSchema: z.ZodType<Prisma.UserOrderByWithRelationInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
-  email: z.lazy(() => SortOrderSchema).optional(),
   name: z.lazy(() => SortOrderSchema).optional(),
-  temporaryLink: z.lazy(() => SortOrderSchema).optional(),
-  temporaryLinkExpiresAt: z.lazy(() => SortOrderSchema).optional(),
-  password: z.lazy(() => SortOrderSchema).optional(),
   udap_id: z.lazy(() => SortOrderSchema).optional(),
   delegation_delegation_createdByTouser: z.lazy(() => DelegationOrderByRelationAggregateInputSchema).optional(),
   delegation_delegation_delegatedToTouser: z.lazy(() => DelegationOrderByRelationAggregateInputSchema).optional(),
@@ -722,11 +706,7 @@ export const UserWhereUniqueInputSchema: z.ZodType<Prisma.UserWhereUniqueInput> 
 
 export const UserOrderByWithAggregationInputSchema: z.ZodType<Prisma.UserOrderByWithAggregationInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
-  email: z.lazy(() => SortOrderSchema).optional(),
   name: z.lazy(() => SortOrderSchema).optional(),
-  temporaryLink: z.lazy(() => SortOrderSchema).optional(),
-  temporaryLinkExpiresAt: z.lazy(() => SortOrderSchema).optional(),
-  password: z.lazy(() => SortOrderSchema).optional(),
   udap_id: z.lazy(() => SortOrderSchema).optional(),
   _count: z.lazy(() => UserCountOrderByAggregateInputSchema).optional(),
   _max: z.lazy(() => UserMaxOrderByAggregateInputSchema).optional(),
@@ -738,11 +718,7 @@ export const UserScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.UserScal
   OR: z.lazy(() => UserScalarWhereWithAggregatesInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => UserScalarWhereWithAggregatesInputSchema),z.lazy(() => UserScalarWhereWithAggregatesInputSchema).array() ]).optional(),
   id: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
-  email: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
   name: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
-  temporaryLink: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
-  temporaryLinkExpiresAt: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
-  password: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
   udap_id: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
 }).strict();
 
@@ -1161,11 +1137,7 @@ export const UdapUncheckedUpdateManyInputSchema: z.ZodType<Prisma.UdapUncheckedU
 
 export const UserCreateInputSchema: z.ZodType<Prisma.UserCreateInput> = z.object({
   id: z.string(),
-  email: z.string(),
   name: z.string(),
-  temporaryLink: z.string().optional().nullable(),
-  temporaryLinkExpiresAt: z.string().optional().nullable(),
-  password: z.string(),
   delegation_delegation_createdByTouser: z.lazy(() => DelegationCreateNestedManyWithoutUser_delegation_createdByTouserInputSchema).optional(),
   delegation_delegation_delegatedToTouser: z.lazy(() => DelegationCreateNestedManyWithoutUser_delegation_delegatedToTouserInputSchema).optional(),
   report: z.lazy(() => ReportCreateNestedManyWithoutUserInputSchema).optional(),
@@ -1174,11 +1146,7 @@ export const UserCreateInputSchema: z.ZodType<Prisma.UserCreateInput> = z.object
 
 export const UserUncheckedCreateInputSchema: z.ZodType<Prisma.UserUncheckedCreateInput> = z.object({
   id: z.string(),
-  email: z.string(),
   name: z.string(),
-  temporaryLink: z.string().optional().nullable(),
-  temporaryLinkExpiresAt: z.string().optional().nullable(),
-  password: z.string(),
   udap_id: z.string(),
   delegation_delegation_createdByTouser: z.lazy(() => DelegationUncheckedCreateNestedManyWithoutUser_delegation_createdByTouserInputSchema).optional(),
   delegation_delegation_delegatedToTouser: z.lazy(() => DelegationUncheckedCreateNestedManyWithoutUser_delegation_delegatedToTouserInputSchema).optional(),
@@ -1187,11 +1155,7 @@ export const UserUncheckedCreateInputSchema: z.ZodType<Prisma.UserUncheckedCreat
 
 export const UserUpdateInputSchema: z.ZodType<Prisma.UserUpdateInput> = z.object({
   id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  email: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  temporaryLink: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  temporaryLinkExpiresAt: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  password: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   delegation_delegation_createdByTouser: z.lazy(() => DelegationUpdateManyWithoutUser_delegation_createdByTouserNestedInputSchema).optional(),
   delegation_delegation_delegatedToTouser: z.lazy(() => DelegationUpdateManyWithoutUser_delegation_delegatedToTouserNestedInputSchema).optional(),
   report: z.lazy(() => ReportUpdateManyWithoutUserNestedInputSchema).optional(),
@@ -1200,11 +1164,7 @@ export const UserUpdateInputSchema: z.ZodType<Prisma.UserUpdateInput> = z.object
 
 export const UserUncheckedUpdateInputSchema: z.ZodType<Prisma.UserUncheckedUpdateInput> = z.object({
   id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  email: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  temporaryLink: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  temporaryLinkExpiresAt: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  password: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   udap_id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   delegation_delegation_createdByTouser: z.lazy(() => DelegationUncheckedUpdateManyWithoutUser_delegation_createdByTouserNestedInputSchema).optional(),
   delegation_delegation_delegatedToTouser: z.lazy(() => DelegationUncheckedUpdateManyWithoutUser_delegation_delegatedToTouserNestedInputSchema).optional(),
@@ -1213,30 +1173,18 @@ export const UserUncheckedUpdateInputSchema: z.ZodType<Prisma.UserUncheckedUpdat
 
 export const UserCreateManyInputSchema: z.ZodType<Prisma.UserCreateManyInput> = z.object({
   id: z.string(),
-  email: z.string(),
   name: z.string(),
-  temporaryLink: z.string().optional().nullable(),
-  temporaryLinkExpiresAt: z.string().optional().nullable(),
-  password: z.string(),
   udap_id: z.string()
 }).strict();
 
 export const UserUpdateManyMutationInputSchema: z.ZodType<Prisma.UserUpdateManyMutationInput> = z.object({
   id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  email: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  temporaryLink: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  temporaryLinkExpiresAt: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  password: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 export const UserUncheckedUpdateManyInputSchema: z.ZodType<Prisma.UserUncheckedUpdateManyInput> = z.object({
   id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  email: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  temporaryLink: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  temporaryLinkExpiresAt: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  password: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   udap_id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
@@ -1651,31 +1599,19 @@ export const ReportOrderByRelationAggregateInputSchema: z.ZodType<Prisma.ReportO
 
 export const UserCountOrderByAggregateInputSchema: z.ZodType<Prisma.UserCountOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
-  email: z.lazy(() => SortOrderSchema).optional(),
   name: z.lazy(() => SortOrderSchema).optional(),
-  temporaryLink: z.lazy(() => SortOrderSchema).optional(),
-  temporaryLinkExpiresAt: z.lazy(() => SortOrderSchema).optional(),
-  password: z.lazy(() => SortOrderSchema).optional(),
   udap_id: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const UserMaxOrderByAggregateInputSchema: z.ZodType<Prisma.UserMaxOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
-  email: z.lazy(() => SortOrderSchema).optional(),
   name: z.lazy(() => SortOrderSchema).optional(),
-  temporaryLink: z.lazy(() => SortOrderSchema).optional(),
-  temporaryLinkExpiresAt: z.lazy(() => SortOrderSchema).optional(),
-  password: z.lazy(() => SortOrderSchema).optional(),
   udap_id: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const UserMinOrderByAggregateInputSchema: z.ZodType<Prisma.UserMinOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
-  email: z.lazy(() => SortOrderSchema).optional(),
   name: z.lazy(() => SortOrderSchema).optional(),
-  temporaryLink: z.lazy(() => SortOrderSchema).optional(),
-  temporaryLinkExpiresAt: z.lazy(() => SortOrderSchema).optional(),
-  password: z.lazy(() => SortOrderSchema).optional(),
   udap_id: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
@@ -2264,11 +2200,7 @@ export const Report_to_clauseScalarWhereInputSchema: z.ZodType<Prisma.Report_to_
 
 export const UserCreateWithoutDelegation_delegation_createdByTouserInputSchema: z.ZodType<Prisma.UserCreateWithoutDelegation_delegation_createdByTouserInput> = z.object({
   id: z.string(),
-  email: z.string(),
   name: z.string(),
-  temporaryLink: z.string().optional().nullable(),
-  temporaryLinkExpiresAt: z.string().optional().nullable(),
-  password: z.string(),
   delegation_delegation_delegatedToTouser: z.lazy(() => DelegationCreateNestedManyWithoutUser_delegation_delegatedToTouserInputSchema).optional(),
   report: z.lazy(() => ReportCreateNestedManyWithoutUserInputSchema).optional(),
   udap: z.lazy(() => UdapCreateNestedOneWithoutUserInputSchema)
@@ -2276,11 +2208,7 @@ export const UserCreateWithoutDelegation_delegation_createdByTouserInputSchema: 
 
 export const UserUncheckedCreateWithoutDelegation_delegation_createdByTouserInputSchema: z.ZodType<Prisma.UserUncheckedCreateWithoutDelegation_delegation_createdByTouserInput> = z.object({
   id: z.string(),
-  email: z.string(),
   name: z.string(),
-  temporaryLink: z.string().optional().nullable(),
-  temporaryLinkExpiresAt: z.string().optional().nullable(),
-  password: z.string(),
   udap_id: z.string(),
   delegation_delegation_delegatedToTouser: z.lazy(() => DelegationUncheckedCreateNestedManyWithoutUser_delegation_delegatedToTouserInputSchema).optional(),
   report: z.lazy(() => ReportUncheckedCreateNestedManyWithoutUserInputSchema).optional()
@@ -2293,11 +2221,7 @@ export const UserCreateOrConnectWithoutDelegation_delegation_createdByTouserInpu
 
 export const UserCreateWithoutDelegation_delegation_delegatedToTouserInputSchema: z.ZodType<Prisma.UserCreateWithoutDelegation_delegation_delegatedToTouserInput> = z.object({
   id: z.string(),
-  email: z.string(),
   name: z.string(),
-  temporaryLink: z.string().optional().nullable(),
-  temporaryLinkExpiresAt: z.string().optional().nullable(),
-  password: z.string(),
   delegation_delegation_createdByTouser: z.lazy(() => DelegationCreateNestedManyWithoutUser_delegation_createdByTouserInputSchema).optional(),
   report: z.lazy(() => ReportCreateNestedManyWithoutUserInputSchema).optional(),
   udap: z.lazy(() => UdapCreateNestedOneWithoutUserInputSchema)
@@ -2305,11 +2229,7 @@ export const UserCreateWithoutDelegation_delegation_delegatedToTouserInputSchema
 
 export const UserUncheckedCreateWithoutDelegation_delegation_delegatedToTouserInputSchema: z.ZodType<Prisma.UserUncheckedCreateWithoutDelegation_delegation_delegatedToTouserInput> = z.object({
   id: z.string(),
-  email: z.string(),
   name: z.string(),
-  temporaryLink: z.string().optional().nullable(),
-  temporaryLinkExpiresAt: z.string().optional().nullable(),
-  password: z.string(),
   udap_id: z.string(),
   delegation_delegation_createdByTouser: z.lazy(() => DelegationUncheckedCreateNestedManyWithoutUser_delegation_createdByTouserInputSchema).optional(),
   report: z.lazy(() => ReportUncheckedCreateNestedManyWithoutUserInputSchema).optional()
@@ -2327,11 +2247,7 @@ export const UserUpsertWithoutDelegation_delegation_createdByTouserInputSchema: 
 
 export const UserUpdateWithoutDelegation_delegation_createdByTouserInputSchema: z.ZodType<Prisma.UserUpdateWithoutDelegation_delegation_createdByTouserInput> = z.object({
   id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  email: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  temporaryLink: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  temporaryLinkExpiresAt: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  password: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   delegation_delegation_delegatedToTouser: z.lazy(() => DelegationUpdateManyWithoutUser_delegation_delegatedToTouserNestedInputSchema).optional(),
   report: z.lazy(() => ReportUpdateManyWithoutUserNestedInputSchema).optional(),
   udap: z.lazy(() => UdapUpdateOneRequiredWithoutUserNestedInputSchema).optional()
@@ -2339,11 +2255,7 @@ export const UserUpdateWithoutDelegation_delegation_createdByTouserInputSchema: 
 
 export const UserUncheckedUpdateWithoutDelegation_delegation_createdByTouserInputSchema: z.ZodType<Prisma.UserUncheckedUpdateWithoutDelegation_delegation_createdByTouserInput> = z.object({
   id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  email: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  temporaryLink: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  temporaryLinkExpiresAt: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  password: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   udap_id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   delegation_delegation_delegatedToTouser: z.lazy(() => DelegationUncheckedUpdateManyWithoutUser_delegation_delegatedToTouserNestedInputSchema).optional(),
   report: z.lazy(() => ReportUncheckedUpdateManyWithoutUserNestedInputSchema).optional()
@@ -2356,11 +2268,7 @@ export const UserUpsertWithoutDelegation_delegation_delegatedToTouserInputSchema
 
 export const UserUpdateWithoutDelegation_delegation_delegatedToTouserInputSchema: z.ZodType<Prisma.UserUpdateWithoutDelegation_delegation_delegatedToTouserInput> = z.object({
   id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  email: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  temporaryLink: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  temporaryLinkExpiresAt: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  password: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   delegation_delegation_createdByTouser: z.lazy(() => DelegationUpdateManyWithoutUser_delegation_createdByTouserNestedInputSchema).optional(),
   report: z.lazy(() => ReportUpdateManyWithoutUserNestedInputSchema).optional(),
   udap: z.lazy(() => UdapUpdateOneRequiredWithoutUserNestedInputSchema).optional()
@@ -2368,11 +2276,7 @@ export const UserUpdateWithoutDelegation_delegation_delegatedToTouserInputSchema
 
 export const UserUncheckedUpdateWithoutDelegation_delegation_delegatedToTouserInputSchema: z.ZodType<Prisma.UserUncheckedUpdateWithoutDelegation_delegation_delegatedToTouserInput> = z.object({
   id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  email: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  temporaryLink: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  temporaryLinkExpiresAt: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  password: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   udap_id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   delegation_delegation_createdByTouser: z.lazy(() => DelegationUncheckedUpdateManyWithoutUser_delegation_createdByTouserNestedInputSchema).optional(),
   report: z.lazy(() => ReportUncheckedUpdateManyWithoutUserNestedInputSchema).optional()
@@ -2380,11 +2284,7 @@ export const UserUncheckedUpdateWithoutDelegation_delegation_delegatedToTouserIn
 
 export const UserCreateWithoutReportInputSchema: z.ZodType<Prisma.UserCreateWithoutReportInput> = z.object({
   id: z.string(),
-  email: z.string(),
   name: z.string(),
-  temporaryLink: z.string().optional().nullable(),
-  temporaryLinkExpiresAt: z.string().optional().nullable(),
-  password: z.string(),
   delegation_delegation_createdByTouser: z.lazy(() => DelegationCreateNestedManyWithoutUser_delegation_createdByTouserInputSchema).optional(),
   delegation_delegation_delegatedToTouser: z.lazy(() => DelegationCreateNestedManyWithoutUser_delegation_delegatedToTouserInputSchema).optional(),
   udap: z.lazy(() => UdapCreateNestedOneWithoutUserInputSchema)
@@ -2392,11 +2292,7 @@ export const UserCreateWithoutReportInputSchema: z.ZodType<Prisma.UserCreateWith
 
 export const UserUncheckedCreateWithoutReportInputSchema: z.ZodType<Prisma.UserUncheckedCreateWithoutReportInput> = z.object({
   id: z.string(),
-  email: z.string(),
   name: z.string(),
-  temporaryLink: z.string().optional().nullable(),
-  temporaryLinkExpiresAt: z.string().optional().nullable(),
-  password: z.string(),
   udap_id: z.string(),
   delegation_delegation_createdByTouser: z.lazy(() => DelegationUncheckedCreateNestedManyWithoutUser_delegation_createdByTouserInputSchema).optional(),
   delegation_delegation_delegatedToTouser: z.lazy(() => DelegationUncheckedCreateNestedManyWithoutUser_delegation_delegatedToTouserInputSchema).optional()
@@ -2434,11 +2330,7 @@ export const UserUpsertWithoutReportInputSchema: z.ZodType<Prisma.UserUpsertWith
 
 export const UserUpdateWithoutReportInputSchema: z.ZodType<Prisma.UserUpdateWithoutReportInput> = z.object({
   id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  email: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  temporaryLink: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  temporaryLinkExpiresAt: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  password: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   delegation_delegation_createdByTouser: z.lazy(() => DelegationUpdateManyWithoutUser_delegation_createdByTouserNestedInputSchema).optional(),
   delegation_delegation_delegatedToTouser: z.lazy(() => DelegationUpdateManyWithoutUser_delegation_delegatedToTouserNestedInputSchema).optional(),
   udap: z.lazy(() => UdapUpdateOneRequiredWithoutUserNestedInputSchema).optional()
@@ -2446,11 +2338,7 @@ export const UserUpdateWithoutReportInputSchema: z.ZodType<Prisma.UserUpdateWith
 
 export const UserUncheckedUpdateWithoutReportInputSchema: z.ZodType<Prisma.UserUncheckedUpdateWithoutReportInput> = z.object({
   id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  email: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  temporaryLink: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  temporaryLinkExpiresAt: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  password: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   udap_id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   delegation_delegation_createdByTouser: z.lazy(() => DelegationUncheckedUpdateManyWithoutUser_delegation_createdByTouserNestedInputSchema).optional(),
   delegation_delegation_delegatedToTouser: z.lazy(() => DelegationUncheckedUpdateManyWithoutUser_delegation_delegatedToTouserNestedInputSchema).optional()
@@ -2602,11 +2490,7 @@ export const ReportUncheckedUpdateWithoutReport_to_clauseInputSchema: z.ZodType<
 
 export const UserCreateWithoutUdapInputSchema: z.ZodType<Prisma.UserCreateWithoutUdapInput> = z.object({
   id: z.string(),
-  email: z.string(),
   name: z.string(),
-  temporaryLink: z.string().optional().nullable(),
-  temporaryLinkExpiresAt: z.string().optional().nullable(),
-  password: z.string(),
   delegation_delegation_createdByTouser: z.lazy(() => DelegationCreateNestedManyWithoutUser_delegation_createdByTouserInputSchema).optional(),
   delegation_delegation_delegatedToTouser: z.lazy(() => DelegationCreateNestedManyWithoutUser_delegation_delegatedToTouserInputSchema).optional(),
   report: z.lazy(() => ReportCreateNestedManyWithoutUserInputSchema).optional()
@@ -2614,11 +2498,7 @@ export const UserCreateWithoutUdapInputSchema: z.ZodType<Prisma.UserCreateWithou
 
 export const UserUncheckedCreateWithoutUdapInputSchema: z.ZodType<Prisma.UserUncheckedCreateWithoutUdapInput> = z.object({
   id: z.string(),
-  email: z.string(),
   name: z.string(),
-  temporaryLink: z.string().optional().nullable(),
-  temporaryLinkExpiresAt: z.string().optional().nullable(),
-  password: z.string(),
   delegation_delegation_createdByTouser: z.lazy(() => DelegationUncheckedCreateNestedManyWithoutUser_delegation_createdByTouserInputSchema).optional(),
   delegation_delegation_delegatedToTouser: z.lazy(() => DelegationUncheckedCreateNestedManyWithoutUser_delegation_delegatedToTouserInputSchema).optional(),
   report: z.lazy(() => ReportUncheckedCreateNestedManyWithoutUserInputSchema).optional()
@@ -2655,11 +2535,7 @@ export const UserScalarWhereInputSchema: z.ZodType<Prisma.UserScalarWhereInput> 
   OR: z.lazy(() => UserScalarWhereInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => UserScalarWhereInputSchema),z.lazy(() => UserScalarWhereInputSchema).array() ]).optional(),
   id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
-  email: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   name: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
-  temporaryLink: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
-  temporaryLinkExpiresAt: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
-  password: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   udap_id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
 }).strict();
 
@@ -2930,20 +2806,12 @@ export const Report_to_clauseUncheckedUpdateWithoutReportInputSchema: z.ZodType<
 
 export const UserCreateManyUdapInputSchema: z.ZodType<Prisma.UserCreateManyUdapInput> = z.object({
   id: z.string(),
-  email: z.string(),
-  name: z.string(),
-  temporaryLink: z.string().optional().nullable(),
-  temporaryLinkExpiresAt: z.string().optional().nullable(),
-  password: z.string()
+  name: z.string()
 }).strict();
 
 export const UserUpdateWithoutUdapInputSchema: z.ZodType<Prisma.UserUpdateWithoutUdapInput> = z.object({
   id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  email: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  temporaryLink: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  temporaryLinkExpiresAt: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  password: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   delegation_delegation_createdByTouser: z.lazy(() => DelegationUpdateManyWithoutUser_delegation_createdByTouserNestedInputSchema).optional(),
   delegation_delegation_delegatedToTouser: z.lazy(() => DelegationUpdateManyWithoutUser_delegation_delegatedToTouserNestedInputSchema).optional(),
   report: z.lazy(() => ReportUpdateManyWithoutUserNestedInputSchema).optional()
@@ -2951,11 +2819,7 @@ export const UserUpdateWithoutUdapInputSchema: z.ZodType<Prisma.UserUpdateWithou
 
 export const UserUncheckedUpdateWithoutUdapInputSchema: z.ZodType<Prisma.UserUncheckedUpdateWithoutUdapInput> = z.object({
   id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  email: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  temporaryLink: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  temporaryLinkExpiresAt: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  password: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   delegation_delegation_createdByTouser: z.lazy(() => DelegationUncheckedUpdateManyWithoutUser_delegation_createdByTouserNestedInputSchema).optional(),
   delegation_delegation_delegatedToTouser: z.lazy(() => DelegationUncheckedUpdateManyWithoutUser_delegation_delegatedToTouserNestedInputSchema).optional(),
   report: z.lazy(() => ReportUncheckedUpdateManyWithoutUserNestedInputSchema).optional()
@@ -2963,11 +2827,7 @@ export const UserUncheckedUpdateWithoutUdapInputSchema: z.ZodType<Prisma.UserUnc
 
 export const UserUncheckedUpdateManyWithoutUserInputSchema: z.ZodType<Prisma.UserUncheckedUpdateManyWithoutUserInput> = z.object({
   id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  email: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  temporaryLink: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  temporaryLinkExpiresAt: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  password: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 export const DelegationCreateManyUser_delegation_createdByTouserInputSchema: z.ZodType<Prisma.DelegationCreateManyUser_delegation_createdByTouserInput> = z.object({
@@ -4185,23 +4045,7 @@ export const tableSchemas = {
         "TEXT"
       ],
       [
-        "email",
-        "TEXT"
-      ],
-      [
         "name",
-        "TEXT"
-      ],
-      [
-        "temporaryLink",
-        "TEXT"
-      ],
-      [
-        "temporaryLinkExpiresAt",
-        "TEXT"
-      ],
-      [
-        "password",
         "TEXT"
       ],
       [

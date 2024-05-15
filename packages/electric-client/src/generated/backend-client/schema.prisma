@@ -99,19 +99,27 @@ model udap {
 }
 
 model user {
-  id                                      String       @id
-  email                                   String
+  id                                      String          @id
   name                                    String
-  temporaryLink                           String?
-  temporaryLinkExpiresAt                  String?
-  password                                String
   udap_id                                 String
-  delegation_delegation_createdByTouser   delegation[] @relation("delegation_createdByTouser")
-  delegation_delegation_delegatedToTouser delegation[] @relation("delegation_delegatedToTouser")
+  delegation_delegation_createdByTouser   delegation[]    @relation("delegation_createdByTouser")
+  delegation_delegation_delegatedToTouser delegation[]    @relation("delegation_delegatedToTouser")
+  internal_user                           internal_user[]
   report                                  report[]
-  udap                                    udap         @relation(fields: [udap_id], references: [id], onDelete: SetNull, onUpdate: NoAction, map: "fk_udap_id")
+  udap                                    udap            @relation(fields: [udap_id], references: [id], onDelete: SetNull, onUpdate: NoAction, map: "fk_udap_id")
 }
 
 model whitelist {
   email String @id
+}
+
+model internal_user {
+  id                     String  @id
+  email                  String
+  role                   String
+  password               String
+  temporaryLink          String?
+  temporaryLinkExpiresAt String?
+  userId                 String
+  user                   user    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 }

@@ -11,54 +11,82 @@ import { AppError } from "../features/errors";
 import { Type, type Static } from "@sinclair/typebox";
 import * as Schemas from "@cr-vif/electric-client/typebox";
 import type { Prisma } from "@cr-vif/electric-client/backend";
+import { user } from "../../../electric-client/src/generated/backend-client/index";
 
 export class UserService {
-  async createUser(payload: Omit<Prisma.userUncheckedCreateInput, "id">) {
-    await assertEmailDoesNotAlreadyExist(payload);
+  async createUser(
+    payload: Pick<Prisma.internal_userUncheckedCreateInput, "email" | "password"> &
+      Pick<Prisma.userUncheckedCreateInput, "name" | "udap_id">,
+  ) {
+    await assertEmailDoesNotAlreadyExist(payload.email);
     await assertEmailInWhitelist(payload.email);
 
     const password = await encryptPassword(payload.password);
 
-    const user = await db.user.create({
+    const { name, udap_id, ...rest } = payload;
+
+    const id = crypto.randomUUID();
+    const internalUser = await db.internal_user.create({
       data: {
-        id: crypto.randomUUID(),
-        ...payload,
+        id,
+        ...rest,
+        role: "user",
+        user: {
+          create: {
+            id,
+            name,
+            udap_id,
+          },
+        },
         password,
       },
-      include: { udap: true },
+      include: {
+        user: {
+          include: {
+            udap: true,
+          },
+        },
+      },
     });
 
-    return { user: serializeUser(user as any)!, token: this.generateJWT(user) };
+    const user = internalUser.user;
+    // TODO: disable autolog after signing up
+
+    return { user: user, token: this.generateJWT(internalUser) };
   }
 
   async getUserByEmail(email: string) {
-    const user = await db.user.findFirst({ where: { email }, include: { udap: true } });
+    const user = await db.internal_user.findFirst({
+      where: { email },
+      include: { user: { include: { udap: true } } },
+    });
     assertUserExists(user);
 
-    return serializeUser(user as any);
+    return user?.user;
   }
 
   async getUserById(id: string) {
     const user = await db.user.findUnique({ where: { id }, include: { udap: true } });
     assertUserExists(user);
 
-    return serializeUser(user as any);
+    return user;
   }
 
-  async updateUser(id: string, payload: Partial<Prisma.userUncheckedCreateInput>) {
-    const changes = pick(payload, ["name", "email", "password"]);
-
-    const user = await db.user.update({ where: { id }, data: changes, include: { udap: true } });
-
-    return serializeUser(user as any);
-  }
-
-  async login(payload: Pick<Prisma.userUncheckedCreateInput, "email" | "password">) {
-    const user = await db.user.findFirst({ where: { email: payload.email }, include: { udap: true } });
+  async login(payload: Pick<Prisma.internal_userCreateInput, "email" | "password">) {
+    const user = await db.internal_user.findFirst({
+      where: { email: payload.email },
+      include: {
+        user: {
+          include: {
+            udap: true,
+          },
+        },
+      },
+    });
     assertUserExists(user);
     await assertPasswordsMatch(payload.password, user!.password);
 
-    return { user: serializeUser(user as any), token: this.generateJWT(user!) };
+    return { user: user?.user, token: this.generateJWT(user!) };
   }
 
   async generateResetLink(id: string) {
@@ -68,18 +96,18 @@ export class UserService {
     const temporaryLink = crypto.randomUUID();
     const temporaryLinkExpiresAt = addDays(new Date(), 1).toISOString();
 
-    await db.user.update({ where: { id }, data: { temporaryLink, temporaryLinkExpiresAt } });
+    await db.internal_user.update({ where: { id }, data: { temporaryLink, temporaryLinkExpiresAt } });
   }
 
   async resetPassword({ temporaryLink, newPassword }: { temporaryLink: string; newPassword: string }) {
-    const user = await db.user.findFirst({
+    const user = await db.internal_user.findFirst({
       where: { temporaryLink, temporaryLinkExpiresAt: { gt: new Date().toISOString() } },
     });
 
     assertLinkIsValid(user);
     const password = await encryptPassword(newPassword);
 
-    await db.user.update({
+    await db.internal_user.update({
       where: { id: user!.id },
       data: { password, temporaryLink: null, temporaryLinkExpiresAt: null },
     });
@@ -92,7 +120,7 @@ export class UserService {
     return this.getUserByEmail(id);
   }
 
-  generateJWT(user: Prisma.userUncheckedCreateInput) {
+  generateJWT(user: Prisma.internal_userUncheckedCreateInput) {
     return jwt.sign(
       {
         sub: user.id,
@@ -109,21 +137,8 @@ export class UserService {
   }
 }
 
-const serializeUser = (user: Prisma.userCreateInput) => {
-  const data = pick(user, ["name", "email", "udap"]);
-  return {
-    id: user.id,
-    name: data.name,
-    email: data.email,
-    udap: data.udap!,
-  } as SerializedUser;
-};
-
-export type SerializedUser = Static<typeof Schemas.userInput>;
-
-export const serializedUserTSchema = Type.Pick(Schemas.user, ["id", "name", "email", "udap"]);
 export const userAndTokenTSchema = Type.Object({
-  user: serializedUserTSchema,
+  user: Type.Pick(Schemas.user, ["id", "name", "udap_id", "udap"]),
   token: Type.String(),
 });
 
@@ -149,13 +164,13 @@ const verifyPassword = (password: string, hash: string) => {
   });
 };
 
-const assertLinkIsValid = (user?: Prisma.userUncheckedCreateInput | null) => {
+const assertLinkIsValid = (user?: Prisma.internal_userUncheckedCreateInput | null) => {
   if (!user) {
     throw new AppError(403, "Le lien est invalide");
   }
 };
 
-const assertUserExists = (user?: Prisma.userUncheckedCreateInput | null) => {
+const assertUserExists = (user?: any) => {
   if (!user) {
     throw new AppError(403, "Le courriel ou le mot de passe est incorrect");
   }
@@ -169,10 +184,10 @@ const assertPasswordsMatch = async (password: string, hash: string) => {
   }
 };
 
-const assertEmailDoesNotAlreadyExist = async (user: Omit<Prisma.userUncheckedCreateInput, "id">) => {
-  const existingUser = await db.user.findFirst({
+const assertEmailDoesNotAlreadyExist = async (email: string) => {
+  const existingUser = await db.internal_user.findFirst({
     where: {
-      email: user.email,
+      email,
     },
   });
 

@@ -23,12 +23,7 @@ export const MyReports = () => {
     db.report.liveMany({
       where: { createdBy: user.id, disabled: false },
       include: {
-        user: {
-          select: {
-            email: true,
-            name: true,
-          },
-        },
+        user: true,
       },
     }),
   );
@@ -47,12 +42,7 @@ export const AllReports = () => {
     db.report.liveMany({
       where: { createdBy: user.id, disabled: false },
       include: {
-        user: {
-          select: {
-            email: true,
-            name: true,
-          },
-        },
+        user: true,
       },
     }),
   );

@@ -180,16 +180,22 @@ exports.Prisma.UdapScalarFieldEnum = {
 
 exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
-  email: 'email',
   name: 'name',
-  temporaryLink: 'temporaryLink',
-  temporaryLinkExpiresAt: 'temporaryLinkExpiresAt',
-  password: 'password',
   udap_id: 'udap_id'
 };
 
 exports.Prisma.WhitelistScalarFieldEnum = {
   email: 'email'
+};
+
+exports.Prisma.Internal_userScalarFieldEnum = {
+  id: 'id',
+  email: 'email',
+  role: 'role',
+  password: 'password',
+  temporaryLink: 'temporaryLink',
+  temporaryLinkExpiresAt: 'temporaryLinkExpiresAt',
+  userId: 'userId'
 };
 
 exports.Prisma.SortOrder = {
@@ -218,7 +224,8 @@ exports.Prisma.ModelName = {
   delegation: 'delegation',
   udap: 'udap',
   user: 'user',
-  whitelist: 'whitelist'
+  whitelist: 'whitelist',
+  internal_user: 'internal_user'
 };
 
 /**

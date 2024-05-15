@@ -25,7 +25,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
       await electric.connect(data.token!);
 
       await electric.db.clause.sync();
-      await electric.db.user.sync({ where: { email: data?.user?.email } });
+      await electric.db.user.sync({ where: { udap_id: data?.user?.udap_id } });
       await electric.db.report.sync();
       await electric.db.chip.sync();
 

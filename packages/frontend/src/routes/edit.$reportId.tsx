@@ -20,7 +20,6 @@ import { db } from "../db";
 import { InfoForm } from "../features/InfoForm";
 import { NotesForm } from "../features/NotesForm";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
-import { useIsModalOpen } from "@codegouvfr/react-dsfr/Modal/useIsModalOpen";
 import { ReportPDFDocument, getReportHtmlString } from "@cr-vif/pdf";
 import { useUser } from "../contexts/AuthContext";
 import { useChipOptions } from "../features/chips/useChipOptions";

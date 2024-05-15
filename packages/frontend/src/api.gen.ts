@@ -10,13 +10,16 @@ export namespace Endpoints {
     method: "POST";
     path: "/api/create-user";
     parameters: {
-      body: { name: string; email: string; password: string; udap_id: string };
+      body:
+        | { name: string; udap_id: string }
+        | { email: string; password: string }
+        | Array<{ name: string; udap_id: string } | { email: string; password: string }>;
     };
     response: {
       user: {
         id: string;
         name: string;
-        email: string;
+        udap_id: string;
         udap: {
           id: string;
           department: string;
@@ -37,13 +40,13 @@ export namespace Endpoints {
     method: "POST";
     path: "/api/login";
     parameters: {
-      body: { email: string; password: string };
+      body: Partial<{}>;
     };
     response: {
       user: {
         id: string;
         name: string;
-        email: string;
+        udap_id: string;
         udap: {
           id: string;
           department: string;
@@ -67,21 +70,24 @@ export namespace Endpoints {
       query: { token: string };
     };
     response: {
-      id: string;
-      name: string;
-      email: string;
-      udap: {
+      user: {
         id: string;
-        department: string;
-        completeCoords?: string | undefined;
-        visible?: boolean | undefined;
-        name?: string | undefined;
-        address?: string | undefined;
-        zipCode?: string | undefined;
-        city?: string | undefined;
-        phone?: string | undefined;
-        email?: string | undefined;
+        name: string;
+        udap_id: string;
+        udap: {
+          id: string;
+          department: string;
+          completeCoords?: string | undefined;
+          visible?: boolean | undefined;
+          name?: string | undefined;
+          address?: string | undefined;
+          zipCode?: string | undefined;
+          city?: string | undefined;
+          phone?: string | undefined;
+          email?: string | undefined;
+        };
       };
+      token: string;
     };
   };
   export type get_Apiudaps = {
