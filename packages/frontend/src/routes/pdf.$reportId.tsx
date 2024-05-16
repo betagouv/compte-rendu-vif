@@ -63,27 +63,29 @@ export const PDF = () => {
   };
 
   return (
-    <TextEditorContextProvider>
-      <EditBanner
-        title={
-          <div>
-            <styled.span fontWeight="bold">{mode === "edit" ? "Modification" : "Prévisualisation"}</styled.span>
-            {report?.title ? `| ${report?.title}` : ""}
-          </div>
-        }
-        buttons={mode === "edit" ? <EditButtons /> : <ViewButtons />}
-      />
-      <Center w="100%" h="100%" mt="10px">
-        <Stack w="800px" h="100%">
-          {report && chipOptions ? (
-            <WithReport
-              mode={mode as "edit" | "view"}
-              initialHtmlString={getReportHtmlString(report, chipOptions, udap as Udap)}
-            />
-          ) : null}
-        </Stack>
-      </Center>
-    </TextEditorContextProvider>
+    <styled.div w="100%" h="100%" bgColor={mode === "edit" ? "background-open-blue-france" : "unset"} overflowY="auto">
+      <TextEditorContextProvider>
+        <EditBanner
+          title={
+            <div>
+              <styled.span fontWeight="bold">{mode === "edit" ? "Modification" : "Prévisualisation"}</styled.span>
+              {report?.title ? `| ${report?.title}` : ""}
+            </div>
+          }
+          buttons={mode === "edit" ? <EditButtons /> : <ViewButtons />}
+        />
+        <Center w="100%" h="100%" maxH="100%" mt="10px" overflowY="auto">
+          <Stack w="800px" h="100%">
+            {report && chipOptions ? (
+              <WithReport
+                mode={mode as "edit" | "view"}
+                initialHtmlString={getReportHtmlString(report, chipOptions, udap as Udap)}
+              />
+            ) : null}
+          </Stack>
+        </Center>
+      </TextEditorContextProvider>
+    </styled.div>
   );
 };
 

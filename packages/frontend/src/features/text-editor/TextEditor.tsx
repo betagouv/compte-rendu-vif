@@ -58,7 +58,7 @@ export const TextEditor = (props: { hasSubmitted?: boolean }) => {
   }, [isEditorActive, hasSubmitted]);
 
   return (
-    <div className={cx(css({ flex: 1 }))}>
+    <div className={cx(css({ h: "100%", mt: "2" }))}>
       {/* {editor && <TextEditorToolbar editor={editor} />} */}
       <EditorContent className={textEditorClassName} editor={editor} />
     </div>
@@ -74,14 +74,14 @@ export const textEditorClassName = css({
     borderWidth: "1px",
     h: "100%",
     minH: "160px",
+    maxHeight: "100%",
     py: "2",
     px: "2",
     fontSize: "13px",
+    bgColor: "white",
     overflowY: "auto",
     _focusVisible: {
       outlineWidth: "1px",
-      borderColor: "purple.500",
-      outlineColor: "purple.500",
       outlineStyle: "solid",
     },
     "& em": {
