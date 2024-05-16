@@ -19,6 +19,7 @@ export const report = Type.Object({
   serviceInstructeur: Type.Optional(Type.Number()),
   pdf: Type.Optional(Type.String()),
   disabled: Type.Optional(Type.Boolean()),
+  udap_id: Type.Optional(Type.String()),
   user: Type.Object({
     id: Type.String(),
     name: Type.String(),

@@ -28,6 +28,7 @@ export const report_to_clauseInput = Type.Object({
     serviceInstructeur: Type.Optional(Type.Number()),
     pdf: Type.Optional(Type.String()),
     disabled: Type.Optional(Type.Boolean()),
+    udap_id: Type.Optional(Type.String()),
   }),
 });
 

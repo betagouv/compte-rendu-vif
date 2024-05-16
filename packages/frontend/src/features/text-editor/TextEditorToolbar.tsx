@@ -1,12 +1,15 @@
-import { cva } from "#styled-system/css";
+import { cva, css } from "#styled-system/css";
 import { hstack } from "#styled-system/patterns";
 import type { Editor } from "@tiptap/react";
+import { useContext, useRef } from "react";
 import { LuBold, LuItalic, LuStrikethrough } from "react-icons/lu";
+import { TextEditorContext } from "./TextEditorContext";
+import Button from "@codegouvfr/react-dsfr/Button";
+import { useDebounce } from "react-use";
 
 const toolbar = hstack({
-  gap: "0",
+  gap: "5px",
   roundedBottom: "sm",
-  borderWidth: "1px",
   mt: "-1px",
   lineHeight: "0",
   transition: "all 0.15s",
@@ -14,16 +17,18 @@ const toolbar = hstack({
 
 const toolbarButtonRecipe = cva({
   base: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    w: "8",
-    h: "8",
+    color: "grey",
+    // display: "flex",
+    // justifyContent: "center",
+    // alignItems: "center",
+    // w: "8",
+    // h: "8",
+    bg: "white",
   },
   variants: {
     active: {
       true: {
-        color: "gray.100",
+        color: "black",
         bg: "gray.600",
       },
     },
@@ -34,112 +39,73 @@ interface Props {
   editor: Editor;
 }
 
-export const TextEditorToolbar = (props: Props) => {
-  const { editor } = props;
+export const TextEditorToolbar = () => {
+  const { editor } = useContext(TextEditorContext);
+
+  if (!editor) return null;
 
   return (
-    <div className={toolbar}>
-      <button
-        type="button"
-        onPointerDown={(event) => event.preventDefault()}
-        onClick={() => editor.chain().focus().toggleBold().run()}
+    <>
+      <Button
         className={toolbarButtonRecipe({
           active: editor.isActive("bold"),
         })}
-      >
-        <LuBold />
-      </button>
-      <button
+        size="small"
+        priority="tertiary no outline"
+        iconId="fr-icon-bold"
         type="button"
-        onPointerDown={(event) => event.preventDefault()}
-        onClick={() => editor.chain().focus().toggleItalic().run()}
+        nativeButtonProps={{
+          onPointerDown: (event) => event.preventDefault(),
+          onClick: () => editor.chain().focus().toggleBold().run(),
+        }}
+      ></Button>
+      <Button
         className={toolbarButtonRecipe({
           active: editor.isActive("italic"),
         })}
-      >
-        <LuItalic />
-      </button>
-      <button
+        size="small"
+        priority="tertiary no outline"
         type="button"
-        onPointerDown={(event) => event.preventDefault()}
-        onClick={() => editor.chain().focus().toggleStrike().run()}
+        iconId="fr-icon-italic"
+        nativeButtonProps={{
+          onPointerDown: (event) => event.preventDefault(),
+          onClick: () => editor.chain().focus().toggleItalic().run(),
+        }}
+      ></Button>
+      <Button
         className={toolbarButtonRecipe({
           active: editor.isActive("strike"),
         })}
-      >
-        <LuStrikethrough />
-      </button>
-      <input
-        type="color"
-        onInput={(event) =>
-          editor
-            .chain()
-            .focus()
-            .setColor((event.target as any).value)
-            .run()
-        }
-        value={editor.getAttributes("textStyle").color ?? "#000000"}
-      />
-      {/* <button
+        size="small"
+        priority="tertiary no outline"
+        iconId="ri-underline"
         type="button"
-        onPointerDown={(event) => event.preventDefault()}
-        onClick={() => editor.chain().focus().toggleBulletList().run()}
-        className={toolbarButtonRecipe({
-          active: editor.isActive("bulletList"),
-        })}
-      >
-        <LuList />
-      </button>
-      <button
-        type="button"
-        onPointerDown={(event) => event.preventDefault()}
-        onClick={() => editor.chain().focus().toggleOrderedList().run()}
-        className={toolbarButtonRecipe({
-          active: editor.isActive("orderedList"),
-        })}
-      >
-        <LuListOrdered />
-      </button>
-      <button
-        type="button"
-        onPointerDown={(event) => event.preventDefault()}
-        onClick={() => editor.chain().focus().toggleBlockquote().run()}
-        className={toolbarButtonRecipe({
-          active: editor.isActive("blockquote"),
-        })}
-      >
-        <LuQuote />
-      </button>
-      <button
-        type="button"
-        onPointerDown={(event) => event.preventDefault()}
-        onClick={() => editor.chain().focus().toggleCode().run()}
-        className={toolbarButtonRecipe({
-          active: editor.isActive("code"),
-        })}
-      >
-        <LuCode />
-      </button> */}
-      {/* <button
-        type="button"
-        onPointerDown={(event) => event.preventDefault()}
-        onClick={() => {
-          const previousUrl = editor.getAttributes("link").href;
-          const url = window.prompt("URL", previousUrl);
-          if (url === null) return; // cancelled
-          if (url === "") {
-            // empty
-            editor.chain().focus().extendMarkRange("link").unsetLink().run();
-            return;
-          }
-          editor.chain().focus().extendMarkRange("link").setLink({ href: url }).run();
+        nativeButtonProps={{
+          onPointerDown: (event) => event.preventDefault(),
+          onClick: () => editor.chain().focus().toggleStrike().run(),
         }}
-        className={toolbarButtonRecipe({
-          active: editor.isActive("link"),
-        })}
-      >
-        <LuLink />
-      </button> */}
-    </div>
+      ></Button>
+      <ColorInput />
+    </>
+  );
+};
+
+const ColorInput = () => {
+  const editor = useContext(TextEditorContext).editor!;
+
+  return (
+    <input
+      id="text-color"
+      // className={css({ visibility: "hidden", width: "0px", margin: 0, padding: 0 })}
+      type="color"
+      onInput={(event) =>
+        editor
+          .chain()
+          .focus()
+          .setColor((event.target as any).value)
+          .run()
+      }
+      value={editor.getAttributes("textStyle").color ?? "#000000"}
+    />
   );
 };

@@ -16,7 +16,8 @@ CREATE TABLE IF NOT EXISTS "report" (
   "createdAt" TIMESTAMP NOT NULL,
   "serviceInstructeur" INT,
   "pdf" TEXT,
-  "disabled" BOOLEAN
+  "disabled" BOOLEAN,
+  "udap_id" TEXT
 );
 
 CREATE TABLE IF NOT EXISTS "clause" (

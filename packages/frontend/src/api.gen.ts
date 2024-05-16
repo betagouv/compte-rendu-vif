@@ -10,10 +10,7 @@ export namespace Endpoints {
     method: "POST";
     path: "/api/create-user";
     parameters: {
-      body:
-        | { name: string; udap_id: string }
-        | { email: string; password: string }
-        | Array<{ name: string; udap_id: string } | { email: string; password: string }>;
+      body: { name: string; udap_id: string; email: string; password: string };
     };
     response: {
       user: {
@@ -40,7 +37,7 @@ export namespace Endpoints {
     method: "POST";
     path: "/api/login";
     parameters: {
-      body: Partial<{}>;
+      body: { email: string; password: string };
     };
     response: {
       user: {

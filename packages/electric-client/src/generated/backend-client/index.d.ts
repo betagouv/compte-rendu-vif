@@ -90,6 +90,7 @@ export type reportPayload<ExtArgs extends $Extensions.Args = $Extensions.Default
     serviceInstructeur: number | null
     pdf: string | null
     disabled: boolean | null
+    udap_id: string | null
   }, ExtArgs["result"]["report"]>
   composites: {}
 }
@@ -4838,6 +4839,7 @@ export namespace Prisma {
     serviceInstructeur: number | null
     pdf: string | null
     disabled: boolean | null
+    udap_id: string | null
   }
 
   export type ReportMaxAggregateOutputType = {
@@ -4859,6 +4861,7 @@ export namespace Prisma {
     serviceInstructeur: number | null
     pdf: string | null
     disabled: boolean | null
+    udap_id: string | null
   }
 
   export type ReportCountAggregateOutputType = {
@@ -4880,6 +4883,7 @@ export namespace Prisma {
     serviceInstructeur: number
     pdf: number
     disabled: number
+    udap_id: number
     _all: number
   }
 
@@ -4911,6 +4915,7 @@ export namespace Prisma {
     serviceInstructeur?: true
     pdf?: true
     disabled?: true
+    udap_id?: true
   }
 
   export type ReportMaxAggregateInputType = {
@@ -4932,6 +4937,7 @@ export namespace Prisma {
     serviceInstructeur?: true
     pdf?: true
     disabled?: true
+    udap_id?: true
   }
 
   export type ReportCountAggregateInputType = {
@@ -4953,6 +4959,7 @@ export namespace Prisma {
     serviceInstructeur?: true
     pdf?: true
     disabled?: true
+    udap_id?: true
     _all?: true
   }
 
@@ -5062,6 +5069,7 @@ export namespace Prisma {
     serviceInstructeur: number | null
     pdf: string | null
     disabled: boolean | null
+    udap_id: string | null
     _count: ReportCountAggregateOutputType | null
     _avg: ReportAvgAggregateOutputType | null
     _sum: ReportSumAggregateOutputType | null
@@ -5102,6 +5110,7 @@ export namespace Prisma {
     serviceInstructeur?: boolean
     pdf?: boolean
     disabled?: boolean
+    udap_id?: boolean
     user?: boolean | userArgs<ExtArgs>
     report_to_clause?: boolean | report$report_to_clauseArgs<ExtArgs>
     _count?: boolean | ReportCountOutputTypeArgs<ExtArgs>
@@ -5126,6 +5135,7 @@ export namespace Prisma {
     serviceInstructeur?: boolean
     pdf?: boolean
     disabled?: boolean
+    udap_id?: boolean
   }
 
   export type reportInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
@@ -12426,7 +12436,8 @@ export namespace Prisma {
     createdAt: 'createdAt',
     serviceInstructeur: 'serviceInstructeur',
     pdf: 'pdf',
-    disabled: 'disabled'
+    disabled: 'disabled',
+    udap_id: 'udap_id'
   };
 
   export type ReportScalarFieldEnum = (typeof ReportScalarFieldEnum)[keyof typeof ReportScalarFieldEnum]
@@ -12684,6 +12695,7 @@ export namespace Prisma {
     serviceInstructeur?: IntNullableFilter | number | null
     pdf?: StringNullableFilter | string | null
     disabled?: BoolNullableFilter | boolean | null
+    udap_id?: StringNullableFilter | string | null
     user?: XOR<UserRelationFilter, userWhereInput>
     report_to_clause?: Report_to_clauseListRelationFilter
   }
@@ -12707,6 +12719,7 @@ export namespace Prisma {
     serviceInstructeur?: SortOrderInput | SortOrder
     pdf?: SortOrderInput | SortOrder
     disabled?: SortOrderInput | SortOrder
+    udap_id?: SortOrderInput | SortOrder
     user?: userOrderByWithRelationInput
     report_to_clause?: report_to_clauseOrderByRelationAggregateInput
   }
@@ -12734,6 +12747,7 @@ export namespace Prisma {
     serviceInstructeur?: SortOrderInput | SortOrder
     pdf?: SortOrderInput | SortOrder
     disabled?: SortOrderInput | SortOrder
+    udap_id?: SortOrderInput | SortOrder
     _count?: reportCountOrderByAggregateInput
     _avg?: reportAvgOrderByAggregateInput
     _max?: reportMaxOrderByAggregateInput
@@ -12763,6 +12777,7 @@ export namespace Prisma {
     serviceInstructeur?: IntNullableWithAggregatesFilter | number | null
     pdf?: StringNullableWithAggregatesFilter | string | null
     disabled?: BoolNullableWithAggregatesFilter | boolean | null
+    udap_id?: StringNullableWithAggregatesFilter | string | null
   }
 
   export type report_to_clauseWhereInput = {
@@ -13251,6 +13266,7 @@ export namespace Prisma {
     serviceInstructeur?: number | null
     pdf?: string | null
     disabled?: boolean | null
+    udap_id?: string | null
     user: userCreateNestedOneWithoutReportInput
     report_to_clause?: report_to_clauseCreateNestedManyWithoutReportInput
   }
@@ -13274,6 +13290,7 @@ export namespace Prisma {
     serviceInstructeur?: number | null
     pdf?: string | null
     disabled?: boolean | null
+    udap_id?: string | null
     report_to_clause?: report_to_clauseUncheckedCreateNestedManyWithoutReportInput
   }
 
@@ -13295,6 +13312,7 @@ export namespace Prisma {
     serviceInstructeur?: NullableIntFieldUpdateOperationsInput | number | null
     pdf?: NullableStringFieldUpdateOperationsInput | string | null
     disabled?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    udap_id?: NullableStringFieldUpdateOperationsInput | string | null
     user?: userUpdateOneRequiredWithoutReportNestedInput
     report_to_clause?: report_to_clauseUpdateManyWithoutReportNestedInput
   }
@@ -13318,6 +13336,7 @@ export namespace Prisma {
     serviceInstructeur?: NullableIntFieldUpdateOperationsInput | number | null
     pdf?: NullableStringFieldUpdateOperationsInput | string | null
     disabled?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    udap_id?: NullableStringFieldUpdateOperationsInput | string | null
     report_to_clause?: report_to_clauseUncheckedUpdateManyWithoutReportNestedInput
   }
 
@@ -13340,6 +13359,7 @@ export namespace Prisma {
     serviceInstructeur?: number | null
     pdf?: string | null
     disabled?: boolean | null
+    udap_id?: string | null
   }
 
   export type reportUpdateManyMutationInput = {
@@ -13360,6 +13380,7 @@ export namespace Prisma {
     serviceInstructeur?: NullableIntFieldUpdateOperationsInput | number | null
     pdf?: NullableStringFieldUpdateOperationsInput | string | null
     disabled?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    udap_id?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type reportUncheckedUpdateManyInput = {
@@ -13381,6 +13402,7 @@ export namespace Prisma {
     serviceInstructeur?: NullableIntFieldUpdateOperationsInput | number | null
     pdf?: NullableStringFieldUpdateOperationsInput | string | null
     disabled?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    udap_id?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type report_to_clauseCreateInput = {
@@ -14060,6 +14082,7 @@ export namespace Prisma {
     serviceInstructeur?: SortOrder
     pdf?: SortOrder
     disabled?: SortOrder
+    udap_id?: SortOrder
   }
 
   export type reportAvgOrderByAggregateInput = {
@@ -14085,6 +14108,7 @@ export namespace Prisma {
     serviceInstructeur?: SortOrder
     pdf?: SortOrder
     disabled?: SortOrder
+    udap_id?: SortOrder
   }
 
   export type reportMinOrderByAggregateInput = {
@@ -14106,6 +14130,7 @@ export namespace Prisma {
     serviceInstructeur?: SortOrder
     pdf?: SortOrder
     disabled?: SortOrder
+    udap_id?: SortOrder
   }
 
   export type reportSumOrderByAggregateInput = {
@@ -15212,6 +15237,7 @@ export namespace Prisma {
     serviceInstructeur?: number | null
     pdf?: string | null
     disabled?: boolean | null
+    udap_id?: string | null
     user: userCreateNestedOneWithoutReportInput
   }
 
@@ -15234,6 +15260,7 @@ export namespace Prisma {
     serviceInstructeur?: number | null
     pdf?: string | null
     disabled?: boolean | null
+    udap_id?: string | null
   }
 
   export type reportCreateOrConnectWithoutReport_to_clauseInput = {
@@ -15281,6 +15308,7 @@ export namespace Prisma {
     serviceInstructeur?: NullableIntFieldUpdateOperationsInput | number | null
     pdf?: NullableStringFieldUpdateOperationsInput | string | null
     disabled?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    udap_id?: NullableStringFieldUpdateOperationsInput | string | null
     user?: userUpdateOneRequiredWithoutReportNestedInput
   }
 
@@ -15303,6 +15331,7 @@ export namespace Prisma {
     serviceInstructeur?: NullableIntFieldUpdateOperationsInput | number | null
     pdf?: NullableStringFieldUpdateOperationsInput | string | null
     disabled?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    udap_id?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type userCreateWithoutDelegation_delegation_createdByTouserInput = {
@@ -15532,6 +15561,7 @@ export namespace Prisma {
     serviceInstructeur?: number | null
     pdf?: string | null
     disabled?: boolean | null
+    udap_id?: string | null
     report_to_clause?: report_to_clauseCreateNestedManyWithoutReportInput
   }
 
@@ -15553,6 +15583,7 @@ export namespace Prisma {
     serviceInstructeur?: number | null
     pdf?: string | null
     disabled?: boolean | null
+    udap_id?: string | null
     report_to_clause?: report_to_clauseUncheckedCreateNestedManyWithoutReportInput
   }
 
@@ -15704,6 +15735,7 @@ export namespace Prisma {
     serviceInstructeur?: IntNullableFilter | number | null
     pdf?: StringNullableFilter | string | null
     disabled?: BoolNullableFilter | boolean | null
+    udap_id?: StringNullableFilter | string | null
   }
 
   export type udapUpsertWithoutUserInput = {
@@ -15881,6 +15913,7 @@ export namespace Prisma {
     serviceInstructeur?: number | null
     pdf?: string | null
     disabled?: boolean | null
+    udap_id?: string | null
   }
 
   export type delegationUpdateWithoutUser_delegation_createdByTouserInput = {
@@ -15952,6 +15985,7 @@ export namespace Prisma {
     serviceInstructeur?: NullableIntFieldUpdateOperationsInput | number | null
     pdf?: NullableStringFieldUpdateOperationsInput | string | null
     disabled?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    udap_id?: NullableStringFieldUpdateOperationsInput | string | null
     report_to_clause?: report_to_clauseUpdateManyWithoutReportNestedInput
   }
 
@@ -15973,6 +16007,7 @@ export namespace Prisma {
     serviceInstructeur?: NullableIntFieldUpdateOperationsInput | number | null
     pdf?: NullableStringFieldUpdateOperationsInput | string | null
     disabled?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    udap_id?: NullableStringFieldUpdateOperationsInput | string | null
     report_to_clause?: report_to_clauseUncheckedUpdateManyWithoutReportNestedInput
   }
 
@@ -15994,6 +16029,7 @@ export namespace Prisma {
     serviceInstructeur?: NullableIntFieldUpdateOperationsInput | number | null
     pdf?: NullableStringFieldUpdateOperationsInput | string | null
     disabled?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    udap_id?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
 

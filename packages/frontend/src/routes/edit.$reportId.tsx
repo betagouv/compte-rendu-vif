@@ -2,8 +2,8 @@ import { EnsureUser } from "#components/EnsureUser";
 import { SyncFormBanner } from "#components/SyncForm";
 import { Tabs } from "#components/Tabs";
 import { css } from "#styled-system/css";
-import { Box, Center, Flex, Stack } from "#styled-system/jsx";
-import type { Report, Udap } from "@cr-vif/electric-client/frontend";
+import { Box, Flex } from "#styled-system/jsx";
+import type { Report } from "@cr-vif/electric-client/frontend";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useLiveQuery } from "electric-sql/react";
 import { useEffect, useRef, useState } from "react";
@@ -20,11 +20,6 @@ import { db } from "../db";
 import { InfoForm } from "../features/InfoForm";
 import { NotesForm } from "../features/NotesForm";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
-import { ReportPDFDocument, getReportHtmlString } from "@cr-vif/pdf";
-import { useUser } from "../contexts/AuthContext";
-import { useChipOptions } from "../features/chips/useChipOptions";
-import { PDFViewer } from "@react-pdf/renderer";
-import Button from "@codegouvfr/react-dsfr/Button";
 
 const EditReport = () => {
   const { reportId } = Route.useParams();
@@ -33,11 +28,6 @@ const EditReport = () => {
 
   return <Flex direction="column">{report ? <WithReport report={report} /> : null}</Flex>;
 };
-
-const modal = createModal({
-  id: "pdf-modal",
-  isOpenedByDefault: false,
-});
 
 function useFormWithFocus<TFieldValues extends FieldValues = FieldValues>(props: UseFormProps<TFieldValues, any>) {
   const form = useForm<TFieldValues>(props);
@@ -132,21 +122,12 @@ const WithReport = ({ report }: { report: Report }) => {
 
   const onSubmit = (_values: Report) => {
     setPdfValues(_values);
-    modal.open();
-  };
-
-  const goToEditPage = () => {
-    navigate({
-      to: "/export/$reportId",
-      params: {
-        reportId: report.id,
-      },
-    });
+    navigate({ to: "/pdf/$reportId", params: { reportId: report.id } });
+    // modal.open();
   };
 
   return (
     <>
-      <PDFModal report={pdfValues} onDownload={() => {}} onEdit={goToEditPage} />
       <Flex direction="column">
         <FormProvider {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -177,47 +158,6 @@ const WithReport = ({ report }: { report: Report }) => {
         </FormProvider>
       </Flex>
     </>
-  );
-};
-
-const PDFModal = ({
-  report,
-  onEdit,
-  onDownload,
-}: {
-  report: Report | null;
-  onEdit: () => void;
-  onDownload: () => void;
-}) => {
-  return (
-    <modal.Component title="">
-      <Stack>
-        <Center gap="10px" direction="row">
-          <Button iconId="ri-pencil-line" priority="secondary" onClick={onEdit}>
-            Modifier
-          </Button>
-          {/* TODO: replace with "Envoyer" */}
-          <Button iconId="ri-download-line" onClick={onDownload}>
-            Télécharger
-          </Button>
-        </Center>
-        {report ? <PDFContent report={report} /> : null}
-      </Stack>
-    </modal.Component>
-  );
-};
-
-const PDFContent = ({ report }: { report: Report }) => {
-  const { udap } = useUser()!;
-  const chipOptions = useChipOptions();
-  const htmlString = getReportHtmlString(report, chipOptions, udap as Udap);
-
-  if (!chipOptions) return null;
-
-  return (
-    <PDFViewer showToolbar={false} width={"100%"} height={"800px"}>
-      <ReportPDFDocument udap={udap as Udap} htmlString={htmlString} images={{ header: "/pdf_header.png" }} />
-    </PDFViewer>
   );
 };
 

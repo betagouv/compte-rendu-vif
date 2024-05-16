@@ -54,6 +54,7 @@ model report {
   serviceInstructeur  Int?
   pdf                 String?
   disabled            Boolean?
+  udap_id             String?
   user                user               @relation(fields: [createdBy], references: [id], onDelete: SetNull, onUpdate: NoAction)
   report_to_clause    report_to_clause[]
 }

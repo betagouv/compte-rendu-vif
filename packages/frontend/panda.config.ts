@@ -38,6 +38,9 @@ export default defineConfig({
           "yellow-waiting": { value: "#FEECC2" },
           "red-offline": { value: "#FFE9E6" },
         },
+        sizes: {
+          "header-height": { value: "80px" },
+        },
       },
       semanticTokens: {},
     },
