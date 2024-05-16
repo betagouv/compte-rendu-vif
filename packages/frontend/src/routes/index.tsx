@@ -35,7 +35,6 @@ const Index = () => {
     },
   ];
 
-
   const createReportMutation = useMutation({
     mutationFn: () =>
       db.report.create({
@@ -44,6 +43,7 @@ const Index = () => {
           createdBy: user.id,
           createdAt: new Date(),
           disabled: false,
+          udap_id: user.udap.id,
         },
       }),
   });

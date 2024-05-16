@@ -3,16 +3,31 @@ import { Stack } from "#styled-system/jsx";
 import Button, { ButtonProps } from "@codegouvfr/react-dsfr/Button";
 import { forwardRef } from "react";
 import { useUser } from "../contexts/AuthContext";
-import { Report } from "@cr-vif/electric-client/frontend";
 import { useMutation } from "@tanstack/react-query";
 import { db } from "../db";
+import { downloadFile } from "../utils";
+import { v4 } from "uuid";
+import { omit } from "pastable";
+import { ReportWithUser } from "./ReportList";
 
-export const ReportActions = forwardRef<HTMLDivElement, { report: Report }>(({ report }, ref) => {
+export const ReportActions = forwardRef<HTMLDivElement, { report: ReportWithUser }>(({ report }, ref) => {
   const user = useUser()!;
 
   const isOwner = report.createdBy === user.id;
 
   const deleteMutation = useDeleteMutation();
+  const duplicateMutation = useMutation(async () => {
+    const payload = omit(report, ["id", "createdAt", "pdf", "user"]);
+    console.log("dup", payload);
+    return db.report.create({
+      data: {
+        ...payload,
+        id: `report-${v4()}`,
+        createdAt: new Date(),
+        pdf: undefined,
+      },
+    });
+  });
 
   return (
     <Stack ref={ref} gap="0">
@@ -24,8 +39,10 @@ export const ReportActions = forwardRef<HTMLDivElement, { report: Report }>(({ r
           onClick={() => deleteMutation.mutate(report.id)}
         />
       ) : null}
-      <ReportAction iconId="ri-download-line" label="Télécharger" onClick={() => {}} />
-      <ReportAction iconId="ri-file-add-line" label="Dupliquer" onClick={() => {}} />
+      {report.pdf ? (
+        <ReportAction iconId="ri-download-line" label="Télécharger" onClick={() => downloadFile(report.pdf!)} />
+      ) : null}
+      <ReportAction iconId="ri-file-add-line" label="Dupliquer" onClick={() => duplicateMutation.mutate()} />
     </Stack>
   );
 });

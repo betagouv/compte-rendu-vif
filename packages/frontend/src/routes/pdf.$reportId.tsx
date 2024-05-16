@@ -17,6 +17,7 @@ import { Editor } from "@tiptap/react";
 import { TextEditorToolbar } from "../features/text-editor/TextEditorToolbar";
 import { TextEditorContext, TextEditorContextProvider } from "../features/text-editor/TextEditorContext";
 import { api } from "../api";
+import { downloadFile } from "../utils";
 
 export const PDF = () => {
   const { udap } = useUser()!;
@@ -69,7 +70,7 @@ export const PDF = () => {
           title={
             <div>
               <styled.span fontWeight="bold">{mode === "edit" ? "Modification" : "Prévisualisation"}</styled.span>
-              {report?.title ? `| ${report?.title}` : ""}
+              {report?.title ? ` | ${report?.title}` : ""}
             </div>
           }
           buttons={mode === "edit" ? <EditButtons /> : <ViewButtons />}
@@ -95,12 +96,7 @@ const DownloadButton = () => {
 
   const generatePdfMutation = useMutation(async (htmlString: string) => {
     const url = await api.post("/api/pdf/report", { body: { reportId, htmlString } });
-    // download file
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "report.pdf";
-    a.click();
-    a.remove();
+    downloadFile(url);
   });
 
   return (

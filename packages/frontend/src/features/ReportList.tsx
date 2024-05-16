@@ -41,8 +41,6 @@ export const MyReports = () => {
     }),
   );
 
-  console.log(nbReports.results?.[0].count);
-
   if (myReports.error || nbReports.error) {
     console.error(myReports.error, nbReports.error);
     return <Center>Une erreur s'est produite</Center>;
@@ -64,7 +62,7 @@ export const AllReports = () => {
   const user = useUser()!;
   const allReports = useLiveQuery(
     db.report.liveMany({
-      where: { disabled: false },
+      where: { disabled: false, udap_id: user.udap.id },
       take: 20,
       skip: page * 20,
       orderBy: { createdAt: "desc" },
@@ -75,7 +73,10 @@ export const AllReports = () => {
   );
 
   const nbReports = useLiveQuery<[{ count: number }]>(
-    db.liveRawQuery({ sql: `SELECT COUNT(*) AS count FROM report WHERE disabled=FALSE` }),
+    db.liveRawQuery({
+      sql: `SELECT COUNT(*) AS count FROM report WHERE disabled=FALSE AND udap_id = ?`,
+      args: [user.udap.id],
+    }),
   );
 
   if (allReports.error || nbReports.error) {
@@ -130,14 +131,16 @@ export const ReportList = ({
           ))}
       </Grid>
       <Center w="100%">
-        <Pagination
-          count={pageCount}
-          getPageLinkProps={(nb) => ({
-            key: `page-${nb}`,
-            onClick: () => setPage(nb - 1),
-          })}
-          defaultPage={page + 1}
-        />
+        {error ? null : (
+          <Pagination
+            count={pageCount}
+            getPageLinkProps={(nb) => ({
+              key: `page-${nb}`,
+              onClick: () => setPage(nb - 1),
+            })}
+            defaultPage={page + 1}
+          />
+        )}
       </Center>
     </Stack>
   );

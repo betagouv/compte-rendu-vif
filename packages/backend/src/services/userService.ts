@@ -25,7 +25,7 @@ export class UserService {
 
     const { name, udap_id, ...rest } = payload;
 
-    const id = crypto.randomUUID();
+    const id = "user-" + crypto.randomUUID();
     const internalUser = await db.internal_user.create({
       data: {
         id,
