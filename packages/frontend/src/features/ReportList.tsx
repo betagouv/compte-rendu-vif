@@ -1,4 +1,4 @@
-import { Center, Divider, Flex, Grid, styled } from "#styled-system/jsx";
+import { Center, Divider, Flex, Grid, Stack, styled } from "#styled-system/jsx";
 import { flex } from "#styled-system/patterns";
 import { useLiveQuery } from "electric-sql/react";
 import { useUser } from "../contexts/AuthContext";
@@ -14,70 +14,132 @@ import { token } from "#styled-system/tokens";
 import { useRef, useState } from "react";
 import { PopoverTrigger } from "@ark-ui/react/popover";
 import { ReportActions } from "./ReportActions";
+import { Pagination } from "@codegouvfr/react-dsfr/Pagination";
 
 export type ReportWithUser = Report & { user?: { email: string; name: string } };
 
 export const MyReports = () => {
+  const [page, setPage] = useState(0);
+
   const user = useUser()!;
   const myReports = useLiveQuery(
     db.report.liveMany({
       where: { createdBy: user.id, disabled: false },
+      take: 20,
+      skip: page * 20,
+      orderBy: { createdAt: "desc" },
       include: {
         user: true,
       },
     }),
   );
 
-  if (myReports.error) {
-    console.error(myReports.error);
+  const nbReports = useLiveQuery<[{ count: number }]>(
+    db.liveRawQuery({
+      sql: `SELECT COUNT(*) AS count FROM report WHERE createdBy = ? AND disabled = FALSE`,
+      args: [user.id],
+    }),
+  );
+
+  console.log(nbReports.results?.[0].count);
+
+  if (myReports.error || nbReports.error) {
+    console.error(myReports.error, nbReports.error);
     return <Center>Une erreur s'est produite</Center>;
   }
 
-  return <ReportList reports={myReports.results ?? []} />;
+  return (
+    <ReportList
+      reports={myReports.results ?? []}
+      setPage={setPage}
+      count={nbReports.results?.[0].count ?? 0}
+      page={page}
+    />
+  );
 };
 
 export const AllReports = () => {
+  const [page, setPage] = useState(0);
+
   const user = useUser()!;
   const allReports = useLiveQuery(
     db.report.liveMany({
-      where: { createdBy: user.id, disabled: false },
+      where: { disabled: false },
+      take: 20,
+      skip: page * 20,
+      orderBy: { createdAt: "desc" },
       include: {
         user: true,
       },
     }),
   );
 
-  if (allReports.error) {
+  const nbReports = useLiveQuery<[{ count: number }]>(
+    db.liveRawQuery({ sql: `SELECT COUNT(*) AS count FROM report WHERE disabled=FALSE` }),
+  );
+
+  if (allReports.error || nbReports.error) {
     console.error(allReports.error);
     return <Center>Une erreur s'est produite</Center>;
   }
 
-  return <ReportList reports={allReports.results ?? []} />;
+  return (
+    <ReportList
+      reports={allReports.results ?? []}
+      setPage={setPage}
+      count={nbReports.results?.[0].count ?? 0}
+      page={page}
+    />
+  );
 };
 
-export const ReportList = ({ reports }: { reports: ReportWithUser[] }) => {
+export const ReportList = ({
+  reports,
+  page,
+  setPage,
+  count,
+}: {
+  reports: ReportWithUser[];
+  page: number;
+  setPage: (page: number) => void;
+  count: number;
+}) => {
   const error = reports.length === 0 ? <Center>Aucun compte-rendu</Center> : null;
 
+  const pageCount = count === 0 ? 0 : Math.ceil(count / 20);
+
   return (
-    <Grid
-      className={css({
-        "& > *:nth-child(-n+10)": {
-          gridColumn: {
-            base: "0",
-            lg: "1",
+    <Stack>
+      <Grid
+        className={css({
+          "& > *:nth-child(-n+10)": {
+            gridColumn: {
+              base: "0",
+              lg: "1",
+            },
           },
-        },
-      })}
-      gap="8px 28px"
-      gridTemplateRows={{ base: "repeat(20, 1fr)", lg: "repeat(10, 1fr)" }}
-      gridAutoFlow="column"
-      w="100%"
-    >
-      {error ??
-        reports.map((report, index) => (
-          <ReportListItem key={report.id} report={report} isLast={index === reports.length - 1} />
-        ))}
-    </Grid>
+        })}
+        gap="8px 28px"
+        gridTemplateRows={{ base: "repeat(20, 1fr)", lg: "repeat(10, 1fr)" }}
+        gridAutoFlow="column"
+        w="100%"
+      >
+        {error ??
+          reports.map((report, index) => (
+            <ReportListItem key={report.id} report={report} isLast={index === reports.length - 1} />
+          ))}
+      </Grid>
+      <Center w="100%">
+        <Pagination
+          count={pageCount}
+          getPageLinkProps={(nb) => ({
+            key: `page-${nb}`,
+            onClick: () => setPage(nb - 1),
+          })}
+          defaultPage={page + 1}
+        />
+      </Center>
+    </Stack>
   );
 };
 
@@ -88,7 +150,6 @@ const ReportListItem = ({ report, isLast }: { report: ReportWithUser; isLast?: b
   const menuProps = {
     report,
     onClose: (e: Event) => {
-      console.log(e);
       if (e.target !== ref.current) setIsOpen(false);
     },
   };

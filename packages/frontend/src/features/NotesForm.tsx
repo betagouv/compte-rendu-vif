@@ -39,9 +39,11 @@ export const NotesForm = () => {
         />
       </Stack>
 
-      <Flex>
-        <Button type="submit">Enregistrer</Button>
-      </Flex>
+      <div>
+        <Button iconId="ri-file-2-line" type="submit">
+          Créer le CR
+        </Button>
+      </div>
     </Flex>
   );
 };

@@ -118,15 +118,15 @@ export const InfoForm = () => {
         </Stack>
       </InputGroupWithTitle>
 
-      <Center>
+      <div>
         <Button
           type="button"
-          // iconId="ri-draft-line"
+          iconId="ri-arrow-right-line"
           nativeButtonProps={{ type: "button", onClick: () => tab.setValue("notes") }}
         >
           Rédiger le bilan
         </Button>
-      </Center>
+      </div>
     </Flex>
   );
 };
