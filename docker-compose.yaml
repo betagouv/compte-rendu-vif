@@ -4,6 +4,14 @@ volumes:
   pg_data:
 
 services:
+  frontend:
+    build:
+      context: .
+      target: frontend
+    restart: always
+    depends_on:
+      - electric
+
   pg:
     image: postgres:14-alpine
     environment:
