@@ -14,6 +14,7 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 
 COPY packages/backend/package.json ./packages/backend/
 COPY packages/electric-client/package.json ./packages/electric-client/
+COPY packages/pdf/package.json ./packages/pdf/
 
 COPY packages/frontend/package.json ./packages/frontend/
 COPY packages/frontend/public ./packages/frontend/public
@@ -33,7 +34,11 @@ RUN pnpm install --frozen-lockfile
 FROM with-deps AS backend
 WORKDIR /usr/src/app
 COPY packages/backend/ ./packages/backend/
+COPY packages/pdf/ ./packages/pdf/
+RUN pnpm electric-client generate:back
 COPY packages/electric-client/ ./packages/electric-client/
+
+
 COPY db/ ./db/
 COPY --from=with-deps /usr/src/app/packages/backend/node_modules ./packages/backend/node_modules
 

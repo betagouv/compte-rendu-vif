@@ -44,9 +44,6 @@ importers:
       '@aws-sdk/lib-storage':
         specifier: ^3.572.0
         version: 3.572.0(@aws-sdk/client-s3@3.572.0)
-      '@cr-vif/electric-client':
-        specifier: workspace:*
-        version: link:../electric-client
       '@fastify/cors':
         specifier: ^9.0.1
         version: 9.0.1
@@ -110,6 +107,9 @@ importers:
       react:
         specifier: ^18.2.0
         version: 18.2.0
+      react-pdf-html:
+        specifier: ^2.0.4
+        version: 2.0.4(@react-pdf/renderer@3.4.2)(react@18.2.0)
       reflect-metadata:
         specifier: ^0.2.1
         version: 0.2.2
@@ -123,6 +123,9 @@ importers:
         specifier: ^3.22.4
         version: 3.22.4
     devDependencies:
+      '@cr-vif/electric-client':
+        specifier: workspace:*
+        version: link:../electric-client
       '@cr-vif/pdf':
         specifier: workspace:*
         version: link:../pdf

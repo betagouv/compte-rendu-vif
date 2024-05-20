@@ -4,7 +4,8 @@
   "description": "",
   "scripts": {
     "generate:front": "dotenv -e ../../.env -- pnpm electric-sql generate && pnpm complete",
-    "generate:back": "dotenv -e ../../.env -- pnpm prisma db pull && pnpm prisma generate",
+    "pull": "dotenv -e ../../.env -- pnpm prisma db pull",
+    "generate:back": "dotenv -e ../../.env -- pnpm prisma generate",
     "complete": "vite-node ./scripts/completePrismaClient.ts",
     "build": "tsup src/index.ts --dts --format cjs,esm"
   },
