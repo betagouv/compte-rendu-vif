@@ -1,5 +1,4 @@
 import { Type, type FastifyPluginAsyncTypebox } from "@fastify/type-provider-typebox";
-import { SerializedUser } from "../services/userService";
 import { renderToBuffer } from "@react-pdf/renderer";
 import { ReportPDFDocument } from "@cr-vif/pdf";
 import { Udap } from "@cr-vif/electric-client/frontend";
@@ -29,7 +28,7 @@ export const pdfPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
   });
 };
 
-const generatePdf = async ({ htmlString, udap }: { htmlString: string; udap: SerializedUser["udap"] }) => {
+const generatePdf = async ({ htmlString, udap }: { htmlString: string; udap: Udap }) => {
   return renderToBuffer(
     <ReportPDFDocument udap={udap as Udap} htmlString={htmlString} images={{ header: "./public/pdf_header.png" }} />,
   );
