@@ -11,7 +11,6 @@ import { AppError } from "../features/errors";
 import { Type, type Static } from "@sinclair/typebox";
 import * as Schemas from "@cr-vif/electric-client/typebox";
 import type { Prisma } from "@cr-vif/electric-client/backend";
-import { user } from "../../../electric-client/src/generated/backend-client/index";
 
 export class UserService {
   async createUser(

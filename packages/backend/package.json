@@ -29,13 +29,13 @@
     "tsup": "^8.0.2",
     "typescript": "^5.2.2",
     "vite": "^5.1.6",
+    "@cr-vif/pdf": "workspace:*",
+    "@cr-vif/electric-client": "workspace:*",
     "vite-node": "^1.4.0"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.572.0",
     "@aws-sdk/lib-storage": "^3.572.0",
-    "@cr-vif/electric-client": "workspace:*",
-    "@cr-vif/pdf": "workspace:*",
     "@fastify/cors": "^9.0.1",
     "@fastify/multipart": "^8.2.0",
     "@fastify/swagger": "^8.14.0",

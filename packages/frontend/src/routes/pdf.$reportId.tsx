@@ -31,7 +31,6 @@ export const PDF = () => {
   const toggleMode = () => {
     navigate({ search: { mode: mode === "edit" ? "view" : "edit" }, replace: true });
   };
-  const onDownload = () => {};
 
   const reportQuery = useQuery({
     queryKey: ["report", reportId],
@@ -77,7 +76,7 @@ export const PDF = () => {
         />
         <Center w="100%" h="100%" maxH="100%" mt="10px" overflowY="auto">
           <Stack w="800px" h="100%">
-            {report && chipOptions ? (
+            {report && chipOptions?.length ? (
               <WithReport
                 mode={mode as "edit" | "view"}
                 initialHtmlString={getReportHtmlString(report, chipOptions, udap as Udap)}

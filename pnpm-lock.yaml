@@ -47,9 +47,6 @@ importers:
       '@cr-vif/electric-client':
         specifier: workspace:*
         version: link:../electric-client
-      '@cr-vif/pdf':
-        specifier: workspace:*
-        version: link:../pdf
       '@fastify/cors':
         specifier: ^9.0.1
         version: 9.0.1
@@ -126,6 +123,9 @@ importers:
         specifier: ^3.22.4
         version: 3.22.4
     devDependencies:
+      '@cr-vif/pdf':
+        specifier: workspace:*
+        version: link:../pdf
       '@triplit/client':
         specifier: ^0.3.33
         version: 0.3.33(react@18.2.0)
