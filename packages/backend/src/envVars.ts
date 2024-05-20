@@ -7,11 +7,11 @@ expand(config({ path: "../../.env" }));
 const stringOrNumberAsNumber = z.string().or(z.number()).transform(Number);
 
 const envSchema = z.object({
-  PG_PORT: stringOrNumberAsNumber.default(5432),
-  PG_HOST: z.string(),
-  PG_USER: z.string(),
-  PG_PASSWORD: z.string(),
-  PG_DB: z.string(),
+  POSTGRES_PORT: stringOrNumberAsNumber.default(5432),
+  POSTGRES_HOST: z.string(),
+  POSTGRES_USER: z.string(),
+  POSTGRES_PASSWORD: z.string(),
+  POSTGRES_DB: z.string(),
   DATABASE_URL: z.string(),
   TOKEN_LIFETIME: z.string().default("1w"),
   JWT_SECRET: z.string(),

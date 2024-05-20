@@ -4,18 +4,30 @@ volumes:
   pg_data:
 
 services:
+  frontend:
+    image: ghcr.io/betagouv/compte-rendu-vif-frontend:latest
+    restart: always
+    depends_on:
+      - electric
+
+  backend:
+    image: ghcr.io/betagouv/compte-rendu-vif-backend:latest
+    restart: always
+    depends_on:
+      - electric
+
   pg:
     image: postgres:14-alpine
     environment:
-      POSTGRES_PASSWORD: ${PG_PASSWORD}
-      POSTGRES_DB: ${PG_DB}
-      POSTGRES_USER: ${PG_USER}
-      POSTGRES_PORT: ${PG_PORT}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PORT: ${POSTGRES_PORT}
     command:
       - -c
       - wal_level=logical
     ports:
-      - ${PG_PORT}:5432
+      - ${POSTGRES_PORT}:5432
     restart: always
     volumes:
       - pg_data:/var/lib/postgresql/data
@@ -26,7 +38,7 @@ services:
     depends_on:
       - pg
     environment:
-      DATABASE_URL: postgresql://${PG_USER}:${PG_PASSWORD}@pg:${PG_PORT}/${PG_DB}
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@pg:${POSTGRES_PORT}/${POSTGRES_DB}
       AUTH_JWT_KEY: ${JWT_SECRET}
       PG_PROXY_PASSWORD: ${PG_PROXY_PASSWORD}
       PG_PROXY_PORT: ${PG_PROXY_PORT}
