@@ -53,6 +53,7 @@ CMD pnpm show-config;pnpm electric:up;pnpm backend start
 FROM with-deps AS frontend
 COPY packages/frontend/ ./packages/frontend/
 COPY packages/electric-client/ ./packages/electric-client/
+COPY packages/pdf/ ./packages/pdf/
 COPY --from=with-deps /usr/src/app/packages/frontend/node_modules ./packages/frontend/node_modules
 COPY --from=with-deps /usr/src/app/packages/frontend/styled-system ./packages/frontend/styled-system
 
