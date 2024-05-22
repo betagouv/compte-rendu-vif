@@ -124,7 +124,6 @@ const EditBanner = ({ title, buttons }: { title: ReactNode; buttons: ReactNode }
             href={""}
             onClick={(e) => {
               e.preventDefault();
-              e.stopPropagation();
 
               goBack();
             }}
