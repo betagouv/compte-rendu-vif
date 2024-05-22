@@ -147,8 +147,9 @@ export const getReportHtmlString = (report: ReportWithUser, chipOptions: Clause[
       }
       ${contacts.map((contact) => `<span>${contact}</span>`).join("<br/><br/>")}
 
+      <br/><br/>
       <span>
-        Nous contacter : ${udap.name}, ${udap.email}, ${udap.phone ? formatPhoneNumber(udap.phone?.toString()) : ""}
+        Nous contacter :<br/>${udap.name}, ${udap.email}, ${udap.phone ? formatPhoneNumber(udap.phone?.toString()) : ""}
       </span>
     </p>
   
