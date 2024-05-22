@@ -43,7 +43,7 @@ export const PDF = () => {
     return (
       <Stack gap="5px" flexDir="row" alignItems="center">
         <TextEditorToolbar />
-        <Button iconId="ri-save-line" onClick={() => toggleMode()}>
+        <Button iconId="ri-save-line" size="small" onClick={() => toggleMode()}>
           Enregistrer
         </Button>
       </Stack>

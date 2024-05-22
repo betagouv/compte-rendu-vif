@@ -20,11 +20,8 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   const electricQuery = useQuery({
     queryKey: ["electric", data?.token!],
     queryFn: async () => {
-      console.log(electric);
       if (electric.isConnected) electric.disconnect();
       await electric.connect(data.token!);
-
-      console.log(data);
 
       await electric.db.clause.sync();
       await electric.db.user.sync({ where: { udap_id: data?.user?.udap_id } });
@@ -36,7 +33,6 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
           user: true,
         },
       });
-      await electric.db.chip.sync();
 
       return true;
     },

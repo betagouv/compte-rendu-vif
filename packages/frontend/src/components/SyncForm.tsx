@@ -39,7 +39,7 @@ export function SyncFormBanner({ form, baseObject }: { form: UseFormReturn<Repor
   return (
     <>
       <Banner className={styles.root} status={status}>
-        <Flex justifyContent="space-between" alignItems="center" w="100%" maxW={{ base: "100%", sm: "800px" }} h="100%">
+        <Flex justifyContent="space-between" alignItems="center" w="100%" maxW={{ base: "100%", lg: "800px" }} h="100%">
           {/* @ts-ignore dsfr buttons props must have children */}
           <Button
             className={styles.back}

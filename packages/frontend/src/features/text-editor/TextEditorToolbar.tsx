@@ -1,43 +1,24 @@
-import { cva, css } from "#styled-system/css";
-import { hstack } from "#styled-system/patterns";
-import type { Editor } from "@tiptap/react";
-import { useContext, useRef } from "react";
-import { LuBold, LuItalic, LuStrikethrough } from "react-icons/lu";
-import { TextEditorContext } from "./TextEditorContext";
+import { cva } from "#styled-system/css";
+import { HStack, Stack } from "#styled-system/jsx";
 import Button from "@codegouvfr/react-dsfr/Button";
-import { useDebounce } from "react-use";
-
-const toolbar = hstack({
-  gap: "5px",
-  roundedBottom: "sm",
-  mt: "-1px",
-  lineHeight: "0",
-  transition: "all 0.15s",
-});
+import { useContext, useState } from "react";
+import { ColorPicker } from "../../components/ColorPicker";
+import { TextEditorContext } from "./TextEditorContext";
 
 const toolbarButtonRecipe = cva({
   base: {
-    color: "grey",
-    // display: "flex",
-    // justifyContent: "center",
-    // alignItems: "center",
-    // w: "8",
-    // h: "8",
+    color: "background-flat-blue-france",
     bg: "white",
   },
   variants: {
     active: {
       true: {
-        color: "black",
-        bg: "gray.600",
+        color: "white",
+        bg: "background-flat-blue-france",
       },
     },
   },
 });
-
-interface Props {
-  editor: Editor;
-}
 
 export const TextEditorToolbar = () => {
   const { editor } = useContext(TextEditorContext);
@@ -85,6 +66,7 @@ export const TextEditorToolbar = () => {
           onClick: () => editor.chain().focus().toggleStrike().run(),
         }}
       ></Button>
+
       <ColorInput />
     </>
   );
@@ -92,20 +74,86 @@ export const TextEditorToolbar = () => {
 
 const ColorInput = () => {
   const editor = useContext(TextEditorContext).editor!;
+  const [isOpen, baseSetIsOpen] = useState(false);
+  const [currentValue, setCurrentValue] = useState(editor.getAttributes("textStyle").color ?? "#000000");
+
+  const setIsOpen = (isOpen: boolean) => {
+    baseSetIsOpen(isOpen);
+
+    if (isOpen) {
+      setCurrentValue(editor.getAttributes("textStyle").color ?? "#000000");
+    }
+  };
 
   return (
-    <input
-      id="text-color"
-      // className={css({ visibility: "hidden", width: "0px", margin: 0, padding: 0 })}
-      type="color"
-      onInput={(event) =>
-        editor
-          .chain()
-          .focus()
-          .setColor((event.target as any).value)
-          .run()
-      }
-      value={editor.getAttributes("textStyle").color ?? "#000000"}
-    />
+    <ColorPicker.Root
+      open={isOpen}
+      onOpenChange={({ open }) => setIsOpen(open)}
+      value={currentValue}
+      onValueChangeEnd={(e) => editor.chain().focus().setColor(e.value.toString("hex")).run()}
+      closeOnSelect={false}
+    >
+      {() => (
+        <>
+          <ColorPicker.Control>
+            <ColorPicker.Trigger asChild>
+              <Button
+                className={toolbarButtonRecipe()}
+                size="small"
+                priority="tertiary no outline"
+                iconId="ri-palette-line"
+                type="button"
+                nativeButtonProps={{
+                  onPointerDown: (event) => event.preventDefault(),
+                }}
+              ></Button>
+            </ColorPicker.Trigger>
+          </ColorPicker.Control>
+          <ColorPicker.Positioner>
+            <ColorPicker.Content w="200px">
+              <Stack gap="3">
+                <ColorPicker.Area>
+                  <ColorPicker.AreaBackground />
+                  <ColorPicker.AreaThumb />
+                </ColorPicker.Area>
+                <HStack gap="3">
+                  <Stack flex="1" gap="2">
+                    <ColorPicker.ChannelSlider channel="hue">
+                      <ColorPicker.ChannelSliderTrack />
+                      <ColorPicker.ChannelSliderThumb />
+                    </ColorPicker.ChannelSlider>
+                  </Stack>
+                </HStack>
+                {/* <Stack gap="1.5">
+                    <Text size="xs" color="fg.default" fontWeight="medium">
+                      Saved Colors
+                    </Text>
+                    <ColorPicker.SwatchGroup>
+                      {presets.map((color, id) => (
+                        <ColorPicker.SwatchTrigger key={id} value={color}>
+                          <ColorPicker.Swatch value={color} />
+                        </ColorPicker.SwatchTrigger>
+                      ))}
+                    </ColorPicker.SwatchGroup>
+                  </Stack> */}
+              </Stack>
+            </ColorPicker.Content>
+          </ColorPicker.Positioner>
+        </>
+      )}
+    </ColorPicker.Root>
+    // <input
+    //   id="text-color"
+    //   // className={css({ visibility: "hidden", width: "0px", margin: 0, padding: 0 })}
+    //   type="color"
+    //   onInput={(event) =>
+    //     editor
+    //       .chain()
+    //       .focus()
+    //       .setColor((event.target as any).value)
+    //       .run()
+    //   }
+    //   value={editor.getAttributes("textStyle").color ?? "#000000"}
+    // />
   );
 };

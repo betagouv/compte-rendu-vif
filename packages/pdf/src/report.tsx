@@ -1,7 +1,8 @@
 import { Document, PDFViewer, Page } from "@react-pdf/renderer";
 import { Html } from "react-pdf-html";
 import React from "react";
-import type { Udap, Report, Chip } from "@cr-vif/electric-client/frontend";
+import type { Udap, Report, Clause } from "@cr-vif/electric-client/frontend";
+import serviceInstructeurs from "./serviceInstructeur.json";
 
 export const ReportPDFDocument = ({ udap, htmlString, images }: { udap: Udap; htmlString: string; images: Images }) => {
   return (
@@ -72,7 +73,7 @@ type Images = {
 
 export type ReportWithUser = Report & { user?: { email: string; name: string } };
 
-export const getReportHtmlString = (report: ReportWithUser, chipOptions: Chip[], udap: Udap) => {
+export const getReportHtmlString = (report: ReportWithUser, chipOptions: Clause[], udap: Udap) => {
   const spaceType = chipOptions.find((chip) => chip.key === "type-espace" && chip.value === report.projectSpaceType);
   const decision = chipOptions.find((chip) => chip.key === "decision" && chip.value === report.decision);
   const contacts = report.contacts ? getMultipleChips(chipOptions, "contacts-utiles", report.contacts) : [];
@@ -80,18 +81,25 @@ export const getReportHtmlString = (report: ReportWithUser, chipOptions: Chip[],
     ? getMultipleChips(chipOptions, "bonnes-pratiques", report.furtherInformation)
     : [];
 
+  const serviceInstructeur = report.serviceInstructeur
+    ? serviceInstructeurs.find((service) => service.tiers === report.serviceInstructeur)
+    : null;
+
   return minifyHtml(`
     <p>
-      Objet : ${report.title ?? ""}<br/>
-      Votre interlocuteur : ${report.user?.name ?? ""}<br/>
+      <strong>Votre interlocuteur : ${report.user?.name ?? ""}</strong><br/>
       Demandeur : ${report.applicantName ?? ""}<br/>
       Adresse du projet : ${report.applicantAddress ?? ""}<br/>
       Ref cadastrale : ${report.projectCadastralRef ?? ""}<br/>
     </p>
+
+    <p>
+      <strong>Objet de la demande : ${report.title ?? ""}</strong>
+    </p>
     
     ${spaceType ? `<p>${spaceType?.text}</p>` : ""}
   
-    ${decision ? `<p>${decision?.text}</p>` : ""}
+    ${decision ? `<p><strong>${decision?.text}</strong></p>` : ""}
   
     ${
       report.precisions
@@ -101,6 +109,11 @@ export const getReportHtmlString = (report: ReportWithUser, chipOptions: Chip[],
     </p>`
         : ""
     }
+
+    <p>
+      <strong>Le projet pour rappel : </strong><br/>
+      ${report.projectDescription ?? ""}
+    </p>
   
     <p>
       <strong>Contacts utiles : </strong><br/>
@@ -120,7 +133,7 @@ export const getReportHtmlString = (report: ReportWithUser, chipOptions: Chip[],
     `);
 };
 
-const getMultipleChips = (chipOptions: Chip[], key: string, values: string) => {
+const getMultipleChips = (chipOptions: Clause[], key: string, values: string) => {
   return values
     .split(",")
     .map((value) => {

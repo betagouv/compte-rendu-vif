@@ -1,4 +1,4 @@
-import { Divider, Flex, Stack } from "#styled-system/jsx";
+import { Divider, Flex, Stack, styled } from "#styled-system/jsx";
 import { useFormContext } from "react-hook-form";
 import { InputGroupWithTitle } from "#components/InputGroup";
 import Input from "@codegouvfr/react-dsfr/Input";
@@ -26,24 +26,24 @@ export const NotesForm = () => {
 
       <Divider mt="36px" mb="52px" />
 
-      <Stack gap={{ base: "0", sm: "16px" }} direction={{ base: "column", sm: "row" }}>
+      <Stack gap={{ base: "0", lg: "16px" }} direction={{ base: "column", lg: "row" }}>
         <ContactChips
           className={css({
-            flex: { base: "none", sm: 1 },
+            flex: { base: "none", lg: 1 },
           })}
         />
         <FurtherInfoChips
           className={css({
-            flex: { base: "none", sm: 1 },
+            flex: { base: "none", lg: 1 },
           })}
         />
       </Stack>
 
-      <div>
+      <styled.div mt={{ base: "16px", lg: 0 }}>
         <Button iconId="ri-file-2-line" type="submit">
           Créer le CR
         </Button>
-      </div>
+      </styled.div>
     </Flex>
   );
 };
