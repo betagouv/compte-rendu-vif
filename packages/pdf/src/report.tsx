@@ -47,7 +47,13 @@ export const ReportPDFDocument = ({ udap, htmlString, images }: { udap: Udap; ht
             text-align: right;
             align-items: center;
             font-size: 18px;
-            
+          }
+
+          .meeting-date {
+            text-align: right;
+            display: flex;
+            justify-content: flex-end;
+            align-items: flex-end;
           }
 
 
@@ -84,9 +90,22 @@ export const getReportHtmlString = (report: ReportWithUser, chipOptions: Clause[
   const serviceInstructeur = report.serviceInstructeur
     ? serviceInstructeurs.find((service) => service.tiers === report.serviceInstructeur)
     : null;
+  const meetDate = report.meetDate ? new Date(report.meetDate) : null;
 
   return minifyHtml(`
+    
     <p>
+    ${
+      meetDate
+        ? `<span style='text-align: right;'>
+      Suite au rendez-vous du ${meetDate?.toLocaleDateString("fr-FR", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      })}
+    </span><br/><br/>`
+        : ""
+    }
       <strong>Votre interlocuteur : ${report.user?.name ?? ""}</strong><br/>
       Demandeur : ${report.applicantName ?? ""}<br/>
       Adresse du projet : ${report.applicantAddress ?? ""}<br/>
@@ -117,9 +136,20 @@ export const getReportHtmlString = (report: ReportWithUser, chipOptions: Clause[
   
     <p>
       <strong>Contacts utiles : </strong><br/>
-      Vous pouvez contacter le service de la collectivité en charge de l’instruction de votre dossier : TODO (quelles informations afficher ?)<br/><br/>
+      ${
+        serviceInstructeur
+          ? `<span>
+        Vous pouvez contacter le service de la collectivité en charge de l’instruction de votre dossier : <br/>
+        ${serviceInstructeur["libellé tiers"]}, ${serviceInstructeur["liste de diffusion"]}.
+        </span>
+      <br/><br/>`
+          : ""
+      }
       ${contacts.map((contact) => `<span>${contact}</span>`).join("<br/><br/>")}
-      Nous contacter : ${udap.name}, ${udap.email}, ${udap.phone}
+
+      <span>
+        Nous contacter : ${udap.name}, ${udap.email}, ${udap.phone ? formatPhoneNumber(udap.phone?.toString()) : ""}
+      </span>
     </p>
   
     <p>
@@ -128,9 +158,16 @@ export const getReportHtmlString = (report: ReportWithUser, chipOptions: Clause[
     </p>
   
     <p>
-      Ce compte rendu ne remplace pas la demande d’autorisation de travaux.
+      <strong>Ce compte rendu ne remplace pas la demande d’autorisation de travaux.</strong>
     </p>
     `);
+};
+
+const formatPhoneNumber = (phoneNumber: string) => {
+  return `0${phoneNumber.slice(0, 1)} ${phoneNumber.slice(1, 3)} ${phoneNumber.slice(3, 5)} ${phoneNumber.slice(
+    5,
+    7,
+  )} ${phoneNumber.slice(7, 9)}`;
 };
 
 const getMultipleChips = (chipOptions: Clause[], key: string, values: string) => {

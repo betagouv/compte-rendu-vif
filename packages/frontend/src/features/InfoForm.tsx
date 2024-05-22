@@ -30,12 +30,13 @@ export const InfoForm = () => {
 
     const date = parse(`${day}T${time}`, "yyyy-MM-dd'T'HH:mm", new Date());
 
+    console.log(day, time, date);
     if (!day || !time || Number.isNaN(date.getTime())) {
       form.setValue("meetDate", undefined as any);
       return;
     }
 
-    form.setValue("meetDate", date);
+    form.setValue("meetDate", date.toISOString() as any);
   };
 
   const setTime = (e: any) => {
