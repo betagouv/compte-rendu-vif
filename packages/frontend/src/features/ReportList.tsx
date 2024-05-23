@@ -6,7 +6,7 @@ import type { Report } from "@cr-vif/electric-client/frontend";
 import { db } from "../db";
 import Button from "@codegouvfr/react-dsfr/Button";
 import Badge from "@codegouvfr/react-dsfr/Badge";
-import { css } from "#styled-system/css";
+import { css, cx } from "#styled-system/css";
 import { Link } from "@tanstack/react-router";
 import { Popover } from "#components/Popover";
 import { useClickAway, useMedia } from "react-use";
@@ -101,6 +101,7 @@ export const AllReports = () => {
   );
 };
 import welcomeImage from "../assets/welcome.svg";
+import { fr } from "@codegouvfr/react-dsfr";
 
 const NoReport = () => {
   return (
@@ -265,8 +266,24 @@ type MenuProps = { onClose: (e: Event) => void; report: Report };
 type ReportStatus = "draft" | "published";
 const ReportBadge = ({ status }: { status: ReportStatus }) => {
   return (
-    <Badge severity={status === "draft" ? "info" : "success"} small>
-      {status === "draft" ? "Brouillon" : "Envoyé"}
+    <Badge
+      className={css({ display: "flex", alignItems: "center" })}
+      severity={status === "draft" ? "info" : "success"}
+      noIcon
+      small
+    >
+      <styled.span
+        className={cx(
+          icons[status],
+          css({ "&::before": { w: "12px !important", h: "12px !important", verticalAlign: "middle !important" } }),
+        )}
+      />
+      <styled.span ml="4px">{status === "draft" ? "Brouillon" : "Envoyé"}</styled.span>
     </Badge>
   );
+};
+
+const icons: Record<ReportStatus, string> = {
+  draft: "ri-timer-fill",
+  published: "ri-send-plane-fill",
 };

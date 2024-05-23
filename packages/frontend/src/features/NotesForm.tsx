@@ -40,7 +40,7 @@ export const NotesForm = () => {
       </Stack>
 
       <styled.div mt={{ base: "16px", lg: 0 }}>
-        <Button iconId="ri-file-2-line" type="submit">
+        <Button iconId="ri-article-fill" type="submit">
           Créer le CR
         </Button>
       </styled.div>

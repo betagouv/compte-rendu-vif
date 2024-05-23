@@ -3,7 +3,7 @@ import { db } from "../db";
 import { type UseFormReturn, useWatch } from "react-hook-form";
 import useDebounce from "react-use/lib/useDebounce";
 import { Banner } from "./Banner";
-import { useRouter } from "@tanstack/react-router";
+import { useNavigate, useRouter } from "@tanstack/react-router";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { Center, Flex, styled } from "#styled-system/jsx";
 import { fr } from "@codegouvfr/react-dsfr";
@@ -21,8 +21,9 @@ export function SyncFormBanner({ form, baseObject }: { form: UseFormReturn<Repor
 
   useDebounce(() => syncMutation.mutate(), 500, [diff]);
 
-  const router = useRouter();
-  const goBack = () => router.history.back();
+  const navigate = useNavigate();
+  const goBack = () => navigate({ to: "/" });
+  // const goBack = () => router.history.back();
   const { online } = useNetworkState();
 
   const status = !online ? "offline" : Object.keys(diff).length ? "pending" : "saved";
