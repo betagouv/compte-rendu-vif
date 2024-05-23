@@ -9,7 +9,7 @@ import { Link, createFileRoute, useNavigate, useRouter } from "@tanstack/react-r
 import { EnsureUser } from "#components/EnsureUser.js";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { db } from "../db";
-import { ReactNode, useContext, useEffect, useState } from "react";
+import { ReactNode, useContext, useEffect, useRef, useState } from "react";
 import { TextEditor, useTextEditor } from "../features/text-editor/TextEditor";
 import { Banner } from "#components/Banner.js";
 import { css } from "#styled-system/css";
@@ -18,6 +18,7 @@ import { TextEditorToolbar } from "../features/text-editor/TextEditorToolbar";
 import { TextEditorContext, TextEditorContextProvider } from "../features/text-editor/TextEditorContext";
 import { api } from "../api";
 import { downloadFile } from "../utils";
+import { useLiveQuery } from "electric-sql/react";
 
 export const PDF = () => {
   const { udap } = useUser()!;
@@ -32,12 +33,14 @@ export const PDF = () => {
     navigate({ search: { mode: mode === "edit" ? "view" : "edit" }, replace: true });
   };
 
-  const reportQuery = useQuery({
-    queryKey: ["report", reportId],
-    queryFn: () => db.report.findUnique({ where: { id: reportId }, include: { user: true } }),
-  });
+  const reportQuery = useLiveQuery(db.report.liveUnique({ where: { id: reportId }, include: { user: true } }));
+  const reportRef = useRef<Report | null>(null);
 
-  const report = reportQuery.data;
+  if (!reportRef.current && reportQuery.results) {
+    reportRef.current = reportQuery.results;
+  }
+
+  const report = reportRef.current;
 
   const EditButtons = () => {
     return (
@@ -72,6 +75,7 @@ export const PDF = () => {
               {report?.title ? ` | ${report?.title}` : ""}
             </div>
           }
+          reportId={report?.id}
           buttons={mode === "edit" ? <EditButtons /> : <ViewButtons />}
         />
         <Center w="100%" h="100%" maxH="100%" mt="10px" overflowY="auto">
@@ -110,9 +114,13 @@ const DownloadButton = () => {
   );
 };
 
-const EditBanner = ({ title, buttons }: { title: ReactNode; buttons: ReactNode }) => {
+const EditBanner = ({ title, buttons, reportId }: { title: ReactNode; buttons: ReactNode; reportId?: string }) => {
   const router = useRouter();
-  const goBack = () => router.history.back();
+  const navigate = useNavigate();
+  const goBack = () =>
+    reportId
+      ? navigate({ to: "/edit/$reportId", params: { reportId }, replace: true, search: { tab: "notes" } })
+      : router.history.back();
 
   return (
     <Banner status="saved" flexDir="row">
