@@ -16,8 +16,9 @@ export const tabs = defineSlotRecipe({
       display: "flex",
       flex: "1",
       justifyContent: "start",
+      height: "56px !important",
       color: "black",
-      fontSize: "16px",
+      fontSize: "20px !important",
       fontWeight: "bold !important",
       bgColor: "#ECECFE",
       _selected: {
