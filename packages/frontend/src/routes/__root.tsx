@@ -2,7 +2,7 @@ import Badge from "@codegouvfr/react-dsfr/Badge";
 import Footer from "@codegouvfr/react-dsfr/Footer";
 import Header from "@codegouvfr/react-dsfr/Header/Header";
 import MuiDsfrThemeProvider from "@codegouvfr/react-dsfr/mui";
-import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
+import { createRootRouteWithContext, Outlet, useNavigate } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import type { PropsWithChildren } from "react";
 import { useIsLoggedIn, useLogout } from "../contexts/AuthContext";

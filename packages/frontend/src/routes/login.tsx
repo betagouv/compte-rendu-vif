@@ -1,5 +1,5 @@
 import { Center, Flex, styled } from "#styled-system/jsx";
-import { createLazyFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { LoginForm } from "#components/LoginForm";
 import { RedirectIfUser } from "#components/RedirectIfUser";
 
@@ -14,10 +14,12 @@ const LoginPage = () => {
   );
 };
 
-export const Route = createLazyFileRoute("/login")({
-  component: () => (
-    <RedirectIfUser>
-      <LoginPage />
-    </RedirectIfUser>
-  ),
+export const Route = createFileRoute("/login")({
+  component: () => {
+    return (
+      <RedirectIfUser>
+        <LoginPage />
+      </RedirectIfUser>
+    );
+  },
 });

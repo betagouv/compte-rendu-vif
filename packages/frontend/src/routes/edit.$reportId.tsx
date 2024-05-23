@@ -19,7 +19,6 @@ import {
 import { db } from "../db";
 import { InfoForm } from "../features/InfoForm";
 import { NotesForm } from "../features/NotesForm";
-import { createModal } from "@codegouvfr/react-dsfr/Modal";
 
 const EditReport = () => {
   const { reportId } = Route.useParams();
