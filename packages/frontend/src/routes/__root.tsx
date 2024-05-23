@@ -10,6 +10,9 @@ import { Box, Flex } from "#styled-system/jsx";
 import type { RouterOutputs } from "../api";
 
 export const Route = createRootRouteWithContext<Partial<RouterOutputs<"/api/login">>>()({
+  beforeLoad: (ctx) => {
+    document.title = getTitle(ctx.location.pathname);
+  },
   component: () => (
     <>
       <MuiDsfrThemeProvider>
@@ -20,6 +23,26 @@ export const Route = createRootRouteWithContext<Partial<RouterOutputs<"/api/logi
     </>
   ),
 });
+
+const getTitle = (pathname: string) => {
+  if (pathname.startsWith("/edit/")) {
+    return "Compte rendu | CR VIF";
+  }
+
+  if (pathname.startsWith("/pdf")) {
+    return "PDF | CR VIF";
+  }
+
+  if (pathname.startsWith("/login")) {
+    return "Connexion | CR VIF";
+  }
+
+  if (pathname.startsWith("/signup")) {
+    return "Inscription | CR VIF";
+  }
+
+  return "CR VIF";
+};
 
 const Layout = ({ children }: PropsWithChildren) => {
   const isLoggedIn = useIsLoggedIn();
