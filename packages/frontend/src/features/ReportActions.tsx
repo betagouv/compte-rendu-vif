@@ -9,11 +9,14 @@ import { downloadFile } from "../utils";
 import { v4 } from "uuid";
 import { omit } from "pastable";
 import { ReportWithUser } from "./ReportList";
+import { useNavigate } from "@tanstack/react-router";
 
 export const ReportActions = forwardRef<HTMLDivElement, { report: ReportWithUser }>(({ report }, ref) => {
   const user = useUser()!;
 
   const isOwner = report.createdBy === user.id;
+
+  const navigate = useNavigate();
 
   const deleteMutation = useDeleteMutation();
   const duplicateMutation = useMutation(async () => {
@@ -32,7 +35,13 @@ export const ReportActions = forwardRef<HTMLDivElement, { report: ReportWithUser
 
   return (
     <Stack ref={ref} gap="0">
-      {isOwner ? <ReportAction iconId="ri-pencil-line" label="Editer" onClick={() => {}} /> : null}
+      {isOwner ? (
+        <ReportAction
+          iconId="ri-pencil-line"
+          label="Editer"
+          onClick={() => navigate({ to: "/edit/$reportId", params: { reportId: report.id } })}
+        />
+      ) : null}
       {isOwner ? (
         <ReportAction
           iconId="ri-delete-bin-2-line"
