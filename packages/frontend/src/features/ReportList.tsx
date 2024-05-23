@@ -200,7 +200,7 @@ const ReportListItem = ({ report, isLast }: { report: ReportWithUser; isLast?: b
             <styled.span ml={"5px"}>{report.createdAt.toLocaleDateString()}</styled.span>
           </Flex>
           <styled.span>Rédigé par {report.user?.name ?? ""}</styled.span>
-          <styled.div mt="2px">
+          <styled.div mt="8px">
             <ReportBadge status={report.pdf ? "published" : "draft"} />
           </styled.div>
         </article>
@@ -271,6 +271,10 @@ const ReportBadge = ({ status }: { status: ReportStatus }) => {
       severity={status === "draft" ? "info" : "success"}
       noIcon
       small
+      style={{
+        backgroundColor: colors[status][1],
+        color: colors[status][0],
+      }}
     >
       <styled.span
         className={cx(
@@ -286,4 +290,9 @@ const ReportBadge = ({ status }: { status: ReportStatus }) => {
 const icons: Record<ReportStatus, string> = {
   draft: "ri-timer-fill",
   published: "ri-send-plane-fill",
+};
+
+const colors: Record<ReportStatus, [string, string]> = {
+  draft: ["#716043", "#FEECC2"] as const,
+  published: ["#18753C", "#D1F1D9"] as const,
 };
