@@ -46,6 +46,9 @@ export const MyReports = () => {
     return <Center>Une erreur s'est produite</Center>;
   }
 
+  const isLoading = !myReports.updatedAt;
+  if (isLoading) return null;
+
   return (
     <ReportList
       reports={myReports.results ?? []}
@@ -79,10 +82,14 @@ export const AllReports = () => {
     }),
   );
 
+  console.log(allReports);
   if (allReports.error || nbReports.error) {
     console.error(allReports.error);
     return <Center>Une erreur s'est produite</Center>;
   }
+
+  const isLoading = !allReports.updatedAt;
+  if (isLoading) return null;
 
   return (
     <ReportList
@@ -91,6 +98,17 @@ export const AllReports = () => {
       count={nbReports.results?.[0].count ?? 0}
       page={page}
     />
+  );
+};
+import welcomeImage from "../assets/welcome.svg";
+
+const NoReport = () => {
+  return (
+    <Center flexDir="column" mt="66px" color="text-title-blue-france" fontSize="26px">
+      <styled.div lineHeight="36px">Bienvenue !</styled.div>
+      <styled.div lineHeight="36px">Pour commencer, créez votre premier compte-rendu ci-dessus.</styled.div>
+      <styled.img src={welcomeImage} alt="Bienvenue" mt="46px" />
+    </Center>
   );
 };
 
@@ -105,7 +123,7 @@ export const ReportList = ({
   setPage: (page: number) => void;
   count: number;
 }) => {
-  const error = reports.length === 0 ? <Center>Aucun compte-rendu</Center> : null;
+  const error = reports.length === 0 ? <NoReport /> : null;
 
   const pageCount = count === 0 ? 0 : Math.ceil(count / 20);
 
