@@ -198,7 +198,7 @@ const assertEmailDoesNotAlreadyExist = async (email: string) => {
 };
 
 const assertEmailInWhitelist = async (email: string) => {
-  if (isDev) return;
+  // if (isDev) return;
   const whitelist = await db.whitelist.findFirst({ where: { email } });
 
   if (!whitelist) {

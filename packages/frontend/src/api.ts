@@ -25,3 +25,7 @@ export type RouterInputs<T extends keyof AllEndpoints> = AllEndpoints[T]["parame
 export type RouterOutputs<T extends keyof AllEndpoints> = AllEndpoints[T]["response"];
 
 type AllEndpoints = GetEndpoints & PostEndpoints;
+
+export const getErrorMessage = (error: any) => {
+  return error?.data?.error ?? "Une erreur est survenue, veuillez réessayer plus tard";
+};
