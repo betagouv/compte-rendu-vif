@@ -119,7 +119,7 @@ const EditBanner = ({ title, buttons, reportId }: { title: ReactNode; buttons: R
   const navigate = useNavigate();
   const goBack = () =>
     reportId
-      ? navigate({ to: "/edit/$reportId", params: { reportId }, replace: true, search: { tab: "notes" } })
+      ? navigate({ to: "/edit/$reportId", params: { reportId }, search: { tab: "notes" } })
       : router.history.back();
 
   return (

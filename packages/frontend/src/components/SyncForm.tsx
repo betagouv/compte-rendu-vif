@@ -5,7 +5,7 @@ import useDebounce from "react-use/lib/useDebounce";
 import { Banner } from "./Banner";
 import { useRouter } from "@tanstack/react-router";
 import Button from "@codegouvfr/react-dsfr/Button";
-import { Flex, styled } from "#styled-system/jsx";
+import { Center, Flex, styled } from "#styled-system/jsx";
 import { fr } from "@codegouvfr/react-dsfr";
 import { sva } from "#styled-system/css";
 import { useNetworkState } from "react-use";
@@ -38,19 +38,36 @@ export function SyncFormBanner({ form, baseObject }: { form: UseFormReturn<Repor
 
   return (
     <>
-      <Banner className={styles.root} status={status}>
-        <Flex justifyContent="space-between" alignItems="center" w="100%" maxW={{ base: "100%", lg: "800px" }} h="100%">
+      <Banner status={status} display="flex" flexDir="row" justifyContent="center" alignItems="center" w="100%">
+        <Center w="calc((100% - 800px) / 2)">
+          <styled.a
+            className={"ri-arrow-left-line"}
+            href={""}
+            onClick={(e) => {
+              e.preventDefault();
+
+              goBack();
+            }}
+            fontSize="15px"
+          >
+            Retour
+          </styled.a>
+        </Center>
+        <Flex className={styles.root}>
+          {/* <Flex
+            justifyContent="space-between"
+            alignItems="center"
+            w="100%"
+            maxW={{ base: "100%", lg: "800px" }}
+            h="100%"
+          > */}
           {/* @ts-ignore dsfr buttons props must have children */}
-          <Button
-            className={styles.back}
-            priority="tertiary no outline"
-            iconId="ri-arrow-left-line"
-            onClick={() => goBack()}
-            size="large"
-          />
           <styled.span nowrap>{isCollapsed ? newObject.title : "Titre compte-rendu :"}</styled.span>
+          {/* </Flex> */}
+          <Input className={styles.input} label="" nativeInputProps={{ ...form.register("title") }} />
         </Flex>
-        <Input className={styles.input} label="" nativeInputProps={{ ...form.register("title") }} />
+        {/* <div></div> */}
+        <styled.div w="calc((100% - 800px) / 2)"></styled.div>
       </Banner>
       <Banner ref={ref} status={status} zIndex="2" position="sticky" top="-1px">
         <Flex className={styles.collapsed}>
@@ -67,7 +84,6 @@ export function SyncFormBanner({ form, baseObject }: { form: UseFormReturn<Repor
               <styled.span nowrap>{newObject.title}</styled.span>
             </>
           ) : null}
-          <Status className={styles.status} status={status} />
         </Flex>
       </Banner>
     </>
@@ -91,7 +107,8 @@ const syncFormBanner = sva({
       zIndex: 2,
       flexDirection: "column",
       justifyContent: "space-between",
-      w: { base: "100%", sm: "100%" },
+      w: { base: "100%", lg: "800px" },
+      py: "56px",
       px: "15px",
     },
     collapsed: {
@@ -101,14 +118,13 @@ const syncFormBanner = sva({
 
       w: "100%",
       maxW: { base: "unset", sm: "800px" },
-      h: "40px",
       px: "15px",
     },
     back: { ml: "-10px", color: "black", _hover: { bgColor: "transparent" } },
     label: {},
     input: {
       w: { base: "100%", sm: "800px" },
-      mt: "-5px !important",
+      // mt: "-5px !important",
       mb: "1em",
       "& input": {
         bgColor: "rgba(50, 50, 50, .15) !important",
