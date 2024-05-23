@@ -54,7 +54,7 @@ export const SignupForm = () => {
         ) : null}
         <InputGroup state={mutationError ? "error" : undefined}>
           <Input
-            label="Nom"
+            label="Prénom Nom"
             nativeInputProps={{
               ...form.register("name", { required: "Le nom est requis" }),
             }}
