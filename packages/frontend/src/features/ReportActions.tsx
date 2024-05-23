@@ -17,12 +17,13 @@ export const ReportActions = forwardRef<HTMLDivElement, { report: ReportWithUser
 
   const deleteMutation = useDeleteMutation();
   const duplicateMutation = useMutation(async () => {
-    const payload = omit(report, ["id", "createdAt", "pdf", "user"]);
-    console.log("dup", payload);
+    const payload = omit(report, ["id", "createdAt", "pdf", "user", "title"]);
+
     return db.report.create({
       data: {
         ...payload,
         id: `report-${v4()}`,
+        title: `${report.title} - copie`,
         createdAt: new Date(),
         pdf: undefined,
       },
