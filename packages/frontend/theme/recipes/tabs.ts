@@ -22,7 +22,9 @@ export const tabs = defineSlotRecipe({
       fontWeight: "bold !important",
       bgColor: "#ECECFE",
       _selected: {
+        zIndex: 2,
         bgColor: "white",
+        boxShadow: "6px 0px 10px 3px rgba(0, 0, 0, .05), -6px 0px 10px 3px rgba(0, 0, 0, .05)",
         _hover: {},
       },
       _horizontal: {

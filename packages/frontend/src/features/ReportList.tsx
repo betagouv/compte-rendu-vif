@@ -199,7 +199,7 @@ const ReportListItem = ({ report, isLast }: { report: ReportWithUser; isLast?: b
             <styled.span ml={"5px"}>{report.createdAt.toLocaleDateString()}</styled.span>
           </Flex>
           <styled.span>Rédigé par {report.user?.name ?? ""}</styled.span>
-          <styled.div mt="8px">
+          <styled.div mt="2px">
             <ReportBadge status={report.pdf ? "published" : "draft"} />
           </styled.div>
         </article>
@@ -265,6 +265,8 @@ type MenuProps = { onClose: (e: Event) => void; report: Report };
 type ReportStatus = "draft" | "published";
 const ReportBadge = ({ status }: { status: ReportStatus }) => {
   return (
-    <Badge severity={status === "draft" ? "info" : "success"}>{status === "draft" ? "Brouillon" : "Envoyé"}</Badge>
+    <Badge severity={status === "draft" ? "info" : "success"} small>
+      {status === "draft" ? "Brouillon" : "Envoyé"}
+    </Badge>
   );
 };
