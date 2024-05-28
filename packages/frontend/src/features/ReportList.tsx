@@ -195,7 +195,9 @@ const ReportListItem = ({ report, isLast }: { report: ReportWithUser; isLast?: b
           })}
         >
           <Flex>
-            <styled.span fontWeight="bold">{report.title ?? "Sans titre"}</styled.span>
+            <styled.span fontWeight="bold" nowrap>
+              {report.title ?? "Sans titre"}
+            </styled.span>
             <styled.span ml={"5px"}>{report.createdAt.toLocaleDateString()}</styled.span>
           </Flex>
           <styled.span>Rédigé par {report.user?.name ?? ""}</styled.span>
