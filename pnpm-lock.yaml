@@ -4,6 +4,11 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  react-pdf-html@2.0.4:
+    hash: ajbwlajmqkscjlvqhgfpcsaiai
+    path: patches/react-pdf-html@2.0.4.patch
+
 importers:
 
   .:
@@ -109,7 +114,7 @@ importers:
         version: 18.2.0
       react-pdf-html:
         specifier: ^2.0.4
-        version: 2.0.4(@react-pdf/renderer@3.4.2)(react@18.2.0)
+        version: 2.0.4(patch_hash=ajbwlajmqkscjlvqhgfpcsaiai)(@react-pdf/renderer@3.4.2)(react@18.2.0)
       reflect-metadata:
         specifier: ^0.2.1
         version: 0.2.2
@@ -300,7 +305,7 @@ importers:
         version: 5.1.0(react@18.2.0)
       react-pdf-html:
         specifier: ^2.0.4
-        version: 2.0.4(@react-pdf/renderer@3.4.2)(react@18.2.0)
+        version: 2.0.4(patch_hash=ajbwlajmqkscjlvqhgfpcsaiai)(@react-pdf/renderer@3.4.2)(react@18.2.0)
       react-use:
         specifier: ^17.5.0
         version: 17.5.0(react-dom@18.2.0)(react@18.2.0)
@@ -400,7 +405,7 @@ importers:
         version: 18.2.0(react@18.2.0)
       react-pdf-html:
         specifier: ^2.0.4
-        version: 2.0.4(@react-pdf/renderer@3.4.2)(react@18.2.0)
+        version: 2.0.4(patch_hash=ajbwlajmqkscjlvqhgfpcsaiai)(@react-pdf/renderer@3.4.2)(react@18.2.0)
     devDependencies:
       '@cr-vif/electric-client':
         specifier: workspace:*
@@ -12071,7 +12076,7 @@ packages:
     resolution: {integrity: sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==}
     dev: false
 
-  /react-pdf-html@2.0.4(@react-pdf/renderer@3.4.2)(react@18.2.0):
+  /react-pdf-html@2.0.4(patch_hash=ajbwlajmqkscjlvqhgfpcsaiai)(@react-pdf/renderer@3.4.2)(react@18.2.0):
     resolution: {integrity: sha512-AA+24Yg8nGgxiHMcGOcUXrTXIFyegdQ/YaMiPkvEusarntpiUCHLzahq39sRofewhbtKMUKslRHRgrEqNet1Ag==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
@@ -12083,6 +12088,7 @@ packages:
       node-html-parser: 6.1.13
       react: 18.2.0
     dev: false
+    patched: true
 
   /react-pdf@8.0.2(@types/react@18.2.74)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-C0PFC+j9vmEIZ82Iq0c85xUWkgsZTUS05syqOk8NC+7PAanyWlVi/ImYkGQe27zYAlBA6IidRYEt1DAAXKq1Ow==}

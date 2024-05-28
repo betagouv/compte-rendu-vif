@@ -22,7 +22,6 @@
   "keywords": [],
   "author": "",
   "devDependencies": {
-    "prisma": "^4.8.1",
     "@biomejs/biome": "1.6.4",
     "@databases/pg-migrations": "^5.0.3",
     "@pandabox/prettier-plugin": "^0.1.0",
@@ -30,6 +29,12 @@
     "@types/node": "^20.11.28",
     "electric-sql": "^0.10.1",
     "prettier": "^3.2.5",
+    "prisma": "^4.8.1",
     "typed-openapi": "^0.4.1"
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "react-pdf-html@2.0.4": "patches/react-pdf-html@2.0.4.patch"
+    }
   }
 }
