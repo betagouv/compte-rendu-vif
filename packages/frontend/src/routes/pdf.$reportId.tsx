@@ -21,8 +21,9 @@ import { downloadFile } from "../utils";
 import { useLiveQuery } from "electric-sql/react";
 import Input from "@codegouvfr/react-dsfr/Input";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
+import sentImage from "../assets/sent.svg";
 
-type Mode = "edit" | "view" | "send";
+type Mode = "edit" | "view" | "send" | "sent";
 
 export const PDF = () => {
   const { udap } = useUser()!;
@@ -85,6 +86,25 @@ export const PDF = () => {
 
   const buttons = mode === "edit" ? <EditButtons /> : mode === "view" ? <ViewButtons /> : <SendButtons />;
 
+  console.log(mode);
+  if (mode === "sent") {
+    return (
+      <Center flexDir="column" w="100%" mt="24px">
+        <styled.img src={sentImage} alt="Courriel envoyé" width={{ base: "80px", lg: "120px" }} />
+        <styled.div mt="16px" color="text-title-blue-france" textAlign="center" fontSize={{ base: "18px", lg: "24px" }}>
+          Votre compte-rendu a bien été envoyé !
+        </styled.div>
+        <Button
+          className={css({ mt: { base: "24px", lg: "48px" } })}
+          type="button"
+          onClick={() => navigate({ to: "/" })}
+        >
+          Accueil
+        </Button>
+      </Center>
+    );
+  }
+
   return (
     <styled.div w="100%" h="100%" bgColor={mode === "edit" ? "background-open-blue-france" : "unset"} overflowY="auto">
       <TextEditorContextProvider>
@@ -124,7 +144,7 @@ const SendForm = ({ children, reportId }: PropsWithChildren<{ reportId: string }
     },
     {
       onSuccess: () => {
-        navigate({ search: { mode: "send" } });
+        navigate({ search: { mode: "sent" } });
       },
     },
   );
@@ -175,7 +195,6 @@ const EditBanner = ({ title, buttons, reportId }: { title: ReactNode; buttons: R
     <Banner status="saved" flexDir="row">
       <Flex direction="row" justifyContent={"space-between"} alignItems="center" w="1000px" h="header-height">
         <Flex direction="row" alignItems="center">
-          {/* <Link onClick={goBack}></Link> */}
           <styled.a
             className={"ri-arrow-left-line"}
             href={""}
@@ -277,7 +296,7 @@ export const Route = createFileRoute("/pdf/$reportId")({
   ),
   validateSearch: (search: Record<string, unknown>) => {
     const mode = search?.mode as Mode;
-    const isModeValid = ["view", "edit", "send"].includes(mode);
+    const isModeValid = ["view", "edit", "send", "sent"].includes(mode);
 
     return {
       mode: isModeValid ? mode : "view",
