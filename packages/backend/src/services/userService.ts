@@ -50,7 +50,6 @@ export class UserService {
     });
 
     const user = internalUser.user;
-    // TODO: disable autolog after signing up
 
     return { user: user, token: this.generateJWT(internalUser) };
   }
@@ -61,8 +60,7 @@ export class UserService {
       include: { user: { include: { udap: true } } },
     });
     assertUserExists(user);
-
-    return user!.user;
+    return user!;
   }
 
   async getUserById(id: string) {

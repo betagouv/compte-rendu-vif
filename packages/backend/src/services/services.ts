@@ -1,6 +1,7 @@
+import { authenticate } from "../routes/authMiddleware";
 import { StaticDataService } from "./staticDataService";
 import { UploadService } from "./uploadService";
-import { SerializedUser, UserService } from "./userService";
+import { UserService } from "./userService";
 
 const ref = {
   services: null as any as ReturnType<typeof makeServices>,
@@ -23,6 +24,6 @@ export const getServices = () => {
 declare module "fastify" {
   export interface FastifyRequest {
     services: ReturnType<typeof makeServices>;
-    user: SerializedUser;
+    user: Awaited<ReturnType<typeof authenticate>>;
   }
 }

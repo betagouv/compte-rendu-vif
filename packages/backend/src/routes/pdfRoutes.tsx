@@ -4,13 +4,14 @@ import { ReportPDFDocument } from "@cr-vif/pdf";
 import { Udap } from "@cr-vif/electric-client/frontend";
 import { authenticate } from "./authMiddleware";
 import { db } from "../db/db";
+import { sendReportMail } from "../features/mail";
 
 export const pdfPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
   fastify.addHook("preHandler", authenticate);
 
-  fastify.post("/report", { schema: createUserTSchema }, async (request) => {
+  fastify.post("/report", { schema: reportPdfTSchema }, async (request) => {
     const { reportId, htmlString } = request.body;
-    const { udap } = request.user;
+    const { udap } = request.user.user;
 
     const pdf = await generatePdf({ htmlString, udap });
 
@@ -24,6 +25,12 @@ export const pdfPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
 
     await db.report.update({ where: { id: reportId }, data: { pdf: url } });
 
+    const userMail = request.user.email;
+    const recipients = request.body.recipients.split(",").map((r) => r.trim());
+    if (!recipients.includes(userMail)) recipients.push(userMail);
+
+    await sendReportMail({ recipients: recipients.join(","), pdfBuffer: pdf });
+
     return url;
   });
 };
@@ -34,10 +41,11 @@ const generatePdf = async ({ htmlString, udap }: { htmlString: string; udap: Uda
   );
 };
 
-export const createUserTSchema = {
+export const reportPdfTSchema = {
   body: Type.Object({
     htmlString: Type.String(),
     reportId: Type.String(),
+    recipients: Type.String(),
   }),
   response: { 200: Type.String() },
 };

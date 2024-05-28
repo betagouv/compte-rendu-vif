@@ -1,7 +1,6 @@
 import "./envVars";
 import { onHmr, registerViteHmrServerRestart } from "./hmr";
 
-import { cleanUpDb, db } from "./db/db";
 import { ENV } from "./envVars";
 import { generateOpenApi, initFastify } from "./router";
 import { makeDebug } from "./features/debug";
@@ -34,6 +33,6 @@ if (shouldCreateOnly) {
   start();
 }
 
-process.on("SIGINT", () => {
-  process.exit();
-});
+const onSIGINT = () => process.exit();
+process.on("SIGINT", onSIGINT);
+onHmr(() => process.off("SIGINT", onSIGINT));

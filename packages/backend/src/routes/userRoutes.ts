@@ -17,10 +17,10 @@ export const userPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
     return result;
   });
 
-  // @ts-expect-error null / undefined mismatch
-  fastify.get("/verify-token", { schema: verifyTokenTSchema }, async (request) => {
-    return request.services.user.verifyJWT(request.query.token);
-  });
+  // // @ts-expect-error null / undefined mismatch
+  // fastify.get("/verify-token", { schema: verifyTokenTSchema }, async (request) => {
+  //   return request.services.user.verifyJWT(request.query.token);
+  // });
 
   fastify.post("/send-reset-password", { schema: sendResetPasswordTSchema }, async (request) => {
     return request.services.user.generateResetLink(request.body.email);

@@ -10,4 +10,6 @@ export const authenticate = async (request: FastifyRequest) => {
 
   if (!user) throw new AppError(403, "Unauthorized");
   request.user = user;
+
+  return user;
 };

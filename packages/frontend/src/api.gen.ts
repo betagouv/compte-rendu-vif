@@ -124,7 +124,7 @@ export namespace Endpoints {
     method: "POST";
     path: "/api/pdf/report";
     parameters: {
-      body: { htmlString: string; reportId: string };
+      body: { htmlString: string; reportId: string; recipients: string };
     };
     response: string;
   };

@@ -10,12 +10,26 @@ const transporter = createTransport({
   },
 });
 
-export const sendReportMail = () => {
-  transporter.sendMail({
+export const sendReportMail = ({
+  recipients,
+  pdfBuffer,
+  reportTitle,
+}: {
+  recipients: string;
+  pdfBuffer: Buffer;
+  reportTitle?: string;
+}) => {
+  return transporter.sendMail({
     from: "noreply@compte-rendu-vif.incubateur.net",
-    to: "mledoux@mledoux.fr",
-    subject: "Salut c'est moi",
-    text: "Salut lmkdjmklfjlkm q",
+    to: recipients,
+    subject: "CR VIF - Compte rendu" + (reportTitle ? ` : ${reportTitle}` : ""),
+    text: "Veuillez trouver ci-joint le compte rendu de votre rendez-vous.",
+    attachments: [
+      {
+        filename: "compte_rendu.pdf",
+        content: pdfBuffer,
+      },
+    ],
   });
 };
 

@@ -18,9 +18,10 @@ export const tabs = defineSlotRecipe({
       justifyContent: "start",
       height: "56px !important",
       color: "black",
-      fontSize: "20px !important",
+      fontSize: { base: "16px !important", lg: "20px !important" },
       fontWeight: "bold !important",
       bgColor: "#ECECFE",
+      nowrap: true,
       _selected: {
         zIndex: 2,
         bgColor: "white !important",
