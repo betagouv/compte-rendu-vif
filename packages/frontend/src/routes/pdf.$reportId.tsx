@@ -1,27 +1,26 @@
+import { Banner } from "#components/Banner.js";
+import { EnsureUser } from "#components/EnsureUser.js";
+import { css } from "#styled-system/css";
 import { Center, Flex, Stack, styled } from "#styled-system/jsx";
+import Button from "@codegouvfr/react-dsfr/Button";
+import Input from "@codegouvfr/react-dsfr/Input";
 import type { Report, Udap } from "@cr-vif/electric-client/frontend";
 import { ReportPDFDocument, getReportHtmlString } from "@cr-vif/pdf";
-import { useUser } from "../contexts/AuthContext";
-import { useChipOptions } from "../features/chips/useChipOptions";
 import { PDFViewer } from "@react-pdf/renderer";
-import Button from "@codegouvfr/react-dsfr/Button";
-import { Link, Navigate, createFileRoute, useNavigate, useRouter } from "@tanstack/react-router";
-import { EnsureUser } from "#components/EnsureUser.js";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { db } from "../db";
-import { PropsWithChildren, ReactNode, useContext, useEffect, useRef, useState } from "react";
-import { TextEditor, useTextEditor } from "../features/text-editor/TextEditor";
-import { Banner } from "#components/Banner.js";
-import { css } from "#styled-system/css";
+import { useMutation } from "@tanstack/react-query";
+import { Navigate, createFileRoute, useNavigate, useRouter } from "@tanstack/react-router";
 import { Editor } from "@tiptap/react";
-import { TextEditorToolbar } from "../features/text-editor/TextEditorToolbar";
-import { TextEditorContext, TextEditorContextProvider } from "../features/text-editor/TextEditorContext";
-import { api } from "../api";
-import { downloadFile } from "../utils";
 import { useLiveQuery } from "electric-sql/react";
-import Input from "@codegouvfr/react-dsfr/Input";
+import { PropsWithChildren, ReactNode, useContext, useEffect, useRef, useState } from "react";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
+import { api } from "../api";
 import sentImage from "../assets/sent.svg";
+import { useUser } from "../contexts/AuthContext";
+import { db } from "../db";
+import { useChipOptions } from "../features/chips/useChipOptions";
+import { TextEditor } from "../features/text-editor/TextEditor";
+import { TextEditorContext, TextEditorContextProvider } from "../features/text-editor/TextEditorContext";
+import { TextEditorToolbar } from "../features/text-editor/TextEditorToolbar";
 
 type Mode = "edit" | "view" | "send" | "sent";
 
@@ -86,7 +85,6 @@ export const PDF = () => {
 
   const buttons = mode === "edit" ? <EditButtons /> : mode === "view" ? <ViewButtons /> : <SendButtons />;
 
-  console.log(mode);
   if (mode === "sent") {
     return (
       <Center flexDir="column" w="100%" mt="24px">
@@ -264,7 +262,6 @@ const SendReportPage = ({ children }: PropsWithChildren) => {
   const report = reportQuery.results;
 
   if (!report) return <div>Report not found</div>;
-  if (!report.pdf) return <Navigate to="/pdf/$reportId" params={{ reportId }} search={{ mode: "view" }} />;
 
   return (
     <Center>
@@ -286,7 +283,7 @@ const SendReportPage = ({ children }: PropsWithChildren) => {
   );
 };
 
-const validateEmailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+// const validateEmailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export const Route = createFileRoute("/pdf/$reportId")({
   component: () => (
