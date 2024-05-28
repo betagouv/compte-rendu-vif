@@ -20,6 +20,11 @@ const envSchema = z.object({
   AWS_BUCKET_NAME: z.string(),
   AWS_REGION: z.string(),
   DEBUG: z.string().default("cr-vif:*"),
+  FRONTEND_URL: z.string(),
+  EMAIL_HOST: z.string(),
+  EMAIL_PORT: stringOrNumberAsNumber.default(465),
+  EMAIL_USER: z.string(),
+  EMAIL_PASSWORD: z.string(),
 });
 
 export const ENV = envSchema.parse(process.env);

@@ -15,6 +15,7 @@ import { useRef, useState } from "react";
 import { PopoverTrigger } from "@ark-ui/react/popover";
 import { ReportActions } from "./ReportActions";
 import { Pagination } from "@codegouvfr/react-dsfr/Pagination";
+import welcomeImage from "../assets/welcome.svg";
 
 export type ReportWithUser = Report & { user?: { email: string; name: string } };
 
@@ -100,8 +101,6 @@ export const AllReports = () => {
     />
   );
 };
-import welcomeImage from "../assets/welcome.svg";
-import { fr } from "@codegouvfr/react-dsfr";
 
 const NoReport = () => {
   return (

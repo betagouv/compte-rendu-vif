@@ -114,7 +114,7 @@ export const SignupForm = () => {
   );
 };
 
-const SignupPasswordInput = ({ form }: { form: UseFormReturn<SignupFormProps> }) => {
+export const SignupPasswordInput = ({ form }: { form: UseFormReturn<SignupFormProps> }) => {
   const value = useWatch({ control: form.control, name: "password" });
 
   const hasNumber = /\d/.test(value);

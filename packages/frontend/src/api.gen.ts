@@ -87,6 +87,22 @@ export namespace Endpoints {
       token: string;
     };
   };
+  export type post_ApisendResetPassword = {
+    method: "POST";
+    path: "/api/send-reset-password";
+    parameters: {
+      body: { email: string };
+    };
+    response: { message: string };
+  };
+  export type post_ApiresetPassword = {
+    method: "POST";
+    path: "/api/reset-password";
+    parameters: {
+      body: { temporaryLink: string; newPassword: string };
+    };
+    response: { message: string };
+  };
   export type get_Apiudaps = {
     method: "GET";
     path: "/api/udaps";
@@ -121,6 +137,8 @@ export type EndpointByMethod = {
   post: {
     "/api/create-user": Endpoints.post_ApicreateUser;
     "/api/login": Endpoints.post_Apilogin;
+    "/api/send-reset-password": Endpoints.post_ApisendResetPassword;
+    "/api/reset-password": Endpoints.post_ApiresetPassword;
     "/api/pdf/report": Endpoints.post_Apipdfreport;
   };
   get: {

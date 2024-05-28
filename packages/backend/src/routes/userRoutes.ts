@@ -21,6 +21,14 @@ export const userPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
   fastify.get("/verify-token", { schema: verifyTokenTSchema }, async (request) => {
     return request.services.user.verifyJWT(request.query.token);
   });
+
+  fastify.post("/send-reset-password", { schema: sendResetPasswordTSchema }, async (request) => {
+    return request.services.user.generateResetLink(request.body.email);
+  });
+
+  fastify.post("/reset-password", { schema: resetPasswordTSchema }, async (request) => {
+    return request.services.user.resetPassword(request.body);
+  });
 };
 
 export const createUserTSchema = {
@@ -30,11 +38,26 @@ export const createUserTSchema = {
   ]),
   response: { 200: userAndTokenTSchema },
 };
+
 export const loginTSchema = {
   body: Type.Pick(internal_userInput, ["email", "password"]),
   response: { 200: userAndTokenTSchema },
 };
+
 export const verifyTokenTSchema = {
   querystring: Type.Object({ token: Type.String() }),
   response: { 200: userAndTokenTSchema },
+};
+
+export const sendResetPasswordTSchema = {
+  body: Type.Object({ email: Type.String() }),
+  response: { 200: Type.Object({ message: Type.String() }) },
+};
+
+export const resetPasswordTSchema = {
+  body: Type.Object({
+    temporaryLink: Type.String(),
+    newPassword: Type.String(),
+  }),
+  response: { 200: Type.Object({ message: Type.String() }) },
 };

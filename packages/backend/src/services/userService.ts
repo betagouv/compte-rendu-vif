@@ -11,6 +11,7 @@ import { AppError } from "../features/errors";
 import { Type, type Static } from "@sinclair/typebox";
 import * as Schemas from "@cr-vif/electric-client/typebox";
 import type { Prisma } from "@cr-vif/electric-client/backend";
+import { sendPasswordResetMail } from "../features/mail";
 
 export class UserService {
   async createUser(
@@ -61,7 +62,7 @@ export class UserService {
     });
     assertUserExists(user);
 
-    return user?.user;
+    return user!.user;
   }
 
   async getUserById(id: string) {
@@ -88,22 +89,36 @@ export class UserService {
     return { user: user?.user, token: this.generateJWT(user!) };
   }
 
-  async generateResetLink(id: string) {
-    const user = await db.user.findFirst({ where: { id } });
-    assertUserExists(user);
+  async generateResetLink(email: string) {
+    const user = await db.internal_user.findFirst({ where: { email } });
+    assertUserExists(user, "Aucun utilisateur avec ce courriel n'a été trouvé.");
 
     const temporaryLink = crypto.randomUUID();
     const temporaryLinkExpiresAt = addDays(new Date(), 1).toISOString();
 
-    await db.internal_user.update({ where: { id }, data: { temporaryLink, temporaryLinkExpiresAt } });
+    const encryptedLink = md5(temporaryLink);
+
+    await db.internal_user.update({
+      where: { id: user!.id },
+      data: { temporaryLink: encryptedLink, temporaryLinkExpiresAt },
+    });
+
+    await sendPasswordResetMail({ email: user!.email, temporaryLink });
+
+    return {
+      message:
+        "Votre demande de récupération de mot de passe a été transmise. Vous recevrez un couriel dans quelques instants.",
+    };
   }
 
   async resetPassword({ temporaryLink, newPassword }: { temporaryLink: string; newPassword: string }) {
+    const encryptedLink = md5(temporaryLink);
+
     const user = await db.internal_user.findFirst({
-      where: { temporaryLink, temporaryLinkExpiresAt: { gt: new Date().toISOString() } },
+      where: { temporaryLink: encryptedLink },
     });
 
-    assertLinkIsValid(user);
+    await assertLinkIsValid(user, encryptedLink);
     const password = await encryptPassword(newPassword);
 
     await db.internal_user.update({
@@ -111,7 +126,7 @@ export class UserService {
       data: { password, temporaryLink: null, temporaryLinkExpiresAt: null },
     });
 
-    return true;
+    return { message: "Votre mot de passe a été modifié avec succès." };
   }
 
   verifyJWT(token: string) {
@@ -135,6 +150,8 @@ export class UserService {
     return jwt.verify(token, ENV.JWT_SECRET) as { id: string };
   }
 }
+
+const md5 = (data: string) => crypto.createHash("md5").update(data).digest("hex");
 
 export const userAndTokenTSchema = Type.Object({
   user: Type.Pick(Schemas.user, ["id", "name", "udap_id", "udap"]),
@@ -163,13 +180,31 @@ const verifyPassword = (password: string, hash: string) => {
   });
 };
 
-const assertLinkIsValid = (user?: Prisma.internal_userUncheckedCreateInput | null) => {
+const assertLinkIsValid = async (
+  user: Prisma.internal_userUncheckedCreateInput | null | undefined,
+  encryptedLink: string,
+) => {
+  console.log({ user, encryptedLink });
+
   if (!user) {
+    throw new AppError(403, "Le lien est invalide");
+  }
+
+  if (!user.temporaryLink || !user.temporaryLinkExpiresAt) {
+    throw new AppError(403, "Le lien est invalide");
+  }
+
+  const expiresAt = new Date(user.temporaryLinkExpiresAt);
+  if (expiresAt < new Date()) {
+    throw new AppError(403, "Le lien est expiré");
+  }
+
+  if (user.temporaryLink !== encryptedLink) {
     throw new AppError(403, "Le lien est invalide");
   }
 };
 
-const assertUserExists = (user?: any) => {
+const assertUserExists = (user: any, errorDescription?: string) => {
   if (!user) {
     throw new AppError(403, "Le courriel ou le mot de passe est incorrect");
   }
