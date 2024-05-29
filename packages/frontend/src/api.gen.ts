@@ -60,33 +60,6 @@ export namespace Endpoints {
       token: string;
     };
   };
-  export type get_ApiverifyToken = {
-    method: "GET";
-    path: "/api/verify-token";
-    parameters: {
-      query: { token: string };
-    };
-    response: {
-      user: {
-        id: string;
-        name: string;
-        udap_id: string;
-        udap: {
-          id: string;
-          department: string;
-          completeCoords?: string | undefined;
-          visible?: boolean | undefined;
-          name?: string | undefined;
-          address?: string | undefined;
-          zipCode?: string | undefined;
-          city?: string | undefined;
-          phone?: string | undefined;
-          email?: string | undefined;
-        };
-      };
-      token: string;
-    };
-  };
   export type post_ApisendResetPassword = {
     method: "POST";
     path: "/api/send-reset-password";
@@ -142,7 +115,6 @@ export type EndpointByMethod = {
     "/api/pdf/report": Endpoints.post_Apipdfreport;
   };
   get: {
-    "/api/verify-token": Endpoints.get_ApiverifyToken;
     "/api/udaps": Endpoints.get_Apiudaps;
   };
 };

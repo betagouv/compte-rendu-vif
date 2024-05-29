@@ -22,7 +22,6 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     queryFn: async () => {
       if (electric.isConnected) electric.disconnect();
       await electric.connect(data.token!);
-
       await electric.db.clause.sync();
       await electric.db.user.sync({ where: { udap_id: data?.user?.udap_id } });
       await electric.db.report.sync({
@@ -38,7 +37,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     },
     enabled: !!data?.token,
     refetchOnWindowFocus: false,
-    onError: (e) => console.error(e),
+    onError: (e) => console.error("aaaaa", e),
   });
 
   if (electricQuery.isError) {
@@ -60,8 +59,6 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     setData: setDataAndSaveInStorage,
     electricStatus: electricQuery.status,
   };
-  //   [data, electricQuery.status],
-  // );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

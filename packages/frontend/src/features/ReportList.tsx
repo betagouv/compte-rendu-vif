@@ -83,7 +83,6 @@ export const AllReports = () => {
     }),
   );
 
-  console.log(allReports);
   if (allReports.error || nbReports.error) {
     console.error(allReports.error);
     return <Center>Une erreur s'est produite</Center>;
