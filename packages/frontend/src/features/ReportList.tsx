@@ -103,9 +103,11 @@ export const AllReports = () => {
 
 const NoReport = () => {
   return (
-    <Center flexDir="column" mt="66px" color="text-title-blue-france" fontSize="26px">
+    <Center flexDir="column" mt="66px" p="16px" color="text-title-blue-france" fontSize="26px">
       <styled.div lineHeight="36px">Bienvenue !</styled.div>
-      <styled.div lineHeight="36px">Pour commencer, créez votre premier compte-rendu ci-dessus.</styled.div>
+      <styled.div textAlign="center" lineHeight="36px">
+        Pour commencer, créez votre premier compte-rendu ci-dessus.
+      </styled.div>
       <styled.img src={welcomeImage} alt="Bienvenue" mt="46px" />
     </Center>
   );

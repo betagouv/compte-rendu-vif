@@ -8,6 +8,7 @@ import type { PropsWithChildren } from "react";
 import { useIsLoggedIn, useLogout } from "../contexts/AuthContext";
 import { Box, Flex } from "#styled-system/jsx";
 import type { RouterOutputs } from "../api";
+import { css, cx } from "#styled-system/css";
 
 export const Route = createRootRouteWithContext<Partial<RouterOutputs<"/api/login">>>()({
   beforeLoad: (ctx) => {
@@ -88,6 +89,11 @@ const Layout = ({ children }: PropsWithChildren) => {
                 },
               ]),
         ]}
+        renderSearchInput={({ className, ...props }) => {
+          console.log(props);
+
+          return <input className={cx(css({ hideFrom: "lg" }), className)} {...props} />;
+        }}
       />
       <Box flex="1">{children}</Box>
       {/* <TanStackRouterDevtools /> */}

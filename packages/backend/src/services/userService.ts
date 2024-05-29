@@ -138,9 +138,7 @@ export class UserService {
         sub: user.id,
       },
       ENV.JWT_SECRET,
-      {
-        expiresIn: ENV.TOKEN_LIFETIME,
-      },
+      {},
     );
   }
 
