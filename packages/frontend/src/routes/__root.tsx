@@ -67,12 +67,14 @@ const Layout = ({ children }: PropsWithChildren) => {
           </>
         }
         serviceTitle={
-          <>
-            Compte-rendu VIF{" "}
-            <Badge as="span" noIcon severity="warning">
-              WiP
-            </Badge>
-          </>
+          isDesktop ? (
+            <>
+              Compte-rendu VIF{" "}
+              <Badge as="span" noIcon severity="warning">
+                WiP
+              </Badge>
+            </>
+          ) : null
         }
         homeLinkProps={{ title: "Compte rendu vif", to: "/" }}
         quickAccessItems={[

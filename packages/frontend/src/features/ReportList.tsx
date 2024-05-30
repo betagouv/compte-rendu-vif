@@ -119,15 +119,17 @@ export const ReportList = ({
   page,
   setPage,
   count,
-  noPagination,
+  hidePagination,
   onClick,
+  hideEmpty,
 }: {
   reports: ReportWithUser[];
   page?: number;
   setPage?: (page: number) => void;
   count?: number;
-  noPagination?: boolean;
+  hidePagination?: boolean;
   onClick?: () => void;
+  hideEmpty?: boolean;
 }) => {
   const error = reports.length === 0 ? <NoReport /> : null;
 
@@ -147,13 +149,14 @@ export const ReportList = ({
         gridAutoFlow="column"
         w="100%"
       >
-        {error ??
-          reports.map((report, index) => (
-            <ReportListItem onClick={onClick} key={report.id} report={report} isLast={index === reports.length - 1} />
-          ))}
+        {error
+          ? !hideEmpty && error
+          : reports.map((report, index) => (
+              <ReportListItem onClick={onClick} key={report.id} report={report} isLast={index === reports.length - 1} />
+            ))}
       </Grid>
       <Center w="100%">
-        {noPagination || error ? null : (
+        {hidePagination || error ? null : (
           <Pagination
             count={count === 0 ? 0 : Math.ceil(count! / 20)}
             getPageLinkProps={(nb) => ({

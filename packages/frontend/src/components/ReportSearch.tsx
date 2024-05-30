@@ -7,6 +7,7 @@ import { db } from "../db";
 import { Spinner } from "./Spinner";
 import noResultsImage from "../assets/noResults.svg";
 import { ReportList } from "../features/ReportList";
+import { useUser } from "../contexts/AuthContext";
 
 export const ReportSearch = ({
   inputProps,
@@ -38,8 +39,8 @@ const isNullOrContains = (field: string, search: string) => {
   };
 };
 
-const SearchResults = ({ search }: { search: string }) => {
-  const query = useLiveQuery(
+const useSearchResultsQuery = (search: string, additionnalWhere: { [key: string]: any } = {}) => {
+  return useLiveQuery(
     db.report.liveMany({
       where: {
         OR: [
@@ -49,13 +50,18 @@ const SearchResults = ({ search }: { search: string }) => {
           isNullOrContains("applicantAddress", search),
         ],
         disabled: false,
+        ...additionnalWhere,
       },
       include: {
         user: true,
       },
     }),
   );
+};
 
+export const SearchResults = ({ search, hideEmpty }: { search: string; hideEmpty?: boolean }) => {
+  const query = useSearchResultsQuery(search);
+  const user = useUser()!;
   const isEmpty = search === "";
   const isLoading = !query.updatedAt;
 
@@ -72,16 +78,36 @@ const SearchResults = ({ search }: { search: string }) => {
   }
 
   const { results } = query;
-  const noResults = results?.length === 0;
+  const noResults = !results || results.length === 0;
 
   if (noResults) {
     return <NoResults />;
   }
 
+  const myReports = results.filter((report) => report.createdBy === user.id);
+  const otherReports = results.filter((report) => report.createdBy !== user.id);
+
   return (
-    <Stack>
-      <ReportList noPagination reports={results ?? []} />
-    </Stack>
+    <Center>
+      <Stack flexDir={{ base: "column", lg: "row" }} mt="24px">
+        {myReports.length ? (
+          <Stack maxW={{ base: "100%", lg: "400px" }}>
+            <styled.div mb="16px" fontSize="20px" fontWeight="bold">
+              Mes compte-rendus :
+            </styled.div>
+            <ReportList hidePagination hideEmpty={hideEmpty} reports={myReports ?? []} />
+          </Stack>
+        ) : null}
+        {otherReports.length ? (
+          <Stack maxW={{ base: "100%", lg: "400px" }}>
+            <styled.div mb="16px" fontSize="20px" fontWeight="bold">
+              Compte-rendus UDAP :
+            </styled.div>
+            <ReportList hidePagination hideEmpty={hideEmpty} reports={otherReports ?? []} />
+          </Stack>
+        ) : null}
+      </Stack>
+    </Center>
   );
 };
 

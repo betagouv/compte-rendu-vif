@@ -106,7 +106,7 @@ export function SyncFormBanner({ form, baseObject }: { form: UseFormReturn<Repor
   );
 }
 
-const Status = ({ status, className }: { status: SyncFormStatus; className?: string }) => {
+export const Status = ({ status, className }: { status: SyncFormStatus; className?: string }) => {
   return (
     <styled.div className={className} color="black" textTransform="uppercase" fontSize="sm" fontWeight="500">
       <styled.span className={fr.cx("fr-icon-wifi-line")} aria-hidden={true} mr="6px" />
