@@ -187,11 +187,12 @@ const ReportListItem = ({ report, isLast }: { report: ReportWithUser; isLast?: b
           },
         })}
         to={"/edit/$reportId"}
-              params={{ reportId: report.id }}
+        params={{ reportId: report.id }}
       >
         <article
           className={flex({
             flexDirection: "column",
+            mr: "52px",
             color: "text-action-high-blue-france",
             fontSize: "16px",
           })}
