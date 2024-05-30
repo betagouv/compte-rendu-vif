@@ -2,7 +2,7 @@ import Badge from "@codegouvfr/react-dsfr/Badge";
 import Footer from "@codegouvfr/react-dsfr/Footer";
 import Header from "@codegouvfr/react-dsfr/Header/Header";
 import MuiDsfrThemeProvider from "@codegouvfr/react-dsfr/mui";
-import { createRootRouteWithContext, Outlet, useNavigate } from "@tanstack/react-router";
+import { createRootRouteWithContext, Outlet, useNavigate, useRouter } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import type { PropsWithChildren } from "react";
 import { useIsLoggedIn, useLogout } from "../contexts/AuthContext";
@@ -10,6 +10,7 @@ import { Box, Flex, Stack } from "#styled-system/jsx";
 import type { RouterOutputs } from "../api";
 import { css, cx } from "#styled-system/css";
 import { useIsDesktop } from "../hooks/useIsDesktop";
+import { ReportSearch } from "#components/ReportSearch.js";
 
 export const Route = createRootRouteWithContext<Partial<RouterOutputs<"/api/login">>>()({
   beforeLoad: (ctx) => {
@@ -51,6 +52,10 @@ const Layout = ({ children }: PropsWithChildren) => {
   const logout = useLogout();
 
   const isDesktop = useIsDesktop();
+  const router = useRouter();
+  console.log(router);
+
+  const isHome = router.latestLocation.pathname === "/";
 
   return (
     <Flex flexDir={"column"} h="100vh">
@@ -93,19 +98,9 @@ const Layout = ({ children }: PropsWithChildren) => {
               ]),
         ]}
         renderSearchInput={
-          !isDesktop
-            ? ({ className, ...props }) => {
-                console.log(props);
-
-                return (
-                  <Stack>
-                    <input className={cx(css({ hideFrom: "lg" }), className)} {...props} />
-                    <Box>Résultat 1</Box>
-                    <Box>Résultat 2</Box>
-                    <Box>Résultat 3</Box>
-                    <Box>Résultat 4</Box>
-                  </Stack>
-                );
+          !isDesktop && isHome
+            ? (inputProps) => {
+                return <ReportSearch inputProps={inputProps} />;
               }
             : undefined
         }

@@ -119,15 +119,17 @@ export const ReportList = ({
   page,
   setPage,
   count,
+  noPagination,
+  onClick,
 }: {
   reports: ReportWithUser[];
-  page: number;
-  setPage: (page: number) => void;
-  count: number;
+  page?: number;
+  setPage?: (page: number) => void;
+  count?: number;
+  noPagination?: boolean;
+  onClick?: () => void;
 }) => {
   const error = reports.length === 0 ? <NoReport /> : null;
-
-  const pageCount = count === 0 ? 0 : Math.ceil(count / 20);
 
   return (
     <Stack w={{ base: "100%", lg: "816px" }}>
@@ -147,18 +149,18 @@ export const ReportList = ({
       >
         {error ??
           reports.map((report, index) => (
-            <ReportListItem key={report.id} report={report} isLast={index === reports.length - 1} />
+            <ReportListItem onClick={onClick} key={report.id} report={report} isLast={index === reports.length - 1} />
           ))}
       </Grid>
       <Center w="100%">
-        {error ? null : (
+        {noPagination || error ? null : (
           <Pagination
-            count={pageCount}
+            count={count === 0 ? 0 : Math.ceil(count! / 20)}
             getPageLinkProps={(nb) => ({
               key: `page-${nb}`,
-              onClick: () => setPage(nb - 1),
+              onClick: () => setPage!(nb - 1),
             })}
-            defaultPage={page + 1}
+            defaultPage={page! + 1}
           />
         )}
       </Center>
@@ -166,7 +168,15 @@ export const ReportList = ({
   );
 };
 
-const ReportListItem = ({ report, isLast }: { report: ReportWithUser; isLast?: boolean }) => {
+const ReportListItem = ({
+  report,
+  isLast,
+  onClick,
+}: {
+  report: ReportWithUser;
+  isLast?: boolean;
+  onClick?: () => void;
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef<HTMLAnchorElement>(null);
 
@@ -186,6 +196,7 @@ const ReportListItem = ({ report, isLast }: { report: ReportWithUser; isLast?: b
             backgroundColor: "initial !important",
           },
         })}
+        onClick={onClick}
         to={"/edit/$reportId"}
         params={{ reportId: report.id }}
       >
@@ -214,7 +225,15 @@ const ReportListItem = ({ report, isLast }: { report: ReportWithUser; isLast?: b
           <PopoverTrigger asChild>
             <Button
               ref={ref as any}
-              className={css({ borderRadius: "50%" })}
+              className={css({
+                borderRadius: "50%",
+                width: "32px",
+                minWidth: "32px",
+                maxWidth: "32px",
+                height: "32px",
+                minHeight: "32px",
+                maxHeight: "32px",
+              })}
               onClick={() => setIsOpen((prev) => !prev)}
               iconId="ri-more-fill"
               title="Actions"

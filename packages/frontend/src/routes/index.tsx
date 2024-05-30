@@ -59,7 +59,7 @@ const Index = () => {
           iconId="ri-add-line"
           nativeButtonProps={{ onClick: () => createReportMutation.mutate() }}
         >
-          Créer un compte-rendu
+          Créer un CR
         </Button>
       </SimpleBanner>
 
