@@ -5,13 +5,13 @@ import { Center, Flex, Stack, styled } from "#styled-system/jsx";
 import Button from "@codegouvfr/react-dsfr/Button";
 import Input from "@codegouvfr/react-dsfr/Input";
 import type { Report, Udap } from "@cr-vif/electric-client/frontend";
-import { ReportPDFDocument, getReportHtmlString } from "@cr-vif/pdf";
-import { PDFViewer } from "@react-pdf/renderer";
-import { useMutation } from "@tanstack/react-query";
+import { ReportPDFDocument, ReportPDFDocumentProps, getReportHtmlString } from "@cr-vif/pdf";
+import { pdf } from "@react-pdf/renderer";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { Navigate, createFileRoute, useNavigate, useRouter } from "@tanstack/react-router";
 import { Editor } from "@tiptap/react";
 import { useLiveQuery } from "electric-sql/react";
-import { PropsWithChildren, ReactNode, useContext, useEffect, useRef, useState } from "react";
+import { PropsWithChildren, ReactNode, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import { api } from "../api";
 import sentImage from "../assets/sent.svg";
@@ -21,6 +21,7 @@ import { useChipOptions } from "../features/chips/useChipOptions";
 import { TextEditor } from "../features/text-editor/TextEditor";
 import { TextEditorContext, TextEditorContextProvider } from "../features/text-editor/TextEditorContext";
 import { TextEditorToolbar } from "../features/text-editor/TextEditorToolbar";
+import { Spinner } from "#components/Spinner";
 
 type Mode = "edit" | "view" | "send" | "sent";
 
@@ -227,27 +228,73 @@ export const WithReport = ({ initialHtmlString, mode }: { initialHtmlString: str
 
   const { udap } = useUser()!;
 
-  const View = (
-    <PDFViewer showToolbar={false} width={"100%"} height={"800px"}>
-      <ReportPDFDocument
-        udap={udap as Udap}
-        htmlString={editor?.getHTML() ?? ""}
-        images={{ header: "/pdf_header.png" }}
-      />
-    </PDFViewer>
+  const ViewDocument = (
+    <View udap={udap as Udap} htmlString={editor?.getHTML() ?? ""} images={{ header: "/pdf_header.png" }} />
   );
 
-  if (mode === "view") return View;
+  if (mode === "view") return ViewDocument;
 
   if (mode === "send") {
     return (
       <SendReportPage>
-        <styled.div mt="16px">{View}</styled.div>
+        <styled.div mt="16px">{ViewDocument}</styled.div>
       </SendReportPage>
     );
   }
 
   return <TextEditor />;
+};
+import { usePdf } from "@mikecousins/react-pdf";
+import { makeArrayOf } from "pastable";
+
+const View = (props: ReportPDFDocumentProps) => {
+  const query = useQuery({
+    queryKey: ["report-pdf", props.htmlString],
+    queryFn: async () => {
+      const blob = await pdf(<ReportPDFDocument {...props} />).toBlob();
+      return blob;
+    },
+    refetchOnWindowFocus: false,
+  });
+
+  if (query.isLoading) return <Spinner />;
+
+  return (
+    <styled.div>
+      <PdfCanvas blob={query.data as Blob} />
+    </styled.div>
+  );
+};
+
+const PdfCanvas = ({ blob }: { blob: Blob }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const file = useMemo(() => URL.createObjectURL(blob), [blob]);
+  const { pdfDocument } = usePdf({
+    file,
+    canvasRef,
+  });
+
+  const nbPages = pdfDocument?.numPages;
+
+  return (
+    <>
+      {makeArrayOf(nbPages ?? 1).map((_, page) => (
+        <PdfCanvasPage key={page} file={file} page={page + 1} />
+      ))}
+    </>
+  );
+};
+
+const PdfCanvasPage = ({ file, page }: { file: string; page: number }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  usePdf({
+    file,
+    page: page,
+    canvasRef,
+  });
+
+  return <styled.canvas ref={canvasRef} width="800px" my="16px" boxShadow="0px 10.18px 30.54px 0px #00001229" />;
 };
 
 const SendReportPage = ({ children }: PropsWithChildren) => {

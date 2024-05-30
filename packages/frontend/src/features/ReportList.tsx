@@ -10,7 +10,6 @@ import { css, cx } from "#styled-system/css";
 import { Link } from "@tanstack/react-router";
 import { Popover } from "#components/Popover";
 import { useClickAway, useMedia } from "react-use";
-import { token } from "#styled-system/tokens";
 import { useRef, useState } from "react";
 import { PopoverTrigger } from "@ark-ui/react/popover";
 import { ReportActions } from "./ReportActions";

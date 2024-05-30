@@ -1,6 +1,8 @@
 import fs from "node:fs/promises";
 import { config } from "dotenv";
-config({ path: "../../.env" });
+import { expand } from "dotenv-expand";
+
+expand(config({ path: "../../.env" }));
 
 export const createEnvFile = async () => {
   const values = Object.entries(process.env)

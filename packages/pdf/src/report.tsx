@@ -4,7 +4,7 @@ import React from "react";
 import type { Udap, Report, Clause } from "@cr-vif/electric-client/frontend";
 import serviceInstructeurs from "./serviceInstructeur.json";
 
-export const ReportPDFDocument = ({ udap, htmlString, images }: { udap: Udap; htmlString: string; images: Images }) => {
+export const ReportPDFDocument = ({ udap, htmlString, images }: ReportPDFDocumentProps) => {
   return (
     <Document>
       <Page size="A4">
@@ -71,6 +71,12 @@ export const ReportPDFDocument = ({ udap, htmlString, images }: { udap: Udap; ht
       </Page>
     </Document>
   );
+};
+
+export type ReportPDFDocumentProps = {
+  htmlString: string;
+  udap: Udap;
+  images: Images;
 };
 
 type Images = {
