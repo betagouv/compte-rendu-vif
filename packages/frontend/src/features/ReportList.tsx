@@ -16,6 +16,7 @@ import { PopoverTrigger } from "@ark-ui/react/popover";
 import { ReportActions } from "./ReportActions";
 import { Pagination } from "@codegouvfr/react-dsfr/Pagination";
 import welcomeImage from "../assets/welcome.svg";
+import { useIsDesktop } from "../hooks/useIsDesktop";
 
 export type ReportWithUser = Report & { user?: { email: string; name: string } };
 
@@ -129,7 +130,7 @@ export const ReportList = ({
   const pageCount = count === 0 ? 0 : Math.ceil(count / 20);
 
   return (
-    <Stack>
+    <Stack w={{ base: "100%", lg: "816px" }}>
       <Grid
         className={css({
           "& > *:nth-child(-n+10)": {
@@ -177,7 +178,7 @@ const ReportListItem = ({ report, isLast }: { report: ReportWithUser; isLast?: b
   };
 
   return (
-    <Flex position="relative" direction="column" w="400px">
+    <Flex position="relative" direction="column" w="100%" maxW="400px">
       <Link
         className={css({
           backgroundImage: "none",
@@ -186,7 +187,7 @@ const ReportListItem = ({ report, isLast }: { report: ReportWithUser; isLast?: b
           },
         })}
         to={"/edit/$reportId"}
-        params={{ reportId: report.id }}
+              params={{ reportId: report.id }}
       >
         <article
           className={flex({
@@ -230,10 +231,6 @@ const ReportListItem = ({ report, isLast }: { report: ReportWithUser; isLast?: b
       {isLast ? null : <Divider mt="16px" mb="8px" />}
     </Flex>
   );
-};
-
-const useIsDesktop = () => {
-  return useMedia(`(min-width: ${token("breakpoints.lg")})`);
 };
 
 const MenuDesktopPopover = ({ onClose, report }: MenuProps) => {

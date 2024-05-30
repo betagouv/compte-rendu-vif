@@ -6,9 +6,10 @@ import { createRootRouteWithContext, Outlet, useNavigate } from "@tanstack/react
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import type { PropsWithChildren } from "react";
 import { useIsLoggedIn, useLogout } from "../contexts/AuthContext";
-import { Box, Flex } from "#styled-system/jsx";
+import { Box, Flex, Stack } from "#styled-system/jsx";
 import type { RouterOutputs } from "../api";
 import { css, cx } from "#styled-system/css";
+import { useIsDesktop } from "../hooks/useIsDesktop";
 
 export const Route = createRootRouteWithContext<Partial<RouterOutputs<"/api/login">>>()({
   beforeLoad: (ctx) => {
@@ -48,6 +49,8 @@ const getTitle = (pathname: string) => {
 const Layout = ({ children }: PropsWithChildren) => {
   const isLoggedIn = useIsLoggedIn();
   const logout = useLogout();
+
+  const isDesktop = useIsDesktop();
 
   return (
     <Flex flexDir={"column"} h="100vh">
@@ -89,11 +92,23 @@ const Layout = ({ children }: PropsWithChildren) => {
                 },
               ]),
         ]}
-        renderSearchInput={({ className, ...props }) => {
-          console.log(props);
+        renderSearchInput={
+          !isDesktop
+            ? ({ className, ...props }) => {
+                console.log(props);
 
-          return <input className={cx(css({ hideFrom: "lg" }), className)} {...props} />;
-        }}
+                return (
+                  <Stack>
+                    <input className={cx(css({ hideFrom: "lg" }), className)} {...props} />
+                    <Box>Résultat 1</Box>
+                    <Box>Résultat 2</Box>
+                    <Box>Résultat 3</Box>
+                    <Box>Résultat 4</Box>
+                  </Stack>
+                );
+              }
+            : undefined
+        }
       />
       <Box flex="1">{children}</Box>
       {/* <TanStackRouterDevtools /> */}

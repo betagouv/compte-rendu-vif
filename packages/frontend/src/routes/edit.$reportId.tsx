@@ -104,7 +104,6 @@ const WithReport = ({ report }: { report: Report }) => {
     const previousValues = previousValuesRef.current;
     const focused = getFocused();
 
-    // key is a string and a string cannot index previousValues or report
     for (const key in previousValues) {
       if ((previousValues as any)[key] !== (report as any)[key]) {
         const fieldState = form.getFieldState(key as any);
@@ -121,7 +120,7 @@ const WithReport = ({ report }: { report: Report }) => {
 
   const onSubmit = (_values: Report) => {
     setPdfValues(_values);
-    navigate({ to: "/pdf/$reportId", params: { reportId: report.id } });
+    navigate({ to: "/pdf/$reportId", params: { reportId: report.id }, search: { mode: "view" } });
     // modal.open();
   };
 

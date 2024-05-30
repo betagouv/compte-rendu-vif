@@ -49,28 +49,42 @@ export function SyncFormBanner({ form, baseObject }: { form: UseFormReturn<Repor
 
               goBack();
             }}
+            hideBelow="lg"
             fontSize="15px"
           >
             Retour
           </styled.a>
         </Center>
         <Flex className={styles.root}>
-          {/* <Flex
+          <Flex
             justifyContent="space-between"
             alignItems="center"
             w="100%"
             maxW={{ base: "100%", lg: "800px" }}
             h="100%"
-          > */}
-          {/* @ts-ignore dsfr buttons props must have children */}
-          <styled.span nowrap>{isCollapsed ? newObject.title : "Titre compte-rendu :"}</styled.span>
-          {/* </Flex> */}
+          >
+            {!isCollapsed ? (
+              <styled.div hideFrom="lg">
+                {/* @ts-ignore dsfr buttons props must have children */}
+                <Button
+                  className={styles.back}
+                  priority="tertiary no outline"
+                  iconId="ri-arrow-left-line"
+                  onClick={() => goBack()}
+                  size="large"
+                />
+              </styled.div>
+            ) : null}
+            {/* @ts-ignore dsfr buttons props must have children */}
+            <styled.span nowrap>{isCollapsed ? newObject.title : "Titre compte-rendu :"}</styled.span>
+          </Flex>
           <Input className={styles.input} label="" nativeInputProps={{ ...form.register("title") }} />
+          <Status className={styles.status} status={status} />
         </Flex>
         {/* <div></div> */}
         <styled.div w="calc((100% - 800px) / 2)"></styled.div>
       </Banner>
-      <Banner ref={ref} status={status} zIndex="2" position="sticky" top="-1px">
+      <Banner ref={ref} status={status} zIndex="3" position="sticky" top="-1px">
         <Flex className={styles.collapsed}>
           {isCollapsed ? (
             <>
@@ -82,7 +96,8 @@ export function SyncFormBanner({ form, baseObject }: { form: UseFormReturn<Repor
                 onClick={() => goBack()}
                 size="large"
               />
-              <styled.span nowrap>{newObject.title}</styled.span>
+              <styled.div nowrap>{newObject.title}</styled.div>
+              <Status className={styles.status} status={status} />
             </>
           ) : null}
         </Flex>
@@ -105,18 +120,18 @@ const syncFormBanner = sva({
   base: {
     root: {
       display: "flex",
-      zIndex: 2,
+      zIndex: 3,
       flexDirection: "column",
       justifyContent: "space-between",
       w: { base: "100%", lg: "800px" },
-      py: "56px",
+      py: { base: 0, lg: "56px" },
       px: "15px",
     },
     collapsed: {
       display: "flex",
+      zIndex: 5,
       flexDirection: "row",
       justifyContent: "flex-end",
-
       w: "100%",
       maxW: { base: "unset", sm: "800px" },
       px: "15px",
@@ -124,7 +139,7 @@ const syncFormBanner = sva({
     back: { ml: "-10px", color: "black", _hover: { bgColor: "transparent" } },
     label: {},
     input: {
-      w: { base: "100%", sm: "800px" },
+      w: { base: "100%", lg: "100%" },
       // mt: "-5px !important",
       mb: "1em",
       "& input": {
@@ -132,6 +147,8 @@ const syncFormBanner = sva({
       },
     },
     status: {
+      alignSelf: "flex-end",
+      mb: "16px",
       fontSize: "10px",
     },
   },
@@ -141,6 +158,14 @@ const syncFormBanner = sva({
         collapsed: {
           justifyContent: "space-between",
           alignItems: "center",
+        },
+        status: {
+          display: "flex",
+          alignSelf: "initial",
+          mb: "0",
+        },
+        back: {
+          flex: "1 0 auto",
         },
       },
     },

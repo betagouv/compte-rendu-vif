@@ -14,6 +14,7 @@ export const tabs = defineSlotRecipe({
     },
     trigger: {
       display: "flex",
+      zIndex: 1,
       flex: "1",
       justifyContent: "start",
       height: "56px !important",

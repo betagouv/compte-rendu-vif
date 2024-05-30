@@ -22,7 +22,7 @@ const Index = () => {
       label: user.name,
       className: css({
         position: "absolute",
-        left: { base: "calc((100vw - 400px) / 2 - 8px)", lg: "calc((100vw - 828px) / 2 - 8px)" },
+        left: { base: "16px", lg: "calc((100vw - 828px) / 2 - 8px)" },
       }),
     },
     {
@@ -73,7 +73,7 @@ const Index = () => {
           <Tabs.Indicator />
         </Tabs.List>
         <Center>
-          <Tabs.Content value="my">
+          <Tabs.Content value="my" display="flex" justifyContent={{ base: "center", lg: "center" }} w="100%" px="16px">
             <MyReports />
           </Tabs.Content>
           <Tabs.Content value="udap">

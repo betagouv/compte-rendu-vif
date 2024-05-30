@@ -18,4 +18,4 @@ export const downloadFile = (url: string) => {
   a.download = "report.pdf";
   a.click();
   a.remove();
-}
+};
