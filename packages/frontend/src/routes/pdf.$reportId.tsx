@@ -1,16 +1,19 @@
 import { Banner } from "#components/Banner.js";
 import { EnsureUser } from "#components/EnsureUser.js";
+import { Spinner } from "#components/Spinner";
 import { css } from "#styled-system/css";
 import { Center, Flex, Stack, styled } from "#styled-system/jsx";
 import Button from "@codegouvfr/react-dsfr/Button";
 import Input from "@codegouvfr/react-dsfr/Input";
 import type { Report, Udap } from "@cr-vif/electric-client/frontend";
 import { ReportPDFDocument, ReportPDFDocumentProps, getReportHtmlString } from "@cr-vif/pdf";
+import { usePdf } from "@mikecousins/react-pdf";
 import { pdf } from "@react-pdf/renderer";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { Navigate, createFileRoute, useNavigate, useRouter } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, useRouter } from "@tanstack/react-router";
 import { Editor } from "@tiptap/react";
 import { useLiveQuery } from "electric-sql/react";
+import { makeArrayOf } from "pastable";
 import { PropsWithChildren, ReactNode, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import { api } from "../api";
@@ -21,7 +24,6 @@ import { useChipOptions } from "../features/chips/useChipOptions";
 import { TextEditor } from "../features/text-editor/TextEditor";
 import { TextEditorContext, TextEditorContextProvider } from "../features/text-editor/TextEditorContext";
 import { TextEditorToolbar } from "../features/text-editor/TextEditorToolbar";
-import { Spinner } from "#components/Spinner";
 
 type Mode = "edit" | "view" | "send" | "sent";
 
@@ -110,10 +112,10 @@ export const PDF = () => {
         <SendForm reportId={reportId}>
           <EditBanner
             title={
-              <div>
+              <styled.div nowrap>
                 <styled.span fontWeight="bold">{getModeTitle(mode)}</styled.span>
                 {report?.title ? ` | ${report?.title}` : ""}
-              </div>
+              </styled.div>
             }
             reportId={report?.id}
             buttons={buttons}
@@ -192,25 +194,45 @@ const EditBanner = ({ title, buttons, reportId }: { title: ReactNode; buttons: R
 
   return (
     <Banner status="saved" flexDir="row">
-      <Flex direction="row" justifyContent={"space-between"} alignItems="center" w="1000px" h="header-height">
-        <Flex direction="row" alignItems="center">
+      <Flex
+        direction="row"
+        justifyContent={"space-between"}
+        alignItems="center"
+        w={{ base: "100%", lg: "1000px" }}
+        maxW={{ base: "100%", lg: "1000px" }}
+        h="header-height"
+        px="16px"
+      >
+        <Flex>
           <styled.a
             className={"ri-arrow-left-line"}
             href={""}
             onClick={(e) => {
               e.preventDefault();
-
               goBack();
             }}
+            hideBelow="lg"
             fontSize="15px"
+            whiteSpace="nowrap"
           >
             Retour
           </styled.a>
-          <styled.div ml={{ base: "0", lg: "50px" }} nowrap>
-            {title}
-          </styled.div>
         </Flex>
-        <Flex direction="row">{buttons}</Flex>
+        <styled.a
+          className={"ri-arrow-left-line"}
+          onClick={(e) => {
+            e.preventDefault();
+            goBack();
+          }}
+          hideFrom="lg"
+          pr="8px"
+          color="black"
+          fontSize="15px"
+        ></styled.a>
+        <styled.div ml={{ base: "0", lg: "50px" }} nowrap>
+          {title}
+        </styled.div>
+        <Flex>{buttons}</Flex>
       </Flex>
     </Banner>
   );
@@ -242,10 +264,12 @@ export const WithReport = ({ initialHtmlString, mode }: { initialHtmlString: str
     );
   }
 
-  return <TextEditor />;
+  return (
+    <styled.div p="16px">
+      <TextEditor />
+    </styled.div>
+  );
 };
-import { usePdf } from "@mikecousins/react-pdf";
-import { makeArrayOf } from "pastable";
 
 const View = (props: ReportPDFDocumentProps) => {
   const query = useQuery({
@@ -260,7 +284,7 @@ const View = (props: ReportPDFDocumentProps) => {
   if (query.isLoading) return <Spinner />;
 
   return (
-    <styled.div>
+    <styled.div px="16px">
       <PdfCanvas blob={query.data as Blob} />
     </styled.div>
   );
@@ -289,12 +313,20 @@ const PdfCanvasPage = ({ file, page }: { file: string; page: number }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   usePdf({
+    scale: 1.5,
     file,
     page: page,
     canvasRef,
   });
 
-  return <styled.canvas ref={canvasRef} width="800px" my="16px" boxShadow="0px 10.18px 30.54px 0px #00001229" />;
+  return (
+    <styled.canvas
+      ref={canvasRef}
+      width={{ base: "100%", lg: "800px" }}
+      my="16px"
+      boxShadow="0px 10.18px 30.54px 0px #00001229"
+    />
+  );
 };
 
 const SendReportPage = ({ children }: PropsWithChildren) => {
