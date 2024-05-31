@@ -70,7 +70,7 @@ const WithReport = ({ report }: { report: Report }) => {
     resetOptions: {},
   });
   const [pdfValues, setPdfValues] = useState<Report | null>(null);
-
+  console.log(report);
   const navigate = useNavigate();
 
   const setTab = (tab: string) => {

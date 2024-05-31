@@ -193,7 +193,7 @@ async function syncObject(id: string, diff: Record<string, any>) {
 }
 
 function isPrimitive(value: any) {
-  return value !== Object(value);
+  return value !== Object(value) || value instanceof Date;
 }
 
 function getDiff(a: Record<string, any>, b: Record<string, any>) {
@@ -201,7 +201,10 @@ function getDiff(a: Record<string, any>, b: Record<string, any>) {
     const oldValue = b[key];
     if (!isPrimitive(oldValue) || !isPrimitive(value)) return acc;
 
-    if (oldValue !== value) {
+    const areDatesAndEqual =
+      oldValue instanceof Date && value instanceof Date && oldValue.getTime() === value.getTime();
+
+    if (oldValue !== value && !areDatesAndEqual) {
       acc[key] = value;
     }
 
