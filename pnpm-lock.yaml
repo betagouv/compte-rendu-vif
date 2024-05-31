@@ -233,7 +233,7 @@ importers:
         version: 1.0.0(webpack@5.91.0)
       '@mikecousins/react-pdf':
         specifier: ^7.1.0
-        version: 7.1.0(pdfjs-dist@4.2.67)(react-dom@18.2.0)(react@18.2.0)
+        version: 7.1.0(pdfjs-dist@4.3.136)(react-dom@18.2.0)(react@18.2.0)
       '@mui/material':
         specifier: ^5.15.15
         version: 5.15.15(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.2.74)(react-dom@18.2.0)(react@18.2.0)
@@ -294,6 +294,9 @@ importers:
       pastable:
         specifier: ^2.2.1
         version: 2.2.1(react@18.2.0)
+      pdfjs-dist:
+        specifier: ^4.3.136
+        version: 4.3.136
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -3100,14 +3103,14 @@ packages:
       - supports-color
     optional: true
 
-  /@mikecousins/react-pdf@7.1.0(pdfjs-dist@4.2.67)(react-dom@18.2.0)(react@18.2.0):
+  /@mikecousins/react-pdf@7.1.0(pdfjs-dist@4.3.136)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-uwJMgu+PQ5ULjBmuVD+R1gk1VpEjErDHxBgBrOoEBWmOk+DjoMxPV4ymPCWo7U9zLV5KJ+ppUGFa0w68fJ5yfw==}
     peerDependencies:
       pdfjs-dist: 4.2.67
       react: ^18.2.0
       react-dom: ^18.2.0
     dependencies:
-      pdfjs-dist: 4.2.67
+      pdfjs-dist: 4.3.136
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     dev: false
@@ -11581,8 +11584,8 @@ packages:
       - supports-color
     dev: true
 
-  /pdfjs-dist@4.2.67:
-    resolution: {integrity: sha512-rJmuBDFpD7cqC8WIkQUEClyB4UAH05K4AsyewToMTp2gSy3Rrx8c1ydAVqlJlGv3yZSOrhEERQU/4ScQQFlLHA==}
+  /pdfjs-dist@4.3.136:
+    resolution: {integrity: sha512-gzfnt1qc4yA+U46golPGYtU4WM2ssqP2MvFjKga8GEKOrEnzRPrA/9jogLLPYHiA3sGBPJ+p7BdAq+ytmw3jEg==}
     engines: {node: '>=18'}
     optionalDependencies:
       canvas: 2.11.2
