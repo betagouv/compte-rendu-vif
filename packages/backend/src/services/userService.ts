@@ -146,16 +146,17 @@ export class UserService {
     );
   }
 
-  async verifyTokenAndRefreshIfNeeded(token: string, refreshToken: string) {
+  async verifyTokenAndRefreshIfNeeded(token: string, refreshToken?: string) {
     debug("token", token);
     debug("refreshToken", refreshToken);
     try {
       this.validateToken(token);
+      const rToken = refreshToken ?? this.generateRefreshToken(await this.getUserByEmail(token));
       debug("token is valid");
-      return { token, refreshToken };
+      return { token, refreshToken: rToken };
     } catch (e: any) {
       debug("invalid token", e);
-      if (e.name === "TokenExpiredError") {
+      if (refreshToken && e.name === "TokenExpiredError") {
         try {
           const { id } = this.validateRefreshToken(refreshToken);
           const user = await this.getUserById(id);
@@ -165,6 +166,8 @@ export class UserService {
           debug("invalid refresh token", e);
           return { token: null, refreshToken: null, user: null };
         }
+      } else {
+        return { token: null, refreshToken: null, user: null };
       }
     }
   }
