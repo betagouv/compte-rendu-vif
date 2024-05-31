@@ -15,6 +15,7 @@ const envSchema = z.object({
   DATABASE_URL: z.string(),
   TOKEN_LIFETIME: z.string().default("1w"),
   JWT_SECRET: z.string(),
+  JWT_REFRESH_SECRET: z.string(),
   NODE_ENV: z.string().default("development"),
   PORT: stringOrNumberAsNumber.default(3001),
   AWS_BUCKET_NAME: z.string(),

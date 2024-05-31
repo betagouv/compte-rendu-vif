@@ -12,7 +12,9 @@ import { Type, type Static } from "@sinclair/typebox";
 import * as Schemas from "@cr-vif/electric-client/typebox";
 import type { Prisma } from "@cr-vif/electric-client/backend";
 import { sendPasswordResetMail } from "../features/mail";
+import { makeDebug } from "../features/debug";
 
+const debug = makeDebug("user_service");
 export class UserService {
   async createUser(
     payload: Pick<Prisma.internal_userUncheckedCreateInput, "email" | "password"> &
@@ -64,7 +66,7 @@ export class UserService {
   }
 
   async getUserById(id: string) {
-    const user = await db.user.findUnique({ where: { id }, include: { udap: true } });
+    const user = await db.internal_user.findFirst({ where: { id }, include: { user: { include: { udap: true } } } });
     assertUserExists(user);
 
     return user;
@@ -84,7 +86,7 @@ export class UserService {
     assertUserExists(user);
     await assertPasswordsMatch(payload.password, user!.password);
 
-    return { user: user?.user, token: this.generateJWT(user!) };
+    return { user: user?.user, token: this.generateJWT(user!), refreshToken: this.generateRefreshToken(user!) };
   }
 
   async generateResetLink(email: string) {
@@ -127,8 +129,8 @@ export class UserService {
     return { message: "Votre mot de passe a été modifié avec succès." };
   }
 
-  verifyJWT(token: string) {
-    const { id } = this.validateJWT(token);
+  getUserByToken(token: string) {
+    const { id } = this.validateToken(token);
     return this.getUserByEmail(id);
   }
 
@@ -144,16 +146,55 @@ export class UserService {
     );
   }
 
-  validateJWT(token: string) {
+  async verifyTokenAndRefreshIfNeeded(token: string, refreshToken: string) {
+    debug("token", token);
+    debug("refreshToken", refreshToken);
+    try {
+      this.validateToken(token);
+      debug("token is valid");
+      return { token, refreshToken };
+    } catch (e: any) {
+      debug("invalid token", e);
+      if (e.name === "TokenExpiredError") {
+        try {
+          const { id } = this.validateRefreshToken(refreshToken);
+          const user = await this.getUserById(id);
+
+          return { token: this.generateJWT(user!), refreshToken, user: user!.user };
+        } catch (e) {
+          debug("invalid refresh token", e);
+          return { token: null, refreshToken: null, user: null };
+        }
+      }
+    }
+  }
+
+  generateRefreshToken(user: Prisma.internal_userUncheckedCreateInput) {
+    return jwt.sign(
+      {
+        sub: user.id,
+      },
+      ENV.JWT_REFRESH_SECRET,
+    );
+  }
+
+  refreshTokenIfNeeded(token: string) {}
+
+  validateToken(token: string) {
     return jwt.verify(token, ENV.JWT_SECRET) as { id: string };
+  }
+
+  validateRefreshToken(token: string) {
+    return jwt.verify(token, ENV.JWT_REFRESH_SECRET) as { id: string };
   }
 }
 
 const md5 = (data: string) => crypto.createHash("md5").update(data).digest("hex");
 
 export const userAndTokenTSchema = Type.Object({
-  user: Type.Pick(Schemas.user, ["id", "name", "udap_id", "udap"]),
+  user: Type.Optional(Type.Pick(Schemas.user, ["id", "name", "udap_id", "udap"])),
   token: Type.String(),
+  refreshToken: Type.String(),
 });
 
 const encryptPassword = (password: string) => {

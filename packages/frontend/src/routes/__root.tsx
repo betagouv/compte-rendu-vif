@@ -5,12 +5,13 @@ import MuiDsfrThemeProvider from "@codegouvfr/react-dsfr/mui";
 import { createRootRouteWithContext, Outlet, useNavigate, useRouter } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import type { PropsWithChildren } from "react";
-import { useIsLoggedIn, useLogout } from "../contexts/AuthContext";
+import { useIsLoggedIn, useLogout, useUser } from "../contexts/AuthContext";
 import { Box, Flex, Stack } from "#styled-system/jsx";
 import type { RouterOutputs } from "../api";
 import { css, cx } from "#styled-system/css";
 import { useIsDesktop } from "../hooks/useIsDesktop";
 import { ReportSearch } from "#components/ReportSearch.js";
+import { electric } from "../db";
 
 export const Route = createRootRouteWithContext<Partial<RouterOutputs<"/api/login">>>()({
   beforeLoad: (ctx) => {
@@ -53,7 +54,9 @@ const Layout = ({ children }: PropsWithChildren) => {
 
   const isDesktop = useIsDesktop();
   const router = useRouter();
-  console.log(router);
+
+  const user = useUser();
+  console.log(user);
 
   const isHome = router.latestLocation.pathname === "/";
 
@@ -84,6 +87,18 @@ const Layout = ({ children }: PropsWithChildren) => {
                   iconId: "fr-icon-logout-box-r-line" as const,
                   text: "Se déconnecter",
                   buttonProps: { onClick: logout },
+                },
+                {
+                  iconId: "fr-icon-warning-fill" as const,
+                  text: "Supprimer les données locales",
+                  buttonProps: {
+                    onClick: () => {
+                      if (electric.isConnected) electric.disconnect();
+                      localStorage.clear();
+                      indexedDB.deleteDatabase("crvif.db");
+                      window.location.reload();
+                    },
+                  },
                 },
               ]
             : [

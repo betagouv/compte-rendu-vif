@@ -45,7 +45,7 @@ COPY --from=with-deps /usr/src/app/packages/electric-client/node_modules ./packa
 
 RUN pnpm electric-client generate:back
 RUN pnpm backend build
-CMD pnpm show-config;pnpm electric:up;pnpm backend start
+CMD pnpm electric:up;pnpm backend start
 
 
 ################################

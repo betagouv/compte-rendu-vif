@@ -166,7 +166,7 @@ const SendForm = ({ children, reportId }: PropsWithChildren<{ reportId: string }
 const getModeTitle = (mode: Mode) => {
   switch (mode) {
     case "edit":
-      return "Modification";
+      return "Mise en page";
     case "view":
       return "Prévisualisation";
     case "send":
@@ -313,7 +313,7 @@ const PdfCanvasPage = ({ file, page }: { file: string; page: number }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   usePdf({
-    scale: 1.5,
+    scale: 1.2,
     file,
     page: page,
     canvasRef,

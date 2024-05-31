@@ -31,6 +31,7 @@ export namespace Endpoints {
         };
       };
       token: string;
+      refreshToken: string;
     };
   };
   export type post_Apilogin = {
@@ -58,6 +59,35 @@ export namespace Endpoints {
         };
       };
       token: string;
+      refreshToken: string;
+    };
+  };
+  export type get_ApirefreshToken = {
+    method: "GET";
+    path: "/api/refresh-token";
+    parameters: {
+      query: { token: string; refreshToken: string };
+    };
+    response: {
+      user: {
+        id: string;
+        name: string;
+        udap_id: string;
+        udap: {
+          id: string;
+          department: string;
+          completeCoords?: string | undefined;
+          visible?: boolean | undefined;
+          name?: string | undefined;
+          address?: string | undefined;
+          zipCode?: string | undefined;
+          city?: string | undefined;
+          phone?: string | undefined;
+          email?: string | undefined;
+        };
+      };
+      token: string;
+      refreshToken: string;
     };
   };
   export type post_ApisendResetPassword = {
@@ -115,6 +145,7 @@ export type EndpointByMethod = {
     "/api/pdf/report": Endpoints.post_Apipdfreport;
   };
   get: {
+    "/api/refresh-token": Endpoints.get_ApirefreshToken;
     "/api/udaps": Endpoints.get_Apiudaps;
   };
 };

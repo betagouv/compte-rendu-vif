@@ -17,10 +17,10 @@ export const userPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
     return result;
   });
 
-  // // @ts-expect-error null / undefined mismatch
-  // fastify.get("/verify-token", { schema: verifyTokenTSchema }, async (request) => {
-  //   return request.services.user.verifyJWT(request.query.token);
-  // });
+  // @ts-expect-error null / undefined mismatch
+  fastify.get("/refresh-token", { schema: refreshTokenTSchema }, async (request) => {
+    return request.services.user.verifyTokenAndRefreshIfNeeded(request.query.token, request.query.refreshToken);
+  });
 
   fastify.post("/send-reset-password", { schema: sendResetPasswordTSchema }, async (request) => {
     return request.services.user.generateResetLink(request.body.email);
@@ -44,8 +44,8 @@ export const loginTSchema = {
   response: { 200: userAndTokenTSchema },
 };
 
-export const verifyTokenTSchema = {
-  querystring: Type.Object({ token: Type.String() }),
+export const refreshTokenTSchema = {
+  querystring: Type.Object({ token: Type.String(), refreshToken: Type.String() }),
   response: { 200: userAndTokenTSchema },
 };
 

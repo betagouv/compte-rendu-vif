@@ -2,7 +2,7 @@ import { type PropsWithChildren, createContext, useContext, useState } from "rea
 import { safeParseLocalStorage } from "../utils";
 import { useQuery } from "@tanstack/react-query";
 import { electric } from "../db";
-import { setToken, type RouterOutputs } from "../api";
+import { api, setToken, type RouterOutputs } from "../api";
 
 const initialAuth = safeParseLocalStorage("crvif/auth");
 setToken(initialAuth?.token);
@@ -17,9 +17,49 @@ const AuthContext = createContext<AuthContextProps>({
 export const AuthProvider = ({ children }: PropsWithChildren) => {
   const [data, setData] = useState<Omit<AuthContextProps, "setData">>(initialAuth);
 
+  const setDataAndSaveInStorage = (data: Omit<AuthContextProps, "setData" | "electricStatus">) => {
+    setData((d) => ({ ...d, ...data }));
+    setToken(data?.token);
+    if (data) {
+      window.localStorage.setItem("crvif/auth", JSON.stringify(data));
+    } else {
+      window.localStorage.removeItem("crvif/auth");
+    }
+  };
+
+  useQuery({
+    queryKey: ["refresh-token"],
+    queryFn: async () => {
+      if (!data?.token) return;
+
+      try {
+        const resp = await api.get("/api/refresh-token", {
+          query: { token: data.token, refreshToken: data.refreshToken! },
+        });
+
+        if (resp.token === null) {
+          console.log("token expired but couldn't find a refresh token, logging out");
+          setDataAndSaveInStorage({ ...data, token: undefined, user: undefined });
+        } else {
+          console.log("token refreshed");
+          setDataAndSaveInStorage(resp);
+        }
+        console.log(resp);
+        return resp;
+      } catch (e) {
+        console.error("refreshTokenQuery error", e);
+      }
+    },
+    enabled: !!data?.token,
+    refetchOnWindowFocus: false,
+  });
+
+  // console.log(!!data?.token && !!data?.user && refreshTokenQuery.isSuccess);
+
   const electricQuery = useQuery({
     queryKey: ["electric", data?.token!],
     queryFn: async () => {
+      console.log("connecting to electric");
       if (electric.isConnected) electric.disconnect();
 
       await electric.connect(data.token!);
@@ -45,22 +85,13 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     console.error("electricQuery error", electricQuery.error);
   }
 
-  const setDataAndSaveInStorage = (data: Omit<AuthContextProps, "setData" | "electricStatus">) => {
-    setData((d) => ({ ...d, ...data }));
-    setToken(data?.token);
-    if (data) {
-      window.localStorage.setItem("crvif/auth", JSON.stringify(data));
-    } else {
-      window.localStorage.removeItem("crvif/auth");
-    }
-  };
-
   const value = {
     ...data,
     setData: setDataAndSaveInStorage,
     electricStatus: electricQuery.status,
   };
 
+  console.log(value);
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
