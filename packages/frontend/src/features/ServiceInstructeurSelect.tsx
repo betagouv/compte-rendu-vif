@@ -31,12 +31,13 @@ export const ServiceInstructeurSelect = () => {
       itemToValue={(item) => (item as ServiceInstructeur)?.tiers.toString() ?? ""}
       items={items}
       value={value ? [value.toString()] : undefined}
+      inputValue={value ? items.find((item) => item.tiers === value)?.["libellé tiers"] : ""}
       onInputValueChange={filterItems}
       onValueChange={(e) => selectItem(e.items?.[0] as ServiceInstructeur)}
     >
       <Combobox.Control>
         <Combobox.Input asChild placeholder="Sélectionner un service instructeur">
-          <Input label="Service instructeur*" />
+          <ProxyInput />
         </Combobox.Input>
         <Combobox.Trigger asChild top="unset !important" bottom="28px">
           {/* @ts-expect-error */}
@@ -57,6 +58,10 @@ export const ServiceInstructeurSelect = () => {
       </Combobox.Positioner>
     </Combobox.Root>
   );
+};
+
+const ProxyInput = (props: any) => {
+  return <Input label="Service instructeur" nativeInputProps={props} />;
 };
 
 type ServiceInstructeur = (typeof serviceInstructeurs)[number];
