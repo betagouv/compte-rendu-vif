@@ -1,18 +1,17 @@
-import { Popover } from "#components/Popover";
 import { ReportSearch } from "#components/ReportSearch.js";
 import { css } from "#styled-system/css";
-import { Box, Center, Divider, Flex, Stack, styled } from "#styled-system/jsx";
+import { Box, Flex, Stack } from "#styled-system/jsx";
 import Badge from "@codegouvfr/react-dsfr/Badge";
 import Button from "@codegouvfr/react-dsfr/Button";
 import Footer from "@codegouvfr/react-dsfr/Footer";
 import Header from "@codegouvfr/react-dsfr/Header/Header";
 import MuiDsfrThemeProvider from "@codegouvfr/react-dsfr/mui";
 import { createRootRouteWithContext, Outlet, useRouter } from "@tanstack/react-router";
-import { useRef, type PropsWithChildren } from "react";
+import { type PropsWithChildren } from "react";
 import type { RouterOutputs } from "../api";
-import { useIsLoggedIn, useLogout } from "../contexts/AuthContext";
-import { electric } from "../db";
+import { useIsLoggedIn } from "../contexts/AuthContext";
 import { useIsDesktop } from "../hooks/useIsDesktop";
+import { MyAccountMenu, actionsContainerClassName } from "../features/MyAccountMenu";
 
 export const Route = createRootRouteWithContext<Partial<RouterOutputs<"/api/login">>>()({
   beforeLoad: (ctx) => {
@@ -79,7 +78,7 @@ const Layout = ({ children }: PropsWithChildren) => {
         homeLinkProps={{ title: "Compte rendu vif", to: "/" }}
         quickAccessItems={[
           ...(isLoggedIn
-            ? [<LoggedInQuickAccessItems />]
+            ? [<MyAccountMenu />]
             : [
                 <Stack className={actionsContainerClassName}>
                   <Button linkProps={{ to: "/login" }}>Se connecter</Button>
@@ -108,79 +107,5 @@ const Layout = ({ children }: PropsWithChildren) => {
       {/* <TanStackRouterDevtools /> */}
       <Footer accessibility="partially compliant" />
     </Flex>
-  );
-};
-
-export const LoggedInQuickAccessItems = () => {
-  const ref = useRef<HTMLAnchorElement>(null);
-
-  return (
-    <>
-      <styled.div hideBelow="lg">
-        <Popover.Root>
-          <Popover.Trigger asChild>
-            <Button ref={ref as any} priority="tertiary" iconId="fr-icon-account-circle-fill">
-              Mon compte
-            </Button>
-          </Popover.Trigger>
-          <Popover.Positioner>
-            <Popover.Content borderRadius="0">
-              <MyAccountDesktop />
-            </Popover.Content>
-          </Popover.Positioner>
-        </Popover.Root>
-      </styled.div>
-      <styled.div hideFrom="lg">
-        <MyAccountDesktop />
-      </styled.div>
-    </>
-  );
-};
-
-const actionsContainerClassName = css({
-  gap: "0",
-  "& > button": {
-    h: "48px",
-    m: 0,
-    color: "black",
-    fontSize: "14px",
-    "&:disabled": {
-      color: "text-disabled-grey",
-    },
-  },
-});
-
-const MyAccountDesktop = () => {
-  const logout = useLogout();
-  const deleteLocalData = () => {
-    if (electric.isConnected) electric.disconnect();
-    localStorage.clear();
-    indexedDB.deleteDatabase("crvif.db");
-    window.location.reload();
-  };
-
-  const actions = [
-    { text: "Partage des CR", onClick: () => {}, disabled: true },
-    { text: "Clauses départementales", onClick: () => {}, disabled: true },
-    { text: "Clauses nationales", onClick: () => {}, disabled: true },
-    { text: "Se déconnecter", onClick: logout },
-    { text: "Supprimer les données locales", onClick: deleteLocalData },
-  ];
-
-  return (
-    <Stack className={actionsContainerClassName}>
-      {actions.map(({ text, onClick, disabled }, index) => (
-        <>
-          <Button disabled={disabled} onClick={onClick}>
-            {text}
-          </Button>
-          {index < actions.length - 1 && (
-            <Center>
-              <Divider w="85%" />
-            </Center>
-          )}
-        </>
-      ))}
-    </Stack>
   );
 };
