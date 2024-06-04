@@ -80,10 +80,10 @@ const Layout = ({ children }: PropsWithChildren) => {
           ...(isLoggedIn
             ? [<MyAccountMenu />]
             : [
-                <Stack className={actionsContainerClassName}>
+                <>
                   <Button linkProps={{ to: "/login" }}>Se connecter</Button>
                   <Button linkProps={{ to: "/signup" }}>S'inscrire</Button>
-                </Stack>,
+                </>,
               ]),
         ]}
         renderSearchInput={
