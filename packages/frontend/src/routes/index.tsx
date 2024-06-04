@@ -52,6 +52,7 @@ const Index = () => {
           createdAt: new Date(),
           disabled: false,
           udap_id: user.udap.id,
+          redactedBy: user.name,
         },
       }),
     onSuccess: (data) => {
