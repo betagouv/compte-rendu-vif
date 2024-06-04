@@ -15,6 +15,7 @@ import { Status, SyncFormStatus } from "#components/SyncForm";
 import Input from "@codegouvfr/react-dsfr/Input";
 import { useState } from "react";
 import { SearchResults } from "#components/ReportSearch.js";
+import { useNavigate } from "@tanstack/react-router";
 
 const Index = () => {
   // TODO: put this into an xstate/store
@@ -40,6 +41,8 @@ const Index = () => {
     },
   ];
 
+  const navigate = useNavigate();
+
   const createReportMutation = useMutation({
     mutationFn: () =>
       db.report.create({
@@ -51,6 +54,9 @@ const Index = () => {
           udap_id: user.udap.id,
         },
       }),
+    onSuccess: (data) => {
+      data.id && navigate({ to: "/edit/$reportId", params: { reportId: data.id } });
+    },
   });
 
   return (
