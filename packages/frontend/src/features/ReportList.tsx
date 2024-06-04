@@ -66,7 +66,7 @@ export const AllReports = () => {
   const user = useUser()!;
   const allReports = useLiveQuery(
     db.report.liveMany({
-      where: { disabled: false, udap_id: user.udap.id },
+      where: { disabled: false, udap_id: user.udap?.id },
       take: 20,
       skip: page * 20,
       orderBy: { createdAt: "desc" },
@@ -79,7 +79,7 @@ export const AllReports = () => {
   const nbReports = useLiveQuery<[{ count: number }]>(
     db.liveRawQuery({
       sql: `SELECT COUNT(*) AS count FROM report WHERE disabled=FALSE AND udap_id = ?`,
-      args: [user.udap.id],
+      args: [user.udap?.id],
     }),
   );
 
