@@ -297,6 +297,7 @@ const PdfCanvas = ({ blob }: { blob: Blob }) => {
   const { pdfDocument } = usePdf({
     file,
     canvasRef,
+    workerSrc: "/pdfjs/build/pdf.worker.min.mjs",
   });
 
   const nbPages = pdfDocument?.numPages;
@@ -318,6 +319,7 @@ const PdfCanvasPage = ({ file, page }: { file: string; page: number }) => {
     file,
     page: page,
     canvasRef,
+    workerSrc: "/pdfjs/build/pdf.worker.min.mjs",
   });
 
   return (
