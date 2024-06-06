@@ -34,7 +34,7 @@ services:
       - ./db/init/:/docker-entrypoint-initdb.d
 
   electric:
-    image: electricsql/electric:canary
+    image: electricsql/electric:0.11.1
     depends_on:
       - pg
     environment:
