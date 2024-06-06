@@ -24,7 +24,7 @@ export const ReportSearch = ({
   return (
     <Stack w="100%" h="100%">
       <Input
-        className={css({ w: "100%" })}
+        className={css({ w: "100%", bgColor: "white !important" })}
         label={null}
         nativeInputProps={{ ...inputProps, value: search, onChange: (e) => setSearch(e.target.value) }}
       />

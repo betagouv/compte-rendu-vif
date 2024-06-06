@@ -12,6 +12,8 @@ import { useNetworkState } from "react-use";
 import { useIntersectionObserver } from "../hooks/useIntersectionObserver";
 import Input from "@codegouvfr/react-dsfr/Input";
 import { Report } from "@cr-vif/electric-client/frontend";
+import { useEffect } from "react";
+import { useElectricStatus } from "../contexts/AuthContext";
 
 export function SyncFormBanner({ form, baseObject }: { form: UseFormReturn<Report>; baseObject: Record<string, any> }) {
   const newObject = useWatch({ control: form.control });
@@ -106,11 +108,24 @@ export function SyncFormBanner({ form, baseObject }: { form: UseFormReturn<Repor
   );
 }
 
-export const Status = ({ status, className }: { status: SyncFormStatus; className?: string }) => {
+export const Status = ({ status, className }: { status?: SyncFormStatus; className?: string }) => {
+  const electricStatus = useElectricStatus();
+  const overrideStatus: SyncFormStatus = electricStatus === "loading" ? "offline" : status ?? "saved";
+
   return (
-    <styled.div className={className} color="black" textTransform="uppercase" fontSize="sm" fontWeight="500">
-      <styled.span className={fr.cx("fr-icon-wifi-line")} aria-hidden={true} mr="6px" />
-      {messages[status]}
+    <styled.div
+      className={className}
+      borderRadius="4px"
+      height="20px"
+      px="6px"
+      color="black"
+      textTransform="uppercase"
+      fontSize="sm"
+      fontWeight="500"
+      bgColor={messagesColor[overrideStatus]}
+    >
+      <styled.span className={fr.cx("fr-icon-wifi-line", "fr-icon--sm")} aria-hidden={true} mr="6px" mb="2px" />
+      {messages[overrideStatus]}
     </styled.div>
   );
 };
@@ -177,6 +192,13 @@ const messages: Record<SyncFormStatus, string> = {
   pending: "En attente",
   saved: "Connecté(e)",
   saving: "Sauvegarde",
+};
+
+const messagesColor: Record<SyncFormStatus, string> = {
+  offline: "red-offline",
+  pending: "yellow-waiting",
+  saved: "background-open-blue-france",
+  saving: "background-open-blue-france",
 };
 
 export type SyncFormStatus = "offline" | "pending" | "saved" | "saving";

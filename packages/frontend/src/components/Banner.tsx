@@ -5,15 +5,7 @@ import { forwardRef } from "react";
 
 export const Banner = forwardRef<HTMLDivElement, CenterProps & { status: SyncFormStatus }>(
   ({ status, className, ...props }, ref) => {
-    return (
-      <Center
-        ref={ref}
-        className={cx(banner({ status }), className)}
-        flexDir="column"
-        bgColor="background-open-blue-france"
-        {...props}
-      />
-    );
+    return <Center ref={ref} className={cx(banner({ status }), className)} flexDir="column" {...props} />;
   },
 );
 

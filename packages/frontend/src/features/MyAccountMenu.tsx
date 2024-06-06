@@ -1,10 +1,11 @@
 import { Popover } from "#components/Popover";
 import { css } from "#styled-system/css";
-import { Center, Divider, Stack, styled } from "#styled-system/jsx";
+import { Center, Divider, Flex, Stack, styled } from "#styled-system/jsx";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { useRef } from "react";
 import { useLogout } from "../contexts/AuthContext";
 import { electric } from "../db";
+import { Status } from "#components/SyncForm";
 
 export const MyAccountMenu = () => {
   const ref = useRef<HTMLAnchorElement>(null);
@@ -14,9 +15,17 @@ export const MyAccountMenu = () => {
       <styled.div hideBelow="lg">
         <Popover.Root>
           <Popover.Trigger asChild>
-            <Button ref={ref as any} priority="tertiary" iconId="fr-icon-account-circle-fill">
-              Mon compte
-            </Button>
+            <Flex alignItems="center">
+              <Status className={css({ display: "flex", alignItems: "center", fontSize: "10px" })} />
+              <Button
+                ref={ref as any}
+                className={css({ ml: "16px", mb: "0" })}
+                priority="tertiary"
+                iconId="fr-icon-account-circle-fill"
+              >
+                Mon compte
+              </Button>
+            </Flex>
           </Popover.Trigger>
           <Popover.Positioner>
             <Popover.Content borderRadius="0">

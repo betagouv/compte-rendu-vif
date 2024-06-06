@@ -54,7 +54,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     refetchOnWindowFocus: false,
   });
 
-  // console.log(!!data?.token && !!data?.user && refreshTokenQuery.isSuccess);
+  console.log(!!data?.token);
 
   const electricQuery = useQuery({
     queryKey: ["electric", data?.token!],
@@ -111,6 +111,11 @@ export const useLogout = () => {
   return () => {
     setData({ ...data, token: undefined, user: undefined });
   };
+};
+
+export const useElectricStatus = () => {
+  const { electricStatus } = useContext(AuthContext);
+  return electricStatus;
 };
 
 export const useUser = () => {

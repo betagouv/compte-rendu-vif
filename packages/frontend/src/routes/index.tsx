@@ -7,7 +7,7 @@ import { v4 } from "uuid";
 import { Banner } from "#components/Banner";
 import { EnsureUser } from "#components/EnsureUser";
 import { Tabs } from "#components/Tabs";
-import { useUser } from "../contexts/AuthContext";
+import { useElectricStatus, useUser } from "../contexts/AuthContext";
 import { db } from "../db";
 import { AllReports, MyReports } from "../features/ReportList";
 import { useNetworkState } from "react-use";
@@ -62,7 +62,7 @@ const Index = () => {
 
   return (
     <Flex direction="column" color="text-label-grey">
-      <SimpleBanner pt="15px" pb="40px">
+      <SimpleBanner pt={{ base: "15px", lg: "82px" }} pb={{ base: "49px", lg: "82px" }}>
         <Flex hideFrom="lg" justifyContent="space-between" w="100%" px="16px">
           <styled.div fontSize="16px" fontWeight="bold">
             Compte-rendu VIF
@@ -71,7 +71,7 @@ const Index = () => {
         </Flex>
         <Center justifyContent="center">
           <Button
-            className={css({ mr: { base: "0", lg: "1rem" }, mt: { base: "15px", lg: "0.5rem" } })}
+            className={css({ mr: { base: "0", lg: "1rem" }, mt: { base: "15px", lg: "0" } })}
             iconId="ri-add-line"
             nativeButtonProps={{ onClick: () => createReportMutation.mutate() }}
           >
@@ -79,10 +79,20 @@ const Index = () => {
           </Button>
           <styled.div hideBelow="lg">
             <Input
+              className={css({
+                "& input": {
+                  width: "334px",
+                  bgColor: "white !important",
+                },
+                "& .fr-input-wrap": {
+                  mt: 0,
+                },
+              })}
               label={null}
               nativeInputProps={{
                 value: search,
                 onChange: (e) => setSearch(e.target.value),
+                placeholder: "Rechercher nom, ville, titre...",
               }}
               addon={
                 <styled.div display="flex" pos="relative" alignItems="center">
@@ -140,9 +150,8 @@ const Index = () => {
 };
 
 const SimpleBanner = (props: CenterProps) => {
-  const { online } = useNetworkState();
-
-  const status: SyncFormStatus = online ? "saved" : "offline";
+  const electricStatus = useElectricStatus();
+  const status: SyncFormStatus = electricStatus === "loading" ? "offline" : "saved";
 
   return <Banner status={status} {...props} />;
 };
