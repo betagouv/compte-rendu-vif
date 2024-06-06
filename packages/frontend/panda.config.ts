@@ -20,6 +20,11 @@ export default defineConfig({
   presets: ["@pandacss/preset-base", "@park-ui/panda-preset", dsfrPreset],
 
   // Useful for theme customization
+  globalCss: {
+    "#fr-header-mobile-overlay-button-close": {
+      mt: "10px !important",
+    },
+  },
   theme: {
     extend: {
       slotRecipes: {

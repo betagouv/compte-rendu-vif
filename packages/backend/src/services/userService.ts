@@ -147,8 +147,7 @@ export class UserService {
   }
 
   async verifyTokenAndRefreshIfNeeded(token: string, refreshToken?: string) {
-    debug("token", token);
-    debug("refreshToken", refreshToken);
+    debug("refreshing token", token?.slice(0, 6), refreshToken?.slice(0, 6));
     try {
       this.validateToken(token);
       const rToken = refreshToken ?? this.generateRefreshToken(await this.getUserByEmail(token));

@@ -7,11 +7,12 @@ import Footer from "@codegouvfr/react-dsfr/Footer";
 import Header from "@codegouvfr/react-dsfr/Header/Header";
 import MuiDsfrThemeProvider from "@codegouvfr/react-dsfr/mui";
 import { createRootRouteWithContext, Outlet, useRouter } from "@tanstack/react-router";
-import { type PropsWithChildren } from "react";
+import { useRef, type PropsWithChildren } from "react";
 import type { RouterOutputs } from "../api";
 import { useIsLoggedIn } from "../contexts/AuthContext";
 import { useIsDesktop } from "../hooks/useIsDesktop";
-import { MyAccountMenu, actionsContainerClassName } from "../features/MyAccountMenu";
+import { MyAccountMenu, actionsContainerClassName } from "../features/menu/MyAccountMenu";
+import { Menu } from "../features/menu/Menu";
 
 export const Route = createRootRouteWithContext<Partial<RouterOutputs<"/api/login">>>()({
   beforeLoad: (ctx) => {
@@ -55,10 +56,12 @@ const Layout = ({ children }: PropsWithChildren) => {
   const router = useRouter();
 
   const isHome = router.latestLocation.pathname === "/";
+  const headerRef = useRef<HTMLDivElement>(null);
 
   return (
     <Flex pos="relative" flexDir={"column"} h="100vh">
       <Header
+        ref={headerRef}
         brandTop={
           <>
             Ministère
@@ -76,16 +79,20 @@ const Layout = ({ children }: PropsWithChildren) => {
           ) : null
         }
         homeLinkProps={{ title: "Compte rendu vif", to: "/" }}
-        quickAccessItems={[
-          ...(isLoggedIn
-            ? [<MyAccountMenu />]
+        quickAccessItems={
+          isLoggedIn
+            ? undefined
             : [
-                <>
-                  <Button linkProps={{ to: "/login" }}>Se connecter</Button>
-                  <Button linkProps={{ to: "/signup" }}>S'inscrire</Button>
-                </>,
-              ]),
-        ]}
+                ...(isLoggedIn
+                  ? []
+                  : [
+                      <>
+                        <Button linkProps={{ to: "/login" }}>Se connecter</Button>
+                        <Button linkProps={{ to: "/signup" }}>S'inscrire</Button>
+                      </>,
+                    ]),
+              ]
+        }
         renderSearchInput={
           !isDesktop && isHome
             ? (inputProps) => {
@@ -94,14 +101,29 @@ const Layout = ({ children }: PropsWithChildren) => {
             : undefined
         }
         classes={{
-          toolsLinks: css({ h: "100%" }),
+          root: css({
+            "& .fr-btn--menu": {
+              opacity: "0",
+              pointerEvents: "none",
+            },
+          }),
+          toolsLinks: css({
+            h: "100%",
+          }),
+          menuLinks: css({
+            "&::after": {
+              display: "none",
+            },
+          }),
           bodyRow: css({
+            pos: "relative",
             "& > .fr-header__tools": {
               h: "26px",
             },
           }),
         }}
       />
+      <Menu headerRef={headerRef} />
 
       <Box flex="1">{children}</Box>
       {/* <TanStackRouterDevtools /> */}
