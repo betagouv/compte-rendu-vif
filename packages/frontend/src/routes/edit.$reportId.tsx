@@ -1,7 +1,12 @@
-import { Box, Center, Flex } from "#styled-system/jsx";
+import { EnsureUser } from "#components/EnsureUser";
+import { SyncFormBanner } from "#components/SyncForm";
+import { Tabs } from "#components/Tabs";
+import { css } from "#styled-system/css";
+import { Box, Flex } from "#styled-system/jsx";
+import type { Report } from "@cr-vif/electric-client/frontend";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useLiveQuery } from "electric-sql/react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   FormProvider,
   useForm,
@@ -11,14 +16,9 @@ import {
   type UseFormProps,
   type UseFormRegister,
 } from "react-hook-form";
-import { EnsureUser } from "#components/EnsureUser";
-import { SyncFormBanner } from "#components/SyncForm";
-import { Tabs } from "#components/Tabs";
 import { db } from "../db";
 import { InfoForm } from "../features/InfoForm";
 import { NotesForm } from "../features/NotesForm";
-import type { Report } from "@cr-vif/electric-client/frontend";
-import { css } from "#styled-system/css";
 
 const EditReport = () => {
   const { reportId } = Route.useParams();
@@ -69,7 +69,8 @@ const WithReport = ({ report }: { report: Report }) => {
     defaultValues: report!,
     resetOptions: {},
   });
-
+  const [pdfValues, setPdfValues] = useState<Report | null>(null);
+  console.log(report);
   const navigate = useNavigate();
 
   const setTab = (tab: string) => {
@@ -103,7 +104,6 @@ const WithReport = ({ report }: { report: Report }) => {
     const previousValues = previousValuesRef.current;
     const focused = getFocused();
 
-    // key is a string and a string cannot index previousValues or report
     for (const key in previousValues) {
       if ((previousValues as any)[key] !== (report as any)[key]) {
         const fieldState = form.getFieldState(key as any);
@@ -118,45 +118,44 @@ const WithReport = ({ report }: { report: Report }) => {
     previousValuesRef.current = report;
   }, [report]);
 
-  const onSubmit = (values: Report) => {
-    navigate({
-      to: "/export/$reportId",
-      params: {
-        reportId: report.id,
-      },
-    });
+  const onSubmit = (_values: Report) => {
+    setPdfValues(_values);
+    navigate({ to: "/pdf/$reportId", params: { reportId: report.id }, search: { mode: "view" } });
+    // modal.open();
   };
 
   return (
-    <Flex direction="column">
-      <FormProvider {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          <SyncFormBanner form={form} baseObject={report} />
-          <Flex justifyContent="center" w="100%">
-            <Tabs.Root defaultValue="info" onValueChange={(e) => setTab(e.value)} value={tab}>
-              <Tabs.List>
-                {options.map((option) => (
-                  <Tabs.Trigger key={option.id} value={option.id} position="relative">
-                    <Box className={option.className}>{option.label}</Box>
-                  </Tabs.Trigger>
-                ))}
-                <Tabs.Indicator />
-              </Tabs.List>
-              <Tabs.Content value="info" display="flex" justifyContent="center">
-                <Box w="100%" maxWidth="800px">
-                  <InfoForm />
-                </Box>
-              </Tabs.Content>
-              <Tabs.Content value="notes" display="flex" justifyContent="center">
-                <Box w="100%" maxWidth="800px">
-                  <NotesForm />
-                </Box>
-              </Tabs.Content>
-            </Tabs.Root>
-          </Flex>
-        </form>
-      </FormProvider>
-    </Flex>
+    <>
+      <Flex direction="column">
+        <FormProvider {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <SyncFormBanner form={form} baseObject={report} />
+            <Flex justifyContent="center" w="100%">
+              <Tabs.Root defaultValue="info" onValueChange={(e) => setTab(e.value)} value={tab}>
+                <Tabs.List>
+                  {options.map((option) => (
+                    <Tabs.Trigger key={option.id} value={option.id} position="relative">
+                      <Box className={option.className}>{option.label}</Box>
+                    </Tabs.Trigger>
+                  ))}
+                  <Tabs.Indicator />
+                </Tabs.List>
+                <Tabs.Content value="info" display="flex" justifyContent="center">
+                  <Box w="100%" maxWidth="800px">
+                    <InfoForm />
+                  </Box>
+                </Tabs.Content>
+                <Tabs.Content value="notes" display="flex" justifyContent="center">
+                  <Box w="100%" maxWidth="800px">
+                    <NotesForm />
+                  </Box>
+                </Tabs.Content>
+              </Tabs.Root>
+            </Flex>
+          </form>
+        </FormProvider>
+      </Flex>
+    </>
   );
 };
 

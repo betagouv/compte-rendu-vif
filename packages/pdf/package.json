@@ -1,0 +1,27 @@
+{
+  "name": "@cr-vif/pdf",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@cr-vif/electric-client": "workspace:*",
+    "@types/react": "^18.2.64",
+    "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "@rawwee/react-pdf-html": "^1.0.2",
+    "@react-pdf/renderer": "^3.4.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-pdf-html": "^2.0.4"
+  }
+}

@@ -1,7 +1,6 @@
 import "./envVars";
 import { onHmr, registerViteHmrServerRestart } from "./hmr";
 
-import { cleanUpDb, db } from "./db/db";
 import { ENV } from "./envVars";
 import { generateOpenApi, initFastify } from "./router";
 import { makeDebug } from "./features/debug";
@@ -13,9 +12,9 @@ const start = async () => {
 
   debug("Starting fastify server");
   const fastifyInstance = await initFastify();
-  await fastifyInstance.listen({ port: ENV.HTTP_PORT, host: "0.0.0.0" });
+  await fastifyInstance.listen({ port: ENV.PORT, host: "0.0.0.0" });
 
-  debug(`Server listening on ${ENV.HTTP_PORT}`);
+  debug(`Server listening on ${ENV.PORT}`);
 
   onHmr(async () => {
     await fastifyInstance.close();
@@ -34,6 +33,6 @@ if (shouldCreateOnly) {
   start();
 }
 
-process.on("SIGINT", () => {
-  process.exit();
-});
+const onSIGINT = () => process.exit();
+process.on("SIGINT", onSIGINT);
+onHmr(() => process.off("SIGINT", onSIGINT));

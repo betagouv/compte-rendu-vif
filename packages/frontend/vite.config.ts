@@ -7,7 +7,7 @@ import wasm from "vite-plugin-wasm";
 export default defineConfig({
   plugins: [react(), TanStackRouterVite(), wasm()],
   envDir: "../..",
-
+  preview: {},
   worker: {
     format: "es",
     plugins: () => [wasm()],

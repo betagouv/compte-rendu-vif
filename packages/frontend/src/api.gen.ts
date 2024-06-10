@@ -10,26 +10,30 @@ export namespace Endpoints {
     method: "POST";
     path: "/api/create-user";
     parameters: {
-      body: { name: string; email: string; password: string; udap_id: string };
+      body: { name: string; udap_id: string; email: string; password: string };
     };
     response: {
-      user: {
-        name: string;
-        email: string;
-        udap: {
-          id: string;
-          department: string;
-          completeCoords?: string | undefined;
-          visible?: boolean | undefined;
-          name?: string | undefined;
-          address?: string | undefined;
-          zipCode?: string | undefined;
-          city?: string | undefined;
-          phone?: string | undefined;
-          email?: string | undefined;
-        };
-      };
+      user?:
+        | {
+            id: string;
+            name: string;
+            udap_id: string;
+            udap: {
+              id: string;
+              department: string;
+              completeCoords?: string | undefined;
+              visible?: boolean | undefined;
+              name?: string | undefined;
+              address?: string | undefined;
+              zipCode?: string | undefined;
+              city?: string | undefined;
+              phone?: string | undefined;
+              email?: string | undefined;
+            };
+          }
+        | undefined;
       token: string;
+      refreshToken: string;
     };
   };
   export type post_Apilogin = {
@@ -39,47 +43,74 @@ export namespace Endpoints {
       body: { email: string; password: string };
     };
     response: {
-      user: {
-        name: string;
-        email: string;
-        udap: {
-          id: string;
-          department: string;
-          completeCoords?: string | undefined;
-          visible?: boolean | undefined;
-          name?: string | undefined;
-          address?: string | undefined;
-          zipCode?: string | undefined;
-          city?: string | undefined;
-          phone?: string | undefined;
-          email?: string | undefined;
-        };
-      };
+      user?:
+        | {
+            id: string;
+            name: string;
+            udap_id: string;
+            udap: {
+              id: string;
+              department: string;
+              completeCoords?: string | undefined;
+              visible?: boolean | undefined;
+              name?: string | undefined;
+              address?: string | undefined;
+              zipCode?: string | undefined;
+              city?: string | undefined;
+              phone?: string | undefined;
+              email?: string | undefined;
+            };
+          }
+        | undefined;
       token: string;
+      refreshToken: string;
     };
   };
-  export type get_ApiverifyToken = {
+  export type get_ApirefreshToken = {
     method: "GET";
-    path: "/api/verify-token";
+    path: "/api/refresh-token";
     parameters: {
-      query: { token: string };
+      query: { token: string; refreshToken: string };
     };
     response: {
-      name: string;
-      email: string;
-      udap: {
-        id: string;
-        department: string;
-        completeCoords?: string | undefined;
-        visible?: boolean | undefined;
-        name?: string | undefined;
-        address?: string | undefined;
-        zipCode?: string | undefined;
-        city?: string | undefined;
-        phone?: string | undefined;
-        email?: string | undefined;
-      };
+      user?:
+        | {
+            id: string;
+            name: string;
+            udap_id: string;
+            udap: {
+              id: string;
+              department: string;
+              completeCoords?: string | undefined;
+              visible?: boolean | undefined;
+              name?: string | undefined;
+              address?: string | undefined;
+              zipCode?: string | undefined;
+              city?: string | undefined;
+              phone?: string | undefined;
+              email?: string | undefined;
+            };
+          }
+        | undefined;
+      token: string;
+      refreshToken: string;
     };
+  };
+  export type post_ApisendResetPassword = {
+    method: "POST";
+    path: "/api/send-reset-password";
+    parameters: {
+      body: { email: string };
+    };
+    response: { message: string };
+  };
+  export type post_ApiresetPassword = {
+    method: "POST";
+    path: "/api/reset-password";
+    parameters: {
+      body: { temporaryLink: string; newPassword: string };
+    };
+    response: { message: string };
   };
   export type get_Apiudaps = {
     method: "GET";
@@ -98,6 +129,14 @@ export namespace Endpoints {
       email?: string | undefined;
     }>;
   };
+  export type post_Apipdfreport = {
+    method: "POST";
+    path: "/api/pdf/report";
+    parameters: {
+      body: { htmlString: string; reportId: string; recipients: string };
+    };
+    response: string;
+  };
 
   // </Endpoints>
 }
@@ -107,9 +146,12 @@ export type EndpointByMethod = {
   post: {
     "/api/create-user": Endpoints.post_ApicreateUser;
     "/api/login": Endpoints.post_Apilogin;
+    "/api/send-reset-password": Endpoints.post_ApisendResetPassword;
+    "/api/reset-password": Endpoints.post_ApiresetPassword;
+    "/api/pdf/report": Endpoints.post_Apipdfreport;
   };
   get: {
-    "/api/verify-token": Endpoints.get_ApiverifyToken;
+    "/api/refresh-token": Endpoints.get_ApirefreshToken;
     "/api/udaps": Endpoints.get_Apiudaps;
   };
 };

@@ -3,17 +3,16 @@ import Input from "@codegouvfr/react-dsfr/Input";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import { FullWidthButton } from "#components/FullWidthButton";
+import { useMutation } from "@tanstack/react-query";
+import { api, getErrorMessage } from "../api";
+import Alert from "@codegouvfr/react-dsfr/Alert";
+import { css } from "#styled-system/css";
+import { MutationAlert } from "#components/MutationAlert.js";
 
 const ResetPasswordPage = () => {
   const form = useForm<ResetPasswordFormProps>();
 
-  // TODO: implement mutation
-  // const mutation =
-
-  const generateResetLink = async (_: { email: string }) => {
-    // const result = await mutation.mutateAsync(values);
-    // console.log(result);
-  };
+  const mutation = useMutation((body: ResetPasswordFormProps) => api.post("/api/send-reset-password", { body }));
 
   return (
     <Center mt="20px" mb="80px">
@@ -24,7 +23,7 @@ const ResetPasswordPage = () => {
           votre mot de passe.
         </p>
 
-        <form onSubmit={form.handleSubmit(generateResetLink)}>
+        <form onSubmit={form.handleSubmit((values) => mutation.mutate(values))}>
           <Input
             label="Courriel"
             hintText="prenom.nom@culture.gouv.fr"
@@ -37,8 +36,11 @@ const ResetPasswordPage = () => {
             })}
           />
 
-          <FullWidthButton type="submit">Valider</FullWidthButton>
+          <FullWidthButton type="submit" disabled={mutation.isLoading}>
+            Valider
+          </FullWidthButton>
         </form>
+        <MutationAlert mutation={mutation} />
       </Flex>
     </Center>
   );
@@ -48,4 +50,6 @@ export const Route = createLazyFileRoute("/reset-password/")({
   component: () => <ResetPasswordPage />,
 });
 
-type ResetPasswordFormProps = any;
+type ResetPasswordFormProps = {
+  email: string;
+};

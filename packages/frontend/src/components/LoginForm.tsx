@@ -9,7 +9,7 @@ import { FullWidthButton } from "./FullWidthButton";
 import { InputGroup } from "./InputGroup";
 import { PasswordInput } from "./PasswordInput";
 import { useMutation } from "@tanstack/react-query";
-import { type RouterInputs, api } from "../api";
+import { type RouterInputs, api, getErrorMessage } from "../api";
 
 export const LoginForm = () => {
   const [authData, setAuthData] = useAuthContext();
@@ -32,7 +32,7 @@ export const LoginForm = () => {
           <Alert
             className={css({ mb: "1.5rem" })}
             severity="error"
-            title={<styled.span fontWeight="regular">{(mutationError as any).message}</styled.span>}
+            title={<styled.span fontWeight="regular">{getErrorMessage(mutationError)}</styled.span>}
           />
         ) : null}
         <InputGroup state={mutationError ? "error" : undefined}>

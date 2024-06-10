@@ -2,21 +2,42 @@ import { createTransport } from "nodemailer";
 import { ENV } from "../envVars";
 
 const transporter = createTransport({
-  host: "smtp.ionos.fr",
-  port: 465,
+  host: ENV.EMAIL_HOST,
+  port: ENV.EMAIL_PORT,
   auth: {
-    type: "OAUTH2",
-    user: "tinmardoule@gmail.com",
-    clientId: ENV.EMAIL_CLIENT_ID,
-    clientSecret: ENV.EMAIL_CLIENT_SECRET,
+    user: ENV.EMAIL_USER,
+    pass: ENV.EMAIL_PASSWORD,
   },
 });
 
-export const sendMail = () => {
-  transporter.sendMail({
-    from: "salut@salut",
-    to: "mledoux@mledoux.fr",
-    subject: "Salut",
-    text: "Salut",
+export const sendReportMail = ({
+  recipients,
+  pdfBuffer,
+  reportTitle,
+}: {
+  recipients: string;
+  pdfBuffer: Buffer;
+  reportTitle?: string;
+}) => {
+  return transporter.sendMail({
+    from: "noreply@compte-rendu-vif.incubateur.net",
+    to: recipients,
+    subject: "CR VIF - Compte rendu" + (reportTitle ? ` : ${reportTitle}` : ""),
+    text: "Veuillez trouver ci-joint le compte rendu de votre rendez-vous.",
+    attachments: [
+      {
+        filename: "compte_rendu.pdf",
+        content: pdfBuffer,
+      },
+    ],
+  });
+};
+
+export const sendPasswordResetMail = ({ email, temporaryLink }: { email: string; temporaryLink: string }) => {
+  return transporter.sendMail({
+    from: "noreply@compte-rendu-vif.incubateur.net",
+    to: email,
+    subject: "CR VIF - Réinitialisation de mot de passe",
+    text: `Voici le lien de réinitialisation de votre mot de passe : ${ENV.FRONTEND_URL}/reset-password/${temporaryLink}`,
   });
 };

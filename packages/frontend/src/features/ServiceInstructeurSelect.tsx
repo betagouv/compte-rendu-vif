@@ -1,8 +1,8 @@
 import { Combobox } from "#components/Combobox";
-import Button, { ButtonProps } from "@codegouvfr/react-dsfr/Button";
+import Button from "@codegouvfr/react-dsfr/Button";
 import Input from "@codegouvfr/react-dsfr/Input";
-import { forwardRef, useState } from "react";
-import serviceInstructeurs from "../serviceInstructeur.json";
+import { useState } from "react";
+import { serviceInstructeurs } from "@cr-vif/pdf";
 import { useFormContext, useWatch } from "react-hook-form";
 import { Report } from "@cr-vif/electric-client/frontend";
 
@@ -12,7 +12,7 @@ export const ServiceInstructeurSelect = () => {
 
   const filterItems = ({ value }: { value: string }) => {
     const filteredItems = serviceInstructeurs.filter((item) =>
-      item["abrégé"].toLowerCase().includes(value.toLowerCase()),
+      item["libellé tiers"].toLowerCase().includes(value.toLowerCase()),
     );
 
     setItems(filteredItems);
@@ -27,19 +27,21 @@ export const ServiceInstructeurSelect = () => {
   return (
     <Combobox.Root
       selectionBehavior="replace"
-      itemToString={(item) => item?.["abrégé"] ?? ""}
-      itemToValue={(item) => item?.tiers ?? ""}
+      itemToString={(item) => (item as ServiceInstructeur)?.["libellé tiers"] ?? ""}
+      itemToValue={(item) => (item as ServiceInstructeur)?.tiers.toString() ?? ""}
       items={items}
-      value={value ? [value] : undefined}
+      value={value ? [value.toString()] : undefined}
+      inputValue={value ? items.find((item) => item.tiers === value)?.["libellé tiers"] : ""}
       onInputValueChange={filterItems}
       onValueChange={(e) => selectItem(e.items?.[0] as ServiceInstructeur)}
     >
       <Combobox.Control>
         <Combobox.Input asChild placeholder="Sélectionner un service instructeur">
-          <A />
+          <ProxyInput />
         </Combobox.Input>
         <Combobox.Trigger asChild top="unset !important" bottom="28px">
-          <Button iconId="ri-arrow-down-line" aria-label="open" priority="tertiary no outline" size="small" />
+          {/* @ts-expect-error */}
+          <Button iconId="ri-arrow-down-line" aria-label="open" priority="tertiary no outline" size="small"></Button>
         </Combobox.Trigger>
       </Combobox.Control>
       <Combobox.Positioner>
@@ -47,7 +49,7 @@ export const ServiceInstructeurSelect = () => {
           <Combobox.ItemGroup id="service-instructeur">
             {items.map((item) => (
               <Combobox.Item key={item.tiers} item={item}>
-                <Combobox.ItemText>{item["abrégé"]}</Combobox.ItemText>
+                <Combobox.ItemText>{item["libellé tiers"]}</Combobox.ItemText>
                 <Combobox.ItemIndicator>✓</Combobox.ItemIndicator>
               </Combobox.Item>
             ))}
@@ -58,8 +60,8 @@ export const ServiceInstructeurSelect = () => {
   );
 };
 
-const A = forwardRef((props, ref) => {
-  return <Input ref={ref} label="Service instructeur*" nativeInputProps={props} />;
-});
+const ProxyInput = (props: any) => {
+  return <Input label="Service instructeur" nativeInputProps={props} />;
+};
 
 type ServiceInstructeur = (typeof serviceInstructeurs)[number];

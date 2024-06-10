@@ -2,11 +2,11 @@ import type { Config } from "drizzle-kit";
 import { ENV } from "./src/envVars";
 
 export const config = {
-  port: ENV.PG_PORT,
-  host: ENV.PG_HOST,
-  user: ENV.PG_USER,
-  password: ENV.PG_PASSWORD,
-  database: ENV.PG_DB,
+  port: ENV.POSTGRES_PORT,
+  host: ENV.POSTGRES_HOST,
+  user: ENV.POSTGRES_USER,
+  password: ENV.POSTGRES_PASSWORD,
+  database: ENV.POSTGRES_DB,
 };
 
 export const usersDatabaseUrl = `postgres://${config.user}:${config.password}@${config.host}:${config.port}/${config.database}`;

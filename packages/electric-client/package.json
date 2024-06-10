@@ -4,13 +4,11 @@
   "description": "",
   "scripts": {
     "generate:front": "dotenv -e ../../.env -- pnpm electric-sql generate && pnpm complete",
-    "generate:back": "dotenv -e ../../.env -- pnpm prisma db pull && pnpm prisma generate",
+    "pull": "dotenv -e ../../.env -- pnpm prisma db pull",
+    "generate:back": "dotenv -e ../../.env -- pnpm prisma generate",
     "complete": "vite-node ./scripts/completePrismaClient.ts",
     "build": "tsup src/index.ts --dts --format cjs,esm"
   },
-  "main": "dist/index.cjs",
-  "module": "dist/index.js",
-  "types": "dist/index.d.ts",
   "exports": {
     "./frontend": {
       "import": {
@@ -20,8 +18,8 @@
     },
     "./backend": {
       "import": {
-        "default": "./src/generated/backend-client/index.js",
-        "types": "./src/generated/backend-client/index.d.ts"
+        "default": "./src/generated/backend-client/index.ts",
+        "types": "./src/generated/backend-client/index.ts"
       }
     },
     "./zod": {
@@ -43,7 +41,7 @@
   "peerDependencies": {
     "@prisma/client": "^4.8.1",
     "@sinclair/typebox": "^0.32.20",
-    "electric-sql": "^0.10.1",
+    "electric-sql": "^0.11.3",
     "zod": "^3.22.4"
   },
   "devDependencies": {

@@ -1,0 +1,53 @@
+import { Type, type FastifyPluginAsyncTypebox } from "@fastify/type-provider-typebox";
+import { renderToBuffer } from "@react-pdf/renderer";
+import { ReportPDFDocument } from "@cr-vif/pdf";
+import { Udap } from "@cr-vif/electric-client/frontend";
+import { authenticate } from "./authMiddleware";
+import { db } from "../db/db";
+import { sendReportMail } from "../features/mail";
+
+export const pdfPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
+  fastify.addHook("preHandler", authenticate);
+
+  fastify.post("/report", { schema: reportPdfTSchema }, async (request) => {
+    const { reportId, htmlString } = request.body;
+    const { udap } = request.user.user;
+
+    const pdf = await generatePdf({ htmlString, udap });
+
+    const name = `${reportId}/compte_rendu.pdf`;
+
+    const url = await request.services.upload.addPDFToReport({
+      reportId,
+      buffer: pdf,
+      name,
+    });
+
+    await db.report.update({ where: { id: reportId }, data: { pdf: url } });
+
+    const userMail = request.user.email;
+    const recipients = request.body.recipients.split(",").map((r) => r.trim());
+    if (!recipients.includes(userMail)) recipients.push(userMail);
+
+    const report = await db.report.findUnique({ where: { id: reportId } });
+
+    await sendReportMail({ recipients: recipients.join(","), pdfBuffer: pdf, reportTitle: report?.title ?? undefined });
+
+    return url;
+  });
+};
+
+const generatePdf = async ({ htmlString, udap }: { htmlString: string; udap: Udap }) => {
+  return renderToBuffer(
+    <ReportPDFDocument udap={udap as Udap} htmlString={htmlString} images={{ header: "./public/pdf_header.png" }} />,
+  );
+};
+
+export const reportPdfTSchema = {
+  body: Type.Object({
+    htmlString: Type.String(),
+    reportId: Type.String(),
+    recipients: Type.String(),
+  }),
+  response: { 200: Type.String() },
+};

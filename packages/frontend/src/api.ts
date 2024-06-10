@@ -9,11 +9,23 @@ export const api = createApiClient((method, url, parameters) => {
     method,
     body: body as any,
     query,
-    headers: header as Record<string, string>,
+    headers: { ...header, Authorization: ref.token ? `Bearer ${ref.token}` : undefined } as Record<string, string>,
   });
 }, ENV.VITE_BACKEND_URL);
+
+const ref = {
+  token: null as string | null,
+};
+
+export const setToken = (token?: string | null) => {
+  ref.token = token ?? null;
+};
 
 export type RouterInputs<T extends keyof AllEndpoints> = AllEndpoints[T]["parameters"];
 export type RouterOutputs<T extends keyof AllEndpoints> = AllEndpoints[T]["response"];
 
 type AllEndpoints = GetEndpoints & PostEndpoints;
+
+export const getErrorMessage = (error: any) => {
+  return error?.data?.error ?? "Une erreur est survenue, veuillez réessayer plus tard";
+};

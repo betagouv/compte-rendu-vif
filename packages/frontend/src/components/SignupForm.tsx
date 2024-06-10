@@ -8,8 +8,7 @@ import { InputGroup } from "./InputGroup";
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import { useAuthContext } from "../contexts/AuthContext";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { type RouterInputs, api } from "../api";
-import { db } from "../db";
+import { type RouterInputs, api, getErrorMessage } from "../api";
 import Select from "@codegouvfr/react-dsfr/Select";
 
 export const SignupForm = () => {
@@ -50,12 +49,12 @@ export const SignupForm = () => {
           <Alert
             className={css({ mb: "1.5rem" })}
             severity="error"
-            title={<styled.span fontWeight="regular">{(mutationError as any).message}</styled.span>}
+            title={<styled.span fontWeight="regular">{getErrorMessage(mutationError)}</styled.span>}
           />
         ) : null}
         <InputGroup state={mutationError ? "error" : undefined}>
           <Input
-            label="Nom"
+            label="Prénom Nom"
             nativeInputProps={{
               ...form.register("name", { required: "Le nom est requis" }),
             }}
@@ -115,7 +114,7 @@ export const SignupForm = () => {
   );
 };
 
-const SignupPasswordInput = ({ form }: { form: UseFormReturn<SignupFormProps> }) => {
+export const SignupPasswordInput = ({ form }: { form: UseFormReturn<SignupFormProps> }) => {
   const value = useWatch({ control: form.control, name: "password" });
 
   const hasNumber = /\d/.test(value);

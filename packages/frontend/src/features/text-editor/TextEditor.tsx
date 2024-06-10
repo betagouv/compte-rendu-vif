@@ -1,12 +1,12 @@
-import Link from "@tiptap/extension-link";
 import { Placeholder } from "@tiptap/extension-placeholder";
 import { Color } from "@tiptap/extension-color";
 import { TextStyle } from "@tiptap/extension-text-style";
-import { EditorContent, useEditor } from "@tiptap/react";
+import { Editor, EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import { useEffect } from "react";
-import { css } from "#styled-system/css";
+import { useContext, useEffect } from "react";
+import { css, cx } from "#styled-system/css";
 import { TextEditorToolbar } from "./TextEditorToolbar";
+import { TextEditorContext } from "./TextEditorContext";
 
 interface Props {
   defaultValue?: string;
@@ -14,13 +14,12 @@ interface Props {
   autoFocus?: boolean;
   readOnly?: boolean;
   placeholder?: string;
-  hasSubmitted?: boolean;
 }
 
-export const TextEditor = (props: Props) => {
-  const { defaultValue, onChange, autoFocus, readOnly, placeholder, hasSubmitted } = props;
+export const useTextEditor = (props: Props) => {
+  const { defaultValue, onChange, autoFocus, readOnly, placeholder } = props;
 
-  const editor = useEditor({
+  return useEditor({
     autofocus: autoFocus ?? false,
     editable: !readOnly,
     extensions: [
@@ -41,10 +40,13 @@ export const TextEditor = (props: Props) => {
       TextStyle.configure(),
     ],
     content: defaultValue,
-    onUpdate({ editor }) {
-      onChange?.(editor.getHTML());
-    },
   });
+};
+
+export const TextEditor = (props: { hasSubmitted?: boolean }) => {
+  const { hasSubmitted } = props;
+
+  const { editor } = useContext(TextEditorContext);
 
   const isEditorActive = !!editor;
 
@@ -56,29 +58,30 @@ export const TextEditor = (props: Props) => {
   }, [isEditorActive, hasSubmitted]);
 
   return (
-    <div className="text-edito">
+    <div className={cx(css({ h: "100%", mt: "2" }))}>
+      {/* {editor && <TextEditorToolbar editor={editor} />} */}
       <EditorContent className={textEditorClassName} editor={editor} />
-      {editor && <TextEditorToolbar editor={editor} />}
     </div>
   );
 };
 
 export const textEditorClassName = css({
+  h: "100%",
   minH: "160px",
   "& > div": {
     outline: "none",
     roundedTop: "md",
     borderWidth: "1px",
+    h: "100%",
     minH: "160px",
-    maxH: "240px",
+    maxHeight: "100%",
     py: "2",
     px: "2",
     fontSize: "13px",
+    bgColor: "white",
     overflowY: "auto",
     _focusVisible: {
       outlineWidth: "1px",
-      borderColor: "purple.500",
-      outlineColor: "purple.500",
       outlineStyle: "solid",
     },
     "& em": {

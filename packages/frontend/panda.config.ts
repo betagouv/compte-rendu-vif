@@ -1,6 +1,7 @@
 import { defineConfig, definePreset } from "@pandacss/dev";
 import theme from "./dsfr-tokens.json";
 import { tabs } from "./theme/recipes/tabs";
+import { popover } from "./theme/recipes/popover";
 
 const dsfrPreset = definePreset(theme);
 
@@ -19,10 +20,21 @@ export default defineConfig({
   presets: ["@pandacss/preset-base", "@park-ui/panda-preset", dsfrPreset],
 
   // Useful for theme customization
+  globalCss: {
+    "#fr-header-mobile-overlay-button-close": {
+      mt: "10px !important",
+    },
+    "@media (min-width: 48em)": {
+      ".fr-modal__body": {
+        maxHeight: "100vh !important",
+      },
+    },
+  },
   theme: {
     extend: {
       slotRecipes: {
         tabs: tabs,
+        popover: popover,
       },
       keyframes: {
         spin: {
@@ -35,8 +47,13 @@ export default defineConfig({
         colors: {
           "yellow-waiting": { value: "#FEECC2" },
           "red-offline": { value: "#FFE9E6" },
+          "blue-connected": { value: "#E3E3FD" },
+        },
+        sizes: {
+          "header-height": { value: "80px" },
         },
       },
+
       semanticTokens: {},
     },
   },

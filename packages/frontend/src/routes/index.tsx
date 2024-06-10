@@ -7,13 +7,19 @@ import { v4 } from "uuid";
 import { Banner } from "#components/Banner";
 import { EnsureUser } from "#components/EnsureUser";
 import { Tabs } from "#components/Tabs";
-import { useUser } from "../contexts/AuthContext";
+import { useElectricStatus, useUser } from "../contexts/AuthContext";
 import { db } from "../db";
 import { AllReports, MyReports } from "../features/ReportList";
 import { useNetworkState } from "react-use";
-import { SyncFormStatus } from "#components/SyncForm";
+import { Status, SyncFormStatus } from "#components/SyncForm";
+import Input from "@codegouvfr/react-dsfr/Input";
+import { useState } from "react";
+import { SearchResults } from "#components/ReportSearch.js";
+import { useNavigate } from "@tanstack/react-router";
 
 const Index = () => {
+  // TODO: put this into an xstate/store
+  const [search, setSearch] = useState("");
   const user = useUser()!;
 
   const options = [
@@ -22,7 +28,7 @@ const Index = () => {
       label: user.name,
       className: css({
         position: "absolute",
-        left: "max(calc((100vw - 100%) / 2 + 24px), 16px)",
+        left: { base: "16px", lg: "calc((100vw - 828px) / 2 - 8px)" },
       }),
     },
     {
@@ -35,58 +41,117 @@ const Index = () => {
     },
   ];
 
+  const navigate = useNavigate();
+
   const createReportMutation = useMutation({
     mutationFn: () =>
       db.report.create({
         data: {
           id: `report-${v4()}`,
-          createdByEmail: user.email,
+          createdBy: user.id,
           createdAt: new Date(),
+          disabled: false,
+          udap_id: user.udap.id,
+          redactedBy: user.name,
         },
       }),
+    onSuccess: (data) => {
+      data.id && navigate({ to: "/edit/$reportId", params: { reportId: data.id } });
+    },
   });
 
   return (
     <Flex direction="column" color="text-label-grey">
-      <SimpleBanner pt="30px" pb="40px">
-        <styled.div color="text-title-blue-france" fontSize="18px" fontWeight="bold">
-          Compte-rendu VIF
-        </styled.div>
-        <Button
-          className={css({ mt: "15px" })}
-          iconId="ri-add-line"
-          nativeButtonProps={{ onClick: () => createReportMutation.mutate() }}
-        >
-          Créer un compte-rendu
-        </Button>
+      <SimpleBanner pt={{ base: "15px", lg: "82px" }} pb={{ base: "49px", lg: "82px" }}>
+        <Flex hideFrom="lg" justifyContent="space-between" w="100%" px="16px">
+          <styled.div fontSize="16px" fontWeight="bold">
+            Compte-rendu VIF
+          </styled.div>
+          <Status className={css({ fontSize: "10px" })} status="saved" />
+        </Flex>
+        <Center justifyContent="center">
+          <Button
+            className={css({ mr: { base: "0", lg: "1rem" }, mt: { base: "15px", lg: "0" } })}
+            iconId="ri-add-line"
+            nativeButtonProps={{ onClick: () => createReportMutation.mutate() }}
+          >
+            Créer un CR
+          </Button>
+          <styled.div hideBelow="lg">
+            <Input
+              className={css({
+                "& input": {
+                  width: "334px",
+                  bgColor: "white !important",
+                },
+                "& .fr-input-wrap": {
+                  mt: 0,
+                },
+              })}
+              label={null}
+              nativeInputProps={{
+                value: search,
+                onChange: (e) => setSearch(e.target.value),
+                placeholder: "Rechercher nom, ville, titre...",
+              }}
+              addon={
+                <styled.div display="flex" pos="relative" alignItems="center">
+                  <styled.div pos="absolute" left="-32px">
+                    {search ? (
+                      // @ts-expect-error dsfr buttons props must have children
+                      <Button
+                        iconId="ri-close-circle-fill"
+                        nativeButtonProps={{
+                          onClick: () => setSearch(""),
+                        }}
+                        size="small"
+                        priority="tertiary no outline"
+                      ></Button>
+                    ) : null}
+                  </styled.div>
+                  <Button className={css({ position: "relative" })}>Rechercher</Button>
+                </styled.div>
+              }
+            />
+          </styled.div>
+        </Center>
       </SimpleBanner>
 
-      <Tabs.Root defaultValue="my">
-        <Tabs.List>
-          {options.map((option) => (
-            <Tabs.Trigger key={option.id} value={option.id} position="relative">
-              <Box className={option.className}>{option.label}</Box>
-            </Tabs.Trigger>
-          ))}
-          <Tabs.Indicator />
-        </Tabs.List>
-        <Center>
-          <Tabs.Content value="my">
-            <MyReports />
-          </Tabs.Content>
-          <Tabs.Content value="udap">
-            <AllReports />
-          </Tabs.Content>
-        </Center>
-      </Tabs.Root>
+      {search ? (
+        <SearchResults hideEmpty search={search} />
+      ) : (
+        <Tabs.Root defaultValue="my">
+          <Tabs.List>
+            {options.map((option) => (
+              <Tabs.Trigger key={option.id} value={option.id} position="relative">
+                <Box className={option.className}>{option.label}</Box>
+              </Tabs.Trigger>
+            ))}
+            <Tabs.Indicator />
+          </Tabs.List>
+          <Center>
+            <Tabs.Content
+              value="my"
+              display="flex"
+              justifyContent={{ base: "center", lg: "center" }}
+              w="100%"
+              px="16px"
+            >
+              <MyReports />
+            </Tabs.Content>
+            <Tabs.Content value="udap">
+              <AllReports />
+            </Tabs.Content>
+          </Center>
+        </Tabs.Root>
+      )}
     </Flex>
   );
 };
 
 const SimpleBanner = (props: CenterProps) => {
-  const { online } = useNetworkState();
-
-  const status: SyncFormStatus = online ? "saved" : "offline";
+  const electricStatus = useElectricStatus();
+  const status: SyncFormStatus = electricStatus === "loading" ? "offline" : "saved";
 
   return <Banner status={status} {...props} />;
 };

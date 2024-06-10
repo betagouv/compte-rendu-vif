@@ -13,16 +13,17 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as LoginImport } from './routes/login'
 import { Route as IndexImport } from './routes/index'
+import { Route as ResetPasswordLinkImport } from './routes/reset-password.$link'
+import { Route as PdfReportIdImport } from './routes/pdf.$reportId'
 import { Route as ExportReportIdImport } from './routes/export.$reportId'
 import { Route as EditReportIdImport } from './routes/edit.$reportId'
 
 // Create Virtual Routes
 
 const SignupLazyImport = createFileRoute('/signup')()
-const LoginLazyImport = createFileRoute('/login')()
 const ResetPasswordIndexLazyImport = createFileRoute('/reset-password/')()
-const ResetPasswordLinkLazyImport = createFileRoute('/reset-password/$link')()
 
 // Create/Update Routes
 
@@ -31,10 +32,10 @@ const SignupLazyRoute = SignupLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/signup.lazy').then((d) => d.Route))
 
-const LoginLazyRoute = LoginLazyImport.update({
+const LoginRoute = LoginImport.update({
   path: '/login',
   getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/login.lazy').then((d) => d.Route))
+} as any)
 
 const IndexRoute = IndexImport.update({
   path: '/',
@@ -48,12 +49,15 @@ const ResetPasswordIndexLazyRoute = ResetPasswordIndexLazyImport.update({
   import('./routes/reset-password.index.lazy').then((d) => d.Route),
 )
 
-const ResetPasswordLinkLazyRoute = ResetPasswordLinkLazyImport.update({
+const ResetPasswordLinkRoute = ResetPasswordLinkImport.update({
   path: '/reset-password/$link',
   getParentRoute: () => rootRoute,
-} as any).lazy(() =>
-  import('./routes/reset-password.$link.lazy').then((d) => d.Route),
-)
+} as any)
+
+const PdfReportIdRoute = PdfReportIdImport.update({
+  path: '/pdf/$reportId',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const ExportReportIdRoute = ExportReportIdImport.update({
   path: '/export/$reportId',
@@ -74,7 +78,7 @@ declare module '@tanstack/react-router' {
       parentRoute: typeof rootRoute
     }
     '/login': {
-      preLoaderRoute: typeof LoginLazyImport
+      preLoaderRoute: typeof LoginImport
       parentRoute: typeof rootRoute
     }
     '/signup': {
@@ -89,8 +93,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ExportReportIdImport
       parentRoute: typeof rootRoute
     }
+    '/pdf/$reportId': {
+      preLoaderRoute: typeof PdfReportIdImport
+      parentRoute: typeof rootRoute
+    }
     '/reset-password/$link': {
-      preLoaderRoute: typeof ResetPasswordLinkLazyImport
+      preLoaderRoute: typeof ResetPasswordLinkImport
       parentRoute: typeof rootRoute
     }
     '/reset-password/': {
@@ -104,11 +112,12 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren([
   IndexRoute,
-  LoginLazyRoute,
+  LoginRoute,
   SignupLazyRoute,
   EditReportIdRoute,
   ExportReportIdRoute,
-  ResetPasswordLinkLazyRoute,
+  PdfReportIdRoute,
+  ResetPasswordLinkRoute,
   ResetPasswordIndexLazyRoute,
 ])
 

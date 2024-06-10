@@ -7,17 +7,25 @@ expand(config({ path: "../../.env" }));
 const stringOrNumberAsNumber = z.string().or(z.number()).transform(Number);
 
 const envSchema = z.object({
-  PG_PORT: stringOrNumberAsNumber.default(5432),
-  PG_HOST: z.string(),
-  PG_USER: z.string(),
-  PG_PASSWORD: z.string(),
-  PG_DB: z.string(),
+  POSTGRES_PORT: stringOrNumberAsNumber.default(5432),
+  POSTGRES_HOST: z.string(),
+  POSTGRES_USER: z.string(),
+  POSTGRES_PASSWORD: z.string(),
+  POSTGRES_DB: z.string(),
   DATABASE_URL: z.string(),
   TOKEN_LIFETIME: z.string().default("1w"),
   JWT_SECRET: z.string(),
+  JWT_REFRESH_SECRET: z.string(),
   NODE_ENV: z.string().default("development"),
-  HTTP_PORT: stringOrNumberAsNumber.default(3001),
+  PORT: stringOrNumberAsNumber.default(3001),
+  AWS_BUCKET_NAME: z.string(),
+  AWS_REGION: z.string(),
   DEBUG: z.string().default("cr-vif:*"),
+  FRONTEND_URL: z.string(),
+  EMAIL_HOST: z.string(),
+  EMAIL_PORT: stringOrNumberAsNumber.default(465),
+  EMAIL_USER: z.string(),
+  EMAIL_PASSWORD: z.string(),
 });
 
 export const ENV = envSchema.parse(process.env);

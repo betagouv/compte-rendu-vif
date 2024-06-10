@@ -1,4 +1,6 @@
+import { authenticate } from "../routes/authMiddleware";
 import { StaticDataService } from "./staticDataService";
+import { UploadService } from "./uploadService";
 import { UserService } from "./userService";
 
 const ref = {
@@ -8,6 +10,7 @@ const ref = {
 const makeServices = () => ({
   user: new UserService(),
   staticData: new StaticDataService(),
+  upload: new UploadService(),
 });
 
 export const getServices = () => {
@@ -21,5 +24,6 @@ export const getServices = () => {
 declare module "fastify" {
   export interface FastifyRequest {
     services: ReturnType<typeof makeServices>;
+    user: Awaited<ReturnType<typeof authenticate>>;
   }
 }

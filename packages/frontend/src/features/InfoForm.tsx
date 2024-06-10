@@ -18,7 +18,6 @@ export const InfoForm = () => {
   const user = useUser()!;
 
   const meetDate = useWatch({ control: form.control, name: "meetDate" });
-
   const meetDateRef = useRef({
     day: meetDate ? format(new Date(meetDate), "yyyy-MM-dd") : "",
     time: meetDate ? format(new Date(meetDate), "HH:mm") : "",
@@ -29,13 +28,12 @@ export const InfoForm = () => {
     const time = meetDateRef.current.time;
 
     const date = parse(`${day}T${time}`, "yyyy-MM-dd'T'HH:mm", new Date());
-
     if (!day || !time || Number.isNaN(date.getTime())) {
       form.setValue("meetDate", undefined as any);
       return;
     }
 
-    form.setValue("meetDate", date);
+    form.setValue("meetDate", date.toISOString() as any);
   };
 
   const setTime = (e: any) => {
@@ -72,12 +70,12 @@ export const InfoForm = () => {
           <Input
             className={css({ flex: { base: "none", sm: 1 } })}
             label="Date"
-            nativeInputProps={{ type: "date", onChange: setDay }}
+            nativeInputProps={{ type: "date", onChange: setDay, value: meetDateRef.current.day }}
           />
           <Input
             className={css({ flex: { base: "none", sm: 1 } })}
             label="Horaire"
-            nativeInputProps={{ type: "time", onChange: setTime }}
+            nativeInputProps={{ type: "time", onChange: setTime, value: meetDateRef.current.time }}
           />
         </Stack>
       </InputGroupWithTitle>
@@ -118,15 +116,15 @@ export const InfoForm = () => {
         </Stack>
       </InputGroupWithTitle>
 
-      <Center>
+      <div>
         <Button
           type="button"
-          // iconId="ri-draft-line"
+          iconId="ri-arrow-right-line"
           nativeButtonProps={{ type: "button", onClick: () => tab.setValue("notes") }}
         >
           Rédiger le bilan
         </Button>
-      </Center>
+      </div>
     </Flex>
   );
 };

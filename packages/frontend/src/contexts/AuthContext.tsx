@@ -2,9 +2,10 @@ import { type PropsWithChildren, createContext, useContext, useState } from "rea
 import { safeParseLocalStorage } from "../utils";
 import { useQuery } from "@tanstack/react-query";
 import { electric } from "../db";
-import type { RouterOutputs } from "../api";
+import { api, setToken, type RouterOutputs } from "../api";
 
 const initialAuth = safeParseLocalStorage("crvif/auth");
+setToken(initialAuth?.token);
 
 const AuthContext = createContext<AuthContextProps>({
   token: initialAuth?.token,
@@ -16,31 +17,9 @@ const AuthContext = createContext<AuthContextProps>({
 export const AuthProvider = ({ children }: PropsWithChildren) => {
   const [data, setData] = useState<Omit<AuthContextProps, "setData">>(initialAuth);
 
-  const electricQuery = useQuery({
-    queryKey: ["electric", data?.token!],
-    queryFn: async () => {
-      console.log(electric);
-      if (electric.isConnected) electric.disconnect();
-      await electric.connect(data.token!);
-
-      await electric.db.clause.sync();
-      await electric.db.user.sync({ where: { email: data?.user?.email } });
-      await electric.db.report.sync();
-      await electric.db.chip.sync();
-
-      return true;
-    },
-    enabled: !!data?.token,
-    refetchOnWindowFocus: false,
-    onError: (e) => console.error(e),
-  });
-
-  if (electricQuery.isError) {
-    console.error("electricQuery error", electricQuery.error);
-  }
-
   const setDataAndSaveInStorage = (data: Omit<AuthContextProps, "setData" | "electricStatus">) => {
     setData((d) => ({ ...d, ...data }));
+    setToken(data?.token);
     if (data) {
       window.localStorage.setItem("crvif/auth", JSON.stringify(data));
     } else {
@@ -48,14 +27,71 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     }
   };
 
+  useQuery({
+    queryKey: ["refresh-token"],
+    queryFn: async () => {
+      if (!data?.token) return;
+
+      try {
+        const resp = await api.get("/api/refresh-token", {
+          query: { token: data.token, refreshToken: data.refreshToken! },
+        });
+
+        if (resp.token === null) {
+          console.log("token expired but couldn't find a refresh token, logging out");
+          setDataAndSaveInStorage({ ...data, token: undefined, user: undefined });
+        } else {
+          console.log("token refreshed");
+          setDataAndSaveInStorage(resp);
+        }
+        console.log(resp);
+        return resp;
+      } catch (e) {
+        console.error("refreshTokenQuery error", e);
+      }
+    },
+    enabled: !!data?.token,
+    refetchOnWindowFocus: false,
+  });
+
+  console.log(!!data?.token);
+
+  const electricQuery = useQuery({
+    queryKey: ["electric", data?.token!],
+    queryFn: async () => {
+      console.log("connecting to electric");
+      if (electric.isConnected) electric.disconnect();
+
+      await electric.connect(data.token!);
+      await electric.db.clause.sync();
+      await electric.db.user.sync({ where: { udap_id: data?.user?.udap_id } });
+      await electric.db.report.sync({
+        where: {
+          udap_id: data?.user?.udap_id,
+        },
+        include: {
+          user: true,
+        },
+      });
+
+      return true;
+    },
+    enabled: !!data?.token,
+    refetchOnWindowFocus: false,
+    onError: (e) => console.error("aaaaa", e),
+  });
+
+  if (electricQuery.isError) {
+    console.error("electricQuery error", electricQuery.error);
+  }
+
   const value = {
     ...data,
     setData: setDataAndSaveInStorage,
     electricStatus: electricQuery.status,
   };
-  //   [data, electricQuery.status],
-  // );
 
+  console.log(value);
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
@@ -75,6 +111,11 @@ export const useLogout = () => {
   return () => {
     setData({ ...data, token: undefined, user: undefined });
   };
+};
+
+export const useElectricStatus = () => {
+  const { electricStatus } = useContext(AuthContext);
+  return electricStatus;
 };
 
 export const useUser = () => {
