@@ -7,12 +7,13 @@ import { useEffect } from "react";
 
 export const Menu = ({ headerRef }: { headerRef: React.RefObject<HTMLElement> }) => {
   const headerBody = headerRef.current?.getElementsByClassName("fr-header__body-row")?.[0];
-
-  useEffect(() => {
-    setTimeout(() => {
-      drawerMenu.open();
-    }, 1000);
-  }, []);
+  // console.log("menu");
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     console.log("open drawer menu");
+  //     drawerMenu.open();
+  //   }, 1000);
+  // }, []);
 
   if (!headerBody) return null;
 
@@ -22,8 +23,6 @@ export const Menu = ({ headerRef }: { headerRef: React.RefObject<HTMLElement> })
         title=""
         className={css({
           display: "flex",
-          justifyContent: "flex-start !important",
-          alignItems: "flex-end !important",
           width: "100%",
           height: "100%",
           "& .fr-container": {
@@ -33,6 +32,7 @@ export const Menu = ({ headerRef }: { headerRef: React.RefObject<HTMLElement> })
             p: 0,
           },
           "& .fr-grid-row": {
+            justifyContent: "flex-end !important",
             height: "100%",
             maxHeight: "100%",
             p: 0,

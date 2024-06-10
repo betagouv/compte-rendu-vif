@@ -9,25 +9,32 @@ import { Status } from "#components/SyncForm";
 import { RouteApi, getRouteApi } from "@tanstack/react-router";
 import { useIsDesktop } from "../../hooks/useIsDesktop";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
+import { drawerMenu } from "./MenuDrawer";
+import { useIsModalOpen } from "@codegouvfr/react-dsfr/Modal/useIsModalOpen";
+
 export const MyAccountMenu = () => {
+  const [menu, setMenu] = useState<NestedMenu>("main");
+  const [isOpen, setIsOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
   return (
     <>
       <styled.div hideBelow="lg">
-        <Popover.Root positioning={{ placement: "bottom-end" }}>
-          <Popover.Trigger asChild>
-            <Flex alignItems="center">
-              <Status className={css({ display: "flex", alignItems: "center", fontSize: "10px" })} />
+        <Flex alignItems="center">
+          <Status className={css({ display: "flex", alignItems: "center", fontSize: "10px" })} />
+          <Popover.Root positioning={{ placement: "bottom-end" }}>
+            <Popover.Trigger asChild>
               <Button className={css({ ml: "16px", mb: "0" })} priority="tertiary" iconId="fr-icon-account-circle-fill">
                 Mon compte
               </Button>
-            </Flex>
-          </Popover.Trigger>
-          <Popover.Positioner>
-            <Popover.Content borderRadius="0">
-              <MyAccountMenuActions />
-            </Popover.Content>
-          </Popover.Positioner>
-        </Popover.Root>
+            </Popover.Trigger>
+            <Popover.Positioner>
+              <Popover.Content borderRadius="0">
+                <MyAccountMenuActions />
+              </Popover.Content>
+            </Popover.Positioner>
+          </Popover.Root>
+        </Flex>
       </styled.div>
       <styled.div hideFrom="lg">
         {/* @ts-ignore */}
@@ -66,6 +73,21 @@ export const MyAccountMenuActions = () => {
   const [menu, setMenu] = useState<NestedMenu>("main");
   const isDesktop = useIsDesktop();
 
+  const isModalOpen = useIsModalOpen(drawerMenu, {
+    onConceal: () => setMenu("main"),
+  });
+
+  useIsModalOpen(menuModal, {
+    onConceal: () => setMenu("main"),
+  });
+
+  const hookSetMenu = (menu: NestedMenu) => {
+    if (menu !== "main") {
+      drawerMenu.open();
+    } else drawerMenu.close();
+    setMenu(menu);
+  };
+
   const logout = useLogout();
   const deleteLocalData = () => {
     if (electric.isConnected) electric.disconnect();
@@ -78,16 +100,18 @@ export const MyAccountMenuActions = () => {
     { text: "Partage des CR", onClick: () => {}, disabled: true },
     { text: "Clauses départementales", onClick: () => {}, disabled: true },
     { text: "Clauses nationales", onClick: () => {}, disabled: true },
-    { text: "Assistance technique", onClick: () => setMenu("help") },
+    { text: "Assistance technique", onClick: () => hookSetMenu("help") },
     { text: "Se déconnecter", onClick: logout },
   ];
 
-  if (isDesktop && menu !== "main")
-    return (
-      <styled.div position="fixed" top="0" right="0" bottom="0" w="500px" h="100vh" bgColor="red">
-        salut
-      </styled.div>
-    );
+  if (isDesktop && menu !== "main") {
+    return null;
+  }
+  // return (
+  //   <styled.div position="fixed" top="0" right="0" bottom="0" w="500px" h="100vh" bgColor="red" isolation={"isolate"}>
+  //     salut
+  //   </styled.div>
+  // );
 
   if (menu === "help") {
     return (
@@ -105,6 +129,7 @@ export const MyAccountMenuActions = () => {
       {actions.map(({ text, onClick, disabled }, index) => (
         <>
           <Button
+            className={css({ w: "100%" })}
             type="button"
             disabled={disabled}
             priority="tertiary no outline"

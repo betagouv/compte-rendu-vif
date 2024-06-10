@@ -24,6 +24,11 @@ export default defineConfig({
     "#fr-header-mobile-overlay-button-close": {
       mt: "10px !important",
     },
+    "@media (min-width: 48em)": {
+      ".fr-modal__body": {
+        maxHeight: "100vh !important",
+      },
+    },
   },
   theme: {
     extend: {
