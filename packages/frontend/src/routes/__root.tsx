@@ -11,8 +11,7 @@ import { useRef, type PropsWithChildren } from "react";
 import type { RouterOutputs } from "../api";
 import { useIsLoggedIn } from "../contexts/AuthContext";
 import { useIsDesktop } from "../hooks/useIsDesktop";
-import { MyAccountMenu, actionsContainerClassName } from "../features/menu/MyAccountMenu";
-import { Menu } from "../features/menu/Menu";
+import { MenuButton } from "../features/menu/MenuButton";
 
 export const Route = createRootRouteWithContext<Partial<RouterOutputs<"/api/login">>>()({
   beforeLoad: (ctx) => {
@@ -123,7 +122,8 @@ const Layout = ({ children }: PropsWithChildren) => {
           }),
         }}
       />
-      <Menu headerRef={headerRef} />
+      <MenuButton />
+      {/* <Menu headerRef={headerRef} /> */}
 
       <Box flex="1">{children}</Box>
       {/* <TanStackRouterDevtools /> */}

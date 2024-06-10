@@ -279,6 +279,9 @@ importers:
       '@ungap/with-resolvers':
         specifier: ^0.1.0
         version: 0.1.0
+      '@xstate/store':
+        specifier: ^0.0.5
+        version: 0.0.5(react@18.2.0)
       date-fns:
         specifier: ^3.6.0
         version: 3.6.0
@@ -5768,6 +5771,18 @@ packages:
 
   /@xobotyi/scrollbar-width@1.9.5:
     resolution: {integrity: sha512-N8tkAACJx2ww8vFMneJmaAgmjAG1tnVBZJRLRcx061tmsLRZHSEZSLuGWnwPtunsSLvSqXQ2wfp7Mgqg1I+2dQ==}
+    dev: false
+
+  /@xstate/store@0.0.5(react@18.2.0):
+    resolution: {integrity: sha512-WliXJxUtz6bs9o+fN2MBnf1PLJPQEEKEiwCbjDnJ0M23NoeJ2ghRxqPVxsPSgZXhGcEzB9QQfb1qwZ34TC9A3w==}
+    peerDependencies:
+      react: ^18.2.0
+    peerDependenciesMeta:
+      react:
+        optional: true
+    dependencies:
+      react: 18.2.0
+      use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
   /@xtuc/ieee754@1.2.0:
