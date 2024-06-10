@@ -16,8 +16,8 @@ export const MenuActions = () => {
 
   const actions = [
     { text: "Partage des CR", onClick: () => {}, disabled: true },
-    { text: "Clauses départementales", onClick: () => {}, disabled: true },
-    { text: "Clauses nationales", onClick: () => {}, disabled: true },
+    { text: "Clauses départementales", onClick: () => setMenu("clauses-departementales") },
+    { text: "Clauses nationales", onClick: () => setMenu("clauses-nationales") },
     { text: "Assistance technique", onClick: () => setMenu("help") },
     { text: "Se déconnecter", onClick: logout },
   ];

@@ -101,10 +101,12 @@ const Layout = ({ children }: PropsWithChildren) => {
         }
         classes={{
           root: css({
-            "& .fr-btn--menu": {
-              opacity: "0",
-              pointerEvents: "none",
-            },
+            "& .fr-btn--menu": isLoggedIn
+              ? {
+                  opacity: "0",
+                  pointerEvents: "none",
+                }
+              : {},
           }),
           toolsLinks: css({
             h: "100%",
@@ -122,7 +124,7 @@ const Layout = ({ children }: PropsWithChildren) => {
           }),
         }}
       />
-      <MenuButton />
+      {isLoggedIn ? <MenuButton headerRef={headerRef} /> : null}
       {/* <Menu headerRef={headerRef} /> */}
 
       <Box flex="1">{children}</Box>

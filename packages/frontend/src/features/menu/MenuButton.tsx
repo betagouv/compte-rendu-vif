@@ -11,13 +11,15 @@ import { useIsDesktop } from "../../hooks/useIsDesktop";
 import { MenuActions } from "./MenuActions";
 import { menuStore } from "./menuStore";
 import { HelpMenu } from "./HelpMenu";
+import { ClauseMenu } from "./ClauseMenu";
+import { createPortal } from "react-dom";
 
-const nestedMenus = ["main", "help"] as const;
+const nestedMenus = ["main", "help", "clauses-nationales", "clauses-departementales"] as const;
 export type NestedMenu = (typeof nestedMenus)[number];
 
-export const MenuButton = () => {
-  //   const [menu, setMenu] = useState<NestedMenu>("main");
+export const MenuButton = ({ headerRef }: { headerRef: any }) => {
   const menu = useSelector(menuStore, (state) => state.context.menu);
+  console.log(menu);
   const isDesktop = useIsDesktop();
 
   const isOpen = isDesktop ? !!menu && menu !== "main" : !!menu;
@@ -25,31 +27,49 @@ export const MenuButton = () => {
   return (
     <>
       <MenuModal className={css({ hideFrom: menu === "main" ? "lg" : undefined })} menu={menu} isOpen={isOpen} />
-      <styled.div hideBelow="lg">
-        <Flex alignItems="center">
-          <Status className={css({ display: "flex", alignItems: "center", fontSize: "10px" })} />
-          <Popover.Root positioning={{ placement: "bottom-end" }} onOpenChange={(e) => {}}>
-            <Popover.Trigger asChild>
-              <Button className={css({ ml: "16px", mb: "0" })} priority="tertiary" iconId="fr-icon-account-circle-fill">
-                Mon compte
-              </Button>
-            </Popover.Trigger>
-            <Popover.Positioner>
-              <Popover.Content borderRadius="0">
-                <MenuActions />
-              </Popover.Content>
-            </Popover.Positioner>
-          </Popover.Root>
-        </Flex>
-      </styled.div>
-      <styled.div hideFrom="lg">
-        {/* @ts-ignore */}
-        <Button
-          iconId="fr-icon-account-circle-fill"
-          priority="tertiary no outline"
-          nativeButtonProps={{ onClick: () => menuStore.send({ type: "setMenu", menu: "main" }) }}
-        />
-      </styled.div>
+      {headerRef.current
+        ? createPortal(
+            <Flex
+              zIndex="800"
+              position="absolute"
+              top={{ base: "8px", lg: "0" }}
+              right="16px"
+              alignItems={{ base: "unset", lg: "center" }}
+              h="100%"
+            >
+              <styled.div hideBelow="lg">
+                <Flex alignItems="center">
+                  <Status className={css({ display: "flex", alignItems: "center", fontSize: "10px" })} />
+                  <Popover.Root positioning={{ placement: "bottom-end" }} onOpenChange={(e) => {}}>
+                    <Popover.Trigger asChild>
+                      <Button
+                        className={css({ ml: "16px", mb: "0" })}
+                        priority="tertiary"
+                        iconId="fr-icon-account-circle-fill"
+                      >
+                        Mon compte
+                      </Button>
+                    </Popover.Trigger>
+                    <Popover.Positioner>
+                      <Popover.Content borderRadius="0">
+                        <MenuActions />
+                      </Popover.Content>
+                    </Popover.Positioner>
+                  </Popover.Root>
+                </Flex>
+              </styled.div>
+              <styled.div hideFrom="lg">
+                {/* @ts-ignore */}
+                <Button
+                  iconId="fr-icon-account-circle-fill"
+                  priority="tertiary no outline"
+                  nativeButtonProps={{ onClick: () => menuStore.send({ type: "setMenu", menu: "main" }) }}
+                />
+              </styled.div>
+            </Flex>,
+            headerRef.current,
+          )
+        : null}
     </>
   );
 };
@@ -59,11 +79,15 @@ const menuModal = createModal({ isOpenedByDefault: false, id: "menu-modal-2" });
 const modalTitles: Record<NestedMenu, string> = {
   main: "Mon compte",
   help: "Assistance technique",
+  "clauses-departementales": "Clauses départementales",
+  "clauses-nationales": "Clauses nationales",
 };
 
 const modalContents: Record<NestedMenu, ReactNode> = {
   main: <MenuActions />,
   help: <HelpMenu />,
+  "clauses-departementales": <ClauseMenu isNational={false} />,
+  "clauses-nationales": <ClauseMenu isNational />,
 };
 
 const MenuModal = ({ menu, isOpen, className }: { menu: NestedMenu | null; isOpen: boolean; className?: string }) => {
@@ -98,7 +122,7 @@ const MenuModal = ({ menu, isOpen, className }: { menu: NestedMenu | null; isOpe
             p: 0,
           },
           "& .fr-modal__body": {
-            width: { base: "100%", lg: "600px" },
+            width: { base: "100%", lg: "800px" },
             maxWidth: "100%",
             height: "100%",
             maxHeight: "100vh !important",
@@ -120,7 +144,11 @@ const MenuModal = ({ menu, isOpen, className }: { menu: NestedMenu | null; isOpe
       {menu === null ? null : (
         <>
           <MenuTitle
-            backButtonOnClick={menu === "main" ? undefined : () => menuStore.send({ type: "setMenu", menu: "main" })}
+            backButtonOnClick={
+              menu === "main"
+                ? undefined
+                : () => void console.log("close") || menuStore.send({ type: "setMenu", menu: "main" })
+            }
           >
             {modalTitles[menu]}
           </MenuTitle>
@@ -133,7 +161,7 @@ const MenuModal = ({ menu, isOpen, className }: { menu: NestedMenu | null; isOpe
 
 const MenuTitle = ({ children, backButtonOnClick }: { children: ReactNode; backButtonOnClick?: () => void }) => (
   <Flex justifyContent="space-between" alignItems="center" w="100%" h="40px">
-    <styled.div>
+    <styled.div hideFrom="lg">
       {backButtonOnClick ? (
         // @ts-ignore
         <Button priority="tertiary no outline" iconId="ri-arrow-left-s-line" onClick={backButtonOnClick}></Button>
