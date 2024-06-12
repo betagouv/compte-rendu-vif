@@ -1,25 +1,24 @@
-import { Status } from "#components/SyncForm";
-import { Divider, Flex, styled } from "#styled-system/jsx";
-import { css, cx } from "#styled-system/css";
 import { Popover } from "#components/Popover";
+import { Status } from "#components/SyncForm";
+import { css, cx } from "#styled-system/css";
+import { Flex, styled } from "#styled-system/jsx";
 import Button from "@codegouvfr/react-dsfr/Button";
-import { ReactNode, useState } from "react";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
+import { ReactNode } from "react";
 
 import { useSelector } from "@xstate/store/react";
+import { createPortal } from "react-dom";
 import { useIsDesktop } from "../../hooks/useIsDesktop";
+import { ClauseMenu } from "./ClauseMenu";
+import { HelpMenu } from "./HelpMenu";
 import { MenuActions } from "./MenuActions";
 import { menuStore } from "./menuStore";
-import { HelpMenu } from "./HelpMenu";
-import { ClauseMenu } from "./ClauseMenu";
-import { createPortal } from "react-dom";
 
 const nestedMenus = ["main", "help", "clauses-nationales", "clauses-departementales"] as const;
 export type NestedMenu = (typeof nestedMenus)[number];
 
 export const MenuButton = ({ headerRef }: { headerRef: any }) => {
   const menu = useSelector(menuStore, (state) => state.context.menu);
-  console.log(menu);
   const isDesktop = useIsDesktop();
 
   const isOpen = isDesktop ? !!menu && menu !== "main" : !!menu;
