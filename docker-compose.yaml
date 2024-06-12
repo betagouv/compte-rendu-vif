@@ -4,17 +4,17 @@ volumes:
   pg_data:
 
 services:
-  frontend:
-    image: ghcr.io/betagouv/compte-rendu-vif-frontend:latest
-    restart: always
-    depends_on:
-      - electric
+  # frontend:
+  #   image: ghcr.io/betagouv/compte-rendu-vif-frontend:latest
+  #   restart: always
+  #   depends_on:
+  #     - electric
 
-  backend:
-    image: ghcr.io/betagouv/compte-rendu-vif-backend:latest
-    restart: always
-    depends_on:
-      - electric
+  # backend:
+  #   image: ghcr.io/betagouv/compte-rendu-vif-backend:latest
+  #   restart: always
+  #   depends_on:
+  #     - electric
 
   pg:
     image: postgres:14-alpine
@@ -34,10 +34,11 @@ services:
       - ./db/init/:/docker-entrypoint-initdb.d
 
   electric:
-    image: electricsql/electric:0.11.1
+    image: electricsql/electric:0.12.0
     depends_on:
       - pg
     environment:
+      DATABASE_REQUIRE_SSL: false
       DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@pg:${POSTGRES_PORT}/${POSTGRES_DB}
       AUTH_JWT_KEY: ${JWT_SECRET}
       PG_PROXY_PASSWORD: ${PG_PROXY_PASSWORD}

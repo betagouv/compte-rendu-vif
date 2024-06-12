@@ -29,8 +29,8 @@ importers:
         specifier: ^20.11.28
         version: 20.12.3
       electric-sql:
-        specifier: ^0.11.3
-        version: 0.11.3(pg@8.11.5)(prisma@4.8.1)(zod@3.21.1)
+        specifier: ^0.12.0
+        version: 0.12.0(pg@8.11.5)(prisma@4.8.1)(zod@3.21.1)
       prettier:
         specifier: ^3.2.5
         version: 3.2.5
@@ -183,8 +183,8 @@ importers:
         specifier: ^0.32.20
         version: 0.32.20
       electric-sql:
-        specifier: ^0.11.3
-        version: 0.11.3(pg@8.11.5)(prisma@4.8.1)(react-dom@18.2.0)(react@18.2.0)(vue@2.7.16)(wa-sqlite@0.9.13)(zod@3.22.4)
+        specifier: ^0.12.0
+        version: 0.12.0(pg@8.11.5)(prisma@4.8.1)(react-dom@18.2.0)(react@18.2.0)(vue@2.7.16)(wa-sqlite@0.9.13)(zod@3.22.4)
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -286,8 +286,8 @@ importers:
         specifier: ^3.6.0
         version: 3.6.0
       electric-sql:
-        specifier: ^0.11.3
-        version: 0.11.3(pg@8.11.5)(prisma@4.8.1)(react-dom@18.2.0)(react@18.2.0)(vue@2.7.16)(wa-sqlite@0.9.13)(zod@3.22.4)
+        specifier: ^0.12.0
+        version: 0.12.0(pg@8.11.5)(prisma@4.8.1)(react-dom@18.2.0)(react@18.2.0)(vue@2.7.16)(wa-sqlite@0.9.13)(zod@3.22.4)
       install:
         specifier: ^0.13.0
         version: 0.13.0
@@ -5330,7 +5330,7 @@ packages:
   /@types/cross-spawn@6.0.2:
     resolution: {integrity: sha512-KuwNhp3eza+Rhu8IFI5HUXRP0LIhqH5cAjubUvGXXthh4YYBuP2ntwEX+Cz8GJoZUHlKo247wPWOfA9LYEq4cw==}
     dependencies:
-      '@types/node': 20.12.3
+      '@types/node': 20.12.12
 
   /@types/css-tree@2.3.7:
     resolution: {integrity: sha512-LUlutQBpR2TgqZJdvXCPOx9EME7a4PHSEo2Y2c8POFpj1E9a6V94PUZNwjVdfHWyb8RQZoNHTYOKs980+sOi+g==}
@@ -8481,8 +8481,8 @@ packages:
       safe-buffer: 5.2.1
     dev: false
 
-  /electric-sql@0.11.3(pg@8.11.5)(prisma@4.8.1)(react-dom@18.2.0)(react@18.2.0)(vue@2.7.16)(wa-sqlite@0.9.13)(zod@3.22.4):
-    resolution: {integrity: sha512-5D9+n69ht4kgErTdTC9EUE+BhdjaaxeW12tYbzCehvSELRW7MdXrDU7Gqm0SLWYVJ+CAJWS+qfoaGt+wqXDOHA==}
+  /electric-sql@0.12.0(pg@8.11.5)(prisma@4.8.1)(react-dom@18.2.0)(react@18.2.0)(vue@2.7.16)(wa-sqlite@0.9.13)(zod@3.22.4):
+    resolution: {integrity: sha512-nM2aHRnsgUgIX885CY6uEUajw1eawxwILLV6taEeWe14ddfkZ6zSaj21KEietp6aSvDXWIpXdyMEP71wg/aDHA==}
     hasBin: true
     peerDependencies:
       '@capacitor-community/sqlite': '>= 5.6.2'
@@ -8578,8 +8578,8 @@ packages:
       - utf-8-validate
     dev: false
 
-  /electric-sql@0.11.3(pg@8.11.5)(prisma@4.8.1)(zod@3.21.1):
-    resolution: {integrity: sha512-5D9+n69ht4kgErTdTC9EUE+BhdjaaxeW12tYbzCehvSELRW7MdXrDU7Gqm0SLWYVJ+CAJWS+qfoaGt+wqXDOHA==}
+  /electric-sql@0.12.0(pg@8.11.5)(prisma@4.8.1)(zod@3.21.1):
+    resolution: {integrity: sha512-nM2aHRnsgUgIX885CY6uEUajw1eawxwILLV6taEeWe14ddfkZ6zSaj21KEietp6aSvDXWIpXdyMEP71wg/aDHA==}
     hasBin: true
     peerDependencies:
       '@capacitor-community/sqlite': '>= 5.6.2'
