@@ -21,8 +21,6 @@ export const ClauseMenu = ({ isNational }: { isNational: boolean }) => {
 
   const groupedByKey = groupBy(clausesQuery.results ?? [], "key");
 
-  console.log(groupedByKey);
-
   return (
     <>
       <Divider height="2px" my={{ base: "27px", lg: "44px" }} color="#C1C1FB" />

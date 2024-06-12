@@ -100,6 +100,9 @@ export type UdapPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultAr
     city: string | null
     phone: string | null
     email: string | null
+    marianne_text: string | null
+    drac_text: Date | null
+    udap_text: Date | null
   }, ExtArgs["result"]["udap"]>
   composites: {}
 }
@@ -4284,6 +4287,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     city: string | null
     phone: string | null
     email: string | null
+    marianne_text: string | null
+    drac_text: Date | null
+    udap_text: Date | null
   }
 
   export type UdapMaxAggregateOutputType = {
@@ -4297,6 +4303,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     city: string | null
     phone: string | null
     email: string | null
+    marianne_text: string | null
+    drac_text: Date | null
+    udap_text: Date | null
   }
 
   export type UdapCountAggregateOutputType = {
@@ -4310,6 +4319,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     city: number
     phone: number
     email: number
+    marianne_text: number
+    drac_text: number
+    udap_text: number
     _all: number
   }
 
@@ -4325,6 +4337,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     city?: true
     phone?: true
     email?: true
+    marianne_text?: true
+    drac_text?: true
+    udap_text?: true
   }
 
   export type UdapMaxAggregateInputType = {
@@ -4338,6 +4353,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     city?: true
     phone?: true
     email?: true
+    marianne_text?: true
+    drac_text?: true
+    udap_text?: true
   }
 
   export type UdapCountAggregateInputType = {
@@ -4351,6 +4369,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     city?: true
     phone?: true
     email?: true
+    marianne_text?: true
+    drac_text?: true
+    udap_text?: true
     _all?: true
   }
 
@@ -4438,6 +4459,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     city: string | null
     phone: string | null
     email: string | null
+    marianne_text: string | null
+    drac_text: Date | null
+    udap_text: Date | null
     _count: UdapCountAggregateOutputType | null
     _min: UdapMinAggregateOutputType | null
     _max: UdapMaxAggregateOutputType | null
@@ -4468,6 +4492,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     city?: boolean
     phone?: boolean
     email?: boolean
+    marianne_text?: boolean
+    drac_text?: boolean
+    udap_text?: boolean
     user?: boolean | Udap$userArgs<ExtArgs>
     _count?: boolean | UdapCountOutputTypeArgs<ExtArgs>
   }, ExtArgs["result"]["udap"]>
@@ -4483,6 +4510,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     city?: boolean
     phone?: boolean
     email?: boolean
+    marianne_text?: boolean
+    drac_text?: boolean
+    udap_text?: boolean
   }
 
   export type UdapInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
@@ -6304,7 +6334,10 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     zipCode: 'zipCode',
     city: 'city',
     phone: 'phone',
-    email: 'email'
+    email: 'email',
+    marianne_text: 'marianne_text',
+    drac_text: 'drac_text',
+    udap_text: 'udap_text'
   };
 
   export type UdapScalarFieldEnum = (typeof UdapScalarFieldEnum)[keyof typeof UdapScalarFieldEnum]
@@ -6545,6 +6578,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     city?: StringNullableFilter | string | null
     phone?: StringNullableFilter | string | null
     email?: StringNullableFilter | string | null
+    marianne_text?: StringNullableFilter | string | null
+    drac_text?: DateTimeNullableFilter | Date | string | null
+    udap_text?: DateTimeNullableFilter | Date | string | null
     user?: UserListRelationFilter
   }
 
@@ -6559,6 +6595,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     city?: SortOrderInput | SortOrder
     phone?: SortOrderInput | SortOrder
     email?: SortOrderInput | SortOrder
+    marianne_text?: SortOrderInput | SortOrder
+    drac_text?: SortOrderInput | SortOrder
+    udap_text?: SortOrderInput | SortOrder
     user?: UserOrderByRelationAggregateInput
   }
 
@@ -6577,6 +6616,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     city?: SortOrderInput | SortOrder
     phone?: SortOrderInput | SortOrder
     email?: SortOrderInput | SortOrder
+    marianne_text?: SortOrderInput | SortOrder
+    drac_text?: SortOrderInput | SortOrder
+    udap_text?: SortOrderInput | SortOrder
     _count?: UdapCountOrderByAggregateInput
     _max?: UdapMaxOrderByAggregateInput
     _min?: UdapMinOrderByAggregateInput
@@ -6596,6 +6638,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     city?: StringNullableWithAggregatesFilter | string | null
     phone?: StringNullableWithAggregatesFilter | string | null
     email?: StringNullableWithAggregatesFilter | string | null
+    marianne_text?: StringNullableWithAggregatesFilter | string | null
+    drac_text?: DateTimeNullableWithAggregatesFilter | Date | string | null
+    udap_text?: DateTimeNullableWithAggregatesFilter | Date | string | null
   }
 
   export type UserWhereInput = {
@@ -6890,6 +6935,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     city?: string | null
     phone?: string | null
     email?: string | null
+    marianne_text?: string | null
+    drac_text?: Date | string | null
+    udap_text?: Date | string | null
     user?: UserCreateNestedManyWithoutUdapInput
   }
 
@@ -6904,6 +6952,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     city?: string | null
     phone?: string | null
     email?: string | null
+    marianne_text?: string | null
+    drac_text?: Date | string | null
+    udap_text?: Date | string | null
     user?: UserUncheckedCreateNestedManyWithoutUdapInput
   }
 
@@ -6918,6 +6969,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     city?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
+    marianne_text?: NullableStringFieldUpdateOperationsInput | string | null
+    drac_text?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    udap_text?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     user?: UserUpdateManyWithoutUdapNestedInput
   }
 
@@ -6932,6 +6986,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     city?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
+    marianne_text?: NullableStringFieldUpdateOperationsInput | string | null
+    drac_text?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    udap_text?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     user?: UserUncheckedUpdateManyWithoutUdapNestedInput
   }
 
@@ -6946,6 +7003,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     city?: string | null
     phone?: string | null
     email?: string | null
+    marianne_text?: string | null
+    drac_text?: Date | string | null
+    udap_text?: Date | string | null
   }
 
   export type UdapUpdateManyMutationInput = {
@@ -6959,6 +7019,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     city?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
+    marianne_text?: NullableStringFieldUpdateOperationsInput | string | null
+    drac_text?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    udap_text?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type UdapUncheckedUpdateManyInput = {
@@ -6972,6 +7035,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     city?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
+    marianne_text?: NullableStringFieldUpdateOperationsInput | string | null
+    drac_text?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    udap_text?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type UserCreateInput = {
@@ -7335,6 +7401,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     city?: SortOrder
     phone?: SortOrder
     email?: SortOrder
+    marianne_text?: SortOrder
+    drac_text?: SortOrder
+    udap_text?: SortOrder
   }
 
   export type UdapMaxOrderByAggregateInput = {
@@ -7348,6 +7417,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     city?: SortOrder
     phone?: SortOrder
     email?: SortOrder
+    marianne_text?: SortOrder
+    drac_text?: SortOrder
+    udap_text?: SortOrder
   }
 
   export type UdapMinOrderByAggregateInput = {
@@ -7361,6 +7433,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     city?: SortOrder
     phone?: SortOrder
     email?: SortOrder
+    marianne_text?: SortOrder
+    drac_text?: SortOrder
+    udap_text?: SortOrder
   }
 
   export type DelegationListRelationFilter = {
@@ -8108,6 +8183,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     city?: string | null
     phone?: string | null
     email?: string | null
+    marianne_text?: string | null
+    drac_text?: Date | string | null
+    udap_text?: Date | string | null
   }
 
   export type UdapUncheckedCreateWithoutUserInput = {
@@ -8121,6 +8199,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     city?: string | null
     phone?: string | null
     email?: string | null
+    marianne_text?: string | null
+    drac_text?: Date | string | null
+    udap_text?: Date | string | null
   }
 
   export type UdapCreateOrConnectWithoutUserInput = {
@@ -8225,6 +8306,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     city?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
+    marianne_text?: NullableStringFieldUpdateOperationsInput | string | null
+    drac_text?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    udap_text?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type UdapUncheckedUpdateWithoutUserInput = {
@@ -8238,6 +8322,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     city?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
+    marianne_text?: NullableStringFieldUpdateOperationsInput | string | null
+    drac_text?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    udap_text?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type UserCreateManyUdapInput = {

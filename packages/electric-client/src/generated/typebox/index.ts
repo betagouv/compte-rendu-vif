@@ -1,5 +1,5 @@
-export * from './atdatabases_migrations_appliedInput';
 export * from './atdatabases_migrations_applied';
+export * from './atdatabases_migrations_appliedInput';
 export * from './atdatabases_migrations_version';
 export * from './atdatabases_migrations_versionInput';
 export * from './clause';
