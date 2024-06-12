@@ -44,7 +44,6 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
           console.log("token refreshed");
           setDataAndSaveInStorage(resp);
         }
-        console.log(resp);
         return resp;
       } catch (e) {
         console.error("refreshTokenQuery error", e);

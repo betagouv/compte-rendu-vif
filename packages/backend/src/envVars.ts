@@ -20,6 +20,7 @@ const envSchema = z.object({
   PORT: stringOrNumberAsNumber.default(3001),
   AWS_BUCKET_NAME: z.string(),
   AWS_REGION: z.string(),
+  AWS_ENDPOINT: z.string(),
   DEBUG: z.string().default("cr-vif:*"),
   FRONTEND_URL: z.string(),
   EMAIL_HOST: z.string(),

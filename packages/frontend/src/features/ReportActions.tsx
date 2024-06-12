@@ -10,6 +10,7 @@ import { v4 } from "uuid";
 import { omit } from "pastable";
 import { ReportWithUser } from "./ReportList";
 import { useNavigate } from "@tanstack/react-router";
+import { api } from "../api";
 
 export const ReportActions = forwardRef<HTMLDivElement, { report: ReportWithUser }>(({ report }, ref) => {
   const user = useUser()!;
@@ -17,6 +18,11 @@ export const ReportActions = forwardRef<HTMLDivElement, { report: ReportWithUser
   const isOwner = report.createdBy === user.id;
 
   const navigate = useNavigate();
+
+  const downloadPdfMutation = useMutation(async () => {
+    const buffer = await api.get("/api/pdf/report", { query: { reportId: report.id } });
+    return downloadFile(`data:application/pdf;base64,${buffer}`);
+  });
 
   const deleteMutation = useDeleteMutation();
   const duplicateMutation = useMutation(async () => {
@@ -50,7 +56,7 @@ export const ReportActions = forwardRef<HTMLDivElement, { report: ReportWithUser
         />
       ) : null}
       {report.pdf ? (
-        <ReportAction iconId="ri-download-line" label="Télécharger" onClick={() => downloadFile(report.pdf!)} />
+        <ReportAction iconId="ri-download-line" label="Télécharger" onClick={() => downloadPdfMutation.mutate()} />
       ) : null}
       <ReportAction iconId="ri-file-add-line" label="Dupliquer" onClick={() => duplicateMutation.mutate()} />
     </Stack>

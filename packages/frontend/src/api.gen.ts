@@ -137,6 +137,14 @@ export namespace Endpoints {
     };
     response: string;
   };
+  export type get_Apipdfreport = {
+    method: "GET";
+    path: "/api/pdf/report";
+    parameters: {
+      query: { reportId: string };
+    };
+    response: unknown;
+  };
 
   // </Endpoints>
 }
@@ -153,6 +161,7 @@ export type EndpointByMethod = {
   get: {
     "/api/refresh-token": Endpoints.get_ApirefreshToken;
     "/api/udaps": Endpoints.get_Apiudaps;
+    "/api/pdf/report": Endpoints.get_Apipdfreport;
   };
 };
 

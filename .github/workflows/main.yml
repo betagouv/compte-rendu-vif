@@ -3,7 +3,9 @@ name: Create and publish a Docker image
 
 on:
   push:
-    branches: ["development", "main"]
+    branches:
+      - main
+      - development
 
 env:
   REGISTRY: ghcr.io
@@ -32,7 +34,7 @@ jobs:
           context: .
           push: true
           target: backend
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-backend:latest
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:backend
 
   build-and-push-frontend:
     runs-on: ubuntu-latest
@@ -56,4 +58,4 @@ jobs:
           context: .
           push: true
           target: frontend
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-frontend:latest
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:frontend
