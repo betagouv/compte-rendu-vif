@@ -26,6 +26,7 @@ const envSchema = z.object({
   EMAIL_PORT: stringOrNumberAsNumber.default(465),
   EMAIL_USER: z.string(),
   EMAIL_PASSWORD: z.string(),
+  EMAIL_EMITTER: z.string(),
 });
 
 export const ENV = envSchema.parse(process.env);

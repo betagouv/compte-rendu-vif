@@ -53,7 +53,7 @@ export class UserService {
 
     const user = internalUser.user;
 
-    return { user: user, token: this.generateJWT(internalUser) };
+    return { user: user, token: this.generateJWT(internalUser), refreshToken: this.generateRefreshToken(internalUser) };
   }
 
   async getUserByEmail(email: string) {
