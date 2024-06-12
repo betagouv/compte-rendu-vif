@@ -1,12 +1,9 @@
-import { S3Client, ListBucketsCommand, PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
-import { Upload } from "@aws-sdk/lib-storage";
+import { S3Client, PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
 import { ENV } from "../envVars";
 import { makeDebug } from "../features/debug";
-import { db } from "../db/db";
 import { AppError } from "../features/errors";
 
 const client = new S3Client({ endpoint: ENV.AWS_ENDPOINT, region: ENV.AWS_REGION });
-const command = new ListBucketsCommand("");
 const debug = makeDebug("upload");
 export const upload = async () => {};
 
