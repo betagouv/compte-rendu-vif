@@ -1,7 +1,7 @@
 version: "3.1"
 
 volumes:
-  pg_data:
+  pg_data_preprod:
 
 services:
   frontend:
@@ -23,15 +23,10 @@ services:
       - wal_level=logical
     restart: always
     volumes:
-      - pg_data:/var/lib/postgresql/data
-      - ./db/init/:/docker-entrypoint-initdb.d
+      - pg_data_preprod:/var/lib/postgresql/data
 
   electric:
-    image: electricsql/electric:0.11.1
+    image: electricsql/electric:0.12.0
+    restart: always
     depends_on:
       - pg
-    restart: always
-
-  adminer:
-    image: adminer
-    restart: always

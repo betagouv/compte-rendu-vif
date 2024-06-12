@@ -41,7 +41,7 @@
   "peerDependencies": {
     "@prisma/client": "^4.8.1",
     "@sinclair/typebox": "^0.32.20",
-    "electric-sql": "^0.11.3",
+    "electric-sql": "^0.12.0",
     "zod": "^3.22.4"
   },
   "devDependencies": {
