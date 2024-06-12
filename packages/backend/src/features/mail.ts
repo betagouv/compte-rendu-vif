@@ -20,7 +20,7 @@ export const sendReportMail = ({
   reportTitle?: string;
 }) => {
   return transporter.sendMail({
-    from: "noreply@compte-rendu-vif.incubateur.net",
+    from: ENV.EMAIL_EMITTER,
     to: recipients,
     subject: "CR VIF - Compte rendu" + (reportTitle ? ` : ${reportTitle}` : ""),
     text: "Veuillez trouver ci-joint le compte rendu de votre rendez-vous.",
@@ -35,7 +35,7 @@ export const sendReportMail = ({
 
 export const sendPasswordResetMail = ({ email, temporaryLink }: { email: string; temporaryLink: string }) => {
   return transporter.sendMail({
-    from: "noreply@compte-rendu-vif.incubateur.net",
+    from: ENV.EMAIL_EMITTER,
     to: email,
     subject: "CR VIF - Réinitialisation de mot de passe",
     text: `Voici le lien de réinitialisation de votre mot de passe : ${ENV.FRONTEND_URL}/reset-password/${temporaryLink}`,
