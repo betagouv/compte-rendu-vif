@@ -26,7 +26,7 @@ services:
       - pg_data_preprod:/var/lib/postgresql/data
 
   electric:
-    image: electricsql/electric:0.11.1
+    image: electricsql/electric:0.12.0
     restart: always
     depends_on:
       - pg
