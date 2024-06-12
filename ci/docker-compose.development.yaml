@@ -16,16 +16,17 @@ services:
     depends_on:
       - electric
 
-  # pg:
-  #   image: postgres:14-alpine
-  #   command:
-  #     - -c
-  #     - wal_level=logical
-  #   restart: always
-  #   volumes:
-  #     - pg_data:/var/lib/postgresql/data
-  #     - ./db/init/:/docker-entrypoint-initdb.d
+  pg:
+    image: postgres:14-alpine
+    command:
+      - -c
+      - wal_level=logical
+    restart: always
+    volumes:
+      - pg_data:/var/lib/postgresql/data
 
   electric:
     image: electricsql/electric:0.11.1
     restart: always
+    depends_on:
+      - pg
