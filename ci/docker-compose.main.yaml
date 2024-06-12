@@ -5,13 +5,13 @@ volumes:
 
 services:
   frontend:
-    image: ghcr.io/betagouv/compte-rendu-vif-main-frontend:latest
+    image: ghcr.io/betagouv/compte-rendu-vif-main:frontend
     restart: always
     depends_on:
       - electric
 
   backend:
-    image: ghcr.io/betagouv/compte-rendu-vif-main-backend:latest
+    image: ghcr.io/betagouv/compte-rendu-vif-main:backend
     restart: always
     depends_on:
       - electric
