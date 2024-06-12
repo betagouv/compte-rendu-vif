@@ -5,6 +5,7 @@ import { Udap } from "@cr-vif/electric-client/frontend";
 import { authenticate } from "./authMiddleware";
 import { db } from "../db/db";
 import { sendReportMail } from "../features/mail";
+import { getPDFName } from "../services/uploadService";
 
 export const pdfPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
   fastify.addHook("preHandler", authenticate);
@@ -15,7 +16,7 @@ export const pdfPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
 
     const pdf = await generatePdf({ htmlString, udap });
 
-    const name = `${reportId}/compte_rendu.pdf`;
+    const name = getPDFName(reportId);
 
     const url = await request.services.upload.addPDFToReport({
       reportId,
@@ -35,6 +36,23 @@ export const pdfPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
 
     return url;
   });
+
+  fastify.get(
+    "/report",
+    {
+      schema: {
+        querystring: Type.Object({ reportId: Type.String() }),
+        response: { 200: Type.Any() },
+      },
+    },
+    async (request) => {
+      console.log("salut");
+      const { reportId } = request.query;
+      const buffer = await request.services.upload.getReportPDF({ reportId });
+
+      return buffer.toString("base64");
+    },
+  );
 };
 
 const generatePdf = async ({ htmlString, udap }: { htmlString: string; udap: Udap }) => {
