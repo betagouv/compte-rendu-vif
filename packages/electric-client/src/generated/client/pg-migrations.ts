@@ -111,8 +111,8 @@ export default [
   {
     "statements": [
       "ALTER TABLE udap ADD COLUMN marianne_text text",
-      "ALTER TABLE udap ADD COLUMN drac_text date",
-      "ALTER TABLE udap ADD COLUMN udap_text date",
+      "ALTER TABLE udap ADD COLUMN drac_text text",
+      "ALTER TABLE udap ADD COLUMN udap_text text",
       "INSERT INTO \"public\".\"_electric_trigger_settings\" (\"namespace\", \"tablename\", \"flag\")\n  VALUES ('public', 'udap', 1)\n  ON CONFLICT DO NOTHING;",
       "DROP TRIGGER IF EXISTS update_ensure_public_udap_primarykey ON \"public\".\"udap\";",
       "CREATE OR REPLACE FUNCTION update_ensure_public_udap_primarykey_function()\nRETURNS TRIGGER AS $$\nBEGIN\n  IF OLD.\"id\" IS DISTINCT FROM NEW.\"id\" THEN\n    RAISE EXCEPTION 'Cannot change the value of column id as it belongs to the primary key';\n  END IF;\n  RETURN NEW;\nEND;\n$$ LANGUAGE plpgsql;",

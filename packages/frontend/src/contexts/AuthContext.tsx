@@ -42,7 +42,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
           setDataAndSaveInStorage({ ...data, token: undefined, user: undefined });
         } else {
           console.log("token refreshed");
-          setDataAndSaveInStorage(resp);
+          setDataAndSaveInStorage({ ...data, ...resp });
         }
         return resp;
       } catch (e) {
@@ -124,5 +124,7 @@ export const useUser = () => {
 
 type AuthContextProps = Partial<RouterOutputs<"/api/login">> & {
   setData: (data: Omit<AuthContextProps, "setData" | "electricStatus">) => void;
-  electricStatus: "error" | "pending" | "success" | "idle" | "loading";
+  electricStatus: ElectricStatus;
 };
+
+export type ElectricStatus = "error" | "pending" | "success" | "idle" | "loading";

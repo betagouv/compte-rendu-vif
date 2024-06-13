@@ -143,7 +143,7 @@ export namespace Endpoints {
     parameters: {
       query: { reportId: string };
     };
-    response: unknown;
+    response: Partial<{}>;
   };
 
   // </Endpoints>
