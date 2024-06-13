@@ -29,6 +29,9 @@ export namespace Endpoints {
               city?: string | undefined;
               phone?: string | undefined;
               email?: string | undefined;
+              marianne_text?: string | undefined;
+              drac_text?: string | undefined;
+              udap_text?: string | undefined;
             };
           }
         | undefined;
@@ -59,6 +62,9 @@ export namespace Endpoints {
               city?: string | undefined;
               phone?: string | undefined;
               email?: string | undefined;
+              marianne_text?: string | undefined;
+              drac_text?: string | undefined;
+              udap_text?: string | undefined;
             };
           }
         | undefined;
@@ -89,6 +95,9 @@ export namespace Endpoints {
               city?: string | undefined;
               phone?: string | undefined;
               email?: string | undefined;
+              marianne_text?: string | undefined;
+              drac_text?: string | undefined;
+              udap_text?: string | undefined;
             };
           }
         | undefined;
@@ -127,6 +136,9 @@ export namespace Endpoints {
       city?: string | undefined;
       phone?: string | undefined;
       email?: string | undefined;
+      marianne_text?: string | undefined;
+      drac_text?: string | undefined;
+      udap_text?: string | undefined;
     }>;
   };
   export type post_Apipdfreport = {

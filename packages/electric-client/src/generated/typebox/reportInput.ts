@@ -25,13 +25,6 @@ export const reportInput = Type.Object({
     name: Type.String(),
     udap_id: Type.String(),
   }),
-  report_to_clause: Type.Array(
-    Type.Object({
-      id: Type.String(),
-      reportId: Type.String(),
-      clauseId: Type.String(),
-    })
-  ),
 });
 
 export type reportInputType = Static<typeof reportInput>;

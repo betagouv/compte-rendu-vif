@@ -10,6 +10,9 @@ CREATE TABLE "udap"(
   ,city            TEXT
   ,phone           TEXT 
   ,email           TEXT
+  ,marianne_text   TEXT
+    ,drac_text       TEXT
+    ,udap_text       TEXT
 );
 
 ALTER TABLE "udap" ENABLE ELECTRIC;

@@ -252,7 +252,11 @@ export const WithReport = ({ initialHtmlString, mode }: { initialHtmlString: str
   const { udap } = useUser()!;
 
   const ViewDocument = (
-    <View udap={udap as Udap} htmlString={editor?.getHTML() ?? ""} images={{ header: "/pdf_header.png" }} />
+    <View
+      udap={udap as Udap}
+      htmlString={editor?.getHTML() ?? ""}
+      images={{ marianne: "/marianne.png", marianneFooter: "/marianne_footer.png" }}
+    />
   );
 
   if (mode === "view") return ViewDocument;
@@ -273,6 +277,7 @@ export const WithReport = ({ initialHtmlString, mode }: { initialHtmlString: str
 };
 
 const View = (props: ReportPDFDocumentProps) => {
+  console.log({ props });
   const query = useQuery({
     queryKey: ["report-pdf", props.htmlString],
     queryFn: async () => {

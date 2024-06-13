@@ -5,14 +5,16 @@ import type { Udap, Report, Clause } from "@cr-vif/electric-client/frontend";
 import serviceInstructeurs from "./serviceInstructeur.json";
 
 export const ReportPDFDocument = ({ udap, htmlString, images }: ReportPDFDocumentProps) => {
+  console.log(images);
   return (
     <Document>
       <Page size="A4">
         <Html
           style={{
             fontSize: "12px",
-            paddingLeft: "15px",
-            paddingRight: "15px",
+            paddingLeft: "20px",
+            paddingRight: "20px",
+            paddingTop: "20px",
             whiteSpace: "pre-line",
           }}
         >{`
@@ -35,18 +37,48 @@ export const ReportPDFDocument = ({ udap, htmlString, images }: ReportPDFDocumen
             font-family: Helvetica-BoldOblique;
           }
 
-          img {
-            width: 150px;
+          .marianne-img {
+            width: 35px;
+          }
+            
+          .marianne-footer-img {
+            width: 50px;
           }
 
           .header {
             display: flex;
             flex-direction: row;
             width: 100%;
+            align-items: flex-start;
             justify-content: space-between;
             text-align: right;
-            align-items: center;
             font-size: 18px;
+            margin-bottom: 32px;
+
+          }
+
+
+          .marianne-text {
+            text-align: left;
+            font-weight: bold;
+            font-size: 12px;
+            margin-top: 4px;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+          }
+
+          .right-texts {
+            display: flex;
+            align-items: flex-end;
+            flex-direction: column;
+            justify-content: flex-end;
+            gap: 20px;
+          }
+
+          .right-texts > div {
+            text-align: right;
+            font-size: 16px;
+            font-family: Helvetica-Bold;
           }
 
           .meeting-date {
@@ -59,8 +91,35 @@ export const ReportPDFDocument = ({ udap, htmlString, images }: ReportPDFDocumen
 
         </style>
             <div class="header">
-              <img src="${images.header}" />
-              <div><strong>${udap.name?.replace("UDAP", "Union départementale de<br/>l'architecture et du<br/>patrimoine")}</strong></div>
+              <div class="marianne">
+
+                <img class="marianne-img" src="${images.marianne}" />
+                <div class="marianne-text">
+                  <strong>
+                ${udap.marianne_text
+                  ?.split("\n")
+                  .map((s) => s.trim())
+                  .join("<br/>")}
+                  </strong>
+                </div>
+                <img class="marianne-footer-img"  src="${images.marianneFooter}" />
+
+              </div>
+
+              <div class="right-texts">
+                <div>
+                      ${udap.drac_text
+                        ?.split("\n")
+                        .map((s) => s.trim())
+                        .join("<br/>")}
+                </div>
+                <div>
+                    ${udap.udap_text
+                      ?.split("\n")
+                      .map((s) => s.trim())
+                      .join("<br/>")}
+                </div>
+              </div>
             </div>
             <div class="content">
               ${htmlString}
@@ -80,7 +139,8 @@ export type ReportPDFDocumentProps = {
 };
 
 type Images = {
-  header: string;
+  marianne: string;
+  marianneFooter: string;
 };
 
 export type ReportWithUser = Report & { user?: { email: string; name: string } };
