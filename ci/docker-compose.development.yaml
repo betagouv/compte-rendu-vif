@@ -30,3 +30,7 @@ services:
     restart: always
     depends_on:
       - pg
+
+  adminer:
+    image: adminer
+    restart: always
