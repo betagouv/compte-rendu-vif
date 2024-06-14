@@ -100,8 +100,8 @@ export const UdapSchema = z.object({
   phone: z.string().nullable(),
   email: z.string().nullable(),
   marianne_text: z.string().nullable(),
-  drac_text: z.coerce.date().nullable(),
-  udap_text: z.coerce.date().nullable(),
+  drac_text: z.string().nullable(),
+  udap_text: z.string().nullable(),
 })
 
 export type Udap = z.infer<typeof UdapSchema>
@@ -466,8 +466,8 @@ export const UdapWhereInputSchema: z.ZodType<Prisma.UdapWhereInput> = z.object({
   phone: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   email: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   marianne_text: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
-  drac_text: z.union([ z.lazy(() => DateTimeNullableFilterSchema),z.coerce.date() ]).optional().nullable(),
-  udap_text: z.union([ z.lazy(() => DateTimeNullableFilterSchema),z.coerce.date() ]).optional().nullable(),
+  drac_text: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  udap_text: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   user: z.lazy(() => UserListRelationFilterSchema).optional()
 }).strict();
 
@@ -526,8 +526,8 @@ export const UdapScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.UdapScal
   phone: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
   email: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
   marianne_text: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
-  drac_text: z.union([ z.lazy(() => DateTimeNullableWithAggregatesFilterSchema),z.coerce.date() ]).optional().nullable(),
-  udap_text: z.union([ z.lazy(() => DateTimeNullableWithAggregatesFilterSchema),z.coerce.date() ]).optional().nullable(),
+  drac_text: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
+  udap_text: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
 }).strict();
 
 export const UserWhereInputSchema: z.ZodType<Prisma.UserWhereInput> = z.object({
@@ -822,8 +822,8 @@ export const UdapCreateInputSchema: z.ZodType<Prisma.UdapCreateInput> = z.object
   phone: z.string().optional().nullable(),
   email: z.string().optional().nullable(),
   marianne_text: z.string().optional().nullable(),
-  drac_text: z.coerce.date().optional().nullable(),
-  udap_text: z.coerce.date().optional().nullable(),
+  drac_text: z.string().optional().nullable(),
+  udap_text: z.string().optional().nullable(),
   user: z.lazy(() => UserCreateNestedManyWithoutUdapInputSchema).optional()
 }).strict();
 
@@ -839,8 +839,8 @@ export const UdapUncheckedCreateInputSchema: z.ZodType<Prisma.UdapUncheckedCreat
   phone: z.string().optional().nullable(),
   email: z.string().optional().nullable(),
   marianne_text: z.string().optional().nullable(),
-  drac_text: z.coerce.date().optional().nullable(),
-  udap_text: z.coerce.date().optional().nullable(),
+  drac_text: z.string().optional().nullable(),
+  udap_text: z.string().optional().nullable(),
   user: z.lazy(() => UserUncheckedCreateNestedManyWithoutUdapInputSchema).optional()
 }).strict();
 
@@ -856,8 +856,8 @@ export const UdapUpdateInputSchema: z.ZodType<Prisma.UdapUpdateInput> = z.object
   phone: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   email: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   marianne_text: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  drac_text: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  udap_text: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  drac_text: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  udap_text: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   user: z.lazy(() => UserUpdateManyWithoutUdapNestedInputSchema).optional()
 }).strict();
 
@@ -873,8 +873,8 @@ export const UdapUncheckedUpdateInputSchema: z.ZodType<Prisma.UdapUncheckedUpdat
   phone: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   email: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   marianne_text: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  drac_text: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  udap_text: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  drac_text: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  udap_text: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   user: z.lazy(() => UserUncheckedUpdateManyWithoutUdapNestedInputSchema).optional()
 }).strict();
 
@@ -890,8 +890,8 @@ export const UdapCreateManyInputSchema: z.ZodType<Prisma.UdapCreateManyInput> = 
   phone: z.string().optional().nullable(),
   email: z.string().optional().nullable(),
   marianne_text: z.string().optional().nullable(),
-  drac_text: z.coerce.date().optional().nullable(),
-  udap_text: z.coerce.date().optional().nullable()
+  drac_text: z.string().optional().nullable(),
+  udap_text: z.string().optional().nullable()
 }).strict();
 
 export const UdapUpdateManyMutationInputSchema: z.ZodType<Prisma.UdapUpdateManyMutationInput> = z.object({
@@ -906,8 +906,8 @@ export const UdapUpdateManyMutationInputSchema: z.ZodType<Prisma.UdapUpdateManyM
   phone: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   email: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   marianne_text: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  drac_text: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  udap_text: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  drac_text: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  udap_text: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const UdapUncheckedUpdateManyInputSchema: z.ZodType<Prisma.UdapUncheckedUpdateManyInput> = z.object({
@@ -922,8 +922,8 @@ export const UdapUncheckedUpdateManyInputSchema: z.ZodType<Prisma.UdapUncheckedU
   phone: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   email: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   marianne_text: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  drac_text: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  udap_text: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  drac_text: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  udap_text: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const UserCreateInputSchema: z.ZodType<Prisma.UserCreateInput> = z.object({
@@ -2065,8 +2065,8 @@ export const UdapCreateWithoutUserInputSchema: z.ZodType<Prisma.UdapCreateWithou
   phone: z.string().optional().nullable(),
   email: z.string().optional().nullable(),
   marianne_text: z.string().optional().nullable(),
-  drac_text: z.coerce.date().optional().nullable(),
-  udap_text: z.coerce.date().optional().nullable()
+  drac_text: z.string().optional().nullable(),
+  udap_text: z.string().optional().nullable()
 }).strict();
 
 export const UdapUncheckedCreateWithoutUserInputSchema: z.ZodType<Prisma.UdapUncheckedCreateWithoutUserInput> = z.object({
@@ -2081,8 +2081,8 @@ export const UdapUncheckedCreateWithoutUserInputSchema: z.ZodType<Prisma.UdapUnc
   phone: z.string().optional().nullable(),
   email: z.string().optional().nullable(),
   marianne_text: z.string().optional().nullable(),
-  drac_text: z.coerce.date().optional().nullable(),
-  udap_text: z.coerce.date().optional().nullable()
+  drac_text: z.string().optional().nullable(),
+  udap_text: z.string().optional().nullable()
 }).strict();
 
 export const UdapCreateOrConnectWithoutUserInputSchema: z.ZodType<Prisma.UdapCreateOrConnectWithoutUserInput> = z.object({
@@ -2188,8 +2188,8 @@ export const UdapUpdateWithoutUserInputSchema: z.ZodType<Prisma.UdapUpdateWithou
   phone: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   email: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   marianne_text: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  drac_text: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  udap_text: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  drac_text: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  udap_text: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const UdapUncheckedUpdateWithoutUserInputSchema: z.ZodType<Prisma.UdapUncheckedUpdateWithoutUserInput> = z.object({
@@ -2204,8 +2204,8 @@ export const UdapUncheckedUpdateWithoutUserInputSchema: z.ZodType<Prisma.UdapUnc
   phone: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   email: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   marianne_text: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  drac_text: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  udap_text: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  drac_text: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  udap_text: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const UserCreateManyUdapInputSchema: z.ZodType<Prisma.UserCreateManyUdapInput> = z.object({
@@ -3124,11 +3124,11 @@ export const tableSchemas = {
       ],
       [
         "drac_text",
-        "DATE"
+        "TEXT"
       ],
       [
         "udap_text",
-        "DATE"
+        "TEXT"
       ]
     ]),
     relations: [

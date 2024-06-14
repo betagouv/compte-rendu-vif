@@ -57,7 +57,11 @@ export const pdfPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
 
 const generatePdf = async ({ htmlString, udap }: { htmlString: string; udap: Udap }) => {
   return renderToBuffer(
-    <ReportPDFDocument udap={udap as Udap} htmlString={htmlString} images={{ header: "./public/pdf_header.png" }} />,
+    <ReportPDFDocument
+      udap={udap as Udap}
+      htmlString={htmlString}
+      images={{ marianne: "./public/marianne.png", marianneFooter: "./public/marianneFooter.png" }}
+    />,
   );
 };
 

@@ -7,13 +7,13 @@ import { useNavigate, useRouter } from "@tanstack/react-router";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { Center, Flex, styled } from "#styled-system/jsx";
 import { fr } from "@codegouvfr/react-dsfr";
-import { sva } from "#styled-system/css";
+import { sva, cx, css } from "#styled-system/css";
 import { useNetworkState } from "react-use";
 import { useIntersectionObserver } from "../hooks/useIntersectionObserver";
 import Input from "@codegouvfr/react-dsfr/Input";
 import { Report } from "@cr-vif/electric-client/frontend";
 import { useEffect } from "react";
-import { useElectricStatus } from "../contexts/AuthContext";
+import { ElectricStatus, useElectricStatus } from "../contexts/AuthContext";
 
 export function SyncFormBanner({ form, baseObject }: { form: UseFormReturn<Report>; baseObject: Record<string, any> }) {
   const newObject = useWatch({ control: form.control });
@@ -29,6 +29,7 @@ export function SyncFormBanner({ form, baseObject }: { form: UseFormReturn<Repor
   const { online } = useNetworkState();
 
   const status = !online ? "offline" : Object.keys(diff).length ? "pending" : "saved";
+  const formStatus = useStatus(status);
 
   const { ref, isIntersecting } = useIntersectionObserver({
     threshold: 0.999999,
@@ -41,7 +42,7 @@ export function SyncFormBanner({ form, baseObject }: { form: UseFormReturn<Repor
 
   return (
     <>
-      <Banner status={status} display="flex" flexDir="row" justifyContent="center" alignItems="center" w="100%">
+      <Banner status={formStatus} display="flex" flexDir="row" justifyContent="center" alignItems="center" w="100%">
         <Center w="calc((100% - 800px) / 2)">
           <styled.a
             className={"ri-arrow-left-line"}
@@ -81,12 +82,12 @@ export function SyncFormBanner({ form, baseObject }: { form: UseFormReturn<Repor
             <styled.span nowrap>{isCollapsed ? newObject.title : "Titre compte-rendu :"}</styled.span>
           </Flex>
           <Input className={styles.input} label="" nativeInputProps={{ ...form.register("title") }} />
-          <Status className={styles.status} status={status} />
+          <Status className={cx(styles.status, css({ hideFrom: "lg" }))} status={status} />
         </Flex>
         {/* <div></div> */}
         <styled.div w="calc((100% - 800px) / 2)"></styled.div>
       </Banner>
-      <Banner ref={ref} status={status} zIndex="3" position="sticky" top="-1px">
+      <Banner ref={ref} status={formStatus} zIndex="3" position="sticky" top="-1px">
         <Flex className={styles.collapsed}>
           {isCollapsed ? (
             <>
@@ -108,9 +109,27 @@ export function SyncFormBanner({ form, baseObject }: { form: UseFormReturn<Repor
   );
 }
 
-export const Status = ({ status, className }: { status?: SyncFormStatus; className?: string }) => {
+const electricStatusToStatus: Record<ElectricStatus, SyncFormStatus> = {
+  error: "offline",
+  loading: "pending",
+  pending: "pending",
+  idle: "offline",
+  success: "saved",
+};
+
+export const useStatus = (overrideStatus?: SyncFormStatus) => {
   const electricStatus = useElectricStatus();
-  const overrideStatus: SyncFormStatus = electricStatus === "loading" ? "offline" : status ?? "saved";
+  if (electricStatus === "error") return "offline";
+
+  const formStatus = electricStatusToStatus[electricStatus];
+
+  if (formStatus === "pending") return "pending";
+
+  return overrideStatus || formStatus;
+};
+
+export const Status = ({ status, className }: { status?: SyncFormStatus; className?: string }) => {
+  const formStatus = useStatus(status === "pending" ? "pending" : undefined);
 
   return (
     <styled.div
@@ -122,10 +141,10 @@ export const Status = ({ status, className }: { status?: SyncFormStatus; classNa
       textTransform="uppercase"
       fontSize="sm"
       fontWeight="500"
-      bgColor={messagesColor[overrideStatus]}
+      bgColor={messagesColor[formStatus]}
     >
       <styled.span className={fr.cx("fr-icon-wifi-line", "fr-icon--sm")} aria-hidden={true} mr="6px" mb="2px" />
-      {messages[overrideStatus]}
+      {messages[formStatus]}
     </styled.div>
   );
 };

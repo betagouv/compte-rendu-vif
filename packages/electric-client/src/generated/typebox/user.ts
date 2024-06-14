@@ -61,6 +61,9 @@ export const user = Type.Object({
     city: Type.Optional(Type.String()),
     phone: Type.Optional(Type.String()),
     email: Type.Optional(Type.String()),
+    marianne_text: Type.Optional(Type.String()),
+    drac_text: Type.Optional(Type.String()),
+    udap_text: Type.Optional(Type.String()),
   }),
 });
 

@@ -1,16 +1,10 @@
 import { Type, Static } from "@sinclair/typebox";
 
 export const clauseInput = Type.Object({
-  id: Type.String(),
-  label: Type.String(),
+  key: Type.String(),
   value: Type.String(),
-  report_to_clause: Type.Array(
-    Type.Object({
-      id: Type.String(),
-      reportId: Type.String(),
-      clauseId: Type.String(),
-    })
-  ),
+  udap_id: Type.String(),
+  text: Type.String(),
 });
 
 export type clauseInputType = Static<typeof clauseInput>;

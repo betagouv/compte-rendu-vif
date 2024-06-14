@@ -7,7 +7,7 @@ import { v4 } from "uuid";
 import { Banner } from "#components/Banner";
 import { EnsureUser } from "#components/EnsureUser";
 import { Tabs } from "#components/Tabs";
-import { useElectricStatus, useUser } from "../contexts/AuthContext";
+import { ElectricStatus, useElectricStatus, useUser } from "../contexts/AuthContext";
 import { db } from "../db";
 import { AllReports, MyReports } from "../features/ReportList";
 import { useNetworkState } from "react-use";
@@ -151,7 +151,16 @@ const Index = () => {
 
 const SimpleBanner = (props: CenterProps) => {
   const electricStatus = useElectricStatus();
-  const status: SyncFormStatus = electricStatus === "loading" ? "offline" : "saved";
+
+  const electricStatusToStatus: Record<ElectricStatus, SyncFormStatus> = {
+    error: "offline",
+    loading: "pending",
+    pending: "pending",
+    idle: "offline",
+    success: "saved",
+  };
+
+  const status: SyncFormStatus = electricStatusToStatus[electricStatus] || "saved";
 
   return <Banner status={status} {...props} />;
 };

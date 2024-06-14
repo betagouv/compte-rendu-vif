@@ -83,6 +83,7 @@ export class UserService {
         },
       },
     });
+    console.log(user?.user);
     assertUserExists(user);
     await assertPasswordsMatch(payload.password, user!.password);
 
