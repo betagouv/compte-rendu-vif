@@ -1,18 +1,15 @@
-import { z } from "zod";
-import { db } from "../db/db";
-import { and, eq, gt } from "drizzle-orm";
-import { pick } from "pastable";
-import crypto from "node:crypto";
-import jwt from "jsonwebtoken";
 import { addDays } from "date-fns";
+import jwt from "jsonwebtoken";
+import crypto from "node:crypto";
+import { db } from "../db/db";
 
-import { ENV, isDev } from "../envVars";
-import { AppError } from "../features/errors";
-import { Type, type Static } from "@sinclair/typebox";
-import * as Schemas from "@cr-vif/electric-client/typebox";
 import type { Prisma } from "@cr-vif/electric-client/backend";
-import { sendPasswordResetMail } from "../features/mail";
+import * as Schemas from "@cr-vif/electric-client/typebox";
+import { Type } from "@sinclair/typebox";
+import { ENV, isDev } from "../envVars";
 import { makeDebug } from "../features/debug";
+import { AppError } from "../features/errors";
+import { sendPasswordResetMail } from "../features/mail";
 
 const debug = makeDebug("user_service");
 export class UserService {
@@ -53,7 +50,9 @@ export class UserService {
 
     const user = internalUser.user;
 
-    return { user: user, token: this.generateJWT(internalUser), refreshToken: this.generateRefreshToken(internalUser) };
+    const { token, expiresAt } = this.generateJWT(internalUser);
+
+    return { user: user, token, expiresAt, refreshToken: this.generateRefreshToken(internalUser) };
   }
 
   async getUserByEmail(email: string) {
@@ -83,11 +82,12 @@ export class UserService {
         },
       },
     });
-    console.log(user?.user);
     assertUserExists(user);
     await assertPasswordsMatch(payload.password, user!.password);
 
-    return { user: user?.user, token: this.generateJWT(user!), refreshToken: this.generateRefreshToken(user!) };
+    const { token, expiresAt } = this.generateJWT(user!);
+
+    return { user: user?.user, token, expiresAt, refreshToken: this.generateRefreshToken(user!) };
   }
 
   async generateResetLink(email: string) {
@@ -131,12 +131,18 @@ export class UserService {
   }
 
   getUserByToken(token: string) {
-    const { id } = this.validateToken(token);
-    return this.getUserByEmail(id);
+    const payload = this.validateToken(token);
+    console.log(payload);
+    const { sub } = payload;
+    if (!sub) throw new AppError(403, "Token invalide");
+    console.log("token id", sub);
+    return this.getUserById(sub);
   }
 
   generateJWT(user: Prisma.internal_userUncheckedCreateInput) {
-    return jwt.sign(
+    const expiresAt = addDays(new Date(), 7).toISOString();
+
+    const token = jwt.sign(
       {
         sub: user.id,
       },
@@ -145,23 +151,26 @@ export class UserService {
         expiresIn: ENV.TOKEN_LIFETIME,
       },
     );
+
+    return { token, expiresAt };
   }
 
   async verifyTokenAndRefreshIfNeeded(token: string, refreshToken?: string) {
     debug("refreshing token", token?.slice(0, 6), refreshToken?.slice(0, 6));
     try {
-      this.validateToken(token);
-      const rToken = refreshToken ?? this.generateRefreshToken(await this.getUserByEmail(token));
+      const { sub } = this.validateToken(token);
+      const rToken = refreshToken ?? this.generateRefreshToken((await this.getUserById(sub))!);
       debug("token is valid");
       return { token, refreshToken: rToken };
     } catch (e: any) {
       debug("invalid token", e);
       if (refreshToken && e.name === "TokenExpiredError") {
         try {
-          const { id } = this.validateRefreshToken(refreshToken);
-          const user = await this.getUserById(id);
+          const { sub } = this.validateRefreshToken(refreshToken);
+          const user = await this.getUserById(sub);
 
-          return { token: this.generateJWT(user!), refreshToken, user: user!.user };
+          const { token, expiresAt } = this.generateJWT(user!);
+          return { token, expiresAt, refreshToken, user: user!.user };
         } catch (e) {
           debug("invalid refresh token", e);
           return { token: null, refreshToken: null, user: null };
@@ -173,22 +182,21 @@ export class UserService {
   }
 
   generateRefreshToken(user: Prisma.internal_userUncheckedCreateInput) {
-    return jwt.sign(
+    const token = jwt.sign(
       {
         sub: user.id,
       },
       ENV.JWT_REFRESH_SECRET,
     );
+    return token;
   }
 
-  refreshTokenIfNeeded(token: string) {}
-
   validateToken(token: string) {
-    return jwt.verify(token, ENV.JWT_SECRET) as { id: string };
+    return jwt.verify(token, ENV.JWT_SECRET) as { sub: string };
   }
 
   validateRefreshToken(token: string) {
-    return jwt.verify(token, ENV.JWT_REFRESH_SECRET) as { id: string };
+    return jwt.verify(token, ENV.JWT_REFRESH_SECRET) as { sub: string };
   }
 }
 
@@ -197,6 +205,7 @@ const md5 = (data: string) => crypto.createHash("md5").update(data).digest("hex"
 export const userAndTokenTSchema = Type.Object({
   user: Type.Optional(Type.Pick(Schemas.user, ["id", "name", "udap_id", "udap"])),
   token: Type.String(),
+  expiresAt: Type.String(),
   refreshToken: Type.String(),
 });
 
@@ -226,8 +235,6 @@ const assertLinkIsValid = async (
   user: Prisma.internal_userUncheckedCreateInput | null | undefined,
   encryptedLink: string,
 ) => {
-  console.log({ user, encryptedLink });
-
   if (!user) {
     throw new AppError(403, "Le lien est invalide");
   }
@@ -275,7 +282,7 @@ const assertEmailDoesNotAlreadyExist = async (email: string) => {
 };
 
 const assertEmailInWhitelist = async (email: string) => {
-  // if (isDev) return;
+  if (isDev) return;
   const whitelist = await db.whitelist.findFirst({ where: { email } });
 
   if (!whitelist) {

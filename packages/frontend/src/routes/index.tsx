@@ -1,21 +1,19 @@
+import { Banner } from "#components/Banner";
+import { EnsureUser } from "#components/EnsureUser";
+import { SearchResults } from "#components/ReportSearch.js";
+import { Status, SyncFormStatus } from "#components/SyncForm";
+import { Tabs } from "#components/Tabs";
 import { css } from "#styled-system/css";
 import { Box, Center, CenterProps, Flex, styled } from "#styled-system/jsx";
 import Button from "@codegouvfr/react-dsfr/Button";
+import Input from "@codegouvfr/react-dsfr/Input";
 import { useMutation } from "@tanstack/react-query";
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
+import { useState } from "react";
 import { v4 } from "uuid";
-import { Banner } from "#components/Banner";
-import { EnsureUser } from "#components/EnsureUser";
-import { Tabs } from "#components/Tabs";
 import { ElectricStatus, useElectricStatus, useUser } from "../contexts/AuthContext";
 import { db } from "../db";
 import { AllReports, MyReports } from "../features/ReportList";
-import { useNetworkState } from "react-use";
-import { Status, SyncFormStatus } from "#components/SyncForm";
-import Input from "@codegouvfr/react-dsfr/Input";
-import { useState } from "react";
-import { SearchResults } from "#components/ReportSearch.js";
-import { useNavigate } from "@tanstack/react-router";
 
 const Index = () => {
   // TODO: put this into an xstate/store
