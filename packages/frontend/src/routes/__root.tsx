@@ -70,10 +70,10 @@ const Layout = ({ children }: PropsWithChildren) => {
         serviceTitle={
           isDesktop ? (
             <>
-              Compte-rendu VIF
-              {/* <Badge as="span" noIcon severity="info">
+              Compte-rendu VIF{" "}
+              <Badge as="span" noIcon severity="success">
                 Beta
-              </Badge> */}
+              </Badge>
             </>
           ) : null
         }
