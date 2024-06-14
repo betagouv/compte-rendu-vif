@@ -3,6 +3,7 @@ import { safeParseLocalStorage } from "../utils";
 import { useQuery } from "@tanstack/react-query";
 import { electric } from "../db";
 import { api, setToken, type RouterOutputs } from "../api";
+import { differenceInHours } from "date-fns";
 
 const initialAuth = safeParseLocalStorage("crvif/auth");
 setToken(initialAuth?.token);
@@ -27,11 +28,12 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     }
   };
 
-  useQuery({
+  const refreshTokenQuery = useQuery({
     queryKey: ["refresh-token"],
     queryFn: async () => {
       if (!data?.token) return;
 
+      if (new Date(data.expiresAt!) > new Date()) return null;
       try {
         const resp = await api.get("/api/refresh-token", {
           query: { token: data.token, refreshToken: data.refreshToken! },
@@ -61,7 +63,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
       console.log("connecting to electric");
       if (electric.isConnected) electric.disconnect();
 
-      await electric.connect(data.token!);
+      await electric.connect(data!.token);
       await electric.db.clause.sync();
       await electric.db.user.sync({ where: { udap_id: data?.user?.udap_id } });
       await electric.db.report.sync({
@@ -75,7 +77,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
 
       return true;
     },
-    enabled: !!data?.token,
+    enabled: !!data?.token && refreshTokenQuery.isSuccess,
     refetchOnWindowFocus: false,
     onError: (e) => console.error("aaaaa", e),
   });
@@ -90,7 +92,6 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     electricStatus: electricQuery.status,
   };
 
-  console.log(value);
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
@@ -108,7 +109,7 @@ export const useLogout = () => {
   const [data, setData] = useAuthContext();
 
   return () => {
-    setData({ ...data, token: undefined, user: undefined });
+    setData({ ...data, token: undefined, user: undefined, refreshToken: undefined });
   };
 };
 

@@ -60,7 +60,7 @@ const generatePdf = async ({ htmlString, udap }: { htmlString: string; udap: Uda
     <ReportPDFDocument
       udap={udap as Udap}
       htmlString={htmlString}
-      images={{ marianne: "./public/marianne.png", marianneFooter: "./public/marianneFooter.png" }}
+      images={{ marianne: "./public/marianne.png", marianneFooter: "./public/marianne_footer.png" }}
     />,
   );
 };

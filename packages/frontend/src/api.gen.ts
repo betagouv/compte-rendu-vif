@@ -36,6 +36,7 @@ export namespace Endpoints {
           }
         | undefined;
       token: string;
+      expiresAt: string;
       refreshToken: string;
     };
   };
@@ -69,6 +70,7 @@ export namespace Endpoints {
           }
         | undefined;
       token: string;
+      expiresAt: string;
       refreshToken: string;
     };
   };
@@ -102,6 +104,7 @@ export namespace Endpoints {
           }
         | undefined;
       token: string;
+      expiresAt: string;
       refreshToken: string;
     };
   };

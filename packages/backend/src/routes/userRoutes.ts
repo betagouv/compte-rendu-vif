@@ -45,7 +45,10 @@ export const loginTSchema = {
 };
 
 export const refreshTokenTSchema = {
-  querystring: Type.Object({ token: Type.String(), refreshToken: Type.Optional(Type.String()) }),
+  querystring: Type.Object({
+    token: Type.String(),
+    refreshToken: Type.Optional(Type.String()),
+  }),
   response: { 200: userAndTokenTSchema },
 };
 
