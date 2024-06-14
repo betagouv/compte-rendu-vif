@@ -71,8 +71,8 @@ const Layout = ({ children }: PropsWithChildren) => {
           isDesktop ? (
             <>
               Compte-rendu VIF{" "}
-              <Badge as="span" noIcon severity="warning">
-                WiP
+              <Badge as="span" noIcon severity="info">
+                Beta
               </Badge>
             </>
           ) : null
