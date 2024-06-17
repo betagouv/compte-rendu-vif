@@ -148,11 +148,7 @@ const MenuModal = ({ menu, isOpen, className }: { menu: NestedMenu | null; isOpe
       {menu === null ? null : (
         <>
           <MenuTitle
-            backButtonOnClick={
-              menu === "main"
-                ? undefined
-                : () => void console.log("close") || menuStore.send({ type: "setMenu", menu: "main" })
-            }
+            backButtonOnClick={menu === "main" ? undefined : () => menuStore.send({ type: "setMenu", menu: "main" })}
           >
             {modalTitles[menu]}
           </MenuTitle>

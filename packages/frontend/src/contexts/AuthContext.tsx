@@ -3,7 +3,6 @@ import { safeParseLocalStorage } from "../utils";
 import { useQuery } from "@tanstack/react-query";
 import { electric } from "../db";
 import { api, setToken, type RouterOutputs } from "../api";
-import { differenceInHours } from "date-fns";
 
 const initialAuth = safeParseLocalStorage("crvif/auth");
 setToken(initialAuth?.token);
@@ -41,7 +40,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
 
         if (resp.token === null) {
           console.log("token expired but couldn't find a refresh token, logging out");
-          setDataAndSaveInStorage({ ...data, token: undefined, user: undefined });
+          setDataAndSaveInStorage({ token: undefined, user: undefined });
         } else {
           console.log("token refreshed");
           setDataAndSaveInStorage({ ...data, ...resp });
@@ -54,8 +53,6 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     enabled: !!data?.token,
     refetchOnWindowFocus: false,
   });
-
-  console.log(!!data?.token);
 
   const electricQuery = useQuery({
     queryKey: ["electric", data?.token!],
@@ -74,6 +71,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
           user: true,
         },
       });
+      await electric.db.service_instructeurs.sync({ where: { udap_id: data?.user?.udap_id } });
 
       return true;
     },

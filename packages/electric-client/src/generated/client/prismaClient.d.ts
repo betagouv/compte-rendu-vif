@@ -84,6 +84,28 @@ export type ReportPayload<ExtArgs extends $Extensions.Args = $Extensions.Default
  * 
  */
 export type Report = runtime.Types.DefaultSelection<ReportPayload>
+export type Service_instructeursPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  name: "Service_instructeurs"
+  objects: {}
+  scalars: $Extensions.GetResult<{
+    /**
+     * @zod.number.int().gte(-2147483648).lte(2147483647)
+     */
+    id: number
+    full_name: string
+    short_name: string
+    email: string | null
+    tel: string | null
+    udap_id: string | null
+  }, ExtArgs["result"]["service_instructeurs"]>
+  composites: {}
+}
+
+/**
+ * Model Service_instructeurs
+ * 
+ */
+export type Service_instructeurs = runtime.Types.DefaultSelection<Service_instructeursPayload>
 export type UdapPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
   name: "Udap"
   objects: {
@@ -288,6 +310,16 @@ export class PrismaClient<
     * ```
     */
   get report(): Prisma.ReportDelegate<GlobalReject, ExtArgs>;
+
+  /**
+   * `prisma.service_instructeurs`: Exposes CRUD operations for the **Service_instructeurs** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Service_instructeurs
+    * const service_instructeurs = await prisma.service_instructeurs.findMany()
+    * ```
+    */
+  get service_instructeurs(): Prisma.Service_instructeursDelegate<GlobalReject, ExtArgs>;
 
   /**
    * `prisma.udap`: Exposes CRUD operations for the **Udap** model.
@@ -794,6 +826,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     Clause: 'Clause',
     Delegation: 'Delegation',
     Report: 'Report',
+    Service_instructeurs: 'Service_instructeurs',
     Udap: 'Udap',
     User: 'User'
   };
@@ -812,7 +845,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type TypeMap<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     meta: {
-      modelProps: 'clause' | 'delegation' | 'report' | 'udap' | 'user'
+      modelProps: 'clause' | 'delegation' | 'report' | 'service_instructeurs' | 'udap' | 'user'
       txIsolationLevel: Prisma.TransactionIsolationLevel
     },
     model: {
@@ -1008,6 +1041,71 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
           count: {
             args: Prisma.ReportCountArgs<ExtArgs>,
             result: $Utils.Optional<ReportCountAggregateOutputType> | number
+          }
+        }
+      }
+      Service_instructeurs: {
+        payload: Service_instructeursPayload<ExtArgs>
+        operations: {
+          findUnique: {
+            args: Prisma.Service_instructeursFindUniqueArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Service_instructeursPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.Service_instructeursFindUniqueOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Service_instructeursPayload>
+          }
+          findFirst: {
+            args: Prisma.Service_instructeursFindFirstArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Service_instructeursPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.Service_instructeursFindFirstOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Service_instructeursPayload>
+          }
+          findMany: {
+            args: Prisma.Service_instructeursFindManyArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Service_instructeursPayload>[]
+          }
+          create: {
+            args: Prisma.Service_instructeursCreateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Service_instructeursPayload>
+          }
+          createMany: {
+            args: Prisma.Service_instructeursCreateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          delete: {
+            args: Prisma.Service_instructeursDeleteArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Service_instructeursPayload>
+          }
+          update: {
+            args: Prisma.Service_instructeursUpdateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Service_instructeursPayload>
+          }
+          deleteMany: {
+            args: Prisma.Service_instructeursDeleteManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          updateMany: {
+            args: Prisma.Service_instructeursUpdateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          upsert: {
+            args: Prisma.Service_instructeursUpsertArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Service_instructeursPayload>
+          }
+          aggregate: {
+            args: Prisma.Service_instructeursAggregateArgs<ExtArgs>,
+            result: $Utils.Optional<AggregateService_instructeurs>
+          }
+          groupBy: {
+            args: Prisma.Service_instructeursGroupByArgs<ExtArgs>,
+            result: $Utils.Optional<Service_instructeursGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.Service_instructeursCountArgs<ExtArgs>,
+            result: $Utils.Optional<Service_instructeursCountAggregateOutputType> | number
           }
         }
       }
@@ -4266,6 +4364,927 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
 
   /**
+   * Model Service_instructeurs
+   */
+
+
+  export type AggregateService_instructeurs = {
+    _count: Service_instructeursCountAggregateOutputType | null
+    _avg: Service_instructeursAvgAggregateOutputType | null
+    _sum: Service_instructeursSumAggregateOutputType | null
+    _min: Service_instructeursMinAggregateOutputType | null
+    _max: Service_instructeursMaxAggregateOutputType | null
+  }
+
+  export type Service_instructeursAvgAggregateOutputType = {
+    id: number | null
+  }
+
+  export type Service_instructeursSumAggregateOutputType = {
+    id: number | null
+  }
+
+  export type Service_instructeursMinAggregateOutputType = {
+    id: number | null
+    full_name: string | null
+    short_name: string | null
+    email: string | null
+    tel: string | null
+    udap_id: string | null
+  }
+
+  export type Service_instructeursMaxAggregateOutputType = {
+    id: number | null
+    full_name: string | null
+    short_name: string | null
+    email: string | null
+    tel: string | null
+    udap_id: string | null
+  }
+
+  export type Service_instructeursCountAggregateOutputType = {
+    id: number
+    full_name: number
+    short_name: number
+    email: number
+    tel: number
+    udap_id: number
+    _all: number
+  }
+
+
+  export type Service_instructeursAvgAggregateInputType = {
+    id?: true
+  }
+
+  export type Service_instructeursSumAggregateInputType = {
+    id?: true
+  }
+
+  export type Service_instructeursMinAggregateInputType = {
+    id?: true
+    full_name?: true
+    short_name?: true
+    email?: true
+    tel?: true
+    udap_id?: true
+  }
+
+  export type Service_instructeursMaxAggregateInputType = {
+    id?: true
+    full_name?: true
+    short_name?: true
+    email?: true
+    tel?: true
+    udap_id?: true
+  }
+
+  export type Service_instructeursCountAggregateInputType = {
+    id?: true
+    full_name?: true
+    short_name?: true
+    email?: true
+    tel?: true
+    udap_id?: true
+    _all?: true
+  }
+
+  export type Service_instructeursAggregateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Service_instructeurs to aggregate.
+     */
+    where?: Service_instructeursWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Service_instructeurs to fetch.
+     */
+    orderBy?: Enumerable<Service_instructeursOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: Service_instructeursWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Service_instructeurs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Service_instructeurs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Service_instructeurs
+    **/
+    _count?: true | Service_instructeursCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: Service_instructeursAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: Service_instructeursSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Service_instructeursMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Service_instructeursMaxAggregateInputType
+  }
+
+  export type GetService_instructeursAggregateType<T extends Service_instructeursAggregateArgs> = {
+        [P in keyof T & keyof AggregateService_instructeurs]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateService_instructeurs[P]>
+      : GetScalarType<T[P], AggregateService_instructeurs[P]>
+  }
+
+
+
+
+  export type Service_instructeursGroupByArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    where?: Service_instructeursWhereInput
+    orderBy?: Enumerable<Service_instructeursOrderByWithAggregationInput>
+    by: Service_instructeursScalarFieldEnum[]
+    having?: Service_instructeursScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Service_instructeursCountAggregateInputType | true
+    _avg?: Service_instructeursAvgAggregateInputType
+    _sum?: Service_instructeursSumAggregateInputType
+    _min?: Service_instructeursMinAggregateInputType
+    _max?: Service_instructeursMaxAggregateInputType
+  }
+
+
+  export type Service_instructeursGroupByOutputType = {
+    id: number
+    full_name: string
+    short_name: string
+    email: string | null
+    tel: string | null
+    udap_id: string | null
+    _count: Service_instructeursCountAggregateOutputType | null
+    _avg: Service_instructeursAvgAggregateOutputType | null
+    _sum: Service_instructeursSumAggregateOutputType | null
+    _min: Service_instructeursMinAggregateOutputType | null
+    _max: Service_instructeursMaxAggregateOutputType | null
+  }
+
+  type GetService_instructeursGroupByPayload<T extends Service_instructeursGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickArray<Service_instructeursGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Service_instructeursGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Service_instructeursGroupByOutputType[P]>
+            : GetScalarType<T[P], Service_instructeursGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type Service_instructeursSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    full_name?: boolean
+    short_name?: boolean
+    email?: boolean
+    tel?: boolean
+    udap_id?: boolean
+  }, ExtArgs["result"]["service_instructeurs"]>
+
+  export type Service_instructeursSelectScalar = {
+    id?: boolean
+    full_name?: boolean
+    short_name?: boolean
+    email?: boolean
+    tel?: boolean
+    udap_id?: boolean
+  }
+
+
+  type Service_instructeursGetPayload<S extends boolean | null | undefined | Service_instructeursArgs> = $Types.GetResult<Service_instructeursPayload, S>
+
+  type Service_instructeursCountArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = 
+    Omit<Service_instructeursFindManyArgs, 'select' | 'include'> & {
+      select?: Service_instructeursCountAggregateInputType | true
+    }
+
+  export interface Service_instructeursDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Service_instructeurs'], meta: { name: 'Service_instructeurs' } }
+    /**
+     * Find zero or one Service_instructeurs that matches the filter.
+     * @param {Service_instructeursFindUniqueArgs} args - Arguments to find a Service_instructeurs
+     * @example
+     * // Get one Service_instructeurs
+     * const service_instructeurs = await prisma.service_instructeurs.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends Service_instructeursFindUniqueArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, Service_instructeursFindUniqueArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'Service_instructeurs'> extends True ? Prisma__Service_instructeursClient<$Types.GetResult<Service_instructeursPayload<ExtArgs>, T, 'findUnique', never>, never, ExtArgs> : Prisma__Service_instructeursClient<$Types.GetResult<Service_instructeursPayload<ExtArgs>, T, 'findUnique', never> | null, null, ExtArgs>
+
+    /**
+     * Find one Service_instructeurs that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {Service_instructeursFindUniqueOrThrowArgs} args - Arguments to find a Service_instructeurs
+     * @example
+     * // Get one Service_instructeurs
+     * const service_instructeurs = await prisma.service_instructeurs.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends Service_instructeursFindUniqueOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, Service_instructeursFindUniqueOrThrowArgs<ExtArgs>>
+    ): Prisma__Service_instructeursClient<$Types.GetResult<Service_instructeursPayload<ExtArgs>, T, 'findUniqueOrThrow', never>, never, ExtArgs>
+
+    /**
+     * Find the first Service_instructeurs that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Service_instructeursFindFirstArgs} args - Arguments to find a Service_instructeurs
+     * @example
+     * // Get one Service_instructeurs
+     * const service_instructeurs = await prisma.service_instructeurs.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends Service_instructeursFindFirstArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, Service_instructeursFindFirstArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'Service_instructeurs'> extends True ? Prisma__Service_instructeursClient<$Types.GetResult<Service_instructeursPayload<ExtArgs>, T, 'findFirst', never>, never, ExtArgs> : Prisma__Service_instructeursClient<$Types.GetResult<Service_instructeursPayload<ExtArgs>, T, 'findFirst', never> | null, null, ExtArgs>
+
+    /**
+     * Find the first Service_instructeurs that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Service_instructeursFindFirstOrThrowArgs} args - Arguments to find a Service_instructeurs
+     * @example
+     * // Get one Service_instructeurs
+     * const service_instructeurs = await prisma.service_instructeurs.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends Service_instructeursFindFirstOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, Service_instructeursFindFirstOrThrowArgs<ExtArgs>>
+    ): Prisma__Service_instructeursClient<$Types.GetResult<Service_instructeursPayload<ExtArgs>, T, 'findFirstOrThrow', never>, never, ExtArgs>
+
+    /**
+     * Find zero or more Service_instructeurs that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Service_instructeursFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Service_instructeurs
+     * const service_instructeurs = await prisma.service_instructeurs.findMany()
+     * 
+     * // Get first 10 Service_instructeurs
+     * const service_instructeurs = await prisma.service_instructeurs.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const service_instructeursWithIdOnly = await prisma.service_instructeurs.findMany({ select: { id: true } })
+     * 
+    **/
+    findMany<T extends Service_instructeursFindManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, Service_instructeursFindManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Types.GetResult<Service_instructeursPayload<ExtArgs>, T, 'findMany', never>>
+
+    /**
+     * Create a Service_instructeurs.
+     * @param {Service_instructeursCreateArgs} args - Arguments to create a Service_instructeurs.
+     * @example
+     * // Create one Service_instructeurs
+     * const Service_instructeurs = await prisma.service_instructeurs.create({
+     *   data: {
+     *     // ... data to create a Service_instructeurs
+     *   }
+     * })
+     * 
+    **/
+    create<T extends Service_instructeursCreateArgs<ExtArgs>>(
+      args: SelectSubset<T, Service_instructeursCreateArgs<ExtArgs>>
+    ): Prisma__Service_instructeursClient<$Types.GetResult<Service_instructeursPayload<ExtArgs>, T, 'create', never>, never, ExtArgs>
+
+    /**
+     * Create many Service_instructeurs.
+     *     @param {Service_instructeursCreateManyArgs} args - Arguments to create many Service_instructeurs.
+     *     @example
+     *     // Create many Service_instructeurs
+     *     const service_instructeurs = await prisma.service_instructeurs.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
+     *     
+    **/
+    createMany<T extends Service_instructeursCreateManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, Service_instructeursCreateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Service_instructeurs.
+     * @param {Service_instructeursDeleteArgs} args - Arguments to delete one Service_instructeurs.
+     * @example
+     * // Delete one Service_instructeurs
+     * const Service_instructeurs = await prisma.service_instructeurs.delete({
+     *   where: {
+     *     // ... filter to delete one Service_instructeurs
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends Service_instructeursDeleteArgs<ExtArgs>>(
+      args: SelectSubset<T, Service_instructeursDeleteArgs<ExtArgs>>
+    ): Prisma__Service_instructeursClient<$Types.GetResult<Service_instructeursPayload<ExtArgs>, T, 'delete', never>, never, ExtArgs>
+
+    /**
+     * Update one Service_instructeurs.
+     * @param {Service_instructeursUpdateArgs} args - Arguments to update one Service_instructeurs.
+     * @example
+     * // Update one Service_instructeurs
+     * const service_instructeurs = await prisma.service_instructeurs.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends Service_instructeursUpdateArgs<ExtArgs>>(
+      args: SelectSubset<T, Service_instructeursUpdateArgs<ExtArgs>>
+    ): Prisma__Service_instructeursClient<$Types.GetResult<Service_instructeursPayload<ExtArgs>, T, 'update', never>, never, ExtArgs>
+
+    /**
+     * Delete zero or more Service_instructeurs.
+     * @param {Service_instructeursDeleteManyArgs} args - Arguments to filter Service_instructeurs to delete.
+     * @example
+     * // Delete a few Service_instructeurs
+     * const { count } = await prisma.service_instructeurs.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends Service_instructeursDeleteManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, Service_instructeursDeleteManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Service_instructeurs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Service_instructeursUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Service_instructeurs
+     * const service_instructeurs = await prisma.service_instructeurs.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends Service_instructeursUpdateManyArgs<ExtArgs>>(
+      args: SelectSubset<T, Service_instructeursUpdateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Service_instructeurs.
+     * @param {Service_instructeursUpsertArgs} args - Arguments to update or create a Service_instructeurs.
+     * @example
+     * // Update or create a Service_instructeurs
+     * const service_instructeurs = await prisma.service_instructeurs.upsert({
+     *   create: {
+     *     // ... data to create a Service_instructeurs
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Service_instructeurs we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends Service_instructeursUpsertArgs<ExtArgs>>(
+      args: SelectSubset<T, Service_instructeursUpsertArgs<ExtArgs>>
+    ): Prisma__Service_instructeursClient<$Types.GetResult<Service_instructeursPayload<ExtArgs>, T, 'upsert', never>, never, ExtArgs>
+
+    /**
+     * Count the number of Service_instructeurs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Service_instructeursCountArgs} args - Arguments to filter Service_instructeurs to count.
+     * @example
+     * // Count the number of Service_instructeurs
+     * const count = await prisma.service_instructeurs.count({
+     *   where: {
+     *     // ... the filter for the Service_instructeurs we want to count
+     *   }
+     * })
+    **/
+    count<T extends Service_instructeursCountArgs>(
+      args?: Subset<T, Service_instructeursCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Service_instructeursCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Service_instructeurs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Service_instructeursAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Service_instructeursAggregateArgs>(args: Subset<T, Service_instructeursAggregateArgs>): Prisma.PrismaPromise<GetService_instructeursAggregateType<T>>
+
+    /**
+     * Group by Service_instructeurs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Service_instructeursGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends Service_instructeursGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: Service_instructeursGroupByArgs['orderBy'] }
+        : { orderBy?: Service_instructeursGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends TupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, Service_instructeursGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetService_instructeursGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Service_instructeurs.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export class Prisma__Service_instructeursClient<T, Null = never, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> implements Prisma.PrismaPromise<T> {
+    private readonly _dmmf;
+    private readonly _queryType;
+    private readonly _rootField;
+    private readonly _clientMethod;
+    private readonly _args;
+    private readonly _dataPath;
+    private readonly _errorFormat;
+    private readonly _measurePerformance?;
+    private _isList;
+    private _callsite;
+    private _requestPromise?;
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+    constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
+
+
+    private get _document();
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): Promise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): Promise<T>;
+  }
+
+
+
+  // Custom InputTypes
+
+  /**
+   * Service_instructeurs base type for findUnique actions
+   */
+  export type Service_instructeursFindUniqueArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Service_instructeurs
+     */
+    select?: Service_instructeursSelect<ExtArgs> | null
+    /**
+     * Filter, which Service_instructeurs to fetch.
+     */
+    where: Service_instructeursWhereUniqueInput
+  }
+
+  /**
+   * Service_instructeurs findUnique
+   */
+  export interface Service_instructeursFindUniqueArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends Service_instructeursFindUniqueArgsBase<ExtArgs> {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * Service_instructeurs findUniqueOrThrow
+   */
+  export type Service_instructeursFindUniqueOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Service_instructeurs
+     */
+    select?: Service_instructeursSelect<ExtArgs> | null
+    /**
+     * Filter, which Service_instructeurs to fetch.
+     */
+    where: Service_instructeursWhereUniqueInput
+  }
+
+
+  /**
+   * Service_instructeurs base type for findFirst actions
+   */
+  export type Service_instructeursFindFirstArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Service_instructeurs
+     */
+    select?: Service_instructeursSelect<ExtArgs> | null
+    /**
+     * Filter, which Service_instructeurs to fetch.
+     */
+    where?: Service_instructeursWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Service_instructeurs to fetch.
+     */
+    orderBy?: Enumerable<Service_instructeursOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Service_instructeurs.
+     */
+    cursor?: Service_instructeursWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Service_instructeurs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Service_instructeurs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Service_instructeurs.
+     */
+    distinct?: Enumerable<Service_instructeursScalarFieldEnum>
+  }
+
+  /**
+   * Service_instructeurs findFirst
+   */
+  export interface Service_instructeursFindFirstArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends Service_instructeursFindFirstArgsBase<ExtArgs> {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * Service_instructeurs findFirstOrThrow
+   */
+  export type Service_instructeursFindFirstOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Service_instructeurs
+     */
+    select?: Service_instructeursSelect<ExtArgs> | null
+    /**
+     * Filter, which Service_instructeurs to fetch.
+     */
+    where?: Service_instructeursWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Service_instructeurs to fetch.
+     */
+    orderBy?: Enumerable<Service_instructeursOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Service_instructeurs.
+     */
+    cursor?: Service_instructeursWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Service_instructeurs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Service_instructeurs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Service_instructeurs.
+     */
+    distinct?: Enumerable<Service_instructeursScalarFieldEnum>
+  }
+
+
+  /**
+   * Service_instructeurs findMany
+   */
+  export type Service_instructeursFindManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Service_instructeurs
+     */
+    select?: Service_instructeursSelect<ExtArgs> | null
+    /**
+     * Filter, which Service_instructeurs to fetch.
+     */
+    where?: Service_instructeursWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Service_instructeurs to fetch.
+     */
+    orderBy?: Enumerable<Service_instructeursOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Service_instructeurs.
+     */
+    cursor?: Service_instructeursWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Service_instructeurs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Service_instructeurs.
+     */
+    skip?: number
+    distinct?: Enumerable<Service_instructeursScalarFieldEnum>
+  }
+
+
+  /**
+   * Service_instructeurs create
+   */
+  export type Service_instructeursCreateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Service_instructeurs
+     */
+    select?: Service_instructeursSelect<ExtArgs> | null
+    /**
+     * The data needed to create a Service_instructeurs.
+     */
+    data: XOR<Service_instructeursCreateInput, Service_instructeursUncheckedCreateInput>
+  }
+
+
+  /**
+   * Service_instructeurs createMany
+   */
+  export type Service_instructeursCreateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Service_instructeurs.
+     */
+    data: Enumerable<Service_instructeursCreateManyInput>
+    skipDuplicates?: boolean
+  }
+
+
+  /**
+   * Service_instructeurs update
+   */
+  export type Service_instructeursUpdateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Service_instructeurs
+     */
+    select?: Service_instructeursSelect<ExtArgs> | null
+    /**
+     * The data needed to update a Service_instructeurs.
+     */
+    data: XOR<Service_instructeursUpdateInput, Service_instructeursUncheckedUpdateInput>
+    /**
+     * Choose, which Service_instructeurs to update.
+     */
+    where: Service_instructeursWhereUniqueInput
+  }
+
+
+  /**
+   * Service_instructeurs updateMany
+   */
+  export type Service_instructeursUpdateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Service_instructeurs.
+     */
+    data: XOR<Service_instructeursUpdateManyMutationInput, Service_instructeursUncheckedUpdateManyInput>
+    /**
+     * Filter which Service_instructeurs to update
+     */
+    where?: Service_instructeursWhereInput
+  }
+
+
+  /**
+   * Service_instructeurs upsert
+   */
+  export type Service_instructeursUpsertArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Service_instructeurs
+     */
+    select?: Service_instructeursSelect<ExtArgs> | null
+    /**
+     * The filter to search for the Service_instructeurs to update in case it exists.
+     */
+    where: Service_instructeursWhereUniqueInput
+    /**
+     * In case the Service_instructeurs found by the `where` argument doesn't exist, create a new Service_instructeurs with this data.
+     */
+    create: XOR<Service_instructeursCreateInput, Service_instructeursUncheckedCreateInput>
+    /**
+     * In case the Service_instructeurs was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<Service_instructeursUpdateInput, Service_instructeursUncheckedUpdateInput>
+  }
+
+
+  /**
+   * Service_instructeurs delete
+   */
+  export type Service_instructeursDeleteArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Service_instructeurs
+     */
+    select?: Service_instructeursSelect<ExtArgs> | null
+    /**
+     * Filter which Service_instructeurs to delete.
+     */
+    where: Service_instructeursWhereUniqueInput
+  }
+
+
+  /**
+   * Service_instructeurs deleteMany
+   */
+  export type Service_instructeursDeleteManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Service_instructeurs to delete
+     */
+    where?: Service_instructeursWhereInput
+  }
+
+
+  /**
+   * Service_instructeurs without action
+   */
+  export type Service_instructeursArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Service_instructeurs
+     */
+    select?: Service_instructeursSelect<ExtArgs> | null
+  }
+
+
+
+  /**
    * Model Udap
    */
 
@@ -6324,6 +7343,18 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type ReportScalarFieldEnum = (typeof ReportScalarFieldEnum)[keyof typeof ReportScalarFieldEnum]
 
 
+  export const Service_instructeursScalarFieldEnum: {
+    id: 'id',
+    full_name: 'full_name',
+    short_name: 'short_name',
+    email: 'email',
+    tel: 'tel',
+    udap_id: 'udap_id'
+  };
+
+  export type Service_instructeursScalarFieldEnum = (typeof Service_instructeursScalarFieldEnum)[keyof typeof Service_instructeursScalarFieldEnum]
+
+
   export const UdapScalarFieldEnum: {
     id: 'id',
     department: 'department',
@@ -6561,6 +7592,57 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     serviceInstructeur?: IntNullableWithAggregatesFilter | number | null
     pdf?: StringNullableWithAggregatesFilter | string | null
     disabled?: BoolNullableWithAggregatesFilter | boolean | null
+    udap_id?: StringNullableWithAggregatesFilter | string | null
+  }
+
+  export type Service_instructeursWhereInput = {
+    AND?: Enumerable<Service_instructeursWhereInput>
+    OR?: Enumerable<Service_instructeursWhereInput>
+    NOT?: Enumerable<Service_instructeursWhereInput>
+    id?: IntFilter | number
+    full_name?: StringFilter | string
+    short_name?: StringFilter | string
+    email?: StringNullableFilter | string | null
+    tel?: StringNullableFilter | string | null
+    udap_id?: StringNullableFilter | string | null
+  }
+
+  export type Service_instructeursOrderByWithRelationInput = {
+    id?: SortOrder
+    full_name?: SortOrder
+    short_name?: SortOrder
+    email?: SortOrderInput | SortOrder
+    tel?: SortOrderInput | SortOrder
+    udap_id?: SortOrderInput | SortOrder
+  }
+
+  export type Service_instructeursWhereUniqueInput = {
+    id?: number
+  }
+
+  export type Service_instructeursOrderByWithAggregationInput = {
+    id?: SortOrder
+    full_name?: SortOrder
+    short_name?: SortOrder
+    email?: SortOrderInput | SortOrder
+    tel?: SortOrderInput | SortOrder
+    udap_id?: SortOrderInput | SortOrder
+    _count?: Service_instructeursCountOrderByAggregateInput
+    _avg?: Service_instructeursAvgOrderByAggregateInput
+    _max?: Service_instructeursMaxOrderByAggregateInput
+    _min?: Service_instructeursMinOrderByAggregateInput
+    _sum?: Service_instructeursSumOrderByAggregateInput
+  }
+
+  export type Service_instructeursScalarWhereWithAggregatesInput = {
+    AND?: Enumerable<Service_instructeursScalarWhereWithAggregatesInput>
+    OR?: Enumerable<Service_instructeursScalarWhereWithAggregatesInput>
+    NOT?: Enumerable<Service_instructeursScalarWhereWithAggregatesInput>
+    id?: IntWithAggregatesFilter | number
+    full_name?: StringWithAggregatesFilter | string
+    short_name?: StringWithAggregatesFilter | string
+    email?: StringNullableWithAggregatesFilter | string | null
+    tel?: StringNullableWithAggregatesFilter | string | null
     udap_id?: StringNullableWithAggregatesFilter | string | null
   }
 
@@ -6921,6 +8003,69 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     serviceInstructeur?: NullableIntFieldUpdateOperationsInput | number | null
     pdf?: NullableStringFieldUpdateOperationsInput | string | null
     disabled?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    udap_id?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type Service_instructeursCreateInput = {
+    id: number
+    full_name: string
+    short_name: string
+    email?: string | null
+    tel?: string | null
+    udap_id?: string | null
+  }
+
+  export type Service_instructeursUncheckedCreateInput = {
+    id: number
+    full_name: string
+    short_name: string
+    email?: string | null
+    tel?: string | null
+    udap_id?: string | null
+  }
+
+  export type Service_instructeursUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    full_name?: StringFieldUpdateOperationsInput | string
+    short_name?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    tel?: NullableStringFieldUpdateOperationsInput | string | null
+    udap_id?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type Service_instructeursUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    full_name?: StringFieldUpdateOperationsInput | string
+    short_name?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    tel?: NullableStringFieldUpdateOperationsInput | string | null
+    udap_id?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type Service_instructeursCreateManyInput = {
+    id: number
+    full_name: string
+    short_name: string
+    email?: string | null
+    tel?: string | null
+    udap_id?: string | null
+  }
+
+  export type Service_instructeursUpdateManyMutationInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    full_name?: StringFieldUpdateOperationsInput | string
+    short_name?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    tel?: NullableStringFieldUpdateOperationsInput | string | null
+    udap_id?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type Service_instructeursUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    full_name?: StringFieldUpdateOperationsInput | string
+    short_name?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    tel?: NullableStringFieldUpdateOperationsInput | string | null
     udap_id?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -7380,6 +8525,68 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     _max?: NestedBoolNullableFilter
   }
 
+  export type IntFilter = {
+    equals?: number
+    in?: Enumerable<number> | number
+    notIn?: Enumerable<number> | number
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedIntFilter | number
+  }
+
+  export type Service_instructeursCountOrderByAggregateInput = {
+    id?: SortOrder
+    full_name?: SortOrder
+    short_name?: SortOrder
+    email?: SortOrder
+    tel?: SortOrder
+    udap_id?: SortOrder
+  }
+
+  export type Service_instructeursAvgOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type Service_instructeursMaxOrderByAggregateInput = {
+    id?: SortOrder
+    full_name?: SortOrder
+    short_name?: SortOrder
+    email?: SortOrder
+    tel?: SortOrder
+    udap_id?: SortOrder
+  }
+
+  export type Service_instructeursMinOrderByAggregateInput = {
+    id?: SortOrder
+    full_name?: SortOrder
+    short_name?: SortOrder
+    email?: SortOrder
+    tel?: SortOrder
+    udap_id?: SortOrder
+  }
+
+  export type Service_instructeursSumOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type IntWithAggregatesFilter = {
+    equals?: number
+    in?: Enumerable<number> | number
+    notIn?: Enumerable<number> | number
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedIntWithAggregatesFilter | number
+    _count?: NestedIntFilter
+    _avg?: NestedFloatFilter
+    _sum?: NestedIntFilter
+    _min?: NestedIntFilter
+    _max?: NestedIntFilter
+  }
+
   export type UserListRelationFilter = {
     every?: UserWhereInput
     some?: UserWhereInput
@@ -7549,6 +8756,14 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     upsert?: UserUpsertWithoutReportInput
     connect?: UserWhereUniqueInput
     update?: XOR<UserUpdateWithoutReportInput, UserUncheckedUpdateWithoutReportInput>
+  }
+
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
   }
 
   export type UserCreateNestedManyWithoutUdapInput = {
@@ -7905,6 +9120,33 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     _count?: NestedIntNullableFilter
     _min?: NestedBoolNullableFilter
     _max?: NestedBoolNullableFilter
+  }
+
+  export type NestedIntWithAggregatesFilter = {
+    equals?: number
+    in?: Enumerable<number> | number
+    notIn?: Enumerable<number> | number
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedIntWithAggregatesFilter | number
+    _count?: NestedIntFilter
+    _avg?: NestedFloatFilter
+    _sum?: NestedIntFilter
+    _min?: NestedIntFilter
+    _max?: NestedIntFilter
+  }
+
+  export type NestedFloatFilter = {
+    equals?: number
+    in?: Enumerable<number> | number
+    notIn?: Enumerable<number> | number
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedFloatFilter | number
   }
 
   export type UserCreateWithoutDelegation_delegation_createdByTouserInput = {

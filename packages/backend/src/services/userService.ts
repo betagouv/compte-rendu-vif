@@ -132,10 +132,8 @@ export class UserService {
 
   getUserByToken(token: string) {
     const payload = this.validateToken(token);
-    console.log(payload);
     const { sub } = payload;
     if (!sub) throw new AppError(403, "Token invalide");
-    console.log("token id", sub);
     return this.getUserById(sub);
   }
 

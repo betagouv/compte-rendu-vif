@@ -10,7 +10,7 @@
     "pdf": "pnpm --filter @cr-vif/pdf",
     "db:create": "pnpm backend migration:create",
     "db:migrate": "pnpm db:create",
-    "electric:up": "pnpm electric-sql with-config \"pnpm pg-migrations apply --database {{ELECTRIC_PROXY}} --directory ./db/migrations\"",
+    "electric:up": "pnpm electric-sql with-config \"pnpm pg-migrations apply --database {{ELECTRIC_PROXY}} --ignore-error migration_file_edited --directory ./db/migrations\"",
     "show-config": "pnpm electric-sql show-config",
     "electric:migrate": "pnpm electric:up && pnpm electric-client generate:front && pnpm electric-client generate:back && pnpm client:generate",
     "client:json": "pnpm backend dev --create-only",

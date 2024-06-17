@@ -1,11 +1,9 @@
 import { Document, PDFViewer, Page } from "@react-pdf/renderer";
 import { Html } from "react-pdf-html";
 import React from "react";
-import type { Udap, Report, Clause } from "@cr-vif/electric-client/frontend";
-import serviceInstructeurs from "./serviceInstructeur.json";
+import type { Udap, Report, Clause, Service_instructeurs } from "@cr-vif/electric-client/frontend";
 
 export const ReportPDFDocument = ({ udap, htmlString, images }: ReportPDFDocumentProps) => {
-  console.log(images);
   return (
     <Document>
       <Page size="A4">
@@ -145,7 +143,12 @@ type Images = {
 
 export type ReportWithUser = Report & { user?: { email: string; name: string } };
 
-export const getReportHtmlString = (report: ReportWithUser, chipOptions: Clause[], udap: Udap) => {
+export const getReportHtmlString = (
+  report: ReportWithUser,
+  chipOptions: Clause[],
+  udap: Udap,
+  serviceInstructeur?: Service_instructeurs,
+) => {
   const spaceType = chipOptions.find((chip) => chip.key === "type-espace" && chip.value === report.projectSpaceType);
   const decision = chipOptions.find((chip) => chip.key === "decision" && chip.value === report.decision);
   const contacts = report.contacts ? getMultipleChips(chipOptions, "contacts-utiles", report.contacts) : [];
@@ -153,9 +156,6 @@ export const getReportHtmlString = (report: ReportWithUser, chipOptions: Clause[
     ? getMultipleChips(chipOptions, "bonnes-pratiques", report.furtherInformation)
     : [];
 
-  const serviceInstructeur = report.serviceInstructeur
-    ? serviceInstructeurs.find((service) => service.tiers === report.serviceInstructeur)
-    : null;
   const meetDate = report.meetDate ? new Date(report.meetDate) : null;
 
   return minifyHtml(`
@@ -206,7 +206,7 @@ export const getReportHtmlString = (report: ReportWithUser, chipOptions: Clause[
         serviceInstructeur
           ? `<span>
         Vous pouvez contacter le service de la collectivité en charge de l’instruction de votre dossier : <br/>
-        ${serviceInstructeur["libellé tiers"]}, ${serviceInstructeur["liste de diffusion"]}.
+        ${formatServiceInstructeur(serviceInstructeur)}
         </span>
       <br/><br/>`
           : ""
@@ -228,6 +228,11 @@ export const getReportHtmlString = (report: ReportWithUser, chipOptions: Clause[
       <strong>Ce compte rendu ne remplace pas la demande d’autorisation de travaux.</strong>
     </p>
     `);
+};
+
+const formatServiceInstructeur = (serviceInstructeur: Service_instructeurs) => {
+  const contact = [serviceInstructeur.email, serviceInstructeur.tel].filter(Boolean).join(", ");
+  return `${serviceInstructeur.full_name}${contact ? `, ${contact}` : ""}.`;
 };
 
 const formatPhoneNumber = (phoneNumber: string) => {
