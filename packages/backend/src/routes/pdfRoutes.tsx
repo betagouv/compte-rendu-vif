@@ -46,7 +46,6 @@ export const pdfPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
       },
     },
     async (request) => {
-      console.log("salut");
       const { reportId } = request.query;
       const buffer = await request.services.upload.getReportPDF({ reportId });
 

@@ -2,24 +2,32 @@ import { Combobox } from "#components/Combobox";
 import Button from "@codegouvfr/react-dsfr/Button";
 import Input from "@codegouvfr/react-dsfr/Input";
 import { useState } from "react";
-import { serviceInstructeurs } from "@cr-vif/pdf";
+// import { serviceInstructeurs } from "@cr-vif/pdf";
 import { useFormContext, useWatch } from "react-hook-form";
-import { Report } from "@cr-vif/electric-client/frontend";
+import { Report, Service_instructeurs } from "@cr-vif/electric-client/frontend";
+import { useLiveQuery } from "electric-sql/react";
+import { db } from "../db";
+import { useUser } from "../contexts/AuthContext";
 
 export const ServiceInstructeurSelect = () => {
   const form = useFormContext<Report>();
-  const [items, setItems] = useState(serviceInstructeurs);
+  const user = useUser()!;
+  const [inputValue, setInputValue] = useState("");
 
-  const filterItems = ({ value }: { value: string }) => {
-    const filteredItems = serviceInstructeurs.filter((item) =>
-      item["libellé tiers"].toLowerCase().includes(value.toLowerCase()),
-    );
+  const serviceInstructeursQuery = useLiveQuery(
+    db.service_instructeurs.liveMany({
+      where: {
+        udap_id: user.udap_id,
+      },
+    }),
+  );
 
-    setItems(filteredItems);
-  };
+  const rawItems = serviceInstructeursQuery.results ?? [];
 
-  const selectItem = (item: ServiceInstructeur) => {
-    form.setValue("serviceInstructeur", item.tiers);
+  const items = rawItems.filter((item) => item.short_name.toLowerCase().includes(inputValue.toLowerCase()));
+
+  const selectItem = (item: ServiceInstructeur | null) => {
+    form.setValue("serviceInstructeur", item?.id || null);
   };
 
   const value = useWatch({ control: form.control, name: "serviceInstructeur" });
@@ -27,12 +35,15 @@ export const ServiceInstructeurSelect = () => {
   return (
     <Combobox.Root
       selectionBehavior="replace"
-      itemToString={(item) => (item as ServiceInstructeur)?.["libellé tiers"] ?? ""}
-      itemToValue={(item) => (item as ServiceInstructeur)?.tiers.toString() ?? ""}
+      itemToString={(item) => (item as ServiceInstructeur)?.short_name ?? ""}
+      itemToValue={(item) => (item as ServiceInstructeur)?.id.toString() ?? ""}
       items={items}
       value={value ? [value.toString()] : undefined}
-      inputValue={value ? items.find((item) => item.tiers === value)?.["libellé tiers"] : ""}
-      onInputValueChange={filterItems}
+      inputValue={value ? items.find((item) => item.id === value)?.short_name : inputValue}
+      onInputValueChange={(e) => {
+        if (value) selectItem(null);
+        setInputValue(e.value);
+      }}
       onValueChange={(e) => selectItem(e.items?.[0] as ServiceInstructeur)}
     >
       <Combobox.Control>
@@ -48,9 +59,8 @@ export const ServiceInstructeurSelect = () => {
         <Combobox.Content maxH="400px" overflow="auto">
           <Combobox.ItemGroup id="service-instructeur">
             {items.map((item) => (
-              <Combobox.Item key={item.tiers} item={item}>
-                <Combobox.ItemText>{item["libellé tiers"]}</Combobox.ItemText>
-                <Combobox.ItemIndicator>✓</Combobox.ItemIndicator>
+              <Combobox.Item key={item.id} item={item}>
+                <Combobox.ItemText>{item.short_name}</Combobox.ItemText>
               </Combobox.Item>
             ))}
           </Combobox.ItemGroup>
@@ -64,4 +74,4 @@ const ProxyInput = (props: any) => {
   return <Input label="Service instructeur" nativeInputProps={props} />;
 };
 
-type ServiceInstructeur = (typeof serviceInstructeurs)[number];
+type ServiceInstructeur = Service_instructeurs;

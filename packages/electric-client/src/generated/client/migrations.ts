@@ -79,5 +79,20 @@ export default [
       "CREATE TRIGGER delete_main_clause_into_oplog\n   AFTER DELETE ON \"main\".\"clause\"\n   WHEN 1 = (SELECT flag from _electric_trigger_settings WHERE namespace = 'main' AND tablename = 'clause')\nBEGIN\n  INSERT INTO _electric_oplog (namespace, tablename, optype, primaryKey, newRow, oldRow, timestamp)\n  VALUES ('main', 'clause', 'DELETE', json_patch('{}', json_object('key', old.\"key\", 'udap_id', old.\"udap_id\", 'value', old.\"value\")), NULL, json_object('key', old.\"key\", 'text', old.\"text\", 'udap_id', old.\"udap_id\", 'value', old.\"value\"), NULL);\nEND;"
     ],
     "version": "4"
+  },
+  {
+    "statements": [
+      "CREATE TABLE \"service_instructeurs\" (\n  \"id\" INTEGER NOT NULL,\n  \"full_name\" TEXT NOT NULL,\n  \"short_name\" TEXT NOT NULL,\n  \"email\" TEXT,\n  \"tel\" TEXT,\n  \"udap_id\" TEXT,\n  CONSTRAINT \"service_instructeurs_pkey\" PRIMARY KEY (\"id\")\n) WITHOUT ROWID;\n",
+      "INSERT OR IGNORE INTO _electric_trigger_settings (namespace, tablename, flag) VALUES ('main', 'service_instructeurs', 1);",
+      "DROP TRIGGER IF EXISTS update_ensure_main_service_instructeurs_primarykey;",
+      "CREATE TRIGGER update_ensure_main_service_instructeurs_primarykey\n  BEFORE UPDATE ON \"main\".\"service_instructeurs\"\nBEGIN\n  SELECT\n    CASE\n      WHEN old.\"id\" != new.\"id\" THEN\n      \t\tRAISE (ABORT, 'cannot change the value of column id as it belongs to the primary key')\n    END;\nEND;",
+      "DROP TRIGGER IF EXISTS insert_main_service_instructeurs_into_oplog;",
+      "CREATE TRIGGER insert_main_service_instructeurs_into_oplog\n   AFTER INSERT ON \"main\".\"service_instructeurs\"\n   WHEN 1 = (SELECT flag from _electric_trigger_settings WHERE namespace = 'main' AND tablename = 'service_instructeurs')\nBEGIN\n  INSERT INTO _electric_oplog (namespace, tablename, optype, primaryKey, newRow, oldRow, timestamp)\n  VALUES ('main', 'service_instructeurs', 'INSERT', json_patch('{}', json_object('id', new.\"id\")), json_object('email', new.\"email\", 'full_name', new.\"full_name\", 'id', new.\"id\", 'short_name', new.\"short_name\", 'tel', new.\"tel\", 'udap_id', new.\"udap_id\"), NULL, NULL);\nEND;",
+      "DROP TRIGGER IF EXISTS update_main_service_instructeurs_into_oplog;",
+      "CREATE TRIGGER update_main_service_instructeurs_into_oplog\n   AFTER UPDATE ON \"main\".\"service_instructeurs\"\n   WHEN 1 = (SELECT flag from _electric_trigger_settings WHERE namespace = 'main' AND tablename = 'service_instructeurs')\nBEGIN\n  INSERT INTO _electric_oplog (namespace, tablename, optype, primaryKey, newRow, oldRow, timestamp)\n  VALUES ('main', 'service_instructeurs', 'UPDATE', json_patch('{}', json_object('id', new.\"id\")), json_object('email', new.\"email\", 'full_name', new.\"full_name\", 'id', new.\"id\", 'short_name', new.\"short_name\", 'tel', new.\"tel\", 'udap_id', new.\"udap_id\"), json_object('email', old.\"email\", 'full_name', old.\"full_name\", 'id', old.\"id\", 'short_name', old.\"short_name\", 'tel', old.\"tel\", 'udap_id', old.\"udap_id\"), NULL);\nEND;",
+      "DROP TRIGGER IF EXISTS delete_main_service_instructeurs_into_oplog;",
+      "CREATE TRIGGER delete_main_service_instructeurs_into_oplog\n   AFTER DELETE ON \"main\".\"service_instructeurs\"\n   WHEN 1 = (SELECT flag from _electric_trigger_settings WHERE namespace = 'main' AND tablename = 'service_instructeurs')\nBEGIN\n  INSERT INTO _electric_oplog (namespace, tablename, optype, primaryKey, newRow, oldRow, timestamp)\n  VALUES ('main', 'service_instructeurs', 'DELETE', json_patch('{}', json_object('id', old.\"id\")), NULL, json_object('email', old.\"email\", 'full_name', old.\"full_name\", 'id', old.\"id\", 'short_name', old.\"short_name\", 'tel', old.\"tel\", 'udap_id', old.\"udap_id\"), NULL);\nEND;"
+    ],
+    "version": "7"
   }
 ]

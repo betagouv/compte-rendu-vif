@@ -21,6 +21,8 @@ export const QueryModeSchema = z.enum(['default','insensitive']);
 
 export const ReportScalarFieldEnumSchema = z.enum(['id','title','projectDescription','redactedBy','meetDate','applicantName','applicantAddress','projectCadastralRef','projectSpaceType','decision','precisions','contacts','furtherInformation','createdBy','createdAt','serviceInstructeur','pdf','disabled','udap_id']);
 
+export const Service_instructeursScalarFieldEnumSchema = z.enum(['id','full_name','short_name','email','tel','udap_id']);
+
 export const SortOrderSchema = z.enum(['asc','desc']);
 
 export const TransactionIsolationLevelSchema = z.enum(['ReadUncommitted','ReadCommitted','RepeatableRead','Serializable']);
@@ -83,6 +85,21 @@ export const ReportSchema = z.object({
 })
 
 export type Report = z.infer<typeof ReportSchema>
+
+/////////////////////////////////////////
+// SERVICE INSTRUCTEURS SCHEMA
+/////////////////////////////////////////
+
+export const Service_instructeursSchema = z.object({
+  id: z.number().int().gte(-2147483648).lte(2147483647),
+  full_name: z.string(),
+  short_name: z.string(),
+  email: z.string().nullable(),
+  tel: z.string().nullable(),
+  udap_id: z.string().nullable(),
+})
+
+export type Service_instructeurs = z.infer<typeof Service_instructeursSchema>
 
 /////////////////////////////////////////
 // UDAP SCHEMA
@@ -185,6 +202,18 @@ export const ReportSelectSchema: z.ZodType<Prisma.ReportSelect> = z.object({
   disabled: z.boolean().optional(),
   udap_id: z.boolean().optional(),
   user: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
+}).strict()
+
+// SERVICE INSTRUCTEURS
+//------------------------------------------------------
+
+export const Service_instructeursSelectSchema: z.ZodType<Prisma.Service_instructeursSelect> = z.object({
+  id: z.boolean().optional(),
+  full_name: z.boolean().optional(),
+  short_name: z.boolean().optional(),
+  email: z.boolean().optional(),
+  tel: z.boolean().optional(),
+  udap_id: z.boolean().optional(),
 }).strict()
 
 // UDAP
@@ -448,6 +477,57 @@ export const ReportScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.Report
   serviceInstructeur: z.union([ z.lazy(() => IntNullableWithAggregatesFilterSchema),z.number() ]).optional().nullable(),
   pdf: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
   disabled: z.union([ z.lazy(() => BoolNullableWithAggregatesFilterSchema),z.boolean() ]).optional().nullable(),
+  udap_id: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
+}).strict();
+
+export const Service_instructeursWhereInputSchema: z.ZodType<Prisma.Service_instructeursWhereInput> = z.object({
+  AND: z.union([ z.lazy(() => Service_instructeursWhereInputSchema),z.lazy(() => Service_instructeursWhereInputSchema).array() ]).optional(),
+  OR: z.lazy(() => Service_instructeursWhereInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => Service_instructeursWhereInputSchema),z.lazy(() => Service_instructeursWhereInputSchema).array() ]).optional(),
+  id: z.union([ z.lazy(() => IntFilterSchema),z.number() ]).optional(),
+  full_name: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  short_name: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  email: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  tel: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  udap_id: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+}).strict();
+
+export const Service_instructeursOrderByWithRelationInputSchema: z.ZodType<Prisma.Service_instructeursOrderByWithRelationInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  full_name: z.lazy(() => SortOrderSchema).optional(),
+  short_name: z.lazy(() => SortOrderSchema).optional(),
+  email: z.lazy(() => SortOrderSchema).optional(),
+  tel: z.lazy(() => SortOrderSchema).optional(),
+  udap_id: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const Service_instructeursWhereUniqueInputSchema: z.ZodType<Prisma.Service_instructeursWhereUniqueInput> = z.object({
+  id: z.number().int().gte(-2147483648).lte(2147483647).optional()
+}).strict();
+
+export const Service_instructeursOrderByWithAggregationInputSchema: z.ZodType<Prisma.Service_instructeursOrderByWithAggregationInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  full_name: z.lazy(() => SortOrderSchema).optional(),
+  short_name: z.lazy(() => SortOrderSchema).optional(),
+  email: z.lazy(() => SortOrderSchema).optional(),
+  tel: z.lazy(() => SortOrderSchema).optional(),
+  udap_id: z.lazy(() => SortOrderSchema).optional(),
+  _count: z.lazy(() => Service_instructeursCountOrderByAggregateInputSchema).optional(),
+  _avg: z.lazy(() => Service_instructeursAvgOrderByAggregateInputSchema).optional(),
+  _max: z.lazy(() => Service_instructeursMaxOrderByAggregateInputSchema).optional(),
+  _min: z.lazy(() => Service_instructeursMinOrderByAggregateInputSchema).optional(),
+  _sum: z.lazy(() => Service_instructeursSumOrderByAggregateInputSchema).optional()
+}).strict();
+
+export const Service_instructeursScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.Service_instructeursScalarWhereWithAggregatesInput> = z.object({
+  AND: z.union([ z.lazy(() => Service_instructeursScalarWhereWithAggregatesInputSchema),z.lazy(() => Service_instructeursScalarWhereWithAggregatesInputSchema).array() ]).optional(),
+  OR: z.lazy(() => Service_instructeursScalarWhereWithAggregatesInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => Service_instructeursScalarWhereWithAggregatesInputSchema),z.lazy(() => Service_instructeursScalarWhereWithAggregatesInputSchema).array() ]).optional(),
+  id: z.union([ z.lazy(() => IntWithAggregatesFilterSchema),z.number() ]).optional(),
+  full_name: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+  short_name: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+  email: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
+  tel: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
   udap_id: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
 }).strict();
 
@@ -807,6 +887,69 @@ export const ReportUncheckedUpdateManyInputSchema: z.ZodType<Prisma.ReportUnchec
   serviceInstructeur: z.union([ z.number().int().gte(-2147483648).lte(2147483647),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   pdf: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   disabled: z.union([ z.boolean(),z.lazy(() => NullableBoolFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  udap_id: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+}).strict();
+
+export const Service_instructeursCreateInputSchema: z.ZodType<Prisma.Service_instructeursCreateInput> = z.object({
+  id: z.number().int().gte(-2147483648).lte(2147483647),
+  full_name: z.string(),
+  short_name: z.string(),
+  email: z.string().optional().nullable(),
+  tel: z.string().optional().nullable(),
+  udap_id: z.string().optional().nullable()
+}).strict();
+
+export const Service_instructeursUncheckedCreateInputSchema: z.ZodType<Prisma.Service_instructeursUncheckedCreateInput> = z.object({
+  id: z.number().int().gte(-2147483648).lte(2147483647),
+  full_name: z.string(),
+  short_name: z.string(),
+  email: z.string().optional().nullable(),
+  tel: z.string().optional().nullable(),
+  udap_id: z.string().optional().nullable()
+}).strict();
+
+export const Service_instructeursUpdateInputSchema: z.ZodType<Prisma.Service_instructeursUpdateInput> = z.object({
+  id: z.union([ z.number().int().gte(-2147483648).lte(2147483647),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  full_name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  short_name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  email: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  tel: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  udap_id: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+}).strict();
+
+export const Service_instructeursUncheckedUpdateInputSchema: z.ZodType<Prisma.Service_instructeursUncheckedUpdateInput> = z.object({
+  id: z.union([ z.number().int().gte(-2147483648).lte(2147483647),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  full_name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  short_name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  email: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  tel: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  udap_id: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+}).strict();
+
+export const Service_instructeursCreateManyInputSchema: z.ZodType<Prisma.Service_instructeursCreateManyInput> = z.object({
+  id: z.number().int().gte(-2147483648).lte(2147483647),
+  full_name: z.string(),
+  short_name: z.string(),
+  email: z.string().optional().nullable(),
+  tel: z.string().optional().nullable(),
+  udap_id: z.string().optional().nullable()
+}).strict();
+
+export const Service_instructeursUpdateManyMutationInputSchema: z.ZodType<Prisma.Service_instructeursUpdateManyMutationInput> = z.object({
+  id: z.union([ z.number().int().gte(-2147483648).lte(2147483647),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  full_name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  short_name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  email: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  tel: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  udap_id: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+}).strict();
+
+export const Service_instructeursUncheckedUpdateManyInputSchema: z.ZodType<Prisma.Service_instructeursUncheckedUpdateManyInput> = z.object({
+  id: z.union([ z.number().int().gte(-2147483648).lte(2147483647),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  full_name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  short_name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  email: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  tel: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   udap_id: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
@@ -1261,6 +1404,68 @@ export const BoolNullableWithAggregatesFilterSchema: z.ZodType<Prisma.BoolNullab
   _max: z.lazy(() => NestedBoolNullableFilterSchema).optional()
 }).strict();
 
+export const IntFilterSchema: z.ZodType<Prisma.IntFilter> = z.object({
+  equals: z.number().optional(),
+  in: z.number().array().optional(),
+  notIn: z.number().array().optional(),
+  lt: z.number().optional(),
+  lte: z.number().optional(),
+  gt: z.number().optional(),
+  gte: z.number().optional(),
+  not: z.union([ z.number(),z.lazy(() => NestedIntFilterSchema) ]).optional(),
+}).strict();
+
+export const Service_instructeursCountOrderByAggregateInputSchema: z.ZodType<Prisma.Service_instructeursCountOrderByAggregateInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  full_name: z.lazy(() => SortOrderSchema).optional(),
+  short_name: z.lazy(() => SortOrderSchema).optional(),
+  email: z.lazy(() => SortOrderSchema).optional(),
+  tel: z.lazy(() => SortOrderSchema).optional(),
+  udap_id: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const Service_instructeursAvgOrderByAggregateInputSchema: z.ZodType<Prisma.Service_instructeursAvgOrderByAggregateInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const Service_instructeursMaxOrderByAggregateInputSchema: z.ZodType<Prisma.Service_instructeursMaxOrderByAggregateInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  full_name: z.lazy(() => SortOrderSchema).optional(),
+  short_name: z.lazy(() => SortOrderSchema).optional(),
+  email: z.lazy(() => SortOrderSchema).optional(),
+  tel: z.lazy(() => SortOrderSchema).optional(),
+  udap_id: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const Service_instructeursMinOrderByAggregateInputSchema: z.ZodType<Prisma.Service_instructeursMinOrderByAggregateInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  full_name: z.lazy(() => SortOrderSchema).optional(),
+  short_name: z.lazy(() => SortOrderSchema).optional(),
+  email: z.lazy(() => SortOrderSchema).optional(),
+  tel: z.lazy(() => SortOrderSchema).optional(),
+  udap_id: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const Service_instructeursSumOrderByAggregateInputSchema: z.ZodType<Prisma.Service_instructeursSumOrderByAggregateInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const IntWithAggregatesFilterSchema: z.ZodType<Prisma.IntWithAggregatesFilter> = z.object({
+  equals: z.number().optional(),
+  in: z.number().array().optional(),
+  notIn: z.number().array().optional(),
+  lt: z.number().optional(),
+  lte: z.number().optional(),
+  gt: z.number().optional(),
+  gte: z.number().optional(),
+  not: z.union([ z.number(),z.lazy(() => NestedIntWithAggregatesFilterSchema) ]).optional(),
+  _count: z.lazy(() => NestedIntFilterSchema).optional(),
+  _avg: z.lazy(() => NestedFloatFilterSchema).optional(),
+  _sum: z.lazy(() => NestedIntFilterSchema).optional(),
+  _min: z.lazy(() => NestedIntFilterSchema).optional(),
+  _max: z.lazy(() => NestedIntFilterSchema).optional()
+}).strict();
+
 export const UserListRelationFilterSchema: z.ZodType<Prisma.UserListRelationFilter> = z.object({
   every: z.lazy(() => UserWhereInputSchema).optional(),
   some: z.lazy(() => UserWhereInputSchema).optional(),
@@ -1430,6 +1635,14 @@ export const UserUpdateOneRequiredWithoutReportNestedInputSchema: z.ZodType<Pris
   upsert: z.lazy(() => UserUpsertWithoutReportInputSchema).optional(),
   connect: z.lazy(() => UserWhereUniqueInputSchema).optional(),
   update: z.union([ z.lazy(() => UserUpdateWithoutReportInputSchema),z.lazy(() => UserUncheckedUpdateWithoutReportInputSchema) ]).optional(),
+}).strict();
+
+export const IntFieldUpdateOperationsInputSchema: z.ZodType<Prisma.IntFieldUpdateOperationsInput> = z.object({
+  set: z.number().optional(),
+  increment: z.number().optional(),
+  decrement: z.number().optional(),
+  multiply: z.number().optional(),
+  divide: z.number().optional()
 }).strict();
 
 export const UserCreateNestedManyWithoutUdapInputSchema: z.ZodType<Prisma.UserCreateNestedManyWithoutUdapInput> = z.object({
@@ -1786,6 +1999,33 @@ export const NestedBoolNullableWithAggregatesFilterSchema: z.ZodType<Prisma.Nest
   _count: z.lazy(() => NestedIntNullableFilterSchema).optional(),
   _min: z.lazy(() => NestedBoolNullableFilterSchema).optional(),
   _max: z.lazy(() => NestedBoolNullableFilterSchema).optional()
+}).strict();
+
+export const NestedIntWithAggregatesFilterSchema: z.ZodType<Prisma.NestedIntWithAggregatesFilter> = z.object({
+  equals: z.number().optional(),
+  in: z.number().array().optional(),
+  notIn: z.number().array().optional(),
+  lt: z.number().optional(),
+  lte: z.number().optional(),
+  gt: z.number().optional(),
+  gte: z.number().optional(),
+  not: z.union([ z.number(),z.lazy(() => NestedIntWithAggregatesFilterSchema) ]).optional(),
+  _count: z.lazy(() => NestedIntFilterSchema).optional(),
+  _avg: z.lazy(() => NestedFloatFilterSchema).optional(),
+  _sum: z.lazy(() => NestedIntFilterSchema).optional(),
+  _min: z.lazy(() => NestedIntFilterSchema).optional(),
+  _max: z.lazy(() => NestedIntFilterSchema).optional()
+}).strict();
+
+export const NestedFloatFilterSchema: z.ZodType<Prisma.NestedFloatFilter> = z.object({
+  equals: z.number().optional(),
+  in: z.number().array().optional(),
+  notIn: z.number().array().optional(),
+  lt: z.number().optional(),
+  lte: z.number().optional(),
+  gt: z.number().optional(),
+  gte: z.number().optional(),
+  not: z.union([ z.number(),z.lazy(() => NestedFloatFilterSchema) ]).optional(),
 }).strict();
 
 export const UserCreateWithoutDelegation_delegation_createdByTouserInputSchema: z.ZodType<Prisma.UserCreateWithoutDelegation_delegation_createdByTouserInput> = z.object({
@@ -2535,6 +2775,63 @@ export const ReportFindUniqueOrThrowArgsSchema: z.ZodType<Prisma.ReportFindUniqu
   where: ReportWhereUniqueInputSchema,
 }).strict() as z.ZodType<Prisma.ReportFindUniqueOrThrowArgs>
 
+export const Service_instructeursFindFirstArgsSchema: z.ZodType<Prisma.Service_instructeursFindFirstArgs> = z.object({
+  select: Service_instructeursSelectSchema.optional(),
+  where: Service_instructeursWhereInputSchema.optional(),
+  orderBy: z.union([ Service_instructeursOrderByWithRelationInputSchema.array(),Service_instructeursOrderByWithRelationInputSchema ]).optional(),
+  cursor: Service_instructeursWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+  distinct: Service_instructeursScalarFieldEnumSchema.array().optional(),
+}).strict() 
+
+export const Service_instructeursFindFirstOrThrowArgsSchema: z.ZodType<Prisma.Service_instructeursFindFirstOrThrowArgs> = z.object({
+  select: Service_instructeursSelectSchema.optional(),
+  where: Service_instructeursWhereInputSchema.optional(),
+  orderBy: z.union([ Service_instructeursOrderByWithRelationInputSchema.array(),Service_instructeursOrderByWithRelationInputSchema ]).optional(),
+  cursor: Service_instructeursWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+  distinct: Service_instructeursScalarFieldEnumSchema.array().optional(),
+}).strict() 
+
+export const Service_instructeursFindManyArgsSchema: z.ZodType<Prisma.Service_instructeursFindManyArgs> = z.object({
+  select: Service_instructeursSelectSchema.optional(),
+  where: Service_instructeursWhereInputSchema.optional(),
+  orderBy: z.union([ Service_instructeursOrderByWithRelationInputSchema.array(),Service_instructeursOrderByWithRelationInputSchema ]).optional(),
+  cursor: Service_instructeursWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+  distinct: Service_instructeursScalarFieldEnumSchema.array().optional(),
+}).strict() 
+
+export const Service_instructeursAggregateArgsSchema: z.ZodType<Prisma.Service_instructeursAggregateArgs> = z.object({
+  where: Service_instructeursWhereInputSchema.optional(),
+  orderBy: z.union([ Service_instructeursOrderByWithRelationInputSchema.array(),Service_instructeursOrderByWithRelationInputSchema ]).optional(),
+  cursor: Service_instructeursWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+}).strict() 
+
+export const Service_instructeursGroupByArgsSchema: z.ZodType<Prisma.Service_instructeursGroupByArgs> = z.object({
+  where: Service_instructeursWhereInputSchema.optional(),
+  orderBy: z.union([ Service_instructeursOrderByWithAggregationInputSchema.array(),Service_instructeursOrderByWithAggregationInputSchema ]).optional(),
+  by: Service_instructeursScalarFieldEnumSchema.array(),
+  having: Service_instructeursScalarWhereWithAggregatesInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+}).strict() 
+
+export const Service_instructeursFindUniqueArgsSchema: z.ZodType<Prisma.Service_instructeursFindUniqueArgs> = z.object({
+  select: Service_instructeursSelectSchema.optional(),
+  where: Service_instructeursWhereUniqueInputSchema,
+}).strict() 
+
+export const Service_instructeursFindUniqueOrThrowArgsSchema: z.ZodType<Prisma.Service_instructeursFindUniqueOrThrowArgs> = z.object({
+  select: Service_instructeursSelectSchema.optional(),
+  where: Service_instructeursWhereUniqueInputSchema,
+}).strict() 
+
 export const UdapFindFirstArgsSchema: z.ZodType<Prisma.UdapFindFirstArgs> = z.object({
   select: UdapSelectSchema.optional(),
   include: UdapIncludeSchema.optional(),
@@ -2778,6 +3075,43 @@ export const ReportDeleteManyArgsSchema: z.ZodType<Prisma.ReportDeleteManyArgs> 
   where: ReportWhereInputSchema.optional(),
 }).strict() as z.ZodType<Prisma.ReportDeleteManyArgs>
 
+export const Service_instructeursCreateArgsSchema: z.ZodType<Prisma.Service_instructeursCreateArgs> = z.object({
+  select: Service_instructeursSelectSchema.optional(),
+  data: z.union([ Service_instructeursCreateInputSchema,Service_instructeursUncheckedCreateInputSchema ]),
+}).strict() 
+
+export const Service_instructeursUpsertArgsSchema: z.ZodType<Prisma.Service_instructeursUpsertArgs> = z.object({
+  select: Service_instructeursSelectSchema.optional(),
+  where: Service_instructeursWhereUniqueInputSchema,
+  create: z.union([ Service_instructeursCreateInputSchema,Service_instructeursUncheckedCreateInputSchema ]),
+  update: z.union([ Service_instructeursUpdateInputSchema,Service_instructeursUncheckedUpdateInputSchema ]),
+}).strict() 
+
+export const Service_instructeursCreateManyArgsSchema: z.ZodType<Prisma.Service_instructeursCreateManyArgs> = z.object({
+  data: Service_instructeursCreateManyInputSchema.array(),
+  skipDuplicates: z.boolean().optional(),
+}).strict() 
+
+export const Service_instructeursDeleteArgsSchema: z.ZodType<Prisma.Service_instructeursDeleteArgs> = z.object({
+  select: Service_instructeursSelectSchema.optional(),
+  where: Service_instructeursWhereUniqueInputSchema,
+}).strict() 
+
+export const Service_instructeursUpdateArgsSchema: z.ZodType<Prisma.Service_instructeursUpdateArgs> = z.object({
+  select: Service_instructeursSelectSchema.optional(),
+  data: z.union([ Service_instructeursUpdateInputSchema,Service_instructeursUncheckedUpdateInputSchema ]),
+  where: Service_instructeursWhereUniqueInputSchema,
+}).strict() 
+
+export const Service_instructeursUpdateManyArgsSchema: z.ZodType<Prisma.Service_instructeursUpdateManyArgs> = z.object({
+  data: z.union([ Service_instructeursUpdateManyMutationInputSchema,Service_instructeursUncheckedUpdateManyInputSchema ]),
+  where: Service_instructeursWhereInputSchema.optional(),
+}).strict() 
+
+export const Service_instructeursDeleteManyArgsSchema: z.ZodType<Prisma.Service_instructeursDeleteManyArgs> = z.object({
+  where: Service_instructeursWhereInputSchema.optional(),
+}).strict() 
+
 export const UdapCreateArgsSchema: z.ZodType<Prisma.UdapCreateArgs> = z.object({
   select: UdapSelectSchema.optional(),
   include: UdapIncludeSchema.optional(),
@@ -2873,6 +3207,11 @@ interface DelegationGetPayload extends HKT {
 interface ReportGetPayload extends HKT {
   readonly _A?: boolean | null | undefined | Prisma.ReportArgs
   readonly type: Omit<Prisma.ReportGetPayload<this['_A']>, "Please either choose `select` or `include`">
+}
+
+interface Service_instructeursGetPayload extends HKT {
+  readonly _A?: boolean | null | undefined | Prisma.Service_instructeursArgs
+  readonly type: Omit<Prisma.Service_instructeursGetPayload<this['_A']>, "Please either choose `select` or `include`">
 }
 
 interface UdapGetPayload extends HKT {
@@ -3075,6 +3414,59 @@ export const tableSchemas = {
     Prisma.ReportFindFirstArgs['orderBy'],
     Prisma.ReportScalarFieldEnum,
     ReportGetPayload
+  >,
+  service_instructeurs: {
+    fields: new Map([
+      [
+        "id",
+        "INT4"
+      ],
+      [
+        "full_name",
+        "TEXT"
+      ],
+      [
+        "short_name",
+        "TEXT"
+      ],
+      [
+        "email",
+        "TEXT"
+      ],
+      [
+        "tel",
+        "TEXT"
+      ],
+      [
+        "udap_id",
+        "TEXT"
+      ]
+    ]),
+    relations: [
+    ],
+    modelSchema: (Service_instructeursCreateInputSchema as any)
+      .partial()
+      .or((Service_instructeursUncheckedCreateInputSchema as any).partial()),
+    createSchema: Service_instructeursCreateArgsSchema,
+    createManySchema: Service_instructeursCreateManyArgsSchema,
+    findUniqueSchema: Service_instructeursFindUniqueArgsSchema,
+    findSchema: Service_instructeursFindFirstArgsSchema,
+    updateSchema: Service_instructeursUpdateArgsSchema,
+    updateManySchema: Service_instructeursUpdateManyArgsSchema,
+    upsertSchema: Service_instructeursUpsertArgsSchema,
+    deleteSchema: Service_instructeursDeleteArgsSchema,
+    deleteManySchema: Service_instructeursDeleteManyArgsSchema
+  } as TableSchema<
+    z.infer<typeof Service_instructeursUncheckedCreateInputSchema>,
+    Prisma.Service_instructeursCreateArgs['data'],
+    Prisma.Service_instructeursUpdateArgs['data'],
+    Prisma.Service_instructeursFindFirstArgs['select'],
+    Prisma.Service_instructeursFindFirstArgs['where'],
+    Prisma.Service_instructeursFindUniqueArgs['where'],
+    never,
+    Prisma.Service_instructeursFindFirstArgs['orderBy'],
+    Prisma.Service_instructeursScalarFieldEnum,
+    Service_instructeursGetPayload
   >,
   udap: {
     fields: new Map([

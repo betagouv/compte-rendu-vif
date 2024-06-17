@@ -5,6 +5,7 @@ import { Flex, styled } from "#styled-system/jsx";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { ReactNode } from "react";
+import { useIsModalOpen } from "@codegouvfr/react-dsfr/Modal/useIsModalOpen";
 
 import { useSelector } from "@xstate/store/react";
 import { createPortal } from "react-dom";
@@ -22,6 +23,10 @@ export const MenuButton = ({ headerRef }: { headerRef: any }) => {
   const isDesktop = useIsDesktop();
 
   const isOpen = isDesktop ? !!menu && menu !== "main" : !!menu;
+
+  useIsModalOpen(menuModal, {
+    onConceal: () => menuStore.send({ type: "setMenu", menu: null }),
+  });
 
   return (
     <>
@@ -143,11 +148,7 @@ const MenuModal = ({ menu, isOpen, className }: { menu: NestedMenu | null; isOpe
       {menu === null ? null : (
         <>
           <MenuTitle
-            backButtonOnClick={
-              menu === "main"
-                ? undefined
-                : () => void console.log("close") || menuStore.send({ type: "setMenu", menu: "main" })
-            }
+            backButtonOnClick={menu === "main" ? undefined : () => menuStore.send({ type: "setMenu", menu: "main" })}
           >
             {modalTitles[menu]}
           </MenuTitle>

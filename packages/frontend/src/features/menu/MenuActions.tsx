@@ -46,7 +46,6 @@ export const MenuActions = () => {
             disabled={disabled}
             priority="tertiary no outline"
             onClick={(e) => {
-              console.log("a");
               e.preventDefault();
               onClick();
             }}

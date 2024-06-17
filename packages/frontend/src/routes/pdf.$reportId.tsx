@@ -43,6 +43,12 @@ export const PDF = () => {
   const reportQuery = useLiveQuery(db.report.liveUnique({ where: { id: reportId }, include: { user: true } }));
   const reportRef = useRef<Report | null>(null);
 
+  const serviceInstructeurQuery = useLiveQuery(
+    db.service_instructeurs.liveUnique({ where: { id: reportQuery.results?.serviceInstructeur ?? undefined } }),
+  );
+  const serviceInstructeur = serviceInstructeurQuery.results;
+  const isServiceInstructeurLoaded = reportQuery.results?.serviceInstructeur ? !!serviceInstructeur : true;
+
   if (!reportRef.current && reportQuery.results) {
     reportRef.current = reportQuery.results;
   }
@@ -123,8 +129,16 @@ export const PDF = () => {
           />
           <Center w="100%" h="100%" maxH="100%" mt="10px" overflowY="auto">
             <Stack w="800px" h="100%">
-              {report && chipOptions?.length ? (
-                <WithReport mode={mode} initialHtmlString={getReportHtmlString(report, chipOptions, udap as Udap)} />
+              {report && chipOptions?.length && isServiceInstructeurLoaded ? (
+                <WithReport
+                  mode={mode}
+                  initialHtmlString={getReportHtmlString(
+                    report,
+                    chipOptions,
+                    udap as Udap,
+                    serviceInstructeur ?? undefined,
+                  )}
+                />
               ) : null}
             </Stack>
           </Center>
@@ -277,7 +291,6 @@ export const WithReport = ({ initialHtmlString, mode }: { initialHtmlString: str
 };
 
 const View = (props: ReportPDFDocumentProps) => {
-  console.log({ props });
   const query = useQuery({
     queryKey: ["report-pdf", props.htmlString],
     queryFn: async () => {
