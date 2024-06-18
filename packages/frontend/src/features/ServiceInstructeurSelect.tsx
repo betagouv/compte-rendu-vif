@@ -58,11 +58,17 @@ export const ServiceInstructeurSelect = () => {
       <Combobox.Positioner>
         <Combobox.Content maxH="400px" overflow="auto">
           <Combobox.ItemGroup id="service-instructeur">
-            {items.map((item) => (
-              <Combobox.Item key={item.id} item={item}>
-                <Combobox.ItemText>{item.short_name}</Combobox.ItemText>
+            {items?.length ? (
+              items.map((item) => (
+                <Combobox.Item key={item.id} item={item}>
+                  <Combobox.ItemText>{item.short_name}</Combobox.ItemText>
+                </Combobox.Item>
+              ))
+            ) : (
+              <Combobox.Item item={null}>
+                <Combobox.ItemText>Aucun résultat</Combobox.ItemText>
               </Combobox.Item>
-            ))}
+            )}
           </Combobox.ItemGroup>
         </Combobox.Content>
       </Combobox.Positioner>
