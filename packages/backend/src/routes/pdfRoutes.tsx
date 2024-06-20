@@ -32,7 +32,7 @@ export const pdfPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
 
     const report = await db.report.findUnique({ where: { id: reportId } });
 
-    await sendReportMail({ recipients: recipients.join(","), pdfBuffer: pdf, reportTitle: report?.title ?? undefined });
+    await sendReportMail({ recipients: recipients.join(","), pdfBuffer: pdf, report: report! });
 
     return url;
   });
