@@ -6,7 +6,7 @@ import { Box, Flex } from "#styled-system/jsx";
 import type { Report } from "@cr-vif/electric-client/frontend";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useLiveQuery } from "electric-sql/react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import {
   FormProvider,
   useForm,
@@ -19,6 +19,8 @@ import {
 import { db } from "../db";
 import { InfoForm } from "../features/InfoForm";
 import { NotesForm } from "../features/NotesForm";
+import { DisabledContext } from "../features/DisabledContext";
+import { useUser } from "../contexts/AuthContext";
 
 const EditReport = () => {
   const { reportId } = Route.useParams();
@@ -69,7 +71,17 @@ const WithReport = ({ report }: { report: Report }) => {
     defaultValues: report!,
     resetOptions: {},
   });
-  const [pdfValues, setPdfValues] = useState<Report | null>(null);
+
+  const user = useUser()!;
+  const isOwner = report.createdBy === user.id;
+
+  const userDelegations = useLiveQuery(
+    db.delegation.liveFirst({ where: { createdBy: report.createdBy, delegatedTo: user.id } }),
+  );
+  const hasDelegation = !!userDelegations.results;
+
+  const canEdit = isOwner || hasDelegation;
+
   const navigate = useNavigate();
 
   const setTab = (tab: string) => {
@@ -118,13 +130,11 @@ const WithReport = ({ report }: { report: Report }) => {
   }, [report]);
 
   const onSubmit = (_values: Report) => {
-    setPdfValues(_values);
     navigate({ to: "/pdf/$reportId", params: { reportId: report.id }, search: { mode: "view" } });
-    // modal.open();
   };
 
   return (
-    <>
+    <DisabledContext.Provider value={!canEdit}>
       <Flex direction="column">
         <FormProvider {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -154,7 +164,7 @@ const WithReport = ({ report }: { report: Report }) => {
           </form>
         </FormProvider>
       </Flex>
-    </>
+    </DisabledContext.Provider>
   );
 };
 

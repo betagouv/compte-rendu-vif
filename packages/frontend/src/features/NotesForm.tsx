@@ -8,16 +8,20 @@ import { ContactChips } from "#components/chips/ContactChips";
 import { css } from "#styled-system/css";
 import { FurtherInfoChips } from "#components/chips/FurtherInfoChips";
 import Button from "@codegouvfr/react-dsfr/Button";
+import { useIsFormDisabled } from "./DisabledContext";
 
 export const NotesForm = () => {
   const form = useFormContext<Report>();
 
+  const isFormDisabled = useIsFormDisabled();
+
   return (
     <Flex direction="column" w="100%" padding="16px">
       <InputGroupWithTitle title="Décision & suite à donner">
-        <DecisionChips />
+        <DecisionChips disabled={isFormDisabled} />
         <Input
           className={css({ mt: "8px" })}
+          disabled={isFormDisabled}
           label="Commentaire"
           textArea
           nativeTextAreaProps={{ ...form.register("precisions"), rows: 5 }}
@@ -31,16 +35,18 @@ export const NotesForm = () => {
           className={css({
             flex: { base: "none", lg: 1 },
           })}
+          disabled={isFormDisabled}
         />
         <FurtherInfoChips
           className={css({
             flex: { base: "none", lg: 1 },
           })}
+          disabled={isFormDisabled}
         />
       </Stack>
 
       <styled.div mt={{ base: "16px", lg: 0 }}>
-        <Button iconId="ri-article-fill" type="submit">
+        <Button iconId="ri-article-fill" type="submit" disabled={isFormDisabled}>
           Créer le CR
         </Button>
       </styled.div>
