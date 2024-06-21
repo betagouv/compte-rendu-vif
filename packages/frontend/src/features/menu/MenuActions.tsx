@@ -15,7 +15,7 @@ export const MenuActions = () => {
   const logout = useLogout();
 
   const actions = [
-    { text: "Partage des CR", onClick: () => {}, disabled: true },
+    { text: "Partage des CR", onClick: () => setMenu("share") },
     { text: "Clauses départementales", onClick: () => setMenu("clauses-departementales") },
     { text: "Clauses nationales", onClick: () => setMenu("clauses-nationales") },
     { text: "Assistance technique", onClick: () => setMenu("help") },
@@ -38,12 +38,11 @@ export const MenuActions = () => {
         },
       })}
     >
-      {actions.map(({ text, onClick, disabled }, index) => (
+      {actions.map(({ text, onClick }, index) => (
         <Fragment key={text}>
           <Button
             className={css({ w: "100%" })}
             type="button"
-            disabled={disabled}
             priority="tertiary no outline"
             onClick={(e) => {
               e.preventDefault();

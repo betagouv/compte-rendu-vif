@@ -13,6 +13,8 @@ import type { Report } from "@cr-vif/electric-client/frontend";
 import { css } from "#styled-system/css";
 import { ServiceInstructeurSelect } from "./ServiceInstructeurSelect";
 import { useIsFormDisabled } from "./DisabledContext";
+import { useLiveQuery } from "electric-sql/react";
+import { db } from "../db";
 
 export const InfoForm = () => {
   const form = useFormContext<Report>();
@@ -49,6 +51,14 @@ export const InfoForm = () => {
     tryToSetMeetDate();
   };
 
+  const redactedByQuery = useLiveQuery(
+    db.delegation.liveMany({ where: { delegatedTo: user.id }, include: { user_delegation_createdByTouser: true } }),
+  );
+  const redactedByOptions = redactedByQuery.results?.map((delegation) => ({
+    value: (delegation as any).user_delegation_createdByTouser?.name,
+    label: (delegation as any).user_delegation_createdByTouser?.name,
+  }));
+
   const tab = useTabsContext();
 
   return (
@@ -62,6 +72,11 @@ export const InfoForm = () => {
             nativeSelectProps={form.register("redactedBy")}
           >
             <option value={user.name}>{user.name}</option>
+            {redactedByOptions?.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            )) ?? null}
           </Select>
           <Input
             className={css({ flex: { base: "none", sm: 1 } })}

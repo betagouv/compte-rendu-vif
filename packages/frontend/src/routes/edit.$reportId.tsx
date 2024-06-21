@@ -79,8 +79,8 @@ const WithReport = ({ report }: { report: Report }) => {
     db.delegation.liveFirst({ where: { createdBy: report.createdBy, delegatedTo: user.id } }),
   );
   const hasDelegation = !!userDelegations.results;
-
   const canEdit = isOwner || hasDelegation;
+  console.log({ hasDelegation, canEdit });
 
   const navigate = useNavigate();
 

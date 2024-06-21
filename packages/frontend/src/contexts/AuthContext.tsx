@@ -72,6 +72,14 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         },
       });
       await electric.db.service_instructeurs.sync({ where: { udap_id: data!.user!.udap_id } });
+      await electric.db.delegation.sync({
+        where: {
+          OR: [{ createdBy: data!.user!.id }, { delegatedTo: data!.user!.id }],
+        },
+        include: {
+          user_delegation_createdByTouser: true,
+        },
+      });
 
       return true;
     },

@@ -14,11 +14,14 @@ import Input from "@codegouvfr/react-dsfr/Input";
 import { Report } from "@cr-vif/electric-client/frontend";
 import { useEffect } from "react";
 import { ElectricStatus, useElectricStatus } from "../contexts/AuthContext";
+import { useIsFormDisabled } from "../features/DisabledContext";
 
 export function SyncFormBanner({ form, baseObject }: { form: UseFormReturn<Report>; baseObject: Record<string, any> }) {
   const newObject = useWatch({ control: form.control });
 
-  const diff = getDiff(newObject, baseObject);
+  const disabled = useIsFormDisabled();
+
+  const diff = disabled ? {} : getDiff(newObject, baseObject);
   const syncMutation = useMutation(() => syncObject(baseObject.id, diff));
 
   useDebounce(() => syncMutation.mutate(), 500, [diff]);

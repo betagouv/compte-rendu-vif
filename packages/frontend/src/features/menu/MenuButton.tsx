@@ -14,8 +14,9 @@ import { ClauseMenu } from "./ClauseMenu";
 import { HelpMenu } from "./HelpMenu";
 import { MenuActions } from "./MenuActions";
 import { menuStore } from "./menuStore";
+import { ShareReport } from "./Share";
 
-const nestedMenus = ["main", "help", "clauses-nationales", "clauses-departementales"] as const;
+const nestedMenus = ["main", "help", "clauses-nationales", "clauses-departementales", "share"] as const;
 export type NestedMenu = (typeof nestedMenus)[number];
 
 export const MenuButton = ({ headerRef }: { headerRef: any }) => {
@@ -85,6 +86,7 @@ const modalTitles: Record<NestedMenu, string> = {
   help: "Assistance technique",
   "clauses-departementales": "Clauses départementales",
   "clauses-nationales": "Clauses nationales",
+  share: "Partage des CR",
 };
 
 const modalContents: Record<NestedMenu, ReactNode> = {
@@ -92,6 +94,7 @@ const modalContents: Record<NestedMenu, ReactNode> = {
   help: <HelpMenu />,
   "clauses-departementales": <ClauseMenu isNational={false} />,
   "clauses-nationales": <ClauseMenu isNational />,
+  share: <ShareReport />,
 };
 
 const MenuModal = ({ menu, isOpen, className }: { menu: NestedMenu | null; isOpen: boolean; className?: string }) => {
