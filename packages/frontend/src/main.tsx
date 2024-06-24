@@ -7,6 +7,11 @@ import "./index.css";
 import { Link } from "@tanstack/react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ErrorBoundary } from "react-error-boundary";
+import { registerSW } from "virtual:pwa-register";
+
+if ("serviceWorker" in navigator) {
+  registerSW({});
+}
 
 startReactDsfr({ defaultColorScheme: "system", Link: Link });
 
