@@ -78,6 +78,7 @@ const WithReport = ({ report }: { report: Report }) => {
   const userDelegations = useLiveQuery(
     db.delegation.liveFirst({ where: { createdBy: report.createdBy, delegatedTo: user.id } }),
   );
+
   const hasDelegation = !!userDelegations.results;
   const canEdit = isOwner || hasDelegation;
   console.log({ hasDelegation, canEdit });

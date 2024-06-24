@@ -54,6 +54,9 @@ export const InfoForm = () => {
   const redactedByQuery = useLiveQuery(
     db.delegation.liveMany({ where: { delegatedTo: user.id }, include: { user_delegation_createdByTouser: true } }),
   );
+
+  console.log(redactedByQuery);
+
   const redactedByOptions = redactedByQuery.results?.map((delegation) => ({
     value: (delegation as any).user_delegation_createdByTouser?.name,
     label: (delegation as any).user_delegation_createdByTouser?.name,
