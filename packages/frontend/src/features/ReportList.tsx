@@ -9,7 +9,7 @@ import Badge from "@codegouvfr/react-dsfr/Badge";
 import { css, cx } from "#styled-system/css";
 import { Link } from "@tanstack/react-router";
 import { Popover } from "#components/Popover";
-import { useClickAway, useMedia } from "react-use";
+import { useClickAway } from "react-use";
 import { useRef, useState } from "react";
 import { PopoverTrigger } from "@ark-ui/react/popover";
 import { ReportActions } from "./ReportActions";
@@ -25,7 +25,7 @@ export const MyReports = () => {
   const user = useUser()!;
   const myReports = useLiveQuery(
     db.report.liveMany({
-      where: { createdBy: user.id, disabled: false },
+      where: { AND: [{ disabled: false }, { OR: [{ createdBy: user.id }, { redactedById: user.id }] }] },
       take: 20,
       skip: page * 20,
       orderBy: { createdAt: "desc" },

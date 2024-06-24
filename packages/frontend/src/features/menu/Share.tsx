@@ -65,15 +65,13 @@ const ManageDelegations = ({ coworkers, delegations }: { coworkers: User[]; dele
   const user = useUser()!;
 
   const createMutation = useMutation((delegation: Delegation) => db.delegation.create({ data: delegation }));
-  const removeMutation = useMutation(
-    (delegation: Delegation) =>
-      void console.log(delegation) ||
-      db.delegation.deleteMany({
-        where: {
-          createdBy: delegation.createdBy,
-          delegatedTo: delegation.delegatedTo,
-        },
-      }),
+  const removeMutation = useMutation((delegation: Delegation) =>
+    db.delegation.deleteMany({
+      where: {
+        createdBy: delegation.createdBy,
+        delegatedTo: delegation.delegatedTo,
+      },
+    }),
   );
 
   return (

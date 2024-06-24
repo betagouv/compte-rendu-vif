@@ -1,4 +1,4 @@
-import { Box, Center, Divider, Flex, Stack } from "#styled-system/jsx";
+import { Box, Divider, Flex, Stack } from "#styled-system/jsx";
 import { useTabsContext } from "@ark-ui/react/tabs";
 import Button from "@codegouvfr/react-dsfr/Button";
 import Input from "@codegouvfr/react-dsfr/Input";
@@ -55,14 +55,29 @@ export const InfoForm = () => {
     db.delegation.liveMany({ where: { delegatedTo: user.id }, include: { user_delegation_createdByTouser: true } }),
   );
 
-  console.log(redactedByQuery);
-
-  const redactedByOptions = redactedByQuery.results?.map((delegation) => ({
-    value: (delegation as any).user_delegation_createdByTouser?.name,
-    label: (delegation as any).user_delegation_createdByTouser?.name,
-  }));
+  const redactedByOptions: { value: string; label: string }[] = [
+    {
+      value: user.id,
+      label: user.name,
+    },
+    ...(redactedByQuery.results?.map((delegation) => ({
+      value: (delegation as any).user_delegation_createdByTouser?.id,
+      label: (delegation as any).user_delegation_createdByTouser?.name,
+    })) ?? []),
+  ];
 
   const tab = useTabsContext();
+
+  const baseRedactedByProps = form.register("redactedById");
+  const redactedByProps = {
+    ...baseRedactedByProps,
+    onChange: (e: any) => {
+      const option = redactedByOptions.find((option) => option.value === e.target.value);
+
+      baseRedactedByProps.onChange(e);
+      form.setValue("redactedBy", option?.label ?? null);
+    },
+  };
 
   return (
     <Flex direction="column" w="100%" padding="16px">
@@ -72,9 +87,8 @@ export const InfoForm = () => {
             className={css({ flex: { base: "none", sm: 1 } })}
             label="Rédigé par"
             disabled={isFormDisabled}
-            nativeSelectProps={form.register("redactedBy")}
+            nativeSelectProps={redactedByProps}
           >
-            <option value={user.name}>{user.name}</option>
             {redactedByOptions?.map((option) => (
               <option key={option.value} value={option.value}>
                 {option.label}

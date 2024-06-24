@@ -81,7 +81,6 @@ const WithReport = ({ report }: { report: Report }) => {
 
   const hasDelegation = !!userDelegations.results;
   const canEdit = isOwner || hasDelegation;
-  console.log({ hasDelegation, canEdit });
 
   const navigate = useNavigate();
 
