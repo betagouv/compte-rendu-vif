@@ -22,7 +22,8 @@
     "paths": {
       "#styled-system/*": ["./styled-system/*"],
       "#components/*": ["./src/components/*"]
-    }
+    },
+    "types": ["vite-plugin-pwa/client"]
   },
   "include": ["src/**/*.tsx", "src/**/*.ts"],
   "exclude": [
