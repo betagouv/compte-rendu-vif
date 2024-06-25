@@ -11,6 +11,7 @@ export const ChipGroup = ({
   value,
   onChange,
   className,
+  disabled,
   ...props
 }: {
   options: ChipGroupOption[];
@@ -18,6 +19,7 @@ export const ChipGroup = ({
   value?: string[];
   label?: string;
   canBeEmpty?: boolean;
+  disabled?: boolean;
   onChange: (values: string[]) => void;
 } & Omit<FlexProps, "onChange">) => {
   const [selectedOptions, setSelectedOptions] = useState(new Set(value ?? []));
@@ -31,6 +33,7 @@ export const ChipGroup = ({
           key={option.key}
           isChecked={selectedOptions.has(option.key)}
           onCheckChange={(isChecked) => {
+            if (disabled) return;
             const newSelectedOptions = new Set(selectedOptions);
             if (isChecked) {
               if (!isMulti) {

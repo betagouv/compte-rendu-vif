@@ -3,7 +3,7 @@ import type { Report } from "@cr-vif/electric-client/frontend";
 import { ChipGroup, type ChipGroupOption } from "../Chip";
 import { useChipOptions } from "../../features/chips/useChipOptions";
 
-export const DecisionChips = () => {
+export const DecisionChips = ({ disabled }: { disabled?: boolean }) => {
   const form = useFormContext<Report>();
 
   const selected = useWatch({ control: form.control, name: "decision" });
@@ -19,6 +19,7 @@ export const DecisionChips = () => {
     <ChipGroup
       options={options}
       value={value}
+      disabled={disabled}
       onChange={(values) => form.setValue("decision", values?.[0])}
       label="Décision"
     />

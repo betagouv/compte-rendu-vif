@@ -91,6 +91,8 @@
     "prisma": "^4.8.1",
     "typescript": "^5.4",
     "vite": "^5.1.6",
-    "vite-node": "^1.4.0"
+    "vite-node": "^1.4.0",
+    "vite-plugin-pwa": "^0.20.0",
+    "workbox-window": "^7.1.0"
   }
 }

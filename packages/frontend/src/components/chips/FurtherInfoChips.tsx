@@ -4,7 +4,7 @@ import { ChipGroup, type ChipGroupOption } from "../Chip";
 import { FlexProps } from "#styled-system/jsx";
 import { useChipOptions } from "../../features/chips/useChipOptions";
 
-export const FurtherInfoChips = (props: FlexProps) => {
+export const FurtherInfoChips = (props: FlexProps & { disabled?: boolean }) => {
   const form = useFormContext<Report>();
 
   const selected = useWatch({ control: form.control, name: "furtherInformation" })?.split(",") ?? [];

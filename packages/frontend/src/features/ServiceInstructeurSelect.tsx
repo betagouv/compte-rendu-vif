@@ -9,7 +9,7 @@ import { useLiveQuery } from "electric-sql/react";
 import { db } from "../db";
 import { useUser } from "../contexts/AuthContext";
 
-export const ServiceInstructeurSelect = () => {
+export const ServiceInstructeurSelect = ({ disabled }: { disabled?: boolean }) => {
   const form = useFormContext<Report>();
   const user = useUser()!;
   const [inputValue, setInputValue] = useState("");
@@ -34,6 +34,7 @@ export const ServiceInstructeurSelect = () => {
 
   return (
     <Combobox.Root
+      disabled={disabled}
       selectionBehavior="replace"
       itemToString={(item) => (item as ServiceInstructeur)?.short_name ?? ""}
       itemToValue={(item) => (item as ServiceInstructeur)?.id.toString() ?? ""}
