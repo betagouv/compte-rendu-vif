@@ -11,7 +11,6 @@ export default defineConfig({
     wasm(),
     VitePWA({
       devOptions: { enabled: true },
-      includeAssets: ["**/*"],
       manifest: {
         id: "gouv.beta.compte-rendu-vif",
         orientation: "portrait",
@@ -23,7 +22,7 @@ export default defineConfig({
       },
       workbox: {
         maximumFileSizeToCacheInBytes: 2097152 * 3,
-        globPatterns: ["**/*"],
+        globPatterns: ["**/*.{svg,woff2,js,wasm,css,html}"],
       },
     }),
   ],
