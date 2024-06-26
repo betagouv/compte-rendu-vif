@@ -84,7 +84,7 @@ export const InfoForm = () => {
       <InputGroupWithTitle title="Le rendez-vous">
         <Stack gap={{ base: "0", sm: "16px" }} direction={{ base: "column", sm: "row" }}>
           <Select
-            className={css({ flex: { base: "none", sm: 1 }, mb: { base: "40px", lg: undefined } })}
+            className={css({ flex: { base: "none", sm: 1 }, mb: { base: "40px", lg: "16px" } })}
             label="Rédigé par"
             disabled={isFormDisabled}
             nativeSelectProps={redactedByProps}
@@ -96,7 +96,7 @@ export const InfoForm = () => {
             )) ?? null}
           </Select>
           <Input
-            className={css({ flex: { base: "none", sm: 1 }, mb: { base: "16px", lg: undefined } })}
+            className={css({ flex: { base: "none", sm: 1 }, mb: { base: "16px", lg: "16px" } })}
             disabled={isFormDisabled}
             label="Nom du demandeur*"
             nativeInputProps={form.register("applicantName")}
