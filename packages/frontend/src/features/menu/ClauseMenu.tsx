@@ -12,7 +12,10 @@ export const ClauseMenu = ({ isNational }: { isNational: boolean }) => {
   const clausesQuery = useLiveQuery(
     db.clause.liveMany({
       where: {
-        udap_id: isNational ? "ALL" : user.udap_id,
+        key: {
+          in: isNational ? ["type-espace", "decision"] : ["contacts-utiles", "bonnes-pratiques"],
+        },
+        OR: [{ udap_id: "ALL" }, { udap_id: user.udap_id! }],
       },
     }),
   );
@@ -29,7 +32,7 @@ export const ClauseMenu = ({ isNational }: { isNational: boolean }) => {
           <Fragment key={key}>
             <Stack gap="16px">
               <styled.h2 fontSize="24px" fontWeight="bold">
-                {key}
+                {(clauseNameMap as any)[key] ?? key}
               </styled.h2>
               {clauses.map((clause) => (
                 <Flex key={clause.value} flexDir="column">
@@ -52,4 +55,11 @@ export const ClauseMenu = ({ isNational }: { isNational: boolean }) => {
       </Stack>
     </>
   );
+};
+
+const clauseNameMap = {
+  "type-espace": "Type d'espace",
+  decision: "Décision",
+  "contacts-utiles": "Contacts utiles",
+  "bonnes-pratiques": "Bonnes pratiques",
 };
