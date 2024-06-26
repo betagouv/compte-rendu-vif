@@ -112,7 +112,6 @@ export const PDF = () => {
       </Center>
     );
   }
-
   return (
     <styled.div w="100%" h="100%" bgColor={mode === "edit" ? "background-open-blue-france" : "unset"} overflowY="auto">
       <TextEditorContextProvider>
@@ -342,6 +341,7 @@ const PdfCanvasPage = ({ file, page }: { file: string; page: number }) => {
 
   return (
     <styled.canvas
+      // @ts-ignore
       ref={canvasRef}
       width={{ base: "100%", lg: "800px" }}
       my="16px"
