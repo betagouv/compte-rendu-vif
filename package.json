@@ -12,7 +12,7 @@
     "db:migrate": "pnpm db:create",
     "electric:up": "pnpm electric-sql with-config \"pnpm pg-migrations apply --database {{ELECTRIC_PROXY}} --ignore-error migration_file_edited --directory ./db/migrations\"",
     "show-config": "pnpm electric-sql show-config",
-    "electric:migrate": "pnpm electric:up && pnpm electric-client generate:front && pnpm electric-client generate:back && pnpm client:generate",
+    "electric:migrate": "pnpm electric:up && pnpm electric-client generate:front",
     "client:json": "pnpm backend dev --create-only",
     "client:ts": "typed-openapi ./packages/backend/openapi.json --output ./packages/frontend/src/api.gen.ts",
     "client:generate": "pnpm client:json && pnpm client:ts",
@@ -27,7 +27,7 @@
     "@pandabox/prettier-plugin": "^0.1.0",
     "@playwright/test": "^1.43.0",
     "@types/node": "^20.11.28",
-    "electric-sql": "^0.12.0",
+    "electric-sql": "^0.12.1",
     "prettier": "^3.2.5",
     "prisma": "^4.8.1",
     "typed-openapi": "^0.4.1"

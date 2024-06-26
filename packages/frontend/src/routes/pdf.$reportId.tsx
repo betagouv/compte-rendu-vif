@@ -6,7 +6,7 @@ import { css } from "#styled-system/css";
 import { Center, Flex, Stack, styled } from "#styled-system/jsx";
 import Button from "@codegouvfr/react-dsfr/Button";
 import Input from "@codegouvfr/react-dsfr/Input";
-import type { Report, Udap } from "@cr-vif/electric-client/frontend";
+import type { Report, Service_instructeurs, Udap } from "@cr-vif/electric-client/frontend";
 import { ReportPDFDocument, ReportPDFDocumentProps, getReportHtmlString } from "@cr-vif/pdf";
 import { usePdf } from "@mikecousins/react-pdf";
 import { pdf } from "@react-pdf/renderer";
@@ -123,36 +123,39 @@ export const PDF = () => {
       </Center>
     );
   }
+
   return (
     <styled.div w="100%" h="100%" bgColor={mode === "edit" ? "background-open-blue-france" : "unset"} overflowY="auto">
       <TextEditorContextProvider>
-        <SendForm generatePdf={generatePdfMutation.mutate}>
-          <EditBanner
-            title={
-              <styled.div nowrap>
-                <styled.span fontWeight="bold">{getModeTitle(mode)}</styled.span>
-                {report?.title ? ` | ${report?.title}` : ""}
-              </styled.div>
-            }
-            reportId={report?.id}
-            buttons={buttons}
-          />
-          <Center w="100%" h="100%" maxH="100%" mt="10px" overflowY="auto">
-            <Stack w="800px" h="100%">
-              {report && chipOptions?.length && isServiceInstructeurLoaded ? (
-                <WithReport
-                  mode={mode}
-                  initialHtmlString={getReportHtmlString(
-                    report,
-                    chipOptions,
-                    udap as Udap,
-                    serviceInstructeur ?? undefined,
-                  )}
-                />
-              ) : null}
-            </Stack>
-          </Center>
-        </SendForm>
+        {report ? (
+          <SendForm generatePdf={generatePdfMutation.mutate} report={report}>
+            <EditBanner
+              title={
+                <styled.div nowrap>
+                  <styled.span fontWeight="bold">{getModeTitle(mode)}</styled.span>
+                  {report?.title ? ` | ${report?.title}` : ""}
+                </styled.div>
+              }
+              reportId={report?.id}
+              buttons={buttons}
+            />
+            <Center w="100%" h="100%" maxH="100%" mt="10px" overflowY="auto">
+              <Stack w="800px" h="100%">
+                {report && chipOptions?.length && isServiceInstructeurLoaded ? (
+                  <WithReport
+                    mode={mode}
+                    initialHtmlString={getReportHtmlString(
+                      report,
+                      chipOptions,
+                      udap as Udap,
+                      serviceInstructeur ?? undefined,
+                    )}
+                  />
+                ) : null}
+              </Stack>
+            </Center>
+          </SendForm>
+        ) : null}
       </TextEditorContextProvider>
     </styled.div>
   );
@@ -161,10 +164,21 @@ export const PDF = () => {
 const SendForm = ({
   children,
   generatePdf,
-}: PropsWithChildren<{ generatePdf: (args: { htmlString: string; recipients: string }) => void }>) => {
+  report,
+}: PropsWithChildren<{ report: Report; generatePdf: (args: { htmlString: string; recipients: string }) => void }>) => {
   const { editor } = useContext(TextEditorContext);
 
   const form = useForm({ defaultValues: { recipients: "" } });
+
+  useQuery({
+    queryKey: ["service-instructeur", report.serviceInstructeur, report.applicantEmail],
+    queryFn: async () => {
+      const recipents = await getBaseRecipients(report);
+      if (!form.getValues("recipients")) {
+        form.setValue("recipients", recipents ?? "");
+      }
+    },
+  });
 
   const send = (values: { recipients: string }) => {
     const recipients = values.recipients
@@ -180,6 +194,14 @@ const SendForm = ({
       <FormProvider {...form}>{children}</FormProvider>
     </form>
   );
+};
+
+const getBaseRecipients = async (report: Report) => {
+  const serviceEmail = report.serviceInstructeur
+    ? (await db.service_instructeurs.findFirst({ where: { id: report.serviceInstructeur } }))?.email
+    : null;
+  const recipients = [serviceEmail, report.applicantEmail].filter(Boolean).join(", ");
+  return recipients;
 };
 
 const getModeTitle = (mode: Mode) => {
