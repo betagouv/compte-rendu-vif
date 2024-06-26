@@ -167,7 +167,10 @@ const SendForm = ({
   const form = useForm({ defaultValues: { recipients: "" } });
 
   const send = (values: { recipients: string }) => {
-    const recipients = values.recipients.split(/,|\s/).filter(Boolean).join(",");
+    const recipients = values.recipients
+      .split(/,|\s|;/)
+      .filter(Boolean)
+      .join(",");
 
     generatePdf({ htmlString: editor?.getHTML() ?? "", recipients });
   };
