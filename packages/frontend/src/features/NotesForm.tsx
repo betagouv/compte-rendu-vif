@@ -1,4 +1,4 @@
-import { Divider, Flex, Stack, styled } from "#styled-system/jsx";
+import { Center, Divider, Flex, Stack, styled } from "#styled-system/jsx";
 import { useFormContext } from "react-hook-form";
 import { InputGroupWithTitle } from "#components/InputGroup";
 import Input from "@codegouvfr/react-dsfr/Input";
@@ -20,7 +20,7 @@ export const NotesForm = () => {
       <InputGroupWithTitle title="Décision & suite à donner">
         <DecisionChips disabled={isFormDisabled} />
         <Input
-          className={css({ mt: "8px" })}
+          className={css({ mt: "24px" })}
           disabled={isFormDisabled}
           label="Commentaire"
           textArea
@@ -45,11 +45,11 @@ export const NotesForm = () => {
         />
       </Stack>
 
-      <styled.div mt={{ base: "16px", lg: 0 }}>
+      <Center justifyContent={{ base: "center", lg: "flex-start" }} mt={{ base: "80px", lg: "50px" }} mb="120px">
         <Button iconId="ri-article-fill" type="submit" disabled={isFormDisabled}>
           Créer le CR
         </Button>
-      </styled.div>
+      </Center>
     </Flex>
   );
 };

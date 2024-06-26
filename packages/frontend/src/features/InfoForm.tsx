@@ -1,4 +1,4 @@
-import { Box, Divider, Flex, Stack } from "#styled-system/jsx";
+import { Box, Center, Divider, Flex, Stack, styled } from "#styled-system/jsx";
 import { useTabsContext } from "@ark-ui/react/tabs";
 import Button from "@codegouvfr/react-dsfr/Button";
 import Input from "@codegouvfr/react-dsfr/Input";
@@ -84,7 +84,7 @@ export const InfoForm = () => {
       <InputGroupWithTitle title="Le rendez-vous">
         <Stack gap={{ base: "0", sm: "16px" }} direction={{ base: "column", sm: "row" }}>
           <Select
-            className={css({ flex: { base: "none", sm: 1 } })}
+            className={css({ flex: { base: "none", sm: 1 }, mb: { base: "40px", lg: undefined } })}
             label="Rédigé par"
             disabled={isFormDisabled}
             nativeSelectProps={redactedByProps}
@@ -96,7 +96,7 @@ export const InfoForm = () => {
             )) ?? null}
           </Select>
           <Input
-            className={css({ flex: { base: "none", sm: 1 } })}
+            className={css({ flex: { base: "none", sm: 1 }, mb: { base: "16px", lg: undefined } })}
             disabled={isFormDisabled}
             label="Nom du demandeur*"
             nativeInputProps={form.register("applicantName")}
@@ -105,13 +105,13 @@ export const InfoForm = () => {
 
         <Stack direction="row" mt="16px">
           <Input
-            className={css({ flex: { base: "none", sm: 1 } })}
+            className={css({ flex: { base: "none", sm: 1 }, mb: { base: "16px", lg: undefined } })}
             disabled={isFormDisabled}
             label="Date"
             nativeInputProps={{ type: "date", onChange: setDay, value: meetDateRef.current.day }}
           />
           <Input
-            className={css({ flex: { base: "none", sm: 1 } })}
+            className={css({ flex: { base: "none", sm: 1 }, mb: { base: "16px", lg: undefined } })}
             disabled={isFormDisabled}
             label="Horaire"
             nativeInputProps={{ type: "time", onChange: setTime, value: meetDateRef.current.time }}
@@ -123,6 +123,7 @@ export const InfoForm = () => {
 
       <InputGroupWithTitle title="Le projet">
         <Input
+          className={css({ mb: { base: "40px", lg: undefined } })}
           label="Description"
           disabled={isFormDisabled}
           textArea
@@ -130,7 +131,7 @@ export const InfoForm = () => {
         />
         <Stack gap={{ base: "0", sm: "16px" }} direction={{ base: "column", sm: "row" }}>
           <Input
-            className={css({ flex: { base: "none", sm: 1 } })}
+            className={css({ flex: { base: "none", sm: 1 }, mb: { base: "40px", lg: undefined } })}
             disabled={isFormDisabled}
             label="Adresse du projet*"
             nativeInputProps={form.register("applicantAddress")}
@@ -153,7 +154,7 @@ export const InfoForm = () => {
         </Stack>
         <Stack gap={{ base: "0", sm: "16px" }} direction={{ base: "column", sm: "row" }} mt="16px">
           <Input
-            className={css({ flex: { base: "none", sm: 1 } })}
+            className={css({ flex: { base: "none", sm: 1 }, mb: "80px" })}
             disabled={isFormDisabled}
             label="Référence cadastrale du projet"
             nativeInputProps={form.register("projectCadastralRef")}
@@ -162,7 +163,7 @@ export const InfoForm = () => {
         </Stack>
       </InputGroupWithTitle>
 
-      <div>
+      <Center justifyContent={{ base: "center", lg: "flex-start" }} mt={{ base: "80px", lg: 0 }} mb="120px">
         <Button
           type="button"
           iconId="ri-arrow-right-line"
@@ -170,7 +171,7 @@ export const InfoForm = () => {
         >
           Rédiger le bilan
         </Button>
-      </div>
+      </Center>
     </Flex>
   );
 };

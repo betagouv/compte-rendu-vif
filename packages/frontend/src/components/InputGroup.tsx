@@ -41,7 +41,7 @@ const Slot = ({ children, className, ...props }: PropsWithChildren & BoxProps) =
 };
 
 const Title = ({ children, ...props }: PropsWithChildren & BoxProps) => (
-  <styled.h6 mb="0.875rem" fontSize="20px" {...props}>
+  <styled.h6 mb="30px" fontSize="20px" {...props}>
     {children}
   </styled.h6>
 );

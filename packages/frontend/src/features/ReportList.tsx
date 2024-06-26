@@ -160,7 +160,7 @@ export const ReportList = ({
           {columns.length === 1 ? <Stack w="400px" /> : null}
         </Stack>
       )}
-      <Center w="100%" mt="66px" mb="66px">
+      <Center w="100%" mt="85px" mb="110px">
         {hidePagination || error ? null : (
           <Pagination
             count={count === 0 ? 0 : Math.ceil(count! / 20)}
