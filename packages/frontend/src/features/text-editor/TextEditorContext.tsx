@@ -1,10 +1,11 @@
 import Color from "@tiptap/extension-color";
 import Placeholder from "@tiptap/extension-placeholder";
 import TextStyle from "@tiptap/extension-text-style";
-import { Editor, useEditor } from "@tiptap/react";
+import { Editor, Extension, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { PropsWithChildren, createContext, useState } from "react";
 import { Underline } from "@tiptap/extension-underline";
+import { HardBreak } from "@tiptap/extension-hard-break";
 
 export const TextEditorContext = createContext<{ editor: Editor | null }>({
   editor: null,
@@ -29,6 +30,13 @@ export const TextEditorContextProvider = ({ children }: PropsWithChildren) => {
       }),
       Placeholder.configure({}),
       TextStyle.configure(),
+      HardBreak.extend({
+        addKeyboardShortcuts() {
+          return {
+            Enter: () => this.editor.commands.setHardBreak(),
+          };
+        },
+      }),
     ],
     content: "",
   });
