@@ -1,11 +1,11 @@
 import Color from "@tiptap/extension-color";
+import { HardBreak } from "@tiptap/extension-hard-break";
 import Placeholder from "@tiptap/extension-placeholder";
 import TextStyle from "@tiptap/extension-text-style";
-import { Editor, Extension, useEditor } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import { PropsWithChildren, createContext, useState } from "react";
 import { Underline } from "@tiptap/extension-underline";
-import { HardBreak } from "@tiptap/extension-hard-break";
+import { Editor, useEditor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import { PropsWithChildren, createContext } from "react";
 
 export const TextEditorContext = createContext<{ editor: Editor | null }>({
   editor: null,
