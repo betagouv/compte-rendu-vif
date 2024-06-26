@@ -273,6 +273,9 @@ importers:
       '@tiptap/extension-text-style':
         specifier: ^2.3.0
         version: 2.3.0(@tiptap/core@2.4.0)
+      '@tiptap/extension-underline':
+        specifier: ^2.4.0
+        version: 2.4.0(@tiptap/core@2.4.0)
       '@tiptap/react':
         specifier: ^2.3.0
         version: 2.3.0(@tiptap/core@2.4.0)(@tiptap/pm@2.4.0)(react-dom@18.2.0)(react@18.2.0)
@@ -6504,6 +6507,14 @@ packages:
       '@tiptap/core': ^2.0.0
     dependencies:
       '@tiptap/core': 2.3.0(@tiptap/pm@2.4.0)
+    dev: false
+
+  /@tiptap/extension-underline@2.4.0(@tiptap/core@2.4.0):
+    resolution: {integrity: sha512-guWojb7JxUwLz4OKzwNExJwOkhZjgw/ttkXCMBT0PVe55k998MMYe1nvN0m2SeTW9IxurEPtScH4kYJ0XuSm8Q==}
+    peerDependencies:
+      '@tiptap/core': ^2.0.0
+    dependencies:
+      '@tiptap/core': 2.4.0(@tiptap/pm@2.4.0)
     dev: false
 
   /@tiptap/pm@2.4.0:
