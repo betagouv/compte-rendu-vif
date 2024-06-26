@@ -36,6 +36,17 @@ export const PDF = () => {
   const { mode } = Route.useSearch();
 
   const navigate = useNavigate();
+  const generatePdfMutation = useMutation(
+    async ({ htmlString, recipients }: { htmlString: string; recipients: string }) => {
+      await api.post("/api/pdf/report", { body: { reportId, htmlString, recipients } });
+      // downloadFile(url);
+    },
+    {
+      onSuccess: () => {
+        navigate({ search: { mode: "sent" } });
+      },
+    },
+  );
   const toggleMode = () => {
     navigate({ search: { mode: mode === "edit" ? "view" : "edit" }, replace: true });
   };
@@ -86,7 +97,7 @@ export const PDF = () => {
   const SendButtons = () => {
     return (
       <Center gap="10px" direction="row">
-        <Button iconId="ri-send-plane-fill" type="submit">
+        <Button iconId="ri-send-plane-fill" type="submit" disabled={generatePdfMutation.isLoading}>
           Envoyer
         </Button>
       </Center>
@@ -98,7 +109,7 @@ export const PDF = () => {
   if (mode === "sent") {
     return (
       <Center flexDir="column" w="100%" mt="24px">
-        <styled.img src={sentImage} alt="Courriel envoyé" width={{ base: "80px", lg: "120px" }} />
+        <styled.img src={sentImage} alt="Courriel envoyé" width={{ base: "80px", lg: "120px" }} mt="100px" />
         <styled.div mt="16px" color="text-title-blue-france" textAlign="center" fontSize={{ base: "18px", lg: "24px" }}>
           Votre compte-rendu a bien été envoyé !
         </styled.div>
@@ -115,7 +126,7 @@ export const PDF = () => {
   return (
     <styled.div w="100%" h="100%" bgColor={mode === "edit" ? "background-open-blue-france" : "unset"} overflowY="auto">
       <TextEditorContextProvider>
-        <SendForm reportId={reportId}>
+        <SendForm generatePdf={generatePdfMutation.mutate}>
           <EditBanner
             title={
               <styled.div nowrap>
@@ -147,27 +158,18 @@ export const PDF = () => {
   );
 };
 
-const SendForm = ({ children, reportId }: PropsWithChildren<{ reportId: string }>) => {
+const SendForm = ({
+  children,
+  generatePdf,
+}: PropsWithChildren<{ generatePdf: (args: { htmlString: string; recipients: string }) => void }>) => {
   const { editor } = useContext(TextEditorContext);
 
   const form = useForm({ defaultValues: { recipients: "" } });
-  const navigate = useNavigate();
-  const generatePdfMutation = useMutation(
-    async ({ htmlString, recipients }: { htmlString: string; recipients: string }) => {
-      await api.post("/api/pdf/report", { body: { reportId, htmlString, recipients } });
-      // downloadFile(url);
-    },
-    {
-      onSuccess: () => {
-        navigate({ search: { mode: "sent" } });
-      },
-    },
-  );
 
   const send = (values: { recipients: string }) => {
     const recipients = values.recipients.split(/,|\s/).filter(Boolean).join(",");
 
-    generatePdfMutation.mutate({ htmlString: editor?.getHTML() ?? "", recipients });
+    generatePdf({ htmlString: editor?.getHTML() ?? "", recipients });
   };
 
   return (
