@@ -48,6 +48,8 @@ export const userInput = Type.Object({
       pdf: Type.Optional(Type.String()),
       disabled: Type.Optional(Type.Boolean()),
       udap_id: Type.Optional(Type.String()),
+      redactedById: Type.Optional(Type.String()),
+      applicantEmail: Type.Optional(Type.String()),
     })
   ),
   udap: Type.Object({

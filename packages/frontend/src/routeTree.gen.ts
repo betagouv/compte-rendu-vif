@@ -17,7 +17,6 @@ import { Route as LoginImport } from './routes/login'
 import { Route as IndexImport } from './routes/index'
 import { Route as ResetPasswordLinkImport } from './routes/reset-password.$link'
 import { Route as PdfReportIdImport } from './routes/pdf.$reportId'
-import { Route as ExportReportIdImport } from './routes/export.$reportId'
 import { Route as EditReportIdImport } from './routes/edit.$reportId'
 
 // Create Virtual Routes
@@ -59,11 +58,6 @@ const PdfReportIdRoute = PdfReportIdImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const ExportReportIdRoute = ExportReportIdImport.update({
-  path: '/export/$reportId',
-  getParentRoute: () => rootRoute,
-} as any)
-
 const EditReportIdRoute = EditReportIdImport.update({
   path: '/edit/$reportId',
   getParentRoute: () => rootRoute,
@@ -89,10 +83,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EditReportIdImport
       parentRoute: typeof rootRoute
     }
-    '/export/$reportId': {
-      preLoaderRoute: typeof ExportReportIdImport
-      parentRoute: typeof rootRoute
-    }
     '/pdf/$reportId': {
       preLoaderRoute: typeof PdfReportIdImport
       parentRoute: typeof rootRoute
@@ -115,7 +105,6 @@ export const routeTree = rootRoute.addChildren([
   LoginRoute,
   SignupLazyRoute,
   EditReportIdRoute,
-  ExportReportIdRoute,
   PdfReportIdRoute,
   ResetPasswordLinkRoute,
   ResetPasswordIndexLazyRoute,

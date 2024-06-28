@@ -190,14 +190,22 @@ export const getReportHtmlString = (
       report.precisions
         ? `<p>
       <strong>Précisions : </strong><br/>
-      <span>${report.precisions}</span>
+      <span>${report.precisions
+        ?.split("\n")
+        .map((s) => s.trim())
+        .join("<br/>")}</span>
     </p>`
         : ""
     }
 
     <p>
       <strong>Le projet pour rappel : </strong><br/>
-      ${report.projectDescription ?? ""}
+      ${
+        report.projectDescription
+          ?.split("\n")
+          .map((s) => s.trim())
+          .join("<br/>") ?? ""
+      }
     </p>
   
     <p>

@@ -16,3 +16,5 @@ export * from './whitelist';
 export * from './whitelistInput';
 export * from './internal_user';
 export * from './internal_userInput';
+export * from './service_instructeurs';
+export * from './service_instructeursInput';

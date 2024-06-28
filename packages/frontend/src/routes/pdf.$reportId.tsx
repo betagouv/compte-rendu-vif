@@ -6,7 +6,7 @@ import { css } from "#styled-system/css";
 import { Center, Flex, Stack, styled } from "#styled-system/jsx";
 import Button from "@codegouvfr/react-dsfr/Button";
 import Input from "@codegouvfr/react-dsfr/Input";
-import type { Report, Udap } from "@cr-vif/electric-client/frontend";
+import type { Report, Service_instructeurs, Udap } from "@cr-vif/electric-client/frontend";
 import { ReportPDFDocument, ReportPDFDocumentProps, getReportHtmlString } from "@cr-vif/pdf";
 import { usePdf } from "@mikecousins/react-pdf";
 import { pdf } from "@react-pdf/renderer";
@@ -36,6 +36,17 @@ export const PDF = () => {
   const { mode } = Route.useSearch();
 
   const navigate = useNavigate();
+  const generatePdfMutation = useMutation(
+    async ({ htmlString, recipients }: { htmlString: string; recipients: string }) => {
+      await api.post("/api/pdf/report", { body: { reportId, htmlString, recipients } });
+      // downloadFile(url);
+    },
+    {
+      onSuccess: () => {
+        navigate({ search: { mode: "sent" } });
+      },
+    },
+  );
   const toggleMode = () => {
     navigate({ search: { mode: mode === "edit" ? "view" : "edit" }, replace: true });
   };
@@ -86,7 +97,7 @@ export const PDF = () => {
   const SendButtons = () => {
     return (
       <Center gap="10px" direction="row">
-        <Button iconId="ri-send-plane-fill" type="submit">
+        <Button iconId="ri-send-plane-fill" type="submit" disabled={generatePdfMutation.isLoading}>
           Envoyer
         </Button>
       </Center>
@@ -98,7 +109,7 @@ export const PDF = () => {
   if (mode === "sent") {
     return (
       <Center flexDir="column" w="100%" mt="24px">
-        <styled.img src={sentImage} alt="Courriel envoyé" width={{ base: "80px", lg: "120px" }} />
+        <styled.img src={sentImage} alt="Courriel envoyé" width={{ base: "80px", lg: "120px" }} mt="100px" />
         <styled.div mt="16px" color="text-title-blue-france" textAlign="center" fontSize={{ base: "18px", lg: "24px" }}>
           Votre compte-rendu a bien été envoyé !
         </styled.div>
@@ -116,59 +127,66 @@ export const PDF = () => {
   return (
     <styled.div w="100%" h="100%" bgColor={mode === "edit" ? "background-open-blue-france" : "unset"} overflowY="auto">
       <TextEditorContextProvider>
-        <SendForm reportId={reportId}>
-          <EditBanner
-            title={
-              <styled.div nowrap>
-                <styled.span fontWeight="bold">{getModeTitle(mode)}</styled.span>
-                {report?.title ? ` | ${report?.title}` : ""}
-              </styled.div>
-            }
-            reportId={report?.id}
-            buttons={buttons}
-          />
-          <Center w="100%" h="100%" maxH="100%" mt="10px" overflowY="auto">
-            <Stack w="800px" h="100%">
-              {report && chipOptions?.length && isServiceInstructeurLoaded ? (
-                <WithReport
-                  mode={mode}
-                  initialHtmlString={getReportHtmlString(
-                    report,
-                    chipOptions,
-                    udap as Udap,
-                    serviceInstructeur ?? undefined,
-                  )}
-                />
-              ) : null}
-            </Stack>
-          </Center>
-        </SendForm>
+        {report ? (
+          <SendForm generatePdf={generatePdfMutation.mutate} report={report}>
+            <EditBanner
+              title={
+                <styled.div nowrap>
+                  <styled.span fontWeight="bold">{getModeTitle(mode)}</styled.span>
+                  {report?.title ? ` | ${report?.title}` : ""}
+                </styled.div>
+              }
+              reportId={report?.id}
+              buttons={buttons}
+            />
+            <Center w="100%" h="100%" maxH="100%" mt="10px" overflowY="auto">
+              <Stack w="800px" h="100%">
+                {report && chipOptions?.length && isServiceInstructeurLoaded ? (
+                  <WithReport
+                    mode={mode}
+                    initialHtmlString={getReportHtmlString(
+                      report,
+                      chipOptions,
+                      udap as Udap,
+                      serviceInstructeur ?? undefined,
+                    )}
+                  />
+                ) : null}
+              </Stack>
+            </Center>
+          </SendForm>
+        ) : null}
       </TextEditorContextProvider>
     </styled.div>
   );
 };
 
-const SendForm = ({ children, reportId }: PropsWithChildren<{ reportId: string }>) => {
+const SendForm = ({
+  children,
+  generatePdf,
+  report,
+}: PropsWithChildren<{ report: Report; generatePdf: (args: { htmlString: string; recipients: string }) => void }>) => {
   const { editor } = useContext(TextEditorContext);
 
   const form = useForm({ defaultValues: { recipients: "" } });
-  const navigate = useNavigate();
-  const generatePdfMutation = useMutation(
-    async ({ htmlString, recipients }: { htmlString: string; recipients: string }) => {
-      await api.post("/api/pdf/report", { body: { reportId, htmlString, recipients } });
-      // downloadFile(url);
+
+  useQuery({
+    queryKey: ["service-instructeur", report.serviceInstructeur, report.applicantEmail],
+    queryFn: async () => {
+      const recipents = await getBaseRecipients(report);
+      if (!form.getValues("recipients")) {
+        form.setValue("recipients", recipents ?? "");
+      }
     },
-    {
-      onSuccess: () => {
-        navigate({ search: { mode: "sent" } });
-      },
-    },
-  );
+  });
 
   const send = (values: { recipients: string }) => {
-    const recipients = values.recipients.split(/,|\s/).filter(Boolean).join(",");
+    const recipients = values.recipients
+      .split(/,|\s|;/)
+      .filter(Boolean)
+      .join(",");
 
-    generatePdfMutation.mutate({ htmlString: editor?.getHTML() ?? "", recipients });
+    generatePdf({ htmlString: editor?.getHTML() ?? "", recipients });
   };
 
   return (
@@ -176,6 +194,14 @@ const SendForm = ({ children, reportId }: PropsWithChildren<{ reportId: string }
       <FormProvider {...form}>{children}</FormProvider>
     </form>
   );
+};
+
+const getBaseRecipients = async (report: Report) => {
+  const serviceEmail = report.serviceInstructeur
+    ? (await db.service_instructeurs.findFirst({ where: { id: report.serviceInstructeur } }))?.email
+    : null;
+  const recipients = [serviceEmail, report.applicantEmail].filter(Boolean).join(", ");
+  return recipients;
 };
 
 const getModeTitle = (mode: Mode) => {
@@ -342,6 +368,7 @@ const PdfCanvasPage = ({ file, page }: { file: string; page: number }) => {
 
   return (
     <styled.canvas
+      // @ts-ignore
       ref={canvasRef}
       width={{ base: "100%", lg: "800px" }}
       my="16px"

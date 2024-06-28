@@ -1,47 +1,7 @@
-import { Placeholder } from "@tiptap/extension-placeholder";
-import { Color } from "@tiptap/extension-color";
-import { TextStyle } from "@tiptap/extension-text-style";
-import { Editor, EditorContent, useEditor } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import { useContext, useEffect } from "react";
 import { css, cx } from "#styled-system/css";
-import { TextEditorToolbar } from "./TextEditorToolbar";
+import { EditorContent } from "@tiptap/react";
+import { useContext, useEffect } from "react";
 import { TextEditorContext } from "./TextEditorContext";
-
-interface Props {
-  defaultValue?: string;
-  onChange?: (value: string) => void;
-  autoFocus?: boolean;
-  readOnly?: boolean;
-  placeholder?: string;
-}
-
-export const useTextEditor = (props: Props) => {
-  const { defaultValue, onChange, autoFocus, readOnly, placeholder } = props;
-
-  return useEditor({
-    autofocus: autoFocus ?? false,
-    editable: !readOnly,
-    extensions: [
-      StarterKit.configure({
-        codeBlock: false,
-        code: {
-          HTMLAttributes: {
-            class: "inline",
-          },
-        },
-      }),
-      Color.configure({
-        types: ["textStyle"],
-      }),
-      Placeholder.configure({
-        placeholder,
-      }),
-      TextStyle.configure(),
-    ],
-    content: defaultValue,
-  });
-};
 
 export const TextEditor = (props: { hasSubmitted?: boolean }) => {
   const { hasSubmitted } = props;
