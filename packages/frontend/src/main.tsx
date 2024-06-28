@@ -15,7 +15,16 @@ if ("serviceWorker" in navigator) {
 
 startReactDsfr({ defaultColorScheme: "system", Link: Link });
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions:{
+    mutations: {
+      networkMode: "always"
+    },
+    queries: {
+      networkMode: "always"
+    }
+  }
+});
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
