@@ -3,14 +3,14 @@ import { useUser } from "../../contexts/AuthContext";
 import { useLiveQuery } from "electric-sql/react";
 import { db } from "../../db";
 import { groupBy } from "pastable";
-import { Clause } from "@cr-vif/electric-client/frontend";
+import { Clause_v2 } from "@cr-vif/electric-client/frontend";
 
 export const useChipOptions = (key?: string) => {
   const user = useUser()!;
 
   // retrieve all chips with the given key
   const decisionsChipsQuery = useLiveQuery(
-    db.clause.liveMany({
+    db.clause_v2.liveMany({
       where: {
         ...(key ? { key } : {}),
         udap_id: { in: ["ALL", user.udap.id] },
@@ -29,7 +29,7 @@ export const useChipOptions = (key?: string) => {
   return chips.map(transformChip);
 };
 
-const transformChip = (chip: Clause) => {
+const transformChip = (chip: Clause_v2) => {
   return {
     ...chip,
     text: chip.text?.replaceAll("\\n", "<br />"),

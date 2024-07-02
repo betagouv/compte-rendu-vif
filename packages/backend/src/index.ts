@@ -4,12 +4,13 @@ import { onHmr, registerViteHmrServerRestart } from "./hmr";
 import { ENV } from "./envVars";
 import { generateOpenApi, initFastify } from "./router";
 import { makeDebug } from "./features/debug";
+import { initClauseV2 } from "./tmp";
 
 const debug = makeDebug("index");
 
 const start = async () => {
   await registerViteHmrServerRestart();
-
+  await initClauseV2();
   debug("Starting fastify server in", ENV.NODE_ENV, "mode");
 
   const fastifyInstance = await initFastify();

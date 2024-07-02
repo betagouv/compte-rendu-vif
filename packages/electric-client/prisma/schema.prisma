@@ -32,6 +32,7 @@ model clause {
   value   String
   udap_id String
   text    String
+  hidden  Boolean?
 
   @@id([key, value, udap_id])
 }
@@ -120,4 +121,12 @@ model service_instructeurs {
   email      String?
   tel        String?
   udap_id    String?
+}
+
+model clause_v2 {
+  id      String  @id
+  key     String
+  value   String
+  udap_id String?
+  text    String
 }

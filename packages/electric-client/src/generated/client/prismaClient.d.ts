@@ -20,6 +20,7 @@ export type ClausePayload<ExtArgs extends $Extensions.Args = $Extensions.Default
     value: string
     udap_id: string
     text: string
+    hidden: boolean | null
   }, ExtArgs["result"]["clause"]>
   composites: {}
 }
@@ -29,6 +30,24 @@ export type ClausePayload<ExtArgs extends $Extensions.Args = $Extensions.Default
  * 
  */
 export type Clause = runtime.Types.DefaultSelection<ClausePayload>
+export type Clause_v2Payload<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  name: "Clause_v2"
+  objects: {}
+  scalars: $Extensions.GetResult<{
+    id: string
+    key: string
+    value: string
+    udap_id: string | null
+    text: string
+  }, ExtArgs["result"]["clause_v2"]>
+  composites: {}
+}
+
+/**
+ * Model Clause_v2
+ * 
+ */
+export type Clause_v2 = runtime.Types.DefaultSelection<Clause_v2Payload>
 export type DelegationPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
   name: "Delegation"
   objects: {
@@ -292,6 +311,16 @@ export class PrismaClient<
     * ```
     */
   get clause(): Prisma.ClauseDelegate<GlobalReject, ExtArgs>;
+
+  /**
+   * `prisma.clause_v2`: Exposes CRUD operations for the **Clause_v2** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Clause_v2s
+    * const clause_v2s = await prisma.clause_v2.findMany()
+    * ```
+    */
+  get clause_v2(): Prisma.Clause_v2Delegate<GlobalReject, ExtArgs>;
 
   /**
    * `prisma.delegation`: Exposes CRUD operations for the **Delegation** model.
@@ -826,6 +855,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export const ModelName: {
     Clause: 'Clause',
+    Clause_v2: 'Clause_v2',
     Delegation: 'Delegation',
     Report: 'Report',
     Service_instructeurs: 'Service_instructeurs',
@@ -847,7 +877,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type TypeMap<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     meta: {
-      modelProps: 'clause' | 'delegation' | 'report' | 'service_instructeurs' | 'udap' | 'user'
+      modelProps: 'clause' | 'clause_v2' | 'delegation' | 'report' | 'service_instructeurs' | 'udap' | 'user'
       txIsolationLevel: Prisma.TransactionIsolationLevel
     },
     model: {
@@ -913,6 +943,71 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
           count: {
             args: Prisma.ClauseCountArgs<ExtArgs>,
             result: $Utils.Optional<ClauseCountAggregateOutputType> | number
+          }
+        }
+      }
+      Clause_v2: {
+        payload: Clause_v2Payload<ExtArgs>
+        operations: {
+          findUnique: {
+            args: Prisma.Clause_v2FindUniqueArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Clause_v2Payload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.Clause_v2FindUniqueOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Clause_v2Payload>
+          }
+          findFirst: {
+            args: Prisma.Clause_v2FindFirstArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Clause_v2Payload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.Clause_v2FindFirstOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Clause_v2Payload>
+          }
+          findMany: {
+            args: Prisma.Clause_v2FindManyArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Clause_v2Payload>[]
+          }
+          create: {
+            args: Prisma.Clause_v2CreateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Clause_v2Payload>
+          }
+          createMany: {
+            args: Prisma.Clause_v2CreateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          delete: {
+            args: Prisma.Clause_v2DeleteArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Clause_v2Payload>
+          }
+          update: {
+            args: Prisma.Clause_v2UpdateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Clause_v2Payload>
+          }
+          deleteMany: {
+            args: Prisma.Clause_v2DeleteManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          updateMany: {
+            args: Prisma.Clause_v2UpdateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          upsert: {
+            args: Prisma.Clause_v2UpsertArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Clause_v2Payload>
+          }
+          aggregate: {
+            args: Prisma.Clause_v2AggregateArgs<ExtArgs>,
+            result: $Utils.Optional<AggregateClause_v2>
+          }
+          groupBy: {
+            args: Prisma.Clause_v2GroupByArgs<ExtArgs>,
+            result: $Utils.Optional<Clause_v2GroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.Clause_v2CountArgs<ExtArgs>,
+            result: $Utils.Optional<Clause_v2CountAggregateOutputType> | number
           }
         }
       }
@@ -1527,6 +1622,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     value: string | null
     udap_id: string | null
     text: string | null
+    hidden: boolean | null
   }
 
   export type ClauseMaxAggregateOutputType = {
@@ -1534,6 +1630,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     value: string | null
     udap_id: string | null
     text: string | null
+    hidden: boolean | null
   }
 
   export type ClauseCountAggregateOutputType = {
@@ -1541,6 +1638,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     value: number
     udap_id: number
     text: number
+    hidden: number
     _all: number
   }
 
@@ -1550,6 +1648,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     value?: true
     udap_id?: true
     text?: true
+    hidden?: true
   }
 
   export type ClauseMaxAggregateInputType = {
@@ -1557,6 +1656,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     value?: true
     udap_id?: true
     text?: true
+    hidden?: true
   }
 
   export type ClauseCountAggregateInputType = {
@@ -1564,6 +1664,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     value?: true
     udap_id?: true
     text?: true
+    hidden?: true
     _all?: true
   }
 
@@ -1645,6 +1746,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     value: string
     udap_id: string
     text: string
+    hidden: boolean | null
     _count: ClauseCountAggregateOutputType | null
     _min: ClauseMinAggregateOutputType | null
     _max: ClauseMaxAggregateOutputType | null
@@ -1669,6 +1771,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     value?: boolean
     udap_id?: boolean
     text?: boolean
+    hidden?: boolean
   }, ExtArgs["result"]["clause"]>
 
   export type ClauseSelectScalar = {
@@ -1676,6 +1779,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     value?: boolean
     udap_id?: boolean
     text?: boolean
+    hidden?: boolean
   }
 
 
@@ -2376,6 +2480,884 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      * Select specific fields to fetch from the Clause
      */
     select?: ClauseSelect<ExtArgs> | null
+  }
+
+
+
+  /**
+   * Model Clause_v2
+   */
+
+
+  export type AggregateClause_v2 = {
+    _count: Clause_v2CountAggregateOutputType | null
+    _min: Clause_v2MinAggregateOutputType | null
+    _max: Clause_v2MaxAggregateOutputType | null
+  }
+
+  export type Clause_v2MinAggregateOutputType = {
+    id: string | null
+    key: string | null
+    value: string | null
+    udap_id: string | null
+    text: string | null
+  }
+
+  export type Clause_v2MaxAggregateOutputType = {
+    id: string | null
+    key: string | null
+    value: string | null
+    udap_id: string | null
+    text: string | null
+  }
+
+  export type Clause_v2CountAggregateOutputType = {
+    id: number
+    key: number
+    value: number
+    udap_id: number
+    text: number
+    _all: number
+  }
+
+
+  export type Clause_v2MinAggregateInputType = {
+    id?: true
+    key?: true
+    value?: true
+    udap_id?: true
+    text?: true
+  }
+
+  export type Clause_v2MaxAggregateInputType = {
+    id?: true
+    key?: true
+    value?: true
+    udap_id?: true
+    text?: true
+  }
+
+  export type Clause_v2CountAggregateInputType = {
+    id?: true
+    key?: true
+    value?: true
+    udap_id?: true
+    text?: true
+    _all?: true
+  }
+
+  export type Clause_v2AggregateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Clause_v2 to aggregate.
+     */
+    where?: Clause_v2WhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Clause_v2s to fetch.
+     */
+    orderBy?: Enumerable<Clause_v2OrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: Clause_v2WhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Clause_v2s from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Clause_v2s.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Clause_v2s
+    **/
+    _count?: true | Clause_v2CountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Clause_v2MinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Clause_v2MaxAggregateInputType
+  }
+
+  export type GetClause_v2AggregateType<T extends Clause_v2AggregateArgs> = {
+        [P in keyof T & keyof AggregateClause_v2]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateClause_v2[P]>
+      : GetScalarType<T[P], AggregateClause_v2[P]>
+  }
+
+
+
+
+  export type Clause_v2GroupByArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    where?: Clause_v2WhereInput
+    orderBy?: Enumerable<Clause_v2OrderByWithAggregationInput>
+    by: Clause_v2ScalarFieldEnum[]
+    having?: Clause_v2ScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Clause_v2CountAggregateInputType | true
+    _min?: Clause_v2MinAggregateInputType
+    _max?: Clause_v2MaxAggregateInputType
+  }
+
+
+  export type Clause_v2GroupByOutputType = {
+    id: string
+    key: string
+    value: string
+    udap_id: string | null
+    text: string
+    _count: Clause_v2CountAggregateOutputType | null
+    _min: Clause_v2MinAggregateOutputType | null
+    _max: Clause_v2MaxAggregateOutputType | null
+  }
+
+  type GetClause_v2GroupByPayload<T extends Clause_v2GroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickArray<Clause_v2GroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Clause_v2GroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Clause_v2GroupByOutputType[P]>
+            : GetScalarType<T[P], Clause_v2GroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type Clause_v2Select<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    key?: boolean
+    value?: boolean
+    udap_id?: boolean
+    text?: boolean
+  }, ExtArgs["result"]["clause_v2"]>
+
+  export type Clause_v2SelectScalar = {
+    id?: boolean
+    key?: boolean
+    value?: boolean
+    udap_id?: boolean
+    text?: boolean
+  }
+
+
+  type Clause_v2GetPayload<S extends boolean | null | undefined | Clause_v2Args> = $Types.GetResult<Clause_v2Payload, S>
+
+  type Clause_v2CountArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = 
+    Omit<Clause_v2FindManyArgs, 'select' | 'include'> & {
+      select?: Clause_v2CountAggregateInputType | true
+    }
+
+  export interface Clause_v2Delegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Clause_v2'], meta: { name: 'Clause_v2' } }
+    /**
+     * Find zero or one Clause_v2 that matches the filter.
+     * @param {Clause_v2FindUniqueArgs} args - Arguments to find a Clause_v2
+     * @example
+     * // Get one Clause_v2
+     * const clause_v2 = await prisma.clause_v2.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends Clause_v2FindUniqueArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, Clause_v2FindUniqueArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'Clause_v2'> extends True ? Prisma__Clause_v2Client<$Types.GetResult<Clause_v2Payload<ExtArgs>, T, 'findUnique', never>, never, ExtArgs> : Prisma__Clause_v2Client<$Types.GetResult<Clause_v2Payload<ExtArgs>, T, 'findUnique', never> | null, null, ExtArgs>
+
+    /**
+     * Find one Clause_v2 that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {Clause_v2FindUniqueOrThrowArgs} args - Arguments to find a Clause_v2
+     * @example
+     * // Get one Clause_v2
+     * const clause_v2 = await prisma.clause_v2.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends Clause_v2FindUniqueOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, Clause_v2FindUniqueOrThrowArgs<ExtArgs>>
+    ): Prisma__Clause_v2Client<$Types.GetResult<Clause_v2Payload<ExtArgs>, T, 'findUniqueOrThrow', never>, never, ExtArgs>
+
+    /**
+     * Find the first Clause_v2 that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Clause_v2FindFirstArgs} args - Arguments to find a Clause_v2
+     * @example
+     * // Get one Clause_v2
+     * const clause_v2 = await prisma.clause_v2.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends Clause_v2FindFirstArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, Clause_v2FindFirstArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'Clause_v2'> extends True ? Prisma__Clause_v2Client<$Types.GetResult<Clause_v2Payload<ExtArgs>, T, 'findFirst', never>, never, ExtArgs> : Prisma__Clause_v2Client<$Types.GetResult<Clause_v2Payload<ExtArgs>, T, 'findFirst', never> | null, null, ExtArgs>
+
+    /**
+     * Find the first Clause_v2 that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Clause_v2FindFirstOrThrowArgs} args - Arguments to find a Clause_v2
+     * @example
+     * // Get one Clause_v2
+     * const clause_v2 = await prisma.clause_v2.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends Clause_v2FindFirstOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, Clause_v2FindFirstOrThrowArgs<ExtArgs>>
+    ): Prisma__Clause_v2Client<$Types.GetResult<Clause_v2Payload<ExtArgs>, T, 'findFirstOrThrow', never>, never, ExtArgs>
+
+    /**
+     * Find zero or more Clause_v2s that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Clause_v2FindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Clause_v2s
+     * const clause_v2s = await prisma.clause_v2.findMany()
+     * 
+     * // Get first 10 Clause_v2s
+     * const clause_v2s = await prisma.clause_v2.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const clause_v2WithIdOnly = await prisma.clause_v2.findMany({ select: { id: true } })
+     * 
+    **/
+    findMany<T extends Clause_v2FindManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, Clause_v2FindManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Types.GetResult<Clause_v2Payload<ExtArgs>, T, 'findMany', never>>
+
+    /**
+     * Create a Clause_v2.
+     * @param {Clause_v2CreateArgs} args - Arguments to create a Clause_v2.
+     * @example
+     * // Create one Clause_v2
+     * const Clause_v2 = await prisma.clause_v2.create({
+     *   data: {
+     *     // ... data to create a Clause_v2
+     *   }
+     * })
+     * 
+    **/
+    create<T extends Clause_v2CreateArgs<ExtArgs>>(
+      args: SelectSubset<T, Clause_v2CreateArgs<ExtArgs>>
+    ): Prisma__Clause_v2Client<$Types.GetResult<Clause_v2Payload<ExtArgs>, T, 'create', never>, never, ExtArgs>
+
+    /**
+     * Create many Clause_v2s.
+     *     @param {Clause_v2CreateManyArgs} args - Arguments to create many Clause_v2s.
+     *     @example
+     *     // Create many Clause_v2s
+     *     const clause_v2 = await prisma.clause_v2.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
+     *     
+    **/
+    createMany<T extends Clause_v2CreateManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, Clause_v2CreateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Clause_v2.
+     * @param {Clause_v2DeleteArgs} args - Arguments to delete one Clause_v2.
+     * @example
+     * // Delete one Clause_v2
+     * const Clause_v2 = await prisma.clause_v2.delete({
+     *   where: {
+     *     // ... filter to delete one Clause_v2
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends Clause_v2DeleteArgs<ExtArgs>>(
+      args: SelectSubset<T, Clause_v2DeleteArgs<ExtArgs>>
+    ): Prisma__Clause_v2Client<$Types.GetResult<Clause_v2Payload<ExtArgs>, T, 'delete', never>, never, ExtArgs>
+
+    /**
+     * Update one Clause_v2.
+     * @param {Clause_v2UpdateArgs} args - Arguments to update one Clause_v2.
+     * @example
+     * // Update one Clause_v2
+     * const clause_v2 = await prisma.clause_v2.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends Clause_v2UpdateArgs<ExtArgs>>(
+      args: SelectSubset<T, Clause_v2UpdateArgs<ExtArgs>>
+    ): Prisma__Clause_v2Client<$Types.GetResult<Clause_v2Payload<ExtArgs>, T, 'update', never>, never, ExtArgs>
+
+    /**
+     * Delete zero or more Clause_v2s.
+     * @param {Clause_v2DeleteManyArgs} args - Arguments to filter Clause_v2s to delete.
+     * @example
+     * // Delete a few Clause_v2s
+     * const { count } = await prisma.clause_v2.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends Clause_v2DeleteManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, Clause_v2DeleteManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Clause_v2s.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Clause_v2UpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Clause_v2s
+     * const clause_v2 = await prisma.clause_v2.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends Clause_v2UpdateManyArgs<ExtArgs>>(
+      args: SelectSubset<T, Clause_v2UpdateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Clause_v2.
+     * @param {Clause_v2UpsertArgs} args - Arguments to update or create a Clause_v2.
+     * @example
+     * // Update or create a Clause_v2
+     * const clause_v2 = await prisma.clause_v2.upsert({
+     *   create: {
+     *     // ... data to create a Clause_v2
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Clause_v2 we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends Clause_v2UpsertArgs<ExtArgs>>(
+      args: SelectSubset<T, Clause_v2UpsertArgs<ExtArgs>>
+    ): Prisma__Clause_v2Client<$Types.GetResult<Clause_v2Payload<ExtArgs>, T, 'upsert', never>, never, ExtArgs>
+
+    /**
+     * Count the number of Clause_v2s.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Clause_v2CountArgs} args - Arguments to filter Clause_v2s to count.
+     * @example
+     * // Count the number of Clause_v2s
+     * const count = await prisma.clause_v2.count({
+     *   where: {
+     *     // ... the filter for the Clause_v2s we want to count
+     *   }
+     * })
+    **/
+    count<T extends Clause_v2CountArgs>(
+      args?: Subset<T, Clause_v2CountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Clause_v2CountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Clause_v2.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Clause_v2AggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Clause_v2AggregateArgs>(args: Subset<T, Clause_v2AggregateArgs>): Prisma.PrismaPromise<GetClause_v2AggregateType<T>>
+
+    /**
+     * Group by Clause_v2.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Clause_v2GroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends Clause_v2GroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: Clause_v2GroupByArgs['orderBy'] }
+        : { orderBy?: Clause_v2GroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends TupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, Clause_v2GroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetClause_v2GroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Clause_v2.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export class Prisma__Clause_v2Client<T, Null = never, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> implements Prisma.PrismaPromise<T> {
+    private readonly _dmmf;
+    private readonly _queryType;
+    private readonly _rootField;
+    private readonly _clientMethod;
+    private readonly _args;
+    private readonly _dataPath;
+    private readonly _errorFormat;
+    private readonly _measurePerformance?;
+    private _isList;
+    private _callsite;
+    private _requestPromise?;
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+    constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
+
+
+    private get _document();
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): Promise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): Promise<T>;
+  }
+
+
+
+  // Custom InputTypes
+
+  /**
+   * Clause_v2 base type for findUnique actions
+   */
+  export type Clause_v2FindUniqueArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Clause_v2
+     */
+    select?: Clause_v2Select<ExtArgs> | null
+    /**
+     * Filter, which Clause_v2 to fetch.
+     */
+    where: Clause_v2WhereUniqueInput
+  }
+
+  /**
+   * Clause_v2 findUnique
+   */
+  export interface Clause_v2FindUniqueArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends Clause_v2FindUniqueArgsBase<ExtArgs> {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * Clause_v2 findUniqueOrThrow
+   */
+  export type Clause_v2FindUniqueOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Clause_v2
+     */
+    select?: Clause_v2Select<ExtArgs> | null
+    /**
+     * Filter, which Clause_v2 to fetch.
+     */
+    where: Clause_v2WhereUniqueInput
+  }
+
+
+  /**
+   * Clause_v2 base type for findFirst actions
+   */
+  export type Clause_v2FindFirstArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Clause_v2
+     */
+    select?: Clause_v2Select<ExtArgs> | null
+    /**
+     * Filter, which Clause_v2 to fetch.
+     */
+    where?: Clause_v2WhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Clause_v2s to fetch.
+     */
+    orderBy?: Enumerable<Clause_v2OrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Clause_v2s.
+     */
+    cursor?: Clause_v2WhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Clause_v2s from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Clause_v2s.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Clause_v2s.
+     */
+    distinct?: Enumerable<Clause_v2ScalarFieldEnum>
+  }
+
+  /**
+   * Clause_v2 findFirst
+   */
+  export interface Clause_v2FindFirstArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends Clause_v2FindFirstArgsBase<ExtArgs> {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * Clause_v2 findFirstOrThrow
+   */
+  export type Clause_v2FindFirstOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Clause_v2
+     */
+    select?: Clause_v2Select<ExtArgs> | null
+    /**
+     * Filter, which Clause_v2 to fetch.
+     */
+    where?: Clause_v2WhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Clause_v2s to fetch.
+     */
+    orderBy?: Enumerable<Clause_v2OrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Clause_v2s.
+     */
+    cursor?: Clause_v2WhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Clause_v2s from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Clause_v2s.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Clause_v2s.
+     */
+    distinct?: Enumerable<Clause_v2ScalarFieldEnum>
+  }
+
+
+  /**
+   * Clause_v2 findMany
+   */
+  export type Clause_v2FindManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Clause_v2
+     */
+    select?: Clause_v2Select<ExtArgs> | null
+    /**
+     * Filter, which Clause_v2s to fetch.
+     */
+    where?: Clause_v2WhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Clause_v2s to fetch.
+     */
+    orderBy?: Enumerable<Clause_v2OrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Clause_v2s.
+     */
+    cursor?: Clause_v2WhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Clause_v2s from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Clause_v2s.
+     */
+    skip?: number
+    distinct?: Enumerable<Clause_v2ScalarFieldEnum>
+  }
+
+
+  /**
+   * Clause_v2 create
+   */
+  export type Clause_v2CreateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Clause_v2
+     */
+    select?: Clause_v2Select<ExtArgs> | null
+    /**
+     * The data needed to create a Clause_v2.
+     */
+    data: XOR<Clause_v2CreateInput, Clause_v2UncheckedCreateInput>
+  }
+
+
+  /**
+   * Clause_v2 createMany
+   */
+  export type Clause_v2CreateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Clause_v2s.
+     */
+    data: Enumerable<Clause_v2CreateManyInput>
+    skipDuplicates?: boolean
+  }
+
+
+  /**
+   * Clause_v2 update
+   */
+  export type Clause_v2UpdateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Clause_v2
+     */
+    select?: Clause_v2Select<ExtArgs> | null
+    /**
+     * The data needed to update a Clause_v2.
+     */
+    data: XOR<Clause_v2UpdateInput, Clause_v2UncheckedUpdateInput>
+    /**
+     * Choose, which Clause_v2 to update.
+     */
+    where: Clause_v2WhereUniqueInput
+  }
+
+
+  /**
+   * Clause_v2 updateMany
+   */
+  export type Clause_v2UpdateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Clause_v2s.
+     */
+    data: XOR<Clause_v2UpdateManyMutationInput, Clause_v2UncheckedUpdateManyInput>
+    /**
+     * Filter which Clause_v2s to update
+     */
+    where?: Clause_v2WhereInput
+  }
+
+
+  /**
+   * Clause_v2 upsert
+   */
+  export type Clause_v2UpsertArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Clause_v2
+     */
+    select?: Clause_v2Select<ExtArgs> | null
+    /**
+     * The filter to search for the Clause_v2 to update in case it exists.
+     */
+    where: Clause_v2WhereUniqueInput
+    /**
+     * In case the Clause_v2 found by the `where` argument doesn't exist, create a new Clause_v2 with this data.
+     */
+    create: XOR<Clause_v2CreateInput, Clause_v2UncheckedCreateInput>
+    /**
+     * In case the Clause_v2 was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<Clause_v2UpdateInput, Clause_v2UncheckedUpdateInput>
+  }
+
+
+  /**
+   * Clause_v2 delete
+   */
+  export type Clause_v2DeleteArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Clause_v2
+     */
+    select?: Clause_v2Select<ExtArgs> | null
+    /**
+     * Filter which Clause_v2 to delete.
+     */
+    where: Clause_v2WhereUniqueInput
+  }
+
+
+  /**
+   * Clause_v2 deleteMany
+   */
+  export type Clause_v2DeleteManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Clause_v2s to delete
+     */
+    where?: Clause_v2WhereInput
+  }
+
+
+  /**
+   * Clause_v2 without action
+   */
+  export type Clause_v2Args<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Clause_v2
+     */
+    select?: Clause_v2Select<ExtArgs> | null
   }
 
 
@@ -7324,10 +8306,22 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     key: 'key',
     value: 'value',
     udap_id: 'udap_id',
-    text: 'text'
+    text: 'text',
+    hidden: 'hidden'
   };
 
   export type ClauseScalarFieldEnum = (typeof ClauseScalarFieldEnum)[keyof typeof ClauseScalarFieldEnum]
+
+
+  export const Clause_v2ScalarFieldEnum: {
+    id: 'id',
+    key: 'key',
+    value: 'value',
+    udap_id: 'udap_id',
+    text: 'text'
+  };
+
+  export type Clause_v2ScalarFieldEnum = (typeof Clause_v2ScalarFieldEnum)[keyof typeof Clause_v2ScalarFieldEnum]
 
 
   export const DelegationScalarFieldEnum: {
@@ -7442,6 +8436,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     value?: StringFilter | string
     udap_id?: StringFilter | string
     text?: StringFilter | string
+    hidden?: BoolNullableFilter | boolean | null
   }
 
   export type ClauseOrderByWithRelationInput = {
@@ -7449,6 +8444,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     value?: SortOrder
     udap_id?: SortOrder
     text?: SortOrder
+    hidden?: SortOrderInput | SortOrder
   }
 
   export type ClauseWhereUniqueInput = {
@@ -7460,6 +8456,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     value?: SortOrder
     udap_id?: SortOrder
     text?: SortOrder
+    hidden?: SortOrderInput | SortOrder
     _count?: ClauseCountOrderByAggregateInput
     _max?: ClauseMaxOrderByAggregateInput
     _min?: ClauseMinOrderByAggregateInput
@@ -7472,6 +8469,52 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     key?: StringWithAggregatesFilter | string
     value?: StringWithAggregatesFilter | string
     udap_id?: StringWithAggregatesFilter | string
+    text?: StringWithAggregatesFilter | string
+    hidden?: BoolNullableWithAggregatesFilter | boolean | null
+  }
+
+  export type Clause_v2WhereInput = {
+    AND?: Enumerable<Clause_v2WhereInput>
+    OR?: Enumerable<Clause_v2WhereInput>
+    NOT?: Enumerable<Clause_v2WhereInput>
+    id?: StringFilter | string
+    key?: StringFilter | string
+    value?: StringFilter | string
+    udap_id?: StringNullableFilter | string | null
+    text?: StringFilter | string
+  }
+
+  export type Clause_v2OrderByWithRelationInput = {
+    id?: SortOrder
+    key?: SortOrder
+    value?: SortOrder
+    udap_id?: SortOrderInput | SortOrder
+    text?: SortOrder
+  }
+
+  export type Clause_v2WhereUniqueInput = {
+    id?: string
+  }
+
+  export type Clause_v2OrderByWithAggregationInput = {
+    id?: SortOrder
+    key?: SortOrder
+    value?: SortOrder
+    udap_id?: SortOrderInput | SortOrder
+    text?: SortOrder
+    _count?: Clause_v2CountOrderByAggregateInput
+    _max?: Clause_v2MaxOrderByAggregateInput
+    _min?: Clause_v2MinOrderByAggregateInput
+  }
+
+  export type Clause_v2ScalarWhereWithAggregatesInput = {
+    AND?: Enumerable<Clause_v2ScalarWhereWithAggregatesInput>
+    OR?: Enumerable<Clause_v2ScalarWhereWithAggregatesInput>
+    NOT?: Enumerable<Clause_v2ScalarWhereWithAggregatesInput>
+    id?: StringWithAggregatesFilter | string
+    key?: StringWithAggregatesFilter | string
+    value?: StringWithAggregatesFilter | string
+    udap_id?: StringNullableWithAggregatesFilter | string | null
     text?: StringWithAggregatesFilter | string
   }
 
@@ -7805,6 +8848,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     value: string
     udap_id: string
     text: string
+    hidden?: boolean | null
   }
 
   export type ClauseUncheckedCreateInput = {
@@ -7812,6 +8856,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     value: string
     udap_id: string
     text: string
+    hidden?: boolean | null
   }
 
   export type ClauseUpdateInput = {
@@ -7819,6 +8864,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     value?: StringFieldUpdateOperationsInput | string
     udap_id?: StringFieldUpdateOperationsInput | string
     text?: StringFieldUpdateOperationsInput | string
+    hidden?: NullableBoolFieldUpdateOperationsInput | boolean | null
   }
 
   export type ClauseUncheckedUpdateInput = {
@@ -7826,6 +8872,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     value?: StringFieldUpdateOperationsInput | string
     udap_id?: StringFieldUpdateOperationsInput | string
     text?: StringFieldUpdateOperationsInput | string
+    hidden?: NullableBoolFieldUpdateOperationsInput | boolean | null
   }
 
   export type ClauseCreateManyInput = {
@@ -7833,6 +8880,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     value: string
     udap_id: string
     text: string
+    hidden?: boolean | null
   }
 
   export type ClauseUpdateManyMutationInput = {
@@ -7840,12 +8888,70 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     value?: StringFieldUpdateOperationsInput | string
     udap_id?: StringFieldUpdateOperationsInput | string
     text?: StringFieldUpdateOperationsInput | string
+    hidden?: NullableBoolFieldUpdateOperationsInput | boolean | null
   }
 
   export type ClauseUncheckedUpdateManyInput = {
     key?: StringFieldUpdateOperationsInput | string
     value?: StringFieldUpdateOperationsInput | string
     udap_id?: StringFieldUpdateOperationsInput | string
+    text?: StringFieldUpdateOperationsInput | string
+    hidden?: NullableBoolFieldUpdateOperationsInput | boolean | null
+  }
+
+  export type Clause_v2CreateInput = {
+    id: string
+    key: string
+    value: string
+    udap_id?: string | null
+    text: string
+  }
+
+  export type Clause_v2UncheckedCreateInput = {
+    id: string
+    key: string
+    value: string
+    udap_id?: string | null
+    text: string
+  }
+
+  export type Clause_v2UpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    key?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+    udap_id?: NullableStringFieldUpdateOperationsInput | string | null
+    text?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type Clause_v2UncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    key?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+    udap_id?: NullableStringFieldUpdateOperationsInput | string | null
+    text?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type Clause_v2CreateManyInput = {
+    id: string
+    key: string
+    value: string
+    udap_id?: string | null
+    text: string
+  }
+
+  export type Clause_v2UpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    key?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+    udap_id?: NullableStringFieldUpdateOperationsInput | string | null
+    text?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type Clause_v2UncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    key?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+    udap_id?: NullableStringFieldUpdateOperationsInput | string | null
     text?: StringFieldUpdateOperationsInput | string
   }
 
@@ -8297,6 +9403,16 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     not?: NestedStringFilter | string
   }
 
+  export type BoolNullableFilter = {
+    equals?: boolean | null
+    not?: NestedBoolNullableFilter | boolean | null
+  }
+
+  export type SortOrderInput = {
+    sort: SortOrder
+    nulls?: NullsOrder
+  }
+
   export type ClauseKeyValueUdap_idCompoundUniqueInput = {
     key: string
     value: string
@@ -8308,6 +9424,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     value?: SortOrder
     udap_id?: SortOrder
     text?: SortOrder
+    hidden?: SortOrder
   }
 
   export type ClauseMaxOrderByAggregateInput = {
@@ -8315,6 +9432,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     value?: SortOrder
     udap_id?: SortOrder
     text?: SortOrder
+    hidden?: SortOrder
   }
 
   export type ClauseMinOrderByAggregateInput = {
@@ -8322,6 +9440,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     value?: SortOrder
     udap_id?: SortOrder
     text?: SortOrder
+    hidden?: SortOrder
   }
 
   export type StringWithAggregatesFilter = {
@@ -8340,6 +9459,71 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     _count?: NestedIntFilter
     _min?: NestedStringFilter
     _max?: NestedStringFilter
+  }
+
+  export type BoolNullableWithAggregatesFilter = {
+    equals?: boolean | null
+    not?: NestedBoolNullableWithAggregatesFilter | boolean | null
+    _count?: NestedIntNullableFilter
+    _min?: NestedBoolNullableFilter
+    _max?: NestedBoolNullableFilter
+  }
+
+  export type StringNullableFilter = {
+    equals?: string | null
+    in?: Enumerable<string> | string | null
+    notIn?: Enumerable<string> | string | null
+    lt?: string
+    lte?: string
+    gt?: string
+    gte?: string
+    contains?: string
+    startsWith?: string
+    endsWith?: string
+    mode?: QueryMode
+    not?: NestedStringNullableFilter | string | null
+  }
+
+  export type Clause_v2CountOrderByAggregateInput = {
+    id?: SortOrder
+    key?: SortOrder
+    value?: SortOrder
+    udap_id?: SortOrder
+    text?: SortOrder
+  }
+
+  export type Clause_v2MaxOrderByAggregateInput = {
+    id?: SortOrder
+    key?: SortOrder
+    value?: SortOrder
+    udap_id?: SortOrder
+    text?: SortOrder
+  }
+
+  export type Clause_v2MinOrderByAggregateInput = {
+    id?: SortOrder
+    key?: SortOrder
+    value?: SortOrder
+    udap_id?: SortOrder
+    text?: SortOrder
+  }
+
+  export type StringNullableWithAggregatesFilter = {
+    equals?: string | null
+    in?: Enumerable<string> | string | null
+    notIn?: Enumerable<string> | string | null
+    lt?: string
+    lte?: string
+    gt?: string
+    gte?: string
+    contains?: string
+    startsWith?: string
+    endsWith?: string
+    mode?: QueryMode
+    not?: NestedStringNullableWithAggregatesFilter | string | null
+    _count?: NestedIntNullableFilter
+    _min?: NestedStringNullableFilter
+    _max?: NestedStringNullableFilter
   }
 
   export type UserRelationFilter = {
@@ -8365,21 +9549,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type DelegationMinOrderByAggregateInput = {
     createdBy?: SortOrder
     delegatedTo?: SortOrder
-  }
-
-  export type StringNullableFilter = {
-    equals?: string | null
-    in?: Enumerable<string> | string | null
-    notIn?: Enumerable<string> | string | null
-    lt?: string
-    lte?: string
-    gt?: string
-    gte?: string
-    contains?: string
-    startsWith?: string
-    endsWith?: string
-    mode?: QueryMode
-    not?: NestedStringNullableFilter | string | null
   }
 
   export type DateTimeNullableFilter = {
@@ -8413,16 +9582,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     gt?: number
     gte?: number
     not?: NestedIntNullableFilter | number | null
-  }
-
-  export type BoolNullableFilter = {
-    equals?: boolean | null
-    not?: NestedBoolNullableFilter | boolean | null
-  }
-
-  export type SortOrderInput = {
-    sort: SortOrder
-    nulls?: NullsOrder
   }
 
   export type ReportCountOrderByAggregateInput = {
@@ -8505,24 +9664,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     serviceInstructeur?: SortOrder
   }
 
-  export type StringNullableWithAggregatesFilter = {
-    equals?: string | null
-    in?: Enumerable<string> | string | null
-    notIn?: Enumerable<string> | string | null
-    lt?: string
-    lte?: string
-    gt?: string
-    gte?: string
-    contains?: string
-    startsWith?: string
-    endsWith?: string
-    mode?: QueryMode
-    not?: NestedStringNullableWithAggregatesFilter | string | null
-    _count?: NestedIntNullableFilter
-    _min?: NestedStringNullableFilter
-    _max?: NestedStringNullableFilter
-  }
-
   export type DateTimeNullableWithAggregatesFilter = {
     equals?: Date | string | null
     in?: Enumerable<Date> | Enumerable<string> | Date | string | null
@@ -8565,14 +9706,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     _sum?: NestedIntNullableFilter
     _min?: NestedIntNullableFilter
     _max?: NestedIntNullableFilter
-  }
-
-  export type BoolNullableWithAggregatesFilter = {
-    equals?: boolean | null
-    not?: NestedBoolNullableWithAggregatesFilter | boolean | null
-    _count?: NestedIntNullableFilter
-    _min?: NestedBoolNullableFilter
-    _max?: NestedBoolNullableFilter
   }
 
   export type IntFilter = {
@@ -8742,6 +9875,14 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     set?: string
   }
 
+  export type NullableBoolFieldUpdateOperationsInput = {
+    set?: boolean | null
+  }
+
+  export type NullableStringFieldUpdateOperationsInput = {
+    set?: string | null
+  }
+
   export type UserCreateNestedOneWithoutDelegation_delegation_createdByTouserInput = {
     create?: XOR<UserCreateWithoutDelegation_delegation_createdByTouserInput, UserUncheckedCreateWithoutDelegation_delegation_createdByTouserInput>
     connectOrCreate?: UserCreateOrConnectWithoutDelegation_delegation_createdByTouserInput
@@ -8776,10 +9917,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     connect?: UserWhereUniqueInput
   }
 
-  export type NullableStringFieldUpdateOperationsInput = {
-    set?: string | null
-  }
-
   export type NullableDateTimeFieldUpdateOperationsInput = {
     set?: Date | string | null
   }
@@ -8794,10 +9931,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     decrement?: number
     multiply?: number
     divide?: number
-  }
-
-  export type NullableBoolFieldUpdateOperationsInput = {
-    set?: boolean | null
   }
 
   export type UserUpdateOneRequiredWithoutReportNestedInput = {
@@ -9012,6 +10145,11 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     not?: NestedStringFilter | string
   }
 
+  export type NestedBoolNullableFilter = {
+    equals?: boolean | null
+    not?: NestedBoolNullableFilter | boolean | null
+  }
+
   export type NestedStringWithAggregatesFilter = {
     equals?: string
     in?: Enumerable<string> | string
@@ -9040,6 +10178,25 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     not?: NestedIntFilter | number
   }
 
+  export type NestedBoolNullableWithAggregatesFilter = {
+    equals?: boolean | null
+    not?: NestedBoolNullableWithAggregatesFilter | boolean | null
+    _count?: NestedIntNullableFilter
+    _min?: NestedBoolNullableFilter
+    _max?: NestedBoolNullableFilter
+  }
+
+  export type NestedIntNullableFilter = {
+    equals?: number | null
+    in?: Enumerable<number> | number | null
+    notIn?: Enumerable<number> | number | null
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedIntNullableFilter | number | null
+  }
+
   export type NestedStringNullableFilter = {
     equals?: string | null
     in?: Enumerable<string> | string | null
@@ -9052,6 +10209,23 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     startsWith?: string
     endsWith?: string
     not?: NestedStringNullableFilter | string | null
+  }
+
+  export type NestedStringNullableWithAggregatesFilter = {
+    equals?: string | null
+    in?: Enumerable<string> | string | null
+    notIn?: Enumerable<string> | string | null
+    lt?: string
+    lte?: string
+    gt?: string
+    gte?: string
+    contains?: string
+    startsWith?: string
+    endsWith?: string
+    not?: NestedStringNullableWithAggregatesFilter | string | null
+    _count?: NestedIntNullableFilter
+    _min?: NestedStringNullableFilter
+    _max?: NestedStringNullableFilter
   }
 
   export type NestedDateTimeNullableFilter = {
@@ -9074,39 +10248,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     gt?: Date | string
     gte?: Date | string
     not?: NestedDateTimeFilter | Date | string
-  }
-
-  export type NestedIntNullableFilter = {
-    equals?: number | null
-    in?: Enumerable<number> | number | null
-    notIn?: Enumerable<number> | number | null
-    lt?: number
-    lte?: number
-    gt?: number
-    gte?: number
-    not?: NestedIntNullableFilter | number | null
-  }
-
-  export type NestedBoolNullableFilter = {
-    equals?: boolean | null
-    not?: NestedBoolNullableFilter | boolean | null
-  }
-
-  export type NestedStringNullableWithAggregatesFilter = {
-    equals?: string | null
-    in?: Enumerable<string> | string | null
-    notIn?: Enumerable<string> | string | null
-    lt?: string
-    lte?: string
-    gt?: string
-    gte?: string
-    contains?: string
-    startsWith?: string
-    endsWith?: string
-    not?: NestedStringNullableWithAggregatesFilter | string | null
-    _count?: NestedIntNullableFilter
-    _min?: NestedStringNullableFilter
-    _max?: NestedStringNullableFilter
   }
 
   export type NestedDateTimeNullableWithAggregatesFilter = {
@@ -9162,14 +10303,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     gt?: number
     gte?: number
     not?: NestedFloatNullableFilter | number | null
-  }
-
-  export type NestedBoolNullableWithAggregatesFilter = {
-    equals?: boolean | null
-    not?: NestedBoolNullableWithAggregatesFilter | boolean | null
-    _count?: NestedIntNullableFilter
-    _min?: NestedBoolNullableFilter
-    _max?: NestedBoolNullableFilter
   }
 
   export type NestedIntWithAggregatesFilter = {

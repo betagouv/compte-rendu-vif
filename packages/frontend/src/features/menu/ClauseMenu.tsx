@@ -10,7 +10,7 @@ export const ClauseMenu = ({ isNational }: { isNational: boolean }) => {
   const user = useUser()!;
 
   const clausesQuery = useLiveQuery(
-    db.clause.liveMany({
+    db.clause_v2.liveMany({
       where: {
         key: {
           in: isNational ? ["type-espace", "decision"] : ["contacts-utiles", "bonnes-pratiques"],
