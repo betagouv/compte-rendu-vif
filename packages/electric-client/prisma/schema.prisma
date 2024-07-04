@@ -124,9 +124,10 @@ model service_instructeurs {
 }
 
 model clause_v2 {
-  id      String  @id
-  key     String
-  value   String
-  udap_id String?
-  text    String
+  id       String  @id
+  key      String
+  value    String
+  position Int?
+  udap_id  String?
+  text     String
 }

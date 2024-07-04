@@ -37,6 +37,10 @@ export type Clause_v2Payload<ExtArgs extends $Extensions.Args = $Extensions.Defa
     id: string
     key: string
     value: string
+    /**
+     * @zod.number.int().gte(-2147483648).lte(2147483647)
+     */
+    position: number | null
     udap_id: string | null
     text: string
   }, ExtArgs["result"]["clause_v2"]>
@@ -2491,14 +2495,25 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type AggregateClause_v2 = {
     _count: Clause_v2CountAggregateOutputType | null
+    _avg: Clause_v2AvgAggregateOutputType | null
+    _sum: Clause_v2SumAggregateOutputType | null
     _min: Clause_v2MinAggregateOutputType | null
     _max: Clause_v2MaxAggregateOutputType | null
+  }
+
+  export type Clause_v2AvgAggregateOutputType = {
+    position: number | null
+  }
+
+  export type Clause_v2SumAggregateOutputType = {
+    position: number | null
   }
 
   export type Clause_v2MinAggregateOutputType = {
     id: string | null
     key: string | null
     value: string | null
+    position: number | null
     udap_id: string | null
     text: string | null
   }
@@ -2507,6 +2522,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id: string | null
     key: string | null
     value: string | null
+    position: number | null
     udap_id: string | null
     text: string | null
   }
@@ -2515,16 +2531,26 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id: number
     key: number
     value: number
+    position: number
     udap_id: number
     text: number
     _all: number
   }
 
 
+  export type Clause_v2AvgAggregateInputType = {
+    position?: true
+  }
+
+  export type Clause_v2SumAggregateInputType = {
+    position?: true
+  }
+
   export type Clause_v2MinAggregateInputType = {
     id?: true
     key?: true
     value?: true
+    position?: true
     udap_id?: true
     text?: true
   }
@@ -2533,6 +2559,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id?: true
     key?: true
     value?: true
+    position?: true
     udap_id?: true
     text?: true
   }
@@ -2541,6 +2568,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id?: true
     key?: true
     value?: true
+    position?: true
     udap_id?: true
     text?: true
     _all?: true
@@ -2584,6 +2612,18 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: Clause_v2AvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: Clause_v2SumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: Clause_v2MinAggregateInputType
@@ -2614,6 +2654,8 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     take?: number
     skip?: number
     _count?: Clause_v2CountAggregateInputType | true
+    _avg?: Clause_v2AvgAggregateInputType
+    _sum?: Clause_v2SumAggregateInputType
     _min?: Clause_v2MinAggregateInputType
     _max?: Clause_v2MaxAggregateInputType
   }
@@ -2623,9 +2665,12 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id: string
     key: string
     value: string
+    position: number | null
     udap_id: string | null
     text: string
     _count: Clause_v2CountAggregateOutputType | null
+    _avg: Clause_v2AvgAggregateOutputType | null
+    _sum: Clause_v2SumAggregateOutputType | null
     _min: Clause_v2MinAggregateOutputType | null
     _max: Clause_v2MaxAggregateOutputType | null
   }
@@ -2648,6 +2693,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id?: boolean
     key?: boolean
     value?: boolean
+    position?: boolean
     udap_id?: boolean
     text?: boolean
   }, ExtArgs["result"]["clause_v2"]>
@@ -2656,6 +2702,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id?: boolean
     key?: boolean
     value?: boolean
+    position?: boolean
     udap_id?: boolean
     text?: boolean
   }
@@ -8317,6 +8364,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id: 'id',
     key: 'key',
     value: 'value',
+    position: 'position',
     udap_id: 'udap_id',
     text: 'text'
   };
@@ -8480,6 +8528,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id?: StringFilter | string
     key?: StringFilter | string
     value?: StringFilter | string
+    position?: IntNullableFilter | number | null
     udap_id?: StringNullableFilter | string | null
     text?: StringFilter | string
   }
@@ -8488,6 +8537,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id?: SortOrder
     key?: SortOrder
     value?: SortOrder
+    position?: SortOrderInput | SortOrder
     udap_id?: SortOrderInput | SortOrder
     text?: SortOrder
   }
@@ -8500,11 +8550,14 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id?: SortOrder
     key?: SortOrder
     value?: SortOrder
+    position?: SortOrderInput | SortOrder
     udap_id?: SortOrderInput | SortOrder
     text?: SortOrder
     _count?: Clause_v2CountOrderByAggregateInput
+    _avg?: Clause_v2AvgOrderByAggregateInput
     _max?: Clause_v2MaxOrderByAggregateInput
     _min?: Clause_v2MinOrderByAggregateInput
+    _sum?: Clause_v2SumOrderByAggregateInput
   }
 
   export type Clause_v2ScalarWhereWithAggregatesInput = {
@@ -8514,6 +8567,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id?: StringWithAggregatesFilter | string
     key?: StringWithAggregatesFilter | string
     value?: StringWithAggregatesFilter | string
+    position?: IntNullableWithAggregatesFilter | number | null
     udap_id?: StringNullableWithAggregatesFilter | string | null
     text?: StringWithAggregatesFilter | string
   }
@@ -8903,6 +8957,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id: string
     key: string
     value: string
+    position?: number | null
     udap_id?: string | null
     text: string
   }
@@ -8911,6 +8966,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id: string
     key: string
     value: string
+    position?: number | null
     udap_id?: string | null
     text: string
   }
@@ -8919,6 +8975,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id?: StringFieldUpdateOperationsInput | string
     key?: StringFieldUpdateOperationsInput | string
     value?: StringFieldUpdateOperationsInput | string
+    position?: NullableIntFieldUpdateOperationsInput | number | null
     udap_id?: NullableStringFieldUpdateOperationsInput | string | null
     text?: StringFieldUpdateOperationsInput | string
   }
@@ -8927,6 +8984,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id?: StringFieldUpdateOperationsInput | string
     key?: StringFieldUpdateOperationsInput | string
     value?: StringFieldUpdateOperationsInput | string
+    position?: NullableIntFieldUpdateOperationsInput | number | null
     udap_id?: NullableStringFieldUpdateOperationsInput | string | null
     text?: StringFieldUpdateOperationsInput | string
   }
@@ -8935,6 +8993,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id: string
     key: string
     value: string
+    position?: number | null
     udap_id?: string | null
     text: string
   }
@@ -8943,6 +9002,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id?: StringFieldUpdateOperationsInput | string
     key?: StringFieldUpdateOperationsInput | string
     value?: StringFieldUpdateOperationsInput | string
+    position?: NullableIntFieldUpdateOperationsInput | number | null
     udap_id?: NullableStringFieldUpdateOperationsInput | string | null
     text?: StringFieldUpdateOperationsInput | string
   }
@@ -8951,6 +9011,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id?: StringFieldUpdateOperationsInput | string
     key?: StringFieldUpdateOperationsInput | string
     value?: StringFieldUpdateOperationsInput | string
+    position?: NullableIntFieldUpdateOperationsInput | number | null
     udap_id?: NullableStringFieldUpdateOperationsInput | string | null
     text?: StringFieldUpdateOperationsInput | string
   }
@@ -9469,6 +9530,17 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     _max?: NestedBoolNullableFilter
   }
 
+  export type IntNullableFilter = {
+    equals?: number | null
+    in?: Enumerable<number> | number | null
+    notIn?: Enumerable<number> | number | null
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedIntNullableFilter | number | null
+  }
+
   export type StringNullableFilter = {
     equals?: string | null
     in?: Enumerable<string> | string | null
@@ -9488,14 +9560,20 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id?: SortOrder
     key?: SortOrder
     value?: SortOrder
+    position?: SortOrder
     udap_id?: SortOrder
     text?: SortOrder
+  }
+
+  export type Clause_v2AvgOrderByAggregateInput = {
+    position?: SortOrder
   }
 
   export type Clause_v2MaxOrderByAggregateInput = {
     id?: SortOrder
     key?: SortOrder
     value?: SortOrder
+    position?: SortOrder
     udap_id?: SortOrder
     text?: SortOrder
   }
@@ -9504,8 +9582,29 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id?: SortOrder
     key?: SortOrder
     value?: SortOrder
+    position?: SortOrder
     udap_id?: SortOrder
     text?: SortOrder
+  }
+
+  export type Clause_v2SumOrderByAggregateInput = {
+    position?: SortOrder
+  }
+
+  export type IntNullableWithAggregatesFilter = {
+    equals?: number | null
+    in?: Enumerable<number> | number | null
+    notIn?: Enumerable<number> | number | null
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedIntNullableWithAggregatesFilter | number | null
+    _count?: NestedIntNullableFilter
+    _avg?: NestedFloatNullableFilter
+    _sum?: NestedIntNullableFilter
+    _min?: NestedIntNullableFilter
+    _max?: NestedIntNullableFilter
   }
 
   export type StringNullableWithAggregatesFilter = {
@@ -9571,17 +9670,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     gt?: Date | string
     gte?: Date | string
     not?: NestedDateTimeFilter | Date | string
-  }
-
-  export type IntNullableFilter = {
-    equals?: number | null
-    in?: Enumerable<number> | number | null
-    notIn?: Enumerable<number> | number | null
-    lt?: number
-    lte?: number
-    gt?: number
-    gte?: number
-    not?: NestedIntNullableFilter | number | null
   }
 
   export type ReportCountOrderByAggregateInput = {
@@ -9690,22 +9778,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     _count?: NestedIntFilter
     _min?: NestedDateTimeFilter
     _max?: NestedDateTimeFilter
-  }
-
-  export type IntNullableWithAggregatesFilter = {
-    equals?: number | null
-    in?: Enumerable<number> | number | null
-    notIn?: Enumerable<number> | number | null
-    lt?: number
-    lte?: number
-    gt?: number
-    gte?: number
-    not?: NestedIntNullableWithAggregatesFilter | number | null
-    _count?: NestedIntNullableFilter
-    _avg?: NestedFloatNullableFilter
-    _sum?: NestedIntNullableFilter
-    _min?: NestedIntNullableFilter
-    _max?: NestedIntNullableFilter
   }
 
   export type IntFilter = {
@@ -9879,6 +9951,14 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     set?: boolean | null
   }
 
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
   export type NullableStringFieldUpdateOperationsInput = {
     set?: string | null
   }
@@ -9923,14 +10003,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type DateTimeFieldUpdateOperationsInput = {
     set?: Date | string
-  }
-
-  export type NullableIntFieldUpdateOperationsInput = {
-    set?: number | null
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
   }
 
   export type UserUpdateOneRequiredWithoutReportNestedInput = {
@@ -10211,6 +10283,33 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     not?: NestedStringNullableFilter | string | null
   }
 
+  export type NestedIntNullableWithAggregatesFilter = {
+    equals?: number | null
+    in?: Enumerable<number> | number | null
+    notIn?: Enumerable<number> | number | null
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedIntNullableWithAggregatesFilter | number | null
+    _count?: NestedIntNullableFilter
+    _avg?: NestedFloatNullableFilter
+    _sum?: NestedIntNullableFilter
+    _min?: NestedIntNullableFilter
+    _max?: NestedIntNullableFilter
+  }
+
+  export type NestedFloatNullableFilter = {
+    equals?: number | null
+    in?: Enumerable<number> | number | null
+    notIn?: Enumerable<number> | number | null
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedFloatNullableFilter | number | null
+  }
+
   export type NestedStringNullableWithAggregatesFilter = {
     equals?: string | null
     in?: Enumerable<string> | string | null
@@ -10276,33 +10375,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     _count?: NestedIntFilter
     _min?: NestedDateTimeFilter
     _max?: NestedDateTimeFilter
-  }
-
-  export type NestedIntNullableWithAggregatesFilter = {
-    equals?: number | null
-    in?: Enumerable<number> | number | null
-    notIn?: Enumerable<number> | number | null
-    lt?: number
-    lte?: number
-    gt?: number
-    gte?: number
-    not?: NestedIntNullableWithAggregatesFilter | number | null
-    _count?: NestedIntNullableFilter
-    _avg?: NestedFloatNullableFilter
-    _sum?: NestedIntNullableFilter
-    _min?: NestedIntNullableFilter
-    _max?: NestedIntNullableFilter
-  }
-
-  export type NestedFloatNullableFilter = {
-    equals?: number | null
-    in?: Enumerable<number> | number | null
-    notIn?: Enumerable<number> | number | null
-    lt?: number
-    lte?: number
-    gt?: number
-    gte?: number
-    not?: NestedFloatNullableFilter | number | null
   }
 
   export type NestedIntWithAggregatesFilter = {
