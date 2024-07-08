@@ -8,14 +8,15 @@ import { Fragment } from "react/jsx-runtime";
 import { MenuTitle } from "./MenuTitle";
 import type { ModalContentProps } from "./MenuButton";
 import { ReactNode, useEffect, useState } from "react";
-import Button from "@codegouvfr/react-dsfr/Button";
-import { css } from "#styled-system/css";
+import Button, { ButtonProps } from "@codegouvfr/react-dsfr/Button";
+import { css, cx } from "#styled-system/css";
 import { Clause_v2 } from "@cr-vif/electric-client/frontend";
 import Input from "@codegouvfr/react-dsfr/Input";
 import { FormProvider, useFieldArray, useForm, useFormContext } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import Select from "@codegouvfr/react-dsfr/Select";
 import { v4 } from "uuid";
+import { fr } from "@codegouvfr/react-dsfr";
 
 export const ClauseMenu = ({ isNational, ...props }: { isNational: boolean } & ModalContentProps) => {
   const user = useUser()!;
@@ -66,12 +67,18 @@ const getDiff = (baseClauses: Clause_v2[], modifiedClauses: Clause_v2[]) => {
 };
 type Mode = "view" | "add" | "edit";
 
+const initialBannerProps = {
+  status: "idle" as BannerStatus,
+  icon: fr.cx("fr-icon-alert-fill"),
+};
+
 const ClauseForm = ({
   clauses,
   isNational,
   ...props
 }: { clauses: Clause_v2[]; isNational: boolean } & ModalContentProps) => {
   const [mode, setMode] = useState<Mode>("view");
+  const [bannerProps, setBannerProps] = useState<{ status: BannerStatus; text: string; icon: string } | null>(null);
 
   const isEditing = mode === "edit";
   const isAdding = mode === "add";
@@ -102,7 +109,14 @@ const ClauseForm = ({
       }
     },
     {
-      onSuccess: () => setMode("view"),
+      onSuccess: () => {
+        setBannerProps({
+          status: "success",
+          icon: fr.cx("ri-check-fill"),
+          text: "Modifications enregistrées",
+        });
+        setMode("view");
+      },
     },
   );
 
@@ -148,6 +162,10 @@ const ClauseForm = ({
           priority="secondary"
           onClick={(e) => {
             e.preventDefault();
+            setBannerProps({
+              ...initialBannerProps,
+              text: "**Vous modifiez les clauses pour toute l’UDAP.** Pensez à faire des contenus courts et explicites pour vos lecteurs.",
+            });
             setMode("edit");
           }}
         >
@@ -165,6 +183,10 @@ const ClauseForm = ({
           priority="secondary"
           onClick={(e) => {
             e.preventDefault();
+            setBannerProps({
+              ...initialBannerProps,
+              text: "**Vous ajoutez une clause pour toute l’UDAP.** Pensez à faire des contenus courts et explicites pour vos lecteurs.",
+            });
             setMode("add");
           }}
         >
@@ -175,8 +197,22 @@ const ClauseForm = ({
 
   return (
     <>
-      <ClauseTitle isNational={isNational} buttons={buttons} {...props} />
-      {isAdding ? <ClauseAdd onSuccess={() => setMode("view")} isNational={isNational} /> : null}
+      <ClauseTitle
+        isNational={isNational}
+        buttons={buttons}
+        {...props}
+        alert={bannerProps ? <ClauseFormBanner {...bannerProps} /> : null}
+      />
+
+      {isAdding ? (
+        <ClauseAdd
+          onSuccess={() => {
+            setBannerProps({ status: "success", text: "Clause ajoutée", icon: "ri-check-fill" });
+            setMode("view");
+          }}
+          isNational={isNational}
+        />
+      ) : null}
       <FormProvider {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} id="edit-form">
           <ClauseList clauses={fieldsWithIndex} isEditing={isEditing} />
@@ -186,12 +222,36 @@ const ClauseForm = ({
   );
 };
 
+type BannerStatus = "idle" | "success";
+
+const ClauseFormBanner = ({ status, icon, text }: { text: string; icon: string; status: BannerStatus }) => {
+  const bgColor = status === "idle" ? "#E8EDFF" : "#B8FEC9";
+  const iconColor = status === "idle" ? "#0063CB" : "#18753C";
+
+  return (
+    <Flex ml="-32px" mr="-32px" py="16px" px="32px" bgColor={bgColor}>
+      <i className={cx(icon, css({ color: iconColor }))} />
+      <styled.div
+        dangerouslySetInnerHTML={{ __html: transformBold(text) }}
+        ml="16px"
+        pr="24px"
+        color={iconColor}
+      ></styled.div>
+    </Flex>
+  );
+};
+
+function transformBold(str: string) {
+  return str.replace(/\*\*(.*?)\*\*/g, "<b>$1</b>");
+}
+
 const ClauseTitle = ({
   isNational,
   buttons,
+  alert,
   ...props
-}: { isNational: boolean; buttons?: ReactNode; isEditing?: boolean } & ModalContentProps) => (
-  <MenuTitle {...props} buttons={buttons}>
+}: { alert?: ReactNode; isNational: boolean; buttons?: ReactNode; isEditing?: boolean } & ModalContentProps) => (
+  <MenuTitle {...props} buttons={buttons} alert={alert}>
     Clauses {isNational ? "nationales" : "départementales"}
   </MenuTitle>
 );
@@ -204,7 +264,9 @@ const ClauseList = ({ clauses, isEditing }: { clauses: ClauseWithIndex[]; isEdit
       {Object.entries(groupedByKey).map(([key, clauses], index) => (
         <Fragment key={key}>
           <Stack gap="24px">
-            <styled.h2 fontSize="20px">{(clauseNameMap as any)[key] ?? key}</styled.h2>
+            <styled.span fontSize="20px" fontWeight="normal">
+              {(clauseNameMap as any)[key] ?? key}
+            </styled.span>
             {clauses.map((clause) => (
               <DivOrTextarea key={clause.id} clause={clause} isEditing={isEditing ?? false} />
             ))}

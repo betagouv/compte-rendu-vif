@@ -8,14 +8,23 @@ export const MenuTitle = ({
   backButtonOnClick,
   buttons,
   hideDivider,
+  alert,
 }: {
   children: ReactNode;
   backButtonOnClick?: () => void;
   buttons?: ReactNode;
   hideDivider?: boolean;
+  alert?: ReactNode;
 }) => (
   <>
-    <Flex justifyContent="space-between" alignItems="center" w="100%" h="40px">
+    <Flex
+      justifyContent="space-between"
+      alignItems="center"
+      w="100%"
+      h="40px"
+      mt={{ base: "0", lg: "48px" }}
+      mb={{ base: "16px", lg: "48px" }}
+    >
       <styled.div hideFrom="lg">
         {backButtonOnClick ? (
           // @ts-ignore
@@ -31,7 +40,7 @@ export const MenuTitle = ({
       >
         {children}
       </styled.span>
-      <Flex gap="16px" pl={{ base: "0", lg: "10px" }} fontSize="20px" fontWeight="bold" nowrap>
+      <Flex gap="16px" pl={{ base: "0", lg: "24px" }} fontSize="20px" fontWeight="bold" nowrap>
         {buttons}
       </Flex>
       <button
@@ -45,15 +54,15 @@ export const MenuTitle = ({
         Fermer
       </button>
     </Flex>
+    {alert ? alert : null}
     {!hideDivider ? (
-      <>
-        <Divider height="2px" my={{ base: "27px", lg: "44px" }} color="#C1C1FB" />
+      <styled.div my="24px">
         {buttons ? (
           <styled.span hideFrom={"lg"} fontSize="20px" fontWeight="bold" nowrap>
             {children}
           </styled.span>
         ) : null}
-      </>
+      </styled.div>
     ) : null}
   </>
 );
