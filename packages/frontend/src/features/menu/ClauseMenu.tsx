@@ -18,12 +18,6 @@ import { useMutation } from "@tanstack/react-query";
 export const ClauseMenu = ({ isNational, ...props }: { isNational: boolean } & ModalContentProps) => {
   const user = useUser()!;
 
-  useEffect(() => {
-    db.clause_v2
-      .findFirst({ where: { value: "Lacanal" } })
-      .then((clause) => console.log(clause!.text.replace(/\n/g, "\\n")));
-  }, []);
-
   const clausesQuery = useLiveQuery(
     db.clause_v2.liveMany({
       where: {
@@ -39,7 +33,7 @@ export const ClauseMenu = ({ isNational, ...props }: { isNational: boolean } & M
 
   return (
     <ClauseForm
-      clauses={clausesQuery.results?.map((c) => ({ ...c, text: c.text?.replaceAll("\n", "\\n") ?? "" })) ?? []}
+      clauses={clausesQuery.results?.map((c) => ({ ...c, text: c.text?.replaceAll("\\n", "\n") ?? "" })) ?? []}
       {...props}
       isNational={isNational}
     />
@@ -58,10 +52,7 @@ const getDiff = (baseClauses: Clause_v2[], modifiedClauses: Clause_v2[]) => {
   });
   const deletedClauses = baseClauses.filter((bc) => !modifiedClauses.find((c) => bc.id === c.id));
 
-  const formatClause = (clause: Clause_v2) => ({ ...clause, text: clause.text.replaceAll("\n", "\n") });
-
-  console.log(updatedClauses[0].text, updatedClauses.map(formatClause)[0].text);
-  return { newClauses: newClauses.map(formatClause), updatedClauses: updatedClauses.map(formatClause), deletedClauses };
+  return { newClauses: newClauses, updatedClauses: updatedClauses, deletedClauses };
 };
 
 const ClauseForm = ({
@@ -76,6 +67,10 @@ const ClauseForm = ({
       clauses: clauses,
     },
   });
+
+  useEffect(() => {
+    form.setValue("clauses", clauses);
+  }, [clauses]);
 
   const { fields } = useFieldArray({
     name: "clauses",
