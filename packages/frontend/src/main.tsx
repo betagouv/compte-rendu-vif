@@ -9,13 +9,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ErrorBoundary } from "react-error-boundary";
 import { registerSW } from "virtual:pwa-register";
 
-const ref = {} as any;
-
 if ("serviceWorker" in navigator) {
-  registerSW({
-    onRegistered: (r) => (ref.current = r),
-    onNeedRefresh: () => ref.current?.update(),
-  });
+  registerSW({});
 }
 
 startReactDsfr({ defaultColorScheme: "system", Link: Link });

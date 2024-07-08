@@ -11,6 +11,7 @@ export default defineConfig({
     wasm(),
     VitePWA({
       devOptions: { enabled: true },
+      registerType: "autoUpdate",
       manifest: {
         id: "gouv.beta.compte-rendu-vif",
         orientation: "portrait",
