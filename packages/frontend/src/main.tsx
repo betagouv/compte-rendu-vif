@@ -9,21 +9,26 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ErrorBoundary } from "react-error-boundary";
 import { registerSW } from "virtual:pwa-register";
 
+const ref = {} as any;
+
 if ("serviceWorker" in navigator) {
-  registerSW({});
+  registerSW({
+    onRegistered: (r) => (ref.current = r),
+    onNeedRefresh: () => ref.current?.update(),
+  });
 }
 
 startReactDsfr({ defaultColorScheme: "system", Link: Link });
 
 const queryClient = new QueryClient({
-  defaultOptions:{
+  defaultOptions: {
     mutations: {
-      networkMode: "always"
+      networkMode: "always",
     },
     queries: {
-      networkMode: "always"
-    }
-  }
+      networkMode: "always",
+    },
+  },
 });
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
