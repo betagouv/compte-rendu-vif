@@ -31,9 +31,9 @@ export const MenuTitle = ({
       >
         {children}
       </styled.span>
-      <styled.div pl={{ base: "0", lg: "10px" }} fontSize="20px" fontWeight="bold" nowrap>
+      <Flex gap="16px" pl={{ base: "0", lg: "10px" }} fontSize="20px" fontWeight="bold" nowrap>
         {buttons}
-      </styled.div>
+      </Flex>
       <button
         className="fr-btn--close fr-btn"
         title="Fermer"
