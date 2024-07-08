@@ -6,6 +6,7 @@ import { Delegation, User } from "@cr-vif/electric-client/frontend";
 import { ToggleSwitch } from "@codegouvfr/react-dsfr/ToggleSwitch";
 import { useMutation } from "@tanstack/react-query";
 import { css } from "#styled-system/css";
+import { MenuTitle } from "./MenuTitle";
 
 export const ShareReport = () => {
   const user = useUser()!;
@@ -40,6 +41,7 @@ export const ShareReport = () => {
 
   return (
     <>
+      <MenuTitle>Partage des CR</MenuTitle>
       <Divider height="2px" my={{ base: "27px", lg: "44px" }} color="#C1C1FB" />
 
       <Stack w="100%">

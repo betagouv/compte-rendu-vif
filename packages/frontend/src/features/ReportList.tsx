@@ -143,9 +143,9 @@ export const ReportList = ({
         error
       ) : (
         <Stack gap={{ base: 0, lg: "126px" }} flexDir={{ base: "column", lg: "row" }} justifyContent="center">
-          {columns.slice(0, 2).map((reports) => {
+          {columns.slice(0, 2).map((reports, index) => {
             return (
-              <Stack flexDir="column" w={{ base: "100%", lg: "400px" }}>
+              <Stack flexDir="column" w={{ base: "100%", lg: "400px" }} key={index}>
                 {reports.map((report, index) => (
                   <ReportListItem
                     onClick={onClick}
