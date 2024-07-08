@@ -7,7 +7,7 @@ import { Divider, Flex, Stack, styled } from "#styled-system/jsx";
 import { Fragment } from "react/jsx-runtime";
 import { MenuTitle } from "./MenuTitle";
 import type { ModalContentProps } from "./MenuButton";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { css } from "#styled-system/css";
 import { Clause_v2 } from "@cr-vif/electric-client/frontend";
@@ -17,6 +17,12 @@ import { useMutation } from "@tanstack/react-query";
 
 export const ClauseMenu = ({ isNational, ...props }: { isNational: boolean } & ModalContentProps) => {
   const user = useUser()!;
+
+  useEffect(() => {
+    db.clause_v2
+      .findFirst({ where: { value: "Lacanal" } })
+      .then((clause) => console.log(clause!.text.replace(/\n/g, "\\n")));
+  }, []);
 
   const clausesQuery = useLiveQuery(
     db.clause_v2.liveMany({
@@ -33,7 +39,7 @@ export const ClauseMenu = ({ isNational, ...props }: { isNational: boolean } & M
 
   return (
     <ClauseForm
-      clauses={clausesQuery.results?.map((c) => ({ ...c, text: c.text?.replaceAll("\\n", "\n") ?? "" })) ?? []}
+      clauses={clausesQuery.results?.map((c) => ({ ...c, text: c.text?.replaceAll("\n", "\\n") ?? "" })) ?? []}
       {...props}
       isNational={isNational}
     />
@@ -52,7 +58,10 @@ const getDiff = (baseClauses: Clause_v2[], modifiedClauses: Clause_v2[]) => {
   });
   const deletedClauses = baseClauses.filter((bc) => !modifiedClauses.find((c) => bc.id === c.id));
 
-  return { newClauses, updatedClauses, deletedClauses };
+  const formatClause = (clause: Clause_v2) => ({ ...clause, text: clause.text.replaceAll("\n", "\n") });
+
+  console.log(updatedClauses[0].text, updatedClauses.map(formatClause)[0].text);
+  return { newClauses: newClauses.map(formatClause), updatedClauses: updatedClauses.map(formatClause), deletedClauses };
 };
 
 const ClauseForm = ({
@@ -81,6 +90,9 @@ const ClauseForm = ({
           data: { text: clause.text },
         });
       }
+    },
+    {
+      onSuccess: () => setIsEditing(false),
     },
   );
 
@@ -118,10 +130,13 @@ const ClauseForm = ({
             mr: { base: "0 !important", lg: "8px !important" },
           },
         })}
+        nativeButtonProps={{ type: "button" }}
         iconId="ri-pencil-fill"
         priority="secondary"
-        type="button"
-        onClick={() => setIsEditing(!isEditing)}
+        onClick={(e) => {
+          e.preventDefault();
+          setIsEditing((isEditing) => !isEditing);
+        }}
       >
         <styled.span hideBelow="lg">Modifier</styled.span>
       </Button>

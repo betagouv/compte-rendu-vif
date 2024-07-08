@@ -32,6 +32,6 @@ export const useChipOptions = (key?: string) => {
 const transformChip = (chip: Clause_v2) => {
   return {
     ...chip,
-    text: chip.text?.replaceAll("\\n", "<br />"),
+    text: chip.text?.replaceAll("\\n", "<br />").replace(/\n/g, "<br />"),
   };
 };
