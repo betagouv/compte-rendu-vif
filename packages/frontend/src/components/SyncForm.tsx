@@ -240,7 +240,7 @@ function isPrimitive(value: any) {
   return value !== Object(value) || value instanceof Date;
 }
 
-function getDiff(a: Record<string, any>, b: Record<string, any>) {
+export function getDiff(a: Record<string, any>, b: Record<string, any>) {
   const diff = Object.entries(a).reduce((acc, [key, value]) => {
     const oldValue = b[key];
     if (!isPrimitive(oldValue) || !isPrimitive(value)) return acc;

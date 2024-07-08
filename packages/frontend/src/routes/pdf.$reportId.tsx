@@ -25,6 +25,7 @@ import { useChipOptions } from "../features/chips/useChipOptions";
 import { TextEditor } from "../features/text-editor/TextEditor";
 import { TextEditorContext, TextEditorContextProvider } from "../features/text-editor/TextEditorContext";
 import { TextEditorToolbar } from "../features/text-editor/TextEditorToolbar";
+import { getDiff } from "../components/SyncForm";
 
 type Mode = "edit" | "view" | "send" | "sent";
 
@@ -70,7 +71,14 @@ export const PDF = () => {
     return (
       <Stack gap="5px" flexDir="row" alignItems="center">
         <TextEditorToolbar />
-        <Button type="button" iconId="ri-save-line" size="small" onClick={() => toggleMode()}>
+        <Button
+          type="button"
+          iconId="ri-save-line"
+          size="small"
+          onClick={() => {
+            toggleMode();
+          }}
+        >
           Enregistrer
         </Button>
       </Stack>
@@ -143,13 +151,12 @@ export const PDF = () => {
               <Stack w="800px" h="100%">
                 {report && chipOptions?.length && isServiceInstructeurLoaded ? (
                   <WithReport
+                    report={report}
                     mode={mode}
-                    initialHtmlString={getReportHtmlString(
-                      report,
-                      chipOptions,
-                      udap as Udap,
-                      serviceInstructeur ?? undefined,
-                    )}
+                    initialHtmlString={
+                      getStoredHtmlString(report) ??
+                      getReportHtmlString(report, chipOptions, udap as Udap, serviceInstructeur ?? undefined)
+                    }
                   />
                 ) : null}
               </Stack>
@@ -159,6 +166,20 @@ export const PDF = () => {
       </TextEditorContextProvider>
     </styled.div>
   );
+};
+
+const getStoredHtmlString = (report: Report) => {
+  const reportSnapshotRaw = localStorage.getItem("report-" + report.id);
+  if (!reportSnapshotRaw) return null;
+
+  const reportSnapshot = JSON.parse(reportSnapshotRaw);
+  const diff = getDiff(reportSnapshot, { ...report, createdAt: report.createdAt.toISOString() });
+
+  if (Object.keys(diff).length) return null;
+
+  const htmlString = localStorage.getItem("report-html-" + report.id);
+
+  return htmlString;
 };
 
 const SendForm = ({
@@ -279,7 +300,15 @@ const EditBanner = ({ title, buttons, reportId }: { title: ReactNode; buttons: R
   );
 };
 
-export const WithReport = ({ initialHtmlString, mode }: { initialHtmlString: string; mode: Mode }) => {
+export const WithReport = ({
+  initialHtmlString,
+  mode,
+  report,
+}: {
+  initialHtmlString: string;
+  mode: Mode;
+  report: Report;
+}) => {
   const { editor } = useContext(TextEditorContext);
   const [htmlString] = useState(initialHtmlString);
 
@@ -288,6 +317,11 @@ export const WithReport = ({ initialHtmlString, mode }: { initialHtmlString: str
 
     editor.commands.setContent(htmlString);
   }, [editor]);
+
+  useEffect(() => {
+    localStorage.setItem("report-html-" + report!.id, editor?.getHTML() ?? "");
+    localStorage.setItem("report-" + report!.id, JSON.stringify(report));
+  }, [mode]);
 
   const { udap } = useUser()!;
 
