@@ -162,5 +162,20 @@ export default [
       "CREATE TRIGGER delete_main_clause_into_oplog\n   AFTER DELETE ON \"main\".\"clause\"\n   WHEN 1 = (SELECT flag from _electric_trigger_settings WHERE namespace = 'main' AND tablename = 'clause')\nBEGIN\n  INSERT INTO _electric_oplog (namespace, tablename, optype, primaryKey, newRow, oldRow, timestamp)\n  VALUES ('main', 'clause', 'DELETE', json_patch('{}', json_object('key', old.\"key\", 'udap_id', old.\"udap_id\", 'value', old.\"value\")), NULL, json_object('hidden', old.\"hidden\", 'key', old.\"key\", 'text', old.\"text\", 'udap_id', old.\"udap_id\", 'value', old.\"value\"), NULL);\nEND;"
     ],
     "version": "903"
+  },
+  {
+    "statements": [
+      "CREATE TABLE \"pdf_snapshot\" (\n  \"id\" TEXT NOT NULL,\n  \"report_id\" TEXT,\n  \"html\" TEXT,\n  \"report\" TEXT,\n  \"user_id\" TEXT,\n  CONSTRAINT \"pdf_snapshot_pkey\" PRIMARY KEY (\"id\")\n) WITHOUT ROWID;\n",
+      "INSERT OR IGNORE INTO _electric_trigger_settings (namespace, tablename, flag) VALUES ('main', 'pdf_snapshot', 1);",
+      "DROP TRIGGER IF EXISTS update_ensure_main_pdf_snapshot_primarykey;",
+      "CREATE TRIGGER update_ensure_main_pdf_snapshot_primarykey\n  BEFORE UPDATE ON \"main\".\"pdf_snapshot\"\nBEGIN\n  SELECT\n    CASE\n      WHEN old.\"id\" != new.\"id\" THEN\n      \t\tRAISE (ABORT, 'cannot change the value of column id as it belongs to the primary key')\n    END;\nEND;",
+      "DROP TRIGGER IF EXISTS insert_main_pdf_snapshot_into_oplog;",
+      "CREATE TRIGGER insert_main_pdf_snapshot_into_oplog\n   AFTER INSERT ON \"main\".\"pdf_snapshot\"\n   WHEN 1 = (SELECT flag from _electric_trigger_settings WHERE namespace = 'main' AND tablename = 'pdf_snapshot')\nBEGIN\n  INSERT INTO _electric_oplog (namespace, tablename, optype, primaryKey, newRow, oldRow, timestamp)\n  VALUES ('main', 'pdf_snapshot', 'INSERT', json_patch('{}', json_object('id', new.\"id\")), json_object('html', new.\"html\", 'id', new.\"id\", 'report', new.\"report\", 'report_id', new.\"report_id\", 'user_id', new.\"user_id\"), NULL, NULL);\nEND;",
+      "DROP TRIGGER IF EXISTS update_main_pdf_snapshot_into_oplog;",
+      "CREATE TRIGGER update_main_pdf_snapshot_into_oplog\n   AFTER UPDATE ON \"main\".\"pdf_snapshot\"\n   WHEN 1 = (SELECT flag from _electric_trigger_settings WHERE namespace = 'main' AND tablename = 'pdf_snapshot')\nBEGIN\n  INSERT INTO _electric_oplog (namespace, tablename, optype, primaryKey, newRow, oldRow, timestamp)\n  VALUES ('main', 'pdf_snapshot', 'UPDATE', json_patch('{}', json_object('id', new.\"id\")), json_object('html', new.\"html\", 'id', new.\"id\", 'report', new.\"report\", 'report_id', new.\"report_id\", 'user_id', new.\"user_id\"), json_object('html', old.\"html\", 'id', old.\"id\", 'report', old.\"report\", 'report_id', old.\"report_id\", 'user_id', old.\"user_id\"), NULL);\nEND;",
+      "DROP TRIGGER IF EXISTS delete_main_pdf_snapshot_into_oplog;",
+      "CREATE TRIGGER delete_main_pdf_snapshot_into_oplog\n   AFTER DELETE ON \"main\".\"pdf_snapshot\"\n   WHEN 1 = (SELECT flag from _electric_trigger_settings WHERE namespace = 'main' AND tablename = 'pdf_snapshot')\nBEGIN\n  INSERT INTO _electric_oplog (namespace, tablename, optype, primaryKey, newRow, oldRow, timestamp)\n  VALUES ('main', 'pdf_snapshot', 'DELETE', json_patch('{}', json_object('id', old.\"id\")), NULL, json_object('html', old.\"html\", 'id', old.\"id\", 'report', old.\"report\", 'report_id', old.\"report_id\", 'user_id', old.\"user_id\"), NULL);\nEND;"
+    ],
+    "version": "904"
   }
 ]

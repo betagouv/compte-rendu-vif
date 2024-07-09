@@ -70,6 +70,24 @@ export type DelegationPayload<ExtArgs extends $Extensions.Args = $Extensions.Def
  * 
  */
 export type Delegation = runtime.Types.DefaultSelection<DelegationPayload>
+export type Pdf_snapshotPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  name: "Pdf_snapshot"
+  objects: {}
+  scalars: $Extensions.GetResult<{
+    id: string
+    report_id: string | null
+    html: string | null
+    report: string | null
+    user_id: string | null
+  }, ExtArgs["result"]["pdf_snapshot"]>
+  composites: {}
+}
+
+/**
+ * Model Pdf_snapshot
+ * 
+ */
+export type Pdf_snapshot = runtime.Types.DefaultSelection<Pdf_snapshotPayload>
 export type ReportPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
   name: "Report"
   objects: {
@@ -335,6 +353,16 @@ export class PrismaClient<
     * ```
     */
   get delegation(): Prisma.DelegationDelegate<GlobalReject, ExtArgs>;
+
+  /**
+   * `prisma.pdf_snapshot`: Exposes CRUD operations for the **Pdf_snapshot** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Pdf_snapshots
+    * const pdf_snapshots = await prisma.pdf_snapshot.findMany()
+    * ```
+    */
+  get pdf_snapshot(): Prisma.Pdf_snapshotDelegate<GlobalReject, ExtArgs>;
 
   /**
    * `prisma.report`: Exposes CRUD operations for the **Report** model.
@@ -861,6 +889,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     Clause: 'Clause',
     Clause_v2: 'Clause_v2',
     Delegation: 'Delegation',
+    Pdf_snapshot: 'Pdf_snapshot',
     Report: 'Report',
     Service_instructeurs: 'Service_instructeurs',
     Udap: 'Udap',
@@ -881,7 +910,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type TypeMap<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     meta: {
-      modelProps: 'clause' | 'clause_v2' | 'delegation' | 'report' | 'service_instructeurs' | 'udap' | 'user'
+      modelProps: 'clause' | 'clause_v2' | 'delegation' | 'pdf_snapshot' | 'report' | 'service_instructeurs' | 'udap' | 'user'
       txIsolationLevel: Prisma.TransactionIsolationLevel
     },
     model: {
@@ -1077,6 +1106,71 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
           count: {
             args: Prisma.DelegationCountArgs<ExtArgs>,
             result: $Utils.Optional<DelegationCountAggregateOutputType> | number
+          }
+        }
+      }
+      Pdf_snapshot: {
+        payload: Pdf_snapshotPayload<ExtArgs>
+        operations: {
+          findUnique: {
+            args: Prisma.Pdf_snapshotFindUniqueArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Pdf_snapshotPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.Pdf_snapshotFindUniqueOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Pdf_snapshotPayload>
+          }
+          findFirst: {
+            args: Prisma.Pdf_snapshotFindFirstArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Pdf_snapshotPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.Pdf_snapshotFindFirstOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Pdf_snapshotPayload>
+          }
+          findMany: {
+            args: Prisma.Pdf_snapshotFindManyArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Pdf_snapshotPayload>[]
+          }
+          create: {
+            args: Prisma.Pdf_snapshotCreateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Pdf_snapshotPayload>
+          }
+          createMany: {
+            args: Prisma.Pdf_snapshotCreateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          delete: {
+            args: Prisma.Pdf_snapshotDeleteArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Pdf_snapshotPayload>
+          }
+          update: {
+            args: Prisma.Pdf_snapshotUpdateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Pdf_snapshotPayload>
+          }
+          deleteMany: {
+            args: Prisma.Pdf_snapshotDeleteManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          updateMany: {
+            args: Prisma.Pdf_snapshotUpdateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          upsert: {
+            args: Prisma.Pdf_snapshotUpsertArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Pdf_snapshotPayload>
+          }
+          aggregate: {
+            args: Prisma.Pdf_snapshotAggregateArgs<ExtArgs>,
+            result: $Utils.Optional<AggregatePdf_snapshot>
+          }
+          groupBy: {
+            args: Prisma.Pdf_snapshotGroupByArgs<ExtArgs>,
+            result: $Utils.Optional<Pdf_snapshotGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.Pdf_snapshotCountArgs<ExtArgs>,
+            result: $Utils.Optional<Pdf_snapshotCountAggregateOutputType> | number
           }
         }
       }
@@ -4306,6 +4400,884 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      * Choose, which related nodes to fetch as well.
      */
     include?: DelegationInclude<ExtArgs> | null
+  }
+
+
+
+  /**
+   * Model Pdf_snapshot
+   */
+
+
+  export type AggregatePdf_snapshot = {
+    _count: Pdf_snapshotCountAggregateOutputType | null
+    _min: Pdf_snapshotMinAggregateOutputType | null
+    _max: Pdf_snapshotMaxAggregateOutputType | null
+  }
+
+  export type Pdf_snapshotMinAggregateOutputType = {
+    id: string | null
+    report_id: string | null
+    html: string | null
+    report: string | null
+    user_id: string | null
+  }
+
+  export type Pdf_snapshotMaxAggregateOutputType = {
+    id: string | null
+    report_id: string | null
+    html: string | null
+    report: string | null
+    user_id: string | null
+  }
+
+  export type Pdf_snapshotCountAggregateOutputType = {
+    id: number
+    report_id: number
+    html: number
+    report: number
+    user_id: number
+    _all: number
+  }
+
+
+  export type Pdf_snapshotMinAggregateInputType = {
+    id?: true
+    report_id?: true
+    html?: true
+    report?: true
+    user_id?: true
+  }
+
+  export type Pdf_snapshotMaxAggregateInputType = {
+    id?: true
+    report_id?: true
+    html?: true
+    report?: true
+    user_id?: true
+  }
+
+  export type Pdf_snapshotCountAggregateInputType = {
+    id?: true
+    report_id?: true
+    html?: true
+    report?: true
+    user_id?: true
+    _all?: true
+  }
+
+  export type Pdf_snapshotAggregateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Pdf_snapshot to aggregate.
+     */
+    where?: Pdf_snapshotWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Pdf_snapshots to fetch.
+     */
+    orderBy?: Enumerable<Pdf_snapshotOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: Pdf_snapshotWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Pdf_snapshots from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Pdf_snapshots.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Pdf_snapshots
+    **/
+    _count?: true | Pdf_snapshotCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Pdf_snapshotMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Pdf_snapshotMaxAggregateInputType
+  }
+
+  export type GetPdf_snapshotAggregateType<T extends Pdf_snapshotAggregateArgs> = {
+        [P in keyof T & keyof AggregatePdf_snapshot]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePdf_snapshot[P]>
+      : GetScalarType<T[P], AggregatePdf_snapshot[P]>
+  }
+
+
+
+
+  export type Pdf_snapshotGroupByArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    where?: Pdf_snapshotWhereInput
+    orderBy?: Enumerable<Pdf_snapshotOrderByWithAggregationInput>
+    by: Pdf_snapshotScalarFieldEnum[]
+    having?: Pdf_snapshotScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Pdf_snapshotCountAggregateInputType | true
+    _min?: Pdf_snapshotMinAggregateInputType
+    _max?: Pdf_snapshotMaxAggregateInputType
+  }
+
+
+  export type Pdf_snapshotGroupByOutputType = {
+    id: string
+    report_id: string | null
+    html: string | null
+    report: string | null
+    user_id: string | null
+    _count: Pdf_snapshotCountAggregateOutputType | null
+    _min: Pdf_snapshotMinAggregateOutputType | null
+    _max: Pdf_snapshotMaxAggregateOutputType | null
+  }
+
+  type GetPdf_snapshotGroupByPayload<T extends Pdf_snapshotGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickArray<Pdf_snapshotGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Pdf_snapshotGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Pdf_snapshotGroupByOutputType[P]>
+            : GetScalarType<T[P], Pdf_snapshotGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type Pdf_snapshotSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    report_id?: boolean
+    html?: boolean
+    report?: boolean
+    user_id?: boolean
+  }, ExtArgs["result"]["pdf_snapshot"]>
+
+  export type Pdf_snapshotSelectScalar = {
+    id?: boolean
+    report_id?: boolean
+    html?: boolean
+    report?: boolean
+    user_id?: boolean
+  }
+
+
+  type Pdf_snapshotGetPayload<S extends boolean | null | undefined | Pdf_snapshotArgs> = $Types.GetResult<Pdf_snapshotPayload, S>
+
+  type Pdf_snapshotCountArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = 
+    Omit<Pdf_snapshotFindManyArgs, 'select' | 'include'> & {
+      select?: Pdf_snapshotCountAggregateInputType | true
+    }
+
+  export interface Pdf_snapshotDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Pdf_snapshot'], meta: { name: 'Pdf_snapshot' } }
+    /**
+     * Find zero or one Pdf_snapshot that matches the filter.
+     * @param {Pdf_snapshotFindUniqueArgs} args - Arguments to find a Pdf_snapshot
+     * @example
+     * // Get one Pdf_snapshot
+     * const pdf_snapshot = await prisma.pdf_snapshot.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends Pdf_snapshotFindUniqueArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, Pdf_snapshotFindUniqueArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'Pdf_snapshot'> extends True ? Prisma__Pdf_snapshotClient<$Types.GetResult<Pdf_snapshotPayload<ExtArgs>, T, 'findUnique', never>, never, ExtArgs> : Prisma__Pdf_snapshotClient<$Types.GetResult<Pdf_snapshotPayload<ExtArgs>, T, 'findUnique', never> | null, null, ExtArgs>
+
+    /**
+     * Find one Pdf_snapshot that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {Pdf_snapshotFindUniqueOrThrowArgs} args - Arguments to find a Pdf_snapshot
+     * @example
+     * // Get one Pdf_snapshot
+     * const pdf_snapshot = await prisma.pdf_snapshot.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends Pdf_snapshotFindUniqueOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, Pdf_snapshotFindUniqueOrThrowArgs<ExtArgs>>
+    ): Prisma__Pdf_snapshotClient<$Types.GetResult<Pdf_snapshotPayload<ExtArgs>, T, 'findUniqueOrThrow', never>, never, ExtArgs>
+
+    /**
+     * Find the first Pdf_snapshot that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Pdf_snapshotFindFirstArgs} args - Arguments to find a Pdf_snapshot
+     * @example
+     * // Get one Pdf_snapshot
+     * const pdf_snapshot = await prisma.pdf_snapshot.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends Pdf_snapshotFindFirstArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, Pdf_snapshotFindFirstArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'Pdf_snapshot'> extends True ? Prisma__Pdf_snapshotClient<$Types.GetResult<Pdf_snapshotPayload<ExtArgs>, T, 'findFirst', never>, never, ExtArgs> : Prisma__Pdf_snapshotClient<$Types.GetResult<Pdf_snapshotPayload<ExtArgs>, T, 'findFirst', never> | null, null, ExtArgs>
+
+    /**
+     * Find the first Pdf_snapshot that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Pdf_snapshotFindFirstOrThrowArgs} args - Arguments to find a Pdf_snapshot
+     * @example
+     * // Get one Pdf_snapshot
+     * const pdf_snapshot = await prisma.pdf_snapshot.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends Pdf_snapshotFindFirstOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, Pdf_snapshotFindFirstOrThrowArgs<ExtArgs>>
+    ): Prisma__Pdf_snapshotClient<$Types.GetResult<Pdf_snapshotPayload<ExtArgs>, T, 'findFirstOrThrow', never>, never, ExtArgs>
+
+    /**
+     * Find zero or more Pdf_snapshots that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Pdf_snapshotFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Pdf_snapshots
+     * const pdf_snapshots = await prisma.pdf_snapshot.findMany()
+     * 
+     * // Get first 10 Pdf_snapshots
+     * const pdf_snapshots = await prisma.pdf_snapshot.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const pdf_snapshotWithIdOnly = await prisma.pdf_snapshot.findMany({ select: { id: true } })
+     * 
+    **/
+    findMany<T extends Pdf_snapshotFindManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, Pdf_snapshotFindManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Types.GetResult<Pdf_snapshotPayload<ExtArgs>, T, 'findMany', never>>
+
+    /**
+     * Create a Pdf_snapshot.
+     * @param {Pdf_snapshotCreateArgs} args - Arguments to create a Pdf_snapshot.
+     * @example
+     * // Create one Pdf_snapshot
+     * const Pdf_snapshot = await prisma.pdf_snapshot.create({
+     *   data: {
+     *     // ... data to create a Pdf_snapshot
+     *   }
+     * })
+     * 
+    **/
+    create<T extends Pdf_snapshotCreateArgs<ExtArgs>>(
+      args: SelectSubset<T, Pdf_snapshotCreateArgs<ExtArgs>>
+    ): Prisma__Pdf_snapshotClient<$Types.GetResult<Pdf_snapshotPayload<ExtArgs>, T, 'create', never>, never, ExtArgs>
+
+    /**
+     * Create many Pdf_snapshots.
+     *     @param {Pdf_snapshotCreateManyArgs} args - Arguments to create many Pdf_snapshots.
+     *     @example
+     *     // Create many Pdf_snapshots
+     *     const pdf_snapshot = await prisma.pdf_snapshot.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
+     *     
+    **/
+    createMany<T extends Pdf_snapshotCreateManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, Pdf_snapshotCreateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Pdf_snapshot.
+     * @param {Pdf_snapshotDeleteArgs} args - Arguments to delete one Pdf_snapshot.
+     * @example
+     * // Delete one Pdf_snapshot
+     * const Pdf_snapshot = await prisma.pdf_snapshot.delete({
+     *   where: {
+     *     // ... filter to delete one Pdf_snapshot
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends Pdf_snapshotDeleteArgs<ExtArgs>>(
+      args: SelectSubset<T, Pdf_snapshotDeleteArgs<ExtArgs>>
+    ): Prisma__Pdf_snapshotClient<$Types.GetResult<Pdf_snapshotPayload<ExtArgs>, T, 'delete', never>, never, ExtArgs>
+
+    /**
+     * Update one Pdf_snapshot.
+     * @param {Pdf_snapshotUpdateArgs} args - Arguments to update one Pdf_snapshot.
+     * @example
+     * // Update one Pdf_snapshot
+     * const pdf_snapshot = await prisma.pdf_snapshot.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends Pdf_snapshotUpdateArgs<ExtArgs>>(
+      args: SelectSubset<T, Pdf_snapshotUpdateArgs<ExtArgs>>
+    ): Prisma__Pdf_snapshotClient<$Types.GetResult<Pdf_snapshotPayload<ExtArgs>, T, 'update', never>, never, ExtArgs>
+
+    /**
+     * Delete zero or more Pdf_snapshots.
+     * @param {Pdf_snapshotDeleteManyArgs} args - Arguments to filter Pdf_snapshots to delete.
+     * @example
+     * // Delete a few Pdf_snapshots
+     * const { count } = await prisma.pdf_snapshot.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends Pdf_snapshotDeleteManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, Pdf_snapshotDeleteManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Pdf_snapshots.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Pdf_snapshotUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Pdf_snapshots
+     * const pdf_snapshot = await prisma.pdf_snapshot.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends Pdf_snapshotUpdateManyArgs<ExtArgs>>(
+      args: SelectSubset<T, Pdf_snapshotUpdateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Pdf_snapshot.
+     * @param {Pdf_snapshotUpsertArgs} args - Arguments to update or create a Pdf_snapshot.
+     * @example
+     * // Update or create a Pdf_snapshot
+     * const pdf_snapshot = await prisma.pdf_snapshot.upsert({
+     *   create: {
+     *     // ... data to create a Pdf_snapshot
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Pdf_snapshot we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends Pdf_snapshotUpsertArgs<ExtArgs>>(
+      args: SelectSubset<T, Pdf_snapshotUpsertArgs<ExtArgs>>
+    ): Prisma__Pdf_snapshotClient<$Types.GetResult<Pdf_snapshotPayload<ExtArgs>, T, 'upsert', never>, never, ExtArgs>
+
+    /**
+     * Count the number of Pdf_snapshots.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Pdf_snapshotCountArgs} args - Arguments to filter Pdf_snapshots to count.
+     * @example
+     * // Count the number of Pdf_snapshots
+     * const count = await prisma.pdf_snapshot.count({
+     *   where: {
+     *     // ... the filter for the Pdf_snapshots we want to count
+     *   }
+     * })
+    **/
+    count<T extends Pdf_snapshotCountArgs>(
+      args?: Subset<T, Pdf_snapshotCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Pdf_snapshotCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Pdf_snapshot.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Pdf_snapshotAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Pdf_snapshotAggregateArgs>(args: Subset<T, Pdf_snapshotAggregateArgs>): Prisma.PrismaPromise<GetPdf_snapshotAggregateType<T>>
+
+    /**
+     * Group by Pdf_snapshot.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Pdf_snapshotGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends Pdf_snapshotGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: Pdf_snapshotGroupByArgs['orderBy'] }
+        : { orderBy?: Pdf_snapshotGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends TupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, Pdf_snapshotGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPdf_snapshotGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Pdf_snapshot.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export class Prisma__Pdf_snapshotClient<T, Null = never, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> implements Prisma.PrismaPromise<T> {
+    private readonly _dmmf;
+    private readonly _queryType;
+    private readonly _rootField;
+    private readonly _clientMethod;
+    private readonly _args;
+    private readonly _dataPath;
+    private readonly _errorFormat;
+    private readonly _measurePerformance?;
+    private _isList;
+    private _callsite;
+    private _requestPromise?;
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+    constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
+
+
+    private get _document();
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): Promise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): Promise<T>;
+  }
+
+
+
+  // Custom InputTypes
+
+  /**
+   * Pdf_snapshot base type for findUnique actions
+   */
+  export type Pdf_snapshotFindUniqueArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Pdf_snapshot
+     */
+    select?: Pdf_snapshotSelect<ExtArgs> | null
+    /**
+     * Filter, which Pdf_snapshot to fetch.
+     */
+    where: Pdf_snapshotWhereUniqueInput
+  }
+
+  /**
+   * Pdf_snapshot findUnique
+   */
+  export interface Pdf_snapshotFindUniqueArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends Pdf_snapshotFindUniqueArgsBase<ExtArgs> {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * Pdf_snapshot findUniqueOrThrow
+   */
+  export type Pdf_snapshotFindUniqueOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Pdf_snapshot
+     */
+    select?: Pdf_snapshotSelect<ExtArgs> | null
+    /**
+     * Filter, which Pdf_snapshot to fetch.
+     */
+    where: Pdf_snapshotWhereUniqueInput
+  }
+
+
+  /**
+   * Pdf_snapshot base type for findFirst actions
+   */
+  export type Pdf_snapshotFindFirstArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Pdf_snapshot
+     */
+    select?: Pdf_snapshotSelect<ExtArgs> | null
+    /**
+     * Filter, which Pdf_snapshot to fetch.
+     */
+    where?: Pdf_snapshotWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Pdf_snapshots to fetch.
+     */
+    orderBy?: Enumerable<Pdf_snapshotOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Pdf_snapshots.
+     */
+    cursor?: Pdf_snapshotWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Pdf_snapshots from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Pdf_snapshots.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Pdf_snapshots.
+     */
+    distinct?: Enumerable<Pdf_snapshotScalarFieldEnum>
+  }
+
+  /**
+   * Pdf_snapshot findFirst
+   */
+  export interface Pdf_snapshotFindFirstArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends Pdf_snapshotFindFirstArgsBase<ExtArgs> {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * Pdf_snapshot findFirstOrThrow
+   */
+  export type Pdf_snapshotFindFirstOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Pdf_snapshot
+     */
+    select?: Pdf_snapshotSelect<ExtArgs> | null
+    /**
+     * Filter, which Pdf_snapshot to fetch.
+     */
+    where?: Pdf_snapshotWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Pdf_snapshots to fetch.
+     */
+    orderBy?: Enumerable<Pdf_snapshotOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Pdf_snapshots.
+     */
+    cursor?: Pdf_snapshotWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Pdf_snapshots from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Pdf_snapshots.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Pdf_snapshots.
+     */
+    distinct?: Enumerable<Pdf_snapshotScalarFieldEnum>
+  }
+
+
+  /**
+   * Pdf_snapshot findMany
+   */
+  export type Pdf_snapshotFindManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Pdf_snapshot
+     */
+    select?: Pdf_snapshotSelect<ExtArgs> | null
+    /**
+     * Filter, which Pdf_snapshots to fetch.
+     */
+    where?: Pdf_snapshotWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Pdf_snapshots to fetch.
+     */
+    orderBy?: Enumerable<Pdf_snapshotOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Pdf_snapshots.
+     */
+    cursor?: Pdf_snapshotWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Pdf_snapshots from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Pdf_snapshots.
+     */
+    skip?: number
+    distinct?: Enumerable<Pdf_snapshotScalarFieldEnum>
+  }
+
+
+  /**
+   * Pdf_snapshot create
+   */
+  export type Pdf_snapshotCreateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Pdf_snapshot
+     */
+    select?: Pdf_snapshotSelect<ExtArgs> | null
+    /**
+     * The data needed to create a Pdf_snapshot.
+     */
+    data: XOR<Pdf_snapshotCreateInput, Pdf_snapshotUncheckedCreateInput>
+  }
+
+
+  /**
+   * Pdf_snapshot createMany
+   */
+  export type Pdf_snapshotCreateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Pdf_snapshots.
+     */
+    data: Enumerable<Pdf_snapshotCreateManyInput>
+    skipDuplicates?: boolean
+  }
+
+
+  /**
+   * Pdf_snapshot update
+   */
+  export type Pdf_snapshotUpdateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Pdf_snapshot
+     */
+    select?: Pdf_snapshotSelect<ExtArgs> | null
+    /**
+     * The data needed to update a Pdf_snapshot.
+     */
+    data: XOR<Pdf_snapshotUpdateInput, Pdf_snapshotUncheckedUpdateInput>
+    /**
+     * Choose, which Pdf_snapshot to update.
+     */
+    where: Pdf_snapshotWhereUniqueInput
+  }
+
+
+  /**
+   * Pdf_snapshot updateMany
+   */
+  export type Pdf_snapshotUpdateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Pdf_snapshots.
+     */
+    data: XOR<Pdf_snapshotUpdateManyMutationInput, Pdf_snapshotUncheckedUpdateManyInput>
+    /**
+     * Filter which Pdf_snapshots to update
+     */
+    where?: Pdf_snapshotWhereInput
+  }
+
+
+  /**
+   * Pdf_snapshot upsert
+   */
+  export type Pdf_snapshotUpsertArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Pdf_snapshot
+     */
+    select?: Pdf_snapshotSelect<ExtArgs> | null
+    /**
+     * The filter to search for the Pdf_snapshot to update in case it exists.
+     */
+    where: Pdf_snapshotWhereUniqueInput
+    /**
+     * In case the Pdf_snapshot found by the `where` argument doesn't exist, create a new Pdf_snapshot with this data.
+     */
+    create: XOR<Pdf_snapshotCreateInput, Pdf_snapshotUncheckedCreateInput>
+    /**
+     * In case the Pdf_snapshot was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<Pdf_snapshotUpdateInput, Pdf_snapshotUncheckedUpdateInput>
+  }
+
+
+  /**
+   * Pdf_snapshot delete
+   */
+  export type Pdf_snapshotDeleteArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Pdf_snapshot
+     */
+    select?: Pdf_snapshotSelect<ExtArgs> | null
+    /**
+     * Filter which Pdf_snapshot to delete.
+     */
+    where: Pdf_snapshotWhereUniqueInput
+  }
+
+
+  /**
+   * Pdf_snapshot deleteMany
+   */
+  export type Pdf_snapshotDeleteManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Pdf_snapshots to delete
+     */
+    where?: Pdf_snapshotWhereInput
+  }
+
+
+  /**
+   * Pdf_snapshot without action
+   */
+  export type Pdf_snapshotArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Pdf_snapshot
+     */
+    select?: Pdf_snapshotSelect<ExtArgs> | null
   }
 
 
@@ -8380,6 +9352,17 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type DelegationScalarFieldEnum = (typeof DelegationScalarFieldEnum)[keyof typeof DelegationScalarFieldEnum]
 
 
+  export const Pdf_snapshotScalarFieldEnum: {
+    id: 'id',
+    report_id: 'report_id',
+    html: 'html',
+    report: 'report',
+    user_id: 'user_id'
+  };
+
+  export type Pdf_snapshotScalarFieldEnum = (typeof Pdf_snapshotScalarFieldEnum)[keyof typeof Pdf_snapshotScalarFieldEnum]
+
+
   export const ReportScalarFieldEnum: {
     id: 'id',
     title: 'title',
@@ -8607,6 +9590,51 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     NOT?: Enumerable<DelegationScalarWhereWithAggregatesInput>
     createdBy?: StringWithAggregatesFilter | string
     delegatedTo?: StringWithAggregatesFilter | string
+  }
+
+  export type Pdf_snapshotWhereInput = {
+    AND?: Enumerable<Pdf_snapshotWhereInput>
+    OR?: Enumerable<Pdf_snapshotWhereInput>
+    NOT?: Enumerable<Pdf_snapshotWhereInput>
+    id?: StringFilter | string
+    report_id?: StringNullableFilter | string | null
+    html?: StringNullableFilter | string | null
+    report?: StringNullableFilter | string | null
+    user_id?: StringNullableFilter | string | null
+  }
+
+  export type Pdf_snapshotOrderByWithRelationInput = {
+    id?: SortOrder
+    report_id?: SortOrderInput | SortOrder
+    html?: SortOrderInput | SortOrder
+    report?: SortOrderInput | SortOrder
+    user_id?: SortOrderInput | SortOrder
+  }
+
+  export type Pdf_snapshotWhereUniqueInput = {
+    id?: string
+  }
+
+  export type Pdf_snapshotOrderByWithAggregationInput = {
+    id?: SortOrder
+    report_id?: SortOrderInput | SortOrder
+    html?: SortOrderInput | SortOrder
+    report?: SortOrderInput | SortOrder
+    user_id?: SortOrderInput | SortOrder
+    _count?: Pdf_snapshotCountOrderByAggregateInput
+    _max?: Pdf_snapshotMaxOrderByAggregateInput
+    _min?: Pdf_snapshotMinOrderByAggregateInput
+  }
+
+  export type Pdf_snapshotScalarWhereWithAggregatesInput = {
+    AND?: Enumerable<Pdf_snapshotScalarWhereWithAggregatesInput>
+    OR?: Enumerable<Pdf_snapshotScalarWhereWithAggregatesInput>
+    NOT?: Enumerable<Pdf_snapshotScalarWhereWithAggregatesInput>
+    id?: StringWithAggregatesFilter | string
+    report_id?: StringNullableWithAggregatesFilter | string | null
+    html?: StringNullableWithAggregatesFilter | string | null
+    report?: StringNullableWithAggregatesFilter | string | null
+    user_id?: StringNullableWithAggregatesFilter | string | null
   }
 
   export type ReportWhereInput = {
@@ -9048,6 +10076,62 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type DelegationUncheckedUpdateManyInput = {
     createdBy?: StringFieldUpdateOperationsInput | string
     delegatedTo?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type Pdf_snapshotCreateInput = {
+    id: string
+    report_id?: string | null
+    html?: string | null
+    report?: string | null
+    user_id?: string | null
+  }
+
+  export type Pdf_snapshotUncheckedCreateInput = {
+    id: string
+    report_id?: string | null
+    html?: string | null
+    report?: string | null
+    user_id?: string | null
+  }
+
+  export type Pdf_snapshotUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    report_id?: NullableStringFieldUpdateOperationsInput | string | null
+    html?: NullableStringFieldUpdateOperationsInput | string | null
+    report?: NullableStringFieldUpdateOperationsInput | string | null
+    user_id?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type Pdf_snapshotUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    report_id?: NullableStringFieldUpdateOperationsInput | string | null
+    html?: NullableStringFieldUpdateOperationsInput | string | null
+    report?: NullableStringFieldUpdateOperationsInput | string | null
+    user_id?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type Pdf_snapshotCreateManyInput = {
+    id: string
+    report_id?: string | null
+    html?: string | null
+    report?: string | null
+    user_id?: string | null
+  }
+
+  export type Pdf_snapshotUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    report_id?: NullableStringFieldUpdateOperationsInput | string | null
+    html?: NullableStringFieldUpdateOperationsInput | string | null
+    report?: NullableStringFieldUpdateOperationsInput | string | null
+    user_id?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type Pdf_snapshotUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    report_id?: NullableStringFieldUpdateOperationsInput | string | null
+    html?: NullableStringFieldUpdateOperationsInput | string | null
+    report?: NullableStringFieldUpdateOperationsInput | string | null
+    user_id?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ReportCreateInput = {
@@ -9648,6 +10732,30 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type DelegationMinOrderByAggregateInput = {
     createdBy?: SortOrder
     delegatedTo?: SortOrder
+  }
+
+  export type Pdf_snapshotCountOrderByAggregateInput = {
+    id?: SortOrder
+    report_id?: SortOrder
+    html?: SortOrder
+    report?: SortOrder
+    user_id?: SortOrder
+  }
+
+  export type Pdf_snapshotMaxOrderByAggregateInput = {
+    id?: SortOrder
+    report_id?: SortOrder
+    html?: SortOrder
+    report?: SortOrder
+    user_id?: SortOrder
+  }
+
+  export type Pdf_snapshotMinOrderByAggregateInput = {
+    id?: SortOrder
+    report_id?: SortOrder
+    html?: SortOrder
+    report?: SortOrder
+    user_id?: SortOrder
   }
 
   export type DateTimeNullableFilter = {

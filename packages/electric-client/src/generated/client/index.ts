@@ -19,6 +19,8 @@ export const Clause_v2ScalarFieldEnumSchema = z.enum(['id','key','value','positi
 
 export const DelegationScalarFieldEnumSchema = z.enum(['createdBy','delegatedTo']);
 
+export const Pdf_snapshotScalarFieldEnumSchema = z.enum(['id','report_id','html','report','user_id']);
+
 export const QueryModeSchema = z.enum(['default','insensitive']);
 
 export const ReportScalarFieldEnumSchema = z.enum(['id','title','projectDescription','redactedBy','meetDate','applicantName','applicantAddress','projectCadastralRef','projectSpaceType','decision','precisions','contacts','furtherInformation','createdBy','createdAt','serviceInstructeur','pdf','disabled','udap_id','redactedById','applicantEmail']);
@@ -75,6 +77,20 @@ export const DelegationSchema = z.object({
 })
 
 export type Delegation = z.infer<typeof DelegationSchema>
+
+/////////////////////////////////////////
+// PDF SNAPSHOT SCHEMA
+/////////////////////////////////////////
+
+export const Pdf_snapshotSchema = z.object({
+  id: z.string(),
+  report_id: z.string().nullable(),
+  html: z.string().nullable(),
+  report: z.string().nullable(),
+  user_id: z.string().nullable(),
+})
+
+export type Pdf_snapshot = z.infer<typeof Pdf_snapshotSchema>
 
 /////////////////////////////////////////
 // REPORT SCHEMA
@@ -200,6 +216,17 @@ export const DelegationSelectSchema: z.ZodType<Prisma.DelegationSelect> = z.obje
   delegatedTo: z.boolean().optional(),
   user_delegation_createdByTouser: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
   user_delegation_delegatedToTouser: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
+}).strict()
+
+// PDF SNAPSHOT
+//------------------------------------------------------
+
+export const Pdf_snapshotSelectSchema: z.ZodType<Prisma.Pdf_snapshotSelect> = z.object({
+  id: z.boolean().optional(),
+  report_id: z.boolean().optional(),
+  html: z.boolean().optional(),
+  report: z.boolean().optional(),
+  user_id: z.boolean().optional(),
 }).strict()
 
 // REPORT
@@ -463,6 +490,51 @@ export const DelegationScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.De
   NOT: z.union([ z.lazy(() => DelegationScalarWhereWithAggregatesInputSchema),z.lazy(() => DelegationScalarWhereWithAggregatesInputSchema).array() ]).optional(),
   createdBy: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
   delegatedTo: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+}).strict();
+
+export const Pdf_snapshotWhereInputSchema: z.ZodType<Prisma.Pdf_snapshotWhereInput> = z.object({
+  AND: z.union([ z.lazy(() => Pdf_snapshotWhereInputSchema),z.lazy(() => Pdf_snapshotWhereInputSchema).array() ]).optional(),
+  OR: z.lazy(() => Pdf_snapshotWhereInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => Pdf_snapshotWhereInputSchema),z.lazy(() => Pdf_snapshotWhereInputSchema).array() ]).optional(),
+  id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  report_id: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  html: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  report: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  user_id: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+}).strict();
+
+export const Pdf_snapshotOrderByWithRelationInputSchema: z.ZodType<Prisma.Pdf_snapshotOrderByWithRelationInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  report_id: z.lazy(() => SortOrderSchema).optional(),
+  html: z.lazy(() => SortOrderSchema).optional(),
+  report: z.lazy(() => SortOrderSchema).optional(),
+  user_id: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const Pdf_snapshotWhereUniqueInputSchema: z.ZodType<Prisma.Pdf_snapshotWhereUniqueInput> = z.object({
+  id: z.string().optional()
+}).strict();
+
+export const Pdf_snapshotOrderByWithAggregationInputSchema: z.ZodType<Prisma.Pdf_snapshotOrderByWithAggregationInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  report_id: z.lazy(() => SortOrderSchema).optional(),
+  html: z.lazy(() => SortOrderSchema).optional(),
+  report: z.lazy(() => SortOrderSchema).optional(),
+  user_id: z.lazy(() => SortOrderSchema).optional(),
+  _count: z.lazy(() => Pdf_snapshotCountOrderByAggregateInputSchema).optional(),
+  _max: z.lazy(() => Pdf_snapshotMaxOrderByAggregateInputSchema).optional(),
+  _min: z.lazy(() => Pdf_snapshotMinOrderByAggregateInputSchema).optional()
+}).strict();
+
+export const Pdf_snapshotScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.Pdf_snapshotScalarWhereWithAggregatesInput> = z.object({
+  AND: z.union([ z.lazy(() => Pdf_snapshotScalarWhereWithAggregatesInputSchema),z.lazy(() => Pdf_snapshotScalarWhereWithAggregatesInputSchema).array() ]).optional(),
+  OR: z.lazy(() => Pdf_snapshotScalarWhereWithAggregatesInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => Pdf_snapshotScalarWhereWithAggregatesInputSchema),z.lazy(() => Pdf_snapshotScalarWhereWithAggregatesInputSchema).array() ]).optional(),
+  id: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+  report_id: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
+  html: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
+  report: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
+  user_id: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
 }).strict();
 
 export const ReportWhereInputSchema: z.ZodType<Prisma.ReportWhereInput> = z.object({
@@ -903,6 +975,62 @@ export const DelegationUpdateManyMutationInputSchema: z.ZodType<Prisma.Delegatio
 export const DelegationUncheckedUpdateManyInputSchema: z.ZodType<Prisma.DelegationUncheckedUpdateManyInput> = z.object({
   createdBy: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   delegatedTo: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const Pdf_snapshotCreateInputSchema: z.ZodType<Prisma.Pdf_snapshotCreateInput> = z.object({
+  id: z.string(),
+  report_id: z.string().optional().nullable(),
+  html: z.string().optional().nullable(),
+  report: z.string().optional().nullable(),
+  user_id: z.string().optional().nullable()
+}).strict();
+
+export const Pdf_snapshotUncheckedCreateInputSchema: z.ZodType<Prisma.Pdf_snapshotUncheckedCreateInput> = z.object({
+  id: z.string(),
+  report_id: z.string().optional().nullable(),
+  html: z.string().optional().nullable(),
+  report: z.string().optional().nullable(),
+  user_id: z.string().optional().nullable()
+}).strict();
+
+export const Pdf_snapshotUpdateInputSchema: z.ZodType<Prisma.Pdf_snapshotUpdateInput> = z.object({
+  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  report_id: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  html: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  report: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  user_id: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+}).strict();
+
+export const Pdf_snapshotUncheckedUpdateInputSchema: z.ZodType<Prisma.Pdf_snapshotUncheckedUpdateInput> = z.object({
+  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  report_id: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  html: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  report: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  user_id: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+}).strict();
+
+export const Pdf_snapshotCreateManyInputSchema: z.ZodType<Prisma.Pdf_snapshotCreateManyInput> = z.object({
+  id: z.string(),
+  report_id: z.string().optional().nullable(),
+  html: z.string().optional().nullable(),
+  report: z.string().optional().nullable(),
+  user_id: z.string().optional().nullable()
+}).strict();
+
+export const Pdf_snapshotUpdateManyMutationInputSchema: z.ZodType<Prisma.Pdf_snapshotUpdateManyMutationInput> = z.object({
+  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  report_id: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  html: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  report: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  user_id: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+}).strict();
+
+export const Pdf_snapshotUncheckedUpdateManyInputSchema: z.ZodType<Prisma.Pdf_snapshotUncheckedUpdateManyInput> = z.object({
+  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  report_id: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  html: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  report: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  user_id: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const ReportCreateInputSchema: z.ZodType<Prisma.ReportCreateInput> = z.object({
@@ -1498,6 +1626,30 @@ export const DelegationMaxOrderByAggregateInputSchema: z.ZodType<Prisma.Delegati
 export const DelegationMinOrderByAggregateInputSchema: z.ZodType<Prisma.DelegationMinOrderByAggregateInput> = z.object({
   createdBy: z.lazy(() => SortOrderSchema).optional(),
   delegatedTo: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const Pdf_snapshotCountOrderByAggregateInputSchema: z.ZodType<Prisma.Pdf_snapshotCountOrderByAggregateInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  report_id: z.lazy(() => SortOrderSchema).optional(),
+  html: z.lazy(() => SortOrderSchema).optional(),
+  report: z.lazy(() => SortOrderSchema).optional(),
+  user_id: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const Pdf_snapshotMaxOrderByAggregateInputSchema: z.ZodType<Prisma.Pdf_snapshotMaxOrderByAggregateInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  report_id: z.lazy(() => SortOrderSchema).optional(),
+  html: z.lazy(() => SortOrderSchema).optional(),
+  report: z.lazy(() => SortOrderSchema).optional(),
+  user_id: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const Pdf_snapshotMinOrderByAggregateInputSchema: z.ZodType<Prisma.Pdf_snapshotMinOrderByAggregateInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  report_id: z.lazy(() => SortOrderSchema).optional(),
+  html: z.lazy(() => SortOrderSchema).optional(),
+  report: z.lazy(() => SortOrderSchema).optional(),
+  user_id: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const DateTimeNullableFilterSchema: z.ZodType<Prisma.DateTimeNullableFilter> = z.object({
@@ -3010,6 +3162,63 @@ export const DelegationFindUniqueOrThrowArgsSchema: z.ZodType<Prisma.DelegationF
   where: DelegationWhereUniqueInputSchema,
 }).strict() as z.ZodType<Prisma.DelegationFindUniqueOrThrowArgs>
 
+export const Pdf_snapshotFindFirstArgsSchema: z.ZodType<Prisma.Pdf_snapshotFindFirstArgs> = z.object({
+  select: Pdf_snapshotSelectSchema.optional(),
+  where: Pdf_snapshotWhereInputSchema.optional(),
+  orderBy: z.union([ Pdf_snapshotOrderByWithRelationInputSchema.array(),Pdf_snapshotOrderByWithRelationInputSchema ]).optional(),
+  cursor: Pdf_snapshotWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+  distinct: Pdf_snapshotScalarFieldEnumSchema.array().optional(),
+}).strict() 
+
+export const Pdf_snapshotFindFirstOrThrowArgsSchema: z.ZodType<Prisma.Pdf_snapshotFindFirstOrThrowArgs> = z.object({
+  select: Pdf_snapshotSelectSchema.optional(),
+  where: Pdf_snapshotWhereInputSchema.optional(),
+  orderBy: z.union([ Pdf_snapshotOrderByWithRelationInputSchema.array(),Pdf_snapshotOrderByWithRelationInputSchema ]).optional(),
+  cursor: Pdf_snapshotWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+  distinct: Pdf_snapshotScalarFieldEnumSchema.array().optional(),
+}).strict() 
+
+export const Pdf_snapshotFindManyArgsSchema: z.ZodType<Prisma.Pdf_snapshotFindManyArgs> = z.object({
+  select: Pdf_snapshotSelectSchema.optional(),
+  where: Pdf_snapshotWhereInputSchema.optional(),
+  orderBy: z.union([ Pdf_snapshotOrderByWithRelationInputSchema.array(),Pdf_snapshotOrderByWithRelationInputSchema ]).optional(),
+  cursor: Pdf_snapshotWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+  distinct: Pdf_snapshotScalarFieldEnumSchema.array().optional(),
+}).strict() 
+
+export const Pdf_snapshotAggregateArgsSchema: z.ZodType<Prisma.Pdf_snapshotAggregateArgs> = z.object({
+  where: Pdf_snapshotWhereInputSchema.optional(),
+  orderBy: z.union([ Pdf_snapshotOrderByWithRelationInputSchema.array(),Pdf_snapshotOrderByWithRelationInputSchema ]).optional(),
+  cursor: Pdf_snapshotWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+}).strict() 
+
+export const Pdf_snapshotGroupByArgsSchema: z.ZodType<Prisma.Pdf_snapshotGroupByArgs> = z.object({
+  where: Pdf_snapshotWhereInputSchema.optional(),
+  orderBy: z.union([ Pdf_snapshotOrderByWithAggregationInputSchema.array(),Pdf_snapshotOrderByWithAggregationInputSchema ]).optional(),
+  by: Pdf_snapshotScalarFieldEnumSchema.array(),
+  having: Pdf_snapshotScalarWhereWithAggregatesInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+}).strict() 
+
+export const Pdf_snapshotFindUniqueArgsSchema: z.ZodType<Prisma.Pdf_snapshotFindUniqueArgs> = z.object({
+  select: Pdf_snapshotSelectSchema.optional(),
+  where: Pdf_snapshotWhereUniqueInputSchema,
+}).strict() 
+
+export const Pdf_snapshotFindUniqueOrThrowArgsSchema: z.ZodType<Prisma.Pdf_snapshotFindUniqueOrThrowArgs> = z.object({
+  select: Pdf_snapshotSelectSchema.optional(),
+  where: Pdf_snapshotWhereUniqueInputSchema,
+}).strict() 
+
 export const ReportFindFirstArgsSchema: z.ZodType<Prisma.ReportFindFirstArgs> = z.object({
   select: ReportSelectSchema.optional(),
   include: ReportIncludeSchema.optional(),
@@ -3368,6 +3577,43 @@ export const DelegationDeleteManyArgsSchema: z.ZodType<Prisma.DelegationDeleteMa
   where: DelegationWhereInputSchema.optional(),
 }).strict() as z.ZodType<Prisma.DelegationDeleteManyArgs>
 
+export const Pdf_snapshotCreateArgsSchema: z.ZodType<Prisma.Pdf_snapshotCreateArgs> = z.object({
+  select: Pdf_snapshotSelectSchema.optional(),
+  data: z.union([ Pdf_snapshotCreateInputSchema,Pdf_snapshotUncheckedCreateInputSchema ]),
+}).strict() 
+
+export const Pdf_snapshotUpsertArgsSchema: z.ZodType<Prisma.Pdf_snapshotUpsertArgs> = z.object({
+  select: Pdf_snapshotSelectSchema.optional(),
+  where: Pdf_snapshotWhereUniqueInputSchema,
+  create: z.union([ Pdf_snapshotCreateInputSchema,Pdf_snapshotUncheckedCreateInputSchema ]),
+  update: z.union([ Pdf_snapshotUpdateInputSchema,Pdf_snapshotUncheckedUpdateInputSchema ]),
+}).strict() 
+
+export const Pdf_snapshotCreateManyArgsSchema: z.ZodType<Prisma.Pdf_snapshotCreateManyArgs> = z.object({
+  data: Pdf_snapshotCreateManyInputSchema.array(),
+  skipDuplicates: z.boolean().optional(),
+}).strict() 
+
+export const Pdf_snapshotDeleteArgsSchema: z.ZodType<Prisma.Pdf_snapshotDeleteArgs> = z.object({
+  select: Pdf_snapshotSelectSchema.optional(),
+  where: Pdf_snapshotWhereUniqueInputSchema,
+}).strict() 
+
+export const Pdf_snapshotUpdateArgsSchema: z.ZodType<Prisma.Pdf_snapshotUpdateArgs> = z.object({
+  select: Pdf_snapshotSelectSchema.optional(),
+  data: z.union([ Pdf_snapshotUpdateInputSchema,Pdf_snapshotUncheckedUpdateInputSchema ]),
+  where: Pdf_snapshotWhereUniqueInputSchema,
+}).strict() 
+
+export const Pdf_snapshotUpdateManyArgsSchema: z.ZodType<Prisma.Pdf_snapshotUpdateManyArgs> = z.object({
+  data: z.union([ Pdf_snapshotUpdateManyMutationInputSchema,Pdf_snapshotUncheckedUpdateManyInputSchema ]),
+  where: Pdf_snapshotWhereInputSchema.optional(),
+}).strict() 
+
+export const Pdf_snapshotDeleteManyArgsSchema: z.ZodType<Prisma.Pdf_snapshotDeleteManyArgs> = z.object({
+  where: Pdf_snapshotWhereInputSchema.optional(),
+}).strict() 
+
 export const ReportCreateArgsSchema: z.ZodType<Prisma.ReportCreateArgs> = z.object({
   select: ReportSelectSchema.optional(),
   include: ReportIncludeSchema.optional(),
@@ -3543,6 +3789,11 @@ interface DelegationGetPayload extends HKT {
   readonly type: Omit<Prisma.DelegationGetPayload<this['_A']>, "Please either choose `select` or `include`">
 }
 
+interface Pdf_snapshotGetPayload extends HKT {
+  readonly _A?: boolean | null | undefined | Prisma.Pdf_snapshotArgs
+  readonly type: Omit<Prisma.Pdf_snapshotGetPayload<this['_A']>, "Please either choose `select` or `include`">
+}
+
 interface ReportGetPayload extends HKT {
   readonly _A?: boolean | null | undefined | Prisma.ReportArgs
   readonly type: Omit<Prisma.ReportGetPayload<this['_A']>, "Please either choose `select` or `include`">
@@ -3704,6 +3955,55 @@ export const tableSchemas = {
     Prisma.DelegationFindFirstArgs['orderBy'],
     Prisma.DelegationScalarFieldEnum,
     DelegationGetPayload
+  >,
+  pdf_snapshot: {
+    fields: new Map([
+      [
+        "id",
+        "TEXT"
+      ],
+      [
+        "report_id",
+        "TEXT"
+      ],
+      [
+        "html",
+        "TEXT"
+      ],
+      [
+        "report",
+        "TEXT"
+      ],
+      [
+        "user_id",
+        "TEXT"
+      ]
+    ]),
+    relations: [
+    ],
+    modelSchema: (Pdf_snapshotCreateInputSchema as any)
+      .partial()
+      .or((Pdf_snapshotUncheckedCreateInputSchema as any).partial()),
+    createSchema: Pdf_snapshotCreateArgsSchema,
+    createManySchema: Pdf_snapshotCreateManyArgsSchema,
+    findUniqueSchema: Pdf_snapshotFindUniqueArgsSchema,
+    findSchema: Pdf_snapshotFindFirstArgsSchema,
+    updateSchema: Pdf_snapshotUpdateArgsSchema,
+    updateManySchema: Pdf_snapshotUpdateManyArgsSchema,
+    upsertSchema: Pdf_snapshotUpsertArgsSchema,
+    deleteSchema: Pdf_snapshotDeleteArgsSchema,
+    deleteManySchema: Pdf_snapshotDeleteManyArgsSchema
+  } as TableSchema<
+    z.infer<typeof Pdf_snapshotUncheckedCreateInputSchema>,
+    Prisma.Pdf_snapshotCreateArgs['data'],
+    Prisma.Pdf_snapshotUpdateArgs['data'],
+    Prisma.Pdf_snapshotFindFirstArgs['select'],
+    Prisma.Pdf_snapshotFindFirstArgs['where'],
+    Prisma.Pdf_snapshotFindUniqueArgs['where'],
+    never,
+    Prisma.Pdf_snapshotFindFirstArgs['orderBy'],
+    Prisma.Pdf_snapshotScalarFieldEnum,
+    Pdf_snapshotGetPayload
   >,
   report: {
     fields: new Map([

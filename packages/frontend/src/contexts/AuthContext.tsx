@@ -80,6 +80,11 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
           user_delegation_createdByTouser: true,
         },
       });
+      await electric.db.pdf_snapshot.sync({
+        where: {
+          user_id: data!.user!.id,
+        },
+      });
 
       return true;
     },

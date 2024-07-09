@@ -26,11 +26,13 @@ import { TextEditor } from "../features/text-editor/TextEditor";
 import { TextEditorContext, TextEditorContextProvider } from "../features/text-editor/TextEditorContext";
 import { TextEditorToolbar } from "../features/text-editor/TextEditorToolbar";
 import { getDiff } from "../components/SyncForm";
+import { v4 } from "uuid";
 
 type Mode = "edit" | "view" | "send" | "sent";
 
 export const PDF = () => {
-  const { udap } = useUser()!;
+  const user = useUser()!;
+  const { udap } = user;
   const chipOptions = useChipOptions();
 
   const { reportId } = Route.useParams();
@@ -48,12 +50,36 @@ export const PDF = () => {
       },
     },
   );
+
   const toggleMode = () => {
     navigate({ search: { mode: mode === "edit" ? "view" : "edit" }, replace: true });
   };
 
   const reportQuery = useLiveQuery(db.report.liveUnique({ where: { id: reportId }, include: { user: true } }));
   const reportRef = useRef<Report | null>(null);
+
+  const snapshotQuery = useQuery({
+    queryKey: ["report-snapshot", reportId],
+    queryFn: async () => {
+      const snapshot = await db.pdf_snapshot.findFirst({ where: { report_id: reportId } });
+      if (!snapshot || !snapshot.report) return null;
+
+      try {
+        const snapshotReport = JSON.parse(snapshot.report);
+        const diff = getDiff(snapshotReport, {
+          ...reportQuery.results!,
+          createdAt: reportQuery.results!.createdAt.toISOString(),
+        });
+
+        if (Object.keys(diff).length) return null;
+
+        return snapshot.html!;
+      } catch (e) {
+        return null;
+      }
+    },
+    enabled: !!reportQuery.results,
+  });
 
   const serviceInstructeurQuery = useLiveQuery(
     db.service_instructeurs.liveUnique({ where: { id: reportQuery.results?.serviceInstructeur ?? undefined } }),
@@ -66,8 +92,29 @@ export const PDF = () => {
   }
 
   const report = reportRef.current;
+  const htmlString = snapshotQuery.data;
+
+  const saveSnapshotMutation = useMutation(
+    async ({ report, html }: { report: string; html: string }) => {
+      await db.pdf_snapshot.deleteMany({
+        where: { report_id: reportId, user_id: user.id },
+      });
+      await db.pdf_snapshot.create({
+        data: {
+          id: v4(),
+          report_id: reportId,
+          report,
+          html,
+          user_id: user.id,
+        },
+      });
+    },
+    { onSuccess: () => toggleMode() },
+  );
 
   const EditButtons = () => {
+    const { editor } = useContext(TextEditorContext);
+
     return (
       <Stack gap="5px" flexDir="row" alignItems="center">
         <TextEditorToolbar />
@@ -75,9 +122,12 @@ export const PDF = () => {
           type="button"
           iconId="ri-save-line"
           size="small"
-          onClick={() => {
-            toggleMode();
-          }}
+          onClick={() =>
+            saveSnapshotMutation.mutate({
+              report: JSON.stringify(report),
+              html: editor?.getHTML() ?? "",
+            })
+          }
         >
           Enregistrer
         </Button>
@@ -149,12 +199,12 @@ export const PDF = () => {
             />
             <Center w="100%" h="100%" maxH="100%" mt="10px" overflowY="auto">
               <Stack w="800px" h="100%">
-                {report && chipOptions?.length && isServiceInstructeurLoaded ? (
+                {report && snapshotQuery.isSuccess && chipOptions?.length && isServiceInstructeurLoaded ? (
                   <WithReport
                     report={report}
                     mode={mode}
                     initialHtmlString={
-                      getStoredHtmlString(report) ??
+                      htmlString ??
                       getReportHtmlString(report, chipOptions, udap as Udap, serviceInstructeur ?? undefined)
                     }
                   />
@@ -168,19 +218,19 @@ export const PDF = () => {
   );
 };
 
-const getStoredHtmlString = (report: Report) => {
-  const reportSnapshotRaw = localStorage.getItem("report-" + report.id);
-  if (!reportSnapshotRaw) return null;
+// const getStoredHtmlString = (report: Report) => {
+//   const reportSnapshotRaw = localStorage.getItem("report-" + report.id);
+//   if (!reportSnapshotRaw) return null;
 
-  const reportSnapshot = JSON.parse(reportSnapshotRaw);
-  const diff = getDiff(reportSnapshot, { ...report, createdAt: report.createdAt.toISOString() });
+//   const reportSnapshot = JSON.parse(reportSnapshotRaw);
+//   const diff = getDiff(reportSnapshot, { ...report, createdAt: report.createdAt.toISOString() });
 
-  if (Object.keys(diff).length) return null;
+//   if (Object.keys(diff).length) return null;
 
-  const htmlString = localStorage.getItem("report-html-" + report.id);
+//   const htmlString = localStorage.getItem("report-html-" + report.id);
 
-  return htmlString;
-};
+//   return htmlString;
+// };
 
 const SendForm = ({
   children,
@@ -317,11 +367,6 @@ export const WithReport = ({
 
     editor.commands.setContent(htmlString);
   }, [editor]);
-
-  useEffect(() => {
-    localStorage.setItem("report-html-" + report!.id, editor?.getHTML() ?? "");
-    localStorage.setItem("report-" + report!.id, JSON.stringify(report));
-  }, [mode]);
 
   const { udap } = useUser()!;
 
