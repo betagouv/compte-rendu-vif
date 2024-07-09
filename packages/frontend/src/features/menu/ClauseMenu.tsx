@@ -56,14 +56,12 @@ type Form = {
 };
 
 const getDiff = (baseClauses: Clause_v2[], modifiedClauses: Clause_v2[]) => {
-  const newClauses = modifiedClauses.filter((c) => !baseClauses.find((bc) => bc.id === c.id));
   const updatedClauses = modifiedClauses.filter((c) => {
     const baseClause = baseClauses.find((bc) => bc.id === c.id);
-    return baseClause && baseClause.text !== c.text;
+    return baseClause && (baseClause.text !== c.text || baseClause.value !== c.value);
   });
-  const deletedClauses = baseClauses.filter((bc) => !modifiedClauses.find((c) => bc.id === c.id));
 
-  return { newClauses: newClauses, updatedClauses: updatedClauses, deletedClauses };
+  return { updatedClauses };
 };
 type Mode = "view" | "add" | "edit";
 
@@ -100,11 +98,11 @@ const ClauseForm = ({
   });
 
   const applyDiffMutation = useMutation(
-    async (diff: { updatedClauses: Clause_v2[]; newClauses: Clause_v2[]; deletedClauses: Clause_v2[] }) => {
+    async (diff: { updatedClauses: Clause_v2[] }) => {
       for (const clause of diff.updatedClauses) {
         await db.clause_v2.update({
           where: { id: clause.id },
-          data: { text: clause.text },
+          data: { text: clause.text, value: clause.value },
         });
       }
     },
@@ -122,6 +120,7 @@ const ClauseForm = ({
 
   const onSubmit = (data: Form) => {
     const diff = getDiff(clauses, data.clauses);
+    console.log(clauses, data.clauses, diff);
     applyDiffMutation.mutate(diff);
   };
 
@@ -317,9 +316,10 @@ const ClauseEdit = ({ clause }: { clause: ClauseWithIndex }) => {
   return (
     <Flex flexDir="column">
       <Flex justifyContent="space-between" alignItems="center" w="100%">
-        <styled.div color="text-action-high-blue-france" fontWeight="bold">
-          {clause.value}
-        </styled.div>
+        <Input
+          label="Intitulé"
+          nativeInputProps={form.register(`clauses.${clause._index}.value`, { required: true })}
+        />
         <Button
           iconId="ri-delete-bin-fill"
           disabled={deleteClauseMutation.isLoading}
