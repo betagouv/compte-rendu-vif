@@ -248,6 +248,7 @@ const SendForm = ({
       if (!form.getValues("recipients")) {
         form.setValue("recipients", recipents ?? "");
       }
+      return null;
     },
   });
 
