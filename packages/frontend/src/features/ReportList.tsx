@@ -145,7 +145,7 @@ export const ReportList = ({
         <Stack gap={{ base: 0, lg: "126px" }} flexDir={{ base: "column", lg: "row" }} justifyContent="center">
           {columns.slice(0, 2).map((reports, index) => {
             return (
-              <Stack flexDir="column" w={{ base: "100%", lg: "400px" }} key={index}>
+              <Stack key={index} flexDir="column" w={{ base: "100%", lg: "400px" }}>
                 {reports.map((report, index) => (
                   <ReportListItem
                     onClick={onClick}
@@ -224,7 +224,7 @@ const ReportListItem = ({
           </Flex>
           <styled.span nowrap>{report.applicantName ? <>Pour {report.applicantName} </> : null}</styled.span>
           <styled.span nowrap>
-            {report.applicantName ? "p" : "P"}ar {report.user?.name ?? ""}
+            {report.applicantName ? "p" : "P"}ar {report.redactedBy ?? report.user?.name ?? ""}
           </styled.span>
           <styled.div mt="8px">
             <ReportBadge status={report.pdf ? "published" : "draft"} />

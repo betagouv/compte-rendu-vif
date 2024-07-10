@@ -172,7 +172,7 @@ export const getReportHtmlString = (
     </span><br/><br/>`
         : ""
     }
-      <strong>Votre interlocuteur : ${report.user?.name ?? ""}</strong><br/>
+      <strong>Votre interlocuteur : ${report.redactedBy ?? report.user?.name ?? ""}</strong><br/>
       Demandeur : ${report.applicantName ?? ""}<br/>
       Adresse du projet : ${report.applicantAddress ?? ""}<br/>
       Ref cadastrale : ${report.projectCadastralRef ?? ""}<br/>
