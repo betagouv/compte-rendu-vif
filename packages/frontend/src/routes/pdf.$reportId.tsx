@@ -68,7 +68,8 @@ export const PDF = () => {
         const snapshotReport = JSON.parse(snapshot.report);
         const diff = getDiff(snapshotReport, {
           ...reportQuery.results!,
-          createdAt: reportQuery.results!.createdAt.toISOString(),
+          createdAt: reportQuery.results!.createdAt?.toISOString(),
+          meetDate: reportQuery.results!.meetDate?.toISOString(),
         });
 
         console.log({ snapshotReport, report: reportQuery.results, diff });
