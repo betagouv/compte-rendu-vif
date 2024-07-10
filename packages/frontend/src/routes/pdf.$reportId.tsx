@@ -71,6 +71,8 @@ export const PDF = () => {
           createdAt: reportQuery.results!.createdAt.toISOString(),
         });
 
+        console.log({ snapshotReport, report: reportQuery.results, diff });
+
         if (Object.keys(diff).length) return null;
 
         return snapshot.html!;
@@ -217,20 +219,6 @@ export const PDF = () => {
     </styled.div>
   );
 };
-
-// const getStoredHtmlString = (report: Report) => {
-//   const reportSnapshotRaw = localStorage.getItem("report-" + report.id);
-//   if (!reportSnapshotRaw) return null;
-
-//   const reportSnapshot = JSON.parse(reportSnapshotRaw);
-//   const diff = getDiff(reportSnapshot, { ...report, createdAt: report.createdAt.toISOString() });
-
-//   if (Object.keys(diff).length) return null;
-
-//   const htmlString = localStorage.getItem("report-html-" + report.id);
-
-//   return htmlString;
-// };
 
 const SendForm = ({
   children,
