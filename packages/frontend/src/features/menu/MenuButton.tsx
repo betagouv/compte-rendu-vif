@@ -45,7 +45,7 @@ export const MenuButton = ({ headerRef }: { headerRef: any }) => {
               <styled.div hideBelow="lg">
                 <Flex alignItems="center">
                   <Status className={css({ display: "flex", alignItems: "center", fontSize: "10px" })} />
-                  <Popover.Root positioning={{ placement: "bottom-end" }} onOpenChange={(e) => {}}>
+                  <Popover.Root positioning={{ placement: "bottom-end" }}>
                     <Popover.Trigger asChild>
                       <Button
                         className={css({ ml: "16px", mb: "0" })}
@@ -57,7 +57,7 @@ export const MenuButton = ({ headerRef }: { headerRef: any }) => {
                     </Popover.Trigger>
                     <Popover.Positioner>
                       <Popover.Content borderRadius="0">
-                        <MenuActions />
+                        <MenuActions menu={menu} />
                       </Popover.Content>
                     </Popover.Positioner>
                   </Popover.Root>
@@ -81,23 +81,22 @@ export const MenuButton = ({ headerRef }: { headerRef: any }) => {
 
 const menuModal = createModal({ isOpenedByDefault: false, id: "menu-modal-2" });
 
-const modalTitles: Record<NestedMenu, string> = {
-  main: "Mon compte",
-  help: "Assistance technique",
-  "clauses-departementales": "Clauses départementales",
-  "clauses-nationales": "Clauses nationales",
-  share: "Partage des CR",
+const modalContents: Record<NestedMenu, (props: ModalContentProps) => ReactNode> = {
+  main: (props) => <MenuActions menu={props.menu} />,
+  help: () => <HelpMenu />,
+  "clauses-departementales": (props) => <ClauseMenu isNational={false} {...props} />,
+  "clauses-nationales": (props) => <ClauseMenu isNational {...props} />,
+  share: () => <ShareReport />,
 };
 
-const modalContents: Record<NestedMenu, ReactNode> = {
-  main: <MenuActions />,
-  help: <HelpMenu />,
-  "clauses-departementales": <ClauseMenu isNational={false} />,
-  "clauses-nationales": <ClauseMenu isNational />,
-  share: <ShareReport />,
+export type ModalContentProps = {
+  menu: NestedMenu;
+  backButtonOnClick: () => void;
 };
 
 const MenuModal = ({ menu, isOpen, className }: { menu: NestedMenu | null; isOpen: boolean; className?: string }) => {
+  const Component = !!menu ? modalContents[menu] : null;
+
   return (
     <menuModal.Component
       title={""}
@@ -148,40 +147,20 @@ const MenuModal = ({ menu, isOpen, className }: { menu: NestedMenu | null; isOpe
         }),
       )}
     >
-      {menu === null ? null : (
+      {Component ? (
         <>
-          <MenuTitle
+          <Component
+            menu={menu!}
+            backButtonOnClick={() => (menu === "main" ? undefined : menuStore.send({ type: "setMenu", menu: "main" }))}
+          />
+          {/* <MenuTitle
             backButtonOnClick={menu === "main" ? undefined : () => menuStore.send({ type: "setMenu", menu: "main" })}
           >
             {modalTitles[menu]}
           </MenuTitle>
-          {modalContents[menu]}
+          {modalContents[menu]} */}
         </>
-      )}
+      ) : null}
     </menuModal.Component>
   );
 };
-
-const MenuTitle = ({ children, backButtonOnClick }: { children: ReactNode; backButtonOnClick?: () => void }) => (
-  <Flex justifyContent="space-between" alignItems="center" w="100%" h="40px">
-    <styled.div hideFrom="lg">
-      {backButtonOnClick ? (
-        // @ts-ignore
-        <Button priority="tertiary no outline" iconId="ri-arrow-left-s-line" onClick={backButtonOnClick}></Button>
-      ) : null}
-    </styled.div>
-    <styled.span pl={backButtonOnClick ? undefined : "16px"} fontSize="20px" fontWeight="bold" nowrap>
-      {children}
-    </styled.span>
-    <button
-      className="fr-btn--close fr-btn"
-      title="Fermer"
-      aria-controls="menu-modal-2"
-      type="button"
-      data-fr-js-modal-button="true"
-      onClick={() => menuStore.send({ type: "setMenu", menu: null })}
-    >
-      Fermer
-    </button>
-  </Flex>
-);

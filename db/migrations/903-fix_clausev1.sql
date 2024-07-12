@@ -1,0 +1,1 @@
+ALTER TABLE clause ADD COLUMN "hidden" BOOLEAN;

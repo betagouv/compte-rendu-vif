@@ -6,7 +6,7 @@ import { css } from "#styled-system/css";
 import { Center, Flex, Stack, styled } from "#styled-system/jsx";
 import Button from "@codegouvfr/react-dsfr/Button";
 import Input from "@codegouvfr/react-dsfr/Input";
-import type { Report, Udap } from "@cr-vif/electric-client/frontend";
+import type { Report, Service_instructeurs, Udap } from "@cr-vif/electric-client/frontend";
 import { ReportPDFDocument, ReportPDFDocumentProps, getReportHtmlString } from "@cr-vif/pdf";
 import { usePdf } from "@mikecousins/react-pdf";
 import { pdf } from "@react-pdf/renderer";
@@ -25,23 +25,64 @@ import { useChipOptions } from "../features/chips/useChipOptions";
 import { TextEditor } from "../features/text-editor/TextEditor";
 import { TextEditorContext, TextEditorContextProvider } from "../features/text-editor/TextEditorContext";
 import { TextEditorToolbar } from "../features/text-editor/TextEditorToolbar";
+import { getDiff } from "../components/SyncForm";
+import { v4 } from "uuid";
 
 type Mode = "edit" | "view" | "send" | "sent";
 
 export const PDF = () => {
-  const { udap } = useUser()!;
+  const user = useUser()!;
+  const { udap } = user;
   const chipOptions = useChipOptions();
 
   const { reportId } = Route.useParams();
   const { mode } = Route.useSearch();
 
   const navigate = useNavigate();
+  const generatePdfMutation = useMutation(
+    async ({ htmlString, recipients }: { htmlString: string; recipients: string }) => {
+      await api.post("/api/pdf/report", { body: { reportId, htmlString, recipients } });
+      // downloadFile(url);
+    },
+    {
+      onSuccess: () => {
+        navigate({ search: { mode: "sent" } });
+      },
+    },
+  );
+
   const toggleMode = () => {
     navigate({ search: { mode: mode === "edit" ? "view" : "edit" }, replace: true });
   };
 
   const reportQuery = useLiveQuery(db.report.liveUnique({ where: { id: reportId }, include: { user: true } }));
   const reportRef = useRef<Report | null>(null);
+
+  const snapshotQuery = useQuery({
+    queryKey: ["report-snapshot", reportId],
+    queryFn: async () => {
+      const snapshot = await db.pdf_snapshot.findFirst({ where: { report_id: reportId } });
+      if (!snapshot || !snapshot.report) return null;
+
+      try {
+        const snapshotReport = JSON.parse(snapshot.report);
+        const diff = getDiff(snapshotReport, {
+          ...reportQuery.results!,
+          createdAt: reportQuery.results!.createdAt?.toISOString(),
+          meetDate: reportQuery.results!.meetDate?.toISOString(),
+        });
+
+        console.log({ snapshotReport, report: reportQuery.results, diff });
+
+        if (Object.keys(diff).length) return null;
+
+        return snapshot.html!;
+      } catch (e) {
+        return null;
+      }
+    },
+    enabled: !!reportQuery.results,
+  });
 
   const serviceInstructeurQuery = useLiveQuery(
     db.service_instructeurs.liveUnique({ where: { id: reportQuery.results?.serviceInstructeur ?? undefined } }),
@@ -54,12 +95,43 @@ export const PDF = () => {
   }
 
   const report = reportRef.current;
+  const htmlString = snapshotQuery.data;
+
+  const saveSnapshotMutation = useMutation(
+    async ({ report, html }: { report: string; html: string }) => {
+      await db.pdf_snapshot.deleteMany({
+        where: { report_id: reportId, user_id: user.id },
+      });
+      await db.pdf_snapshot.create({
+        data: {
+          id: v4(),
+          report_id: reportId,
+          report,
+          html,
+          user_id: user.id,
+        },
+      });
+    },
+    { onSuccess: () => toggleMode() },
+  );
 
   const EditButtons = () => {
+    const { editor } = useContext(TextEditorContext);
+
     return (
       <Stack gap="5px" flexDir="row" alignItems="center">
         <TextEditorToolbar />
-        <Button type="button" iconId="ri-save-line" size="small" onClick={() => toggleMode()}>
+        <Button
+          type="button"
+          iconId="ri-save-line"
+          size="small"
+          onClick={() =>
+            saveSnapshotMutation.mutate({
+              report: JSON.stringify(report),
+              html: editor?.getHTML() ?? "",
+            })
+          }
+        >
           Enregistrer
         </Button>
       </Stack>
@@ -86,7 +158,7 @@ export const PDF = () => {
   const SendButtons = () => {
     return (
       <Center gap="10px" direction="row">
-        <Button iconId="ri-send-plane-fill" type="submit">
+        <Button iconId="ri-send-plane-fill" type="submit" disabled={generatePdfMutation.isLoading}>
           Envoyer
         </Button>
       </Center>
@@ -98,7 +170,7 @@ export const PDF = () => {
   if (mode === "sent") {
     return (
       <Center flexDir="column" w="100%" mt="24px">
-        <styled.img src={sentImage} alt="Courriel envoyé" width={{ base: "80px", lg: "120px" }} />
+        <styled.img src={sentImage} alt="Courriel envoyé" width={{ base: "80px", lg: "120px" }} mt="100px" />
         <styled.div mt="16px" color="text-title-blue-france" textAlign="center" fontSize={{ base: "18px", lg: "24px" }}>
           Votre compte-rendu a bien été envoyé !
         </styled.div>
@@ -116,59 +188,66 @@ export const PDF = () => {
   return (
     <styled.div w="100%" h="100%" bgColor={mode === "edit" ? "background-open-blue-france" : "unset"} overflowY="auto">
       <TextEditorContextProvider>
-        <SendForm reportId={reportId}>
-          <EditBanner
-            title={
-              <styled.div nowrap>
-                <styled.span fontWeight="bold">{getModeTitle(mode)}</styled.span>
-                {report?.title ? ` | ${report?.title}` : ""}
-              </styled.div>
-            }
-            reportId={report?.id}
-            buttons={buttons}
-          />
-          <Center w="100%" h="100%" maxH="100%" mt="10px" overflowY="auto">
-            <Stack w="800px" h="100%">
-              {report && chipOptions?.length && isServiceInstructeurLoaded ? (
-                <WithReport
-                  mode={mode}
-                  initialHtmlString={getReportHtmlString(
-                    report,
-                    chipOptions,
-                    udap as Udap,
-                    serviceInstructeur ?? undefined,
-                  )}
-                />
-              ) : null}
-            </Stack>
-          </Center>
-        </SendForm>
+        {report ? (
+          <SendForm generatePdf={generatePdfMutation.mutate} report={report}>
+            <EditBanner
+              title={
+                <styled.div nowrap>
+                  <styled.span fontWeight="bold">{getModeTitle(mode)}</styled.span>
+                  {report?.title ? ` | ${report?.title}` : ""}
+                </styled.div>
+              }
+              reportId={report?.id}
+              buttons={buttons}
+            />
+            <Center w="100%" h="100%" maxH="100%" mt="10px" overflowY="auto">
+              <Stack w="800px" h="100%">
+                {report && snapshotQuery.isSuccess && chipOptions?.length && isServiceInstructeurLoaded ? (
+                  <WithReport
+                    report={report}
+                    mode={mode}
+                    initialHtmlString={
+                      htmlString ??
+                      getReportHtmlString(report, chipOptions, udap as Udap, serviceInstructeur ?? undefined)
+                    }
+                  />
+                ) : null}
+              </Stack>
+            </Center>
+          </SendForm>
+        ) : null}
       </TextEditorContextProvider>
     </styled.div>
   );
 };
 
-const SendForm = ({ children, reportId }: PropsWithChildren<{ reportId: string }>) => {
+const SendForm = ({
+  children,
+  generatePdf,
+  report,
+}: PropsWithChildren<{ report: Report; generatePdf: (args: { htmlString: string; recipients: string }) => void }>) => {
   const { editor } = useContext(TextEditorContext);
 
   const form = useForm({ defaultValues: { recipients: "" } });
-  const navigate = useNavigate();
-  const generatePdfMutation = useMutation(
-    async ({ htmlString, recipients }: { htmlString: string; recipients: string }) => {
-      await api.post("/api/pdf/report", { body: { reportId, htmlString, recipients } });
-      // downloadFile(url);
+
+  useQuery({
+    queryKey: ["service-instructeur", report.serviceInstructeur, report.applicantEmail],
+    queryFn: async () => {
+      const recipents = await getBaseRecipients(report);
+      if (!form.getValues("recipients")) {
+        form.setValue("recipients", recipents ?? "");
+      }
+      return null;
     },
-    {
-      onSuccess: () => {
-        navigate({ search: { mode: "sent" } });
-      },
-    },
-  );
+  });
 
   const send = (values: { recipients: string }) => {
-    const recipients = values.recipients.split(/,|\s/).filter(Boolean).join(",");
+    const recipients = values.recipients
+      .split(/,|\s|;/)
+      .filter(Boolean)
+      .join(",");
 
-    generatePdfMutation.mutate({ htmlString: editor?.getHTML() ?? "", recipients });
+    generatePdf({ htmlString: editor?.getHTML() ?? "", recipients });
   };
 
   return (
@@ -176,6 +255,14 @@ const SendForm = ({ children, reportId }: PropsWithChildren<{ reportId: string }
       <FormProvider {...form}>{children}</FormProvider>
     </form>
   );
+};
+
+const getBaseRecipients = async (report: Report) => {
+  const serviceEmail = report.serviceInstructeur
+    ? (await db.service_instructeurs.findFirst({ where: { id: report.serviceInstructeur } }))?.email
+    : null;
+  const recipients = [serviceEmail, report.applicantEmail].filter(Boolean).join(", ");
+  return recipients;
 };
 
 const getModeTitle = (mode: Mode) => {
@@ -253,7 +340,15 @@ const EditBanner = ({ title, buttons, reportId }: { title: ReactNode; buttons: R
   );
 };
 
-export const WithReport = ({ initialHtmlString, mode }: { initialHtmlString: string; mode: Mode }) => {
+export const WithReport = ({
+  initialHtmlString,
+  mode,
+  report,
+}: {
+  initialHtmlString: string;
+  mode: Mode;
+  report: Report;
+}) => {
   const { editor } = useContext(TextEditorContext);
   const [htmlString] = useState(initialHtmlString);
 
@@ -342,6 +437,7 @@ const PdfCanvasPage = ({ file, page }: { file: string; page: number }) => {
 
   return (
     <styled.canvas
+      // @ts-ignore
       ref={canvasRef}
       width={{ base: "100%", lg: "800px" }}
       my="16px"

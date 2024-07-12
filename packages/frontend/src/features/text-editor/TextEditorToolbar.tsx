@@ -55,7 +55,7 @@ export const TextEditorToolbar = () => {
       ></Button>
       <Button
         className={toolbarButtonRecipe({
-          active: editor.isActive("strike"),
+          active: editor.isActive("underline"),
         })}
         size="small"
         priority="tertiary no outline"
@@ -63,7 +63,7 @@ export const TextEditorToolbar = () => {
         type="button"
         nativeButtonProps={{
           onPointerDown: (event) => event.preventDefault(),
-          onClick: () => editor.chain().focus().toggleStrike().run(),
+          onClick: () => editor.chain().focus().toggleUnderline().run(),
         }}
       ></Button>
 

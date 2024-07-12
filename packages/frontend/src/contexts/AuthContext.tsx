@@ -61,7 +61,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
       if (electric.isConnected) electric.disconnect();
 
       await electric.connect(data!.token);
-      await electric.db.clause.sync({ where: { udap_id: { in: ["ALL", data!.user!.udap_id!] } } });
+      await electric.db.clause_v2.sync({ where: { udap_id: { in: ["ALL", data!.user!.udap_id!] } } });
       await electric.db.user.sync({ where: { udap_id: data!.user!.udap_id } });
       await electric.db.report.sync({
         where: {
@@ -78,6 +78,11 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         },
         include: {
           user_delegation_createdByTouser: true,
+        },
+      });
+      await electric.db.pdf_snapshot.sync({
+        where: {
+          user_id: data!.user!.id,
         },
       });
 

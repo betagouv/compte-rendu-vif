@@ -16,6 +16,7 @@ import { ReportActions } from "./ReportActions";
 import { Pagination } from "@codegouvfr/react-dsfr/Pagination";
 import welcomeImage from "../assets/welcome.svg";
 import { useIsDesktop } from "../hooks/useIsDesktop";
+import { chunk, makeArrayOf } from "pastable";
 
 export type ReportWithUser = Report & { user?: { email: string; name: string } };
 
@@ -25,7 +26,7 @@ export const MyReports = () => {
   const user = useUser()!;
   const myReports = useLiveQuery(
     db.report.liveMany({
-      where: { AND: [{ disabled: false }, { OR: [{ createdBy: user.id }, { redactedById: user.id }] }] },
+      where: { disabled: false, OR: [{ createdBy: user.id }, { redactedById: user.id }] },
       take: 20,
       skip: page * 20,
       orderBy: { createdAt: "desc" },
@@ -37,8 +38,8 @@ export const MyReports = () => {
 
   const nbReports = useLiveQuery<[{ count: number }]>(
     db.liveRawQuery({
-      sql: `SELECT COUNT(*) AS count FROM report WHERE createdBy = ? AND disabled = FALSE`,
-      args: [user.id],
+      sql: `SELECT COUNT(*) AS count FROM report WHERE (createdBy = ? OR redactedById = ?) AND disabled = FALSE`,
+      args: [user.id, user.id],
     }),
   );
 
@@ -113,6 +114,8 @@ const NoReport = () => {
   );
 };
 
+const nbPerColumn = 10;
+
 export const ReportList = ({
   reports,
   page,
@@ -132,29 +135,32 @@ export const ReportList = ({
 }) => {
   const error = reports.length === 0 ? <NoReport /> : null;
 
+  const columns = chunk(reports, nbPerColumn);
+
   return (
-    <Stack w={{ base: "100%", lg: "816px" }}>
-      <Grid
-        className={css({
-          "& > *:nth-child(-n+10)": {
-            gridColumn: {
-              base: "0",
-              lg: "1",
-            },
-          },
-        })}
-        gap="8px 28px"
-        gridTemplateRows={{ base: "repeat(20, 1fr)", lg: "repeat(10, 1fr)" }}
-        gridAutoFlow="column"
-        w="100%"
-      >
-        {error
-          ? !hideEmpty && error
-          : reports.map((report, index) => (
-              <ReportListItem onClick={onClick} key={report.id} report={report} isLast={index === reports.length - 1} />
-            ))}
-      </Grid>
-      <Center w="100%">
+    <Stack w="100%" mt={{ base: "20px", lg: "30px" }}>
+      {!hideEmpty && error ? (
+        error
+      ) : (
+        <Stack gap={{ base: 0, lg: "126px" }} flexDir={{ base: "column", lg: "row" }} justifyContent="center">
+          {columns.slice(0, 2).map((reports, index) => {
+            return (
+              <Stack key={index} flexDir="column" w={{ base: "100%", lg: "400px" }}>
+                {reports.map((report, index) => (
+                  <ReportListItem
+                    onClick={onClick}
+                    key={report.id}
+                    report={report}
+                    isLast={index === reports.length - 1}
+                  />
+                ))}
+              </Stack>
+            );
+          })}
+          {columns.length === 1 ? <Stack w="400px" /> : null}
+        </Stack>
+      )}
+      <Center w="100%" mt="85px" mb="110px">
         {hidePagination || error ? null : (
           <Pagination
             count={count === 0 ? 0 : Math.ceil(count! / 20)}
@@ -190,7 +196,7 @@ const ReportListItem = ({
   };
 
   return (
-    <Flex position="relative" direction="column" w="100%" maxW="400px">
+    <Flex position="relative" direction="column" w="100%">
       <Link
         className={css({
           backgroundImage: "none",
@@ -216,7 +222,10 @@ const ReportListItem = ({
             </styled.span>
             <styled.span ml={"5px"}>{report.createdAt.toLocaleDateString()}</styled.span>
           </Flex>
-          <styled.span>Rédigé par {report.user?.name ?? ""}</styled.span>
+          <styled.span nowrap>{report.applicantName ? <>Pour {report.applicantName} </> : null}</styled.span>
+          <styled.span nowrap>
+            {report.applicantName ? "p" : "P"}ar {report.redactedBy ?? report.user?.name ?? ""}
+          </styled.span>
           <styled.div mt="8px">
             <ReportBadge status={report.pdf ? "published" : "draft"} />
           </styled.div>

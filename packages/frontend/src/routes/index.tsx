@@ -16,7 +16,6 @@ import { db } from "../db";
 import { AllReports, MyReports } from "../features/ReportList";
 
 const Index = () => {
-  // TODO: put this into an xstate/store
   const [search, setSearch] = useState("");
   const user = useUser()!;
 
@@ -26,7 +25,7 @@ const Index = () => {
       label: user.name,
       className: css({
         position: "absolute",
-        left: { base: "16px", lg: "calc((100vw - 828px) / 2 - 8px)" },
+        left: { base: "16px", lg: "calc((100vw - 400px * 2 - 126px) / 2)" },
       }),
     },
     {
@@ -51,6 +50,7 @@ const Index = () => {
           disabled: false,
           udap_id: user.udap.id,
           redactedBy: user.name,
+          redactedById: user.id,
         },
       }),
     onSuccess: (data) => {
@@ -137,7 +137,13 @@ const Index = () => {
             >
               <MyReports />
             </Tabs.Content>
-            <Tabs.Content value="udap">
+            <Tabs.Content
+              value="udap"
+              display="flex"
+              justifyContent={{ base: "center", lg: "center" }}
+              w="100%"
+              px="16px"
+            >
               <AllReports />
             </Tabs.Content>
           </Center>

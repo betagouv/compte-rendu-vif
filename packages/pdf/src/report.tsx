@@ -1,7 +1,7 @@
 import { Document, PDFViewer, Page } from "@react-pdf/renderer";
 import { Html } from "react-pdf-html";
 import React from "react";
-import type { Udap, Report, Clause, Service_instructeurs } from "@cr-vif/electric-client/frontend";
+import type { Udap, Report, Service_instructeurs, Clause_v2 } from "@cr-vif/electric-client/frontend";
 
 export const ReportPDFDocument = ({ udap, htmlString, images }: ReportPDFDocumentProps) => {
   return (
@@ -145,7 +145,7 @@ export type ReportWithUser = Report & { user?: { email: string; name: string } }
 
 export const getReportHtmlString = (
   report: ReportWithUser,
-  chipOptions: Clause[],
+  chipOptions: Clause_v2[],
   udap: Udap,
   serviceInstructeur?: Service_instructeurs,
 ) => {
@@ -172,7 +172,7 @@ export const getReportHtmlString = (
     </span><br/><br/>`
         : ""
     }
-      <strong>Votre interlocuteur : ${report.user?.name ?? ""}</strong><br/>
+      <strong>Votre interlocuteur : ${report.redactedBy ?? report.user?.name ?? ""}</strong><br/>
       Demandeur : ${report.applicantName ?? ""}<br/>
       Adresse du projet : ${report.applicantAddress ?? ""}<br/>
       Ref cadastrale : ${report.projectCadastralRef ?? ""}<br/>
@@ -190,14 +190,22 @@ export const getReportHtmlString = (
       report.precisions
         ? `<p>
       <strong>Précisions : </strong><br/>
-      <span>${report.precisions}</span>
+      <span>${report.precisions
+        ?.split("\n")
+        .map((s) => s.trim())
+        .join("<br/>")}</span>
     </p>`
         : ""
     }
 
     <p>
       <strong>Le projet pour rappel : </strong><br/>
-      ${report.projectDescription ?? ""}
+      ${
+        report.projectDescription
+          ?.split("\n")
+          .map((s) => s.trim())
+          .join("<br/>") ?? ""
+      }
     </p>
   
     <p>
@@ -242,7 +250,7 @@ const formatPhoneNumber = (phoneNumber: string) => {
   )} ${phoneNumber.slice(7, 9)}`;
 };
 
-const getMultipleChips = (chipOptions: Clause[], key: string, values: string) => {
+const getMultipleChips = (chipOptions: Clause_v2[], key: string, values: string) => {
   return values
     .split(",")
     .map((value) => {
