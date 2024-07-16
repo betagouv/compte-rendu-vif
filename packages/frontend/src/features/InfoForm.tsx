@@ -142,9 +142,18 @@ export const InfoForm = () => {
           <Input
             className={css({ flex: { base: "none", lg: 1 }, mb: { base: "40px", lg: undefined } })}
             disabled={isFormDisabled}
-            label="Adresse du projet*"
+            label="Commune du projet*"
+            // hintText="Ce champ apparaitra dans la liste des compte-rendus"
+            nativeInputProps={form.register("city")}
+          />
+          <Input
+            className={css({ flex: { base: "none", lg: 2 }, mb: { base: "40px", lg: undefined } })}
+            disabled={isFormDisabled}
+            label="Adresse du projet"
             nativeInputProps={form.register("applicantAddress")}
           />
+        </Stack>
+        <Stack gap={{ base: "0", lg: "16px" }} direction={{ base: "column", lg: "row" }}>
           <Box
             className={css({
               flex: {
@@ -155,13 +164,6 @@ export const InfoForm = () => {
           >
             <ServiceInstructeurSelect disabled={isFormDisabled} />
           </Box>
-          {/* <Input
-            className={css({ flex: { base: "none", lg: 1 } })}
-            label="Service instructeur*"
-            nativeInputProps={form.register("serviceInstructeur")}
-          /> */}
-        </Stack>
-        <Stack gap={{ base: "0", lg: "16px" }} direction={{ base: "column", lg: "row" }} mt="16px">
           <Input
             className={css({ flex: { base: "none", lg: 1 }, mb: "80px" })}
             disabled={isFormDisabled}

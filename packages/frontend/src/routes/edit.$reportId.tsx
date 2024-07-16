@@ -73,7 +73,7 @@ const WithReport = ({ report }: { report: Report }) => {
   });
 
   const user = useUser()!;
-  const isOwner = report.createdBy === user.id;
+  const isOwner = report.redactedById === user.id;
 
   const userDelegations = useLiveQuery(
     db.delegation.liveFirst({ where: { createdBy: report.createdBy, delegatedTo: user.id } }),
