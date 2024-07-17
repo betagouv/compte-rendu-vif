@@ -158,6 +158,8 @@ export const getReportHtmlString = (
 
   const meetDate = report.meetDate ? new Date(report.meetDate) : null;
 
+  const address = [report.applicantAddress, report.city].filter(Boolean).join(" ");
+
   return minifyHtml(`
     
     <p>
@@ -174,7 +176,7 @@ export const getReportHtmlString = (
     }
       <strong>Votre interlocuteur : ${report.redactedBy ?? report.user?.name ?? ""}</strong><br/>
       Demandeur : ${report.applicantName ?? ""}<br/>
-      Adresse du projet : ${report.applicantAddress ?? ""}<br/>
+      Adresse du projet : ${address ?? ""}<br/>
       Ref cadastrale : ${report.projectCadastralRef ?? ""}<br/>
     </p>
 

@@ -195,6 +195,12 @@ const ReportListItem = ({
     },
   };
 
+  const whereText = report.city ? `à ${report.city}` : null;
+  const forText = report.applicantName ? uppercaseFirstLetterIf(`pour ${report.applicantName}`, !whereText) : null;
+  const byText = uppercaseFirstLetterIf(`par ${report.redactedBy ?? report.user?.name ?? ""}`, !whereText && !forText);
+
+  const description = [whereText, forText, byText].filter(Boolean).join(" ");
+
   return (
     <Flex position="relative" direction="column" w="100%">
       <Link
@@ -220,12 +226,13 @@ const ReportListItem = ({
             <styled.span fontWeight="bold" nowrap>
               {report.title ?? "Sans titre"}
             </styled.span>
-            <styled.span ml={"5px"}>{report.createdAt.toLocaleDateString()}</styled.span>
+            {report.meetDate ? (
+              <styled.span ml={"5px"}>{new Date(report.meetDate).toLocaleDateString()}</styled.span>
+            ) : null}
           </Flex>
-          <styled.span nowrap>{report.applicantName ? <>Pour {report.applicantName} </> : null}</styled.span>
-          <styled.span nowrap>
-            {report.applicantName ? "p" : "P"}ar {report.redactedBy ?? report.user?.name ?? ""}
-          </styled.span>
+          <styled.div lineClamp={2}>
+            <styled.span>{description}</styled.span>
+          </styled.div>
           <styled.div mt="8px">
             <ReportBadge status={report.pdf ? "published" : "draft"} />
           </styled.div>
@@ -262,6 +269,10 @@ const ReportListItem = ({
       {isLast ? null : <Divider mt="16px" mb="8px" />}
     </Flex>
   );
+};
+
+const uppercaseFirstLetterIf = (str: string, condition: boolean) => {
+  return condition ? str.charAt(0).toUpperCase() + str.slice(1) : str;
 };
 
 const MenuDesktopPopover = ({ onClose, report }: MenuProps) => {

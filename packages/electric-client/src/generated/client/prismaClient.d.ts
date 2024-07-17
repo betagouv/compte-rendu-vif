@@ -118,6 +118,7 @@ export type ReportPayload<ExtArgs extends $Extensions.Args = $Extensions.Default
     udap_id: string | null
     redactedById: string | null
     applicantEmail: string | null
+    city: string | null
   }, ExtArgs["result"]["report"]>
   composites: {}
 }
@@ -5325,6 +5326,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     udap_id: string | null
     redactedById: string | null
     applicantEmail: string | null
+    city: string | null
   }
 
   export type ReportMaxAggregateOutputType = {
@@ -5349,6 +5351,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     udap_id: string | null
     redactedById: string | null
     applicantEmail: string | null
+    city: string | null
   }
 
   export type ReportCountAggregateOutputType = {
@@ -5373,6 +5376,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     udap_id: number
     redactedById: number
     applicantEmail: number
+    city: number
     _all: number
   }
 
@@ -5407,6 +5411,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     udap_id?: true
     redactedById?: true
     applicantEmail?: true
+    city?: true
   }
 
   export type ReportMaxAggregateInputType = {
@@ -5431,6 +5436,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     udap_id?: true
     redactedById?: true
     applicantEmail?: true
+    city?: true
   }
 
   export type ReportCountAggregateInputType = {
@@ -5455,6 +5461,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     udap_id?: true
     redactedById?: true
     applicantEmail?: true
+    city?: true
     _all?: true
   }
 
@@ -5567,6 +5574,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     udap_id: string | null
     redactedById: string | null
     applicantEmail: string | null
+    city: string | null
     _count: ReportCountAggregateOutputType | null
     _avg: ReportAvgAggregateOutputType | null
     _sum: ReportSumAggregateOutputType | null
@@ -5610,6 +5618,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     udap_id?: boolean
     redactedById?: boolean
     applicantEmail?: boolean
+    city?: boolean
     user?: boolean | UserArgs<ExtArgs>
   }, ExtArgs["result"]["report"]>
 
@@ -5635,6 +5644,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     udap_id?: boolean
     redactedById?: boolean
     applicantEmail?: boolean
+    city?: boolean
   }
 
   export type ReportInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
@@ -9384,7 +9394,8 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     disabled: 'disabled',
     udap_id: 'udap_id',
     redactedById: 'redactedById',
-    applicantEmail: 'applicantEmail'
+    applicantEmail: 'applicantEmail',
+    city: 'city'
   };
 
   export type ReportScalarFieldEnum = (typeof ReportScalarFieldEnum)[keyof typeof ReportScalarFieldEnum]
@@ -9662,6 +9673,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     udap_id?: StringNullableFilter | string | null
     redactedById?: StringNullableFilter | string | null
     applicantEmail?: StringNullableFilter | string | null
+    city?: StringNullableFilter | string | null
     user?: XOR<UserRelationFilter, UserWhereInput>
   }
 
@@ -9687,6 +9699,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     udap_id?: SortOrderInput | SortOrder
     redactedById?: SortOrderInput | SortOrder
     applicantEmail?: SortOrderInput | SortOrder
+    city?: SortOrderInput | SortOrder
     user?: UserOrderByWithRelationInput
   }
 
@@ -9716,6 +9729,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     udap_id?: SortOrderInput | SortOrder
     redactedById?: SortOrderInput | SortOrder
     applicantEmail?: SortOrderInput | SortOrder
+    city?: SortOrderInput | SortOrder
     _count?: ReportCountOrderByAggregateInput
     _avg?: ReportAvgOrderByAggregateInput
     _max?: ReportMaxOrderByAggregateInput
@@ -9748,6 +9762,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     udap_id?: StringNullableWithAggregatesFilter | string | null
     redactedById?: StringNullableWithAggregatesFilter | string | null
     applicantEmail?: StringNullableWithAggregatesFilter | string | null
+    city?: StringNullableWithAggregatesFilter | string | null
   }
 
   export type Service_instructeursWhereInput = {
@@ -10155,6 +10170,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     udap_id?: string | null
     redactedById?: string | null
     applicantEmail?: string | null
+    city?: string | null
     user: UserCreateNestedOneWithoutReportInput
   }
 
@@ -10180,6 +10196,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     udap_id?: string | null
     redactedById?: string | null
     applicantEmail?: string | null
+    city?: string | null
   }
 
   export type ReportUpdateInput = {
@@ -10203,6 +10220,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     udap_id?: NullableStringFieldUpdateOperationsInput | string | null
     redactedById?: NullableStringFieldUpdateOperationsInput | string | null
     applicantEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
     user?: UserUpdateOneRequiredWithoutReportNestedInput
   }
 
@@ -10228,6 +10246,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     udap_id?: NullableStringFieldUpdateOperationsInput | string | null
     redactedById?: NullableStringFieldUpdateOperationsInput | string | null
     applicantEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ReportCreateManyInput = {
@@ -10252,6 +10271,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     udap_id?: string | null
     redactedById?: string | null
     applicantEmail?: string | null
+    city?: string | null
   }
 
   export type ReportUpdateManyMutationInput = {
@@ -10275,6 +10295,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     udap_id?: NullableStringFieldUpdateOperationsInput | string | null
     redactedById?: NullableStringFieldUpdateOperationsInput | string | null
     applicantEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ReportUncheckedUpdateManyInput = {
@@ -10299,6 +10320,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     udap_id?: NullableStringFieldUpdateOperationsInput | string | null
     redactedById?: NullableStringFieldUpdateOperationsInput | string | null
     applicantEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type Service_instructeursCreateInput = {
@@ -10802,6 +10824,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     udap_id?: SortOrder
     redactedById?: SortOrder
     applicantEmail?: SortOrder
+    city?: SortOrder
   }
 
   export type ReportAvgOrderByAggregateInput = {
@@ -10830,6 +10853,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     udap_id?: SortOrder
     redactedById?: SortOrder
     applicantEmail?: SortOrder
+    city?: SortOrder
   }
 
   export type ReportMinOrderByAggregateInput = {
@@ -10854,6 +10878,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     udap_id?: SortOrder
     redactedById?: SortOrder
     applicantEmail?: SortOrder
+    city?: SortOrder
   }
 
   export type ReportSumOrderByAggregateInput = {
@@ -11746,6 +11771,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     udap_id?: string | null
     redactedById?: string | null
     applicantEmail?: string | null
+    city?: string | null
   }
 
   export type ReportUncheckedCreateWithoutUserInput = {
@@ -11769,6 +11795,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     udap_id?: string | null
     redactedById?: string | null
     applicantEmail?: string | null
+    city?: string | null
   }
 
   export type ReportCreateOrConnectWithoutUserInput = {
@@ -11899,6 +11926,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     udap_id?: StringNullableFilter | string | null
     redactedById?: StringNullableFilter | string | null
     applicantEmail?: StringNullableFilter | string | null
+    city?: StringNullableFilter | string | null
   }
 
   export type UdapUpsertWithoutUserInput = {
@@ -11993,6 +12021,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     udap_id?: string | null
     redactedById?: string | null
     applicantEmail?: string | null
+    city?: string | null
   }
 
   export type DelegationUpdateWithoutUser_delegation_createdByTouserInput = {
@@ -12040,6 +12069,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     udap_id?: NullableStringFieldUpdateOperationsInput | string | null
     redactedById?: NullableStringFieldUpdateOperationsInput | string | null
     applicantEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ReportUncheckedUpdateWithoutUserInput = {
@@ -12063,6 +12093,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     udap_id?: NullableStringFieldUpdateOperationsInput | string | null
     redactedById?: NullableStringFieldUpdateOperationsInput | string | null
     applicantEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ReportUncheckedUpdateManyWithoutReportInput = {
@@ -12086,6 +12117,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     udap_id?: NullableStringFieldUpdateOperationsInput | string | null
     redactedById?: NullableStringFieldUpdateOperationsInput | string | null
     applicantEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
 
