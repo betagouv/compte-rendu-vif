@@ -84,7 +84,7 @@ export const InfoForm = () => {
       <InputGroupWithTitle title="Le rendez-vous">
         <Stack gap={{ base: "0", lg: "16px" }} direction={{ base: "column", lg: "row" }}>
           <Select
-            className={css({ flex: { base: "none", lg: 1 }, mb: { base: "40px", lg: "16px" } })}
+            className={css({ flex: { base: "none", lg: 1 }, mb: { base: "24px", lg: "16px" } })}
             label="Rédigé par"
             disabled={isFormDisabled}
             nativeSelectProps={redactedByProps}
@@ -103,7 +103,7 @@ export const InfoForm = () => {
           />
         </Stack>
 
-        <styled.div mt="24px">
+        <styled.div mt="8px">
           <Input
             className={css({})}
             disabled={isFormDisabled}
@@ -112,7 +112,7 @@ export const InfoForm = () => {
           />
         </styled.div>
 
-        <Stack direction="row" mt="40px">
+        <Stack direction="row" mt="24px">
           <Input
             className={css({ flex: { base: "none", lg: 1 }, mb: { base: "16px", lg: undefined } })}
             disabled={isFormDisabled}
@@ -132,28 +132,42 @@ export const InfoForm = () => {
 
       <InputGroupWithTitle title="Le projet">
         <Input
-          className={css({ mb: { base: "40px", lg: undefined } })}
+          className={css({ mb: { base: "24px", lg: undefined } })}
           label="Description"
           disabled={isFormDisabled}
           textArea
           nativeTextAreaProps={{ ...form.register("projectDescription"), rows: 5 }}
         />
+
+        <Input
+          className={css({ flex: { base: "none", lg: 2 }, mt: "16px", mb: { base: "24px", lg: undefined } })}
+          disabled={isFormDisabled}
+          label="Adresse du projet"
+          nativeInputProps={form.register("applicantAddress")}
+        />
         <Stack gap={{ base: "0", lg: "16px" }} direction={{ base: "column", lg: "row" }}>
           <Input
-            className={css({ flex: { base: "none", lg: 1 }, mb: { base: "40px", lg: undefined } })}
+            className={css({ flex: { base: "none", lg: 1 }, mb: { base: "24px", lg: undefined } })}
             disabled={isFormDisabled}
-            label="Commune du projet*"
+            label="Code postal"
+            // hintText="Ce champ apparaitra dans la liste des compte-rendus"
+            nativeInputProps={form.register("zipCode")}
+          />
+          <Input
+            className={css({ flex: { base: "none", lg: 1 }, mb: { base: "24px", lg: undefined } })}
+            disabled={isFormDisabled}
+            label="Commune*"
             // hintText="Ce champ apparaitra dans la liste des compte-rendus"
             nativeInputProps={form.register("city")}
           />
-          <Input
-            className={css({ flex: { base: "none", lg: 2 }, mb: { base: "40px", lg: undefined } })}
-            disabled={isFormDisabled}
-            label="Adresse du projet"
-            nativeInputProps={form.register("applicantAddress")}
-          />
         </Stack>
         <Stack gap={{ base: "0", lg: "16px" }} direction={{ base: "column", lg: "row" }}>
+          <Input
+            className={css({ flex: { base: "none", lg: 1 }, mb: "16px" })}
+            disabled={isFormDisabled}
+            label="Référence cadastrale du projet"
+            nativeInputProps={form.register("projectCadastralRef")}
+          />
           <Box
             className={css({
               flex: {
@@ -164,14 +178,8 @@ export const InfoForm = () => {
           >
             <ServiceInstructeurSelect disabled={isFormDisabled} />
           </Box>
-          <Input
-            className={css({ flex: { base: "none", lg: 1 }, mb: "80px" })}
-            disabled={isFormDisabled}
-            label="Référence cadastrale du projet"
-            nativeInputProps={form.register("projectCadastralRef")}
-          />
-          <SpaceTypeChips className={css({ flex: { base: "none", lg: 1 } })} disabled={isFormDisabled} />
         </Stack>
+        <SpaceTypeChips className={css({ flex: { base: "none", lg: 1 } })} disabled={isFormDisabled} />
       </InputGroupWithTitle>
 
       <Center justifyContent={{ base: "center", lg: "flex-start" }} mt={{ base: "80px", lg: 0 }} mb="120px">
