@@ -314,7 +314,7 @@ const EditBanner = ({ title, buttons, reportId }: { title: ReactNode; buttons: R
               goBack();
             }}
             hideBelow="lg"
-            fontSize="15px"
+            fontSize="16px"
             whiteSpace="nowrap"
           >
             Retour
@@ -329,7 +329,7 @@ const EditBanner = ({ title, buttons, reportId }: { title: ReactNode; buttons: R
           hideFrom="lg"
           pr="8px"
           color="black"
-          fontSize="15px"
+          fontSize="16px"
         ></styled.a>
         <styled.div ml={{ base: "0", lg: "50px" }} nowrap>
           {title}
