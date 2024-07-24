@@ -6,13 +6,19 @@ import type { Udap, Report, Service_instructeurs, Clause_v2 } from "@cr-vif/elec
 export const ReportPDFDocument = ({ udap, htmlString, images }: ReportPDFDocumentProps) => {
   return (
     <Document>
-      <Page size="A4">
+      <Page
+        minPresenceAhead={20}
+        size="A4"
+        style={{
+          paddingTop: "32px",
+          paddingBottom: "32px",
+        }}
+      >
         <Html
           style={{
             fontSize: "12px",
-            paddingLeft: "20px",
-            paddingRight: "20px",
-            paddingTop: "20px",
+            paddingLeft: "32px",
+            paddingRight: "32px",
             whiteSpace: "pre-line",
           }}
         >{`
@@ -66,6 +72,7 @@ export const ReportPDFDocument = ({ udap, htmlString, images }: ReportPDFDocumen
           }
 
           .right-texts {
+            margin-top: 13px;
             display: flex;
             align-items: flex-end;
             flex-direction: column;
@@ -75,7 +82,7 @@ export const ReportPDFDocument = ({ udap, htmlString, images }: ReportPDFDocumen
 
           .right-texts > div {
             text-align: right;
-            font-size: 16px;
+            font-size: 14px;
             font-family: Helvetica-Bold;
           }
 
