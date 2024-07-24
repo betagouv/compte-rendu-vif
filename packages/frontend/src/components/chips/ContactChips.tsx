@@ -22,7 +22,7 @@ export const ContactChips = (props: FlexProps & { disabled?: boolean }) => {
       value={selected}
       {...props}
       onChange={(values) => form.setValue("contacts", values.join(","))}
-      label="Contacts"
+      label="Contacts utiles"
     />
   );
 };
