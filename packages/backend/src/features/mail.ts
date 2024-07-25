@@ -24,7 +24,7 @@ export const sendReportMail = ({
   return transporter.sendMail({
     from: ENV.EMAIL_EMITTER,
     to: recipients,
-    subject: "Compte-rendu UDAP : " + (report?.title ? ` : ${report.title}` : ""),
+    subject: "Compte-rendu UDAP" + (report?.title ? ` : ${report.title}` : ""),
     text: `Bonjour,
 vous trouverez ci-joint le compte-rendu de notre rendez-vous.
 
