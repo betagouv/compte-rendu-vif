@@ -237,7 +237,7 @@ export const getReportHtmlString = (
     </p>
   
     <p>
-        <strong>Pour aller plus loin</strong><br/>
+        <strong>Bonnes pratiques</strong><br/>
         ${furtherInfos.map((furtherInfo) => `<span>${furtherInfo}</span>`).join("<br/><br/>")}
     </p>
   

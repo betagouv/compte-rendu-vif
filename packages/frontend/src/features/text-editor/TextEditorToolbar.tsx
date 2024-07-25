@@ -1,9 +1,10 @@
 import { cva } from "#styled-system/css";
-import { HStack, Stack } from "#styled-system/jsx";
+import { Flex, HStack, Stack, styled } from "#styled-system/jsx";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { useContext, useState } from "react";
 import { ColorPicker } from "../../components/ColorPicker";
 import { TextEditorContext } from "./TextEditorContext";
+import { Popover } from "#components/Popover";
 
 const toolbarButtonRecipe = cva({
   base: {
@@ -86,74 +87,57 @@ const ColorInput = () => {
   };
 
   return (
-    <ColorPicker.Root
-      open={isOpen}
-      onOpenChange={({ open }) => setIsOpen(open)}
-      value={currentValue}
-      onValueChangeEnd={(e) => editor.chain().focus().setColor(e.value.toString("hex")).run()}
-      closeOnSelect={false}
-    >
-      {() => (
-        <>
-          <ColorPicker.Control>
-            <ColorPicker.Trigger asChild>
-              <Button
-                className={toolbarButtonRecipe()}
-                size="small"
-                priority="tertiary no outline"
-                iconId="ri-palette-line"
-                type="button"
-                nativeButtonProps={{
-                  onPointerDown: (event) => event.preventDefault(),
-                }}
-              ></Button>
-            </ColorPicker.Trigger>
-          </ColorPicker.Control>
-          <ColorPicker.Positioner>
-            <ColorPicker.Content w="200px">
-              <Stack gap="3">
-                <ColorPicker.Area>
-                  <ColorPicker.AreaBackground />
-                  <ColorPicker.AreaThumb />
-                </ColorPicker.Area>
-                <HStack gap="3">
-                  <Stack flex="1" gap="2">
-                    <ColorPicker.ChannelSlider channel="hue">
-                      <ColorPicker.ChannelSliderTrack />
-                      <ColorPicker.ChannelSliderThumb />
-                    </ColorPicker.ChannelSlider>
-                  </Stack>
-                </HStack>
-                {/* <Stack gap="1.5">
-                    <Text size="xs" color="fg.default" fontWeight="medium">
-                      Saved Colors
-                    </Text>
-                    <ColorPicker.SwatchGroup>
-                      {presets.map((color, id) => (
-                        <ColorPicker.SwatchTrigger key={id} value={color}>
-                          <ColorPicker.Swatch value={color} />
-                        </ColorPicker.SwatchTrigger>
-                      ))}
-                    </ColorPicker.SwatchGroup>
-                  </Stack> */}
-              </Stack>
-            </ColorPicker.Content>
-          </ColorPicker.Positioner>
-        </>
-      )}
-    </ColorPicker.Root>
-    // <input
-    //   id="text-color"
-    //   // className={css({ visibility: "hidden", width: "0px", margin: 0, padding: 0 })}
-    //   type="color"
-    //   onInput={(event) =>
-    //     editor
-    //       .chain()
-    //       .focus()
-    //       .setColor((event.target as any).value)
-    //       .run()
-    //   }
-    //   value={editor.getAttributes("textStyle").color ?? "#000000"}
-    // />
+    <Popover.Root open={isOpen} onOpenChange={({ open }) => setIsOpen(open)}>
+      <Popover.Trigger>
+        <Button
+          className={toolbarButtonRecipe({})}
+          size="small"
+          priority="tertiary no outline"
+          iconId="ri-palette-line"
+          type="button"
+          nativeButtonProps={{
+            onPointerDown: (event) => event.preventDefault(),
+          }}
+        ></Button>
+      </Popover.Trigger>
+      <Popover.Positioner>
+        <Popover.Content>
+          <Stack p="8px">
+            <Stack gap="8px" flexDir="row" justifyContent="space-around" w="100%">
+              <ColorButton value={currentValue} color="black" />
+              <ColorButton value={currentValue} color="#000091" />
+              <ColorButton value={currentValue} color="#E1000F" />
+            </Stack>
+            <Stack gap="8px" flexDir="row" justifyContent="space-around" w="100%">
+              <ColorButton value={currentValue} color="#6E445A" />
+              <ColorButton value={currentValue} color="#2B7758" />
+              <ColorButton value={currentValue} color="#465F9D" />
+            </Stack>
+          </Stack>
+        </Popover.Content>
+      </Popover.Positioner>
+    </Popover.Root>
+  );
+};
+
+const ColorButton = ({ color, value }: { color: string; value: string }) => {
+  const editor = useContext(TextEditorContext).editor!;
+
+  const isSelected = value === color;
+
+  return (
+    <styled.button
+      type="button"
+      onClick={() => {
+        editor.chain().focus().setColor(color).run();
+      }}
+      style={{
+        backgroundColor: color,
+      }}
+      border={isSelected ? "1px solid black" : undefined}
+      borderRadius="50%"
+      w="30px"
+      h="30px"
+    ></styled.button>
   );
 };

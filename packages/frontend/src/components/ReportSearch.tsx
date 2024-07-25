@@ -88,8 +88,8 @@ export const SearchResults = ({ search, hideEmpty }: { search: string; hideEmpty
   const otherReports = results.filter((report) => report.createdBy !== user.id);
 
   return (
-    <Center>
-      <Stack flexDir={{ base: "column", lg: "row" }} mt="24px">
+    <Center w="100%">
+      <Stack flexDir={{ base: "column", lg: "row" }} w="100%" mt="24px">
         {myReports.length ? (
           <Stack maxW={{ base: "100%", lg: "400px" }}>
             <styled.div mb="16px" fontSize="20px" fontWeight="bold">
@@ -113,11 +113,11 @@ export const SearchResults = ({ search, hideEmpty }: { search: string; hideEmpty
 
 const NoResults = () => {
   return (
-    <Center flexDir="column" h="100%" mt="100px">
+    <Center flexDir="column" h="100%" mt="100px" mb="24px">
       <styled.span fontSize="16px" fontWeight="bold">
         Aucun résultat
       </styled.span>
-      <img src={noResultsImage} alt="Aucun résultat" />
+      <styled.img src={noResultsImage} alt="Aucun résultat" />
     </Center>
   );
 };

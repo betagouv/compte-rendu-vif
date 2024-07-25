@@ -56,7 +56,7 @@ export function SyncFormBanner({ form, baseObject }: { form: UseFormReturn<Repor
               goBack();
             }}
             hideBelow="lg"
-            fontSize="15px"
+            fontSize="16px"
           >
             Retour
           </styled.a>
@@ -137,6 +137,7 @@ export const Status = ({ status, className }: { status?: SyncFormStatus; classNa
   return (
     <styled.div
       className={className}
+      display="flex"
       borderRadius="4px"
       height="20px"
       px="6px"
@@ -146,7 +147,19 @@ export const Status = ({ status, className }: { status?: SyncFormStatus; classNa
       fontWeight="500"
       bgColor={messagesColor[formStatus]}
     >
-      <styled.span className={fr.cx("fr-icon-wifi-line", "fr-icon--sm")} aria-hidden={true} mr="6px" mb="2px" />
+      <styled.span
+        className={fr.cx("fr-icon-wifi-line")}
+        aria-hidden={true}
+        height="24px"
+        {...{
+          "&::before": {
+            width: "16px !important",
+            height: "16px !important",
+            verticalAlign: "middle",
+          },
+        }}
+        mr="6px"
+      />
       {messages[formStatus]}
     </styled.div>
   );

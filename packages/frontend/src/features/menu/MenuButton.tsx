@@ -4,7 +4,7 @@ import { css, cx } from "#styled-system/css";
 import { Flex, styled } from "#styled-system/jsx";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useRef } from "react";
 import { useIsModalOpen } from "@codegouvfr/react-dsfr/Modal/useIsModalOpen";
 
 import { useSelector } from "@xstate/store/react";
@@ -16,6 +16,8 @@ import { MenuActions } from "./MenuActions";
 import { menuStore } from "./menuStore";
 import { ShareReport } from "./Share";
 
+import { useClickAway } from "react-use";
+
 const nestedMenus = ["main", "help", "clauses-nationales", "clauses-departementales", "share"] as const;
 export type NestedMenu = (typeof nestedMenus)[number];
 
@@ -26,7 +28,9 @@ export const MenuButton = ({ headerRef }: { headerRef: any }) => {
   const isOpen = isDesktop ? !!menu && menu !== "main" : !!menu;
 
   useIsModalOpen(menuModal, {
-    onConceal: () => menuStore.send({ type: "setMenu", menu: null }),
+    onConceal: () => {
+      menuStore.send({ type: "setMenu", menu: null });
+    },
   });
 
   return (
