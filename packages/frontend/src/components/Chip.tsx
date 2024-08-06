@@ -7,7 +7,7 @@ export const ChipGroup = ({
   options,
   isMulti,
   label,
-  canBeEmpty,
+  canBeEmpty = true,
   value,
   onChange,
   className,
