@@ -86,6 +86,7 @@ const WithReport = ({ report }: { report: Report }) => {
 
   const setTab = (tab: string) => {
     navigate({ search: { tab }, replace: true });
+    document.getElementById("root")!.scrollTo(0, 0);
   };
 
   const options = [

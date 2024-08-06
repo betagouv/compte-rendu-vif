@@ -186,7 +186,12 @@ export const InfoForm = () => {
         <Button
           type="button"
           iconId="ri-arrow-right-line"
-          nativeButtonProps={{ type: "button", onClick: () => tab.setValue("notes") }}
+          nativeButtonProps={{
+            type: "button",
+            onClick: () => {
+              tab.setValue("notes");
+            },
+          }}
         >
           Rédiger le bilan
         </Button>
