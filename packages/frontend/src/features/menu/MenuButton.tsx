@@ -93,10 +93,10 @@ const menuModal = createModal({ isOpenedByDefault: false, id: "menu-modal-2" });
 
 const modalContents: Record<NestedMenu, (props: ModalContentProps) => ReactNode> = {
   main: (props) => <MenuActions menu={props.menu} />,
-  help: () => <HelpMenu />,
+  help: (props) => <HelpMenu {...props} />,
   "clauses-departementales": (props) => <ClauseMenu isNational={false} {...props} />,
   "clauses-nationales": (props) => <ClauseMenu isNational {...props} />,
-  share: () => <ShareReport />,
+  share: (props) => <ShareReport {...props} />,
 };
 
 export type ModalContentProps = {
@@ -136,6 +136,9 @@ const MenuModal = ({ menu, isOpen, className }: { menu: NestedMenu | null; isOpe
             height: "100%",
             maxHeight: "100%",
             p: 0,
+          },
+          "& .fr-modal__title": {
+            display: "none",
           },
           "& .fr-modal__body": {
             width: { base: "100%", lg: "800px" },

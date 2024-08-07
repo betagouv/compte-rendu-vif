@@ -8,7 +8,7 @@ import { useMutation } from "@tanstack/react-query";
 import { css } from "#styled-system/css";
 import { MenuTitle } from "./MenuTitle";
 
-export const ShareReport = () => {
+export const ShareReport = ({ backButtonOnClick }: { backButtonOnClick: () => void }) => {
   const user = useUser()!;
 
   const coworkersQuery = useLiveQuery(
@@ -41,7 +41,7 @@ export const ShareReport = () => {
 
   return (
     <>
-      <MenuTitle>Partage des CR</MenuTitle>
+      <MenuTitle backButtonOnClick={backButtonOnClick}>Partage des CR</MenuTitle>
       <Divider height="2px" my={{ base: "27px", lg: "44px" }} color="#C1C1FB" />
 
       <Stack w="100%">
