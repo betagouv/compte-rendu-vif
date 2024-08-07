@@ -186,7 +186,7 @@ export const PDF = () => {
   }
 
   return (
-    <styled.div w="100%" h="100%" bgColor={mode === "edit" ? "background-open-blue-france" : "unset"} overflowY="auto">
+    <styled.div w="100%" h="100%" bgColor={mode === "edit" ? "background-open-blue-france" : "unset"}>
       <TextEditorContextProvider>
         {report ? (
           <SendForm generatePdf={generatePdfMutation.mutate} report={report}>
@@ -295,7 +295,13 @@ const EditBanner = ({ title, buttons, reportId }: { title: ReactNode; buttons: R
       : router.history.back();
 
   return (
-    <Banner status="saved" flexDir="row">
+    <Banner
+      status="saved"
+      zIndex={3}
+      position={{ base: "sticky", lg: "unset" }}
+      top={{ base: "-1px", lg: "unset" }}
+      flexDir="row"
+    >
       <Flex
         direction="row"
         justifyContent={"flex-start"}
