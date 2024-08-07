@@ -122,7 +122,7 @@ const electricStatusToStatus: Record<ElectricStatus, SyncFormStatus> = {
 
 export const useStatus = (overrideStatus?: SyncFormStatus) => {
   const electricStatus = useElectricStatus();
-  if (electricStatus === "error") return "offline";
+  if (electricStatus === "error" || overrideStatus === "offline") return "offline";
 
   const formStatus = electricStatusToStatus[electricStatus];
 
@@ -132,7 +132,9 @@ export const useStatus = (overrideStatus?: SyncFormStatus) => {
 };
 
 export const Status = ({ status, className }: { status?: SyncFormStatus; className?: string }) => {
-  const formStatus = useStatus(status === "pending" ? "pending" : undefined);
+  const formStatus = useStatus(status);
+
+  console.log(status, formStatus);
 
   return (
     <styled.div

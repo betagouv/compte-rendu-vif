@@ -16,7 +16,7 @@ import { MenuActions } from "./MenuActions";
 import { menuStore } from "./menuStore";
 import { ShareReport } from "./Share";
 
-import { useClickAway } from "react-use";
+import { useClickAway, useNetworkState } from "react-use";
 
 const nestedMenus = ["main", "help", "clauses-nationales", "clauses-departementales", "share"] as const;
 export type NestedMenu = (typeof nestedMenus)[number];
@@ -24,6 +24,9 @@ export type NestedMenu = (typeof nestedMenus)[number];
 export const MenuButton = ({ headerRef }: { headerRef: any }) => {
   const menu = useSelector(menuStore, (state) => state.context.menu);
   const isDesktop = useIsDesktop();
+
+  const { online } = useNetworkState();
+  const status = !online ? "offline" : "saved";
 
   const isOpen = isDesktop ? !!menu && menu !== "main" : !!menu;
 
@@ -48,7 +51,10 @@ export const MenuButton = ({ headerRef }: { headerRef: any }) => {
             >
               <styled.div hideBelow="lg">
                 <Flex alignItems="center">
-                  <Status className={css({ display: "flex", alignItems: "center", fontSize: "10px" })} />
+                  <Status
+                    className={css({ display: "flex", alignItems: "center", fontSize: "10px" })}
+                    status={status}
+                  />
                   <Popover.Root positioning={{ placement: "bottom-end" }}>
                     <Popover.Trigger asChild>
                       <Button
