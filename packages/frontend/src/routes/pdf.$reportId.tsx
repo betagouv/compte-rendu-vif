@@ -298,7 +298,7 @@ const EditBanner = ({ title, buttons, reportId }: { title: ReactNode; buttons: R
     <Banner status="saved" flexDir="row">
       <Flex
         direction="row"
-        justifyContent={"space-between"}
+        justifyContent={"flex-start"}
         alignItems="center"
         w={{ base: "100%", lg: "1000px" }}
         maxW={{ base: "100%", lg: "1000px" }}
@@ -331,7 +331,7 @@ const EditBanner = ({ title, buttons, reportId }: { title: ReactNode; buttons: R
           color="black"
           fontSize="16px"
         ></styled.a>
-        <styled.div ml={{ base: "0", lg: "50px" }} nowrap>
+        <styled.div flex={1} ml={{ base: "0", lg: "32px" }} pr="8px" nowrap>
           {title}
         </styled.div>
         <Flex>{buttons}</Flex>

@@ -134,8 +134,6 @@ export const useStatus = (overrideStatus?: SyncFormStatus) => {
 export const Status = ({ status, className }: { status?: SyncFormStatus; className?: string }) => {
   const formStatus = useStatus(status);
 
-  console.log(status, formStatus);
-
   return (
     <styled.div
       className={className}
