@@ -191,8 +191,6 @@ export const getReportHtmlString = (
       Ref cadastrale : ${report.projectCadastralRef ?? ""}<br/>
     </p>
 
-    <span class="link">https://stackoverflow.com/questions/8753296/how-to-prevent-line-break-at-hyphens-in-all-browsers</span>
-
     <p>
       <strong>Objet de la demande : ${report.title ?? ""}</strong>
     </p>
