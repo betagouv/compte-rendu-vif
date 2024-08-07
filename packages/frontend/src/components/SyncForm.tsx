@@ -57,6 +57,14 @@ export function SyncFormBanner({ form, baseObject }: { form: UseFormReturn<Repor
             }}
             hideBelow="lg"
             fontSize="16px"
+            {...{
+              "&::before": {
+                width: "16px !important",
+                height: "16px !important",
+                mb: "4px !important",
+                mr: "4px",
+              },
+            }}
           >
             Retour
           </styled.a>

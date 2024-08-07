@@ -322,6 +322,14 @@ const EditBanner = ({ title, buttons, reportId }: { title: ReactNode; buttons: R
             hideBelow="lg"
             fontSize="16px"
             whiteSpace="nowrap"
+            {...{
+              "&::before": {
+                width: "16px !important",
+                height: "16px !important",
+                mb: "4px !important",
+                mr: "4px",
+              },
+            }}
           >
             Retour
           </styled.a>
