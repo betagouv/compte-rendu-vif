@@ -7,7 +7,7 @@ export const ChipGroup = ({
   options,
   isMulti,
   label,
-  canBeEmpty,
+  canBeEmpty = true,
   value,
   onChange,
   className,
@@ -76,11 +76,10 @@ export const Chip = ({
   isChecked?: boolean;
   onCheckChange: (value: boolean) => void;
 }) => {
-  const styles = chip({ isChecked });
-
   return (
     <Tag
-      className={styles}
+      // className={styles}
+      pressed={isChecked}
       nativeButtonProps={{
         onClick: () => onCheckChange(!isChecked),
         type: "button",
@@ -90,18 +89,3 @@ export const Chip = ({
     </Tag>
   );
 };
-
-const chip = cva({
-  base: {
-    color: "background-action-high-blue-france",
-    bgColor: "background-action-low-blue-france",
-  },
-  variants: {
-    isChecked: {
-      true: {
-        color: "background-action-low-blue-france",
-        bgColor: "background-action-high-blue-france",
-      },
-    },
-  },
-});

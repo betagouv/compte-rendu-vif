@@ -1,7 +1,12 @@
-import { Document, PDFViewer, Page } from "@react-pdf/renderer";
+import { Document, Font, Page } from "@react-pdf/renderer";
 import { Html } from "react-pdf-html";
 import React from "react";
 import type { Udap, Report, Service_instructeurs, Clause_v2 } from "@cr-vif/electric-client/frontend";
+
+Font.registerHyphenationCallback((word) => {
+  console.log(word);
+  return [word];
+});
 
 export const ReportPDFDocument = ({ udap, htmlString, images }: ReportPDFDocumentProps) => {
   return (
@@ -92,7 +97,6 @@ export const ReportPDFDocument = ({ udap, htmlString, images }: ReportPDFDocumen
             justify-content: flex-end;
             align-items: flex-end;
           }
-
 
         </style>
             <div class="header">
@@ -186,6 +190,8 @@ export const getReportHtmlString = (
       Adresse du projet : ${address ?? ""}<br/>
       Ref cadastrale : ${report.projectCadastralRef ?? ""}<br/>
     </p>
+
+    <span class="link">https://stackoverflow.com/questions/8753296/how-to-prevent-line-break-at-hyphens-in-all-browsers</span>
 
     <p>
       <strong>Objet de la demande : ${report.title ?? ""}</strong>
