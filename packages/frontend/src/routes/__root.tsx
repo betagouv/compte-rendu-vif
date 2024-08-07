@@ -108,6 +108,12 @@ const Layout = ({ children }: PropsWithChildren) => {
                 }
               : {},
           }),
+          logo: css({
+            "&::after": {
+              backgroundPosition: "0 0 !important",
+            },
+          }),
+          service: css({ display: { base: "none", lg: "unset" } }),
           toolsLinks: css({
             h: "100%",
           }),
