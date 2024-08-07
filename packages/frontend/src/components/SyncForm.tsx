@@ -192,9 +192,17 @@ const syncFormBanner = sva({
       justifyContent: "flex-end",
       w: "100%",
       maxW: { base: "unset", sm: "800px" },
+      h: { base: "56px", lg: "unset" },
       px: "15px",
     },
-    back: { ml: "-10px", color: "black", _hover: { bgColor: "transparent" } },
+    back: {
+      ml: "-10px",
+      color: "black",
+      _hover: { bgColor: "transparent" },
+      "&::before": {
+        width: "24px !important",
+      },
+    },
     label: {},
     input: {
       w: { base: "100%", lg: "100%" },

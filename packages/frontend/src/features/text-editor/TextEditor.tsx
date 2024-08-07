@@ -30,8 +30,9 @@ export const textEditorClassName = css({
   minH: "160px",
   "& > div": {
     outline: "none",
+    borderRadius: "0 !important",
     roundedTop: "md",
-    borderWidth: "1px",
+    borderWidth: "0px",
     h: "100%",
     minH: "160px",
     maxHeight: "100%",

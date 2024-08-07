@@ -42,7 +42,7 @@ export const ShareReport = ({ backButtonOnClick }: { backButtonOnClick: () => vo
   return (
     <>
       <MenuTitle backButtonOnClick={backButtonOnClick}>Partage des CR</MenuTitle>
-      <Divider height="2px" my={{ base: "27px", lg: "44px" }} color="#C1C1FB" />
+      <Divider hideFrom="lg" height="2px" my={{ base: "20px", lg: "44px" }} color="#C1C1FB" />
 
       <Stack w="100%">
         <styled.div>Ces personnes peuvent créer, modifier et supprimer vos CR : </styled.div>

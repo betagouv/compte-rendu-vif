@@ -262,7 +262,7 @@ const ClauseList = ({ clauses, isEditing }: { clauses: ClauseWithIndex[]; isEdit
     <Stack>
       {Object.entries(groupedByKey).map(([key, clauses], index) => (
         <Fragment key={key}>
-          <Stack gap="24px">
+          <Stack gap="20px">
             <styled.span fontSize="20px" fontWeight="normal">
               {(clauseNameMap as any)[key] ?? key}
             </styled.span>
@@ -270,7 +270,9 @@ const ClauseList = ({ clauses, isEditing }: { clauses: ClauseWithIndex[]; isEdit
               <DivOrTextarea key={clause.id} clause={clause} isEditing={isEditing ?? false} />
             ))}
           </Stack>
-          {index < Object.keys(groupedByKey).length - 1 && <Divider height="1px" my="16px" color="#C1C1FB" />}
+          {index < Object.keys(groupedByKey).length - 1 && (
+            <Divider height="1px" my={{ base: "16px", lg: "30px" }} color="#C1C1FB" />
+          )}
         </Fragment>
       ))}
     </Stack>

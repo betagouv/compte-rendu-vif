@@ -23,7 +23,7 @@ export const MenuTitle = ({
       justifyContent="space-between"
       alignItems="center"
       w="100%"
-      py="16px"
+      py={{ base: "16px", lg: "30px" }}
       // mt={{ base: "0", lg: "48px" }}
       // mb={{ base: "16px", lg: "48px" }}
       bgColor="white"
@@ -59,7 +59,7 @@ export const MenuTitle = ({
     </Flex>
     {alert ? alert : null}
     {!hideDivider ? (
-      <styled.div mb="24px">
+      <styled.div hideFrom="lg" mb="24px">
         {buttons ? (
           <styled.span hideFrom={"lg"} fontSize="20px" fontWeight="bold" nowrap>
             {children}
