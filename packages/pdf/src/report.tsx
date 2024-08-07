@@ -4,7 +4,6 @@ import React from "react";
 import type { Udap, Report, Service_instructeurs, Clause_v2 } from "@cr-vif/electric-client/frontend";
 
 Font.registerHyphenationCallback((word) => {
-  console.log(word);
   return [word];
 });
 
@@ -15,13 +14,13 @@ export const ReportPDFDocument = ({ udap, htmlString, images }: ReportPDFDocumen
         minPresenceAhead={20}
         size="A4"
         style={{
-          paddingTop: "32px",
+          paddingTop: "48px",
           paddingBottom: "32px",
         }}
       >
         <Html
           style={{
-            fontSize: "12px",
+            fontSize: "10px",
             paddingLeft: "32px",
             paddingRight: "32px",
             whiteSpace: "pre-line",
@@ -56,6 +55,7 @@ export const ReportPDFDocument = ({ udap, htmlString, images }: ReportPDFDocumen
 
           .header {
             display: flex;
+            margin-top: -16px;
             flex-direction: row;
             width: 100%;
             align-items: flex-start;
@@ -173,10 +173,10 @@ export const getReportHtmlString = (
 
   return minifyHtml(`
     
-    <p>
+    <p class="meeting-date">
     ${
       meetDate
-        ? `<span style='text-align: right;'>
+        ? `<span>
       Suite au rendez-vous du ${meetDate?.toLocaleDateString("fr-FR", {
         year: "numeric",
         month: "long",
