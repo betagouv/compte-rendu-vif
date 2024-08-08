@@ -3,7 +3,7 @@ import Button from "@codegouvfr/react-dsfr/Button";
 import { electric } from "../../db";
 import { MenuTitle } from "./MenuTitle";
 
-export const HelpMenu = () => {
+export const HelpMenu = ({ backButtonOnClick }: { backButtonOnClick: () => void }) => {
   const deleteLocalData = () => {
     if (electric.isConnected) electric.disconnect();
     localStorage.clear();
@@ -12,7 +12,7 @@ export const HelpMenu = () => {
   };
   return (
     <>
-      <MenuTitle>Assistance technique</MenuTitle>
+      <MenuTitle backButtonOnClick={backButtonOnClick}>Assistance technique</MenuTitle>
       <Divider height="2px" my={{ base: "27px", lg: "44px" }} color="#C1C1FB" />
       <Stack>
         <styled.div mb="10px">

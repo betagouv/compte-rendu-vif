@@ -186,7 +186,7 @@ export const PDF = () => {
   }
 
   return (
-    <styled.div w="100%" h="100%" bgColor={mode === "edit" ? "background-open-blue-france" : "unset"} overflowY="auto">
+    <styled.div w="100%" h="100%" bgColor={mode === "edit" ? "background-open-blue-france" : "unset"}>
       <TextEditorContextProvider>
         {report ? (
           <SendForm generatePdf={generatePdfMutation.mutate} report={report}>
@@ -295,10 +295,16 @@ const EditBanner = ({ title, buttons, reportId }: { title: ReactNode; buttons: R
       : router.history.back();
 
   return (
-    <Banner status="saved" flexDir="row">
+    <Banner
+      status="saved"
+      zIndex={3}
+      position={{ base: "sticky", lg: "unset" }}
+      top={{ base: "-1px", lg: "unset" }}
+      flexDir="row"
+    >
       <Flex
         direction="row"
-        justifyContent={"space-between"}
+        justifyContent={"flex-start"}
         alignItems="center"
         w={{ base: "100%", lg: "1000px" }}
         maxW={{ base: "100%", lg: "1000px" }}
@@ -316,6 +322,14 @@ const EditBanner = ({ title, buttons, reportId }: { title: ReactNode; buttons: R
             hideBelow="lg"
             fontSize="16px"
             whiteSpace="nowrap"
+            {...{
+              "&::before": {
+                width: "16px !important",
+                height: "16px !important",
+                mb: "4px !important",
+                mr: "4px",
+              },
+            }}
           >
             Retour
           </styled.a>
@@ -331,7 +345,7 @@ const EditBanner = ({ title, buttons, reportId }: { title: ReactNode; buttons: R
           color="black"
           fontSize="16px"
         ></styled.a>
-        <styled.div ml={{ base: "0", lg: "50px" }} nowrap>
+        <styled.div flex={1} ml={{ base: "0", lg: "32px" }} pr="8px" nowrap>
           {title}
         </styled.div>
         <Flex>{buttons}</Flex>

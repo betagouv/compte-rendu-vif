@@ -8,7 +8,7 @@ import { useMutation } from "@tanstack/react-query";
 import { css } from "#styled-system/css";
 import { MenuTitle } from "./MenuTitle";
 
-export const ShareReport = () => {
+export const ShareReport = ({ backButtonOnClick }: { backButtonOnClick: () => void }) => {
   const user = useUser()!;
 
   const coworkersQuery = useLiveQuery(
@@ -41,8 +41,8 @@ export const ShareReport = () => {
 
   return (
     <>
-      <MenuTitle>Partage des CR</MenuTitle>
-      <Divider height="2px" my={{ base: "27px", lg: "44px" }} color="#C1C1FB" />
+      <MenuTitle backButtonOnClick={backButtonOnClick}>Partage des CR</MenuTitle>
+      <Divider hideFrom="lg" height="2px" my={{ base: "20px", lg: "44px" }} color="#C1C1FB" />
 
       <Stack w="100%">
         <styled.div>Ces personnes peuvent créer, modifier et supprimer vos CR : </styled.div>

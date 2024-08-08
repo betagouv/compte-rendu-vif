@@ -18,12 +18,15 @@ export const MenuTitle = ({
 }) => (
   <>
     <Flex
+      position={{ base: "sticky", lg: "unset" }}
+      top={{ base: "-1px", lg: "unset" }}
       justifyContent="space-between"
       alignItems="center"
       w="100%"
-      h="40px"
-      mt={{ base: "0", lg: "48px" }}
-      mb={{ base: "16px", lg: "48px" }}
+      py={{ base: "16px", lg: "30px" }}
+      // mt={{ base: "0", lg: "48px" }}
+      // mb={{ base: "16px", lg: "48px" }}
+      bgColor="white"
     >
       <styled.div hideFrom="lg">
         {backButtonOnClick ? (
@@ -56,7 +59,7 @@ export const MenuTitle = ({
     </Flex>
     {alert ? alert : null}
     {!hideDivider ? (
-      <styled.div my="24px">
+      <styled.div hideFrom="lg" mb="24px">
         {buttons ? (
           <styled.span hideFrom={"lg"} fontSize="20px" fontWeight="bold" nowrap>
             {children}

@@ -1,5 +1,5 @@
 import { css } from "#styled-system/css";
-import { Stack } from "#styled-system/jsx";
+import { Divider, Stack } from "#styled-system/jsx";
 import Button, { ButtonProps } from "@codegouvfr/react-dsfr/Button";
 import { forwardRef } from "react";
 import { useUser } from "../contexts/AuthContext";
@@ -42,21 +42,30 @@ export const ReportActions = forwardRef<HTMLDivElement, { report: ReportWithUser
   return (
     <Stack ref={ref} gap="0">
       {isOwner ? (
-        <ReportAction
-          iconId="ri-pencil-line"
-          label="Editer"
-          onClick={() => navigate({ to: "/edit/$reportId", params: { reportId: report.id } })}
-        />
+        <>
+          <ReportAction
+            iconId="ri-pencil-line"
+            label="Editer"
+            onClick={() => navigate({ to: "/edit/$reportId", params: { reportId: report.id } })}
+          />
+          <Divider height="1px" color="#DDD" />
+        </>
       ) : null}
       {isOwner ? (
-        <ReportAction
-          iconId="ri-delete-bin-2-line"
-          label="Supprimer"
-          onClick={() => deleteMutation.mutate(report.id)}
-        />
+        <>
+          <ReportAction
+            iconId="ri-delete-bin-2-line"
+            label="Supprimer"
+            onClick={() => deleteMutation.mutate(report.id)}
+          />
+          <Divider height="1px" color="#DDD" />
+        </>
       ) : null}
       {report.pdf ? (
-        <ReportAction iconId="ri-download-line" label="Télécharger" onClick={() => downloadPdfMutation.mutate()} />
+        <>
+          <ReportAction iconId="ri-download-line" label="Télécharger" onClick={() => downloadPdfMutation.mutate()} />
+          <Divider height="1px" color="#DDD" />
+        </>
       ) : null}
       <ReportAction iconId="ri-file-add-line" label="Dupliquer" onClick={() => duplicateMutation.mutate()} />
     </Stack>

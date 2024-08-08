@@ -57,6 +57,14 @@ export function SyncFormBanner({ form, baseObject }: { form: UseFormReturn<Repor
             }}
             hideBelow="lg"
             fontSize="16px"
+            {...{
+              "&::before": {
+                width: "16px !important",
+                height: "16px !important",
+                mb: "4px !important",
+                mr: "4px",
+              },
+            }}
           >
             Retour
           </styled.a>
@@ -122,7 +130,7 @@ const electricStatusToStatus: Record<ElectricStatus, SyncFormStatus> = {
 
 export const useStatus = (overrideStatus?: SyncFormStatus) => {
   const electricStatus = useElectricStatus();
-  if (electricStatus === "error") return "offline";
+  if (electricStatus === "error" || overrideStatus === "offline") return "offline";
 
   const formStatus = electricStatusToStatus[electricStatus];
 
@@ -132,7 +140,7 @@ export const useStatus = (overrideStatus?: SyncFormStatus) => {
 };
 
 export const Status = ({ status, className }: { status?: SyncFormStatus; className?: string }) => {
-  const formStatus = useStatus(status === "pending" ? "pending" : undefined);
+  const formStatus = useStatus(status);
 
   return (
     <styled.div
@@ -184,9 +192,17 @@ const syncFormBanner = sva({
       justifyContent: "flex-end",
       w: "100%",
       maxW: { base: "unset", sm: "800px" },
+      h: { base: "56px", lg: "unset" },
       px: "15px",
     },
-    back: { ml: "-10px", color: "black", _hover: { bgColor: "transparent" } },
+    back: {
+      ml: "-10px",
+      color: "black",
+      _hover: { bgColor: "transparent" },
+      "&::before": {
+        width: "24px !important",
+      },
+    },
     label: {},
     input: {
       w: { base: "100%", lg: "100%" },
