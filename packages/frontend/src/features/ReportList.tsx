@@ -197,8 +197,6 @@ const ReportListItem = ({
   const forText = report.applicantName ? uppercaseFirstLetterIf(`pour ${report.applicantName}`, !whereText) : null;
   const byText = uppercaseFirstLetterIf(`par ${report.redactedBy ?? report.user?.name ?? ""}`, !whereText && !forText);
 
-  const description = [whereText, forText, byText].filter(Boolean).join(" ");
-
   return (
     <Flex position="relative" direction="column" w="100%">
       <Link
@@ -228,9 +226,9 @@ const ReportListItem = ({
               <styled.span ml={"5px"}>{new Date(report.meetDate).toLocaleDateString()}</styled.span>
             ) : null}
           </Flex>
-          <styled.div lineClamp={2}>
-            <styled.span>{description}</styled.span>
-          </styled.div>
+          <styled.div nowrap>{whereText}</styled.div>
+          <styled.div nowrap>{forText}</styled.div>
+          <styled.div nowrap>{byText}</styled.div>
           <styled.div mt="8px">
             <ReportBadge status={report.pdf ? "published" : "draft"} />
           </styled.div>
