@@ -16,7 +16,7 @@ export const HelpMenu = ({ backButtonOnClick }: { backButtonOnClick: () => void 
       <Divider height="2px" my={{ base: "27px", lg: "44px" }} color="#C1C1FB" />
       <Stack>
         <styled.div mb="10px">
-          Si vous n'arrivez pas à vous connecter, essayez de réinitialiser les données locales :
+          Vous ne voyez pas vos dernières informations enregistrées ? Essayez de réinitialiser les données locales :
         </styled.div>
         <Button onClick={() => deleteLocalData()}>Réinitialiser</Button>
       </Stack>

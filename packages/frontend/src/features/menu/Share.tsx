@@ -7,6 +7,8 @@ import { ToggleSwitch } from "@codegouvfr/react-dsfr/ToggleSwitch";
 import { useMutation } from "@tanstack/react-query";
 import { css } from "#styled-system/css";
 import { MenuTitle } from "./MenuTitle";
+import { ClauseFormBanner } from "./ClauseMenu";
+import { fr } from "@codegouvfr/react-dsfr";
 
 export const ShareReport = ({ backButtonOnClick }: { backButtonOnClick: () => void }) => {
   const user = useUser()!;
@@ -41,7 +43,18 @@ export const ShareReport = ({ backButtonOnClick }: { backButtonOnClick: () => vo
 
   return (
     <>
-      <MenuTitle backButtonOnClick={backButtonOnClick}>Partage des CR</MenuTitle>
+      <MenuTitle
+        backButtonOnClick={backButtonOnClick}
+        alert={
+          <ClauseFormBanner
+            status="idle"
+            icon={fr.cx("fr-icon-alert-fill")}
+            text={`Tous les agents de l'UDAP peuvent voir et télécharger les compte-rendus envoyés. Seuls ceux à qui vous avez donné le droit peuvent créer, modifier, et supprimer vos compte-rendus. Le compte-rendu est attribué à un agent via le champ "rédigé par" du formulaire.`}
+          />
+        }
+      >
+        Partage des CR
+      </MenuTitle>
       <Divider hideFrom="lg" height="2px" my={{ base: "20px", lg: "44px" }} color="#C1C1FB" />
 
       <Stack w="100%">

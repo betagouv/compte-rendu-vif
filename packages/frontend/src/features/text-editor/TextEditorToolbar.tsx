@@ -32,7 +32,7 @@ export const TextEditorToolbar = () => {
         className={toolbarButtonRecipe({
           active: editor.isActive("bold"),
         })}
-        size="small"
+        size="medium"
         priority="tertiary no outline"
         iconId="fr-icon-bold"
         type="button"
@@ -45,7 +45,7 @@ export const TextEditorToolbar = () => {
         className={toolbarButtonRecipe({
           active: editor.isActive("italic"),
         })}
-        size="small"
+        size="medium"
         priority="tertiary no outline"
         type="button"
         iconId="fr-icon-italic"
@@ -58,7 +58,7 @@ export const TextEditorToolbar = () => {
         className={toolbarButtonRecipe({
           active: editor.isActive("underline"),
         })}
-        size="small"
+        size="medium"
         priority="tertiary no outline"
         iconId="ri-underline"
         type="button"
@@ -91,7 +91,7 @@ const ColorInput = () => {
       <Popover.Trigger>
         <Button
           className={toolbarButtonRecipe({})}
-          size="small"
+          size="medium"
           priority="tertiary no outline"
           iconId="ri-palette-line"
           type="button"

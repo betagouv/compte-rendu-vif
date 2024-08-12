@@ -2,7 +2,7 @@ import "@ungap/with-resolvers";
 import { Banner } from "#components/Banner.js";
 import { EnsureUser } from "#components/EnsureUser.js";
 import { Spinner } from "#components/Spinner";
-import { css } from "#styled-system/css";
+import { css, cx } from "#styled-system/css";
 import { Center, Flex, Stack, styled } from "#styled-system/jsx";
 import Button from "@codegouvfr/react-dsfr/Button";
 import Input from "@codegouvfr/react-dsfr/Input";
@@ -27,6 +27,9 @@ import { TextEditorContext, TextEditorContextProvider } from "../features/text-e
 import { TextEditorToolbar } from "../features/text-editor/TextEditorToolbar";
 import { getDiff } from "../components/SyncForm";
 import { v4 } from "uuid";
+import Alert from "@codegouvfr/react-dsfr/Alert";
+import { fr } from "@codegouvfr/react-dsfr";
+import { transformBold } from "../features/menu/ClauseMenu";
 
 type Mode = "edit" | "view" | "send" | "sent";
 
@@ -124,7 +127,7 @@ export const PDF = () => {
         <Button
           type="button"
           iconId="ri-save-line"
-          size="small"
+          size="medium"
           onClick={() =>
             saveSnapshotMutation.mutate({
               report: JSON.stringify(report),
@@ -187,6 +190,19 @@ export const PDF = () => {
 
   return (
     <styled.div w="100%" h="100%" bgColor={mode === "edit" ? "background-open-blue-france" : "unset"}>
+      <Flex justifyContent="center" mb="24px" py="16px" px="32px" bgColor={"#E8EDFF"}>
+        <i className={cx(fr.cx("fr-icon-alert-fill"), css({ color: "#0063CB" }))} />
+        <styled.div
+          dangerouslySetInnerHTML={{
+            __html:
+              transformBold(`**Si vous modifiez un champ dans le formulaire, votre mise en page sera ré-initialisée.** <br/>
+Les modifications du compte-rendu se font uniquement sur l'appareil utilisé. Utilisez le même appareil pour continuer les modifications et l'envoi.`),
+          }}
+          ml="16px"
+          pr="24px"
+          color={"#0063CB"}
+        ></styled.div>
+      </Flex>
       <TextEditorContextProvider>
         {report ? (
           <SendForm generatePdf={generatePdfMutation.mutate} report={report}>
