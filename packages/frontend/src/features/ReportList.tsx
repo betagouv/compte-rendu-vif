@@ -114,8 +114,6 @@ const NoReport = () => {
   );
 };
 
-const nbPerColumn = 10;
-
 export const ReportList = ({
   reports,
   page,
@@ -135,7 +133,7 @@ export const ReportList = ({
 }) => {
   const error = reports.length === 0 ? <NoReport /> : null;
 
-  const columns = chunk(reports, nbPerColumn);
+  const columns = reports.length < 6 ? [reports] : chunk(reports, Math.ceil(reports.length / 2));
 
   return (
     <Stack w="100%" mt={{ base: "20px", lg: "30px" }}>
