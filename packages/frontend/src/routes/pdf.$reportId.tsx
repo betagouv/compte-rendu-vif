@@ -190,7 +190,7 @@ export const PDF = () => {
 
   return (
     <styled.div w="100%" h="100%" bgColor={mode === "edit" ? "background-open-blue-france" : "unset"}>
-      <Flex justifyContent="center" mb="24px" py="16px" px="32px" bgColor={"#E8EDFF"}>
+      <Flex justifyContent="center" py="16px" px="32px" bgColor={"#E8EDFF"}>
         <i className={cx(fr.cx("fr-icon-alert-fill"), css({ color: "#0063CB" }))} />
         <styled.div
           dangerouslySetInnerHTML={{
