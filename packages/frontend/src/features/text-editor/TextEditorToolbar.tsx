@@ -106,12 +106,12 @@ const ColorInput = () => {
             <Stack gap="8px" flexDir="row" justifyContent="space-around" w="100%">
               <ColorButton value={currentValue} color="black" />
               <ColorButton value={currentValue} color="#e1000f" />
-              <ColorButton value={currentValue} color="#000091" />
-            </Stack>
-            <Stack gap="8px" flexDir="row" justifyContent="space-around" w="100%">
-              <ColorButton value={currentValue} color="#118d49" />
               <ColorButton value={currentValue} color="#d64d00" />
-              <div/>
+            </Stack>
+            <Stack flexDir="row" w="100%">
+              <ColorButton value={currentValue} color="#000091" />
+              <ColorButton value={currentValue} color="#118d49" />
+              <div />
             </Stack>
           </Stack>
         </Popover.Content>
