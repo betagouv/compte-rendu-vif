@@ -1,0 +1,19 @@
+CREATE TABLE tmp_pictures (
+    id TEXT PRIMARY KEY NOT NULL,
+    "reportId" TEXT NOT NULL REFERENCES "report"(id) ON DELETE CASCADE,
+    "data" TEXT NOT NULL,
+    "createdAt" TIMESTAMP NOT NULL
+);
+
+CREATE TABLE pictures (
+    id TEXT PRIMARY KEY NOT NULL,
+    "reportId" TEXT NOT NULL REFERENCES "report"(id) ON DELETE CASCADE,
+    "url" TEXT NOT NULL,
+    "createdAt" TIMESTAMP NOT NULL
+);
+
+ALTER TABLE
+  tmp_pictures ENABLE ELECTRIC;
+
+ALTER TABLE
+  pictures ENABLE ELECTRIC;

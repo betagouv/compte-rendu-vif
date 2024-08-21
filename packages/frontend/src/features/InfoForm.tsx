@@ -15,6 +15,8 @@ import { ServiceInstructeurSelect } from "./ServiceInstructeurSelect";
 import { useIsFormDisabled } from "./DisabledContext";
 import { useLiveQuery } from "electric-sql/react";
 import { db } from "../db";
+import { Upload } from "@codegouvfr/react-dsfr/Upload";
+import { v4 } from "uuid";
 
 export const InfoForm = () => {
   const form = useFormContext<Report>();
@@ -131,6 +133,27 @@ export const InfoForm = () => {
       <Divider mt="20px" mb="52px" />
 
       <InputGroupWithTitle title="Le projet">
+        <Upload
+          multiple={false}
+          nativeInputProps={{
+            onChange: async (e) => {
+              console.log(e.target.files);
+              if (!e.target.files?.[0]) return;
+              const id = v4();
+              const data = await getBase64FromBlob(e.target.files?.[0]!);
+              const result = await db.tmp_pictures.create({
+                data: {
+                  id,
+                  data,
+                  reportId: form.getValues().id,
+                  createdAt: new Date(),
+                },
+              });
+
+              console.log(result);
+            },
+          }}
+        />
         <Input
           className={css({ mb: { base: "24px", lg: undefined } })}
           label="Description"
@@ -199,3 +222,11 @@ export const InfoForm = () => {
     </Flex>
   );
 };
+
+async function getBase64FromBlob(blob: Blob) {
+  return new Promise<string>((resolve, _) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result);
+    reader.readAsDataURL(blob);
+  });
+}
