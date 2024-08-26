@@ -491,9 +491,9 @@ const SendReportPage = ({ children }: PropsWithChildren) => {
 
   return (
     <Center>
-      <Flex flexDirection="column" w={{ base: "100%", lg: "800px" }}>
+      <Flex flexDirection="column" alignItems="center" w={{ base: "100%", lg: "800px" }}>
         <Input
-          className={css({ mt: "16px" })}
+          className={css({ w: "100%", mt: "16px", px: { base: "16px", lg: "unset" } })}
           label="Destinataires"
           hintText="Liste de courriels, séparés par des virgules ou des espaces"
           textArea
