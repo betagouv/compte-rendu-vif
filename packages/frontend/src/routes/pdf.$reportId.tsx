@@ -314,8 +314,8 @@ const EditBanner = ({ title, buttons, reportId }: { title: ReactNode; buttons: R
     <Banner
       status="saved"
       zIndex={3}
-      position={{ base: "sticky", lg: "unset" }}
-      top={{ base: "-1px", lg: "unset" }}
+      position={{ base: "sticky", lg: "sticky" }}
+      top={{ base: "-1px", lg: "-1px" }}
       flexDir="row"
     >
       <Flex
