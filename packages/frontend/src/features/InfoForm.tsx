@@ -98,7 +98,7 @@ export const InfoForm = () => {
           <Input
             className={css({ flex: { base: "none", lg: 1 }, mb: { base: "16px", lg: "16px" } })}
             disabled={isFormDisabled}
-            label="Nom du demandeur*"
+            label="Nom du demandeur"
             nativeInputProps={form.register("applicantName")}
           />
         </Stack>
@@ -156,7 +156,7 @@ export const InfoForm = () => {
           <Input
             className={css({ flex: { base: "none", lg: 1 }, mb: { base: "24px", lg: undefined } })}
             disabled={isFormDisabled}
-            label="Commune*"
+            label="Commune"
             // hintText="Ce champ apparaitra dans la liste des compte-rendus"
             nativeInputProps={form.register("city")}
           />
