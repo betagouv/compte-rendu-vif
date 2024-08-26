@@ -142,7 +142,7 @@ export const InfoForm = () => {
         <Input
           className={css({ flex: { base: "none", lg: 2 }, mt: "16px", mb: { base: "24px", lg: undefined } })}
           disabled={isFormDisabled}
-          label="Adresse du projet"
+          label="Adresse"
           nativeInputProps={form.register("applicantAddress")}
         />
         <Stack gap={{ base: "0", lg: "16px" }} direction={{ base: "column", lg: "row" }}>
@@ -165,7 +165,7 @@ export const InfoForm = () => {
           <Input
             className={css({ flex: { base: "none", lg: 1 }, mb: "16px" })}
             disabled={isFormDisabled}
-            label="Référence cadastrale du projet"
+            label="Référence cadastrale"
             nativeInputProps={form.register("projectCadastralRef")}
           />
           <Box
