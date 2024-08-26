@@ -129,6 +129,10 @@ const MenuModal = ({ menu, isOpen, className }: { menu: NestedMenu | null; isOpe
             maxHeight: "100%",
             p: 0,
           },
+          "& .fr-modal__content": {
+            pl: 0,
+            pr: 0,
+          },
           "& .fr-col-12": {
             flex: { base: 1, lg: "unset" },
             width: { base: "100%", lg: "unset" },

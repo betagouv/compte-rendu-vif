@@ -55,14 +55,14 @@ export const ShareReport = ({ backButtonOnClick }: { backButtonOnClick: () => vo
       >
         Partage des CR
       </MenuTitle>
-      <Divider hideFrom="lg" height="2px" my={{ base: "20px", lg: "44px" }} color="#C1C1FB" />
+      {/* <Divider hideFrom="lg" height="2px" my={{ base: "20px", lg: "44px" }} color="#C1C1FB" /> */}
 
-      <Stack w="100%">
+      <Stack w="100%" px="20px">
         <styled.div>Ces personnes peuvent créer, modifier et supprimer vos CR : </styled.div>
         <ManageDelegations coworkers={coworkersQuery.results ?? []} delegations={delegationsQuery.results ?? []} />
       </Stack>
 
-      <Stack mt="49px" color="#757575">
+      <Stack mt="49px" px="20px" color="#757575">
         <styled.div>Ces personnes vous permettent de créer, modifier et supprimer leurs CR :</styled.div>
         <styled.ul>
           {delegatedToMeQuery.results?.map((delegation) => (

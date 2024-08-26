@@ -49,7 +49,9 @@ export const ClauseMenu = ({ isNational, ...props }: { isNational: boolean } & M
           }
           {...props}
         />
-        <ClauseList clauses={(clausesQuery.results as any) ?? []} isEditing={false} />
+        <styled.div px="20px">
+          <ClauseList clauses={(clausesQuery.results as any) ?? []} isEditing={false} />
+        </styled.div>
       </>
     );
 
@@ -216,21 +218,22 @@ const ClauseForm = ({
         {...props}
         alert={bannerProps ? <ClauseFormBanner {...bannerProps} /> : null}
       />
-
-      {isAdding ? (
-        <ClauseAdd
-          onSuccess={() => {
-            setBannerProps({ status: "success", text: "Clause ajoutée", icon: "ri-check-fill" });
-            setMode("view");
-          }}
-          isNational={isNational}
-        />
-      ) : null}
-      <FormProvider {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} id="edit-form">
-          <ClauseList clauses={fieldsWithIndex} isEditing={isEditing} />
-        </form>
-      </FormProvider>
+      <styled.div px="20px">
+        {isAdding ? (
+          <ClauseAdd
+            onSuccess={() => {
+              setBannerProps({ status: "success", text: "Clause ajoutée", icon: "ri-check-fill" });
+              setMode("view");
+            }}
+            isNational={isNational}
+          />
+        ) : null}
+        <FormProvider {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} id="edit-form">
+            <ClauseList clauses={fieldsWithIndex} isEditing={isEditing} />
+          </form>
+        </FormProvider>
+      </styled.div>
     </>
   );
 };
@@ -242,7 +245,7 @@ export const ClauseFormBanner = ({ status, icon, text }: { text: string; icon: s
   const iconColor = status === "idle" ? "#0063CB" : "#18753C";
 
   return (
-    <Flex ml="-32px" mr="-32px" mb="24px" py="16px" px="32px" bgColor={bgColor}>
+    <Flex mb="24px" py="16px" px="32px" bgColor={bgColor}>
       <i className={cx(icon, css({ color: iconColor }))} />
       <styled.div
         dangerouslySetInnerHTML={{ __html: transformBold(text) }}
