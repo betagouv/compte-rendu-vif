@@ -163,7 +163,7 @@ export const InfoForm = () => {
         </Stack>
         <Stack gap={{ base: "0", lg: "16px" }} direction={{ base: "column", lg: "row" }}>
           <Input
-            className={css({ flex: { base: "none", lg: 1 }, mb: "16px" })}
+            className={css({ flex: { base: "none", lg: 1 }, mb: "24px" })}
             disabled={isFormDisabled}
             label="Référence cadastrale"
             nativeInputProps={form.register("projectCadastralRef")}
@@ -182,7 +182,7 @@ export const InfoForm = () => {
         <SpaceTypeChips className={css({ flex: { base: "none", lg: 1 } })} disabled={isFormDisabled} />
       </InputGroupWithTitle>
 
-      <Center justifyContent={{ base: "center", lg: "flex-start" }} mt={{ base: "80px", lg: 0 }} mb="120px">
+      <Center justifyContent={{ base: "center", lg: "flex-start" }} mt={{ base: "80px", lg: "50px" }} mb="120px">
         <Button
           type="button"
           iconId="ri-arrow-right-line"
