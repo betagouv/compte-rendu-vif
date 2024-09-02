@@ -131,6 +131,8 @@ export const InfoForm = () => {
       <Divider mt="20px" mb="52px" />
 
       <InputGroupWithTitle title="Le projet">
+        <Button type="button">Ajouter photo</Button>
+
         <Input
           className={css({ mb: { base: "24px", lg: undefined } })}
           label="Description"
@@ -166,7 +168,7 @@ export const InfoForm = () => {
             className={css({ flex: { base: "none", lg: 1 }, mb: "24px" })}
             disabled={isFormDisabled}
             label="Référence cadastrale"
-            nativeInputProps={form.register("projectCadastralRef")}
+            nativeInputProps={{ ...form.register("projectCadastralRef"), placeholder: "Seulement la principale" }}
           />
           <Box
             className={css({
