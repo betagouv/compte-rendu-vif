@@ -90,9 +90,12 @@ export type Pdf_snapshotPayload<ExtArgs extends $Extensions.Args = $Extensions.D
 export type Pdf_snapshot = runtime.Types.DefaultSelection<Pdf_snapshotPayload>
 export type PicturesPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
   name: "Pictures"
-  objects: {}
+  objects: {
+    report: ReportPayload<ExtArgs> | null
+  }
   scalars: $Extensions.GetResult<{
     id: string
+    reportId: string | null
     data: Buffer | null
     url: string | null
     createdAt: Date | null
@@ -108,6 +111,7 @@ export type Pictures = runtime.Types.DefaultSelection<PicturesPayload>
 export type ReportPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
   name: "Report"
   objects: {
+    pictures: PicturesPayload<ExtArgs>[]
     user: UserPayload<ExtArgs>
   }
   scalars: $Extensions.GetResult<{
@@ -1703,6 +1707,41 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   /**
    * Count Types
    */
+
+
+  /**
+   * Count Type ReportCountOutputType
+   */
+
+
+  export type ReportCountOutputType = {
+    pictures: number
+  }
+
+  export type ReportCountOutputTypeSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    pictures?: boolean | ReportCountOutputTypeCountPicturesArgs
+  }
+
+  // Custom InputTypes
+
+  /**
+   * ReportCountOutputType without action
+   */
+  export type ReportCountOutputTypeArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ReportCountOutputType
+     */
+    select?: ReportCountOutputTypeSelect<ExtArgs> | null
+  }
+
+
+  /**
+   * ReportCountOutputType without action
+   */
+  export type ReportCountOutputTypeCountPicturesArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    where?: PicturesWhereInput
+  }
+
 
 
   /**
@@ -5390,6 +5429,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type PicturesMinAggregateOutputType = {
     id: string | null
+    reportId: string | null
     data: Buffer | null
     url: string | null
     createdAt: Date | null
@@ -5397,6 +5437,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type PicturesMaxAggregateOutputType = {
     id: string | null
+    reportId: string | null
     data: Buffer | null
     url: string | null
     createdAt: Date | null
@@ -5404,6 +5445,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type PicturesCountAggregateOutputType = {
     id: number
+    reportId: number
     data: number
     url: number
     createdAt: number
@@ -5413,6 +5455,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type PicturesMinAggregateInputType = {
     id?: true
+    reportId?: true
     data?: true
     url?: true
     createdAt?: true
@@ -5420,6 +5463,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type PicturesMaxAggregateInputType = {
     id?: true
+    reportId?: true
     data?: true
     url?: true
     createdAt?: true
@@ -5427,6 +5471,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type PicturesCountAggregateInputType = {
     id?: true
+    reportId?: true
     data?: true
     url?: true
     createdAt?: true
@@ -5508,6 +5553,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type PicturesGroupByOutputType = {
     id: string
+    reportId: string | null
     data: Buffer | null
     url: string | null
     createdAt: Date | null
@@ -5532,16 +5578,23 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type PicturesSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    reportId?: boolean
     data?: boolean
     url?: boolean
     createdAt?: boolean
+    report?: boolean | ReportArgs<ExtArgs>
   }, ExtArgs["result"]["pictures"]>
 
   export type PicturesSelectScalar = {
     id?: boolean
+    reportId?: boolean
     data?: boolean
     url?: boolean
     createdAt?: boolean
+  }
+
+  export type PicturesInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    report?: boolean | ReportArgs<ExtArgs>
   }
 
 
@@ -5914,6 +5967,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     readonly [Symbol.toStringTag]: 'PrismaPromise';
     constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
 
+    report<T extends ReportArgs<ExtArgs> = {}>(args?: Subset<T, ReportArgs<ExtArgs>>): Prisma__ReportClient<$Types.GetResult<ReportPayload<ExtArgs>, T, 'findUnique', never> | Null, never, ExtArgs>;
 
     private get _document();
     /**
@@ -5951,6 +6005,10 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      */
     select?: PicturesSelect<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: PicturesInclude<ExtArgs> | null
+    /**
      * Filter, which Pictures to fetch.
      */
     where: PicturesWhereUniqueInput
@@ -5977,6 +6035,10 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      */
     select?: PicturesSelect<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: PicturesInclude<ExtArgs> | null
+    /**
      * Filter, which Pictures to fetch.
      */
     where: PicturesWhereUniqueInput
@@ -5991,6 +6053,10 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      * Select specific fields to fetch from the Pictures
      */
     select?: PicturesSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: PicturesInclude<ExtArgs> | null
     /**
      * Filter, which Pictures to fetch.
      */
@@ -6048,6 +6114,10 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      */
     select?: PicturesSelect<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: PicturesInclude<ExtArgs> | null
+    /**
      * Filter, which Pictures to fetch.
      */
     where?: PicturesWhereInput
@@ -6093,6 +6163,10 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      */
     select?: PicturesSelect<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: PicturesInclude<ExtArgs> | null
+    /**
      * Filter, which Pictures to fetch.
      */
     where?: PicturesWhereInput
@@ -6133,6 +6207,10 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      */
     select?: PicturesSelect<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: PicturesInclude<ExtArgs> | null
+    /**
      * The data needed to create a Pictures.
      */
     data: XOR<PicturesCreateInput, PicturesUncheckedCreateInput>
@@ -6159,6 +6237,10 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      * Select specific fields to fetch from the Pictures
      */
     select?: PicturesSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: PicturesInclude<ExtArgs> | null
     /**
      * The data needed to update a Pictures.
      */
@@ -6194,6 +6276,10 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      */
     select?: PicturesSelect<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: PicturesInclude<ExtArgs> | null
+    /**
      * The filter to search for the Pictures to update in case it exists.
      */
     where: PicturesWhereUniqueInput
@@ -6216,6 +6302,10 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      * Select specific fields to fetch from the Pictures
      */
     select?: PicturesSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: PicturesInclude<ExtArgs> | null
     /**
      * Filter which Pictures to delete.
      */
@@ -6242,6 +6332,10 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      * Select specific fields to fetch from the Pictures
      */
     select?: PicturesSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: PicturesInclude<ExtArgs> | null
   }
 
 
@@ -6590,7 +6684,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     applicantEmail?: boolean
     city?: boolean
     zipCode?: boolean
+    pictures?: boolean | Report$picturesArgs<ExtArgs>
     user?: boolean | UserArgs<ExtArgs>
+    _count?: boolean | ReportCountOutputTypeArgs<ExtArgs>
   }, ExtArgs["result"]["report"]>
 
   export type ReportSelectScalar = {
@@ -6620,7 +6716,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   }
 
   export type ReportInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    pictures?: boolean | Report$picturesArgs<ExtArgs>
     user?: boolean | UserArgs<ExtArgs>
+    _count?: boolean | ReportCountOutputTypeArgs<ExtArgs>
   }
 
 
@@ -6993,6 +7091,8 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     readonly [Symbol.toStringTag]: 'PrismaPromise';
     constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
 
+    pictures<T extends Report$picturesArgs<ExtArgs> = {}>(args?: Subset<T, Report$picturesArgs<ExtArgs>>): Prisma.PrismaPromise<$Types.GetResult<PicturesPayload<ExtArgs>, T, 'findMany', never>| Null>;
+
     user<T extends UserArgs<ExtArgs> = {}>(args?: Subset<T, UserArgs<ExtArgs>>): Prisma__UserClient<$Types.GetResult<UserPayload<ExtArgs>, T, 'findUnique', never> | Null, never, ExtArgs>;
 
     private get _document();
@@ -7347,6 +7447,27 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      * Filter which Reports to delete
      */
     where?: ReportWhereInput
+  }
+
+
+  /**
+   * Report.pictures
+   */
+  export type Report$picturesArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Pictures
+     */
+    select?: PicturesSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: PicturesInclude<ExtArgs> | null
+    where?: PicturesWhereInput
+    orderBy?: Enumerable<PicturesOrderByWithRelationInput>
+    cursor?: PicturesWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Enumerable<PicturesScalarFieldEnum>
   }
 
 
@@ -10347,6 +10468,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export const PicturesScalarFieldEnum: {
     id: 'id',
+    reportId: 'reportId',
     data: 'data',
     url: 'url',
     createdAt: 'createdAt'
@@ -10636,16 +10758,20 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     OR?: Enumerable<PicturesWhereInput>
     NOT?: Enumerable<PicturesWhereInput>
     id?: StringFilter | string
+    reportId?: StringNullableFilter | string | null
     data?: BytesNullableFilter | Buffer | null
     url?: StringNullableFilter | string | null
     createdAt?: DateTimeNullableFilter | Date | string | null
+    report?: XOR<ReportRelationFilter, ReportWhereInput> | null
   }
 
   export type PicturesOrderByWithRelationInput = {
     id?: SortOrder
+    reportId?: SortOrderInput | SortOrder
     data?: SortOrderInput | SortOrder
     url?: SortOrderInput | SortOrder
     createdAt?: SortOrderInput | SortOrder
+    report?: ReportOrderByWithRelationInput
   }
 
   export type PicturesWhereUniqueInput = {
@@ -10654,6 +10780,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type PicturesOrderByWithAggregationInput = {
     id?: SortOrder
+    reportId?: SortOrderInput | SortOrder
     data?: SortOrderInput | SortOrder
     url?: SortOrderInput | SortOrder
     createdAt?: SortOrderInput | SortOrder
@@ -10667,6 +10794,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     OR?: Enumerable<PicturesScalarWhereWithAggregatesInput>
     NOT?: Enumerable<PicturesScalarWhereWithAggregatesInput>
     id?: StringWithAggregatesFilter | string
+    reportId?: StringNullableWithAggregatesFilter | string | null
     data?: BytesNullableWithAggregatesFilter | Buffer | null
     url?: StringNullableWithAggregatesFilter | string | null
     createdAt?: DateTimeNullableWithAggregatesFilter | Date | string | null
@@ -10699,6 +10827,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     applicantEmail?: StringNullableFilter | string | null
     city?: StringNullableFilter | string | null
     zipCode?: StringNullableFilter | string | null
+    pictures?: PicturesListRelationFilter
     user?: XOR<UserRelationFilter, UserWhereInput>
   }
 
@@ -10726,6 +10855,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     applicantEmail?: SortOrderInput | SortOrder
     city?: SortOrderInput | SortOrder
     zipCode?: SortOrderInput | SortOrder
+    pictures?: PicturesOrderByRelationAggregateInput
     user?: UserOrderByWithRelationInput
   }
 
@@ -11182,10 +11312,12 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     data?: Buffer | null
     url?: string | null
     createdAt?: Date | string | null
+    report?: ReportCreateNestedOneWithoutPicturesInput
   }
 
   export type PicturesUncheckedCreateInput = {
     id: string
+    reportId?: string | null
     data?: Buffer | null
     url?: string | null
     createdAt?: Date | string | null
@@ -11196,10 +11328,12 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     data?: NullableBytesFieldUpdateOperationsInput | Buffer | null
     url?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    report?: ReportUpdateOneWithoutPicturesNestedInput
   }
 
   export type PicturesUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    reportId?: NullableStringFieldUpdateOperationsInput | string | null
     data?: NullableBytesFieldUpdateOperationsInput | Buffer | null
     url?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -11207,6 +11341,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type PicturesCreateManyInput = {
     id: string
+    reportId?: string | null
     data?: Buffer | null
     url?: string | null
     createdAt?: Date | string | null
@@ -11221,6 +11356,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type PicturesUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
+    reportId?: NullableStringFieldUpdateOperationsInput | string | null
     data?: NullableBytesFieldUpdateOperationsInput | Buffer | null
     url?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -11249,6 +11385,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     applicantEmail?: string | null
     city?: string | null
     zipCode?: string | null
+    pictures?: PicturesCreateNestedManyWithoutReportInput
     user: UserCreateNestedOneWithoutReportInput
   }
 
@@ -11276,6 +11413,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     applicantEmail?: string | null
     city?: string | null
     zipCode?: string | null
+    pictures?: PicturesUncheckedCreateNestedManyWithoutReportInput
   }
 
   export type ReportUpdateInput = {
@@ -11301,6 +11439,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     applicantEmail?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     zipCode?: NullableStringFieldUpdateOperationsInput | string | null
+    pictures?: PicturesUpdateManyWithoutReportNestedInput
     user?: UserUpdateOneRequiredWithoutReportNestedInput
   }
 
@@ -11328,6 +11467,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     applicantEmail?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     zipCode?: NullableStringFieldUpdateOperationsInput | string | null
+    pictures?: PicturesUncheckedUpdateManyWithoutReportNestedInput
   }
 
   export type ReportCreateManyInput = {
@@ -11882,8 +12022,14 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     not?: NestedDateTimeNullableFilter | Date | string | null
   }
 
+  export type ReportRelationFilter = {
+    is?: ReportWhereInput | null
+    isNot?: ReportWhereInput | null
+  }
+
   export type PicturesCountOrderByAggregateInput = {
     id?: SortOrder
+    reportId?: SortOrder
     data?: SortOrder
     url?: SortOrder
     createdAt?: SortOrder
@@ -11891,6 +12037,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type PicturesMaxOrderByAggregateInput = {
     id?: SortOrder
+    reportId?: SortOrder
     data?: SortOrder
     url?: SortOrder
     createdAt?: SortOrder
@@ -11898,6 +12045,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type PicturesMinOrderByAggregateInput = {
     id?: SortOrder
+    reportId?: SortOrder
     data?: SortOrder
     url?: SortOrder
     createdAt?: SortOrder
@@ -11936,6 +12084,16 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     gt?: Date | string
     gte?: Date | string
     not?: NestedDateTimeFilter | Date | string
+  }
+
+  export type PicturesListRelationFilter = {
+    every?: PicturesWhereInput
+    some?: PicturesWhereInput
+    none?: PicturesWhereInput
+  }
+
+  export type PicturesOrderByRelationAggregateInput = {
+    _count?: SortOrder
   }
 
   export type ReportCountOrderByAggregateInput = {
@@ -12249,6 +12407,12 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     update?: XOR<UserUpdateWithoutDelegation_delegation_delegatedToTouserInput, UserUncheckedUpdateWithoutDelegation_delegation_delegatedToTouserInput>
   }
 
+  export type ReportCreateNestedOneWithoutPicturesInput = {
+    create?: XOR<ReportCreateWithoutPicturesInput, ReportUncheckedCreateWithoutPicturesInput>
+    connectOrCreate?: ReportCreateOrConnectWithoutPicturesInput
+    connect?: ReportWhereUniqueInput
+  }
+
   export type NullableBytesFieldUpdateOperationsInput = {
     set?: Buffer | null
   }
@@ -12257,14 +12421,52 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     set?: Date | string | null
   }
 
+  export type ReportUpdateOneWithoutPicturesNestedInput = {
+    create?: XOR<ReportCreateWithoutPicturesInput, ReportUncheckedCreateWithoutPicturesInput>
+    connectOrCreate?: ReportCreateOrConnectWithoutPicturesInput
+    upsert?: ReportUpsertWithoutPicturesInput
+    disconnect?: boolean
+    delete?: boolean
+    connect?: ReportWhereUniqueInput
+    update?: XOR<ReportUpdateWithoutPicturesInput, ReportUncheckedUpdateWithoutPicturesInput>
+  }
+
+  export type PicturesCreateNestedManyWithoutReportInput = {
+    create?: XOR<Enumerable<PicturesCreateWithoutReportInput>, Enumerable<PicturesUncheckedCreateWithoutReportInput>>
+    connectOrCreate?: Enumerable<PicturesCreateOrConnectWithoutReportInput>
+    createMany?: PicturesCreateManyReportInputEnvelope
+    connect?: Enumerable<PicturesWhereUniqueInput>
+  }
+
   export type UserCreateNestedOneWithoutReportInput = {
     create?: XOR<UserCreateWithoutReportInput, UserUncheckedCreateWithoutReportInput>
     connectOrCreate?: UserCreateOrConnectWithoutReportInput
     connect?: UserWhereUniqueInput
   }
 
+  export type PicturesUncheckedCreateNestedManyWithoutReportInput = {
+    create?: XOR<Enumerable<PicturesCreateWithoutReportInput>, Enumerable<PicturesUncheckedCreateWithoutReportInput>>
+    connectOrCreate?: Enumerable<PicturesCreateOrConnectWithoutReportInput>
+    createMany?: PicturesCreateManyReportInputEnvelope
+    connect?: Enumerable<PicturesWhereUniqueInput>
+  }
+
   export type DateTimeFieldUpdateOperationsInput = {
     set?: Date | string
+  }
+
+  export type PicturesUpdateManyWithoutReportNestedInput = {
+    create?: XOR<Enumerable<PicturesCreateWithoutReportInput>, Enumerable<PicturesUncheckedCreateWithoutReportInput>>
+    connectOrCreate?: Enumerable<PicturesCreateOrConnectWithoutReportInput>
+    upsert?: Enumerable<PicturesUpsertWithWhereUniqueWithoutReportInput>
+    createMany?: PicturesCreateManyReportInputEnvelope
+    set?: Enumerable<PicturesWhereUniqueInput>
+    disconnect?: Enumerable<PicturesWhereUniqueInput>
+    delete?: Enumerable<PicturesWhereUniqueInput>
+    connect?: Enumerable<PicturesWhereUniqueInput>
+    update?: Enumerable<PicturesUpdateWithWhereUniqueWithoutReportInput>
+    updateMany?: Enumerable<PicturesUpdateManyWithWhereWithoutReportInput>
+    deleteMany?: Enumerable<PicturesScalarWhereInput>
   }
 
   export type UserUpdateOneRequiredWithoutReportNestedInput = {
@@ -12273,6 +12475,20 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     upsert?: UserUpsertWithoutReportInput
     connect?: UserWhereUniqueInput
     update?: XOR<UserUpdateWithoutReportInput, UserUncheckedUpdateWithoutReportInput>
+  }
+
+  export type PicturesUncheckedUpdateManyWithoutReportNestedInput = {
+    create?: XOR<Enumerable<PicturesCreateWithoutReportInput>, Enumerable<PicturesUncheckedCreateWithoutReportInput>>
+    connectOrCreate?: Enumerable<PicturesCreateOrConnectWithoutReportInput>
+    upsert?: Enumerable<PicturesUpsertWithWhereUniqueWithoutReportInput>
+    createMany?: PicturesCreateManyReportInputEnvelope
+    set?: Enumerable<PicturesWhereUniqueInput>
+    disconnect?: Enumerable<PicturesWhereUniqueInput>
+    delete?: Enumerable<PicturesWhereUniqueInput>
+    connect?: Enumerable<PicturesWhereUniqueInput>
+    update?: Enumerable<PicturesUpdateWithWhereUniqueWithoutReportInput>
+    updateMany?: Enumerable<PicturesUpdateManyWithWhereWithoutReportInput>
+    deleteMany?: Enumerable<PicturesScalarWhereInput>
   }
 
   export type IntFieldUpdateOperationsInput = {
@@ -12767,6 +12983,144 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     report?: ReportUncheckedUpdateManyWithoutUserNestedInput
   }
 
+  export type ReportCreateWithoutPicturesInput = {
+    id: string
+    title?: string | null
+    projectDescription?: string | null
+    redactedBy?: string | null
+    meetDate?: Date | string | null
+    applicantName?: string | null
+    applicantAddress?: string | null
+    projectCadastralRef?: string | null
+    projectSpaceType?: string | null
+    decision?: string | null
+    precisions?: string | null
+    contacts?: string | null
+    furtherInformation?: string | null
+    createdAt: Date | string
+    serviceInstructeur?: number | null
+    pdf?: string | null
+    disabled?: boolean | null
+    udap_id?: string | null
+    redactedById?: string | null
+    applicantEmail?: string | null
+    city?: string | null
+    zipCode?: string | null
+    user: UserCreateNestedOneWithoutReportInput
+  }
+
+  export type ReportUncheckedCreateWithoutPicturesInput = {
+    id: string
+    title?: string | null
+    projectDescription?: string | null
+    redactedBy?: string | null
+    meetDate?: Date | string | null
+    applicantName?: string | null
+    applicantAddress?: string | null
+    projectCadastralRef?: string | null
+    projectSpaceType?: string | null
+    decision?: string | null
+    precisions?: string | null
+    contacts?: string | null
+    furtherInformation?: string | null
+    createdBy: string
+    createdAt: Date | string
+    serviceInstructeur?: number | null
+    pdf?: string | null
+    disabled?: boolean | null
+    udap_id?: string | null
+    redactedById?: string | null
+    applicantEmail?: string | null
+    city?: string | null
+    zipCode?: string | null
+  }
+
+  export type ReportCreateOrConnectWithoutPicturesInput = {
+    where: ReportWhereUniqueInput
+    create: XOR<ReportCreateWithoutPicturesInput, ReportUncheckedCreateWithoutPicturesInput>
+  }
+
+  export type ReportUpsertWithoutPicturesInput = {
+    update: XOR<ReportUpdateWithoutPicturesInput, ReportUncheckedUpdateWithoutPicturesInput>
+    create: XOR<ReportCreateWithoutPicturesInput, ReportUncheckedCreateWithoutPicturesInput>
+  }
+
+  export type ReportUpdateWithoutPicturesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    projectDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    redactedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    meetDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    applicantName?: NullableStringFieldUpdateOperationsInput | string | null
+    applicantAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    projectCadastralRef?: NullableStringFieldUpdateOperationsInput | string | null
+    projectSpaceType?: NullableStringFieldUpdateOperationsInput | string | null
+    decision?: NullableStringFieldUpdateOperationsInput | string | null
+    precisions?: NullableStringFieldUpdateOperationsInput | string | null
+    contacts?: NullableStringFieldUpdateOperationsInput | string | null
+    furtherInformation?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    serviceInstructeur?: NullableIntFieldUpdateOperationsInput | number | null
+    pdf?: NullableStringFieldUpdateOperationsInput | string | null
+    disabled?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    udap_id?: NullableStringFieldUpdateOperationsInput | string | null
+    redactedById?: NullableStringFieldUpdateOperationsInput | string | null
+    applicantEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    zipCode?: NullableStringFieldUpdateOperationsInput | string | null
+    user?: UserUpdateOneRequiredWithoutReportNestedInput
+  }
+
+  export type ReportUncheckedUpdateWithoutPicturesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    projectDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    redactedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    meetDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    applicantName?: NullableStringFieldUpdateOperationsInput | string | null
+    applicantAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    projectCadastralRef?: NullableStringFieldUpdateOperationsInput | string | null
+    projectSpaceType?: NullableStringFieldUpdateOperationsInput | string | null
+    decision?: NullableStringFieldUpdateOperationsInput | string | null
+    precisions?: NullableStringFieldUpdateOperationsInput | string | null
+    contacts?: NullableStringFieldUpdateOperationsInput | string | null
+    furtherInformation?: NullableStringFieldUpdateOperationsInput | string | null
+    createdBy?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    serviceInstructeur?: NullableIntFieldUpdateOperationsInput | number | null
+    pdf?: NullableStringFieldUpdateOperationsInput | string | null
+    disabled?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    udap_id?: NullableStringFieldUpdateOperationsInput | string | null
+    redactedById?: NullableStringFieldUpdateOperationsInput | string | null
+    applicantEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    zipCode?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type PicturesCreateWithoutReportInput = {
+    id: string
+    data?: Buffer | null
+    url?: string | null
+    createdAt?: Date | string | null
+  }
+
+  export type PicturesUncheckedCreateWithoutReportInput = {
+    id: string
+    data?: Buffer | null
+    url?: string | null
+    createdAt?: Date | string | null
+  }
+
+  export type PicturesCreateOrConnectWithoutReportInput = {
+    where: PicturesWhereUniqueInput
+    create: XOR<PicturesCreateWithoutReportInput, PicturesUncheckedCreateWithoutReportInput>
+  }
+
+  export type PicturesCreateManyReportInputEnvelope = {
+    data: Enumerable<PicturesCreateManyReportInput>
+    skipDuplicates?: boolean
+  }
+
   export type UserCreateWithoutReportInput = {
     id: string
     name: string
@@ -12786,6 +13140,33 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type UserCreateOrConnectWithoutReportInput = {
     where: UserWhereUniqueInput
     create: XOR<UserCreateWithoutReportInput, UserUncheckedCreateWithoutReportInput>
+  }
+
+  export type PicturesUpsertWithWhereUniqueWithoutReportInput = {
+    where: PicturesWhereUniqueInput
+    update: XOR<PicturesUpdateWithoutReportInput, PicturesUncheckedUpdateWithoutReportInput>
+    create: XOR<PicturesCreateWithoutReportInput, PicturesUncheckedCreateWithoutReportInput>
+  }
+
+  export type PicturesUpdateWithWhereUniqueWithoutReportInput = {
+    where: PicturesWhereUniqueInput
+    data: XOR<PicturesUpdateWithoutReportInput, PicturesUncheckedUpdateWithoutReportInput>
+  }
+
+  export type PicturesUpdateManyWithWhereWithoutReportInput = {
+    where: PicturesScalarWhereInput
+    data: XOR<PicturesUpdateManyMutationInput, PicturesUncheckedUpdateManyWithoutPicturesInput>
+  }
+
+  export type PicturesScalarWhereInput = {
+    AND?: Enumerable<PicturesScalarWhereInput>
+    OR?: Enumerable<PicturesScalarWhereInput>
+    NOT?: Enumerable<PicturesScalarWhereInput>
+    id?: StringFilter | string
+    reportId?: StringNullableFilter | string | null
+    data?: BytesNullableFilter | Buffer | null
+    url?: StringNullableFilter | string | null
+    createdAt?: DateTimeNullableFilter | Date | string | null
   }
 
   export type UserUpsertWithoutReportInput = {
@@ -12919,6 +13300,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     applicantEmail?: string | null
     city?: string | null
     zipCode?: string | null
+    pictures?: PicturesCreateNestedManyWithoutReportInput
   }
 
   export type ReportUncheckedCreateWithoutUserInput = {
@@ -12944,6 +13326,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     applicantEmail?: string | null
     city?: string | null
     zipCode?: string | null
+    pictures?: PicturesUncheckedCreateNestedManyWithoutReportInput
   }
 
   export type ReportCreateOrConnectWithoutUserInput = {
@@ -13115,6 +13498,34 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     udap_text?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type PicturesCreateManyReportInput = {
+    id: string
+    data?: Buffer | null
+    url?: string | null
+    createdAt?: Date | string | null
+  }
+
+  export type PicturesUpdateWithoutReportInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    data?: NullableBytesFieldUpdateOperationsInput | Buffer | null
+    url?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type PicturesUncheckedUpdateWithoutReportInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    data?: NullableBytesFieldUpdateOperationsInput | Buffer | null
+    url?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type PicturesUncheckedUpdateManyWithoutPicturesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    data?: NullableBytesFieldUpdateOperationsInput | Buffer | null
+    url?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
   export type UserCreateManyUdapInput = {
     id: string
     name: string
@@ -13221,6 +13632,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     applicantEmail?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     zipCode?: NullableStringFieldUpdateOperationsInput | string | null
+    pictures?: PicturesUpdateManyWithoutReportNestedInput
   }
 
   export type ReportUncheckedUpdateWithoutUserInput = {
@@ -13246,6 +13658,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     applicantEmail?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     zipCode?: NullableStringFieldUpdateOperationsInput | string | null
+    pictures?: PicturesUncheckedUpdateManyWithoutReportNestedInput
   }
 
   export type ReportUncheckedUpdateManyWithoutReportInput = {
