@@ -4,7 +4,7 @@ import Button from "@codegouvfr/react-dsfr/Button";
 import Input from "@codegouvfr/react-dsfr/Input";
 import Select from "@codegouvfr/react-dsfr/Select";
 import { format, parse } from "date-fns";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { InputGroupWithTitle } from "#components/InputGroup";
 import { SpaceTypeChips } from "#components/chips/SpaceTypeChips";
@@ -15,8 +15,11 @@ import { ServiceInstructeurSelect } from "./ServiceInstructeurSelect";
 import { useIsFormDisabled } from "./DisabledContext";
 import { useLiveQuery } from "electric-sql/react";
 import { db } from "../db";
+import { v4 } from "uuid";
 
 export const InfoForm = () => {
+  const [userMedia, setUserMedia] = useState<MediaStream | null>(null);
+
   const form = useFormContext<Report>();
   const user = useUser()!;
 
@@ -131,7 +134,31 @@ export const InfoForm = () => {
       <Divider mt="20px" mb="52px" />
 
       <InputGroupWithTitle title="Le projet">
-        <Button type="button">Ajouter photo</Button>
+        <styled.input
+          type="file"
+          accept="image/*"
+          capture
+          onChange={async (e) => {
+            console.log(e.target.files);
+            if (!e.target.files?.[0]) return;
+            const file = e.target.files[0];
+
+            const id = v4();
+            const buffer = await getArrayBufferFromBlob(file);
+            const data = new Uint8Array(buffer);
+
+            const result = await db.pictures.create({
+              data: {
+                id,
+                data,
+                reportId: form.getValues().id,
+                createdAt: new Date(),
+              },
+            });
+
+            console.log(result);
+          }}
+        />
 
         <Input
           className={css({ mb: { base: "24px", lg: undefined } })}
@@ -201,3 +228,11 @@ export const InfoForm = () => {
     </Flex>
   );
 };
+
+async function getArrayBufferFromBlob(blob: Blob) {
+  return new Promise<ArrayBuffer>((resolve, _) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result as ArrayBuffer);
+    reader.readAsArrayBuffer(blob);
+  });
+}
