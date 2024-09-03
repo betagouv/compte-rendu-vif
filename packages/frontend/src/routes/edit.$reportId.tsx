@@ -16,14 +16,26 @@ import {
   type UseFormProps,
   type UseFormRegister,
 } from "react-hook-form";
-import { db } from "../db";
+import { db, electric } from "../db";
 import { InfoForm } from "../features/InfoForm";
 import { NotesForm } from "../features/NotesForm";
 import { DisabledContext } from "../features/DisabledContext";
 import { useUser } from "../contexts/AuthContext";
+import { useQuery } from "@tanstack/react-query";
 
 const EditReport = () => {
   const { reportId } = Route.useParams();
+
+  useQuery({
+    queryKey: ["report", reportId],
+    queryFn: () =>
+      electric.db.report.sync({
+        where: { id: reportId },
+        include: {
+          pictures: true,
+        },
+      }),
+  });
 
   const { results: report } = useLiveQuery(db.report.liveUnique({ where: { id: reportId } }));
 

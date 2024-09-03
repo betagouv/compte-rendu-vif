@@ -159,6 +159,7 @@ export const InfoForm = () => {
             console.log(result);
           }}
         />
+        <ReportPictures />
 
         <Input
           className={css({ mb: { base: "24px", lg: undefined } })}
@@ -225,6 +226,28 @@ export const InfoForm = () => {
           Rédiger le bilan
         </Button>
       </Center>
+    </Flex>
+  );
+};
+
+const ReportPictures = () => {
+  const form = useFormContext<Report>();
+
+  const picturesQuery = useLiveQuery(db.pictures.liveMany({ where: { reportId: form.getValues().id } }));
+
+  console.log(picturesQuery);
+
+  return (
+    <Flex direction="column" w="100%" padding="16px">
+      <InputGroupWithTitle title="Photos">
+        <Flex gap="16px" direction="column">
+          {/* {picturesQuery.results?.map((picture) => (
+            <Box key={picture.id}>
+              <img src={`data:image/png;base64,${btoa(String.fromCharCode(...new Uint8Array(picture.data)))}`} />
+            </Box>
+          ))} */}
+        </Flex>
+      </InputGroupWithTitle>
     </Flex>
   );
 };
