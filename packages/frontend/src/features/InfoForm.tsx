@@ -241,11 +241,13 @@ const ReportPictures = () => {
     <Flex direction="column" w="100%" padding="16px">
       <InputGroupWithTitle title="Photos">
         <Flex gap="16px" direction="column">
-          {/* {picturesQuery.results?.map((picture) => (
-            <Box key={picture.id}>
-              <img src={`data:image/png;base64,${btoa(String.fromCharCode(...new Uint8Array(picture.data)))}`} />
-            </Box>
-          ))} */}
+          {picturesQuery.results
+            ?.filter((picture) => !!picture.data)
+            .map((picture) => (
+              <Box key={picture.id}>
+                <img src={`data:image/png;base64,$`} />
+              </Box>
+            ))}
         </Flex>
       </InputGroupWithTitle>
     </Flex>
@@ -258,4 +260,15 @@ async function getArrayBufferFromBlob(blob: Blob) {
     reader.onloadend = () => resolve(reader.result as ArrayBuffer);
     reader.readAsArrayBuffer(blob);
   });
+}
+
+async function bufferToBase64(buffer: ArrayBuffer) {
+  // use a FileReader to generate a base64 data URI:
+  const base64url = await new Promise<string>((r) => {
+    const reader = new FileReader();
+    reader.onload = () => r(reader.result as string);
+    reader.readAsDataURL(new Blob([buffer]));
+  });
+  // remove the `data:...;base64,` part from the start
+  return base64url.slice(base64url.indexOf(",") + 1);
 }
