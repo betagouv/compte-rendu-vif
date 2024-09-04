@@ -29,7 +29,7 @@ export const ReportPDFDocument = ({ udap, htmlString, images }: ReportPDFDocumen
         <html>
           <body>
           <style>
-          * {
+          body {
             font-family: Helvetica;
           }
 
@@ -41,7 +41,19 @@ export const ReportPDFDocument = ({ udap, htmlString, images }: ReportPDFDocumen
             font-family: Helvetica-Oblique;
           }
 
-          strong > em {
+          strong em span {
+            font-family: Helvetica-BoldOblique;
+          }
+
+          em strong span {
+            font-family: Helvetica-BoldOblique;
+          }
+
+          strong em {
+            font-family: Helvetica-BoldOblique;
+          }
+
+          em strong {
             font-family: Helvetica-BoldOblique;
           }
 
