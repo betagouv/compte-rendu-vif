@@ -16,10 +16,9 @@ import { useIsFormDisabled } from "./DisabledContext";
 import { useLiveQuery } from "electric-sql/react";
 import { db } from "../db";
 import { v4 } from "uuid";
+import { Buffer } from "buffer";
 
 export const InfoForm = () => {
-  const [userMedia, setUserMedia] = useState<MediaStream | null>(null);
-
   const form = useFormContext<Report>();
   const user = useUser()!;
 
@@ -235,8 +234,6 @@ const ReportPictures = () => {
 
   const picturesQuery = useLiveQuery(db.pictures.liveMany({ where: { reportId: form.getValues().id } }));
 
-  console.log(picturesQuery);
-
   return (
     <Flex direction="column" w="100%" padding="16px">
       <InputGroupWithTitle title="Photos">
@@ -244,8 +241,8 @@ const ReportPictures = () => {
           {picturesQuery.results
             ?.filter((picture) => !!picture.data)
             .map((picture) => (
-              <Box key={picture.id}>
-                <img src={`data:image/png;base64,$`} />
+              <Box key={picture.id} maxW="180px">
+                <img src={`data:image/png;base64,${Buffer.from(picture.data!).toString("base64")}`} />
               </Box>
             ))}
         </Flex>
@@ -260,15 +257,4 @@ async function getArrayBufferFromBlob(blob: Blob) {
     reader.onloadend = () => resolve(reader.result as ArrayBuffer);
     reader.readAsArrayBuffer(blob);
   });
-}
-
-async function bufferToBase64(buffer: ArrayBuffer) {
-  // use a FileReader to generate a base64 data URI:
-  const base64url = await new Promise<string>((r) => {
-    const reader = new FileReader();
-    reader.onload = () => r(reader.result as string);
-    reader.readAsDataURL(new Blob([buffer]));
-  });
-  // remove the `data:...;base64,` part from the start
-  return base64url.slice(base64url.indexOf(",") + 1);
 }

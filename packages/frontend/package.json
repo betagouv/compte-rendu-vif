@@ -47,6 +47,7 @@
     "@tiptap/starter-kit": "^2.4.0",
     "@ungap/with-resolvers": "^0.1.0",
     "@xstate/store": "^0.0.5",
+    "buffer": "^6.0.3",
     "date-fns": "^3.6.0",
     "electric-sql": "^0.12.1",
     "install": "^0.13.0",
