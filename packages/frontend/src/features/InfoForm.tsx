@@ -9,7 +9,7 @@ import { useFormContext, useWatch } from "react-hook-form";
 import { InputGroupWithTitle } from "#components/InputGroup";
 import { SpaceTypeChips } from "#components/chips/SpaceTypeChips";
 import { useUser } from "../contexts/AuthContext";
-import type { Report } from "@cr-vif/electric-client/frontend";
+import type { Report, Pictures } from "@cr-vif/electric-client/frontend";
 import { css } from "#styled-system/css";
 import { ServiceInstructeurSelect } from "./ServiceInstructeurSelect";
 import { useIsFormDisabled } from "./DisabledContext";
@@ -17,6 +17,7 @@ import { useLiveQuery } from "electric-sql/react";
 import { db } from "../db";
 import { v4 } from "uuid";
 import { Buffer } from "buffer";
+import { useMutation } from "@tanstack/react-query";
 
 export const InfoForm = () => {
   const form = useFormContext<Report>();
@@ -232,7 +233,12 @@ export const InfoForm = () => {
 const ReportPictures = () => {
   const form = useFormContext<Report>();
 
-  const picturesQuery = useLiveQuery(db.pictures.liveMany({ where: { reportId: form.getValues().id } }));
+  const picturesQuery = useLiveQuery(
+    db.pictures.liveMany({
+      where: { reportId: form.getValues().id },
+      orderBy: { createdAt: "desc" },
+    }),
+  );
 
   return (
     <Flex direction="column" w="100%" padding="16px">
@@ -240,13 +246,25 @@ const ReportPictures = () => {
         <Flex gap="16px" direction="column">
           {picturesQuery.results
             ?.filter((picture) => !!picture.data)
-            .map((picture) => (
-              <Box key={picture.id} maxW="180px">
-                <img src={`data:image/png;base64,${Buffer.from(picture.data!).toString("base64")}`} />
-              </Box>
-            ))}
+            .map((picture, index) => <PictureThumbnail key={picture.id} picture={picture as any} index={index} />)}
         </Flex>
       </InputGroupWithTitle>
+    </Flex>
+  );
+};
+
+const PictureThumbnail = ({ picture, index }: { picture: Pictures; index: number }) => {
+  const deletePictureMutation = useMutation(() => db.pictures.delete({ where: { id: picture.id } }));
+
+  return (
+    <Flex flexDir="column" maxW="180px">
+      <Box key={picture.id}>
+        <img src={`data:image/png;base64,${Buffer.from(picture.data!).toString("base64")}`} />
+      </Box>
+      <Flex>
+        <Box flex="1">N° {index + 1}</Box>
+        <Box onClick={() => deletePictureMutation.mutate()}>Suppr</Box>
+      </Flex>
     </Flex>
   );
 };

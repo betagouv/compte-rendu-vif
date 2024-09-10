@@ -24,6 +24,7 @@ export default defineConfig({
       workbox: {
         maximumFileSizeToCacheInBytes: 2097152 * 3,
         globPatterns: ["**/*.{svg,woff2,js,wasm,css,html}"],
+        importScripts: ["./src/test.js"],
       },
     }),
   ],
