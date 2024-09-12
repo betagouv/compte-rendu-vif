@@ -98,7 +98,7 @@ export const InfoForm = () => {
           <Input
             className={css({ flex: { base: "none", lg: 1 }, mb: { base: "16px", lg: "16px" } })}
             disabled={isFormDisabled}
-            label="Nom du demandeur*"
+            label="Nom du demandeur"
             nativeInputProps={form.register("applicantName")}
           />
         </Stack>
@@ -142,7 +142,7 @@ export const InfoForm = () => {
         <Input
           className={css({ flex: { base: "none", lg: 2 }, mt: "16px", mb: { base: "24px", lg: undefined } })}
           disabled={isFormDisabled}
-          label="Adresse du projet"
+          label="Adresse"
           nativeInputProps={form.register("applicantAddress")}
         />
         <Stack gap={{ base: "0", lg: "16px" }} direction={{ base: "column", lg: "row" }}>
@@ -156,16 +156,16 @@ export const InfoForm = () => {
           <Input
             className={css({ flex: { base: "none", lg: 1 }, mb: { base: "24px", lg: undefined } })}
             disabled={isFormDisabled}
-            label="Commune*"
+            label="Commune"
             // hintText="Ce champ apparaitra dans la liste des compte-rendus"
             nativeInputProps={form.register("city")}
           />
         </Stack>
         <Stack gap={{ base: "0", lg: "16px" }} direction={{ base: "column", lg: "row" }}>
           <Input
-            className={css({ flex: { base: "none", lg: 1 }, mb: "16px" })}
+            className={css({ flex: { base: "none", lg: 1 }, mb: "24px" })}
             disabled={isFormDisabled}
-            label="Référence cadastrale du projet"
+            label="Référence cadastrale"
             nativeInputProps={form.register("projectCadastralRef")}
           />
           <Box
@@ -182,7 +182,7 @@ export const InfoForm = () => {
         <SpaceTypeChips className={css({ flex: { base: "none", lg: 1 } })} disabled={isFormDisabled} />
       </InputGroupWithTitle>
 
-      <Center justifyContent={{ base: "center", lg: "flex-start" }} mt={{ base: "80px", lg: 0 }} mb="120px">
+      <Center justifyContent={{ base: "center", lg: "flex-start" }} mt={{ base: "80px", lg: "50px" }} mb="120px">
         <Button
           type="button"
           iconId="ri-arrow-right-line"

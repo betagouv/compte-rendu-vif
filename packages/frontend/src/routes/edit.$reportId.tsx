@@ -89,13 +89,17 @@ const WithReport = ({ report }: { report: Report }) => {
     document.getElementById("root")!.scrollTo(0, 0);
   };
 
+  // @ts-ignore
+  const isChrome = !!window.chrome;
+
   const options = [
     {
       id: "info",
       label: "RDV",
       className: css({
         position: "absolute",
-        left: "max(calc((100vw - 800px) / 2 + 8px), 16px)",
+        // there is a difference in padding between chrome and other browsers due to scrollbar width (i guess)
+        left: isChrome ? "max(calc((100vw - 800px) / 2 + 8px), 16px)" : "max(calc((100vw - 800px) / 2 + 16px), 16px)",
       }),
     },
     {

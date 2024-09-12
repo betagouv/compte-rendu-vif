@@ -37,8 +37,21 @@ export const ClauseMenu = ({ isNational, ...props }: { isNational: boolean } & M
   if (isNational)
     return (
       <>
-        <ClauseTitle isNational={isNational} buttons={null} {...props} />
-        <ClauseList clauses={(clausesQuery.results as any) ?? []} isEditing={false} />
+        <ClauseTitle
+          isNational={isNational}
+          buttons={null}
+          alert={
+            <ClauseFormBanner
+              status="idle"
+              icon={fr.cx("fr-icon-alert-fill")}
+              text={`Ces clauses sont communes à toutes les UDAP et ne peuvent pas être modifiées.`}
+            />
+          }
+          {...props}
+        />
+        <styled.div px="20px">
+          <ClauseList clauses={(clausesQuery.results as any) ?? []} isEditing={false} />
+        </styled.div>
       </>
     );
 
@@ -76,7 +89,10 @@ const ClauseForm = ({
   ...props
 }: { clauses: Clause_v2[]; isNational: boolean } & ModalContentProps) => {
   const [mode, setMode] = useState<Mode>("view");
-  const [bannerProps, setBannerProps] = useState<{ status: BannerStatus; text: string; icon: string } | null>(null);
+  const [bannerProps, setBannerProps] = useState<{ status: BannerStatus; text: string; icon: string } | null>({
+    ...initialBannerProps,
+    text: "Ces clauses sont spécifiques à votre UDAP et modifiables.",
+  });
 
   const isEditing = mode === "edit";
   const isAdding = mode === "add";
@@ -202,33 +218,34 @@ const ClauseForm = ({
         {...props}
         alert={bannerProps ? <ClauseFormBanner {...bannerProps} /> : null}
       />
-
-      {isAdding ? (
-        <ClauseAdd
-          onSuccess={() => {
-            setBannerProps({ status: "success", text: "Clause ajoutée", icon: "ri-check-fill" });
-            setMode("view");
-          }}
-          isNational={isNational}
-        />
-      ) : null}
-      <FormProvider {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} id="edit-form">
-          <ClauseList clauses={fieldsWithIndex} isEditing={isEditing} />
-        </form>
-      </FormProvider>
+      <styled.div px="20px">
+        {isAdding ? (
+          <ClauseAdd
+            onSuccess={() => {
+              setBannerProps({ status: "success", text: "Clause ajoutée", icon: "ri-check-fill" });
+              setMode("view");
+            }}
+            isNational={isNational}
+          />
+        ) : null}
+        <FormProvider {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} id="edit-form">
+            <ClauseList clauses={fieldsWithIndex} isEditing={isEditing} />
+          </form>
+        </FormProvider>
+      </styled.div>
     </>
   );
 };
 
 type BannerStatus = "idle" | "success";
 
-const ClauseFormBanner = ({ status, icon, text }: { text: string; icon: string; status: BannerStatus }) => {
+export const ClauseFormBanner = ({ status, icon, text }: { text: string; icon: string; status: BannerStatus }) => {
   const bgColor = status === "idle" ? "#E8EDFF" : "#B8FEC9";
   const iconColor = status === "idle" ? "#0063CB" : "#18753C";
 
   return (
-    <Flex ml="-32px" mr="-32px" py="16px" px="32px" bgColor={bgColor}>
+    <Flex mb="24px" py="16px" px="32px" bgColor={bgColor}>
       <i className={cx(icon, css({ color: iconColor }))} />
       <styled.div
         dangerouslySetInnerHTML={{ __html: transformBold(text) }}
@@ -240,7 +257,7 @@ const ClauseFormBanner = ({ status, icon, text }: { text: string; icon: string; 
   );
 };
 
-function transformBold(str: string) {
+export function transformBold(str: string) {
   return str.replace(/\*\*(.*?)\*\*/g, "<b>$1</b>");
 }
 

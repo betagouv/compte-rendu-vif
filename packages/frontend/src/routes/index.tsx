@@ -47,6 +47,7 @@ const Index = () => {
           id: `report-${v4()}`,
           createdBy: user.id,
           createdAt: new Date(),
+          meetDate: new Date(),
           disabled: false,
           udap_id: user.udap.id,
           redactedBy: user.name,

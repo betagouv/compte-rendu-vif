@@ -7,6 +7,8 @@ import { ToggleSwitch } from "@codegouvfr/react-dsfr/ToggleSwitch";
 import { useMutation } from "@tanstack/react-query";
 import { css } from "#styled-system/css";
 import { MenuTitle } from "./MenuTitle";
+import { ClauseFormBanner } from "./ClauseMenu";
+import { fr } from "@codegouvfr/react-dsfr";
 
 export const ShareReport = ({ backButtonOnClick }: { backButtonOnClick: () => void }) => {
   const user = useUser()!;
@@ -41,15 +43,26 @@ export const ShareReport = ({ backButtonOnClick }: { backButtonOnClick: () => vo
 
   return (
     <>
-      <MenuTitle backButtonOnClick={backButtonOnClick}>Partage des CR</MenuTitle>
-      <Divider hideFrom="lg" height="2px" my={{ base: "20px", lg: "44px" }} color="#C1C1FB" />
+      <MenuTitle
+        backButtonOnClick={backButtonOnClick}
+        alert={
+          <ClauseFormBanner
+            status="idle"
+            icon={fr.cx("fr-icon-alert-fill")}
+            text={`Tous les agents de l'UDAP peuvent voir et télécharger les compte-rendus envoyés. Seuls ceux à qui vous avez donné le droit peuvent créer, modifier, et supprimer vos compte-rendus. Le compte-rendu est attribué à un agent via le champ "rédigé par" du formulaire.`}
+          />
+        }
+      >
+        Partage des CR
+      </MenuTitle>
+      {/* <Divider hideFrom="lg" height="2px" my={{ base: "20px", lg: "44px" }} color="#C1C1FB" /> */}
 
-      <Stack w="100%">
+      <Stack w="100%" px="20px">
         <styled.div>Ces personnes peuvent créer, modifier et supprimer vos CR : </styled.div>
         <ManageDelegations coworkers={coworkersQuery.results ?? []} delegations={delegationsQuery.results ?? []} />
       </Stack>
 
-      <Stack mt="49px" color="#757575">
+      <Stack mt="49px" px="20px" color="#757575">
         <styled.div>Ces personnes vous permettent de créer, modifier et supprimer leurs CR :</styled.div>
         <styled.ul>
           {delegatedToMeQuery.results?.map((delegation) => (

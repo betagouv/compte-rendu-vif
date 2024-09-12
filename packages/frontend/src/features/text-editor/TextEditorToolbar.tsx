@@ -32,7 +32,7 @@ export const TextEditorToolbar = () => {
         className={toolbarButtonRecipe({
           active: editor.isActive("bold"),
         })}
-        size="small"
+        size="medium"
         priority="tertiary no outline"
         iconId="fr-icon-bold"
         type="button"
@@ -45,7 +45,7 @@ export const TextEditorToolbar = () => {
         className={toolbarButtonRecipe({
           active: editor.isActive("italic"),
         })}
-        size="small"
+        size="medium"
         priority="tertiary no outline"
         type="button"
         iconId="fr-icon-italic"
@@ -58,7 +58,7 @@ export const TextEditorToolbar = () => {
         className={toolbarButtonRecipe({
           active: editor.isActive("underline"),
         })}
-        size="small"
+        size="medium"
         priority="tertiary no outline"
         iconId="ri-underline"
         type="button"
@@ -91,7 +91,7 @@ const ColorInput = () => {
       <Popover.Trigger>
         <Button
           className={toolbarButtonRecipe({})}
-          size="small"
+          size="medium"
           priority="tertiary no outline"
           iconId="ri-palette-line"
           type="button"
@@ -105,18 +105,13 @@ const ColorInput = () => {
           <Stack p="8px">
             <Stack gap="8px" flexDir="row" justifyContent="space-around" w="100%">
               <ColorButton value={currentValue} color="black" />
-              <ColorButton value={currentValue} color="#c9191e" />
-              <ColorButton value={currentValue} color="#666666" />
+              <ColorButton value={currentValue} color="#e1000f" />
+              <ColorButton value={currentValue} color="#d64d00" />
             </Stack>
-            <Stack gap="8px" flexDir="row" justifyContent="space-around" w="100%">
-              <ColorButton value={currentValue} color="#cecece" />
-              <ColorButton value={currentValue} color="#0078f3" />
-              <ColorButton value={currentValue} color="#1f8d49" />
-            </Stack>
-            <Stack gap="8px" flexDir="row" justifyContent="space-around" w="100%">
-              <ColorButton value={currentValue} color="#68a532" />
-              <ColorButton value={currentValue} color="#e4794a" />
-              <ColorButton value={currentValue} color="#272747" />
+            <Stack flexDir="row" w="100%">
+              <ColorButton value={currentValue} color="#000091" />
+              <ColorButton value={currentValue} color="#118d49" />
+              <div />
             </Stack>
           </Stack>
         </Popover.Content>
