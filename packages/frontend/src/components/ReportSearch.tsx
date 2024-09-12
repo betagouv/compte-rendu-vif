@@ -89,23 +89,25 @@ export const SearchResults = ({ search, hideEmpty }: { search: string; hideEmpty
 
   return (
     <Center w="100%">
-      <Stack flexDir={{ base: "column", lg: "row" }} w="100%" mt="24px">
+      <Stack flexDir={{ base: "column", lg: "row" }} w={{ base: "100%", lg: "unset" }} mt="24px">
         {myReports.length ? (
-          <Stack maxW={{ base: "100%", lg: "400px" }}>
+          <Stack>
             <styled.div mb="16px" fontSize="20px" fontWeight="bold">
               Mes compte-rendus :
             </styled.div>
             <ReportList hidePagination hideEmpty={hideEmpty} reports={myReports ?? []} />
           </Stack>
         ) : null}
-        {otherReports.length ? (
-          <Stack maxW={{ base: "100%", lg: "400px" }}>
-            <styled.div mb="16px" fontSize="20px" fontWeight="bold">
-              Compte-rendus UDAP :
-            </styled.div>
-            <ReportList hidePagination hideEmpty={hideEmpty} reports={otherReports ?? []} />
-          </Stack>
-        ) : null}
+        <Stack>
+          {otherReports.length ? (
+            <>
+              <styled.div mb="16px" fontSize="20px" fontWeight="bold">
+                Compte-rendus UDAP :
+              </styled.div>
+              <ReportList hidePagination hideEmpty={hideEmpty} reports={otherReports ?? []} />
+            </>
+          ) : null}
+        </Stack>
       </Stack>
     </Center>
   );
