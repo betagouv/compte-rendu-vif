@@ -29,25 +29,43 @@ import { initElectric } from "./electric";
 
 declare let self: ServiceWorkerGlobalScope;
 
+console.log("salut");
+
 skipWaiting();
 clientsClaim();
 
 precacheAndRoute(self.__WB_MANIFEST);
 
 self.addEventListener("sync", async (event) => {
+  event.waitUntil(syncMissingPictures());
+});
+
+const ref = {
+  db: null as Awaited<ReturnType<typeof initElectric>>["db"] | null,
+};
+
+const getDb = async () => {
+  if (!ref.db) {
+    ref.db = (await initElectric()).db;
+  }
+
+  return ref.db;
+};
+
+const syncMissingPictures = async () => {
   const token = await getTokenFromIdb();
   if (!token) return void console.log("no token");
 
-  const { db } = await initElectric();
+  const db = await getDb();
+  const ids = await db.pictures.findMany({ where: { url: null } });
 
-  console.log(await db.pictures.findMany({ where: { url: null } }));
+  return syncPicturesById(
+    ids.map((p) => p.id),
+    token,
+  );
+};
 
-  // const toSyncStore = getToSyncStore();
-
-  // console.log(await keys(toSyncStore));
-});
-
-const syncMissingPictures = async (ids: string[], token: string) => {
+const syncPicturesById = async (ids: string[], token: string) => {
   const store = getPicturesStore();
   const localIds = await keys(store);
 
@@ -58,7 +76,7 @@ const syncMissingPictures = async (ids: string[], token: string) => {
     if (!buffer) {
       console.log("missing buffer for id", id);
       continue;
-    };
+    }
 
     const formData = new FormData();
     formData.append("file", new Blob([buffer]), "file");
@@ -66,6 +84,6 @@ const syncMissingPictures = async (ids: string[], token: string) => {
     api.post("/api/upload/image", {
       body: formData,
       header: { Authorization: `Bearer ${token}` },
-    } as any)
+    } as any);
   }
 };
