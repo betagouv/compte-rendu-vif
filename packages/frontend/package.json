@@ -99,6 +99,8 @@
     "vite": "^5.1.6",
     "vite-node": "^1.4.0",
     "vite-plugin-pwa": "^0.20.0",
+    "vite-plugin-top-level-await": "^1.4.4",
+    "workbox-core": "^7.1.0",
     "workbox-expiration": "^7.1.0",
     "workbox-precaching": "^7.1.0",
     "workbox-routing": "^7.1.0",

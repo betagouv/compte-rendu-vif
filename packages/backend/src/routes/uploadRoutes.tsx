@@ -9,22 +9,28 @@ export const uploadPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
     },
   });
 
-  fastify.post("/upload-image", async (request) => {
+  fastify.post("/image", async (request) => {
+    // console.log(request);
+
+    // const resp = await request.services.upload.addPictureToReport({})
     const files = request.files();
-
     for await (const file of files) {
-      const isImage = ["image/png", "image/jpeg", "image/jpg"].includes(file.mimetype);
-
-      if (!isImage) {
-        throw new AppError(400, "File is not an image");
-      }
-
-      //   await request.services.upload.addImageToReport({
-      //     reportId: "",
-      //     buffer: await file.toBuffer(),
-      //     name: getFileName(file),
-      //   });
+      console.log(file);
     }
+
+    // for await (const file of files) {
+    //   const isImage = ["image/png", "image/jpeg", "image/jpg"].includes(file.mimetype);
+
+    //   if (!isImage) {
+    //     throw new AppError(400, "File is not an image");
+    //   }
+
+    //   //   await request.services.upload.addImageToReport({
+    //   //     reportId: "",
+    //   //     buffer: await file.toBuffer(),
+    //   //     name: getFileName(file),
+    //   //   });
+    // }
 
     return "ok";
   });

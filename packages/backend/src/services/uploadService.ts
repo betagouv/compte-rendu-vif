@@ -30,6 +30,11 @@ export class UploadService {
 
     return Buffer.from(buffer);
   }
+
+  async addPictureToReport({ reportId, data }: { reportId: string; data: Uint8Array }) {
+    console.log(data);
+    return reportId;
+  }
 }
 
 export const getPDFName = (reportId: string) => `${reportId}/compte_rendu.pdf`;

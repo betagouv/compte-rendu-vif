@@ -3,6 +3,7 @@ import react from "@vitejs/plugin-react";
 import { TanStackRouterVite } from "@tanstack/router-vite-plugin";
 import wasm from "vite-plugin-wasm";
 import { VitePWA } from "vite-plugin-pwa";
+import topLevelAwait from "vite-plugin-top-level-await";
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
@@ -10,7 +11,7 @@ export default defineConfig({
     TanStackRouterVite(),
     wasm(),
     VitePWA({
-      devOptions: { enabled: true },
+      devOptions: { enabled: true, type: "module" },
       registerType: "autoUpdate",
       manifest: {
         id: "gouv.beta.compte-rendu-vif",
@@ -21,11 +22,14 @@ export default defineConfig({
         start_url: "/",
         lang: "fr",
       },
-      workbox: {
+      injectManifest: {
         maximumFileSizeToCacheInBytes: 2097152 * 3,
         globPatterns: ["**/*.{svg,woff2,js,wasm,css,html}"],
-        importScripts: ["./src/test.ts"],
       },
+      includeAssets: ["**/*.{svg,woff2,wasm}"],
+      strategies: "injectManifest",
+      srcDir: "src/service-worker",
+      filename: "sw.ts",
     }),
   ],
   envDir: "../..",

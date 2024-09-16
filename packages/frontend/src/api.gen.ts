@@ -144,6 +144,12 @@ export namespace Endpoints {
       udap_text?: string | undefined;
     }>;
   };
+  export type post_Apiuploadimage = {
+    method: "POST";
+    path: "/api/upload/image";
+    parameters: never;
+    response: unknown;
+  };
   export type post_Apipdfreport = {
     method: "POST";
     path: "/api/pdf/report";
@@ -171,6 +177,7 @@ export type EndpointByMethod = {
     "/api/login": Endpoints.post_Apilogin;
     "/api/send-reset-password": Endpoints.post_ApisendResetPassword;
     "/api/reset-password": Endpoints.post_ApiresetPassword;
+    "/api/upload/image": Endpoints.post_Apiuploadimage;
     "/api/pdf/report": Endpoints.post_Apipdfreport;
   };
   get: {

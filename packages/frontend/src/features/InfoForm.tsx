@@ -18,6 +18,9 @@ import { db } from "../db";
 import { v4 } from "uuid";
 import { Buffer } from "buffer";
 import { useMutation } from "@tanstack/react-query";
+import { api } from "../api";
+import { createStore, keys, set } from "idb-keyval";
+import { getReportStore, getPicturesStore, syncImages } from "./idb";
 
 export const InfoForm = () => {
   const form = useFormContext<Report>();
@@ -139,24 +142,52 @@ export const InfoForm = () => {
           accept="image/*"
           capture
           onChange={async (e) => {
-            console.log(e.target.files);
-            if (!e.target.files?.[0]) return;
-            const file = e.target.files[0];
+            const picturesStore = getPicturesStore();
 
             const id = v4();
-            const buffer = await getArrayBufferFromBlob(file);
-            const data = new Uint8Array(buffer);
+            const file = e.target.files?.[0];
+            if (!file) return;
 
-            const result = await db.pictures.create({
+            const buffer = await getArrayBufferFromBlob(file);
+            set(id, buffer, picturesStore);
+
+            await db.pictures.create({
               data: {
                 id,
-                data,
                 reportId: form.getValues().id,
                 createdAt: new Date(),
               },
             });
 
-            console.log(result);
+            syncImages();
+
+            // console.log(e.target.files);
+            // if (!e.target.files?.[0]) return;
+            // const file = e.target.files[0];
+
+            // const id = v4();
+            // const buffer = await getArrayBufferFromBlob(file);
+            // const data = new Uint8Array(buffer);
+
+            // // const result = await db.pictures.create({
+            // //   data: {
+            // //     id,
+            // //     data,
+            // //     reportId: form.getValues().id,
+            // //     createdAt: new Date(),
+            // //   },
+            // // });
+
+            // const newFile = new File([buffer], "image.png", { type: "image/png" });
+
+            // const formData = new FormData();
+            // formData.append("data", newFile);
+
+            // const result = await api.post("/api/upload/image", {
+            //   body: formData,
+            // } as any);
+
+            // console.log(result);
           }}
         />
         <ReportPictures />
