@@ -20,3 +20,7 @@ export * from './service_instructeurs';
 export * from './service_instructeursInput';
 export * from './clause_v2';
 export * from './clause_v2Input';
+export * from './pdf_snapshot';
+export * from './pdf_snapshotInput';
+export * from './pictures';
+export * from './picturesInput';

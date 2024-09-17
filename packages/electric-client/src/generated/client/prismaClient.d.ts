@@ -96,7 +96,6 @@ export type PicturesPayload<ExtArgs extends $Extensions.Args = $Extensions.Defau
   scalars: $Extensions.GetResult<{
     id: string
     reportId: string | null
-    data: Buffer | null
     url: string | null
     createdAt: Date | null
   }, ExtArgs["result"]["pictures"]>
@@ -5430,7 +5429,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type PicturesMinAggregateOutputType = {
     id: string | null
     reportId: string | null
-    data: Buffer | null
     url: string | null
     createdAt: Date | null
   }
@@ -5438,7 +5436,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type PicturesMaxAggregateOutputType = {
     id: string | null
     reportId: string | null
-    data: Buffer | null
     url: string | null
     createdAt: Date | null
   }
@@ -5446,7 +5443,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type PicturesCountAggregateOutputType = {
     id: number
     reportId: number
-    data: number
     url: number
     createdAt: number
     _all: number
@@ -5456,7 +5452,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type PicturesMinAggregateInputType = {
     id?: true
     reportId?: true
-    data?: true
     url?: true
     createdAt?: true
   }
@@ -5464,7 +5459,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type PicturesMaxAggregateInputType = {
     id?: true
     reportId?: true
-    data?: true
     url?: true
     createdAt?: true
   }
@@ -5472,7 +5466,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type PicturesCountAggregateInputType = {
     id?: true
     reportId?: true
-    data?: true
     url?: true
     createdAt?: true
     _all?: true
@@ -5554,7 +5547,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type PicturesGroupByOutputType = {
     id: string
     reportId: string | null
-    data: Buffer | null
     url: string | null
     createdAt: Date | null
     _count: PicturesCountAggregateOutputType | null
@@ -5579,7 +5571,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type PicturesSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     reportId?: boolean
-    data?: boolean
     url?: boolean
     createdAt?: boolean
     report?: boolean | ReportArgs<ExtArgs>
@@ -5588,7 +5579,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type PicturesSelectScalar = {
     id?: boolean
     reportId?: boolean
-    data?: boolean
     url?: boolean
     createdAt?: boolean
   }
@@ -10469,7 +10459,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export const PicturesScalarFieldEnum: {
     id: 'id',
     reportId: 'reportId',
-    data: 'data',
     url: 'url',
     createdAt: 'createdAt'
   };
@@ -10759,7 +10748,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     NOT?: Enumerable<PicturesWhereInput>
     id?: StringFilter | string
     reportId?: StringNullableFilter | string | null
-    data?: BytesNullableFilter | Buffer | null
     url?: StringNullableFilter | string | null
     createdAt?: DateTimeNullableFilter | Date | string | null
     report?: XOR<ReportRelationFilter, ReportWhereInput> | null
@@ -10768,7 +10756,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type PicturesOrderByWithRelationInput = {
     id?: SortOrder
     reportId?: SortOrderInput | SortOrder
-    data?: SortOrderInput | SortOrder
     url?: SortOrderInput | SortOrder
     createdAt?: SortOrderInput | SortOrder
     report?: ReportOrderByWithRelationInput
@@ -10781,7 +10768,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type PicturesOrderByWithAggregationInput = {
     id?: SortOrder
     reportId?: SortOrderInput | SortOrder
-    data?: SortOrderInput | SortOrder
     url?: SortOrderInput | SortOrder
     createdAt?: SortOrderInput | SortOrder
     _count?: PicturesCountOrderByAggregateInput
@@ -10795,7 +10781,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     NOT?: Enumerable<PicturesScalarWhereWithAggregatesInput>
     id?: StringWithAggregatesFilter | string
     reportId?: StringNullableWithAggregatesFilter | string | null
-    data?: BytesNullableWithAggregatesFilter | Buffer | null
     url?: StringNullableWithAggregatesFilter | string | null
     createdAt?: DateTimeNullableWithAggregatesFilter | Date | string | null
   }
@@ -11309,7 +11294,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type PicturesCreateInput = {
     id: string
-    data?: Buffer | null
     url?: string | null
     createdAt?: Date | string | null
     report?: ReportCreateNestedOneWithoutPicturesInput
@@ -11318,14 +11302,12 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type PicturesUncheckedCreateInput = {
     id: string
     reportId?: string | null
-    data?: Buffer | null
     url?: string | null
     createdAt?: Date | string | null
   }
 
   export type PicturesUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    data?: NullableBytesFieldUpdateOperationsInput | Buffer | null
     url?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     report?: ReportUpdateOneWithoutPicturesNestedInput
@@ -11334,7 +11316,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type PicturesUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     reportId?: NullableStringFieldUpdateOperationsInput | string | null
-    data?: NullableBytesFieldUpdateOperationsInput | Buffer | null
     url?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
@@ -11342,14 +11323,12 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type PicturesCreateManyInput = {
     id: string
     reportId?: string | null
-    data?: Buffer | null
     url?: string | null
     createdAt?: Date | string | null
   }
 
   export type PicturesUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    data?: NullableBytesFieldUpdateOperationsInput | Buffer | null
     url?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
@@ -11357,7 +11336,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type PicturesUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     reportId?: NullableStringFieldUpdateOperationsInput | string | null
-    data?: NullableBytesFieldUpdateOperationsInput | Buffer | null
     url?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
@@ -12004,13 +11982,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     user_id?: SortOrder
   }
 
-  export type BytesNullableFilter = {
-    equals?: Buffer | null
-    in?: Enumerable<Buffer> | Buffer | null
-    notIn?: Enumerable<Buffer> | Buffer | null
-    not?: NestedBytesNullableFilter | Buffer | null
-  }
-
   export type DateTimeNullableFilter = {
     equals?: Date | string | null
     in?: Enumerable<Date> | Enumerable<string> | Date | string | null
@@ -12030,7 +12001,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type PicturesCountOrderByAggregateInput = {
     id?: SortOrder
     reportId?: SortOrder
-    data?: SortOrder
     url?: SortOrder
     createdAt?: SortOrder
   }
@@ -12038,7 +12008,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type PicturesMaxOrderByAggregateInput = {
     id?: SortOrder
     reportId?: SortOrder
-    data?: SortOrder
     url?: SortOrder
     createdAt?: SortOrder
   }
@@ -12046,19 +12015,8 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type PicturesMinOrderByAggregateInput = {
     id?: SortOrder
     reportId?: SortOrder
-    data?: SortOrder
     url?: SortOrder
     createdAt?: SortOrder
-  }
-
-  export type BytesNullableWithAggregatesFilter = {
-    equals?: Buffer | null
-    in?: Enumerable<Buffer> | Buffer | null
-    notIn?: Enumerable<Buffer> | Buffer | null
-    not?: NestedBytesNullableWithAggregatesFilter | Buffer | null
-    _count?: NestedIntNullableFilter
-    _min?: NestedBytesNullableFilter
-    _max?: NestedBytesNullableFilter
   }
 
   export type DateTimeNullableWithAggregatesFilter = {
@@ -12411,10 +12369,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     create?: XOR<ReportCreateWithoutPicturesInput, ReportUncheckedCreateWithoutPicturesInput>
     connectOrCreate?: ReportCreateOrConnectWithoutPicturesInput
     connect?: ReportWhereUniqueInput
-  }
-
-  export type NullableBytesFieldUpdateOperationsInput = {
-    set?: Buffer | null
   }
 
   export type NullableDateTimeFieldUpdateOperationsInput = {
@@ -12805,13 +12759,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     _max?: NestedStringNullableFilter
   }
 
-  export type NestedBytesNullableFilter = {
-    equals?: Buffer | null
-    in?: Enumerable<Buffer> | Buffer | null
-    notIn?: Enumerable<Buffer> | Buffer | null
-    not?: NestedBytesNullableFilter | Buffer | null
-  }
-
   export type NestedDateTimeNullableFilter = {
     equals?: Date | string | null
     in?: Enumerable<Date> | Enumerable<string> | Date | string | null
@@ -12821,16 +12768,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     gt?: Date | string
     gte?: Date | string
     not?: NestedDateTimeNullableFilter | Date | string | null
-  }
-
-  export type NestedBytesNullableWithAggregatesFilter = {
-    equals?: Buffer | null
-    in?: Enumerable<Buffer> | Buffer | null
-    notIn?: Enumerable<Buffer> | Buffer | null
-    not?: NestedBytesNullableWithAggregatesFilter | Buffer | null
-    _count?: NestedIntNullableFilter
-    _min?: NestedBytesNullableFilter
-    _max?: NestedBytesNullableFilter
   }
 
   export type NestedDateTimeNullableWithAggregatesFilter = {
@@ -13099,14 +13036,12 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type PicturesCreateWithoutReportInput = {
     id: string
-    data?: Buffer | null
     url?: string | null
     createdAt?: Date | string | null
   }
 
   export type PicturesUncheckedCreateWithoutReportInput = {
     id: string
-    data?: Buffer | null
     url?: string | null
     createdAt?: Date | string | null
   }
@@ -13164,7 +13099,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     NOT?: Enumerable<PicturesScalarWhereInput>
     id?: StringFilter | string
     reportId?: StringNullableFilter | string | null
-    data?: BytesNullableFilter | Buffer | null
     url?: StringNullableFilter | string | null
     createdAt?: DateTimeNullableFilter | Date | string | null
   }
@@ -13500,28 +13434,24 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type PicturesCreateManyReportInput = {
     id: string
-    data?: Buffer | null
     url?: string | null
     createdAt?: Date | string | null
   }
 
   export type PicturesUpdateWithoutReportInput = {
     id?: StringFieldUpdateOperationsInput | string
-    data?: NullableBytesFieldUpdateOperationsInput | Buffer | null
     url?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type PicturesUncheckedUpdateWithoutReportInput = {
     id?: StringFieldUpdateOperationsInput | string
-    data?: NullableBytesFieldUpdateOperationsInput | Buffer | null
     url?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type PicturesUncheckedUpdateManyWithoutPicturesInput = {
     id?: StringFieldUpdateOperationsInput | string
-    data?: NullableBytesFieldUpdateOperationsInput | Buffer | null
     url?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }

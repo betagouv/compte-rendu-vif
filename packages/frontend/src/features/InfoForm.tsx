@@ -1,12 +1,12 @@
-import { Box, Center, Divider, Flex, Stack, styled } from "#styled-system/jsx";
+import { Box, Center, Divider, Flex, Grid, Stack, styled } from "#styled-system/jsx";
 import { useTabsContext } from "@ark-ui/react/tabs";
 import Button from "@codegouvfr/react-dsfr/Button";
 import Input from "@codegouvfr/react-dsfr/Input";
 import Select from "@codegouvfr/react-dsfr/Select";
 import { format, parse } from "date-fns";
-import { useRef, useState } from "react";
+import { ChangeEvent, useRef, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
-import { InputGroupWithTitle } from "#components/InputGroup";
+import { InputGroup, InputGroupWithTitle } from "#components/InputGroup";
 import { SpaceTypeChips } from "#components/chips/SpaceTypeChips";
 import { useUser } from "../contexts/AuthContext";
 import type { Report, Pictures } from "@cr-vif/electric-client/frontend";
@@ -17,10 +17,11 @@ import { useLiveQuery } from "electric-sql/react";
 import { db } from "../db";
 import { v4 } from "uuid";
 import { Buffer } from "buffer";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { api } from "../api";
-import { createStore, keys, set } from "idb-keyval";
+import { createStore, get, keys, set } from "idb-keyval";
 import { getReportStore, getPicturesStore, syncImages } from "./idb";
+import { fr } from "@codegouvfr/react-dsfr";
 
 export const InfoForm = () => {
   const form = useFormContext<Report>();
@@ -137,59 +138,7 @@ export const InfoForm = () => {
       <Divider mt="20px" mb="52px" />
 
       <InputGroupWithTitle title="Le projet">
-        <styled.input
-          type="file"
-          accept="image/*"
-          capture
-          onChange={async (e) => {
-            const picturesStore = getPicturesStore();
-
-            const id = v4();
-            const file = e.target.files?.[0];
-            if (!file) return;
-
-            const buffer = await getArrayBufferFromBlob(file);
-            set(id, buffer, picturesStore);
-
-            await db.pictures.create({
-              data: {
-                id,
-                reportId: form.getValues().id,
-                createdAt: new Date(),
-              },
-            });
-
-            syncImages();
-
-            // console.log(e.target.files);
-            // if (!e.target.files?.[0]) return;
-            // const file = e.target.files[0];
-
-            // const id = v4();
-            // const buffer = await getArrayBufferFromBlob(file);
-            // const data = new Uint8Array(buffer);
-
-            // // const result = await db.pictures.create({
-            // //   data: {
-            // //     id,
-            // //     data,
-            // //     reportId: form.getValues().id,
-            // //     createdAt: new Date(),
-            // //   },
-            // // });
-
-            // const newFile = new File([buffer], "image.png", { type: "image/png" });
-
-            // const formData = new FormData();
-            // formData.append("data", newFile);
-
-            // const result = await api.post("/api/upload/image", {
-            //   body: formData,
-            // } as any);
-
-            // console.log(result);
-          }}
-        />
+        <UploadImage reportId={form.getValues().id} />
         <ReportPictures />
 
         <Input
@@ -261,25 +210,69 @@ export const InfoForm = () => {
   );
 };
 
+const UploadImage = ({ reportId }: { reportId: string }) => {
+  const ref = useRef<HTMLInputElement>(null);
+
+  const onChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    const picturesStore = getPicturesStore();
+
+    const id = v4();
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const buffer = await getArrayBufferFromBlob(file);
+    set(id, buffer, picturesStore);
+
+    await db.pictures.create({
+      data: {
+        id,
+        reportId,
+        createdAt: new Date(),
+      },
+    });
+
+    syncImages();
+  };
+
+  return (
+    <>
+      <Button
+        type="button"
+        iconId="ri-add-line"
+        priority="secondary"
+        nativeButtonProps={{
+          type: "button",
+          onClick: () => ref.current?.click(),
+        }}
+      >
+        Ajouter photo
+      </Button>
+      <styled.input ref={ref as any} type="file" accept="image/*" capture onChange={onChange} display="none" />
+    </>
+  );
+};
+
 const ReportPictures = () => {
   const form = useFormContext<Report>();
 
   const picturesQuery = useLiveQuery(
     db.pictures.liveMany({
       where: { reportId: form.getValues().id },
-      orderBy: { createdAt: "desc" },
+      orderBy: { createdAt: "asc" },
     }),
   );
 
   return (
     <Flex direction="column" w="100%" padding="16px">
-      <InputGroupWithTitle title="Photos">
-        <Flex gap="16px" direction="column">
-          {picturesQuery.results
-            ?.filter((picture) => !!picture.data)
-            .map((picture, index) => <PictureThumbnail key={picture.id} picture={picture as any} index={index} />)}
-        </Flex>
-      </InputGroupWithTitle>
+      <InputGroup>
+        {/* <Flex gap="16px" direction="column"> */}
+        <Grid gap="16px" gridTemplateColumns={{ base: "repeat(2, 1fr)", md: "repeat(3, 1fr)", lg: "repeat(4, 1fr)" }}>
+          {picturesQuery.results?.map((picture, index) => (
+            <PictureThumbnail key={picture.id} picture={picture as any} index={index} />
+          ))}
+        </Grid>
+        {/* </Flex> */}
+      </InputGroup>
     </Flex>
   );
 };
@@ -287,14 +280,35 @@ const ReportPictures = () => {
 const PictureThumbnail = ({ picture, index }: { picture: Pictures; index: number }) => {
   const deletePictureMutation = useMutation(() => db.pictures.delete({ where: { id: picture.id } }));
 
+  const bgUrlQuery = useQuery({
+    queryKey: ["picture", picture.id],
+    queryFn: async () => {
+      // if (picture.url) return picture.url;
+      const buffer = await get(picture.id, getPicturesStore());
+      const blob = new Blob([buffer], { type: "image/png" });
+
+      return URL.createObjectURL(blob);
+    },
+  });
+
   return (
-    <Flex flexDir="column" maxW="180px">
-      <Box key={picture.id}>
-        <img src={`data:image/png;base64,${Buffer.from(picture.data!).toString("base64")}`} />
-      </Box>
-      <Flex>
-        <Box flex="1">N° {index + 1}</Box>
-        <Box onClick={() => deletePictureMutation.mutate()}>Suppr</Box>
+    <Flex
+      style={bgUrlQuery.data ? { backgroundImage: `url(${bgUrlQuery.data})` } : { backgroundColor: "gray" }}
+      flexDir="column"
+      justifyContent="flex-end"
+      w="180px"
+      h="170px"
+      backgroundPositionY="-20px"
+      backgroundSize="cover"
+    >
+      <Flex alignItems="center" border="1px solid #DFDFDF" h="40px" bgColor="white">
+        <Box flex="1" pl="5px">
+          N° {index + 1}
+        </Box>
+        <Box onClick={() => deletePictureMutation.mutate()} borderLeft="1px solid #DFDFDF">
+          <Button type="button" iconId="ri-close-circle-fill" priority="tertiary no outline" />
+          {/* <styled.i className={fr.cx("fr-icon--md", "fr-icon-close-circle-fill")} /> */}
+        </Box>
       </Flex>
     </Flex>
   );

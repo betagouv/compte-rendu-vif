@@ -8,9 +8,24 @@ const debug = makeDebug("upload");
 export const upload = async () => {};
 
 export class UploadService {
-  async addPDFToReport({ reportId, buffer, name }: { reportId: string; buffer: Buffer; name: string }) {
+  async addPDFToReport({
+    reportId,
+    buffer,
+    name,
+    publicRead,
+  }: {
+    reportId: string;
+    buffer: Buffer;
+    name: string;
+    publicRead?: boolean;
+  }) {
     debug("Uploading PDF to S3", reportId);
-    const command = new PutObjectCommand({ Bucket: ENV.AWS_BUCKET_NAME, Body: buffer, Key: name });
+    const command = new PutObjectCommand({
+      Bucket: ENV.AWS_BUCKET_NAME,
+      Body: buffer,
+      Key: name,
+      ACL: publicRead ? "public-read" : undefined,
+    });
     await client.send(command);
 
     const url = `https://${ENV.AWS_BUCKET_NAME}.s3.${ENV.AWS_REGION}.scw.cloud/${name}`;
@@ -31,10 +46,18 @@ export class UploadService {
     return Buffer.from(buffer);
   }
 
-  async addPictureToReport({ reportId, data }: { reportId: string; data: Uint8Array }) {
-    console.log(data);
-    return reportId;
+  async getReportPicture({ reportId, pictureId }: { reportId: string; pictureId: string }) {
+    const name = getPictureName(reportId, pictureId);
+
+    const command = new GetObjectCommand({ Bucket: ENV.AWS_BUCKET_NAME, Key: name });
+    const response = await client.send(command);
+
+    const buffer = await response.Body?.transformToByteArray();
+    if (!buffer) throw new AppError(404, "Picture not found");
+
+    return Buffer.from(buffer);
   }
 }
 
 export const getPDFName = (reportId: string) => `${reportId}/compte_rendu.pdf`;
+export const getPictureName = (reportId: string, pictureId: string) => `${reportId}/pictures/${pictureId}.png`;

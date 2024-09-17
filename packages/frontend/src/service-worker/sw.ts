@@ -17,25 +17,20 @@
 
 // // });
 
-import { createHandlerBoundToURL, precacheAndRoute, cleanupOutdatedCaches } from "workbox-precaching";
-import { NavigationRoute, registerRoute } from "workbox-routing";
+import { precacheAndRoute } from "workbox-precaching";
 import { skipWaiting, clientsClaim } from "workbox-core";
-import { StaleWhileRevalidate } from "workbox-strategies";
-import { ExpirationPlugin } from "workbox-expiration";
 import { api, getTokenFromIdb } from "../api";
 import { getPicturesStore } from "../features/idb";
 import { get, keys } from "idb-keyval";
 import { initElectric } from "./electric";
+import { Pictures } from "@cr-vif/electric-client/frontend";
 
 declare let self: ServiceWorkerGlobalScope;
 
-console.log("salut");
-
-skipWaiting();
-clientsClaim();
-
 precacheAndRoute(self.__WB_MANIFEST);
 
+self.addEventListener("install", () => void self.skipWaiting());
+self.addEventListener("activate", () => void self.clients.claim());
 self.addEventListener("sync", async (event) => {
   event.waitUntil(syncMissingPictures());
 });
@@ -52,38 +47,52 @@ const getDb = async () => {
   return ref.db;
 };
 
-const syncMissingPictures = async () => {
-  const token = await getTokenFromIdb();
-  if (!token) return void console.log("no token");
+const syncMissingPictures = async (retries = 3) => {
+  try {
+    const token = await getTokenFromIdb();
+    if (!token) return void console.log("no token");
 
-  const db = await getDb();
-  const ids = await db.pictures.findMany({ where: { url: null } });
+    const db = await getDb();
+    const pictures = await db.pictures.findMany({ where: { url: null } });
 
-  return syncPicturesById(
-    ids.map((p) => p.id),
-    token,
-  );
+    console.log("syncing", pictures.length, "missing pictures");
+
+    return syncPicturesById(pictures, token);
+  } catch (e) {
+    if (retries > 0) {
+      console.log("retrying in 5s", e);
+      await new Promise((resolve) => setTimeout(resolve, 5000));
+      return syncMissingPictures(retries - 1);
+    }
+
+    throw e;
+  }
 };
 
-const syncPicturesById = async (ids: string[], token: string) => {
+const syncPicturesById = async (ids: Pictures[], token: string) => {
   const store = getPicturesStore();
   const localIds = await keys(store);
+  const missingIds = ids.filter((pic) => localIds.includes(pic.id));
 
-  const missingIds = ids.filter((id) => !localIds.includes(id));
-
-  for (const id of missingIds) {
-    const buffer = await get(id, store);
+  for (const pic of missingIds) {
+    console.log("syncing picture", pic);
+    const buffer = await get(pic.id, store);
     if (!buffer) {
-      console.log("missing buffer for id", id);
+      console.log("missing buffer for id", pic.id);
       continue;
     }
 
     const formData = new FormData();
     formData.append("file", new Blob([buffer]), "file");
+    formData.append("reportId", pic.reportId!);
+    formData.append("pictureId", pic.id);
 
-    api.post("/api/upload/image", {
+    await api.post("/api/upload/image", {
       body: formData,
+      query: { reportId: pic.reportId, id: pic.id },
       header: { Authorization: `Bearer ${token}` },
     } as any);
+
+    console.log("done");
   }
 };
