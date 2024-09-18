@@ -1,5 +1,4 @@
-import { createStore, keys, set } from "idb-keyval";
-import { promisifyRequest } from "idb-keyval";
+import { createStore } from "idb-keyval";
 
 export const getPicturesStore = () => createStore("toSync", "images");
 

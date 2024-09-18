@@ -1,27 +1,24 @@
+import { InputGroup, InputGroupWithTitle } from "#components/InputGroup";
+import { SpaceTypeChips } from "#components/chips/SpaceTypeChips";
+import { css } from "#styled-system/css";
 import { Box, Center, Divider, Flex, Grid, Stack, styled } from "#styled-system/jsx";
 import { useTabsContext } from "@ark-ui/react/tabs";
 import Button from "@codegouvfr/react-dsfr/Button";
 import Input from "@codegouvfr/react-dsfr/Input";
 import Select from "@codegouvfr/react-dsfr/Select";
-import { format, parse } from "date-fns";
-import { ChangeEvent, useRef, useState } from "react";
-import { useFormContext, useWatch } from "react-hook-form";
-import { InputGroup, InputGroupWithTitle } from "#components/InputGroup";
-import { SpaceTypeChips } from "#components/chips/SpaceTypeChips";
-import { useUser } from "../contexts/AuthContext";
-import type { Report, Pictures } from "@cr-vif/electric-client/frontend";
-import { css } from "#styled-system/css";
-import { ServiceInstructeurSelect } from "./ServiceInstructeurSelect";
-import { useIsFormDisabled } from "./DisabledContext";
-import { useLiveQuery } from "electric-sql/react";
-import { db } from "../db";
-import { v4 } from "uuid";
-import { Buffer } from "buffer";
+import type { Pictures, Report } from "@cr-vif/electric-client/frontend";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { api } from "../api";
-import { createStore, get, keys, set } from "idb-keyval";
-import { getReportStore, getPicturesStore, syncImages } from "./idb";
-import { fr } from "@codegouvfr/react-dsfr";
+import { format, parse } from "date-fns";
+import { useLiveQuery } from "electric-sql/react";
+import { get, set } from "idb-keyval";
+import { ChangeEvent, useRef } from "react";
+import { useFormContext, useWatch } from "react-hook-form";
+import { v4 } from "uuid";
+import { useUser } from "../contexts/AuthContext";
+import { db } from "../db";
+import { useIsFormDisabled } from "./DisabledContext";
+import { ServiceInstructeurSelect } from "./ServiceInstructeurSelect";
+import { getPicturesStore, syncImages } from "./idb";
 
 export const InfoForm = () => {
   const form = useFormContext<Report>();
@@ -263,7 +260,7 @@ const ReportPictures = () => {
   );
 
   return (
-    <Flex direction="column" w="100%" padding="16px">
+    <Flex direction="column" w="100%" my="40px">
       <InputGroup>
         {/* <Flex gap="16px" direction="column"> */}
         <Grid gap="16px" gridTemplateColumns={{ base: "repeat(2, 1fr)", md: "repeat(3, 1fr)", lg: "repeat(4, 1fr)" }}>

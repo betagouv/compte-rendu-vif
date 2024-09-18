@@ -1,27 +1,7 @@
-// // import { createHandlerBoundToURL, precacheAndRoute } from "workbox-precaching";
-// const { createStore, get } = require("idb-keyval");
-
-// const store = createStore("auth", "access");
-// const getTokenFromIdb = async () => {
-//   return get("token", store);
-// };
-
-// console.log("MDR");
-
-// // // @ts-expect-error periodicsync is not included in the default SW interface.
-// // self.addEventListener('periodicsync', (event: PeriodicBackgroundSyncEvent) => {
-
-// // });
-
-// // self.addEventListener('message', (event) => {
-
-// // });
-
 import { precacheAndRoute } from "workbox-precaching";
-import { skipWaiting, clientsClaim } from "workbox-core";
 import { api, getTokenFromIdb } from "../api";
 import { getPicturesStore } from "../features/idb";
-import { get, keys } from "idb-keyval";
+import { del, get, keys } from "idb-keyval";
 import { initElectric } from "./electric";
 import { Pictures } from "@cr-vif/electric-client/frontend";
 
@@ -57,7 +37,7 @@ const syncMissingPictures = async (retries = 3) => {
 
     console.log("syncing", pictures.length, "missing pictures");
 
-    return syncPicturesById(pictures, token);
+    await syncPicturesById(pictures, token);
   } catch (e) {
     if (retries > 0) {
       console.log("retrying in 5s", e);
@@ -67,6 +47,8 @@ const syncMissingPictures = async (retries = 3) => {
 
     throw e;
   }
+
+  await cleanupOldCaches();
 };
 
 const syncPicturesById = async (ids: Pictures[], token: string) => {
@@ -95,4 +77,23 @@ const syncPicturesById = async (ids: Pictures[], token: string) => {
 
     console.log("done");
   }
+};
+
+const cleanupOldCaches = async () => {
+  const db = await getDb();
+
+  const keysToKeep = await db.pictures.findMany({ where: { url: null } });
+
+  const store = getPicturesStore();
+  const localIds = await keys(store);
+
+  const keysToDelete = localIds.filter((id) => !keysToKeep.some((pic) => pic.id === id));
+
+  console.log("deleting", keysToDelete.length, "old pictures");
+
+  for (const key of keysToDelete) {
+    await del(key, store);
+  }
+
+  console.log("done");
 };
