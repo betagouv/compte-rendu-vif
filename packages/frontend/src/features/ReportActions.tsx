@@ -32,8 +32,11 @@ export const ReportActions = forwardRef<HTMLDivElement, { report: ReportWithUser
       data: {
         ...payload,
         id: `report-${v4()}`,
-        title: `${report.title} - copie`,
+        title: `${report.title ?? "Sans titre"} - copie`,
         createdAt: new Date(),
+        redactedBy: user.name,
+        redactedById: user.id,
+        createdBy: user.id,
         pdf: undefined,
       },
     });
