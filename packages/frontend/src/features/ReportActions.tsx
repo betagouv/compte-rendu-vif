@@ -11,11 +11,12 @@ import { omit } from "pastable";
 import { ReportWithUser } from "./ReportList";
 import { useNavigate } from "@tanstack/react-router";
 import { api } from "../api";
+import { useCanEditReport } from "../hooks/useCanEditReport";
 
 export const ReportActions = forwardRef<HTMLDivElement, { report: ReportWithUser }>(({ report }, ref) => {
   const user = useUser()!;
 
-  const isOwner = report.createdBy === user.id;
+  const canEdit = useCanEditReport(report);
 
   const navigate = useNavigate();
 
@@ -32,8 +33,11 @@ export const ReportActions = forwardRef<HTMLDivElement, { report: ReportWithUser
       data: {
         ...payload,
         id: `report-${v4()}`,
-        title: `${report.title} - copie`,
+        title: `${report.title ?? "Sans titre"} - copie`,
         createdAt: new Date(),
+        redactedBy: user.name,
+        redactedById: user.id,
+        createdBy: user.id,
         pdf: undefined,
       },
     });
@@ -41,7 +45,7 @@ export const ReportActions = forwardRef<HTMLDivElement, { report: ReportWithUser
 
   return (
     <Stack ref={ref} gap="0">
-      {isOwner ? (
+      {canEdit ? (
         <>
           <ReportAction
             iconId="ri-pencil-line"
@@ -51,7 +55,7 @@ export const ReportActions = forwardRef<HTMLDivElement, { report: ReportWithUser
           <Divider height="1px" color="#DDD" />
         </>
       ) : null}
-      {isOwner ? (
+      {canEdit ? (
         <>
           <ReportAction
             iconId="ri-delete-bin-2-line"

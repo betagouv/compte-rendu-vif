@@ -20,7 +20,7 @@ import { db } from "../db";
 import { InfoForm } from "../features/InfoForm";
 import { NotesForm } from "../features/NotesForm";
 import { DisabledContext } from "../features/DisabledContext";
-import { useUser } from "../contexts/AuthContext";
+import { useCanEditReport } from "../hooks/useCanEditReport";
 
 const EditReport = () => {
   const { reportId } = Route.useParams();
@@ -64,7 +64,6 @@ function useFormWithFocus<TFieldValues extends FieldValues = FieldValues>(props:
 
   return [form, () => focusedRef.current] as const;
 }
-
 const WithReport = ({ report }: { report: Report }) => {
   const { tab } = Route.useSearch();
   const [form, getFocused] = useFormWithFocus<Report>({
@@ -72,15 +71,7 @@ const WithReport = ({ report }: { report: Report }) => {
     resetOptions: {},
   });
 
-  const user = useUser()!;
-  const isOwner = report.redactedById === user.id;
-
-  const userDelegations = useLiveQuery(
-    db.delegation.liveFirst({ where: { createdBy: report.createdBy, delegatedTo: user.id } }),
-  );
-
-  const hasDelegation = !!userDelegations.results;
-  const canEdit = isOwner || hasDelegation;
+  const canEdit = useCanEditReport(report);
 
   const navigate = useNavigate();
 
