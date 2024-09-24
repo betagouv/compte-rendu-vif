@@ -28,8 +28,7 @@ export const sendReportMail = ({
     text: `Bonjour,
 vous trouverez ci-joint le compte-rendu de notre rendez-vous.
 
-Ce compte-rendu est un nouveau dispositif en phase de développement pour but d’aider l’usager
-dans sa démarche. Aidez-nous à l’améliorer en répondant à ce questionnaire anonyme de moins d’une minute : https://adtk8x51mbw.eu.typeform.com/to/LHrKhXkd
+Ce compte-rendu est un nouveau dispositif en phase de développement pour but d’aider l’usager dans sa démarche. Aidez-nous à l’améliorer en répondant à ce questionnaire anonyme de moins d’une minute : https://adtk8x51mbw.eu.typeform.com/to/LHrKhXkd
 
 Cordialement`,
     attachments: [
