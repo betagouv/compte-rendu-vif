@@ -10,9 +10,8 @@ export const createEnvFile = async () => {
     .map(([key, value]) => `${key}: "${value}"`)
     .join(",\n");
 
-  const version = "0.1.0." + Math.floor(Date.now() / 1000).toString(16);
 
-  const contentJs = `window.ENV = { ${values}, VERSION: "${version}" };`;
+  const contentJs = `window.ENV = { ${values} };`;
 
   await fs.writeFile("./dist/env.js", contentJs);
 };
