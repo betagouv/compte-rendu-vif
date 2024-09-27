@@ -24,6 +24,7 @@ export const MenuTitle = ({
       alignItems="center"
       w="100%"
       py={{ base: "16px", lg: "30px" }}
+      pl={{ base: undefined, lg: "16px" }}
       // mt={{ base: "0", lg: "48px" }}
       // mb={{ base: "16px", lg: "48px" }}
       bgColor="white"
