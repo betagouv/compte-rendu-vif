@@ -282,6 +282,8 @@ const PictureThumbnail = ({ picture, index }: { picture: Pictures; index: number
     queryFn: async () => {
       // if (picture.url) return picture.url;
       const buffer = await get(picture.id, getPicturesStore());
+      if (!buffer) return picture.url;
+
       const blob = new Blob([buffer], { type: "image/png" });
 
       return URL.createObjectURL(blob);

@@ -11,7 +11,7 @@ precacheAndRoute(self.__WB_MANIFEST);
 
 self.addEventListener("install", () => void self.skipWaiting());
 self.addEventListener("activate", () => void self.clients.claim());
-self.addEventListener("sync", async (event) => {
+self.addEventListener("sync", async (event: any) => {
   event.waitUntil(syncMissingPictures());
 });
 
@@ -48,7 +48,7 @@ const syncMissingPictures = async (retries = 3) => {
     throw e;
   }
 
-  await cleanupOldCaches();
+  // await cleanupOldCaches();
 };
 
 const syncPicturesById = async (ids: Pictures[], token: string) => {
