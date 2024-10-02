@@ -112,6 +112,10 @@ export const ReportPDFDocument = ({ udap, htmlString, images, pictures }: Report
             align-items: flex-end;
           }
 
+          .pictures {
+            background-color: #f5f5f5;
+          }
+
         </style>
             <div class="header">
               <div class="marianne">
@@ -150,7 +154,10 @@ export const ReportPDFDocument = ({ udap, htmlString, images, pictures }: Report
             ${
               pictures
                 ? `<div class="pictures">
-              ${pictures.filter((pic) => !!pic.data).map((pic) => `<img src="data:image/png;base64,${Buffer.from(pic.data!).toString("base64")}"`)}
+              ${pictures
+                .filter((pic) => !!pic.url)
+                .map((pic) => `<img src="${pic.url}" />`)
+                .join("")}
             </div>`
                 : ""
             }
