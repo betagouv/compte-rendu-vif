@@ -1,6 +1,6 @@
 import { ReportSearch } from "#components/ReportSearch.js";
 import { css } from "#styled-system/css";
-import { Box, Flex, Stack } from "#styled-system/jsx";
+import { Box, Flex, Stack, styled } from "#styled-system/jsx";
 import Badge from "@codegouvfr/react-dsfr/Badge";
 import Button from "@codegouvfr/react-dsfr/Button";
 import Footer from "@codegouvfr/react-dsfr/Footer";
@@ -138,4 +138,12 @@ const Layout = ({ children }: PropsWithChildren) => {
       <Footer accessibility="partially compliant" />
     </Flex>
   );
+};
+
+const VersionDisplay = () => {
+  const version = window.APP_VERSION;
+
+  if (!version) return null;
+
+  return <styled.div>Version {version}</styled.div>;
 };

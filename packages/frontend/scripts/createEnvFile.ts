@@ -10,6 +10,7 @@ export const createEnvFile = async () => {
     .map(([key, value]) => `${key}: "${value}"`)
     .join(",\n");
 
+
   const contentJs = `window.ENV = { ${values} };`;
 
   await fs.writeFile("./dist/env.js", contentJs);

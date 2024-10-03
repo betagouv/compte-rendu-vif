@@ -1,7 +1,7 @@
 {
   "name": "@cr-vif/frontend",
   "private": true,
-  "version": "1.0.0",
+  "version": "0.1.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -10,6 +10,7 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "pnpm env:gen && vite preview --host",
     "env:gen": "vite-node ./scripts/createEnvFile.ts",
+    "version": "vite-node ./scripts/setVersion.ts",
     "prepare": "pnpm dsfr && panda codegen",
     "dsfr": "copy-dsfr-to-public && pnpm panda-ds",
     "icons": "only-include-used-icons",

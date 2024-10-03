@@ -11,5 +11,6 @@ export const ENV = envSchema.parse(isDev ? import.meta.env : window.ENV);
 declare global {
   interface Window {
     ENV: typeof ENV;
+    APP_VERSION?: string;
   }
 }
