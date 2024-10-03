@@ -1,13 +1,14 @@
 import { Document, Font, Page } from "@react-pdf/renderer";
 import { Html } from "react-pdf-html";
 import React from "react";
-import type { Udap, Report, Service_instructeurs, Clause_v2 } from "@cr-vif/electric-client/frontend";
+import type { Udap, Report, Service_instructeurs, Clause_v2, Pictures } from "@cr-vif/electric-client/frontend";
+import { Buffer } from "buffer";
 
 Font.registerHyphenationCallback((word) => {
   return [word];
 });
 
-export const ReportPDFDocument = ({ udap, htmlString, images }: ReportPDFDocumentProps) => {
+export const ReportPDFDocument = ({ udap, htmlString, images, pictures }: ReportPDFDocumentProps) => {
   return (
     <Document>
       <Page
@@ -110,6 +111,10 @@ export const ReportPDFDocument = ({ udap, htmlString, images }: ReportPDFDocumen
             align-items: flex-end;
           }
 
+          .pictures {
+            background-color: #f5f5f5;
+          }
+
         </style>
             <div class="header">
               <div class="marianne">
@@ -145,6 +150,16 @@ export const ReportPDFDocument = ({ udap, htmlString, images }: ReportPDFDocumen
             <div class="content">
               ${htmlString}
             </div>
+            ${
+              pictures
+                ? `<div class="pictures">
+              ${pictures
+                .filter((pic) => !!pic.url)
+                .map((pic) => `<img src="${pic.url}" />`)
+                .join("")}
+            </div>`
+                : ""
+            }
           </body>
         </html>
       `}</Html>
@@ -157,6 +172,7 @@ export type ReportPDFDocumentProps = {
   htmlString: string;
   udap: Udap;
   images: Images;
+  pictures?: Pictures[];
 };
 
 type Images = {

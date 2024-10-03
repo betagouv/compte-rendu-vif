@@ -1,20 +1,24 @@
-import { Box, Center, Divider, Flex, Stack, styled } from "#styled-system/jsx";
+import { InputGroup, InputGroupWithTitle } from "#components/InputGroup";
+import { SpaceTypeChips } from "#components/chips/SpaceTypeChips";
+import { css } from "#styled-system/css";
+import { Box, Center, Divider, Flex, Grid, Stack, styled } from "#styled-system/jsx";
 import { useTabsContext } from "@ark-ui/react/tabs";
 import Button from "@codegouvfr/react-dsfr/Button";
 import Input from "@codegouvfr/react-dsfr/Input";
 import Select from "@codegouvfr/react-dsfr/Select";
+import type { Pictures, Report } from "@cr-vif/electric-client/frontend";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { format, parse } from "date-fns";
-import { useRef } from "react";
-import { useFormContext, useWatch } from "react-hook-form";
-import { InputGroupWithTitle } from "#components/InputGroup";
-import { SpaceTypeChips } from "#components/chips/SpaceTypeChips";
-import { useUser } from "../contexts/AuthContext";
-import type { Report } from "@cr-vif/electric-client/frontend";
-import { css } from "#styled-system/css";
-import { ServiceInstructeurSelect } from "./ServiceInstructeurSelect";
-import { useIsFormDisabled } from "./DisabledContext";
 import { useLiveQuery } from "electric-sql/react";
+import { get, set } from "idb-keyval";
+import { ChangeEvent, useRef } from "react";
+import { useFormContext, useWatch } from "react-hook-form";
+import { v4 } from "uuid";
+import { useUser } from "../contexts/AuthContext";
 import { db } from "../db";
+import { useIsFormDisabled } from "./DisabledContext";
+import { ServiceInstructeurSelect } from "./ServiceInstructeurSelect";
+import { getPicturesStore, syncImages } from "./idb";
 
 export const InfoForm = () => {
   const form = useFormContext<Report>();
@@ -131,6 +135,9 @@ export const InfoForm = () => {
       <Divider mt="20px" mb="52px" />
 
       <InputGroupWithTitle title="Le projet">
+        <UploadImage reportId={form.getValues().id} />
+        <ReportPictures />
+
         <Input
           className={css({ mb: { base: "24px", lg: undefined } })}
           label="Description"
@@ -166,7 +173,7 @@ export const InfoForm = () => {
             className={css({ flex: { base: "none", lg: 1 }, mb: "24px" })}
             disabled={isFormDisabled}
             label="Référence cadastrale"
-            nativeInputProps={form.register("projectCadastralRef")}
+            nativeInputProps={{ ...form.register("projectCadastralRef"), placeholder: "Seulement la principale" }}
           />
           <Box
             className={css({
@@ -199,3 +206,117 @@ export const InfoForm = () => {
     </Flex>
   );
 };
+
+const UploadImage = ({ reportId }: { reportId: string }) => {
+  const ref = useRef<HTMLInputElement>(null);
+
+  const onChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    const picturesStore = getPicturesStore();
+
+    const id = v4();
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const buffer = await getArrayBufferFromBlob(file);
+    set(id, buffer, picturesStore);
+
+    await db.pictures.create({
+      data: {
+        id,
+        reportId,
+        createdAt: new Date(),
+      },
+    });
+
+    syncImages();
+  };
+
+  return (
+    <>
+      <Button
+        type="button"
+        iconId="ri-add-line"
+        priority="secondary"
+        nativeButtonProps={{
+          type: "button",
+          onClick: () => ref.current?.click(),
+        }}
+      >
+        Ajouter photo
+      </Button>
+      <styled.input ref={ref as any} type="file" accept="image/*" capture onChange={onChange} display="none" />
+    </>
+  );
+};
+
+const ReportPictures = () => {
+  const form = useFormContext<Report>();
+
+  const picturesQuery = useLiveQuery(
+    db.pictures.liveMany({
+      where: { reportId: form.getValues().id },
+      orderBy: { createdAt: "asc" },
+    }),
+  );
+
+  return (
+    <Flex direction="column" w="100%" my="40px">
+      <InputGroup>
+        {/* <Flex gap="16px" direction="column"> */}
+        <Grid gap="16px" gridTemplateColumns={{ base: "repeat(2, 1fr)", md: "repeat(3, 1fr)", lg: "repeat(4, 1fr)" }}>
+          {picturesQuery.results?.map((picture, index) => (
+            <PictureThumbnail key={picture.id} picture={picture as any} index={index} />
+          ))}
+        </Grid>
+        {/* </Flex> */}
+      </InputGroup>
+    </Flex>
+  );
+};
+
+const PictureThumbnail = ({ picture, index }: { picture: Pictures; index: number }) => {
+  const deletePictureMutation = useMutation(() => db.pictures.delete({ where: { id: picture.id } }));
+
+  const bgUrlQuery = useQuery({
+    queryKey: ["picture", picture.id],
+    queryFn: async () => {
+      // if (picture.url) return picture.url;
+      const buffer = await get(picture.id, getPicturesStore());
+      if (!buffer) return picture.url;
+
+      const blob = new Blob([buffer], { type: "image/png" });
+
+      return URL.createObjectURL(blob);
+    },
+  });
+
+  return (
+    <Flex
+      style={bgUrlQuery.data ? { backgroundImage: `url(${bgUrlQuery.data})` } : { backgroundColor: "gray" }}
+      flexDir="column"
+      justifyContent="flex-end"
+      w="180px"
+      h="170px"
+      backgroundPositionY="-20px"
+      backgroundSize="cover"
+    >
+      <Flex alignItems="center" border="1px solid #DFDFDF" h="40px" bgColor="white">
+        <Box flex="1" pl="5px">
+          N° {index + 1}
+        </Box>
+        <Box onClick={() => deletePictureMutation.mutate()} borderLeft="1px solid #DFDFDF">
+          <Button type="button" iconId="ri-close-circle-fill" priority="tertiary no outline" />
+          {/* <styled.i className={fr.cx("fr-icon--md", "fr-icon-close-circle-fill")} /> */}
+        </Box>
+      </Flex>
+    </Flex>
+  );
+};
+
+async function getArrayBufferFromBlob(blob: Blob) {
+  return new Promise<ArrayBuffer>((resolve, _) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result as ArrayBuffer);
+    reader.readAsArrayBuffer(blob);
+  });
+}
