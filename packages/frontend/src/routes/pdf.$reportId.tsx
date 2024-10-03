@@ -223,7 +223,7 @@ Les modifications du compte-rendu se font uniquement sur l'appareil utilisé. Ut
               <Stack w="800px" h="100%">
                 {report && snapshotQuery.isSuccess && chipOptions?.length && isServiceInstructeurLoaded ? (
                   <WithReport
-                    report={report}
+                    report={report as any}
                     mode={mode}
                     initialHtmlString={
                       htmlString ??

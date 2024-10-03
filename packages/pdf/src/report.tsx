@@ -1,9 +1,8 @@
 import { Document, Font, Page } from "@react-pdf/renderer";
 import { Html } from "react-pdf-html";
 import React from "react";
-import type { Udap, Report, Service_instructeurs, Clause_v2 } from "@cr-vif/electric-client/frontend";
+import type { Udap, Report, Service_instructeurs, Clause_v2, Pictures } from "@cr-vif/electric-client/frontend";
 import { Buffer } from "buffer";
-import { Pictures } from "../../electric-client/src/generated/client/index";
 
 Font.registerHyphenationCallback((word) => {
   return [word];
