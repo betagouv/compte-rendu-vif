@@ -71,6 +71,7 @@ const generatePdf = async ({
       udap={udap as Udap}
       htmlString={htmlString}
       images={{ marianne: "./public/marianne.png", marianneFooter: "./public/marianne_footer.png" }}
+      pictures={pictures}
     />,
   );
 };
