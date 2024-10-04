@@ -6,6 +6,7 @@ import { authenticate } from "./authMiddleware";
 import { db } from "../db/db";
 import { sendReportMail } from "../features/mail";
 import { getPDFName } from "../services/uploadService";
+import React from "react";
 
 export const pdfPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
   fastify.addHook("preHandler", authenticate);
