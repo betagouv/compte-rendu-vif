@@ -1,11 +1,12 @@
-import pjson from '../package.json';
-import fs from "node:fs/promises";
+import pjson from "../package.json";
+import fs from "node:fs";
 
 const version = pjson.version + "." + Math.floor(Date.now() / 1000).toString(16);
 
-const setVersion = async () => {
-    const contentJs = `window.APP_VERSION = "${version}";`;
-    await fs.writeFile("./dist/version.js", contentJs);
-}
+const setVersion = () => {
+  console.log("Setting version to", version);
+  const contentJs = `window.APP_VERSION = "${version}";`;
+  fs.writeFileSync("./dist/version.js", contentJs);
+};
 
 setVersion();

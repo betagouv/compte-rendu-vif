@@ -20,6 +20,7 @@ export default defineConfig({
         scope: "/",
         start_url: "/",
         lang: "fr",
+        theme_color: "#FFFFFF",
       },
       workbox: {
         maximumFileSizeToCacheInBytes: 2097152 * 3,

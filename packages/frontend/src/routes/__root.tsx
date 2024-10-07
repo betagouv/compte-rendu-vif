@@ -1,17 +1,16 @@
 import { ReportSearch } from "#components/ReportSearch.js";
 import { css } from "#styled-system/css";
-import { Box, Flex, Stack, styled } from "#styled-system/jsx";
+import { Box, Flex, styled } from "#styled-system/jsx";
 import Badge from "@codegouvfr/react-dsfr/Badge";
 import Button from "@codegouvfr/react-dsfr/Button";
-import Footer from "@codegouvfr/react-dsfr/Footer";
 import Header from "@codegouvfr/react-dsfr/Header/Header";
 import MuiDsfrThemeProvider from "@codegouvfr/react-dsfr/mui";
 import { createRootRouteWithContext, Outlet, useRouter } from "@tanstack/react-router";
 import { useRef, type PropsWithChildren } from "react";
 import type { RouterOutputs } from "../api";
 import { useIsLoggedIn } from "../contexts/AuthContext";
-import { useIsDesktop } from "../hooks/useIsDesktop";
 import { MenuButton } from "../features/menu/MenuButton";
+import { useIsDesktop } from "../hooks/useIsDesktop";
 
 export const Route = createRootRouteWithContext<Partial<RouterOutputs<"/api/login">>>()({
   beforeLoad: (ctx) => {
@@ -135,15 +134,107 @@ const Layout = ({ children }: PropsWithChildren) => {
 
       <Box flex="1">{children}</Box>
       {/* <TanStackRouterDevtools /> */}
-      <Footer accessibility="partially compliant" />
+
+      <AppFooter />
+      {/* <VersionDisplay /> */}
     </Flex>
   );
 };
 
-const VersionDisplay = () => {
+const AppFooter = () => {
+  return (
+    <footer id="fr-footer" className="fr-footer" role="contentinfo" style={{ border: "none", borderBottomWidth: 0 }}>
+      <div className="fr-container">
+        <div className="fr-footer__body">
+          <div className="fr-footer__brand fr-enlarge-link">
+            <a className="active" title="Compte rendu vif" href="/" data-status="active">
+              <p className="fr-logo">
+                Ministère
+                <br /> de la culture
+              </p>
+            </a>
+          </div>
+          <div className="fr-footer__content">
+            <ul className="fr-footer__content-list">
+              <li className="fr-footer__content-item">
+                <a
+                  className="fr-footer__content-link"
+                  target="_blank"
+                  href="https://legifrance.gouv.fr"
+                  title="legifrance.gouv.fr - ouvre une nouvelle fenêtre"
+                >
+                  legifrance.gouv.fr
+                </a>
+              </li>
+              <li className="fr-footer__content-item">
+                <a
+                  className="fr-footer__content-link"
+                  target="_blank"
+                  href="https://gouvernement.fr"
+                  title="gouvernement.fr - ouvre une nouvelle fenêtre"
+                >
+                  gouvernement.fr
+                </a>
+              </li>
+              <li className="fr-footer__content-item">
+                <a
+                  className="fr-footer__content-link"
+                  target="_blank"
+                  href="https://service-public.fr"
+                  title="service-public.fr - ouvre une nouvelle fenêtre"
+                >
+                  service-public.fr
+                </a>
+              </li>
+              <li className="fr-footer__content-item">
+                <a
+                  className="fr-footer__content-link"
+                  target="_blank"
+                  href="https://data.gouv.fr"
+                  title="data.gouv.fr - ouvre une nouvelle fenêtre"
+                >
+                  data.gouv.fr
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div className="fr-footer__bottom">
+          <ul className="fr-footer__bottom-list">
+            <li className="fr-footer__bottom-item">
+              <span className="fr-footer__bottom-link">Accessibilité: partiellement conforme</span>
+            </li>
+          </ul>
+
+          <Flex flexDir="column">
+            <VersionDisplay />
+            <div className="fr-footer__bottom-copy">
+              <p>
+                Sauf mention explicite de propriété intellectuelle détenue par des tiers, les contenus de ce site sont
+                proposés sous{" "}
+                <a
+                  href="https://github.com/etalab/licence-ouverte/blob/master/LO.md"
+                  target="_blank"
+                  title="licence etalab-2.0 - ouvre une nouvelle fenêtre"
+                >
+                  licence etalab-2.0
+                </a>
+              </p>
+            </div>
+          </Flex>
+        </div>
+      </div>
+    </footer>
+  );
+};
+
+export const VersionDisplay = () => {
   const version = window.APP_VERSION;
 
   if (!version) return null;
-
-  return <styled.div>Version {version}</styled.div>;
+  return (
+    <div className="fr-footer__bottom-copy">
+      <styled.p mb="10px">Version {version}</styled.p>
+    </div>
+  );
 };
