@@ -9,7 +9,6 @@ export const initElectric = async () => {
     url: ENV.VITE_ELECTRIC_URL,
   } satisfies ElectricConfig;
   const conn = await ElectricDatabase.init("crvif.db", "/");
-
   const electric = await electrify(conn, schema, config);
   const db = electric.db;
 

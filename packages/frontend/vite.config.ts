@@ -4,6 +4,7 @@ import { TanStackRouterVite } from "@tanstack/router-vite-plugin";
 import wasm from "vite-plugin-wasm";
 import { VitePWA } from "vite-plugin-pwa";
 import topLevelAwait from "vite-plugin-top-level-await";
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
@@ -12,6 +13,7 @@ export default defineConfig({
     wasm(),
     VitePWA({
       devOptions: { enabled: true, type: "module" },
+
       registerType: "autoUpdate",
       manifest: {
         id: "gouv.beta.compte-rendu-vif",
@@ -25,6 +27,7 @@ export default defineConfig({
       injectManifest: {
         maximumFileSizeToCacheInBytes: 2097152 * 3,
         globPatterns: ["**/*.{svg,woff2,js,wasm,css,html,png}"],
+        rollupFormat: "es",
       },
       includeAssets: ["**/*.{svg,woff2,wasm}"],
       strategies: "injectManifest",

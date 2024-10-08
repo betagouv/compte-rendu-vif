@@ -29,6 +29,7 @@ export const uploadPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
       publicRead: true,
     });
 
+    // await db.pictures.create({ data: { id, url, reportId, createdAt: new Date() } });
     await db.pictures.update({ where: { id }, data: { url } });
 
     reply.send();

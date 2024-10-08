@@ -7,7 +7,9 @@ const envSchema = z.object({
   VITE_ELECTRIC_URL: z.string(),
 });
 
-export const ENV = envSchema.parse(isDev ? import.meta.env : window.ENV);
+const isBrowser = typeof window === "undefined";
+
+export const ENV = envSchema.parse(isDev || isBrowser ? import.meta.env : window.ENV);
 declare global {
   interface Window {
     ENV: typeof ENV;

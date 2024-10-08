@@ -18,7 +18,7 @@ import { useUser } from "../contexts/AuthContext";
 import { db } from "../db";
 import { useIsFormDisabled } from "./DisabledContext";
 import { ServiceInstructeurSelect } from "./ServiceInstructeurSelect";
-import { getPicturesStore, syncImages } from "./idb";
+import { getPicturesStore, getToUploadStore, syncImages } from "./idb";
 
 export const InfoForm = () => {
   const form = useFormContext<Report>();
@@ -212,22 +212,17 @@ const UploadImage = ({ reportId }: { reportId: string }) => {
 
   const onChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const picturesStore = getPicturesStore();
+    const toUploadStore = getToUploadStore();
 
     const id = v4();
     const file = e.target.files?.[0];
     if (!file) return;
 
     const buffer = await getArrayBufferFromBlob(file);
-    set(id, buffer, picturesStore);
+    await set(id, buffer, picturesStore);
+    await set(id, reportId, toUploadStore);
 
-    await db.pictures.create({
-      data: {
-        id,
-        reportId,
-        createdAt: new Date(),
-      },
-    });
-
+    await db.pictures.create({ data: { id, reportId, createdAt: new Date() } });
     syncImages();
   };
 

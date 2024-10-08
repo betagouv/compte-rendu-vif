@@ -1,6 +1,7 @@
 import { createStore } from "idb-keyval";
 
 export const getPicturesStore = () => createStore("toSync", "images");
+export const getToUploadStore = () => createStore("toUpload", "images");
 
 export const syncImages = async () => {
   console.log("sync");
