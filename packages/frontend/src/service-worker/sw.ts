@@ -1,3 +1,5 @@
+importScripts("/swEnv.js");
+
 import { precacheAndRoute } from "workbox-precaching";
 import { api, getTokenFromIdb } from "../api";
 import { getPicturesStore, getToUploadStore } from "../features/idb";
