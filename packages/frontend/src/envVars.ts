@@ -10,7 +10,17 @@ const envSchema = z.object({
 const isSW = typeof window === "undefined";
 console.log("isSW", isSW);
 console.log("isDev", isDev);
-export const ENV = envSchema.parse(isDev ? import.meta.env : isSW ? self.ENV : window.ENV);
+
+const safeParseEnv = (env: Record<string, string>) => {
+  try {
+    return envSchema.parse(env);
+  } catch (e) {
+    console.error("Error parsing env", e);
+    return {};
+  }
+};
+
+export const ENV = safeParseEnv(isDev ? import.meta.env : isSW ? self.ENV : window.ENV);
 
 declare global {
   interface Window {
