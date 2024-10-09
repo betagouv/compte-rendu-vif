@@ -8,7 +8,8 @@ const envSchema = z.object({
 });
 
 const isSW = typeof window === "undefined";
-
+console.log("isSW", isSW);
+console.log("isDev", isDev);
 export const ENV = envSchema.parse(isDev ? import.meta.env : isSW ? self.ENV : window.ENV);
 
 declare global {
