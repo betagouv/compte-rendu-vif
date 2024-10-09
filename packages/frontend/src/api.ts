@@ -7,16 +7,23 @@ import { createStore, get, set } from "idb-keyval";
 export const apiStore = createStore("auth", "access");
 
 export const createApiClientWithUrl = (url: string) => {
-  return createApiClient((method, url, parameters) => {
-    const { body, query, header } = parameters || {};
+  try {
+    const api = createApiClient((method, url, parameters) => {
+      const { body, query, header } = parameters || {};
 
-    return ofetch(url, {
-      method,
-      body: body as any,
-      query,
-      headers: { ...header, Authorization: ref.token ? `Bearer ${ref.token}` : undefined } as Record<string, string>,
-    });
-  }, url);
+      return ofetch(url, {
+        method,
+        body: body as any,
+        query,
+        headers: { ...header, Authorization: ref.token ? `Bearer ${ref.token}` : undefined } as Record<string, string>,
+      });
+    }, url);
+
+    return api;
+  } catch (e) {
+    console.error("error creating api client", e);
+    return null;
+  }
 };
 
 export const api = createApiClientWithUrl(ENV.VITE_BACKEND_URL);
