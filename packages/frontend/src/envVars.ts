@@ -11,12 +11,12 @@ const isSW = typeof window === "undefined";
 console.log("isSW", isSW);
 console.log("isDev", isDev);
 
-const safeParseEnv = (env: Record<string, string>) => {
+const safeParseEnv = (env: Record<string, string>): z.infer<typeof envSchema> => {
   try {
     return envSchema.parse(env);
   } catch (e) {
-    console.error("Error parsing env", e);
-    return {};
+    console.error("Error parsing env vars");
+    return {} as any;
   }
 };
 

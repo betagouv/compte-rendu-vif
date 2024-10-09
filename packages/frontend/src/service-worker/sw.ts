@@ -1,7 +1,7 @@
 import { precacheAndRoute } from "workbox-precaching";
 import { apiStore, createApiClientWithUrl, getTokenFromIdb } from "../api";
-import { getPicturesStore, getToUploadStore } from "../features/idb";
-import { get, keys, del } from "idb-keyval";
+import { getPicturesStore, getToUploadStore, getUploadStatusStore } from "../features/idb";
+import { get, keys, del, set } from "idb-keyval";
 
 declare let self: ServiceWorkerGlobalScope;
 
@@ -48,29 +48,38 @@ const syncPicturesById = async (ids: string[], token: string) => {
   const api = createApiClientWithUrl(url);
 
   for (const picId of missingIds) {
-    const reportId = await get(picId, toUploadStore);
+    try {
+      await set(picId, "uploading", getUploadStatusStore());
 
-    console.log("syncing picture", picId);
-    const buffer = await get(picId, store);
-    if (!buffer) {
-      console.log("missing buffer for id", picId);
-      continue;
+      const reportId = await get(picId, toUploadStore);
+
+      console.log("syncing picture", picId);
+      const buffer = await get(picId, store);
+      if (!buffer) {
+        console.log("missing buffer for id", picId);
+        continue;
+      }
+
+      const formData = new FormData();
+      formData.append("file", new Blob([buffer]), "file");
+      formData.append("reportId", reportId);
+      formData.append("pictureId", picId);
+
+      await api.post("/api/upload/image", {
+        body: formData,
+        query: { reportId: reportId, id: picId },
+        header: { Authorization: `Bearer ${token}` },
+      } as any);
+
+      await del(picId, toUploadStore);
+
+      await set(picId, "success", getUploadStatusStore());
+
+      console.log("done");
+    } catch (e) {
+      await set(picId, "error", getUploadStatusStore());
+      throw e;
     }
-
-    const formData = new FormData();
-    formData.append("file", new Blob([buffer]), "file");
-    formData.append("reportId", reportId);
-    formData.append("pictureId", picId);
-
-    await api.post("/api/upload/image", {
-      body: formData,
-      query: { reportId: reportId, id: picId },
-      header: { Authorization: `Bearer ${token}` },
-    } as any);
-
-    await del(picId, toUploadStore);
-
-    console.log("done");
   }
 };
 
