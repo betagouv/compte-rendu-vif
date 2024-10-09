@@ -1,17 +1,23 @@
-import { precacheAndRoute } from "workbox-precaching";
+import { cleanupOutdatedCaches, precacheAndRoute } from "workbox-precaching";
 import { apiStore, createApiClientWithUrl, getTokenFromIdb } from "../api";
 import { getPicturesStore, getToUploadStore, getUploadStatusStore } from "../features/idb";
 import { get, keys, del, set } from "idb-keyval";
 
 declare let self: ServiceWorkerGlobalScope;
-
+cleanupOutdatedCaches();
 precacheAndRoute(self.__WB_MANIFEST);
 
-self.addEventListener("install", () => void self.skipWaiting());
-self.addEventListener("activate", () => void self.clients.claim());
+self.skipWaiting();
+self.clients.claim();
+
+// self.addEventListener("install", () => void );
+// self.addEventListener("activate", () => void );
 self.addEventListener("sync", async (event: any) => {
   event.waitUntil(syncMissingPictures());
 });
+// self.addEventListener("periodicsync", async (event: any) => {
+//   event.waitUntil(syncMissingPictures());
+// });
 
 const syncMissingPictures = async (retries = 3) => {
   try {
