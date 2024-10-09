@@ -1,7 +1,5 @@
-importScripts("/swEnv.js");
-console.log(self.ENV);
 import { precacheAndRoute } from "workbox-precaching";
-import { api, getTokenFromIdb } from "../api";
+import { apiStore, createApiClientWithUrl, getTokenFromIdb } from "../api";
 import { getPicturesStore, getToUploadStore } from "../features/idb";
 import { get, keys, del } from "idb-keyval";
 
@@ -42,6 +40,12 @@ const syncPicturesById = async (ids: string[], token: string) => {
 
   const localIds = await keys(store);
   const missingIds = ids.filter((picId) => localIds.includes(picId));
+
+  const url = await get("url", apiStore);
+
+  if (!url) throw new Error("no backend url in service worker");
+
+  const api = createApiClientWithUrl(url);
 
   for (const picId of missingIds) {
     const reportId = await get(picId, toUploadStore);
