@@ -4,11 +4,17 @@ import { getPicturesStore, getToUploadStore, getUploadStatusStore } from "../fea
 import { get, keys, del, set } from "idb-keyval";
 
 declare let self: ServiceWorkerGlobalScope;
+
+skipWaiting();
+clients.claim()
+
 cleanupOutdatedCaches();
 precacheAndRoute(self.__WB_MANIFEST);
 
-self.skipWaiting();
-self.clients.claim();
+
+
+// self.skipWaiting();
+// self.clients.claim();
 
 // self.addEventListener("install", () => void );
 // self.addEventListener("activate", () => void );
