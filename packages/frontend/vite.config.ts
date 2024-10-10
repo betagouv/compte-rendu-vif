@@ -35,6 +35,7 @@ export default defineConfig({
             type: "image/png",
           },
         ],
+        theme_color: "#FFFFFF",
       },
       manifestFilename: "manifest.webmanifest",
       injectManifest: {
