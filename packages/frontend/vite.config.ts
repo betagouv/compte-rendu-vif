@@ -23,8 +23,20 @@ export default defineConfig({
         scope: "/",
         start_url: "/",
         lang: "fr",
+        icons: [
+          {
+            src: "dsfr/favicon/android-chrome-192x192.png",
+            sizes: "192x192",
+            type: "image/png",
+          },
+          {
+            src: "dsfr/favicon/android-chrome-512x512.png",
+            sizes: "512x512",
+            type: "image/png",
+          },
+        ],
       },
-      manifestFilename: "manifest.json",
+      manifestFilename: "manifest.webmanifest",
       injectManifest: {
         maximumFileSizeToCacheInBytes: 2097152 * 3,
         globPatterns: ["**/*.{svg,woff2,js,wasm,css,html,png}"],
