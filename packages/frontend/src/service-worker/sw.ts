@@ -6,24 +6,17 @@ import { get, keys, del, set } from "idb-keyval";
 declare let self: ServiceWorkerGlobalScope;
 
 skipWaiting();
-clients.claim()
+clients.claim();
 
 cleanupOutdatedCaches();
 precacheAndRoute(self.__WB_MANIFEST);
 
+const broadcastChannel = new BroadcastChannel("sw-messages");
 
-
-// self.skipWaiting();
-// self.clients.claim();
-
-// self.addEventListener("install", () => void );
-// self.addEventListener("activate", () => void );
 self.addEventListener("sync", async (event: any) => {
+  broadcastChannel.postMessage({ type: "sync" });
   event.waitUntil(syncMissingPictures());
 });
-// self.addEventListener("periodicsync", async (event: any) => {
-//   event.waitUntil(syncMissingPictures());
-// });
 
 const syncMissingPictures = async (retries = 3) => {
   try {
@@ -62,6 +55,7 @@ const syncPicturesById = async (ids: string[], token: string) => {
   for (const picId of missingIds) {
     try {
       await set(picId, "uploading", getUploadStatusStore());
+      broadcastChannel.postMessage({ type: "status", id: picId, status: "uploading" });
 
       const reportId = await get(picId, toUploadStore);
 
@@ -86,10 +80,13 @@ const syncPicturesById = async (ids: string[], token: string) => {
       await del(picId, toUploadStore);
 
       await set(picId, "success", getUploadStatusStore());
+      broadcastChannel.postMessage({ type: "status", id: picId, status: "success" });
 
       console.log("done");
     } catch (e) {
       await set(picId, "error", getUploadStatusStore());
+      broadcastChannel.postMessage({ type: "status", id: picId, status: "error" });
+
       throw e;
     }
   }

@@ -11,7 +11,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { format, parse } from "date-fns";
 import { useLiveQuery } from "electric-sql/react";
 import { get, set } from "idb-keyval";
-import { ChangeEvent, useRef } from "react";
+import { ChangeEvent, useEffect, useRef } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { v4 } from "uuid";
 import { useUser } from "../contexts/AuthContext";
@@ -206,6 +206,7 @@ export const InfoForm = () => {
     </Flex>
   );
 };
+const broadcastChannel = new BroadcastChannel("sw-messages");
 
 const UploadImage = ({ reportId }: { reportId: string }) => {
   const ref = useRef<HTMLInputElement>(null);
@@ -225,6 +226,19 @@ const UploadImage = ({ reportId }: { reportId: string }) => {
     await db.pictures.create({ data: { id, reportId, createdAt: new Date() } });
     syncImages();
   };
+
+  useEffect(() => {
+    const listener = (event: MessageEvent) => {
+      console.log("message", event.data);
+      if (event.data.type === "status") {
+        console.log("status", event.data.id, event.data.status);
+      }
+    };
+
+    broadcastChannel.addEventListener("message", listener);
+
+    return () => broadcastChannel.removeEventListener("message", listener);
+  }, []);
 
   return (
     <>
