@@ -11,14 +11,14 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { format, parse } from "date-fns";
 import { useLiveQuery } from "electric-sql/react";
 import { get, set } from "idb-keyval";
-import { ChangeEvent, useEffect, useRef } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { v4 } from "uuid";
 import { useUser } from "../contexts/AuthContext";
 import { db } from "../db";
 import { useIsFormDisabled } from "./DisabledContext";
 import { ServiceInstructeurSelect } from "./ServiceInstructeurSelect";
-import { getPicturesStore, getToUploadStore, syncImages } from "./idb";
+import { getPicturesStore, getToUploadStore, getUploadStatusStore, syncImages } from "./idb";
 
 export const InfoForm = () => {
   const form = useFormContext<Report>();
@@ -136,7 +136,6 @@ export const InfoForm = () => {
 
       <InputGroupWithTitle title="Le projet">
         <UploadImage reportId={form.getValues().id} />
-        <ReportPictures />
 
         <Input
           className={css({ mb: { base: "24px", lg: undefined } })}
@@ -209,6 +208,7 @@ export const InfoForm = () => {
 const broadcastChannel = new BroadcastChannel("sw-messages");
 
 const UploadImage = ({ reportId }: { reportId: string }) => {
+  const [statusMap, setStatusMap] = useState<Record<string, string>>({});
   const ref = useRef<HTMLInputElement>(null);
 
   const onChange = async (e: ChangeEvent<HTMLInputElement>) => {
@@ -232,6 +232,7 @@ const UploadImage = ({ reportId }: { reportId: string }) => {
       console.log("message", event.data);
       if (event.data.type === "status") {
         console.log("status", event.data.id, event.data.status);
+        setStatusMap((prev) => ({ ...prev, [event.data.id]: event.data.status }));
       }
     };
 
@@ -254,11 +255,12 @@ const UploadImage = ({ reportId }: { reportId: string }) => {
         Ajouter photo
       </Button>
       <styled.input ref={ref as any} type="file" accept="image/*" capture onChange={onChange} display="none" />
+      <ReportPictures statusMap={statusMap} />
     </>
   );
 };
 
-const ReportPictures = () => {
+const ReportPictures = ({ statusMap }: { statusMap: Record<string, string> }) => {
   const form = useFormContext<Report>();
 
   const picturesQuery = useLiveQuery(
@@ -274,7 +276,7 @@ const ReportPictures = () => {
         {/* <Flex gap="16px" direction="column"> */}
         <Grid gap="16px" gridTemplateColumns={{ base: "repeat(2, 1fr)", md: "repeat(3, 1fr)", lg: "repeat(4, 1fr)" }}>
           {picturesQuery.results?.map((picture, index) => (
-            <PictureThumbnail key={picture.id} picture={picture as any} index={index} />
+            <PictureThumbnail key={picture.id} picture={picture as any} index={index} status={statusMap[picture.id]} />
           ))}
         </Grid>
         {/* </Flex> */}
@@ -283,7 +285,7 @@ const ReportPictures = () => {
   );
 };
 
-const PictureThumbnail = ({ picture, index }: { picture: Pictures; index: number }) => {
+const PictureThumbnail = ({ picture, index, status }: { picture: Pictures; index: number; status?: string }) => {
   const deletePictureMutation = useMutation(() => db.pictures.delete({ where: { id: picture.id } }));
 
   const bgUrlQuery = useQuery({
@@ -298,6 +300,17 @@ const PictureThumbnail = ({ picture, index }: { picture: Pictures; index: number
       return URL.createObjectURL(blob);
     },
   });
+
+  const idbStatusQuery = useQuery({
+    queryKey: ["picture-status", picture.id],
+    queryFn: async () => {
+      const status = await get(picture.id, getUploadStatusStore());
+      return status;
+    },
+    enabled: !status,
+  });
+
+  const finalStatus = status ?? idbStatusQuery.data;
 
   return (
     <Flex
@@ -315,6 +328,7 @@ const PictureThumbnail = ({ picture, index }: { picture: Pictures; index: number
         </Box>
         <Box onClick={() => deletePictureMutation.mutate()} borderLeft="1px solid #DFDFDF">
           <Button type="button" iconId="ri-close-circle-fill" priority="tertiary no outline" />
+          {finalStatus ? <span>{finalStatus}</span> : null}
           {/* <styled.i className={fr.cx("fr-icon--md", "fr-icon-close-circle-fill")} /> */}
         </Box>
       </Flex>

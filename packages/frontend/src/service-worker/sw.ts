@@ -1,15 +1,21 @@
-import { cleanupOutdatedCaches, precacheAndRoute } from "workbox-precaching";
+import { cleanupOutdatedCaches, createHandlerBoundToURL, precacheAndRoute } from "workbox-precaching";
 import { apiStore, createApiClientWithUrl, getTokenFromIdb } from "../api";
 import { getPicturesStore, getToUploadStore, getUploadStatusStore } from "../features/idb";
 import { get, keys, del, set } from "idb-keyval";
+import { NavigationRoute, registerRoute } from "workbox-routing";
 
 declare let self: ServiceWorkerGlobalScope;
 
 skipWaiting();
 clients.claim();
 
+const manif = self.__WB_MANIFEST;
+console.log(manif);
 cleanupOutdatedCaches();
-precacheAndRoute(self.__WB_MANIFEST);
+precacheAndRoute(manif);
+
+const handler = createHandlerBoundToURL("/index.html");
+registerRoute(new NavigationRoute(handler));
 
 const broadcastChannel = new BroadcastChannel("sw-messages");
 

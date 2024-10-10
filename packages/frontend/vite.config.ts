@@ -24,6 +24,7 @@ export default defineConfig({
         start_url: "/",
         lang: "fr",
       },
+      manifestFilename: "manifest.json",
       injectManifest: {
         maximumFileSizeToCacheInBytes: 2097152 * 3,
         globPatterns: ["**/*.{svg,woff2,js,wasm,css,html,png}"],
