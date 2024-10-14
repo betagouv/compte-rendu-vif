@@ -289,11 +289,11 @@ const PictureThumbnail = ({ picture, index, status }: { picture: Pictures; index
   const deletePictureMutation = useMutation(() => db.pictures.delete({ where: { id: picture.id } }));
 
   const bgUrlQuery = useQuery({
-    queryKey: ["picture", picture.id],
+    queryKey: ["picture", picture.id, picture.url],
     queryFn: async () => {
-      // if (picture.url) return picture.url;
+      if (picture.url) return picture.url;
       const buffer = await get(picture.id, getPicturesStore());
-      if (!buffer) return picture.url;
+      if (!buffer) return null;
 
       const blob = new Blob([buffer], { type: "image/png" });
 
@@ -313,9 +313,11 @@ const PictureThumbnail = ({ picture, index, status }: { picture: Pictures; index
 
   const finalStatus = status ?? idbStatusQuery.data;
 
+  const bgUrl = bgUrlQuery.data;
+
   return (
     <Flex
-      style={bgUrlQuery.data ? { backgroundImage: `url(${bgUrlQuery.data})` } : { backgroundColor: "gray" }}
+      style={bgUrl ? { backgroundImage: `url(${bgUrl})` } : { backgroundColor: "gray" }}
       flexDir="column"
       justifyContent="flex-end"
       w="180px"
