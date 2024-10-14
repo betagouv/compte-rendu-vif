@@ -254,7 +254,7 @@ const UploadImage = ({ reportId }: { reportId: string }) => {
       >
         Ajouter photo
       </Button>
-      <styled.input ref={ref as any} type="file" accept="image/*" capture onChange={onChange} display="none" />
+      <styled.input ref={ref as any} type="file" accept="image/*" onChange={onChange} display="none" />
       <ReportPictures statusMap={statusMap} />
     </>
   );
