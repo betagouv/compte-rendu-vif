@@ -18,7 +18,7 @@ import { useUser } from "../contexts/AuthContext";
 import { db } from "../db";
 import { useIsFormDisabled } from "./DisabledContext";
 import { ServiceInstructeurSelect } from "./ServiceInstructeurSelect";
-import { getPicturesStore, getToUploadStore, getUploadStatusStore, syncImages } from "./idb";
+import { deleteImageFromIdb, getPicturesStore, getToUploadStore, getUploadStatusStore, syncImages } from "./idb";
 
 export const InfoForm = () => {
   const form = useFormContext<Report>();
@@ -286,7 +286,11 @@ const ReportPictures = ({ statusMap }: { statusMap: Record<string, string> }) =>
 };
 
 const PictureThumbnail = ({ picture, index, status }: { picture: Pictures; index: number; status?: string }) => {
-  const deletePictureMutation = useMutation(() => db.pictures.delete({ where: { id: picture.id } }));
+  const deletePictureMutation = useMutation(async () => {
+    await deleteImageFromIdb(picture.id);
+
+    return db.pictures.delete({ where: { id: picture.id } });
+  });
 
   const bgUrlQuery = useQuery({
     queryKey: ["picture", picture.id, picture.url],
