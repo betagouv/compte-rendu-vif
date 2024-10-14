@@ -29,93 +29,93 @@ export const ReportPDFDocument = ({ udap, htmlString, images, pictures }: Report
         >{`
         <html>
           <body>
-          <style>
-          body {
-            font-family: Helvetica;
-          }
+            <style>
+              body {
+                font-family: Helvetica;
+              }
 
-          strong {
-            font-family: Helvetica-Bold;
-          }
+              strong {
+                font-family: Helvetica-Bold;
+              }
 
-          em {
-            font-family: Helvetica-Oblique;
-          }
+              em {
+                font-family: Helvetica-Oblique;
+              }
 
-          strong em span {
-            font-family: Helvetica-BoldOblique;
-          }
+              strong em span {
+                font-family: Helvetica-BoldOblique;
+              }
 
-          em strong span {
-            font-family: Helvetica-BoldOblique;
-          }
+              em strong span {
+                font-family: Helvetica-BoldOblique;
+              }
 
-          strong em {
-            font-family: Helvetica-BoldOblique;
-          }
+              strong em {
+                font-family: Helvetica-BoldOblique;
+              }
 
-          em strong {
-            font-family: Helvetica-BoldOblique;
-          }
+              em strong {
+                font-family: Helvetica-BoldOblique;
+              }
 
-          .marianne-img {
-            width: 35px;
-          }
-            
-          .marianne-footer-img {
-            width: 50px;
-          }
+              .marianne-img {
+                width: 35px;
+              }
+                
+              .marianne-footer-img {
+                width: 50px;
+              }
 
-          .header {
-            display: flex;
-            margin-top: -16px;
-            flex-direction: row;
-            width: 100%;
-            align-items: flex-start;
-            justify-content: space-between;
-            text-align: right;
-            font-size: 18px;
-            margin-bottom: 32px;
+              .header {
+                display: flex;
+                margin-top: -16px;
+                flex-direction: row;
+                width: 100%;
+                align-items: flex-start;
+                justify-content: space-between;
+                text-align: right;
+                font-size: 18px;
+                margin-bottom: 32px;
 
-          }
+              }
 
 
-          .marianne-text {
-            text-align: left;
-            font-weight: bold;
-            font-size: 12px;
-            margin-top: 4px;
-            margin-bottom: 4px;
-            text-transform: uppercase;
-          }
+              .marianne-text {
+                text-align: left;
+                font-weight: bold;
+                font-size: 12px;
+                margin-top: 4px;
+                margin-bottom: 4px;
+                text-transform: uppercase;
+              }
 
-          .right-texts {
-            margin-top: 13px;
-            display: flex;
-            align-items: flex-end;
-            flex-direction: column;
-            justify-content: flex-end;
-            gap: 20px;
-          }
+              .right-texts {
+                margin-top: 13px;
+                display: flex;
+                align-items: flex-end;
+                flex-direction: column;
+                justify-content: flex-end;
+                gap: 20px;
+              }
 
-          .right-texts > div {
-            text-align: right;
-            font-size: 14px;
-            font-family: Helvetica-Bold;
-          }
+              .right-texts > div {
+                text-align: right;
+                font-size: 14px;
+                font-family: Helvetica-Bold;
+              }
 
-          .meeting-date {
-            text-align: right;
-            display: flex;
-            justify-content: flex-end;
-            align-items: flex-end;
-          }
+              .meeting-date {
+                text-align: right;
+                display: flex;
+                justify-content: flex-end;
+                align-items: flex-end;
+              }
 
-          .pictures {
-            background-color: #f5f5f5;
-          }
+              .pictures {
+                background-color: #f5f5f5;
+              }
 
-        </style>
+            </style>
             <div class="header">
               <div class="marianne">
 

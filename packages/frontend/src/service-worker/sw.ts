@@ -3,19 +3,27 @@ import { apiStore, createApiClientWithUrl, getTokenFromIdb } from "../api";
 import { getPicturesStore, getToUploadStore, getUploadStatusStore } from "../features/idb";
 import { get, keys, del, set } from "idb-keyval";
 import { NavigationRoute, registerRoute } from "workbox-routing";
+import { isDev } from "../envVars";
 
 declare let self: ServiceWorkerGlobalScope;
 
-skipWaiting();
-clients.claim();
+self.addEventListener("install", (event) => {
+  event.waitUntil(self.skipWaiting());
+});
+
+self.addEventListener("activate", (event) => {
+  event.waitUntil(self.clients.claim());
+});
 
 const manif = self.__WB_MANIFEST;
 console.log(manif);
 cleanupOutdatedCaches();
 precacheAndRoute(manif);
 
-const handler = createHandlerBoundToURL("/index.html");
-registerRoute(new NavigationRoute(handler));
+if (!isDev) {
+  const handler = createHandlerBoundToURL("/index.html");
+  registerRoute(new NavigationRoute(handler));
+}
 
 const broadcastChannel = new BroadcastChannel("sw-messages");
 

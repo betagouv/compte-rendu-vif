@@ -22,11 +22,10 @@ export const uploadPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
     if (!file) throw new AppError(400, "No file provided");
     if (!reportId || !id) throw new AppError(400, "No reportId or id provided");
 
-    const url = await request.services.upload.addPDFToReport({
+    const url = await request.services.upload.addPictureToReport({
       reportId: (request.query as any).reportId as string,
       buffer: await file.toBuffer(),
       name: getPictureName(reportId, id),
-      publicRead: true,
     });
 
     // await db.pictures.create({ data: { id, url, reportId, createdAt: new Date() } });

@@ -28,6 +28,10 @@ const envSchema = z.object({
   EMAIL_USER: z.string(),
   EMAIL_PASSWORD: z.string(),
   EMAIL_EMITTER: z.string(),
+  MINIO_ACCESS_KEY_ID: z.string(),
+  MINIO_SECRET_KEY: z.string(),
+  MINIO_URL: z.string(),
+  MINIO_BUCKET: z.string(),
 });
 
 export const ENV = envSchema.parse(process.env);

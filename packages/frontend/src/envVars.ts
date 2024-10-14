@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const isDev = !z.boolean().parse(import.meta.env.PROD);
+export const isDev = !z.boolean().parse(import.meta.env.PROD);
 
 const envSchema = z.object({
   VITE_BACKEND_URL: z.string(),

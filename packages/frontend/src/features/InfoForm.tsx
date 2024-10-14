@@ -299,6 +299,7 @@ const PictureThumbnail = ({ picture, index, status }: { picture: Pictures; index
 
       return URL.createObjectURL(blob);
     },
+    refetchOnWindowFocus: false,
   });
 
   const idbStatusQuery = useQuery({
