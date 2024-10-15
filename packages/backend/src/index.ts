@@ -5,7 +5,6 @@ import { ENV } from "./envVars";
 import { generateOpenApi, initFastify } from "./router";
 import { makeDebug } from "./features/debug";
 import { initClauseV2 } from "./tmp";
-import { sentry } from "./features/sentry";
 
 const debug = makeDebug("index");
 
