@@ -44,6 +44,7 @@
     "@fastify/type-provider-typebox": "^4.0.0",
     "@prisma/client": "^4.8.1",
     "@react-pdf/renderer": "^3.4.2",
+    "@sentry/node": "^8.34.0",
     "@sinclair/typebox": "^0.32.20",
     "date-fns": "^3.6.0",
     "debug": "^4.3.4",

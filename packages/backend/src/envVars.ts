@@ -28,6 +28,7 @@ const envSchema = z.object({
   EMAIL_USER: z.string(),
   EMAIL_PASSWORD: z.string(),
   EMAIL_EMITTER: z.string(),
+  SENTRY_DSN: z.string(),
 });
 
 export const ENV = envSchema.parse(process.env);
