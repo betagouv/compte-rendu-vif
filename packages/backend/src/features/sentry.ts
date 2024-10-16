@@ -1,9 +1,8 @@
-const Sentry = require("@sentry/node");
+// const Sentry = require("@sentry/node");
 import { ENV, isDev } from "../envVars";
 
-export const sentry = isDev
-  ? null
-  : Sentry.init({
-      dsn: ENV.SENTRY_DSN,
-      tracesSampleRate: 1.0,
-    });
+export const sentry = isDev ? null : null;
+// Sentry.init({
+//     dsn: ENV.SENTRY_DSN,
+//     tracesSampleRate: 1.0,
+//   });
