@@ -32,6 +32,8 @@ export const InfoForm = () => {
     time: meetDate ? format(new Date(meetDate), "HH:mm") : "",
   });
 
+  const redactedById = useWatch({ control: form.control, name: "redactedById" });
+
   const tryToSetMeetDate = () => {
     const day = meetDateRef.current.day;
     const time = meetDateRef.current.time;
@@ -94,7 +96,9 @@ export const InfoForm = () => {
             nativeSelectProps={redactedByProps}
           >
             {redactedByOptions?.map((option) => (
-              <option key={option.value} value={option.value}>
+              <option key={option.value} value={option.value} selected={
+                redactedById === option.value
+              }>
                 {option.label}
               </option>
             )) ?? null}

@@ -11,6 +11,7 @@ import { makeDebug } from "./features/debug";
 import { staticDataPlugin } from "./routes/staticDataRoutes";
 import { pdfPlugin } from "./routes/pdfRoutes";
 import { uploadPlugin } from "./routes/uploadRoutes";
+import { sentry } from "./features/sentry";
 
 const debug = makeDebug("fastify");
 
@@ -44,6 +45,7 @@ export const initFastify = async () => {
     async (instance) => {
       instance.setErrorHandler((error, request, reply) => {
         console.error(error);
+        sentry?.captureException(error, { data: { request: request.body, params: request.params } });
         if (error instanceof AppError) {
           reply.status(error.status).send({ error: error.message });
         } else {

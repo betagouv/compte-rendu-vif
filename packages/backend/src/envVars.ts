@@ -32,6 +32,7 @@ const envSchema = z.object({
   MINIO_SECRET_KEY: z.string(),
   MINIO_URL: z.string(),
   MINIO_BUCKET: z.string(),
+  SENTRY_DSN: z.string(),
 });
 
 export const ENV = envSchema.parse(process.env);

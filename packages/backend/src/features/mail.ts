@@ -2,6 +2,7 @@ import { createTransport } from "nodemailer";
 import { ENV } from "../envVars";
 import { Report } from "@cr-vif/electric-client/frontend";
 import { format } from "date-fns";
+import { sentry } from "./sentry";
 
 const transporter = createTransport({
   host: ENV.EMAIL_HOST,
@@ -21,6 +22,8 @@ export const sendReportMail = ({
   pdfBuffer: Buffer;
   report: Report;
 }) => {
+  sentry?.captureMessage("Sending report mail", { extra: { recipients, report } });
+
   return transporter.sendMail({
     from: ENV.EMAIL_EMITTER,
     to: recipients,
