@@ -19,6 +19,7 @@ import { db } from "../db";
 import { useIsFormDisabled } from "./DisabledContext";
 import { ServiceInstructeurSelect } from "./ServiceInstructeurSelect";
 import { deleteImageFromIdb, getPicturesStore, getToUploadStore, getUploadStatusStore, syncImages } from "./idb";
+import Badge from "@codegouvfr/react-dsfr/Badge";
 
 export const InfoForm = () => {
   const form = useFormContext<Report>();
@@ -87,6 +88,7 @@ export const InfoForm = () => {
 
   return (
     <Flex direction="column" w="100%" padding="16px">
+      <Badge severity="info">Les champs marqués d'un astérisque (*) sont obligatoires</Badge>
       <InputGroupWithTitle title="Le rendez-vous">
         <Stack gap={{ base: "0", lg: "16px" }} direction={{ base: "column", lg: "row" }}>
           <Select
@@ -96,9 +98,7 @@ export const InfoForm = () => {
             nativeSelectProps={redactedByProps}
           >
             {redactedByOptions?.map((option) => (
-              <option key={option.value} value={option.value} selected={
-                redactedById === option.value
-              }>
+              <option key={option.value} value={option.value} selected={redactedById === option.value}>
                 {option.label}
               </option>
             )) ?? null}
@@ -264,6 +264,29 @@ const UploadImage = ({ reportId }: { reportId: string }) => {
   );
 };
 
+const ReportStatus = ({ status }: { status: "uploading" | "success" | "error" }) => {
+  return (
+    <Badge
+      className={css({ display: "flex", alignItems: "center" })}
+      severity={status === "draft" ? "info" : "success"}
+      noIcon
+      small
+      style={{
+        backgroundColor: colors[status][1],
+        color: colors[status][0],
+      }}
+    >
+      <styled.span
+        className={cx(
+          icons[status],
+          css({ "&::before": { w: "12px !important", h: "12px !important", verticalAlign: "middle !important" } }),
+        )}
+      />
+      <styled.span ml="4px">{status === "draft" ? "Brouillon" : "Envoyé"}</styled.span>
+    </Badge>
+  );
+};
+
 const ReportPictures = ({ statusMap }: { statusMap: Record<string, string> }) => {
   const form = useFormContext<Report>();
 
@@ -319,31 +342,34 @@ const PictureThumbnail = ({ picture, index, status }: { picture: Pictures; index
     enabled: !status,
   });
 
-  const finalStatus = status ?? idbStatusQuery.data;
+  const finalStatus = status ?? idbStatusQuery.data ?? "success";
 
   const bgUrl = bgUrlQuery.data;
 
   return (
-    <Flex
-      style={bgUrl ? { backgroundImage: `url(${bgUrl})` } : { backgroundColor: "gray" }}
-      flexDir="column"
-      justifyContent="flex-end"
-      w="180px"
-      h="170px"
-      backgroundPositionY="-20px"
-      backgroundSize="cover"
-    >
-      <Flex alignItems="center" border="1px solid #DFDFDF" h="40px" bgColor="white">
-        <Box flex="1" pl="5px">
-          N° {index + 1}
-        </Box>
-        <Box onClick={() => deletePictureMutation.mutate()} borderLeft="1px solid #DFDFDF">
-          <Button type="button" iconId="ri-close-circle-fill" priority="tertiary no outline" />
-          {finalStatus ? <span>{finalStatus}</span> : null}
-          {/* <styled.i className={fr.cx("fr-icon--md", "fr-icon-close-circle-fill")} /> */}
-        </Box>
+    <Stack>
+      {/* <Badge severity={finalStatus === "uploading" ? }></Badge> */}
+      <Flex
+        style={bgUrl ? { backgroundImage: `url(${bgUrl})` } : { backgroundColor: "gray" }}
+        flexDir="column"
+        justifyContent="flex-end"
+        w="180px"
+        h="170px"
+        backgroundPositionY="-20px"
+        backgroundSize="cover"
+      >
+        <Flex alignItems="center" border="1px solid #DFDFDF" h="40px" bgColor="white">
+          <Box flex="1" pl="5px">
+            N° {index + 1}
+          </Box>
+          <Box onClick={() => deletePictureMutation.mutate()} borderLeft="1px solid #DFDFDF">
+            <Button type="button" iconId="ri-close-circle-fill" priority="tertiary no outline" />
+            {/* {finalStatus ? <span>{finalStatus}</span> : null} */}
+            {/* <styled.i className={fr.cx("fr-icon--md", "fr-icon-close-circle-fill")} /> */}
+          </Box>
+        </Flex>
       </Flex>
-    </Flex>
+    </Stack>
   );
 };
 
