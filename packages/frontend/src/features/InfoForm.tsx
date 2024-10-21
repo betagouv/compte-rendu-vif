@@ -88,7 +88,7 @@ export const InfoForm = () => {
 
   return (
     <Flex direction="column" w="100%" padding="16px">
-      <Badge severity="info">Les champs marqués d'un astérisque (*) sont obligatoires</Badge>
+      {/* <Badge severity="info">Les champs marqués d'un astérisque (*) sont obligatoires</Badge> */}
       <InputGroupWithTitle title="Le rendez-vous">
         <Stack gap={{ base: "0", lg: "16px" }} direction={{ base: "column", lg: "row" }}>
           <Select
