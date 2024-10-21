@@ -297,6 +297,8 @@ const ReportPictures = ({ statusMap }: { statusMap: Record<string, string> }) =>
     }),
   );
 
+  console.log(picturesQuery.results);
+
   return (
     <Flex direction="column" w="100%" my="40px">
       <InputGroup>
