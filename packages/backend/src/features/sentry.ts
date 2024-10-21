@@ -3,10 +3,12 @@ import { ENV, isDev } from "../envVars";
 
 isDev
   ? null
-  : Sentry.init({
-      dsn: ENV.SENTRY_DSN,
-      tracesSampleRate: 1.0,
-    });
+  : ENV.SENTRY_DSN
+    ? Sentry.init({
+        dsn: ENV.SENTRY_DSN,
+        tracesSampleRate: 1.0,
+      })
+    : null;
 
 const sentry = isDev ? null : Sentry;
 
