@@ -5,7 +5,9 @@ import util from "node:util";
 import { pipeline } from "node:stream";
 import { getPictureName } from "../services/uploadService";
 import { db } from "../db/db";
+import { makeDebug } from "../features/debug";
 
+const debug = makeDebug("upload");
 const pump = util.promisify(pipeline);
 
 export const uploadPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
@@ -28,10 +30,12 @@ export const uploadPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
       name: getPictureName(reportId, id),
     });
 
+    debug("adding url to pic", id, "for report", reportId);
+
     // await db.pictures.create({ data: { id, url, reportId, createdAt: new Date() } });
     await db.pictures.update({ where: { id }, data: { url } });
 
-    reply.send();
+    reply.send(url);
 
     // for await (const file of files) {
     //   const isImage = ["image/png", "image/jpeg", "image/jpg"].includes(file.mimetype);
