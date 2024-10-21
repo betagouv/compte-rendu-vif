@@ -69,6 +69,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         },
         include: {
           user: true,
+          pictures: true,
         },
       });
       await electric.db.service_instructeurs.sync({ where: { udap_id: data!.user!.udap_id } });
