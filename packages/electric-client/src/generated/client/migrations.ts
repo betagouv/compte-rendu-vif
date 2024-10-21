@@ -234,5 +234,24 @@ export default [
       "CREATE TRIGGER compensation_update_main_pictures_reportId_into_oplog\n  AFTER UPDATE ON \"main\".\"pictures\"\n  WHEN 1 = (SELECT flag from _electric_trigger_settings WHERE namespace = 'main' AND tablename = 'pictures') AND\n       1 = (SELECT value from _electric_meta WHERE key = 'compensations')\nBEGIN\n  INSERT INTO _electric_oplog (namespace, tablename, optype, primaryKey, newRow, oldRow, timestamp)\n  SELECT 'main', 'report', 'COMPENSATION', json_patch('{}', json_object('id', \"id\")), json_object('id', \"id\"), NULL, NULL\n  FROM \"main\".\"report\" WHERE \"id\" = new.\"reportId\";\nEND;"
     ],
     "version": "907"
+  },
+  {
+    "statements": [
+      "CREATE TABLE \"tmp_pictures\" (\n  \"id\" TEXT NOT NULL,\n  \"reportId\" TEXT,\n  \"createdAt\" TEXT,\n  CONSTRAINT \"tmp_pictures_reportId_fkey\" FOREIGN KEY (\"reportId\") REFERENCES \"report\" (\"id\") ON DELETE CASCADE,\n  CONSTRAINT \"tmp_pictures_pkey\" PRIMARY KEY (\"id\")\n) WITHOUT ROWID;\n",
+      "INSERT OR IGNORE INTO _electric_trigger_settings (namespace, tablename, flag) VALUES ('main', 'tmp_pictures', 1);",
+      "DROP TRIGGER IF EXISTS update_ensure_main_tmp_pictures_primarykey;",
+      "CREATE TRIGGER update_ensure_main_tmp_pictures_primarykey\n  BEFORE UPDATE ON \"main\".\"tmp_pictures\"\nBEGIN\n  SELECT\n    CASE\n      WHEN old.\"id\" != new.\"id\" THEN\n      \t\tRAISE (ABORT, 'cannot change the value of column id as it belongs to the primary key')\n    END;\nEND;",
+      "DROP TRIGGER IF EXISTS insert_main_tmp_pictures_into_oplog;",
+      "CREATE TRIGGER insert_main_tmp_pictures_into_oplog\n   AFTER INSERT ON \"main\".\"tmp_pictures\"\n   WHEN 1 = (SELECT flag from _electric_trigger_settings WHERE namespace = 'main' AND tablename = 'tmp_pictures')\nBEGIN\n  INSERT INTO _electric_oplog (namespace, tablename, optype, primaryKey, newRow, oldRow, timestamp)\n  VALUES ('main', 'tmp_pictures', 'INSERT', json_patch('{}', json_object('id', new.\"id\")), json_object('createdAt', new.\"createdAt\", 'id', new.\"id\", 'reportId', new.\"reportId\"), NULL, NULL);\nEND;",
+      "DROP TRIGGER IF EXISTS update_main_tmp_pictures_into_oplog;",
+      "CREATE TRIGGER update_main_tmp_pictures_into_oplog\n   AFTER UPDATE ON \"main\".\"tmp_pictures\"\n   WHEN 1 = (SELECT flag from _electric_trigger_settings WHERE namespace = 'main' AND tablename = 'tmp_pictures')\nBEGIN\n  INSERT INTO _electric_oplog (namespace, tablename, optype, primaryKey, newRow, oldRow, timestamp)\n  VALUES ('main', 'tmp_pictures', 'UPDATE', json_patch('{}', json_object('id', new.\"id\")), json_object('createdAt', new.\"createdAt\", 'id', new.\"id\", 'reportId', new.\"reportId\"), json_object('createdAt', old.\"createdAt\", 'id', old.\"id\", 'reportId', old.\"reportId\"), NULL);\nEND;",
+      "DROP TRIGGER IF EXISTS delete_main_tmp_pictures_into_oplog;",
+      "CREATE TRIGGER delete_main_tmp_pictures_into_oplog\n   AFTER DELETE ON \"main\".\"tmp_pictures\"\n   WHEN 1 = (SELECT flag from _electric_trigger_settings WHERE namespace = 'main' AND tablename = 'tmp_pictures')\nBEGIN\n  INSERT INTO _electric_oplog (namespace, tablename, optype, primaryKey, newRow, oldRow, timestamp)\n  VALUES ('main', 'tmp_pictures', 'DELETE', json_patch('{}', json_object('id', old.\"id\")), NULL, json_object('createdAt', old.\"createdAt\", 'id', old.\"id\", 'reportId', old.\"reportId\"), NULL);\nEND;",
+      "DROP TRIGGER IF EXISTS compensation_insert_main_tmp_pictures_reportId_into_oplog;",
+      "CREATE TRIGGER compensation_insert_main_tmp_pictures_reportId_into_oplog\n  AFTER INSERT ON \"main\".\"tmp_pictures\"\n  WHEN 1 = (SELECT flag from _electric_trigger_settings WHERE namespace = 'main' AND tablename = 'tmp_pictures') AND\n       1 = (SELECT value from _electric_meta WHERE key = 'compensations')\nBEGIN\n  INSERT INTO _electric_oplog (namespace, tablename, optype, primaryKey, newRow, oldRow, timestamp)\n  SELECT 'main', 'report', 'COMPENSATION', json_patch('{}', json_object('id', \"id\")), json_object('id', \"id\"), NULL, NULL\n  FROM \"main\".\"report\" WHERE \"id\" = new.\"reportId\";\nEND;",
+      "DROP TRIGGER IF EXISTS compensation_update_main_tmp_pictures_reportId_into_oplog;",
+      "CREATE TRIGGER compensation_update_main_tmp_pictures_reportId_into_oplog\n  AFTER UPDATE ON \"main\".\"tmp_pictures\"\n  WHEN 1 = (SELECT flag from _electric_trigger_settings WHERE namespace = 'main' AND tablename = 'tmp_pictures') AND\n       1 = (SELECT value from _electric_meta WHERE key = 'compensations')\nBEGIN\n  INSERT INTO _electric_oplog (namespace, tablename, optype, primaryKey, newRow, oldRow, timestamp)\n  SELECT 'main', 'report', 'COMPENSATION', json_patch('{}', json_object('id', \"id\")), json_object('id', \"id\"), NULL, NULL\n  FROM \"main\".\"report\" WHERE \"id\" = new.\"reportId\";\nEND;"
+    ],
+    "version": "908"
   }
 ]

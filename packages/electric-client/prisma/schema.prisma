@@ -38,11 +38,11 @@ model clause {
 }
 
 model report {
-  id                  String     @id
+  id                  String         @id
   title               String?
   projectDescription  String?
   redactedBy          String?
-  meetDate            DateTime?  @db.Timestamp(6)
+  meetDate            DateTime?      @db.Timestamp(6)
   applicantName       String?
   applicantAddress    String?
   projectCadastralRef String?
@@ -52,7 +52,7 @@ model report {
   contacts            String?
   furtherInformation  String?
   createdBy           String
-  createdAt           DateTime   @db.Timestamp(6)
+  createdAt           DateTime       @db.Timestamp(6)
   serviceInstructeur  Int?
   pdf                 String?
   disabled            Boolean?
@@ -62,7 +62,8 @@ model report {
   city                String?
   zipCode             String?
   pictures            pictures[]
-  user                user       @relation(fields: [createdBy], references: [id], onDelete: SetNull, onUpdate: NoAction)
+  user                user           @relation(fields: [createdBy], references: [id], onDelete: SetNull, onUpdate: NoAction)
+  tmp_pictures        tmp_pictures[]
 }
 
 model delegation {
@@ -147,6 +148,13 @@ model pictures {
   id        String    @id
   reportId  String?
   url       String?
+  createdAt DateTime? @db.Timestamp(6)
+  report    report?   @relation(fields: [reportId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model tmp_pictures {
+  id        String    @id
+  reportId  String?
   createdAt DateTime? @db.Timestamp(6)
   report    report?   @relation(fields: [reportId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 }

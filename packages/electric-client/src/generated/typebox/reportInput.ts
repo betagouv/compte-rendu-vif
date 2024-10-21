@@ -37,6 +37,13 @@ export const reportInput = Type.Object({
     name: Type.String(),
     udap_id: Type.String(),
   }),
+  tmp_pictures: Type.Array(
+    Type.Object({
+      id: Type.String(),
+      reportId: Type.Optional(Type.String()),
+      createdAt: Type.Optional(Type.String()),
+    })
+  ),
 });
 
 export type reportInputType = Static<typeof reportInput>;

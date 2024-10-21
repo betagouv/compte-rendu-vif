@@ -24,3 +24,5 @@ export * from './pdf_snapshot';
 export * from './pdf_snapshotInput';
 export * from './pictures';
 export * from './picturesInput';
+export * from './tmp_pictures';
+export * from './tmp_picturesInput';

@@ -6,7 +6,7 @@ import { useTabsContext } from "@ark-ui/react/tabs";
 import Button from "@codegouvfr/react-dsfr/Button";
 import Input from "@codegouvfr/react-dsfr/Input";
 import Select from "@codegouvfr/react-dsfr/Select";
-import type { Pictures, Report } from "@cr-vif/electric-client/frontend";
+import type { Pictures, Report, Tmp_pictures } from "@cr-vif/electric-client/frontend";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { format, parse } from "date-fns";
 import { useLiveQuery } from "electric-sql/react";
@@ -227,7 +227,7 @@ const UploadImage = ({ reportId }: { reportId: string }) => {
     await set(id, buffer, picturesStore);
     await set(id, reportId, toUploadStore);
 
-    await db.pictures.create({ data: { id, reportId, createdAt: new Date() } });
+    await db.tmp_pictures.create({ data: { id, reportId, createdAt: new Date() } });
     syncImages();
   };
 
@@ -264,47 +264,53 @@ const UploadImage = ({ reportId }: { reportId: string }) => {
   );
 };
 
-const ReportStatus = ({ status }: { status: "uploading" | "success" | "error" }) => {
-  return (
-    <Badge
-      className={css({ display: "flex", alignItems: "center" })}
-      severity={status === "draft" ? "info" : "success"}
-      noIcon
-      small
-      style={{
-        backgroundColor: colors[status][1],
-        color: colors[status][0],
-      }}
-    >
-      <styled.span
-        className={cx(
-          icons[status],
-          css({ "&::before": { w: "12px !important", h: "12px !important", verticalAlign: "middle !important" } }),
-        )}
-      />
-      <styled.span ml="4px">{status === "draft" ? "Brouillon" : "Envoyé"}</styled.span>
-    </Badge>
-  );
-};
+// const ReportStatus = ({ status }: { status: "uploading" | "success" | "error" }) => {
+//   return (
+//     <Badge
+//       className={css({ display: "flex", alignItems: "center" })}
+//       severity={status === "draft" ? "info" : "success"}
+//       noIcon
+//       small
+//       style={{
+//         backgroundColor: colors[status][1],
+//         color: colors[status][0],
+//       }}
+//     >
+//       <styled.span
+//         className={cx(
+//           icons[status],
+//           css({ "&::before": { w: "12px !important", h: "12px !important", verticalAlign: "middle !important" } }),
+//         )}
+//       />
+//       <styled.span ml="4px">{status === "draft" ? "Brouillon" : "Envoyé"}</styled.span>
+//     </Badge>
+//   );
+// };
 
 const ReportPictures = ({ statusMap }: { statusMap: Record<string, string> }) => {
   const form = useFormContext<Report>();
 
+  const reportId = form.getValues().id;
+
+  const tmpPicturesQuery = useLiveQuery(
+    db.tmp_pictures.liveMany({ where: { reportId }, orderBy: { createdAt: "asc" } }),
+  );
+
   const picturesQuery = useLiveQuery(
     db.pictures.liveMany({
-      where: { reportId: form.getValues().id },
+      where: { reportId },
       orderBy: { createdAt: "asc" },
     }),
   );
 
-  console.log(picturesQuery.results);
+  const pictures = mergePictureArrays(tmpPicturesQuery.results ?? [], picturesQuery.results ?? []);
 
   return (
     <Flex direction="column" w="100%" my="40px">
       <InputGroup>
         {/* <Flex gap="16px" direction="column"> */}
         <Grid gap="16px" gridTemplateColumns={{ base: "repeat(2, 1fr)", md: "repeat(3, 1fr)", lg: "repeat(4, 1fr)" }}>
-          {picturesQuery.results?.map((picture, index) => (
+          {pictures?.map((picture, index) => (
             <PictureThumbnail key={picture.id} picture={picture as any} index={index} status={statusMap[picture.id]} />
           ))}
         </Grid>
@@ -314,19 +320,33 @@ const ReportPictures = ({ statusMap }: { statusMap: Record<string, string> }) =>
   );
 };
 
+const mergePictureArrays = (a: Tmp_pictures[], b: Pictures[]) => {
+  const map = new Map<string, Tmp_pictures>();
+
+  for (const item of a) {
+    map.set(item.id, item);
+  }
+
+  for (const item of b) {
+    map.set(item.id, item);
+  }
+
+  return Array.from(map.values());
+};
+
 const PictureThumbnail = ({ picture, index, status }: { picture: Pictures; index: number; status?: string }) => {
   const deletePictureMutation = useMutation(async () => {
     await deleteImageFromIdb(picture.id);
-
-    return db.pictures.delete({ where: { id: picture.id } });
+    if (picture.url) await db.pictures.delete({ where: { id: picture.id } });
+    else await db.tmp_pictures.delete({ where: { id: picture.id } });
+    return "ok";
   });
 
   const bgUrlQuery = useQuery({
     queryKey: ["picture", picture.id, picture.url],
     queryFn: async () => {
-      if (picture.url) return picture.url;
       const buffer = await get(picture.id, getPicturesStore());
-      if (!buffer) return null;
+      if (!buffer) return picture.url;
 
       const blob = new Blob([buffer], { type: "image/png" });
 

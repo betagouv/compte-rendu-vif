@@ -32,8 +32,11 @@ export const uploadPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
 
     debug("adding url to pic", id, "for report", reportId);
 
-    // await db.pictures.create({ data: { id, url, reportId, createdAt: new Date() } });
-    await db.pictures.update({ where: { id }, data: { url } });
+    await db.pictures.create({ data: { id, url, reportId, createdAt: new Date() } });
+    // try {
+    //   await db.tmp_pictures.delete({ where: { id } });
+    // } catch (e) {}
+    // await db.pictures.update({ where: { id }, data: { url } });
 
     reply.send(url);
 
