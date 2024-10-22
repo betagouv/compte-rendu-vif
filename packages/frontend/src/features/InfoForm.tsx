@@ -1,6 +1,6 @@
 import { InputGroup, InputGroupWithTitle } from "#components/InputGroup";
 import { SpaceTypeChips } from "#components/chips/SpaceTypeChips";
-import { css } from "#styled-system/css";
+import { css, cx } from "#styled-system/css";
 import { Box, Center, Divider, Flex, Grid, Stack, styled } from "#styled-system/jsx";
 import { useTabsContext } from "@ark-ui/react/tabs";
 import Button from "@codegouvfr/react-dsfr/Button";
@@ -264,28 +264,38 @@ const UploadImage = ({ reportId }: { reportId: string }) => {
   );
 };
 
-// const ReportStatus = ({ status }: { status: "uploading" | "success" | "error" }) => {
-//   return (
-//     <Badge
-//       className={css({ display: "flex", alignItems: "center" })}
-//       severity={status === "draft" ? "info" : "success"}
-//       noIcon
-//       small
-//       style={{
-//         backgroundColor: colors[status][1],
-//         color: colors[status][0],
-//       }}
-//     >
-//       <styled.span
-//         className={cx(
-//           icons[status],
-//           css({ "&::before": { w: "12px !important", h: "12px !important", verticalAlign: "middle !important" } }),
-//         )}
-//       />
-//       <styled.span ml="4px">{status === "draft" ? "Brouillon" : "Envoyé"}</styled.span>
-//     </Badge>
-//   );
-// };
+const ReportStatus = ({ status }: { status: "uploading" | "success" | "error" }) => {
+  const { color, bgColor, label, icon } = statusData[status];
+
+  return (
+    <Badge
+      className={css({ display: "flex", alignItems: "center" })}
+      severity={"info"}
+      noIcon
+      small
+      style={{
+        backgroundColor: bgColor,
+        color,
+        // backgroundColor: colors[status][1],
+        // color: colors[status][0],
+      }}
+    >
+      <styled.span
+        className={cx(
+          icon,
+          css({ "&::before": { w: "12px !important", h: "12px !important", verticalAlign: "middle !important" } }),
+        )}
+      />
+      <styled.span ml="4px">{label}</styled.span>
+    </Badge>
+  );
+};
+
+const statusData = {
+  uploading: { label: "En cours", bgColor: "#FEE7FC", color: "#855080", icon: "fr-icon-refresh-line" },
+  success: { label: "Ok", bgColor: "#B8FEC9", color: "#18753C", icon: "fr-icon-success-line" },
+  error: { label: "Erreur", bgColor: "#FEC9C9", color: "#853C3C", icon: "fr-icon-warning-line" },
+};
 
 const ReportPictures = ({ statusMap }: { statusMap: Record<string, string> }) => {
   const form = useFormContext<Report>();
@@ -293,13 +303,13 @@ const ReportPictures = ({ statusMap }: { statusMap: Record<string, string> }) =>
   const reportId = form.getValues().id;
 
   const tmpPicturesQuery = useLiveQuery(
-    db.tmp_pictures.liveMany({ where: { reportId }, orderBy: { createdAt: "asc" } }),
+    db.tmp_pictures.liveMany({ where: { reportId }, orderBy: { createdAt: "desc" } }),
   );
 
   const picturesQuery = useLiveQuery(
     db.pictures.liveMany({
       where: { reportId },
-      orderBy: { createdAt: "asc" },
+      orderBy: { createdAt: "desc" },
     }),
   );
 
@@ -323,11 +333,15 @@ const ReportPictures = ({ statusMap }: { statusMap: Record<string, string> }) =>
 const mergePictureArrays = (a: Tmp_pictures[], b: Pictures[]) => {
   const map = new Map<string, Tmp_pictures>();
 
-  for (const item of a) {
+  const sortByDate = (a: Tmp_pictures, b: Tmp_pictures) => {
+    return new Date(a.createdAt!).getTime() - new Date(b.createdAt!).getTime();
+  };
+
+  for (const item of a.sort(sortByDate)) {
     map.set(item.id, item);
   }
 
-  for (const item of b) {
+  for (const item of b.sort(sortByDate)) {
     map.set(item.id, item);
   }
 
@@ -371,6 +385,7 @@ const PictureThumbnail = ({ picture, index, status }: { picture: Pictures; index
   return (
     <Stack>
       {/* <Badge severity={finalStatus === "uploading" ? }></Badge> */}
+      <ReportStatus status={finalStatus as any} />
       <Flex
         style={bgUrl ? { backgroundImage: `url(${bgUrl})` } : { backgroundColor: "gray" }}
         flexDir="column"
