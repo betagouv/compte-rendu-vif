@@ -373,12 +373,12 @@ const PictureThumbnail = ({ picture, index, status }: { picture: Pictures; index
     queryKey: ["picture-status", picture.id],
     queryFn: async () => {
       const status = await get(picture.id, getUploadStatusStore());
-      return status;
+      return status ?? null;
     },
     enabled: !status,
   });
 
-  const finalStatus = status ?? idbStatusQuery.data ?? "success";
+  const finalStatus = picture.url ? "success" : status ?? idbStatusQuery.data ?? "uploading";
 
   const bgUrl = bgUrlQuery.data;
 
