@@ -48,8 +48,6 @@ const syncMissingPictures = async (retries = 3) => {
       await new Promise((resolve) => setTimeout(resolve, 5000));
       return syncMissingPictures(retries - 1);
     }
-
-    throw e;
   }
 };
 
