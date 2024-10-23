@@ -337,22 +337,23 @@ const mergePictureArrays = (a: Tmp_pictures[], b: Pictures[]) => {
     return new Date(a.createdAt!).getTime() - new Date(b.createdAt!).getTime();
   };
 
-  for (const item of a.sort(sortByDate)) {
+  for (const item of a) {
     map.set(item.id, item);
   }
 
-  for (const item of b.sort(sortByDate)) {
+  for (const item of b) {
     map.set(item.id, item);
   }
 
-  return Array.from(map.values());
+  return Array.from(map.values()).sort(sortByDate);
 };
 
 const PictureThumbnail = ({ picture, index, status }: { picture: Pictures; index: number; status?: string }) => {
   const deletePictureMutation = useMutation(async () => {
     await deleteImageFromIdb(picture.id);
-    if (picture.url) await db.pictures.delete({ where: { id: picture.id } });
-    else await db.tmp_pictures.delete({ where: { id: picture.id } });
+    await db.tmp_pictures.delete({ where: { id: picture.id } }).catch(() => {});
+    await db.pictures.delete({ where: { id: picture.id } }).catch(() => {});
+
     return "ok";
   });
 
