@@ -8,6 +8,7 @@ export const HelpMenu = ({ backButtonOnClick }: { backButtonOnClick: () => void 
     if (electric.isConnected) electric.disconnect();
     localStorage.clear();
     indexedDB.deleteDatabase("crvif.db");
+    unregisterSWs()
     window.location.reload();
   };
   return (
@@ -22,4 +23,15 @@ export const HelpMenu = ({ backButtonOnClick }: { backButtonOnClick: () => void 
       </Stack>
     </>
   );
+};
+
+const unregisterSWs = async () => {
+  if ('serviceWorker' in navigator) {
+    const registrations = await navigator.serviceWorker.getRegistrations();
+    
+    // Unregister all service workers
+    await Promise.all(
+      registrations.map(registration => registration.unregister())
+    );
+  } 
 };
