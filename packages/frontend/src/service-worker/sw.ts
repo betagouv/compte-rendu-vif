@@ -16,7 +16,6 @@ self.addEventListener("activate", (event) => {
 });
 
 const manif = self.__WB_MANIFEST;
-console.log(manif);
 cleanupOutdatedCaches();
 precacheAndRoute(manif);
 
