@@ -31,7 +31,7 @@ self.addEventListener("sync", async (event: any) => {
   event.waitUntil(syncMissingPictures());
 });
 
-const syncMissingPictures = async (retries = 3) => {
+const syncMissingPictures = async () => {
   try {
     const token = await getTokenFromIdb();
     if (!token) return void console.log("no token");
@@ -42,11 +42,7 @@ const syncMissingPictures = async (retries = 3) => {
 
     await syncPicturesById(pictureIds as string[], token);
   } catch (e) {
-    if (retries > 0) {
-      console.log("retrying in 5s", e);
-      await new Promise((resolve) => setTimeout(resolve, 5000));
-      return syncMissingPictures(retries - 1);
-    }
+    console.error("sync error", e);
   }
 };
 
@@ -97,8 +93,6 @@ const syncPicturesById = async (ids: string[], token: string) => {
     } catch (e) {
       await set(picId, "error", getUploadStatusStore());
       broadcastChannel.postMessage({ type: "status", id: picId, status: "error" });
-
-      throw e;
     }
   }
 };
