@@ -1,5 +1,5 @@
 import { Flex, styled } from "#styled-system/jsx";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export const DrawingCanvas = ({ imageUrl }: { imageUrl: string }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -63,6 +63,10 @@ export const DrawingCanvas = ({ imageUrl }: { imageUrl: string }) => {
     };
     img.src = imageUrl;
   };
+
+  useEffect(() => {
+    clearCanvas();
+  }, [imageUrl]);
 
   return (
     <Flex flexDir="column">

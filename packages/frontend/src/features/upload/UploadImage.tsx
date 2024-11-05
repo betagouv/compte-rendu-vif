@@ -4,7 +4,7 @@ import { db } from "../../db";
 import { deleteImageFromIdb, getPicturesStore, getToUploadStore, getUploadStatusStore, syncImages } from "../idb";
 import { Box, Flex, Grid, Stack, styled } from "#styled-system/jsx";
 import { InputGroup } from "#components/InputGroup.tsx";
-import { cx } from "#styled-system/css/cx.js";
+import { cx } from "#styled-system/css";
 import { Tmp_pictures, Pictures, Report } from "@cr-vif/electric-client/frontend";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useLiveQuery } from "electric-sql/react";
@@ -13,10 +13,20 @@ import { useFormContext } from "react-hook-form";
 import Badge from "@codegouvfr/react-dsfr/Badge";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { css } from "#styled-system/css";
+import { createModal } from "@codegouvfr/react-dsfr/Modal";
+import { DrawingCanvas } from "./DrawingCanvas";
+
+const modal = createModal({
+  id: "edit-picture",
+  isOpenedByDefault: false,
+});
 
 export const UploadImage = ({ reportId }: { reportId: string }) => {
   const [statusMap, setStatusMap] = useState<Record<string, string>>({});
+  const [selectedPicture, setSelectedPicture] = useState<{ id: string; url: string } | null>(null);
   const ref = useRef<HTMLInputElement>(null);
+
+  console.log(selectedPicture);
 
   const onChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const picturesStore = getPicturesStore();
@@ -50,6 +60,9 @@ export const UploadImage = ({ reportId }: { reportId: string }) => {
 
   return (
     <>
+      <modal.Component title="Editer la photo">
+        {selectedPicture ? <DrawingCanvas imageUrl={selectedPicture.url} /> : null}
+      </modal.Component>
       <Button
         type="button"
         iconId="ri-add-line"
@@ -62,14 +75,20 @@ export const UploadImage = ({ reportId }: { reportId: string }) => {
         Ajouter photo
       </Button>
       <styled.input ref={ref as any} type="file" accept="image/*" onChange={onChange} display="none" />
-      <ReportPictures statusMap={statusMap} />
+      <ReportPictures setSelectedPicture={setSelectedPicture} statusMap={statusMap} />
     </>
   );
 };
 
 const broadcastChannel = new BroadcastChannel("sw-messages");
 
-const ReportPictures = ({ statusMap }: { statusMap: Record<string, string> }) => {
+const ReportPictures = ({
+  statusMap,
+  setSelectedPicture,
+}: {
+  statusMap: Record<string, string>;
+  setSelectedPicture: (props: { id: string; url: string }) => void;
+}) => {
   const form = useFormContext<Report>();
 
   const reportId = form.getValues().id;
@@ -93,7 +112,13 @@ const ReportPictures = ({ statusMap }: { statusMap: Record<string, string> }) =>
         {/* <Flex gap="16px" direction="column"> */}
         <Grid gap="16px" gridTemplateColumns={{ base: "repeat(2, 1fr)", md: "repeat(3, 1fr)", lg: "repeat(4, 1fr)" }}>
           {pictures?.map((picture, index) => (
-            <PictureThumbnail key={picture.id} picture={picture as any} index={index} status={statusMap[picture.id]} />
+            <PictureThumbnail
+              setSelectedPicture={setSelectedPicture}
+              key={picture.id}
+              picture={picture as any}
+              index={index}
+              status={statusMap[picture.id]}
+            />
           ))}
         </Grid>
         {/* </Flex> */}
@@ -120,7 +145,17 @@ const mergePictureArrays = (a: Tmp_pictures[], b: Pictures[]) => {
   return Array.from(map.values()).sort(sortByDate);
 };
 
-const PictureThumbnail = ({ picture, index, status }: { picture: Pictures; index: number; status?: string }) => {
+const PictureThumbnail = ({
+  picture,
+  index,
+  status,
+  setSelectedPicture,
+}: {
+  picture: Pictures;
+  index: number;
+  status?: string;
+  setSelectedPicture: (props: { id: string; url: string }) => void;
+}) => {
   const deletePictureMutation = useMutation(async () => {
     await deleteImageFromIdb(picture.id);
     await db.tmp_pictures.delete({ where: { id: picture.id } }).catch(() => {});
@@ -169,6 +204,17 @@ const PictureThumbnail = ({ picture, index, status }: { picture: Pictures; index
         backgroundSize="cover"
       >
         <Flex alignItems="center" border="1px solid #DFDFDF" h="40px" bgColor="white">
+          <Box
+            onClick={() => {
+              setSelectedPicture({ id: picture.id, url: bgUrl! });
+              modal.open();
+            }}
+            borderLeft="1px solid #DFDFDF"
+          >
+            <Button type="button" iconId="ri-pencil-fill" priority="tertiary no outline" />
+            {/* {finalStatus ? <span>{finalStatus}</span> : null} */}
+            {/* <styled.i className={fr.cx("fr-icon--md", "fr-icon-close-circle-fill")} /> */}
+          </Box>
           <Box flex="1" pl="5px">
             N° {index + 1}
           </Box>
