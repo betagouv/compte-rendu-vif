@@ -55,7 +55,7 @@ const syncPicturesById = async (ids: string[], token: string) => {
 
   const url = await get("url", apiStore);
 
-  if (!url) throw new Error("no backend url in service worker");
+  if (!url) return void console.error("no backend url in service worker");
 
   const api = createApiClientWithUrl(url);
 
