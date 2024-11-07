@@ -15,6 +15,7 @@ import Button from "@codegouvfr/react-dsfr/Button";
 import { css } from "#styled-system/css";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { DrawingCanvas } from "./DrawingCanvas";
+import { api } from "../../api";
 
 const modal = createModal({
   id: "edit-picture",
@@ -26,22 +27,39 @@ export const UploadImage = ({ reportId }: { reportId: string }) => {
   const [selectedPicture, setSelectedPicture] = useState<{ id: string; url: string } | null>(null);
   const ref = useRef<HTMLInputElement>(null);
 
-  console.log(selectedPicture);
+  const uploadImageMutation = useMutation(async (file: File) => {
+    const picId = v4();
+
+    try {
+      const formData = new FormData();
+      const buffer = await getArrayBufferFromBlob(file);
+
+      formData.append("file", new Blob([buffer]), "file");
+      formData.append("reportId", reportId);
+      formData.append("pictureId", picId);
+
+      await api.post("/api/upload/image", {
+        body: formData,
+        query: { reportId: reportId, id: picId },
+      } as any);
+    } catch {
+      const picturesStore = getPicturesStore();
+      const toUploadStore = getToUploadStore();
+
+      const buffer = await getArrayBufferFromBlob(file);
+      await set(picId, buffer, picturesStore);
+      await set(picId, reportId, toUploadStore);
+
+      await db.tmp_pictures.create({ data: { id: picId, reportId, createdAt: new Date() } });
+      syncImages();
+    }
+  });
 
   const onChange = async (e: ChangeEvent<HTMLInputElement>) => {
-    const picturesStore = getPicturesStore();
-    const toUploadStore = getToUploadStore();
-
-    const id = v4();
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const buffer = await getArrayBufferFromBlob(file);
-    await set(id, buffer, picturesStore);
-    await set(id, reportId, toUploadStore);
-
-    await db.tmp_pictures.create({ data: { id, reportId, createdAt: new Date() } });
-    syncImages();
+    await uploadImageMutation.mutateAsync(file);
   };
 
   useEffect(() => {
@@ -204,7 +222,7 @@ const PictureThumbnail = ({
         backgroundSize="cover"
       >
         <Flex alignItems="center" border="1px solid #DFDFDF" h="40px" bgColor="white">
-          <Box
+          {/* <Box
             onClick={() => {
               setSelectedPicture({ id: picture.id, url: bgUrl! });
               modal.open();
@@ -212,9 +230,7 @@ const PictureThumbnail = ({
             borderLeft="1px solid #DFDFDF"
           >
             <Button type="button" iconId="ri-pencil-fill" priority="tertiary no outline" />
-            {/* {finalStatus ? <span>{finalStatus}</span> : null} */}
-            {/* <styled.i className={fr.cx("fr-icon--md", "fr-icon-close-circle-fill")} /> */}
-          </Box>
+          </Box> */}
           <Box flex="1" pl="5px">
             N° {index + 1}
           </Box>
