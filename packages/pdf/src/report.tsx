@@ -1,4 +1,4 @@
-import { Document, Font, Image, Page, View } from "@react-pdf/renderer";
+import { Document, Font, Image, Page, Text, View } from "@react-pdf/renderer";
 import { Html } from "react-pdf-html";
 import React from "react";
 import type { Udap, Report, Service_instructeurs, Clause_v2, Pictures } from "@cr-vif/electric-client/frontend";
@@ -10,9 +10,8 @@ Font.registerHyphenationCallback((word) => {
 
 export const ReportPDFDocument = ({ udap, htmlString, images, pictures }: ReportPDFDocumentProps) => {
   return (
-    <Document>
+    <Document onRender={console.log}>
       <Page
-        minPresenceAhead={20}
         size="A4"
         style={{
           paddingTop: "48px",
@@ -20,6 +19,8 @@ export const ReportPDFDocument = ({ udap, htmlString, images, pictures }: Report
         }}
       >
         <Html
+          resetStyles
+          collapse
           style={{
             fontSize: "10px",
             paddingLeft: "32px",
@@ -154,16 +155,40 @@ export const ReportPDFDocument = ({ udap, htmlString, images, pictures }: Report
           </body>
         </html>
       `}</Html>
-        {pictures ? (
-          <View break>
-            {pictures
-              .filter((pic) => !!pic.url)
-              .map((pic) => (
-                <Image key={pic.id} style={{ width: `100%`, height: "auto" }} src={pic.url!} />
-              ))}
-          </View>
-        ) : null}
       </Page>
+      {pictures
+        ? pictures
+            .filter((pic) => !!pic.url)
+            .map((pic, index) => (
+              <Page
+                break={index > 0}
+                style={{
+                  paddingTop: "48px",
+                  paddingBottom: "32px",
+                  maxHeight: "100vh",
+                }}
+                key={pic.id}
+                size="A4"
+              >
+                <View
+                  style={{
+                    marginHorizontal: "10%",
+                    maxHeight: "100vh",
+                  }}
+                >
+                  <Image
+                    style={{
+                      width: `auto`,
+                      height: "auto",
+                      objectFit: "contain",
+                      overflow: "hidden",
+                    }}
+                    src={pic.url!}
+                  />
+                </View>
+              </Page>
+            ))
+        : null}
     </Document>
   );
 };

@@ -427,6 +427,7 @@ const View = (props: ReportPDFDocumentProps) => {
       return blob;
     },
     refetchOnWindowFocus: false,
+    enabled: !!props.htmlString,
   });
 
   if (query.isLoading) return <Spinner />;
