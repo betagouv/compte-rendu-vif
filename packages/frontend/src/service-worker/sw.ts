@@ -1,6 +1,6 @@
 import { cleanupOutdatedCaches, createHandlerBoundToURL, precacheAndRoute } from "workbox-precaching";
 import { apiStore, createApiClientWithUrl, getTokenFromIdb } from "../api";
-import { getPicturesStore, getToUploadStore, getUploadStatusStore } from "../features/idb";
+import { getPicturesStore, getToPingStore, getToUploadStore, getUploadStatusStore } from "../features/idb";
 import { get, keys, del, set } from "idb-keyval";
 import { NavigationRoute, registerRoute } from "workbox-routing";
 import { isDev } from "../envVars";
@@ -27,9 +27,42 @@ if (!isDev) {
 const broadcastChannel = new BroadcastChannel("sw-messages");
 
 self.addEventListener("sync", async (event: any) => {
-  broadcastChannel.postMessage({ type: "sync" });
-  event.waitUntil(syncMissingPictures());
+  if (event.tag === "images") {
+    event.waitUntil(syncMissingPictures());
+  } else if (event.tag === "picture-lines") {
+    event.waitUntil(syncPictureLines());
+  }
 });
+
+const syncPictureLines = async () => {
+  try {
+    const token = await getTokenFromIdb();
+    if (!token) return void console.log("no token");
+
+    const pictureIds = await keys(getToPingStore());
+
+    console.log("syncing", pictureIds.length, "picture lines");
+
+    const url = await get("url", apiStore);
+    if (!url) return void console.error("no backend url in service worker");
+
+    const api = createApiClientWithUrl(url);
+
+    for (let i = 0; i < pictureIds.length; i++) {
+      const picId = pictureIds[i];
+      console.log("syncing picture lines for", picId);
+
+      // @ts-ignore
+      await api.post(`/api/upload/picture/${pictureId}/lines`, {
+        header: { Authorization: `Bearer ${token}` },
+      } as any);
+
+      await del(picId, getToPingStore());
+    }
+  } catch (e) {
+    console.error("sync error", e);
+  }
+};
 
 const syncMissingPictures = async () => {
   try {

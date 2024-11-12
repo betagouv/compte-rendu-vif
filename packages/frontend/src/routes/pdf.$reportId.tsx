@@ -385,6 +385,8 @@ export const WithReport = ({
   const { editor } = useContext(TextEditorContext);
   const [htmlString] = useState(initialHtmlString);
 
+  console.log(report);
+
   useEffect(() => {
     if (!editor) return;
 

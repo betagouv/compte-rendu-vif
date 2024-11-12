@@ -30,6 +30,7 @@ export const reportInput = Type.Object({
       reportId: Type.Optional(Type.String()),
       url: Type.Optional(Type.String()),
       createdAt: Type.Optional(Type.String()),
+      finalUrl: Type.Optional(Type.String()),
     })
   ),
   user: Type.Object({

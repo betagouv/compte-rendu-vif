@@ -3,6 +3,8 @@ import { ENV } from "../envVars";
 import { makeDebug } from "../features/debug";
 import { AppError } from "../features/errors";
 import { S3 } from "@aws-sdk/client-s3";
+import { applyLinesToPicture, getPictureWithLines } from "../features/image";
+import { db } from "../db/db";
 
 const client = new S3Client({ endpoint: ENV.AWS_ENDPOINT, region: ENV.AWS_REGION });
 const debug = makeDebug("upload");
@@ -87,7 +89,46 @@ export class UploadService {
 
     return Buffer.from(buffer);
   }
+
+  async handleNotifyPictureLines({
+    pictureId,
+    lines,
+  }: {
+    pictureId: string;
+    lines: Array<{ points: { x: number; y: number }[]; color: string }>;
+  }) {
+    debug("Handling picture lines", pictureId);
+    const picture = await db.pictures.findFirst({
+      where: { id: pictureId },
+    });
+    if (!picture) throw new AppError(404, "Picture not found");
+
+    const buffer = await applyLinesToPicture({ pictureUrl: picture.url!, lines });
+
+    const name = getPictureName(pictureId, pictureId, Math.round(Date.now() / 1000));
+
+    const bucketUrl = `${ENV.MINIO_URL}/${ENV.MINIO_BUCKET}`;
+
+    debug("Uploading picture to S3", pictureId);
+    await imageClient.putObject({
+      Bucket: bucketUrl,
+      Key: name,
+      Body: buffer,
+      ACL: "public-read",
+      ContentType: "image/png",
+    });
+
+    debug("Picture uploaded", pictureId);
+
+    const url = `${bucketUrl}/${name}`;
+
+    await db.pictures.update({ where: { id: pictureId }, data: { finalUrl: url } });
+
+    debug(url);
+    return url;
+  }
 }
 
 export const getPDFName = (reportId: string) => `${reportId}/compte_rendu.pdf`;
-export const getPictureName = (reportId: string, pictureId: string) => `${reportId}/pictures/${pictureId}.png`;
+export const getPictureName = (reportId: string, pictureId: string, snapshot?: number) =>
+  `${reportId}/pictures/${pictureId}${snapshot ? `_${snapshot}` : ""}.png`;

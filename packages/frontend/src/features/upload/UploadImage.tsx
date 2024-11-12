@@ -1,20 +1,28 @@
 import { useState, useRef, ChangeEvent, useEffect } from "react";
 import { v4 } from "uuid";
 import { db } from "../../db";
-import { deleteImageFromIdb, getPicturesStore, getToUploadStore, getUploadStatusStore, syncImages } from "../idb";
+import {
+  deleteImageFromIdb,
+  getPicturesStore,
+  getToPingStore,
+  getToUploadStore,
+  getUploadStatusStore,
+  syncImages,
+  syncPictureLines,
+} from "../idb";
 import { Box, Flex, Grid, Stack, styled } from "#styled-system/jsx";
 import { InputGroup } from "#components/InputGroup.tsx";
 import { cx } from "#styled-system/css";
 import { Tmp_pictures, Pictures, Report } from "@cr-vif/electric-client/frontend";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useLiveQuery } from "electric-sql/react";
-import { get, set } from "idb-keyval";
+import { del, get, set } from "idb-keyval";
 import { useFormContext } from "react-hook-form";
 import Badge from "@codegouvfr/react-dsfr/Badge";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { css } from "#styled-system/css";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
-import { ImageCanvas } from "./DrawingCanvas";
+import { ImageCanvas, Line } from "./DrawingCanvas";
 import { api } from "../../api";
 
 const modal = createModal({
@@ -25,6 +33,19 @@ const modal = createModal({
 export const UploadImage = ({ reportId }: { reportId: string }) => {
   const [statusMap, setStatusMap] = useState<Record<string, string>>({});
   const [selectedPicture, setSelectedPicture] = useState<{ id: string; url: string } | null>(null);
+
+  const notifyPictureLines = useMutation(async ({ pictureId, lines }: { pictureId: string; lines: Array<Line> }) => {
+    try {
+      // @ts-ignore
+      const result = await api.post(`/api/upload/picture/${pictureId}/lines`, { body: { lines } });
+      await del(pictureId, getToPingStore());
+
+      return result;
+    } catch (e) {
+      await set(pictureId, true, getToPingStore());
+      syncPictureLines();
+    }
+  });
 
   // const linesQuery = useLiveQuery(db.picture_lines.liveMany({ where: { pictureId: selectedPicture?.id } }));
 
@@ -43,8 +64,6 @@ export const UploadImage = ({ reportId }: { reportId: string }) => {
   const uploadImageMutation = useMutation(async (file: File) => {
     const picId = v4();
     const buffer = await getArrayBufferFromBlob(file);
-
-    console.log("oui");
 
     await db.tmp_pictures.create({ data: { id: picId, reportId, createdAt: new Date() } });
     await set(picId, buffer, getPicturesStore());
@@ -105,6 +124,7 @@ export const UploadImage = ({ reportId }: { reportId: string }) => {
         {selectedPicture ? (
           <ImageCanvas
             closeModal={() => setSelectedPicture(null)}
+            notifyPictureLines={notifyPictureLines.mutate}
             pictureId={selectedPicture.id}
             url={selectedPicture.url}
             containerRef={containerRef}
@@ -213,18 +233,22 @@ const PictureThumbnail = ({
     return "ok";
   });
 
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
   const bgUrlQuery = useQuery({
     queryKey: ["picture", picture.id, picture.url],
     queryFn: async () => {
+      // if (picture.url) return picture.finalUrl ?? picture.url;
       const buffer = await get(picture.id, getPicturesStore());
       if (!buffer) return picture.url;
-
       const blob = new Blob([buffer], { type: "image/png" });
 
       return URL.createObjectURL(blob);
     },
     refetchOnWindowFocus: false,
   });
+
+  const pictureLines = useLiveQuery(db.picture_lines.liveMany({ where: { pictureId: picture.id } }));
 
   const idbStatusQuery = useQuery({
     queryKey: ["picture-status", picture.id],
@@ -235,6 +259,64 @@ const PictureThumbnail = ({
     enabled: !status,
   });
 
+  useEffect(() => {
+    drawCanvas();
+  }, [bgUrlQuery.data, pictureLines.results]);
+
+  const drawCanvas = () => {
+    if (!canvasRef.current) return;
+    if (!bgUrlQuery.data) return;
+    if (!pictureLines.results) return;
+
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d")!;
+
+    const image = new Image();
+    image.src = bgUrlQuery.data;
+
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = 180 * dpr;
+    canvas.height = 130 * dpr;
+
+    ctx.scale(dpr, dpr);
+
+    image.onload = () => {
+      const scaleX = 180 / image.width;
+      const scaleY = 130 / image.height;
+      console.log(scaleX, scaleY);
+      const initialScale = Math.min(scaleX, scaleY) * 1.5;
+
+      const xOffset = (180 - image.width * initialScale) / 2;
+      const yOffset = (130 - image.height * initialScale) / 2;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.save();
+
+      ctx.translate(xOffset, yOffset);
+      ctx.scale(initialScale, initialScale);
+
+      ctx.drawImage(image, 0, 0, image.width, image.height);
+
+      const lines = JSON.parse(pictureLines.results?.[0]?.lines ?? "[]");
+
+      ctx.lineWidth = 5;
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+
+      lines.forEach((line: any) => {
+        ctx.beginPath();
+        ctx.strokeStyle = line.color;
+        if (line.points.length > 0) {
+          ctx.moveTo(line.points[0].x, line.points[0].y);
+          for (let i = 1; i < line.points.length; i++) {
+            ctx.lineTo(line.points[i].x, line.points[i].y);
+          }
+          ctx.stroke();
+        }
+      });
+    };
+  };
+
   const finalStatus = picture.url ? "success" : status ?? idbStatusQuery.data ?? "uploading";
 
   const bgUrl = bgUrlQuery.data;
@@ -244,15 +326,16 @@ const PictureThumbnail = ({
       {/* <Badge severity={finalStatus === "uploading" ? }></Badge> */}
       <ReportStatus status={finalStatus as any} />
       <Flex
-        style={bgUrl ? { backgroundImage: `url(${bgUrl})` } : { backgroundColor: "gray" }}
+        // style={bgUrl ? { backgroundImage: `url(${bgUrl})` } : { backgroundColor: "gray" }}
         flexDir="column"
         justifyContent="flex-end"
         w="180px"
         h="170px"
-        bgPosition="center"
-        bgRepeat="no-repeat"
-        backgroundSize="contain"
+        // bgPosition="center calc(50% - 20px)"
+        // bgRepeat="no-repeat"
+        // backgroundSize="cover"
       >
+        <styled.canvas ref={canvasRef} flex="1"></styled.canvas>
         <Flex alignItems="center" border="1px solid #DFDFDF" h="40px" bgColor="white">
           <Box
             onClick={() => {

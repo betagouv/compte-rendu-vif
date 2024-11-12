@@ -8,19 +8,21 @@ import { v4 } from "uuid";
 import { Picture_lines } from "@cr-vif/electric-client/frontend";
 
 type DrawEvent = React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>;
-
+export type Line = { points: Array<{ x: number; y: number }>; color: string };
 export const ImageCanvas = ({
   url,
   pictureId,
   lines: dbLines,
   containerRef,
   closeModal,
+  notifyPictureLines,
 }: {
-  lines: Array<{ points: Array<{ x: number; y: number }>; color: string }>;
   url: string;
   containerRef: any;
   pictureId: string;
+  lines: Array<Line>;
   closeModal: () => void;
+  notifyPictureLines: (args: { pictureId: string; lines: Array<Line> }) => void;
 }) => {
   const [tool, setTool] = useState("draw");
   const [lines, setLines] = useState<Array<{ points: Array<{ x: number; y: number }>; color: string }>>([]);
@@ -33,8 +35,6 @@ export const ImageCanvas = ({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imageRef = useRef<HTMLImageElement | null>(null);
   const contextRef = useRef<CanvasRenderingContext2D | null>(null);
-
-  console.log(containerRef?.current?.getBoundingClientRect());
 
   const isDrawing = state === "drawing" || state === "hold";
 
@@ -268,6 +268,7 @@ export const ImageCanvas = ({
         data: { id: v4(), pictureId, lines: JSON.stringify(lines) },
       });
     }
+    notifyPictureLines({ pictureId, lines });
     closeModal();
   };
 

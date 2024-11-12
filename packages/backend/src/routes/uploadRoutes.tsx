@@ -32,7 +32,7 @@ export const uploadPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
 
     debug("adding url to pic", id, "for report", reportId);
 
-    await db.pictures.create({ data: { id, url, reportId, createdAt: new Date() } });
+    await db.pictures.create({ data: { id, url, reportId, createdAt: new Date(), finalUrl: url } });
     // try {
     //   await db.tmp_pictures.delete({ where: { id } });
     // } catch (e) {}
@@ -72,6 +72,30 @@ export const uploadPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
       const buffer = await request.services.upload.getReportPicture({ reportId, pictureId });
 
       return buffer.toString("base64");
+    },
+  );
+
+  fastify.post(
+    "/picture/:pictureId/lines",
+    {
+      schema: {
+        params: Type.Object({ pictureId: Type.String() }),
+        body: Type.Object({
+          lines: Type.Array(
+            Type.Object({
+              points: Type.Array(Type.Object({ x: Type.Number(), y: Type.Number() })),
+              color: Type.String(),
+            }),
+          ),
+        }),
+        response: { 200: Type.String() },
+      },
+    },
+    async (request) => {
+      const { pictureId } = request.params;
+      const { lines } = request.body;
+
+      return request.services.upload.handleNotifyPictureLines({ pictureId, lines });
     },
   );
 };

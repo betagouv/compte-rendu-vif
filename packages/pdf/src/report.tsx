@@ -9,6 +9,7 @@ Font.registerHyphenationCallback((word) => {
 });
 
 export const ReportPDFDocument = ({ udap, htmlString, images, pictures }: ReportPDFDocumentProps) => {
+  console.log(pictures);
   return (
     <Document onRender={console.log}>
       <Page
@@ -183,7 +184,7 @@ export const ReportPDFDocument = ({ udap, htmlString, images, pictures }: Report
                       objectFit: "contain",
                       overflow: "hidden",
                     }}
-                    src={pic.url!}
+                    src={pic.finalUrl ?? pic.url!}
                   />
                 </View>
               </Page>

@@ -5,6 +5,15 @@ export const pictures = Type.Object({
   reportId: Type.Optional(Type.String()),
   url: Type.Optional(Type.String()),
   createdAt: Type.Optional(Type.String()),
+  finalUrl: Type.Optional(Type.String()),
+  picture_lines: Type.Array(
+    Type.Object({
+      id: Type.String(),
+      pictureId: Type.Optional(Type.String()),
+      lines: Type.String(),
+      createdAt: Type.Optional(Type.String()),
+    })
+  ),
   report: Type.Optional(
     Type.Object({
       id: Type.String(),

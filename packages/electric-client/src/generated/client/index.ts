@@ -23,7 +23,7 @@ export const Pdf_snapshotScalarFieldEnumSchema = z.enum(['id','report_id','html'
 
 export const Picture_linesScalarFieldEnumSchema = z.enum(['id','pictureId','lines','createdAt']);
 
-export const PicturesScalarFieldEnumSchema = z.enum(['id','reportId','url','createdAt']);
+export const PicturesScalarFieldEnumSchema = z.enum(['id','reportId','url','createdAt','finalUrl']);
 
 export const QueryModeSchema = z.enum(['default','insensitive']);
 
@@ -120,6 +120,7 @@ export const PicturesSchema = z.object({
   reportId: z.string().nullable(),
   url: z.string().nullable(),
   createdAt: z.coerce.date().nullable(),
+  finalUrl: z.string().nullable(),
 })
 
 export type Pictures = z.infer<typeof PicturesSchema>
@@ -322,6 +323,7 @@ export const PicturesSelectSchema: z.ZodType<Prisma.PicturesSelect> = z.object({
   reportId: z.boolean().optional(),
   url: z.boolean().optional(),
   createdAt: z.boolean().optional(),
+  finalUrl: z.boolean().optional(),
   picture_lines: z.union([z.boolean(),z.lazy(() => Picture_linesFindManyArgsSchema)]).optional(),
   report: z.union([z.boolean(),z.lazy(() => ReportArgsSchema)]).optional(),
   _count: z.union([z.boolean(),z.lazy(() => PicturesCountOutputTypeArgsSchema)]).optional(),
@@ -722,6 +724,7 @@ export const PicturesWhereInputSchema: z.ZodType<Prisma.PicturesWhereInput> = z.
   reportId: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   url: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   createdAt: z.union([ z.lazy(() => DateTimeNullableFilterSchema),z.coerce.date() ]).optional().nullable(),
+  finalUrl: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   picture_lines: z.lazy(() => Picture_linesListRelationFilterSchema).optional(),
   report: z.union([ z.lazy(() => ReportRelationFilterSchema),z.lazy(() => ReportWhereInputSchema) ]).optional().nullable(),
 }).strict();
@@ -731,6 +734,7 @@ export const PicturesOrderByWithRelationInputSchema: z.ZodType<Prisma.PicturesOr
   reportId: z.lazy(() => SortOrderSchema).optional(),
   url: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
+  finalUrl: z.lazy(() => SortOrderSchema).optional(),
   picture_lines: z.lazy(() => Picture_linesOrderByRelationAggregateInputSchema).optional(),
   report: z.lazy(() => ReportOrderByWithRelationInputSchema).optional()
 }).strict();
@@ -744,6 +748,7 @@ export const PicturesOrderByWithAggregationInputSchema: z.ZodType<Prisma.Picture
   reportId: z.lazy(() => SortOrderSchema).optional(),
   url: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
+  finalUrl: z.lazy(() => SortOrderSchema).optional(),
   _count: z.lazy(() => PicturesCountOrderByAggregateInputSchema).optional(),
   _max: z.lazy(() => PicturesMaxOrderByAggregateInputSchema).optional(),
   _min: z.lazy(() => PicturesMinOrderByAggregateInputSchema).optional()
@@ -757,6 +762,7 @@ export const PicturesScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.Pict
   reportId: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
   url: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
   createdAt: z.union([ z.lazy(() => DateTimeNullableWithAggregatesFilterSchema),z.coerce.date() ]).optional().nullable(),
+  finalUrl: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
 }).strict();
 
 export const ReportWhereInputSchema: z.ZodType<Prisma.ReportWhereInput> = z.object({
@@ -1358,6 +1364,7 @@ export const PicturesCreateInputSchema: z.ZodType<Prisma.PicturesCreateInput> = 
   id: z.string(),
   url: z.string().optional().nullable(),
   createdAt: z.coerce.date().optional().nullable(),
+  finalUrl: z.string().optional().nullable(),
   picture_lines: z.lazy(() => Picture_linesCreateNestedManyWithoutPicturesInputSchema).optional(),
   report: z.lazy(() => ReportCreateNestedOneWithoutPicturesInputSchema).optional()
 }).strict();
@@ -1367,6 +1374,7 @@ export const PicturesUncheckedCreateInputSchema: z.ZodType<Prisma.PicturesUnchec
   reportId: z.string().optional().nullable(),
   url: z.string().optional().nullable(),
   createdAt: z.coerce.date().optional().nullable(),
+  finalUrl: z.string().optional().nullable(),
   picture_lines: z.lazy(() => Picture_linesUncheckedCreateNestedManyWithoutPicturesInputSchema).optional()
 }).strict();
 
@@ -1374,6 +1382,7 @@ export const PicturesUpdateInputSchema: z.ZodType<Prisma.PicturesUpdateInput> = 
   id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   url: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  finalUrl: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   picture_lines: z.lazy(() => Picture_linesUpdateManyWithoutPicturesNestedInputSchema).optional(),
   report: z.lazy(() => ReportUpdateOneWithoutPicturesNestedInputSchema).optional()
 }).strict();
@@ -1383,6 +1392,7 @@ export const PicturesUncheckedUpdateInputSchema: z.ZodType<Prisma.PicturesUnchec
   reportId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   url: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  finalUrl: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   picture_lines: z.lazy(() => Picture_linesUncheckedUpdateManyWithoutPicturesNestedInputSchema).optional()
 }).strict();
 
@@ -1390,13 +1400,15 @@ export const PicturesCreateManyInputSchema: z.ZodType<Prisma.PicturesCreateManyI
   id: z.string(),
   reportId: z.string().optional().nullable(),
   url: z.string().optional().nullable(),
-  createdAt: z.coerce.date().optional().nullable()
+  createdAt: z.coerce.date().optional().nullable(),
+  finalUrl: z.string().optional().nullable()
 }).strict();
 
 export const PicturesUpdateManyMutationInputSchema: z.ZodType<Prisma.PicturesUpdateManyMutationInput> = z.object({
   id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   url: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  finalUrl: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const PicturesUncheckedUpdateManyInputSchema: z.ZodType<Prisma.PicturesUncheckedUpdateManyInput> = z.object({
@@ -1404,6 +1416,7 @@ export const PicturesUncheckedUpdateManyInputSchema: z.ZodType<Prisma.PicturesUn
   reportId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   url: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  finalUrl: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const ReportCreateInputSchema: z.ZodType<Prisma.ReportCreateInput> = z.object({
@@ -2158,21 +2171,24 @@ export const PicturesCountOrderByAggregateInputSchema: z.ZodType<Prisma.Pictures
   id: z.lazy(() => SortOrderSchema).optional(),
   reportId: z.lazy(() => SortOrderSchema).optional(),
   url: z.lazy(() => SortOrderSchema).optional(),
-  createdAt: z.lazy(() => SortOrderSchema).optional()
+  createdAt: z.lazy(() => SortOrderSchema).optional(),
+  finalUrl: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const PicturesMaxOrderByAggregateInputSchema: z.ZodType<Prisma.PicturesMaxOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   reportId: z.lazy(() => SortOrderSchema).optional(),
   url: z.lazy(() => SortOrderSchema).optional(),
-  createdAt: z.lazy(() => SortOrderSchema).optional()
+  createdAt: z.lazy(() => SortOrderSchema).optional(),
+  finalUrl: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const PicturesMinOrderByAggregateInputSchema: z.ZodType<Prisma.PicturesMinOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   reportId: z.lazy(() => SortOrderSchema).optional(),
   url: z.lazy(() => SortOrderSchema).optional(),
-  createdAt: z.lazy(() => SortOrderSchema).optional()
+  createdAt: z.lazy(() => SortOrderSchema).optional(),
+  finalUrl: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const DateTimeFilterSchema: z.ZodType<Prisma.DateTimeFilter> = z.object({
@@ -3210,6 +3226,7 @@ export const PicturesCreateWithoutPicture_linesInputSchema: z.ZodType<Prisma.Pic
   id: z.string(),
   url: z.string().optional().nullable(),
   createdAt: z.coerce.date().optional().nullable(),
+  finalUrl: z.string().optional().nullable(),
   report: z.lazy(() => ReportCreateNestedOneWithoutPicturesInputSchema).optional()
 }).strict();
 
@@ -3217,7 +3234,8 @@ export const PicturesUncheckedCreateWithoutPicture_linesInputSchema: z.ZodType<P
   id: z.string(),
   reportId: z.string().optional().nullable(),
   url: z.string().optional().nullable(),
-  createdAt: z.coerce.date().optional().nullable()
+  createdAt: z.coerce.date().optional().nullable(),
+  finalUrl: z.string().optional().nullable()
 }).strict();
 
 export const PicturesCreateOrConnectWithoutPicture_linesInputSchema: z.ZodType<Prisma.PicturesCreateOrConnectWithoutPicture_linesInput> = z.object({
@@ -3234,6 +3252,7 @@ export const PicturesUpdateWithoutPicture_linesInputSchema: z.ZodType<Prisma.Pic
   id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   url: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  finalUrl: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   report: z.lazy(() => ReportUpdateOneWithoutPicturesNestedInputSchema).optional()
 }).strict();
 
@@ -3242,6 +3261,7 @@ export const PicturesUncheckedUpdateWithoutPicture_linesInputSchema: z.ZodType<P
   reportId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   url: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  finalUrl: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const Picture_linesCreateWithoutPicturesInputSchema: z.ZodType<Prisma.Picture_linesCreateWithoutPicturesInput> = z.object({
@@ -3414,6 +3434,7 @@ export const PicturesCreateWithoutReportInputSchema: z.ZodType<Prisma.PicturesCr
   id: z.string(),
   url: z.string().optional().nullable(),
   createdAt: z.coerce.date().optional().nullable(),
+  finalUrl: z.string().optional().nullable(),
   picture_lines: z.lazy(() => Picture_linesCreateNestedManyWithoutPicturesInputSchema).optional()
 }).strict();
 
@@ -3421,6 +3442,7 @@ export const PicturesUncheckedCreateWithoutReportInputSchema: z.ZodType<Prisma.P
   id: z.string(),
   url: z.string().optional().nullable(),
   createdAt: z.coerce.date().optional().nullable(),
+  finalUrl: z.string().optional().nullable(),
   picture_lines: z.lazy(() => Picture_linesUncheckedCreateNestedManyWithoutPicturesInputSchema).optional()
 }).strict();
 
@@ -3499,6 +3521,7 @@ export const PicturesScalarWhereInputSchema: z.ZodType<Prisma.PicturesScalarWher
   reportId: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   url: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   createdAt: z.union([ z.lazy(() => DateTimeNullableFilterSchema),z.coerce.date() ]).optional().nullable(),
+  finalUrl: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
 }).strict();
 
 export const UserUpsertWithoutReportInputSchema: z.ZodType<Prisma.UserUpsertWithoutReportInput> = z.object({
@@ -4002,7 +4025,8 @@ export const Picture_linesUncheckedUpdateManyWithoutPicture_linesInputSchema: z.
 export const PicturesCreateManyReportInputSchema: z.ZodType<Prisma.PicturesCreateManyReportInput> = z.object({
   id: z.string(),
   url: z.string().optional().nullable(),
-  createdAt: z.coerce.date().optional().nullable()
+  createdAt: z.coerce.date().optional().nullable(),
+  finalUrl: z.string().optional().nullable()
 }).strict();
 
 export const Tmp_picturesCreateManyReportInputSchema: z.ZodType<Prisma.Tmp_picturesCreateManyReportInput> = z.object({
@@ -4014,6 +4038,7 @@ export const PicturesUpdateWithoutReportInputSchema: z.ZodType<Prisma.PicturesUp
   id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   url: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  finalUrl: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   picture_lines: z.lazy(() => Picture_linesUpdateManyWithoutPicturesNestedInputSchema).optional()
 }).strict();
 
@@ -4021,6 +4046,7 @@ export const PicturesUncheckedUpdateWithoutReportInputSchema: z.ZodType<Prisma.P
   id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   url: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  finalUrl: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   picture_lines: z.lazy(() => Picture_linesUncheckedUpdateManyWithoutPicturesNestedInputSchema).optional()
 }).strict();
 
@@ -4028,6 +4054,7 @@ export const PicturesUncheckedUpdateManyWithoutPicturesInputSchema: z.ZodType<Pr
   id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   url: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  finalUrl: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const Tmp_picturesUpdateWithoutReportInputSchema: z.ZodType<Prisma.Tmp_picturesUpdateWithoutReportInput> = z.object({
@@ -5617,6 +5644,10 @@ export const tableSchemas = {
       [
         "createdAt",
         "TIMESTAMP"
+      ],
+      [
+        "finalUrl",
+        "TEXT"
       ]
     ]),
     relations: [

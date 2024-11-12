@@ -46,6 +46,7 @@
     "@react-pdf/renderer": "^3.4.2",
     "@sentry/node": "^7.70.0",
     "@sinclair/typebox": "^0.32.20",
+    "canvas": "^2.11.2",
     "date-fns": "^3.6.0",
     "debug": "^4.3.4",
     "dotenv": "^16.4.5",

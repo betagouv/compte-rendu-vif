@@ -22,7 +22,7 @@ export const useChipOptions = (key?: string) => {
 
   // keep only the most specific chip for each value
   const chips = Object.values(grouped).map((value) => {
-    if (value.length > 1) return value.find((chip) => chip.udap_id !== "ALL")!;
+    if (value.length > 1) return value.find((chip) => chip.udap_id !== "ALL") ?? value[0];
     return value[0];
   });
 
@@ -32,6 +32,6 @@ export const useChipOptions = (key?: string) => {
 const transformChip = (chip: Clause_v2) => {
   return {
     ...chip,
-    text: chip.text?.replaceAll("\\n", "<br />").replace(/\n/g, "<br />"),
+    text: chip?.text?.replaceAll("\\n", "<br />").replace(/\n/g, "<br />"),
   };
 };
