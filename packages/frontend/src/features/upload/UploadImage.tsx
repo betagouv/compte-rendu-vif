@@ -14,7 +14,7 @@ import Badge from "@codegouvfr/react-dsfr/Badge";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { css } from "#styled-system/css";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
-import { DrawingCanvas } from "./DrawingCanvas";
+import { ImageCanvas } from "./DrawingCanvas";
 import { api } from "../../api";
 
 const modal = createModal({
@@ -25,7 +25,20 @@ const modal = createModal({
 export const UploadImage = ({ reportId }: { reportId: string }) => {
   const [statusMap, setStatusMap] = useState<Record<string, string>>({});
   const [selectedPicture, setSelectedPicture] = useState<{ id: string; url: string } | null>(null);
+
+  // const linesQuery = useLiveQuery(db.picture_lines.liveMany({ where: { pictureId: selectedPicture?.id } }));
+
+  const linesQuery = useQuery({
+    queryKey: ["lines", selectedPicture?.id],
+    queryFn: async () => {
+      const pictureLines = await db.picture_lines.findFirst({ where: { pictureId: selectedPicture?.id } });
+      return JSON.parse(pictureLines?.lines ?? "[]");
+    },
+    enabled: !!selectedPicture,
+  });
+
   const ref = useRef<HTMLInputElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const uploadImageMutation = useMutation(async (file: File) => {
     const picId = v4();
@@ -76,9 +89,29 @@ export const UploadImage = ({ reportId }: { reportId: string }) => {
 
   return (
     <>
-      <modal.Component title="Editer la photo">
-        {selectedPicture ? <DrawingCanvas imageUrl={selectedPicture.url} /> : null}
-      </modal.Component>
+      <styled.div
+        ref={containerRef}
+        display={selectedPicture ? "initial" : "none"}
+        zIndex="1000"
+        pos="fixed"
+        top="0"
+        left="0"
+        right="0"
+        bottom="0"
+        w="100%"
+        h={{ base: "100vh" }}
+        bgColor="white"
+      >
+        {selectedPicture ? (
+          <ImageCanvas
+            closeModal={() => setSelectedPicture(null)}
+            pictureId={selectedPicture.id}
+            url={selectedPicture.url}
+            containerRef={containerRef}
+            lines={linesQuery.data}
+          />
+        ) : null}
+      </styled.div>
       <Button
         type="button"
         iconId="ri-add-line"
@@ -216,19 +249,20 @@ const PictureThumbnail = ({
         justifyContent="flex-end"
         w="180px"
         h="170px"
-        backgroundPositionY="-20px"
-        backgroundSize="cover"
+        bgPosition="center"
+        bgRepeat="no-repeat"
+        backgroundSize="contain"
       >
         <Flex alignItems="center" border="1px solid #DFDFDF" h="40px" bgColor="white">
-          {/* <Box
+          <Box
             onClick={() => {
               setSelectedPicture({ id: picture.id, url: bgUrl! });
               modal.open();
             }}
-            borderLeft="1px solid #DFDFDF"
+            borderRight="1px solid #DFDFDF"
           >
             <Button type="button" iconId="ri-pencil-fill" priority="tertiary no outline" />
-          </Box> */}
+          </Box>
           <Box flex="1" pl="5px">
             N° {index + 1}
           </Box>

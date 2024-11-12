@@ -88,9 +88,29 @@ export type Pdf_snapshotPayload<ExtArgs extends $Extensions.Args = $Extensions.D
  * 
  */
 export type Pdf_snapshot = runtime.Types.DefaultSelection<Pdf_snapshotPayload>
+export type Picture_linesPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  name: "Picture_lines"
+  objects: {
+    pictures: PicturesPayload<ExtArgs> | null
+  }
+  scalars: $Extensions.GetResult<{
+    id: string
+    pictureId: string | null
+    lines: string
+    createdAt: Date | null
+  }, ExtArgs["result"]["picture_lines"]>
+  composites: {}
+}
+
+/**
+ * Model Picture_lines
+ * 
+ */
+export type Picture_lines = runtime.Types.DefaultSelection<Picture_linesPayload>
 export type PicturesPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
   name: "Pictures"
   objects: {
+    picture_lines: Picture_linesPayload<ExtArgs>[]
     report: ReportPayload<ExtArgs> | null
   }
   scalars: $Extensions.GetResult<{
@@ -404,6 +424,16 @@ export class PrismaClient<
     * ```
     */
   get pdf_snapshot(): Prisma.Pdf_snapshotDelegate<GlobalReject, ExtArgs>;
+
+  /**
+   * `prisma.picture_lines`: Exposes CRUD operations for the **Picture_lines** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Picture_lines
+    * const picture_lines = await prisma.picture_lines.findMany()
+    * ```
+    */
+  get picture_lines(): Prisma.Picture_linesDelegate<GlobalReject, ExtArgs>;
 
   /**
    * `prisma.pictures`: Exposes CRUD operations for the **Pictures** model.
@@ -951,6 +981,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     Clause_v2: 'Clause_v2',
     Delegation: 'Delegation',
     Pdf_snapshot: 'Pdf_snapshot',
+    Picture_lines: 'Picture_lines',
     Pictures: 'Pictures',
     Report: 'Report',
     Service_instructeurs: 'Service_instructeurs',
@@ -973,7 +1004,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type TypeMap<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     meta: {
-      modelProps: 'clause' | 'clause_v2' | 'delegation' | 'pdf_snapshot' | 'pictures' | 'report' | 'service_instructeurs' | 'tmp_pictures' | 'udap' | 'user'
+      modelProps: 'clause' | 'clause_v2' | 'delegation' | 'pdf_snapshot' | 'picture_lines' | 'pictures' | 'report' | 'service_instructeurs' | 'tmp_pictures' | 'udap' | 'user'
       txIsolationLevel: Prisma.TransactionIsolationLevel
     },
     model: {
@@ -1234,6 +1265,71 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
           count: {
             args: Prisma.Pdf_snapshotCountArgs<ExtArgs>,
             result: $Utils.Optional<Pdf_snapshotCountAggregateOutputType> | number
+          }
+        }
+      }
+      Picture_lines: {
+        payload: Picture_linesPayload<ExtArgs>
+        operations: {
+          findUnique: {
+            args: Prisma.Picture_linesFindUniqueArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Picture_linesPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.Picture_linesFindUniqueOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Picture_linesPayload>
+          }
+          findFirst: {
+            args: Prisma.Picture_linesFindFirstArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Picture_linesPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.Picture_linesFindFirstOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Picture_linesPayload>
+          }
+          findMany: {
+            args: Prisma.Picture_linesFindManyArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Picture_linesPayload>[]
+          }
+          create: {
+            args: Prisma.Picture_linesCreateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Picture_linesPayload>
+          }
+          createMany: {
+            args: Prisma.Picture_linesCreateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          delete: {
+            args: Prisma.Picture_linesDeleteArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Picture_linesPayload>
+          }
+          update: {
+            args: Prisma.Picture_linesUpdateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Picture_linesPayload>
+          }
+          deleteMany: {
+            args: Prisma.Picture_linesDeleteManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          updateMany: {
+            args: Prisma.Picture_linesUpdateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          upsert: {
+            args: Prisma.Picture_linesUpsertArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Picture_linesPayload>
+          }
+          aggregate: {
+            args: Prisma.Picture_linesAggregateArgs<ExtArgs>,
+            result: $Utils.Optional<AggregatePicture_lines>
+          }
+          groupBy: {
+            args: Prisma.Picture_linesGroupByArgs<ExtArgs>,
+            result: $Utils.Optional<Picture_linesGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.Picture_linesCountArgs<ExtArgs>,
+            result: $Utils.Optional<Picture_linesCountAggregateOutputType> | number
           }
         }
       }
@@ -1801,6 +1897,41 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   /**
    * Count Types
    */
+
+
+  /**
+   * Count Type PicturesCountOutputType
+   */
+
+
+  export type PicturesCountOutputType = {
+    picture_lines: number
+  }
+
+  export type PicturesCountOutputTypeSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    picture_lines?: boolean | PicturesCountOutputTypeCountPicture_linesArgs
+  }
+
+  // Custom InputTypes
+
+  /**
+   * PicturesCountOutputType without action
+   */
+  export type PicturesCountOutputTypeArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PicturesCountOutputType
+     */
+    select?: PicturesCountOutputTypeSelect<ExtArgs> | null
+  }
+
+
+  /**
+   * PicturesCountOutputType without action
+   */
+  export type PicturesCountOutputTypeCountPicture_linesArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    where?: Picture_linesWhereInput
+  }
+
 
 
   /**
@@ -5521,6 +5652,921 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
 
   /**
+   * Model Picture_lines
+   */
+
+
+  export type AggregatePicture_lines = {
+    _count: Picture_linesCountAggregateOutputType | null
+    _min: Picture_linesMinAggregateOutputType | null
+    _max: Picture_linesMaxAggregateOutputType | null
+  }
+
+  export type Picture_linesMinAggregateOutputType = {
+    id: string | null
+    pictureId: string | null
+    lines: string | null
+    createdAt: Date | null
+  }
+
+  export type Picture_linesMaxAggregateOutputType = {
+    id: string | null
+    pictureId: string | null
+    lines: string | null
+    createdAt: Date | null
+  }
+
+  export type Picture_linesCountAggregateOutputType = {
+    id: number
+    pictureId: number
+    lines: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type Picture_linesMinAggregateInputType = {
+    id?: true
+    pictureId?: true
+    lines?: true
+    createdAt?: true
+  }
+
+  export type Picture_linesMaxAggregateInputType = {
+    id?: true
+    pictureId?: true
+    lines?: true
+    createdAt?: true
+  }
+
+  export type Picture_linesCountAggregateInputType = {
+    id?: true
+    pictureId?: true
+    lines?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type Picture_linesAggregateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Picture_lines to aggregate.
+     */
+    where?: Picture_linesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Picture_lines to fetch.
+     */
+    orderBy?: Enumerable<Picture_linesOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: Picture_linesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Picture_lines from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Picture_lines.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Picture_lines
+    **/
+    _count?: true | Picture_linesCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Picture_linesMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Picture_linesMaxAggregateInputType
+  }
+
+  export type GetPicture_linesAggregateType<T extends Picture_linesAggregateArgs> = {
+        [P in keyof T & keyof AggregatePicture_lines]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePicture_lines[P]>
+      : GetScalarType<T[P], AggregatePicture_lines[P]>
+  }
+
+
+
+
+  export type Picture_linesGroupByArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    where?: Picture_linesWhereInput
+    orderBy?: Enumerable<Picture_linesOrderByWithAggregationInput>
+    by: Picture_linesScalarFieldEnum[]
+    having?: Picture_linesScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Picture_linesCountAggregateInputType | true
+    _min?: Picture_linesMinAggregateInputType
+    _max?: Picture_linesMaxAggregateInputType
+  }
+
+
+  export type Picture_linesGroupByOutputType = {
+    id: string
+    pictureId: string | null
+    lines: string
+    createdAt: Date | null
+    _count: Picture_linesCountAggregateOutputType | null
+    _min: Picture_linesMinAggregateOutputType | null
+    _max: Picture_linesMaxAggregateOutputType | null
+  }
+
+  type GetPicture_linesGroupByPayload<T extends Picture_linesGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickArray<Picture_linesGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Picture_linesGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Picture_linesGroupByOutputType[P]>
+            : GetScalarType<T[P], Picture_linesGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type Picture_linesSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    pictureId?: boolean
+    lines?: boolean
+    createdAt?: boolean
+    pictures?: boolean | PicturesArgs<ExtArgs>
+  }, ExtArgs["result"]["picture_lines"]>
+
+  export type Picture_linesSelectScalar = {
+    id?: boolean
+    pictureId?: boolean
+    lines?: boolean
+    createdAt?: boolean
+  }
+
+  export type Picture_linesInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    pictures?: boolean | PicturesArgs<ExtArgs>
+  }
+
+
+  type Picture_linesGetPayload<S extends boolean | null | undefined | Picture_linesArgs> = $Types.GetResult<Picture_linesPayload, S>
+
+  type Picture_linesCountArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = 
+    Omit<Picture_linesFindManyArgs, 'select' | 'include'> & {
+      select?: Picture_linesCountAggregateInputType | true
+    }
+
+  export interface Picture_linesDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Picture_lines'], meta: { name: 'Picture_lines' } }
+    /**
+     * Find zero or one Picture_lines that matches the filter.
+     * @param {Picture_linesFindUniqueArgs} args - Arguments to find a Picture_lines
+     * @example
+     * // Get one Picture_lines
+     * const picture_lines = await prisma.picture_lines.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends Picture_linesFindUniqueArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, Picture_linesFindUniqueArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'Picture_lines'> extends True ? Prisma__Picture_linesClient<$Types.GetResult<Picture_linesPayload<ExtArgs>, T, 'findUnique', never>, never, ExtArgs> : Prisma__Picture_linesClient<$Types.GetResult<Picture_linesPayload<ExtArgs>, T, 'findUnique', never> | null, null, ExtArgs>
+
+    /**
+     * Find one Picture_lines that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {Picture_linesFindUniqueOrThrowArgs} args - Arguments to find a Picture_lines
+     * @example
+     * // Get one Picture_lines
+     * const picture_lines = await prisma.picture_lines.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends Picture_linesFindUniqueOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, Picture_linesFindUniqueOrThrowArgs<ExtArgs>>
+    ): Prisma__Picture_linesClient<$Types.GetResult<Picture_linesPayload<ExtArgs>, T, 'findUniqueOrThrow', never>, never, ExtArgs>
+
+    /**
+     * Find the first Picture_lines that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Picture_linesFindFirstArgs} args - Arguments to find a Picture_lines
+     * @example
+     * // Get one Picture_lines
+     * const picture_lines = await prisma.picture_lines.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends Picture_linesFindFirstArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, Picture_linesFindFirstArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'Picture_lines'> extends True ? Prisma__Picture_linesClient<$Types.GetResult<Picture_linesPayload<ExtArgs>, T, 'findFirst', never>, never, ExtArgs> : Prisma__Picture_linesClient<$Types.GetResult<Picture_linesPayload<ExtArgs>, T, 'findFirst', never> | null, null, ExtArgs>
+
+    /**
+     * Find the first Picture_lines that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Picture_linesFindFirstOrThrowArgs} args - Arguments to find a Picture_lines
+     * @example
+     * // Get one Picture_lines
+     * const picture_lines = await prisma.picture_lines.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends Picture_linesFindFirstOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, Picture_linesFindFirstOrThrowArgs<ExtArgs>>
+    ): Prisma__Picture_linesClient<$Types.GetResult<Picture_linesPayload<ExtArgs>, T, 'findFirstOrThrow', never>, never, ExtArgs>
+
+    /**
+     * Find zero or more Picture_lines that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Picture_linesFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Picture_lines
+     * const picture_lines = await prisma.picture_lines.findMany()
+     * 
+     * // Get first 10 Picture_lines
+     * const picture_lines = await prisma.picture_lines.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const picture_linesWithIdOnly = await prisma.picture_lines.findMany({ select: { id: true } })
+     * 
+    **/
+    findMany<T extends Picture_linesFindManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, Picture_linesFindManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Types.GetResult<Picture_linesPayload<ExtArgs>, T, 'findMany', never>>
+
+    /**
+     * Create a Picture_lines.
+     * @param {Picture_linesCreateArgs} args - Arguments to create a Picture_lines.
+     * @example
+     * // Create one Picture_lines
+     * const Picture_lines = await prisma.picture_lines.create({
+     *   data: {
+     *     // ... data to create a Picture_lines
+     *   }
+     * })
+     * 
+    **/
+    create<T extends Picture_linesCreateArgs<ExtArgs>>(
+      args: SelectSubset<T, Picture_linesCreateArgs<ExtArgs>>
+    ): Prisma__Picture_linesClient<$Types.GetResult<Picture_linesPayload<ExtArgs>, T, 'create', never>, never, ExtArgs>
+
+    /**
+     * Create many Picture_lines.
+     *     @param {Picture_linesCreateManyArgs} args - Arguments to create many Picture_lines.
+     *     @example
+     *     // Create many Picture_lines
+     *     const picture_lines = await prisma.picture_lines.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
+     *     
+    **/
+    createMany<T extends Picture_linesCreateManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, Picture_linesCreateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Picture_lines.
+     * @param {Picture_linesDeleteArgs} args - Arguments to delete one Picture_lines.
+     * @example
+     * // Delete one Picture_lines
+     * const Picture_lines = await prisma.picture_lines.delete({
+     *   where: {
+     *     // ... filter to delete one Picture_lines
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends Picture_linesDeleteArgs<ExtArgs>>(
+      args: SelectSubset<T, Picture_linesDeleteArgs<ExtArgs>>
+    ): Prisma__Picture_linesClient<$Types.GetResult<Picture_linesPayload<ExtArgs>, T, 'delete', never>, never, ExtArgs>
+
+    /**
+     * Update one Picture_lines.
+     * @param {Picture_linesUpdateArgs} args - Arguments to update one Picture_lines.
+     * @example
+     * // Update one Picture_lines
+     * const picture_lines = await prisma.picture_lines.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends Picture_linesUpdateArgs<ExtArgs>>(
+      args: SelectSubset<T, Picture_linesUpdateArgs<ExtArgs>>
+    ): Prisma__Picture_linesClient<$Types.GetResult<Picture_linesPayload<ExtArgs>, T, 'update', never>, never, ExtArgs>
+
+    /**
+     * Delete zero or more Picture_lines.
+     * @param {Picture_linesDeleteManyArgs} args - Arguments to filter Picture_lines to delete.
+     * @example
+     * // Delete a few Picture_lines
+     * const { count } = await prisma.picture_lines.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends Picture_linesDeleteManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, Picture_linesDeleteManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Picture_lines.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Picture_linesUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Picture_lines
+     * const picture_lines = await prisma.picture_lines.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends Picture_linesUpdateManyArgs<ExtArgs>>(
+      args: SelectSubset<T, Picture_linesUpdateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Picture_lines.
+     * @param {Picture_linesUpsertArgs} args - Arguments to update or create a Picture_lines.
+     * @example
+     * // Update or create a Picture_lines
+     * const picture_lines = await prisma.picture_lines.upsert({
+     *   create: {
+     *     // ... data to create a Picture_lines
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Picture_lines we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends Picture_linesUpsertArgs<ExtArgs>>(
+      args: SelectSubset<T, Picture_linesUpsertArgs<ExtArgs>>
+    ): Prisma__Picture_linesClient<$Types.GetResult<Picture_linesPayload<ExtArgs>, T, 'upsert', never>, never, ExtArgs>
+
+    /**
+     * Count the number of Picture_lines.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Picture_linesCountArgs} args - Arguments to filter Picture_lines to count.
+     * @example
+     * // Count the number of Picture_lines
+     * const count = await prisma.picture_lines.count({
+     *   where: {
+     *     // ... the filter for the Picture_lines we want to count
+     *   }
+     * })
+    **/
+    count<T extends Picture_linesCountArgs>(
+      args?: Subset<T, Picture_linesCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Picture_linesCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Picture_lines.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Picture_linesAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Picture_linesAggregateArgs>(args: Subset<T, Picture_linesAggregateArgs>): Prisma.PrismaPromise<GetPicture_linesAggregateType<T>>
+
+    /**
+     * Group by Picture_lines.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Picture_linesGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends Picture_linesGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: Picture_linesGroupByArgs['orderBy'] }
+        : { orderBy?: Picture_linesGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends TupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, Picture_linesGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPicture_linesGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Picture_lines.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export class Prisma__Picture_linesClient<T, Null = never, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> implements Prisma.PrismaPromise<T> {
+    private readonly _dmmf;
+    private readonly _queryType;
+    private readonly _rootField;
+    private readonly _clientMethod;
+    private readonly _args;
+    private readonly _dataPath;
+    private readonly _errorFormat;
+    private readonly _measurePerformance?;
+    private _isList;
+    private _callsite;
+    private _requestPromise?;
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+    constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
+
+    pictures<T extends PicturesArgs<ExtArgs> = {}>(args?: Subset<T, PicturesArgs<ExtArgs>>): Prisma__PicturesClient<$Types.GetResult<PicturesPayload<ExtArgs>, T, 'findUnique', never> | Null, never, ExtArgs>;
+
+    private get _document();
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): Promise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): Promise<T>;
+  }
+
+
+
+  // Custom InputTypes
+
+  /**
+   * Picture_lines base type for findUnique actions
+   */
+  export type Picture_linesFindUniqueArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Picture_lines
+     */
+    select?: Picture_linesSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: Picture_linesInclude<ExtArgs> | null
+    /**
+     * Filter, which Picture_lines to fetch.
+     */
+    where: Picture_linesWhereUniqueInput
+  }
+
+  /**
+   * Picture_lines findUnique
+   */
+  export interface Picture_linesFindUniqueArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends Picture_linesFindUniqueArgsBase<ExtArgs> {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * Picture_lines findUniqueOrThrow
+   */
+  export type Picture_linesFindUniqueOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Picture_lines
+     */
+    select?: Picture_linesSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: Picture_linesInclude<ExtArgs> | null
+    /**
+     * Filter, which Picture_lines to fetch.
+     */
+    where: Picture_linesWhereUniqueInput
+  }
+
+
+  /**
+   * Picture_lines base type for findFirst actions
+   */
+  export type Picture_linesFindFirstArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Picture_lines
+     */
+    select?: Picture_linesSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: Picture_linesInclude<ExtArgs> | null
+    /**
+     * Filter, which Picture_lines to fetch.
+     */
+    where?: Picture_linesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Picture_lines to fetch.
+     */
+    orderBy?: Enumerable<Picture_linesOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Picture_lines.
+     */
+    cursor?: Picture_linesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Picture_lines from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Picture_lines.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Picture_lines.
+     */
+    distinct?: Enumerable<Picture_linesScalarFieldEnum>
+  }
+
+  /**
+   * Picture_lines findFirst
+   */
+  export interface Picture_linesFindFirstArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends Picture_linesFindFirstArgsBase<ExtArgs> {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * Picture_lines findFirstOrThrow
+   */
+  export type Picture_linesFindFirstOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Picture_lines
+     */
+    select?: Picture_linesSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: Picture_linesInclude<ExtArgs> | null
+    /**
+     * Filter, which Picture_lines to fetch.
+     */
+    where?: Picture_linesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Picture_lines to fetch.
+     */
+    orderBy?: Enumerable<Picture_linesOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Picture_lines.
+     */
+    cursor?: Picture_linesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Picture_lines from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Picture_lines.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Picture_lines.
+     */
+    distinct?: Enumerable<Picture_linesScalarFieldEnum>
+  }
+
+
+  /**
+   * Picture_lines findMany
+   */
+  export type Picture_linesFindManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Picture_lines
+     */
+    select?: Picture_linesSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: Picture_linesInclude<ExtArgs> | null
+    /**
+     * Filter, which Picture_lines to fetch.
+     */
+    where?: Picture_linesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Picture_lines to fetch.
+     */
+    orderBy?: Enumerable<Picture_linesOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Picture_lines.
+     */
+    cursor?: Picture_linesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Picture_lines from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Picture_lines.
+     */
+    skip?: number
+    distinct?: Enumerable<Picture_linesScalarFieldEnum>
+  }
+
+
+  /**
+   * Picture_lines create
+   */
+  export type Picture_linesCreateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Picture_lines
+     */
+    select?: Picture_linesSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: Picture_linesInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Picture_lines.
+     */
+    data: XOR<Picture_linesCreateInput, Picture_linesUncheckedCreateInput>
+  }
+
+
+  /**
+   * Picture_lines createMany
+   */
+  export type Picture_linesCreateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Picture_lines.
+     */
+    data: Enumerable<Picture_linesCreateManyInput>
+    skipDuplicates?: boolean
+  }
+
+
+  /**
+   * Picture_lines update
+   */
+  export type Picture_linesUpdateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Picture_lines
+     */
+    select?: Picture_linesSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: Picture_linesInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Picture_lines.
+     */
+    data: XOR<Picture_linesUpdateInput, Picture_linesUncheckedUpdateInput>
+    /**
+     * Choose, which Picture_lines to update.
+     */
+    where: Picture_linesWhereUniqueInput
+  }
+
+
+  /**
+   * Picture_lines updateMany
+   */
+  export type Picture_linesUpdateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Picture_lines.
+     */
+    data: XOR<Picture_linesUpdateManyMutationInput, Picture_linesUncheckedUpdateManyInput>
+    /**
+     * Filter which Picture_lines to update
+     */
+    where?: Picture_linesWhereInput
+  }
+
+
+  /**
+   * Picture_lines upsert
+   */
+  export type Picture_linesUpsertArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Picture_lines
+     */
+    select?: Picture_linesSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: Picture_linesInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Picture_lines to update in case it exists.
+     */
+    where: Picture_linesWhereUniqueInput
+    /**
+     * In case the Picture_lines found by the `where` argument doesn't exist, create a new Picture_lines with this data.
+     */
+    create: XOR<Picture_linesCreateInput, Picture_linesUncheckedCreateInput>
+    /**
+     * In case the Picture_lines was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<Picture_linesUpdateInput, Picture_linesUncheckedUpdateInput>
+  }
+
+
+  /**
+   * Picture_lines delete
+   */
+  export type Picture_linesDeleteArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Picture_lines
+     */
+    select?: Picture_linesSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: Picture_linesInclude<ExtArgs> | null
+    /**
+     * Filter which Picture_lines to delete.
+     */
+    where: Picture_linesWhereUniqueInput
+  }
+
+
+  /**
+   * Picture_lines deleteMany
+   */
+  export type Picture_linesDeleteManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Picture_lines to delete
+     */
+    where?: Picture_linesWhereInput
+  }
+
+
+  /**
+   * Picture_lines without action
+   */
+  export type Picture_linesArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Picture_lines
+     */
+    select?: Picture_linesSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: Picture_linesInclude<ExtArgs> | null
+  }
+
+
+
+  /**
    * Model Pictures
    */
 
@@ -5678,7 +6724,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     reportId?: boolean
     url?: boolean
     createdAt?: boolean
+    picture_lines?: boolean | Pictures$picture_linesArgs<ExtArgs>
     report?: boolean | ReportArgs<ExtArgs>
+    _count?: boolean | PicturesCountOutputTypeArgs<ExtArgs>
   }, ExtArgs["result"]["pictures"]>
 
   export type PicturesSelectScalar = {
@@ -5689,7 +6737,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   }
 
   export type PicturesInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    picture_lines?: boolean | Pictures$picture_linesArgs<ExtArgs>
     report?: boolean | ReportArgs<ExtArgs>
+    _count?: boolean | PicturesCountOutputTypeArgs<ExtArgs>
   }
 
 
@@ -6062,6 +7112,8 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     readonly [Symbol.toStringTag]: 'PrismaPromise';
     constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
 
+    picture_lines<T extends Pictures$picture_linesArgs<ExtArgs> = {}>(args?: Subset<T, Pictures$picture_linesArgs<ExtArgs>>): Prisma.PrismaPromise<$Types.GetResult<Picture_linesPayload<ExtArgs>, T, 'findMany', never>| Null>;
+
     report<T extends ReportArgs<ExtArgs> = {}>(args?: Subset<T, ReportArgs<ExtArgs>>): Prisma__ReportClient<$Types.GetResult<ReportPayload<ExtArgs>, T, 'findUnique', never> | Null, never, ExtArgs>;
 
     private get _document();
@@ -6416,6 +7468,27 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      * Filter which Pictures to delete
      */
     where?: PicturesWhereInput
+  }
+
+
+  /**
+   * Pictures.picture_lines
+   */
+  export type Pictures$picture_linesArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Picture_lines
+     */
+    select?: Picture_linesSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: Picture_linesInclude<ExtArgs> | null
+    where?: Picture_linesWhereInput
+    orderBy?: Enumerable<Picture_linesOrderByWithRelationInput>
+    cursor?: Picture_linesWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Enumerable<Picture_linesScalarFieldEnum>
   }
 
 
@@ -11492,6 +12565,16 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type Pdf_snapshotScalarFieldEnum = (typeof Pdf_snapshotScalarFieldEnum)[keyof typeof Pdf_snapshotScalarFieldEnum]
 
 
+  export const Picture_linesScalarFieldEnum: {
+    id: 'id',
+    pictureId: 'pictureId',
+    lines: 'lines',
+    createdAt: 'createdAt'
+  };
+
+  export type Picture_linesScalarFieldEnum = (typeof Picture_linesScalarFieldEnum)[keyof typeof Picture_linesScalarFieldEnum]
+
+
   export const PicturesScalarFieldEnum: {
     id: 'id',
     reportId: 'reportId',
@@ -11787,6 +12870,49 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     user_id?: StringNullableWithAggregatesFilter | string | null
   }
 
+  export type Picture_linesWhereInput = {
+    AND?: Enumerable<Picture_linesWhereInput>
+    OR?: Enumerable<Picture_linesWhereInput>
+    NOT?: Enumerable<Picture_linesWhereInput>
+    id?: StringFilter | string
+    pictureId?: StringNullableFilter | string | null
+    lines?: StringFilter | string
+    createdAt?: DateTimeNullableFilter | Date | string | null
+    pictures?: XOR<PicturesRelationFilter, PicturesWhereInput> | null
+  }
+
+  export type Picture_linesOrderByWithRelationInput = {
+    id?: SortOrder
+    pictureId?: SortOrderInput | SortOrder
+    lines?: SortOrder
+    createdAt?: SortOrderInput | SortOrder
+    pictures?: PicturesOrderByWithRelationInput
+  }
+
+  export type Picture_linesWhereUniqueInput = {
+    id?: string
+  }
+
+  export type Picture_linesOrderByWithAggregationInput = {
+    id?: SortOrder
+    pictureId?: SortOrderInput | SortOrder
+    lines?: SortOrder
+    createdAt?: SortOrderInput | SortOrder
+    _count?: Picture_linesCountOrderByAggregateInput
+    _max?: Picture_linesMaxOrderByAggregateInput
+    _min?: Picture_linesMinOrderByAggregateInput
+  }
+
+  export type Picture_linesScalarWhereWithAggregatesInput = {
+    AND?: Enumerable<Picture_linesScalarWhereWithAggregatesInput>
+    OR?: Enumerable<Picture_linesScalarWhereWithAggregatesInput>
+    NOT?: Enumerable<Picture_linesScalarWhereWithAggregatesInput>
+    id?: StringWithAggregatesFilter | string
+    pictureId?: StringNullableWithAggregatesFilter | string | null
+    lines?: StringWithAggregatesFilter | string
+    createdAt?: DateTimeNullableWithAggregatesFilter | Date | string | null
+  }
+
   export type PicturesWhereInput = {
     AND?: Enumerable<PicturesWhereInput>
     OR?: Enumerable<PicturesWhereInput>
@@ -11795,6 +12921,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     reportId?: StringNullableFilter | string | null
     url?: StringNullableFilter | string | null
     createdAt?: DateTimeNullableFilter | Date | string | null
+    picture_lines?: Picture_linesListRelationFilter
     report?: XOR<ReportRelationFilter, ReportWhereInput> | null
   }
 
@@ -11803,6 +12930,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     reportId?: SortOrderInput | SortOrder
     url?: SortOrderInput | SortOrder
     createdAt?: SortOrderInput | SortOrder
+    picture_lines?: Picture_linesOrderByRelationAggregateInput
     report?: ReportOrderByWithRelationInput
   }
 
@@ -12378,10 +13506,59 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     user_id?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type Picture_linesCreateInput = {
+    id: string
+    lines: string
+    createdAt?: Date | string | null
+    pictures?: PicturesCreateNestedOneWithoutPicture_linesInput
+  }
+
+  export type Picture_linesUncheckedCreateInput = {
+    id: string
+    pictureId?: string | null
+    lines: string
+    createdAt?: Date | string | null
+  }
+
+  export type Picture_linesUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    lines?: StringFieldUpdateOperationsInput | string
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pictures?: PicturesUpdateOneWithoutPicture_linesNestedInput
+  }
+
+  export type Picture_linesUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    pictureId?: NullableStringFieldUpdateOperationsInput | string | null
+    lines?: StringFieldUpdateOperationsInput | string
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type Picture_linesCreateManyInput = {
+    id: string
+    pictureId?: string | null
+    lines: string
+    createdAt?: Date | string | null
+  }
+
+  export type Picture_linesUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    lines?: StringFieldUpdateOperationsInput | string
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type Picture_linesUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    pictureId?: NullableStringFieldUpdateOperationsInput | string | null
+    lines?: StringFieldUpdateOperationsInput | string
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
   export type PicturesCreateInput = {
     id: string
     url?: string | null
     createdAt?: Date | string | null
+    picture_lines?: Picture_linesCreateNestedManyWithoutPicturesInput
     report?: ReportCreateNestedOneWithoutPicturesInput
   }
 
@@ -12390,12 +13567,14 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     reportId?: string | null
     url?: string | null
     createdAt?: Date | string | null
+    picture_lines?: Picture_linesUncheckedCreateNestedManyWithoutPicturesInput
   }
 
   export type PicturesUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     url?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    picture_lines?: Picture_linesUpdateManyWithoutPicturesNestedInput
     report?: ReportUpdateOneWithoutPicturesNestedInput
   }
 
@@ -12404,6 +13583,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     reportId?: NullableStringFieldUpdateOperationsInput | string | null
     url?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    picture_lines?: Picture_linesUncheckedUpdateManyWithoutPicturesNestedInput
   }
 
   export type PicturesCreateManyInput = {
@@ -13124,9 +14304,59 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     not?: NestedDateTimeNullableFilter | Date | string | null
   }
 
+  export type PicturesRelationFilter = {
+    is?: PicturesWhereInput | null
+    isNot?: PicturesWhereInput | null
+  }
+
+  export type Picture_linesCountOrderByAggregateInput = {
+    id?: SortOrder
+    pictureId?: SortOrder
+    lines?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type Picture_linesMaxOrderByAggregateInput = {
+    id?: SortOrder
+    pictureId?: SortOrder
+    lines?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type Picture_linesMinOrderByAggregateInput = {
+    id?: SortOrder
+    pictureId?: SortOrder
+    lines?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type DateTimeNullableWithAggregatesFilter = {
+    equals?: Date | string | null
+    in?: Enumerable<Date> | Enumerable<string> | Date | string | null
+    notIn?: Enumerable<Date> | Enumerable<string> | Date | string | null
+    lt?: Date | string
+    lte?: Date | string
+    gt?: Date | string
+    gte?: Date | string
+    not?: NestedDateTimeNullableWithAggregatesFilter | Date | string | null
+    _count?: NestedIntNullableFilter
+    _min?: NestedDateTimeNullableFilter
+    _max?: NestedDateTimeNullableFilter
+  }
+
+  export type Picture_linesListRelationFilter = {
+    every?: Picture_linesWhereInput
+    some?: Picture_linesWhereInput
+    none?: Picture_linesWhereInput
+  }
+
   export type ReportRelationFilter = {
     is?: ReportWhereInput | null
     isNot?: ReportWhereInput | null
+  }
+
+  export type Picture_linesOrderByRelationAggregateInput = {
+    _count?: SortOrder
   }
 
   export type PicturesCountOrderByAggregateInput = {
@@ -13148,20 +14378,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     reportId?: SortOrder
     url?: SortOrder
     createdAt?: SortOrder
-  }
-
-  export type DateTimeNullableWithAggregatesFilter = {
-    equals?: Date | string | null
-    in?: Enumerable<Date> | Enumerable<string> | Date | string | null
-    notIn?: Enumerable<Date> | Enumerable<string> | Date | string | null
-    lt?: Date | string
-    lte?: Date | string
-    gt?: Date | string
-    gte?: Date | string
-    not?: NestedDateTimeNullableWithAggregatesFilter | Date | string | null
-    _count?: NestedIntNullableFilter
-    _min?: NestedDateTimeNullableFilter
-    _max?: NestedDateTimeNullableFilter
   }
 
   export type DateTimeFilter = {
@@ -13524,14 +14740,58 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     update?: XOR<UserUpdateWithoutDelegation_delegation_delegatedToTouserInput, UserUncheckedUpdateWithoutDelegation_delegation_delegatedToTouserInput>
   }
 
+  export type PicturesCreateNestedOneWithoutPicture_linesInput = {
+    create?: XOR<PicturesCreateWithoutPicture_linesInput, PicturesUncheckedCreateWithoutPicture_linesInput>
+    connectOrCreate?: PicturesCreateOrConnectWithoutPicture_linesInput
+    connect?: PicturesWhereUniqueInput
+  }
+
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
+  }
+
+  export type PicturesUpdateOneWithoutPicture_linesNestedInput = {
+    create?: XOR<PicturesCreateWithoutPicture_linesInput, PicturesUncheckedCreateWithoutPicture_linesInput>
+    connectOrCreate?: PicturesCreateOrConnectWithoutPicture_linesInput
+    upsert?: PicturesUpsertWithoutPicture_linesInput
+    disconnect?: boolean
+    delete?: boolean
+    connect?: PicturesWhereUniqueInput
+    update?: XOR<PicturesUpdateWithoutPicture_linesInput, PicturesUncheckedUpdateWithoutPicture_linesInput>
+  }
+
+  export type Picture_linesCreateNestedManyWithoutPicturesInput = {
+    create?: XOR<Enumerable<Picture_linesCreateWithoutPicturesInput>, Enumerable<Picture_linesUncheckedCreateWithoutPicturesInput>>
+    connectOrCreate?: Enumerable<Picture_linesCreateOrConnectWithoutPicturesInput>
+    createMany?: Picture_linesCreateManyPicturesInputEnvelope
+    connect?: Enumerable<Picture_linesWhereUniqueInput>
+  }
+
   export type ReportCreateNestedOneWithoutPicturesInput = {
     create?: XOR<ReportCreateWithoutPicturesInput, ReportUncheckedCreateWithoutPicturesInput>
     connectOrCreate?: ReportCreateOrConnectWithoutPicturesInput
     connect?: ReportWhereUniqueInput
   }
 
-  export type NullableDateTimeFieldUpdateOperationsInput = {
-    set?: Date | string | null
+  export type Picture_linesUncheckedCreateNestedManyWithoutPicturesInput = {
+    create?: XOR<Enumerable<Picture_linesCreateWithoutPicturesInput>, Enumerable<Picture_linesUncheckedCreateWithoutPicturesInput>>
+    connectOrCreate?: Enumerable<Picture_linesCreateOrConnectWithoutPicturesInput>
+    createMany?: Picture_linesCreateManyPicturesInputEnvelope
+    connect?: Enumerable<Picture_linesWhereUniqueInput>
+  }
+
+  export type Picture_linesUpdateManyWithoutPicturesNestedInput = {
+    create?: XOR<Enumerable<Picture_linesCreateWithoutPicturesInput>, Enumerable<Picture_linesUncheckedCreateWithoutPicturesInput>>
+    connectOrCreate?: Enumerable<Picture_linesCreateOrConnectWithoutPicturesInput>
+    upsert?: Enumerable<Picture_linesUpsertWithWhereUniqueWithoutPicturesInput>
+    createMany?: Picture_linesCreateManyPicturesInputEnvelope
+    set?: Enumerable<Picture_linesWhereUniqueInput>
+    disconnect?: Enumerable<Picture_linesWhereUniqueInput>
+    delete?: Enumerable<Picture_linesWhereUniqueInput>
+    connect?: Enumerable<Picture_linesWhereUniqueInput>
+    update?: Enumerable<Picture_linesUpdateWithWhereUniqueWithoutPicturesInput>
+    updateMany?: Enumerable<Picture_linesUpdateManyWithWhereWithoutPicturesInput>
+    deleteMany?: Enumerable<Picture_linesScalarWhereInput>
   }
 
   export type ReportUpdateOneWithoutPicturesNestedInput = {
@@ -13542,6 +14802,20 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     delete?: boolean
     connect?: ReportWhereUniqueInput
     update?: XOR<ReportUpdateWithoutPicturesInput, ReportUncheckedUpdateWithoutPicturesInput>
+  }
+
+  export type Picture_linesUncheckedUpdateManyWithoutPicturesNestedInput = {
+    create?: XOR<Enumerable<Picture_linesCreateWithoutPicturesInput>, Enumerable<Picture_linesUncheckedCreateWithoutPicturesInput>>
+    connectOrCreate?: Enumerable<Picture_linesCreateOrConnectWithoutPicturesInput>
+    upsert?: Enumerable<Picture_linesUpsertWithWhereUniqueWithoutPicturesInput>
+    createMany?: Picture_linesCreateManyPicturesInputEnvelope
+    set?: Enumerable<Picture_linesWhereUniqueInput>
+    disconnect?: Enumerable<Picture_linesWhereUniqueInput>
+    delete?: Enumerable<Picture_linesWhereUniqueInput>
+    connect?: Enumerable<Picture_linesWhereUniqueInput>
+    update?: Enumerable<Picture_linesUpdateWithWhereUniqueWithoutPicturesInput>
+    updateMany?: Enumerable<Picture_linesUpdateManyWithWhereWithoutPicturesInput>
+    deleteMany?: Enumerable<Picture_linesScalarWhereInput>
   }
 
   export type PicturesCreateNestedManyWithoutReportInput = {
@@ -14137,6 +15411,66 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     report?: ReportUncheckedUpdateManyWithoutUserNestedInput
   }
 
+  export type PicturesCreateWithoutPicture_linesInput = {
+    id: string
+    url?: string | null
+    createdAt?: Date | string | null
+    report?: ReportCreateNestedOneWithoutPicturesInput
+  }
+
+  export type PicturesUncheckedCreateWithoutPicture_linesInput = {
+    id: string
+    reportId?: string | null
+    url?: string | null
+    createdAt?: Date | string | null
+  }
+
+  export type PicturesCreateOrConnectWithoutPicture_linesInput = {
+    where: PicturesWhereUniqueInput
+    create: XOR<PicturesCreateWithoutPicture_linesInput, PicturesUncheckedCreateWithoutPicture_linesInput>
+  }
+
+  export type PicturesUpsertWithoutPicture_linesInput = {
+    update: XOR<PicturesUpdateWithoutPicture_linesInput, PicturesUncheckedUpdateWithoutPicture_linesInput>
+    create: XOR<PicturesCreateWithoutPicture_linesInput, PicturesUncheckedCreateWithoutPicture_linesInput>
+  }
+
+  export type PicturesUpdateWithoutPicture_linesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    url?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    report?: ReportUpdateOneWithoutPicturesNestedInput
+  }
+
+  export type PicturesUncheckedUpdateWithoutPicture_linesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    reportId?: NullableStringFieldUpdateOperationsInput | string | null
+    url?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type Picture_linesCreateWithoutPicturesInput = {
+    id: string
+    lines: string
+    createdAt?: Date | string | null
+  }
+
+  export type Picture_linesUncheckedCreateWithoutPicturesInput = {
+    id: string
+    lines: string
+    createdAt?: Date | string | null
+  }
+
+  export type Picture_linesCreateOrConnectWithoutPicturesInput = {
+    where: Picture_linesWhereUniqueInput
+    create: XOR<Picture_linesCreateWithoutPicturesInput, Picture_linesUncheckedCreateWithoutPicturesInput>
+  }
+
+  export type Picture_linesCreateManyPicturesInputEnvelope = {
+    data: Enumerable<Picture_linesCreateManyPicturesInput>
+    skipDuplicates?: boolean
+  }
+
   export type ReportCreateWithoutPicturesInput = {
     id: string
     title?: string | null
@@ -14194,6 +15528,32 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type ReportCreateOrConnectWithoutPicturesInput = {
     where: ReportWhereUniqueInput
     create: XOR<ReportCreateWithoutPicturesInput, ReportUncheckedCreateWithoutPicturesInput>
+  }
+
+  export type Picture_linesUpsertWithWhereUniqueWithoutPicturesInput = {
+    where: Picture_linesWhereUniqueInput
+    update: XOR<Picture_linesUpdateWithoutPicturesInput, Picture_linesUncheckedUpdateWithoutPicturesInput>
+    create: XOR<Picture_linesCreateWithoutPicturesInput, Picture_linesUncheckedCreateWithoutPicturesInput>
+  }
+
+  export type Picture_linesUpdateWithWhereUniqueWithoutPicturesInput = {
+    where: Picture_linesWhereUniqueInput
+    data: XOR<Picture_linesUpdateWithoutPicturesInput, Picture_linesUncheckedUpdateWithoutPicturesInput>
+  }
+
+  export type Picture_linesUpdateManyWithWhereWithoutPicturesInput = {
+    where: Picture_linesScalarWhereInput
+    data: XOR<Picture_linesUpdateManyMutationInput, Picture_linesUncheckedUpdateManyWithoutPicture_linesInput>
+  }
+
+  export type Picture_linesScalarWhereInput = {
+    AND?: Enumerable<Picture_linesScalarWhereInput>
+    OR?: Enumerable<Picture_linesScalarWhereInput>
+    NOT?: Enumerable<Picture_linesScalarWhereInput>
+    id?: StringFilter | string
+    pictureId?: StringNullableFilter | string | null
+    lines?: StringFilter | string
+    createdAt?: DateTimeNullableFilter | Date | string | null
   }
 
   export type ReportUpsertWithoutPicturesInput = {
@@ -14259,12 +15619,14 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id: string
     url?: string | null
     createdAt?: Date | string | null
+    picture_lines?: Picture_linesCreateNestedManyWithoutPicturesInput
   }
 
   export type PicturesUncheckedCreateWithoutReportInput = {
     id: string
     url?: string | null
     createdAt?: Date | string | null
+    picture_lines?: Picture_linesUncheckedCreateNestedManyWithoutPicturesInput
   }
 
   export type PicturesCreateOrConnectWithoutReportInput = {
@@ -14818,6 +16180,30 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     udap_text?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type Picture_linesCreateManyPicturesInput = {
+    id: string
+    lines: string
+    createdAt?: Date | string | null
+  }
+
+  export type Picture_linesUpdateWithoutPicturesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    lines?: StringFieldUpdateOperationsInput | string
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type Picture_linesUncheckedUpdateWithoutPicturesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    lines?: StringFieldUpdateOperationsInput | string
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type Picture_linesUncheckedUpdateManyWithoutPicture_linesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    lines?: StringFieldUpdateOperationsInput | string
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
   export type PicturesCreateManyReportInput = {
     id: string
     url?: string | null
@@ -14833,12 +16219,14 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id?: StringFieldUpdateOperationsInput | string
     url?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    picture_lines?: Picture_linesUpdateManyWithoutPicturesNestedInput
   }
 
   export type PicturesUncheckedUpdateWithoutReportInput = {
     id?: StringFieldUpdateOperationsInput | string
     url?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    picture_lines?: Picture_linesUncheckedUpdateManyWithoutPicturesNestedInput
   }
 
   export type PicturesUncheckedUpdateManyWithoutPicturesInput = {
