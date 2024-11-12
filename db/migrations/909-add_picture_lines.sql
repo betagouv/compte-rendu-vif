@@ -1,6 +1,6 @@
 CREATE TABLE picture_lines (
     id TEXT PRIMARY KEY,
-    "pictureId" TEXT REFERENCES pictures(id) ON DELETE CASCADE,
+    "pictureId" TEXT,
     lines TEXT NOT NULL,
     "createdAt" TIMESTAMP
 );
