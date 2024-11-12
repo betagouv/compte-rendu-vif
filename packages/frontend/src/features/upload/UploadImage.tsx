@@ -29,10 +29,15 @@ export const UploadImage = ({ reportId }: { reportId: string }) => {
 
   const uploadImageMutation = useMutation(async (file: File) => {
     const picId = v4();
+    const buffer = await getArrayBufferFromBlob(file);
+
+    console.log("oui");
+
+    await db.tmp_pictures.create({ data: { id: picId, reportId, createdAt: new Date() } });
+    await set(picId, buffer, getPicturesStore());
 
     try {
       const formData = new FormData();
-      const buffer = await getArrayBufferFromBlob(file);
 
       formData.append("file", new Blob([buffer]), "file");
       formData.append("reportId", reportId);
@@ -43,14 +48,7 @@ export const UploadImage = ({ reportId }: { reportId: string }) => {
         query: { reportId: reportId, id: picId },
       } as any);
     } catch {
-      const picturesStore = getPicturesStore();
-      const toUploadStore = getToUploadStore();
-
-      const buffer = await getArrayBufferFromBlob(file);
-      await set(picId, buffer, picturesStore);
-      await set(picId, reportId, toUploadStore);
-
-      await db.tmp_pictures.create({ data: { id: picId, reportId, createdAt: new Date() } });
+      await set(picId, reportId, getToUploadStore());
       syncImages();
     }
   });
