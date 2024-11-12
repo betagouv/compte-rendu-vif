@@ -1,4 +1,4 @@
-import { Document, Font, Page } from "@react-pdf/renderer";
+import { Document, Font, Image, Page, View } from "@react-pdf/renderer";
 import { Html } from "react-pdf-html";
 import React from "react";
 import type { Udap, Report, Service_instructeurs, Clause_v2, Pictures } from "@cr-vif/electric-client/frontend";
@@ -150,19 +150,19 @@ export const ReportPDFDocument = ({ udap, htmlString, images, pictures }: Report
             <div class="content">
               ${htmlString}
             </div>
-            ${
-              pictures
-                ? `<div class="pictures">
-              ${pictures
-                .filter((pic) => !!pic.url)
-                .map((pic) => `<img src="${pic.url}" />`)
-                .join("")}
-            </div>`
-                : ""
-            }
+            
           </body>
         </html>
       `}</Html>
+        {pictures ? (
+          <View break>
+            {pictures
+              .filter((pic) => !!pic.url)
+              .map((pic) => (
+                <Image key={pic.id} style={{ width: `100%`, height: "auto" }} src={pic.url!} />
+              ))}
+          </View>
+        ) : null}
       </Page>
     </Document>
   );
