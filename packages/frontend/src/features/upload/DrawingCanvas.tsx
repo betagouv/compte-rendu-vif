@@ -259,11 +259,13 @@ export const ImageCanvas = ({
   const handleSave = async () => {
     const existingLines = await db.picture_lines.findFirst({ where: { pictureId } });
     if (existingLines) {
+      console.log("updating lines", existingLines, lines);
       await db.picture_lines.update({
         where: { id: existingLines.id },
         data: { lines: JSON.stringify(lines) },
       });
     } else {
+      console.log("creating lines", lines);
       await db.picture_lines.create({
         data: { id: v4(), pictureId, lines: JSON.stringify(lines) },
       });

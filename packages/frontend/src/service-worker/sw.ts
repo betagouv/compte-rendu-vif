@@ -27,12 +27,13 @@ if (!isDev) {
 const broadcastChannel = new BroadcastChannel("sw-messages");
 
 self.addEventListener("sync", async (event: any) => {
-  if (event.tag === "images") {
-    event.waitUntil(syncMissingPictures());
-  } else if (event.tag === "picture-lines") {
-    event.waitUntil(syncPictureLines());
-  }
+  event.waitUntil(syncPictureAndLines());
 });
+
+const syncPictureAndLines = async () => {
+  await syncMissingPictures();
+  await syncPictureLines();
+};
 
 const syncPictureLines = async () => {
   try {
@@ -52,10 +53,16 @@ const syncPictureLines = async () => {
       const picId = pictureIds[i];
       console.log("syncing picture lines for", picId);
 
-      // @ts-ignore
-      await api.post(`/api/upload/picture/${pictureId}/lines`, {
-        header: { Authorization: `Bearer ${token}` },
-      } as any);
+      const linesRaw = await get(picId, getToPingStore());
+      const lines = JSON.parse(linesRaw);
+
+      await api.post(
+        `/api/upload/picture/${picId}/lines` as any,
+        {
+          body: { lines },
+          header: { Authorization: `Bearer ${token}` },
+        } as any,
+      );
 
       await del(picId, getToPingStore());
     }

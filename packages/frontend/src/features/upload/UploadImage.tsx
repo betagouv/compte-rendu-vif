@@ -36,13 +36,12 @@ export const UploadImage = ({ reportId }: { reportId: string }) => {
 
   const notifyPictureLines = useMutation(async ({ pictureId, lines }: { pictureId: string; lines: Array<Line> }) => {
     try {
-      // @ts-ignore
-      const result = await api.post(`/api/upload/picture/${pictureId}/lines`, { body: { lines } });
+      const result = await api.post(`/api/upload/picture/${pictureId}/lines` as any, { body: { lines } });
       await del(pictureId, getToPingStore());
 
       return result;
     } catch (e) {
-      await set(pictureId, true, getToPingStore());
+      await set(pictureId, JSON.stringify(lines), getToPingStore());
       syncPictureLines();
     }
   });
@@ -283,7 +282,6 @@ const PictureThumbnail = ({
     image.onload = () => {
       const scaleX = 180 / image.width;
       const scaleY = 130 / image.height;
-      console.log(scaleX, scaleY);
       const initialScale = Math.min(scaleX, scaleY) * 1.5;
 
       const xOffset = (180 - image.width * initialScale) / 2;
