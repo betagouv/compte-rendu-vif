@@ -86,6 +86,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
           user_id: data!.user!.id,
         },
       });
+      await electric.db.picture_lines.sync({});
 
       return true;
     },
