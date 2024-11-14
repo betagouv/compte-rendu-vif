@@ -3,6 +3,7 @@ version: "3.1"
 volumes:
   pg_data:
   minio_data:
+  mongo_storage:
 
 services:
   # frontend:
@@ -26,6 +27,8 @@ services:
       POSTGRES_PORT: ${POSTGRES_PORT}
     command:
       - -c
+      - listen_addresses=*
+      - -c
       - wal_level=logical
     ports:
       - ${POSTGRES_PORT}:5432
@@ -33,25 +36,66 @@ services:
     volumes:
       - pg_data:/var/lib/postgresql/data
       - ./db/init/:/docker-entrypoint-initdb.d
-
-  electric:
-    image: electricsql/electric:0.12.0
-    depends_on:
-      - pg
-    environment:
-      DATABASE_REQUIRE_SSL: false
-      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@pg:${POSTGRES_PORT}/${POSTGRES_DB}
-      AUTH_JWT_KEY: ${JWT_SECRET}
-      PG_PROXY_PASSWORD: ${PG_PROXY_PASSWORD}
-      PG_PROXY_PORT: ${PG_PROXY_PORT}
-      AUTH_MODE: secure
-      LOGICAL_PUBLISHER_HOST: electric
-      AUTH_JWT_ALG: HS256
-      ELECTRIC_PG_PROXY_PORT: 65432
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+  mongo:
+    image: mongo:7.0
+    command: --replSet rs0 --bind_ip_all --quiet
+    restart: unless-stopped
     ports:
-      - ${ELECTRIC_PORT}:5133
-      - ${PG_PROXY_PORT}:65432
-    restart: always
+      - 27017:27017
+    volumes:
+      - mongo_storage:/data/db
+  # Initializes the MongoDB replica set. This service will not usually be actively running
+  mongo-rs-init:
+    image: mongo:7.0
+    depends_on:
+      - mongo
+    restart: on-failure
+    entrypoint:
+      - bash
+      - -c
+      - 'mongosh --host mongo:27017 --eval ''try{rs.status().ok && quit(0)} catch {} rs.initiate({_id: "rs0", version:
+        1, members: [{ _id: 0, host : "mongo:27017" }]})'''
+
+  # electric:
+  #   image: electricsql/electric:latest
+  #   depends_on:
+  #     - pg
+  #   environment:
+  #     # DATABASE_REQUIRE_SSL: false
+  #     DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@pg:${POSTGRES_PORT}/${POSTGRES_DB}
+  #     # AUTH_JWT_KEY: ${JWT_SECRET}
+  #     # PG_PROXY_PASSWORD: ${PG_PROXY_PASSWORD}
+  #     # PG_PROXY_PORT: ${PG_PROXY_PORT}
+  #     # AUTH_MODE: secure
+  #     # LOGICAL_PUBLISHER_HOST: electric
+  #     # AUTH_JWT_ALG: HS256
+  #     # ELECTRIC_PG_PROXY_PORT: 65432
+  #   ports:
+  #     - ${ELECTRIC_PORT}:3000
+  #     # - ${PG_PROXY_PORT}:65432
+  #   restart: always
+
+  powersync:
+    restart: unless-stopped
+    depends_on:
+      mongo-rs-init:
+        condition: service_completed_successfully
+      pg: # This is not required, but is nice to have
+        condition: service_healthy
+    image: journeyapps/powersync-service:latest
+    command: ["start", "-r", "unified"]
+    volumes:
+      - ./powersync-config.yaml:/config/config.yaml
+    environment:
+      POWERSYNC_CONFIG_PATH: /config/config.yaml
+      PS_DATABASE_URL: ${PS_DATABASE_URL}
+    ports:
+      - 8080:8080
 
   adminer:
     image: adminer

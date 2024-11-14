@@ -52,6 +52,9 @@ importers:
       '@aws-sdk/lib-storage':
         specifier: ^3.572.0
         version: 3.572.0(@aws-sdk/client-s3@3.572.0)
+      '@electric-sql/client':
+        specifier: ^0.7.1
+        version: 0.7.1
       '@fastify/cors':
         specifier: ^9.0.1
         version: 9.0.1
@@ -3304,6 +3307,12 @@ packages:
       superjson: 2.2.1
     dev: true
 
+  /@electric-sql/client@0.7.1:
+    resolution: {integrity: sha512-NpKEn5hDSy+NaAdG9Ql8kIGfjrj/XfakJOOHTTutb99db3Dza0uUfnkqycFpyUAarFMQ4hYSKgx8AbOm1PCeFQ==}
+    optionalDependencies:
+      '@rollup/rollup-darwin-arm64': 4.26.0
+    dev: false
+
   /@electric-sql/prisma-generator@1.1.5:
     resolution: {integrity: sha512-O7+DCq1QDmFY7Y5BfeD9e7ftUWpKLAQ+lz2qRuExtMtkfsvZPwAOmu6HhTBaLdo+/rZz1wnAEdnzksFv4LlgAw==}
     hasBin: true
@@ -5720,6 +5729,14 @@ packages:
     cpu: [arm64]
     os: [darwin]
     requiresBuild: true
+    optional: true
+
+  /@rollup/rollup-darwin-arm64@4.26.0:
+    resolution: {integrity: sha512-ErTASs8YKbqTBoPLp/kA1B1Um5YSom8QAc4rKhg7b9tyyVqDBlQxy7Bf2wW7yIlPGPg2UODDQcbkTlruPzDosw==}
+    cpu: [arm64]
+    os: [darwin]
+    requiresBuild: true
+    dev: false
     optional: true
 
   /@rollup/rollup-darwin-x64@4.14.0:

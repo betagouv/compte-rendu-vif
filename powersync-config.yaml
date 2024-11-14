@@ -1,0 +1,32 @@
+replication:
+  connections:
+    - type: postgresql
+      uri: !env PS_DATABASE_URL
+
+      # SSL settings
+      sslmode: disable # 'verify-full' (default) or 'verify-ca' or 'disable'
+
+# Connection settings for sync bucket storage
+storage:
+  type: mongodb
+  uri: mongodb://mongo:27017/powersync_demo
+
+# The port which the PowerSync API server will listen on
+port: 8080
+
+# Specify sync rules
+# sync_rules:
+#   # TODO use specific sync rules here
+#   content: |
+#     bucket_definitions:
+#       global:
+#         data:
+#           - SELECT * FROM report
+
+# Settings for client authentication
+client_auth:
+  # Settings for telemetry reporting
+  # See https://docs.powersync.com/self-hosting/telemetry
+  telemetry:
+    # Opt out of reporting anonymized usage metrics to PowerSync telemetry service
+    disable_telemetry_sharing: false
