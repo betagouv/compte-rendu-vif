@@ -8,7 +8,9 @@
     "build": "tsup ./src/index.ts --publicDir --format esm",
     "start": "cross-env NODE_ENV=production node ./dist/index.js",
     "dev": "vite-node --watch ./src/index.ts",
-    "migration:create": "pnpm drizzle-kit generate:pg"
+    "migration:create": "pnpm drizzle-kit generate",
+    "migration:up": "pnpm drizzle-kit migrate",
+    "test": "vitest"
   },
   "exports": {
     ".": "./src/router.ts"
@@ -28,15 +30,17 @@
     "@types/react": "^18.2.64",
     "@types/uuid": "^9.0.8",
     "cross-env": "^7.0.3",
-    "drizzle-kit": "^0.20.14",
+    "drizzle-kit": "^0.28.1",
     "tsup": "^8.0.2",
     "typescript": "^5.2.2",
     "vite": "^5.1.6",
-    "vite-node": "^1.4.0"
+    "vite-node": "^1.4.0",
+    "vitest": "^2.1.5"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.572.0",
     "@aws-sdk/lib-storage": "^3.572.0",
+    "@cr-vif/schemas": "workspace:^",
     "@fastify/cors": "^9.0.1",
     "@fastify/multipart": "^8.2.0",
     "@fastify/swagger": "^8.14.0",
@@ -51,9 +55,7 @@
     "debug": "^4.3.4",
     "dotenv": "^16.4.5",
     "dotenv-expand": "^11.0.6",
-    "drizzle-orm": "^0.30.4",
-    "drizzle-typebox": "^0.1.1",
-    "drizzle-zod": "^0.5.1",
+    "drizzle-orm": "^0.36.2",
     "fastify": "^4.26.2",
     "fastify-multer": "^2.0.3",
     "jsonwebtoken": "^9.0.2",
