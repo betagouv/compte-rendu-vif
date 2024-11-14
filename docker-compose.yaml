@@ -35,23 +35,31 @@ services:
       - ./db/init/:/docker-entrypoint-initdb.d
 
   electric:
-    image: electricsql/electric:0.12.0
+    image: electricsql/electric
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@pg:${POSTGRES_PORT}/${POSTGRES_DB}?sslmode=disable
+    ports:
+      - "3000:3000"
     depends_on:
       - pg
-    environment:
-      DATABASE_REQUIRE_SSL: false
-      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@pg:${POSTGRES_PORT}/${POSTGRES_DB}
-      AUTH_JWT_KEY: ${JWT_SECRET}
-      PG_PROXY_PASSWORD: ${PG_PROXY_PASSWORD}
-      PG_PROXY_PORT: ${PG_PROXY_PORT}
-      AUTH_MODE: secure
-      LOGICAL_PUBLISHER_HOST: electric
-      AUTH_JWT_ALG: HS256
-      ELECTRIC_PG_PROXY_PORT: 65432
-    ports:
-      - ${ELECTRIC_PORT}:5133
-      - ${PG_PROXY_PORT}:65432
-    restart: always
+  # electric:
+  #   image: electricsql/electric:0.12.0
+  #   depends_on:
+  #     - pg
+  #   environment:
+  #     DATABASE_REQUIRE_SSL: false
+  #     DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@pg:${POSTGRES_PORT}/${POSTGRES_DB}
+  #     AUTH_JWT_KEY: ${JWT_SECRET}
+  #     PG_PROXY_PASSWORD: ${PG_PROXY_PASSWORD}
+  #     PG_PROXY_PORT: ${PG_PROXY_PORT}
+  #     AUTH_MODE: secure
+  #     LOGICAL_PUBLISHER_HOST: electric
+  #     AUTH_JWT_ALG: HS256
+  #     ELECTRIC_PG_PROXY_PORT: 65432
+  #   ports:
+  #     - ${ELECTRIC_PORT}:5133
+  #     - ${PG_PROXY_PORT}:65432
+  #   restart: always
 
   adminer:
     image: adminer

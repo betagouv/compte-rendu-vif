@@ -9,35 +9,51 @@ import { initFonts } from "@cr-vif/pdf";
 
 initFonts("./public/");
 
-const debug = makeDebug("index");
+// const debug = makeDebug("index");
 
-const start = async () => {
-  await registerViteHmrServerRestart();
-  await initClauseV2();
-  debug("Starting fastify server in", ENV.NODE_ENV, "mode");
+// const start = async () => {
+//   await registerViteHmrServerRestart();
+//   await initClauseV2();
+//   debug("Starting fastify server in", ENV.NODE_ENV, "mode");
 
-  const fastifyInstance = await initFastify();
-  await fastifyInstance.listen({ port: ENV.PORT, host: "0.0.0.0" });
+//   const fastifyInstance = await initFastify();
+//   await fastifyInstance.listen({ port: ENV.PORT, host: "0.0.0.0" });
 
-  debug(`Server listening on ${ENV.PORT}`);
+//   debug(`Server listening on ${ENV.PORT}`);
 
-  onHmr(async () => {
-    await fastifyInstance.close();
-  });
-};
+//   onHmr(async () => {
+//     await fastifyInstance.close();
+//   });
+// };
 
-const shouldCreateOnly = process.argv.includes("--create-only");
+// const shouldCreateOnly = process.argv.includes("--create-only");
 
-if (shouldCreateOnly) {
-  debug("Generating openapi.json");
-  await generateOpenApi();
+// if (shouldCreateOnly) {
+//   debug("Generating openapi.json");
+//   await generateOpenApi();
 
-  debug("openapi.json generated");
-  process.exit(0);
-} else {
-  start();
-}
+//   debug("openapi.json generated");
+//   process.exit(0);
+// } else {
+//   start();
+// }
 
-const onSIGINT = () => process.exit();
-process.on("SIGINT", onSIGINT);
-onHmr(() => process.off("SIGINT", onSIGINT));
+// const onSIGINT = () => process.exit();
+// process.on("SIGINT", onSIGINT);
+// onHmr(() => process.off("SIGINT", onSIGINT));
+
+import { Shape, ShapeStream } from "@electric-sql/client";
+import fetch from "node-fetch";
+
+const stream = new ShapeStream({
+  url: "http://localhost:3000/v1/shape",
+  table: "report",
+  fetchClient: async (url, options) => void console.log(url, options) || (await fetch(url.toString(), options)).json(),
+});
+
+const shape = new Shape(stream);
+
+console.log(await shape.rows);
+shape.subscribe((rows) => {
+  console.log(rows);
+});
