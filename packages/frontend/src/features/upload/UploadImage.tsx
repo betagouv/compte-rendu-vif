@@ -323,7 +323,7 @@ const PictureThumbnail = ({
     };
   };
 
-  const finalStatus = status ?? idbStatusQuery.data ?? "uploading";
+  const finalStatus = status ?? idbStatusQuery.data ?? "success";
 
   const bgUrl = bgUrlQuery.data;
 
