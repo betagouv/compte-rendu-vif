@@ -10,7 +10,7 @@ import {
   syncImages,
   syncPictureLines,
 } from "../idb";
-import { Box, Flex, Grid, Stack, styled } from "#styled-system/jsx";
+import { Box, Center, Flex, Grid, Stack, styled } from "#styled-system/jsx";
 import { InputGroup } from "#components/InputGroup.tsx";
 import { cx } from "#styled-system/css";
 import { Tmp_pictures, Pictures, Report } from "@cr-vif/electric-client/frontend";
@@ -115,7 +115,6 @@ export const UploadImage = ({ reportId }: { reportId: string }) => {
   return (
     <>
       <styled.div
-        ref={containerRef}
         display={selectedPicture ? "initial" : "none"}
         zIndex="1000"
         pos="fixed"
@@ -123,20 +122,32 @@ export const UploadImage = ({ reportId }: { reportId: string }) => {
         left="0"
         right="0"
         bottom="0"
-        w="100%"
-        h={{ base: "100vh" }}
-        bgColor="white"
+        w="100vw"
+        h="100vh"
+        // w={{ base: "100%", lg: "634px" }}
+        // h={{ base: "100vh", lg: "792px" }}
       >
-        {selectedPicture ? (
-          <ImageCanvas
-            closeModal={() => setSelectedPicture(null)}
-            notifyPictureLines={notifyPictureLines.mutate}
-            pictureId={selectedPicture.id}
-            url={selectedPicture.url}
-            containerRef={containerRef}
-            lines={linesQuery.data}
-          />
-        ) : null}
+        <styled.div pos="fixed" top="0" left="0" right="0" bottom="0" bgColor="rgba(0, 0, 0, 0.5)"></styled.div>
+        <Center w="100%" h="100%">
+          <styled.div
+            ref={containerRef}
+            position="relative"
+            w={{ base: "100%", lg: "634px" }}
+            h={{ base: "100vh", lg: "792px" }}
+            bgColor="white"
+          >
+            {selectedPicture ? (
+              <ImageCanvas
+                closeModal={() => setSelectedPicture(null)}
+                notifyPictureLines={notifyPictureLines.mutate}
+                pictureId={selectedPicture.id}
+                url={selectedPicture.url}
+                containerRef={containerRef}
+                lines={linesQuery.data}
+              />
+            ) : null}
+          </styled.div>
+        </Center>
       </styled.div>
       <Button
         type="button"
