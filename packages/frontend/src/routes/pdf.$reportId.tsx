@@ -78,8 +78,6 @@ export const PDF = () => {
           meetDate: reportQuery.results!.meetDate?.toISOString(),
         });
 
-        console.log({ snapshotReport, report: reportQuery.results, diff });
-
         if (Object.keys(diff).length) return null;
 
         return snapshot.html!;

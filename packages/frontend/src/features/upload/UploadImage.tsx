@@ -36,8 +36,12 @@ export const UploadImage = ({ reportId }: { reportId: string }) => {
 
   const notifyPictureLines = useMutation(async ({ pictureId, lines }: { pictureId: string; lines: Array<Line> }) => {
     try {
+      emitterChannel.postMessage({ type: "status", id: pictureId, status: "uploading" });
+
       const result = await api.post(`/api/upload/picture/${pictureId}/lines` as any, { body: { lines } });
       await del(pictureId, getToPingStore());
+
+      emitterChannel.postMessage({ type: "status", id: pictureId, status: "success" });
 
       return result;
     } catch (e) {
@@ -73,11 +77,14 @@ export const UploadImage = ({ reportId }: { reportId: string }) => {
       formData.append("file", new Blob([buffer]), "file");
       formData.append("reportId", reportId);
       formData.append("pictureId", picId);
+      emitterChannel.postMessage({ type: "status", id: picId, status: "uploading" });
 
       await api.post("/api/upload/image", {
         body: formData,
         query: { reportId: reportId, id: picId },
       } as any);
+
+      emitterChannel.postMessage({ type: "status", id: picId, status: "success" });
     } catch {
       await set(picId, reportId, getToUploadStore());
       syncImages();
@@ -93,7 +100,7 @@ export const UploadImage = ({ reportId }: { reportId: string }) => {
 
   useEffect(() => {
     const listener = (event: MessageEvent) => {
-      console.log("message", event.data);
+      console.log(event.data);
       if (event.data.type === "status") {
         console.log("status", event.data.id, event.data.status);
         setStatusMap((prev) => ({ ...prev, [event.data.id]: event.data.status }));
@@ -149,6 +156,7 @@ export const UploadImage = ({ reportId }: { reportId: string }) => {
 };
 
 const broadcastChannel = new BroadcastChannel("sw-messages");
+const emitterChannel = new BroadcastChannel("sw-messages");
 
 const ReportPictures = ({
   statusMap,
@@ -315,7 +323,7 @@ const PictureThumbnail = ({
     };
   };
 
-  const finalStatus = picture.url ? "success" : status ?? idbStatusQuery.data ?? "uploading";
+  const finalStatus = status ?? idbStatusQuery.data ?? "uploading";
 
   const bgUrl = bgUrlQuery.data;
 
