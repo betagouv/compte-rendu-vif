@@ -5,27 +5,27 @@ import type { Udap, Report, Service_instructeurs, Clause_v2, Pictures } from "@c
 import { Buffer } from "buffer";
 
 export const initFonts = (folder: string = "") => {
-  Font.register({
-    family: "Marianne",
-    fonts: [
-      {
-        src: `${folder}/fonts/Marianne-Regular.ttf`,
-        fontStyle: "normal",
-        fontWeight: "normal",
-      },
-      { src: `${folder}/fonts/Marianne-Bold.ttf`, fontStyle: "normal", fontWeight: "bold" },
-      {
-        src: `${folder}/fonts/Marianne-RegularItalic.ttf`,
-        fontStyle: "italic",
-        fontWeight: "normal",
-      },
-      {
-        src: `${folder}/fonts/Marianne-BoldItalic.ttf`,
-        fontStyle: "italic",
-        fontWeight: "bold",
-      },
-    ],
-  });
+  // Font.register({
+  //   family: "Marianne",
+  //   fonts: [
+  //     {
+  //       src: `${folder}/fonts/Marianne-Regular.ttf`,
+  //       fontStyle: "normal",
+  //       fontWeight: "normal",
+  //     },
+  //     { src: `${folder}/fonts/Marianne-Bold.ttf`, fontStyle: "normal", fontWeight: "bold" },
+  //     {
+  //       src: `${folder}/fonts/Marianne-RegularItalic.ttf`,
+  //       fontStyle: "italic",
+  //       fontWeight: "normal",
+  //     },
+  //     {
+  //       src: `${folder}/fonts/Marianne-BoldItalic.ttf`,
+  //       fontStyle: "italic",
+  //       fontWeight: "bold",
+  //     },
+  //   ],
+  // });
 };
 
 Font.registerHyphenationCallback((word) => {
@@ -57,15 +57,31 @@ export const ReportPDFDocument = ({ udap, htmlString, images, pictures }: Report
           <body>
             <style>
               body {
-                font-family: Marianne;
+                font-family: Helvetica;
               }
 
               strong {
-                font-weight: bold;
+                font-family: Helvetica-Bold;
               }
-              
+
               em {
-                font-style: italic;
+                font-family: Helvetica-Oblique;
+              }
+
+              strong em span {
+                font-family: Helvetica-BoldOblique;
+              }
+
+              em strong span {
+                font-family: Helvetica-BoldOblique;
+              }
+
+              strong em {
+                font-family: Helvetica-BoldOblique;
+              }
+
+              em strong {
+                font-family: Helvetica-BoldOblique;
               }
 
               .marianne-img {
@@ -111,7 +127,7 @@ export const ReportPDFDocument = ({ udap, htmlString, images, pictures }: Report
               .right-texts > div {
                 text-align: right;
                 font-size: 14px;
-                font-weight: bold;
+                font-family: Helvetica-Bold;
               }
 
               .meeting-date {
