@@ -8,12 +8,14 @@ import { Link } from "@tanstack/react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ErrorBoundary } from "react-error-boundary";
 import { registerSW } from "virtual:pwa-register";
+import { initFonts } from "@cr-vif/pdf";
 
 if ("serviceWorker" in navigator) {
   registerSW({});
 }
 
 startReactDsfr({ defaultColorScheme: "system", Link: Link });
+initFonts();
 
 const queryClient = new QueryClient({
   defaultOptions: {

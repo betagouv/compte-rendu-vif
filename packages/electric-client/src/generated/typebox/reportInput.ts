@@ -22,11 +22,29 @@ export const reportInput = Type.Object({
   udap_id: Type.Optional(Type.String()),
   redactedById: Type.Optional(Type.String()),
   applicantEmail: Type.Optional(Type.String()),
+  city: Type.Optional(Type.String()),
+  zipCode: Type.Optional(Type.String()),
+  pictures: Type.Array(
+    Type.Object({
+      id: Type.String(),
+      reportId: Type.Optional(Type.String()),
+      url: Type.Optional(Type.String()),
+      createdAt: Type.Optional(Type.String()),
+      finalUrl: Type.Optional(Type.String()),
+    })
+  ),
   user: Type.Object({
     id: Type.String(),
     name: Type.String(),
     udap_id: Type.String(),
   }),
+  tmp_pictures: Type.Array(
+    Type.Object({
+      id: Type.String(),
+      reportId: Type.Optional(Type.String()),
+      createdAt: Type.Optional(Type.String()),
+    })
+  ),
 });
 
 export type reportInputType = Static<typeof reportInput>;

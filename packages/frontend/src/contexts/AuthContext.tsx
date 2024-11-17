@@ -69,6 +69,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         },
         include: {
           user: true,
+          pictures: true,
         },
       });
       await electric.db.service_instructeurs.sync({ where: { udap_id: data!.user!.udap_id } });
@@ -85,6 +86,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
           user_id: data!.user!.id,
         },
       });
+      await electric.db.picture_lines.sync({});
 
       return true;
     },

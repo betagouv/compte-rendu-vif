@@ -1,10 +1,10 @@
 import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { useAuthContext } from "./contexts/AuthContext";
 import { routeTree } from "./routeTree.gen";
+import { useEffect } from "react";
 
 export const App = () => {
   const [auth] = useAuthContext();
-
   return <RouterProvider router={router} context={auth} />;
 };
 

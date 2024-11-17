@@ -1,17 +1,42 @@
-import { Document, Font, Page } from "@react-pdf/renderer";
+import { Document, Font, Image, Page, Text, View } from "@react-pdf/renderer";
 import { Html } from "react-pdf-html";
 import React from "react";
-import type { Udap, Report, Service_instructeurs, Clause_v2 } from "@cr-vif/electric-client/frontend";
+import type { Udap, Report, Service_instructeurs, Clause_v2, Pictures } from "@cr-vif/electric-client/frontend";
+import { Buffer } from "buffer";
+
+export const initFonts = (folder: string = "") => {
+  // Font.register({
+  //   family: "Marianne",
+  //   fonts: [
+  //     {
+  //       src: `${folder}/fonts/Marianne-Regular.ttf`,
+  //       fontStyle: "normal",
+  //       fontWeight: "normal",
+  //     },
+  //     { src: `${folder}/fonts/Marianne-Bold.ttf`, fontStyle: "normal", fontWeight: "bold" },
+  //     {
+  //       src: `${folder}/fonts/Marianne-RegularItalic.ttf`,
+  //       fontStyle: "italic",
+  //       fontWeight: "normal",
+  //     },
+  //     {
+  //       src: `${folder}/fonts/Marianne-BoldItalic.ttf`,
+  //       fontStyle: "italic",
+  //       fontWeight: "bold",
+  //     },
+  //   ],
+  // });
+};
 
 Font.registerHyphenationCallback((word) => {
   return [word];
 });
 
-export const ReportPDFDocument = ({ udap, htmlString, images }: ReportPDFDocumentProps) => {
+export const ReportPDFDocument = ({ udap, htmlString, images, pictures }: ReportPDFDocumentProps) => {
+  console.log(pictures);
   return (
-    <Document>
+    <Document onRender={console.log}>
       <Page
-        minPresenceAhead={20}
         size="A4"
         style={{
           paddingTop: "48px",
@@ -19,6 +44,8 @@ export const ReportPDFDocument = ({ udap, htmlString, images }: ReportPDFDocumen
         }}
       >
         <Html
+          resetStyles
+          collapse
           style={{
             fontSize: "10px",
             paddingLeft: "32px",
@@ -28,89 +55,93 @@ export const ReportPDFDocument = ({ udap, htmlString, images }: ReportPDFDocumen
         >{`
         <html>
           <body>
-          <style>
-          body {
-            font-family: Helvetica;
-          }
+            <style>
+              body {
+                font-family: Helvetica;
+              }
 
-          strong {
-            font-family: Helvetica-Bold;
-          }
+              strong {
+                font-family: Helvetica-Bold;
+              }
 
-          em {
-            font-family: Helvetica-Oblique;
-          }
+              em {
+                font-family: Helvetica-Oblique;
+              }
 
-          strong em span {
-            font-family: Helvetica-BoldOblique;
-          }
+              strong em span {
+                font-family: Helvetica-BoldOblique;
+              }
 
-          em strong span {
-            font-family: Helvetica-BoldOblique;
-          }
+              em strong span {
+                font-family: Helvetica-BoldOblique;
+              }
 
-          strong em {
-            font-family: Helvetica-BoldOblique;
-          }
+              strong em {
+                font-family: Helvetica-BoldOblique;
+              }
 
-          em strong {
-            font-family: Helvetica-BoldOblique;
-          }
+              em strong {
+                font-family: Helvetica-BoldOblique;
+              }
 
-          .marianne-img {
-            width: 35px;
-          }
-            
-          .marianne-footer-img {
-            width: 50px;
-          }
+              .marianne-img {
+                width: 35px;
+              }
+                
+              .marianne-footer-img {
+                width: 50px;
+              }
 
-          .header {
-            display: flex;
-            margin-top: -16px;
-            flex-direction: row;
-            width: 100%;
-            align-items: flex-start;
-            justify-content: space-between;
-            text-align: right;
-            font-size: 18px;
-            margin-bottom: 32px;
+              .header {
+                display: flex;
+                margin-top: -16px;
+                flex-direction: row;
+                width: 100%;
+                align-items: flex-start;
+                justify-content: space-between;
+                text-align: right;
+                font-size: 18px;
+                margin-bottom: 32px;
 
-          }
+              }
 
 
-          .marianne-text {
-            text-align: left;
-            font-weight: bold;
-            font-size: 12px;
-            margin-top: 4px;
-            margin-bottom: 4px;
-            text-transform: uppercase;
-          }
+              .marianne-text {
+                text-align: left;
+                font-weight: bold;
+                font-size: 12px;
+                margin-top: 4px;
+                margin-bottom: 4px;
+                text-transform: uppercase;
+              }
 
-          .right-texts {
-            margin-top: 13px;
-            display: flex;
-            align-items: flex-end;
-            flex-direction: column;
-            justify-content: flex-end;
-            gap: 20px;
-          }
+              .right-texts {
+                margin-top: 13px;
+                display: flex;
+                align-items: flex-end;
+                flex-direction: column;
+                justify-content: flex-end;
+                gap: 20px;
+              }
 
-          .right-texts > div {
-            text-align: right;
-            font-size: 14px;
-            font-family: Helvetica-Bold;
-          }
+              .right-texts > div {
+                text-align: right;
+                font-size: 14px;
+                font-family: Helvetica-Bold;
+              }
 
-          .meeting-date {
-            text-align: right;
-            display: flex;
-            justify-content: flex-end;
-            align-items: flex-end;
-          }
+              .meeting-date {
+                text-align: right;
+                display: flex;
+                justify-content: flex-end;
+                align-items: flex-end;
+              }
 
-        </style>
+              .pictures {
+                background-color: #f5f5f5;
+              }
+
+            </style>
             <div class="header">
               <div class="marianne">
 
@@ -145,10 +176,44 @@ export const ReportPDFDocument = ({ udap, htmlString, images }: ReportPDFDocumen
             <div class="content">
               ${htmlString}
             </div>
+            
           </body>
         </html>
       `}</Html>
       </Page>
+      {pictures
+        ? pictures
+            .filter((pic) => !!pic.url)
+            .map((pic, index) => (
+              <Page
+                break={index > 0}
+                style={{
+                  paddingTop: "48px",
+                  paddingBottom: "32px",
+                  maxHeight: "100vh",
+                }}
+                key={pic.id}
+                size="A4"
+              >
+                <View
+                  style={{
+                    marginHorizontal: "10%",
+                    maxHeight: "100vh",
+                  }}
+                >
+                  <Image
+                    style={{
+                      width: `auto`,
+                      height: "auto",
+                      objectFit: "contain",
+                      overflow: "hidden",
+                    }}
+                    src={pic.finalUrl ?? pic.url!}
+                  />
+                </View>
+              </Page>
+            ))
+        : null}
     </Document>
   );
 };
@@ -157,6 +222,7 @@ export type ReportPDFDocumentProps = {
   htmlString: string;
   udap: Udap;
   images: Images;
+  pictures?: Pictures[];
 };
 
 type Images = {

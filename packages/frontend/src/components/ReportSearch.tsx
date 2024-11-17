@@ -48,6 +48,8 @@ const useSearchResultsQuery = (search: string, additionnalWhere: { [key: string]
           isNullOrContains("redactedBy", search),
           isNullOrContains("applicantName", search),
           isNullOrContains("applicantAddress", search),
+          isNullOrContains("city", search),
+          isNullOrContains("zipCode", search),
         ],
         disabled: false,
         ...additionnalWhere,

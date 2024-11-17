@@ -1,11 +1,12 @@
 import { Type, type FastifyPluginAsyncTypebox } from "@fastify/type-provider-typebox";
 import { renderToBuffer } from "@react-pdf/renderer";
 import { ReportPDFDocument } from "@cr-vif/pdf";
-import { Udap } from "@cr-vif/electric-client/frontend";
+import { Pictures, Udap } from "@cr-vif/electric-client/frontend";
 import { authenticate } from "./authMiddleware";
 import { db } from "../db/db";
 import { sendReportMail } from "../features/mail";
 import { getPDFName } from "../services/uploadService";
+import React from "react";
 
 export const pdfPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
   fastify.addHook("preHandler", authenticate);
@@ -14,7 +15,9 @@ export const pdfPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
     const { reportId, htmlString } = request.body;
     const { udap } = request.user.user;
 
-    const pdf = await generatePdf({ htmlString, udap });
+    const pictures = await db.pictures.findMany({ where: { reportId }, orderBy: { createdAt: "asc" } });
+
+    const pdf = await generatePdf({ htmlString, udap, pictures });
 
     const name = getPDFName(reportId);
 
@@ -57,12 +60,21 @@ export const pdfPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
   );
 };
 
-const generatePdf = async ({ htmlString, udap }: { htmlString: string; udap: Udap }) => {
+const generatePdf = async ({
+  htmlString,
+  udap,
+  pictures,
+}: {
+  htmlString: string;
+  udap: Udap;
+  pictures: Pictures[];
+}) => {
   return renderToBuffer(
     <ReportPDFDocument
       udap={udap as Udap}
       htmlString={htmlString}
       images={{ marianne: "./public/marianne.png", marianneFooter: "./public/marianne_footer.png" }}
+      pictures={pictures}
     />,
   );
 };

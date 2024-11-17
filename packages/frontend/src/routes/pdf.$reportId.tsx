@@ -30,6 +30,7 @@ import { v4 } from "uuid";
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import { fr } from "@codegouvfr/react-dsfr";
 import { transformBold } from "../features/menu/ClauseMenu";
+import { Pictures } from "../../../electric-client/src/generated/client/index";
 
 type Mode = "edit" | "view" | "send" | "sent";
 
@@ -58,8 +59,10 @@ export const PDF = () => {
     navigate({ search: { mode: mode === "edit" ? "view" : "edit" }, replace: true });
   };
 
-  const reportQuery = useLiveQuery(db.report.liveUnique({ where: { id: reportId }, include: { user: true } }));
-  const reportRef = useRef<Report | null>(null);
+  const reportQuery = useLiveQuery(
+    db.report.liveUnique({ where: { id: reportId }, include: { user: true, pictures: true } }),
+  );
+  const reportRef = useRef<(Report & { pictures?: Pictures[] }) | null>(null);
 
   const snapshotQuery = useQuery({
     queryKey: ["report-snapshot", reportId],
@@ -74,8 +77,6 @@ export const PDF = () => {
           createdAt: reportQuery.results!.createdAt?.toISOString(),
           meetDate: reportQuery.results!.meetDate?.toISOString(),
         });
-
-        console.log({ snapshotReport, report: reportQuery.results, diff });
 
         if (Object.keys(diff).length) return null;
 
@@ -220,7 +221,7 @@ Les modifications du compte-rendu se font uniquement sur l'appareil utilisé. Ut
               <Stack w="800px" h="100%">
                 {report && snapshotQuery.isSuccess && chipOptions?.length && isServiceInstructeurLoaded ? (
                   <WithReport
-                    report={report}
+                    report={report as any}
                     mode={mode}
                     initialHtmlString={
                       htmlString ??
@@ -377,10 +378,12 @@ export const WithReport = ({
 }: {
   initialHtmlString: string;
   mode: Mode;
-  report: Report;
+  report: Report & { pictures: Pictures[] };
 }) => {
   const { editor } = useContext(TextEditorContext);
   const [htmlString] = useState(initialHtmlString);
+
+  console.log(report);
 
   useEffect(() => {
     if (!editor) return;
@@ -395,6 +398,7 @@ export const WithReport = ({
       udap={udap as Udap}
       htmlString={editor?.getHTML() ?? ""}
       images={{ marianne: "/marianne.png", marianneFooter: "/marianne_footer.png" }}
+      pictures={report.pictures}
     />
   );
 
@@ -423,6 +427,7 @@ const View = (props: ReportPDFDocumentProps) => {
       return blob;
     },
     refetchOnWindowFocus: false,
+    enabled: !!props.htmlString,
   });
 
   if (query.isLoading) return <Spinner />;

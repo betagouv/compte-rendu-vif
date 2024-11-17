@@ -5,6 +5,9 @@ import { ENV } from "./envVars";
 import { generateOpenApi, initFastify } from "./router";
 import { makeDebug } from "./features/debug";
 import { initClauseV2 } from "./tmp";
+import { initFonts } from "@cr-vif/pdf";
+
+initFonts("./public/");
 
 const debug = makeDebug("index");
 

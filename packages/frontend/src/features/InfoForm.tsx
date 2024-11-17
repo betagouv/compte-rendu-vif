@@ -1,20 +1,26 @@
-import { Box, Center, Divider, Flex, Stack, styled } from "#styled-system/jsx";
+import { InputGroup, InputGroupWithTitle } from "#components/InputGroup";
+import { SpaceTypeChips } from "#components/chips/SpaceTypeChips";
+import { css, cx } from "#styled-system/css";
+import { Box, Center, Divider, Flex, Grid, Stack, styled } from "#styled-system/jsx";
 import { useTabsContext } from "@ark-ui/react/tabs";
 import Button from "@codegouvfr/react-dsfr/Button";
 import Input from "@codegouvfr/react-dsfr/Input";
 import Select from "@codegouvfr/react-dsfr/Select";
+import type { Pictures, Report, Tmp_pictures } from "@cr-vif/electric-client/frontend";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { format, parse } from "date-fns";
-import { useRef } from "react";
-import { useFormContext, useWatch } from "react-hook-form";
-import { InputGroupWithTitle } from "#components/InputGroup";
-import { SpaceTypeChips } from "#components/chips/SpaceTypeChips";
-import { useUser } from "../contexts/AuthContext";
-import type { Report } from "@cr-vif/electric-client/frontend";
-import { css } from "#styled-system/css";
-import { ServiceInstructeurSelect } from "./ServiceInstructeurSelect";
-import { useIsFormDisabled } from "./DisabledContext";
 import { useLiveQuery } from "electric-sql/react";
+import { get, set } from "idb-keyval";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { useFormContext, useWatch } from "react-hook-form";
+import { v4 } from "uuid";
+import { useUser } from "../contexts/AuthContext";
 import { db } from "../db";
+import { useIsFormDisabled } from "./DisabledContext";
+import { ServiceInstructeurSelect } from "./ServiceInstructeurSelect";
+import { deleteImageFromIdb, getPicturesStore, getToUploadStore, getUploadStatusStore, syncImages } from "./idb";
+import Badge from "@codegouvfr/react-dsfr/Badge";
+import { UploadImage } from "./upload/UploadImage";
 
 export const InfoForm = () => {
   const form = useFormContext<Report>();
@@ -83,6 +89,7 @@ export const InfoForm = () => {
 
   return (
     <Flex direction="column" w="100%" padding="16px">
+      {/* <Badge severity="info">Les champs marqués d'un astérisque (*) sont obligatoires</Badge> */}
       <InputGroupWithTitle title="Le rendez-vous">
         <Stack gap={{ base: "0", lg: "16px" }} direction={{ base: "column", lg: "row" }}>
           <Select
@@ -92,9 +99,7 @@ export const InfoForm = () => {
             nativeSelectProps={redactedByProps}
           >
             {redactedByOptions?.map((option) => (
-              <option key={option.value} value={option.value} selected={
-                redactedById === option.value
-              }>
+              <option key={option.value} value={option.value} selected={redactedById === option.value}>
                 {option.label}
               </option>
             )) ?? null}
@@ -170,7 +175,7 @@ export const InfoForm = () => {
             className={css({ flex: { base: "none", lg: 1 }, mb: "24px" })}
             disabled={isFormDisabled}
             label="Référence cadastrale"
-            nativeInputProps={form.register("projectCadastralRef")}
+            nativeInputProps={{ ...form.register("projectCadastralRef"), placeholder: "Seulement la principale" }}
           />
           <Box
             className={css({

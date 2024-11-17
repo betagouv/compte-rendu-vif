@@ -144,6 +144,29 @@ export namespace Endpoints {
       udap_text?: string | undefined;
     }>;
   };
+  export type post_Apiuploadimage = {
+    method: "POST";
+    path: "/api/upload/image";
+    parameters: never;
+    response: unknown;
+  };
+  export type get_Apiuploadpicture = {
+    method: "GET";
+    path: "/api/upload/picture";
+    parameters: {
+      query: { reportId: string; pictureId: string };
+    };
+    response: Partial<{}>;
+  };
+  export type post_ApiuploadpicturePictureIdlines = {
+    method: "POST";
+    path: "/api/upload/picture/{pictureId}/lines";
+    parameters: {
+      query: { reportId: string };
+      path: { pictureId: string };
+    };
+    response: string;
+  };
   export type post_Apipdfreport = {
     method: "POST";
     path: "/api/pdf/report";
@@ -171,11 +194,14 @@ export type EndpointByMethod = {
     "/api/login": Endpoints.post_Apilogin;
     "/api/send-reset-password": Endpoints.post_ApisendResetPassword;
     "/api/reset-password": Endpoints.post_ApiresetPassword;
+    "/api/upload/image": Endpoints.post_Apiuploadimage;
+    "/api/upload/picture/{pictureId}/lines": Endpoints.post_ApiuploadpicturePictureIdlines;
     "/api/pdf/report": Endpoints.post_Apipdfreport;
   };
   get: {
     "/api/refresh-token": Endpoints.get_ApirefreshToken;
     "/api/udaps": Endpoints.get_Apiudaps;
+    "/api/upload/picture": Endpoints.get_Apiuploadpicture;
     "/api/pdf/report": Endpoints.get_Apipdfreport;
   };
 };

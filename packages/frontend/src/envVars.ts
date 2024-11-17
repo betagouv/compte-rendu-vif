@@ -1,13 +1,27 @@
 import { z } from "zod";
 
-const isDev = !z.boolean().parse(import.meta.env.PROD);
+export const isDev = !z.boolean().parse(import.meta.env.PROD);
 
 const envSchema = z.object({
   VITE_BACKEND_URL: z.string(),
   VITE_ELECTRIC_URL: z.string(),
 });
 
-export const ENV = envSchema.parse(isDev ? import.meta.env : window.ENV);
+const isSW = typeof window === "undefined";
+console.log("isSW", isSW);
+console.log("isDev", isDev);
+
+const safeParseEnv = (env: Record<string, string>): z.infer<typeof envSchema> => {
+  try {
+    return envSchema.parse(env);
+  } catch (e) {
+    console.error("Error parsing env vars");
+    return {} as any;
+  }
+};
+
+export const ENV = safeParseEnv(isDev ? import.meta.env : isSW ? self.ENV : window.ENV);
+
 declare global {
   interface Window {
     ENV: typeof ENV;

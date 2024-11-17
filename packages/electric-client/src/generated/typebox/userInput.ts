@@ -50,6 +50,8 @@ export const userInput = Type.Object({
       udap_id: Type.Optional(Type.String()),
       redactedById: Type.Optional(Type.String()),
       applicantEmail: Type.Optional(Type.String()),
+      city: Type.Optional(Type.String()),
+      zipCode: Type.Optional(Type.String()),
     })
   ),
   udap: Type.Object({
