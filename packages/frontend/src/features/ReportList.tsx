@@ -16,7 +16,7 @@ import { ReportActions } from "./ReportActions";
 import { Pagination } from "@codegouvfr/react-dsfr/Pagination";
 import welcomeImage from "../assets/welcome.svg";
 import { useIsDesktop } from "../hooks/useIsDesktop";
-import { chunk, makeArrayOf } from "pastable";
+import { chunk } from "pastable";
 
 export type ReportWithUser = Report & { user?: { email: string; name: string } };
 
@@ -29,7 +29,7 @@ export const MyReports = () => {
       where: { disabled: false, OR: [{ createdBy: user.id }, { redactedById: user.id }] },
       take: 20,
       skip: page * 20,
-      orderBy: { createdAt: "desc" },
+      orderBy: [{ meetDate: "desc" }, { createdAt: "desc" }],
       include: {
         user: true,
       },

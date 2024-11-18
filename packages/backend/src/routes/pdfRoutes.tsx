@@ -30,7 +30,10 @@ export const pdfPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
     await db.report.update({ where: { id: reportId }, data: { pdf: url } });
 
     const userMail = request.user.email;
-    const recipients = request.body.recipients.split(",").map((r) => r.trim());
+    const recipients = request.body.recipients
+      .replaceAll(";", ",")
+      .split(",")
+      .map((r) => r.trim());
     if (!recipients.includes(userMail)) recipients.push(userMail);
 
     const report = await db.report.findUnique({ where: { id: reportId } });
