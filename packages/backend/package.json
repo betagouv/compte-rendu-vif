@@ -57,6 +57,7 @@
     "drizzle-zod": "^0.5.1",
     "fastify": "^4.26.2",
     "fastify-multer": "^2.0.3",
+    "jose": "^5.9.6",
     "jsonwebtoken": "^9.0.2",
     "nodemailer": "^6.9.13",
     "pastable": "^2.2.1",

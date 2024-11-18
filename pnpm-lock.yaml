@@ -112,6 +112,9 @@ importers:
       fastify-multer:
         specifier: ^2.0.3
         version: 2.0.3
+      jose:
+        specifier: ^5.9.6
+        version: 5.9.6
       jsonwebtoken:
         specifier: ^9.0.2
         version: 9.0.2
@@ -249,12 +252,21 @@ importers:
       '@gouvfr/dsfr-chart':
         specifier: ^1.0.0
         version: 1.0.0(webpack@5.91.0)
+      '@journeyapps/wa-sqlite':
+        specifier: ^0.4.2
+        version: 0.4.2
       '@mikecousins/react-pdf':
         specifier: ^7.1.0
         version: 7.1.0(pdfjs-dist@4.3.136)(react-dom@18.2.0)(react@18.2.0)
       '@mui/material':
         specifier: ^5.15.15
         version: 5.15.15(@emotion/react@11.11.4)(@emotion/styled@11.11.5)(@types/react@18.2.74)(react-dom@18.2.0)(react@18.2.0)
+      '@powersync/react':
+        specifier: ^1.5.1
+        version: 1.5.1(@powersync/common@1.21.0)(react@18.2.0)
+      '@powersync/web':
+        specifier: ^1.10.2
+        version: 1.10.2(@journeyapps/wa-sqlite@0.4.2)(@powersync/common@1.21.0)
       '@prisma/client':
         specifier: ^4.8.1
         version: 4.16.2(prisma@4.8.1)
@@ -321,6 +333,9 @@ importers:
       install:
         specifier: ^0.13.0
         version: 0.13.0
+      js-logger:
+        specifier: ^1.6.1
+        version: 1.6.1
       npm:
         specifier: ^10.5.0
         version: 10.5.0
@@ -4301,6 +4316,10 @@ packages:
       wrap-ansi: 8.1.0
       wrap-ansi-cjs: /wrap-ansi@7.0.0
 
+  /@journeyapps/wa-sqlite@0.4.2:
+    resolution: {integrity: sha512-xdpDLbyC/DHkNcnXCfgBXUgfy+ff1w/sxVY6mjdGP8F4bgxnSQfUyN8+PNE2nTgYUx4y5ar57MEnSty4zjIm7Q==}
+    dev: false
+
   /@jridgewell/gen-mapping@0.3.5:
     resolution: {integrity: sha512-IzL8ZoEDIBRWEzlCcRhOaCupYyN5gdIK+Q6fbFdPDg6HqX6jpkItn7DFIpW9LQzXG6Df9sA7+OKnq0qlz/GaQg==}
     engines: {node: '>=6.0.0'}
@@ -5099,6 +5118,36 @@ packages:
 
   /@popperjs/core@2.11.8:
     resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}
+    dev: false
+
+  /@powersync/common@1.21.0:
+    resolution: {integrity: sha512-G77WGytQb3JwqE9vlxcQZwf8w/tBYGJfU99RqJMrD5Tyb4VrCeOrEcmulmL/M7Q+ZYOjpIhpVwQZB+pNocY0jg==}
+    dependencies:
+      js-logger: 1.6.1
+    dev: false
+
+  /@powersync/react@1.5.1(@powersync/common@1.21.0)(react@18.2.0):
+    resolution: {integrity: sha512-x/uKsNOoDzUjdXgCMMrJmpZQMTEpddk64XDjW684bFsld3fqL0t5t3ULOpAHsm1vl/hKh77Xa9nthLUCXpKSgw==}
+    peerDependencies:
+      '@powersync/common': ^1.21.0
+      react: '*'
+    dependencies:
+      '@powersync/common': 1.21.0
+      react: 18.2.0
+    dev: false
+
+  /@powersync/web@1.10.2(@journeyapps/wa-sqlite@0.4.2)(@powersync/common@1.21.0):
+    resolution: {integrity: sha512-s01lXkUx7GcdyWDV2p9StHWf9h0vm3TWi0Pc/hWGexOldbiiCFDad1QyC1OxMpSdIAEuFa6yb0Eu0BAsS05jYQ==}
+    peerDependencies:
+      '@journeyapps/wa-sqlite': ^0.4.2
+      '@powersync/common': ^1.21.0
+    dependencies:
+      '@journeyapps/wa-sqlite': 0.4.2
+      '@powersync/common': 1.21.0
+      async-mutex: 0.4.1
+      bson: 6.9.0
+      comlink: 4.4.2
+      js-logger: 1.6.1
     dev: false
 
   /@prisma/client@4.16.2(prisma@4.8.1):
@@ -9057,6 +9106,11 @@ packages:
       node-releases: 2.0.14
       update-browserslist-db: 1.0.13(browserslist@4.23.0)
 
+  /bson@6.9.0:
+    resolution: {integrity: sha512-X9hJeyeM0//Fus+0pc5dSUMhhrrmWwQUtdavaQeF3Ta6m69matZkGWV/MrBcnwUeLC8W9kwwc2hfkZgUuCX3Ig==}
+    engines: {node: '>=16.20.1'}
+    dev: false
+
   /buffer-alloc-unsafe@1.1.0:
     resolution: {integrity: sha512-TEM2iMIEQdJ2yjPJoSIsldnleVaAk1oW3DBVUykyOLsEsFmEc9kn+SFFPz+gl54KQNxlDnAwCXosOS9Okx2xAg==}
 
@@ -9408,6 +9462,10 @@ packages:
     resolution: {integrity: sha512-qiBjkpbMLO/HL68y+lh4q0/O1MZFj2RX6X/KmMa3+gJD3z+WwI1ZzDHysvqHGS3mP6mznPckpXmw1nI9cJjyRg==}
     hasBin: true
     requiresBuild: true
+
+  /comlink@4.4.2:
+    resolution: {integrity: sha512-OxGdvBmJuNKSCMO4NTl1L47VRp6xn2wG4F/2hYzB6tiCb709otOxtEYCSvK80PtjODfXXZu8ds+Nw5kVCjqd2g==}
+    dev: false
 
   /commander@11.1.0:
     resolution: {integrity: sha512-yPVavfyCcRhmorC7rWlkHn15b4wDVgVmBA7kV4QVBsF7kv/9TKJAbAXVTxvTnwP8HHKjRCJDClKbciiYS7p0DQ==}
@@ -12158,6 +12216,10 @@ packages:
   /jose@4.15.5:
     resolution: {integrity: sha512-jc7BFxgKPKi94uOvEmzlSWFFe2+vASyXaKUpdQKatWAESU2MWjDfFf0fdfc83CDKcA5QecabZeNLyfhe3yKNkg==}
 
+  /jose@5.9.6:
+    resolution: {integrity: sha512-AMlnetc9+CV9asI19zHmrgS/WYsWUwCn2R7RzlbJWD7F9eWYUTGyBmU9o6PxngtLGOiDGPRu+Uc4fhKzbpteZQ==}
+    dev: false
+
   /joycon@3.1.1:
     resolution: {integrity: sha512-34wB/Y7MW7bzjKRjUKTa46I2Z7eV62Rkhva+KkopW7Qvv/OSWBqvkSY7vusOPrNuZcUG3tApvdVgNB8POj3SPw==}
     engines: {node: '>=10'}
@@ -12165,6 +12227,10 @@ packages:
 
   /js-cookie@2.2.1:
     resolution: {integrity: sha512-HvdH2LzI/EAZcUwA8+0nKNtWHqS+ZmijLA30RwZA0bo7ToCckjK5MkGhjED9KoRcXO6BaGI3I9UIzSA1FKFPOQ==}
+    dev: false
+
+  /js-logger@1.6.1:
+    resolution: {integrity: sha512-yTgMCPXVjhmg28CuUH8CKjU+cIKL/G+zTu4Fn4lQxs8mRFH/03QTNvEFngcxfg/gRDiQAOoyCKmMTOm9ayOzXA==}
     dev: false
 
   /js-tokens@4.0.0:

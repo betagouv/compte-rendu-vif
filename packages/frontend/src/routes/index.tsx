@@ -12,8 +12,8 @@ import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { v4 } from "uuid";
 import { ElectricStatus, useElectricStatus, useUser } from "../contexts/AuthContext";
-import { db } from "../db";
 import { AllReports, MyReports } from "../features/ReportList";
+import { db } from "../db/db";
 
 const Index = () => {
   const [search, setSearch] = useState("");
@@ -41,19 +41,33 @@ const Index = () => {
   const navigate = useNavigate();
 
   const createReportMutation = useMutation({
-    mutationFn: () =>
-      db.report.create({
-        data: {
-          id: `report-${v4()}`,
-          createdBy: user.id,
-          createdAt: new Date(),
-          meetDate: new Date(),
-          disabled: false,
-          udap_id: user.udap.id,
-          redactedBy: user.name,
-          redactedById: user.id,
-        },
-      }),
+    mutationFn: async () => {
+      await db.execute(
+        `INSERT INTO report (
+          "id",
+          "createdBy",
+          "createdAt",
+          "meetDate",
+          "disabled",
+          "udap_id",
+          "redactedBy",
+          "redactedById"
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+        ["report-" + v4(), user.id, new Date(), new Date(), false, user.udap.id, user.name, user.id],
+      );
+    },
+    // db.report.create({
+    //   data: {
+    //     id: `report-${v4()}`,
+    //     createdBy: user.id,
+    //     createdAt: new Date(),
+    //     meetDate: new Date(),
+    //     disabled: false,
+    //     udap_id: user.udap.id,
+    //     redactedBy: user.name,
+    //     redactedById: user.id,
+    //   },
+    // }),
     onSuccess: (data) => {
       data.id && navigate({ to: "/edit/$reportId", params: { reportId: data.id } });
     },

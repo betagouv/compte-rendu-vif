@@ -41,6 +41,7 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+
   mongo:
     image: mongo:7.0
     command: --replSet rs0 --bind_ip_all --quiet
@@ -62,22 +63,22 @@ services:
         1, members: [{ _id: 0, host : "mongo:27017" }]})'''
 
   # electric:
-  #   image: electricsql/electric:latest
+  #   image: electricsql/electric:0.12.0
   #   depends_on:
   #     - pg
   #   environment:
-  #     # DATABASE_REQUIRE_SSL: false
+  #     DATABASE_REQUIRE_SSL: false
   #     DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@pg:${POSTGRES_PORT}/${POSTGRES_DB}
-  #     # AUTH_JWT_KEY: ${JWT_SECRET}
-  #     # PG_PROXY_PASSWORD: ${PG_PROXY_PASSWORD}
-  #     # PG_PROXY_PORT: ${PG_PROXY_PORT}
-  #     # AUTH_MODE: secure
-  #     # LOGICAL_PUBLISHER_HOST: electric
-  #     # AUTH_JWT_ALG: HS256
-  #     # ELECTRIC_PG_PROXY_PORT: 65432
+  #     AUTH_JWT_KEY: ${JWT_SECRET}
+  #     PG_PROXY_PASSWORD: ${PG_PROXY_PASSWORD}
+  #     PG_PROXY_PORT: ${PG_PROXY_PORT}
+  #     AUTH_MODE: secure
+  #     LOGICAL_PUBLISHER_HOST: electric
+  #     AUTH_JWT_ALG: HS256
+  #     ELECTRIC_PG_PROXY_PORT: 65432
   #   ports:
-  #     - ${ELECTRIC_PORT}:3000
-  #     # - ${PG_PROXY_PORT}:65432
+  #     - ${ELECTRIC_PORT}:5133
+  #     - ${PG_PROXY_PORT}:65432
   #   restart: always
 
   powersync:
@@ -94,6 +95,7 @@ services:
     environment:
       POWERSYNC_CONFIG_PATH: /config/config.yaml
       PS_DATABASE_URL: ${PS_DATABASE_URL}
+      PS_JWT_SECRET: ${JWT_SECRET}
     ports:
       - 8080:8080
 

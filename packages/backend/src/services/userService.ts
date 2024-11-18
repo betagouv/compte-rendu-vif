@@ -1,4 +1,4 @@
-import { addDays } from "date-fns";
+import { addDays, addHours } from "date-fns";
 import jwt from "jsonwebtoken";
 import crypto from "node:crypto";
 import { db } from "../db/db";
@@ -10,6 +10,7 @@ import { ENV, isDev } from "../envVars";
 import { makeDebug } from "../features/debug";
 import { AppError } from "../features/errors";
 import { sendPasswordResetMail } from "../features/mail";
+import jose from "jose";
 
 const debug = makeDebug("user_service");
 export class UserService {
@@ -138,17 +139,37 @@ export class UserService {
   }
 
   generateJWT(user: Prisma.internal_userUncheckedCreateInput) {
-    const expiresAt = addDays(new Date(), 7).toISOString();
+    const expiresAt = addHours(new Date(), 1).toISOString();
 
-    const token = jwt.sign(
-      {
-        sub: user.id,
-      },
-      ENV.JWT_SECRET,
-      {
-        expiresIn: ENV.TOKEN_LIFETIME,
-      },
-    );
+    const key = {
+      alg: "HS256",
+      k: ENV.JWT_SECRET,
+      kid: "powersync",
+      kty: "oct",
+    };
+
+    // const key = jose.importJWK({ alg: "HS256", k: ENV.JWT_SECRET, kid: "powersync", kty: "oct" });
+
+    // const data = new jose.SignJWT({}).setProtectedHeader({ alg: "HS256", kid: "powersync" })
+    // .setSubject(user.id)
+    // .setIssuedAt()
+    // .setIssuer('test-client')
+    // .setAudience(['powersync-dev'])
+    // .setExpirationTime('24h')
+    // .sign(kje);
+
+    // return
+
+    const token = jwt.sign({}, Buffer.from(key.k, "base64"), {
+      algorithm: key.alg as any,
+      keyid: key.kid,
+      subject: user.id,
+      issuer: "test-client",
+      audience: ["powersync"],
+      expiresIn: "1h",
+    });
+
+    // console.log(this.validateToken(token));
 
     return { token, expiresAt };
   }
@@ -197,6 +218,13 @@ export class UserService {
     return jwt.verify(token, ENV.JWT_REFRESH_SECRET) as { sub: string };
   }
 }
+
+const key = {
+  alg: "HS256",
+  k: ENV.JWT_SECRET,
+  kid: "powersync",
+  kty: "oct",
+};
 
 const md5 = (data: string) => crypto.createHash("md5").update(data).digest("hex");
 
