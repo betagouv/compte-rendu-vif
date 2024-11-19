@@ -134,6 +134,7 @@ export const UploadImage = ({ reportId }: { reportId: string }) => {
             position="relative"
             w={{ base: "100%", lg: "634px" }}
             h={{ base: "100vh", lg: "792px" }}
+            maxH={{ base: "100vh", lg: "100vh" }}
             bgColor="white"
           >
             {selectedPicture ? (
