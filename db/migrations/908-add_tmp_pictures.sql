@@ -4,4 +4,4 @@ CREATE TABLE tmp_pictures (
     "createdAt" TIMESTAMP
 );
 
-ALTER TABLE tmp_pictures ENABLE ELECTRIC;
+ALTER PUBLICATION powersync ADD TABLE "tmp_pictures";

@@ -8,4 +8,4 @@ CREATE TABLE clause_v2 (
   ,text    text NOT NULL
 );
 
-ALTER TABLE clause_v2 ENABLE ELECTRIC;
+ALTER PUBLICATION powersync ADD TABLE "clause_v2";

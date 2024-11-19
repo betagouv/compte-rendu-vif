@@ -148,18 +148,6 @@ export class UserService {
       kty: "oct",
     };
 
-    // const key = jose.importJWK({ alg: "HS256", k: ENV.JWT_SECRET, kid: "powersync", kty: "oct" });
-
-    // const data = new jose.SignJWT({}).setProtectedHeader({ alg: "HS256", kid: "powersync" })
-    // .setSubject(user.id)
-    // .setIssuedAt()
-    // .setIssuer('test-client')
-    // .setAudience(['powersync-dev'])
-    // .setExpirationTime('24h')
-    // .sign(kje);
-
-    // return
-
     const token = jwt.sign({}, Buffer.from(key.k, "base64"), {
       algorithm: key.alg as any,
       keyid: key.kid,
@@ -168,8 +156,6 @@ export class UserService {
       audience: ["powersync"],
       expiresIn: "1h",
     });
-
-    // console.log(this.validateToken(token));
 
     return { token, expiresAt };
   }
@@ -207,11 +193,14 @@ export class UserService {
       },
       ENV.JWT_REFRESH_SECRET,
     );
+
     return token;
   }
 
   validateToken(token: string) {
-    return jwt.verify(token, ENV.JWT_SECRET) as { sub: string };
+    return jwt.verify(token, Buffer.from(key.k, "base64"), {
+      algorithms: [key.alg as any],
+    });
   }
 
   validateRefreshToken(token: string) {

@@ -15,7 +15,7 @@ CREATE TABLE "udap"(
     ,udap_text       TEXT
 );
 
-ALTER TABLE "udap" ENABLE ELECTRIC;
+CREATE PUBLICATION powersync FOR TABLE "udap";
     
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "user" (
@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS "internal_user" (
     "userId" text NOT NULL REFERENCES "user"(id) ON DELETE CASCADE
 );
 
-ALTER TABLE "user" ENABLE ELECTRIC;
+ALTER PUBLICATION powersync ADD TABLE "user";
 
 CREATE TABLE IF NOT EXISTS "delegation" (
     "createdBy" text NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
@@ -43,4 +43,4 @@ CREATE TABLE IF NOT EXISTS "delegation" (
 );
 
 
-ALTER TABLE "delegation" ENABLE ELECTRIC;
+ALTER PUBLICATION powersync ADD TABLE "delegation";

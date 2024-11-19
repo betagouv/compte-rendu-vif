@@ -9,7 +9,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ErrorBoundary } from "react-error-boundary";
 import { registerSW } from "virtual:pwa-register";
 import { initFonts } from "@cr-vif/pdf";
-import { db, setupPowersync } from "./db/db";
+import { powerSyncDb, setupPowersync } from "./db/db";
 import { PowerSyncContext } from "@powersync/react";
 import { TestPowersync } from "./features/testPowersync";
 
@@ -34,7 +34,7 @@ const queryClient = new QueryClient({
 setupPowersync();
 
 const WithPowersync = ({ children }: PropsWithChildren) => {
-  return <PowerSyncContext.Provider value={db}>{children}</PowerSyncContext.Provider>;
+  return <PowerSyncContext.Provider value={powerSyncDb}>{children}</PowerSyncContext.Provider>;
 };
 
 ReactDOM.createRoot(document.getElementById("root")!).render(

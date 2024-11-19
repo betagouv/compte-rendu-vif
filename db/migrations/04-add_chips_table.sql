@@ -7,4 +7,4 @@ CREATE TABLE clause(
   , PRIMARY KEY (key, value, udap_id)
 );
 
-ALTER TABLE clause ENABLE ELECTRIC;
+ALTER PUBLICATION powersync ADD TABLE "clause";

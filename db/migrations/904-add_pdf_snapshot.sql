@@ -6,4 +6,4 @@ CREATE TABLE pdf_snapshot (
     user_id TEXT
 );
 
-ALTER TABLE pdf_snapshot ENABLE ELECTRIC;
+ALTER PUBLICATION powersync ADD TABLE "pdf_snapshot";

@@ -32,6 +32,7 @@
     "@journeyapps/wa-sqlite": "^0.4.2",
     "@mikecousins/react-pdf": "^7.1.0",
     "@mui/material": "^5.15.15",
+    "@powersync/kysely-driver": "^1.0.0",
     "@powersync/react": "^1.5.1",
     "@powersync/web": "^1.10.2",
     "@prisma/client": "^4.8.1",
