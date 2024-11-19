@@ -4,6 +4,7 @@ import { useLiveQuery } from "electric-sql/react";
 import { useUser } from "../contexts/AuthContext";
 import type { Report } from "@cr-vif/electric-client/frontend";
 import { db } from "../db";
+import { db as powerSyncDb } from "../db/db";
 import Button from "@codegouvfr/react-dsfr/Button";
 import Badge from "@codegouvfr/react-dsfr/Badge";
 import { css, cx } from "#styled-system/css";
@@ -17,6 +18,7 @@ import { Pagination } from "@codegouvfr/react-dsfr/Pagination";
 import welcomeImage from "../assets/welcome.svg";
 import { useIsDesktop } from "../hooks/useIsDesktop";
 import { chunk, makeArrayOf } from "pastable";
+import { useQuery } from "@powersync/react";
 
 export type ReportWithUser = Report & { user?: { email: string; name: string } };
 
@@ -24,6 +26,21 @@ export const MyReports = () => {
   const [page, setPage] = useState(0);
 
   const user = useUser()!;
+
+  const a = useQuery(
+    powerSyncDb
+      .selectFrom("report")
+
+      .where("disabled", "=", 0)
+      .where((eb) => eb.or([eb("createdBy", "=", user.id), eb("redactedById", "=", user.id)]))
+      .limit(20)
+      .offset(page * 20)
+      .orderBy("createdAt desc")
+      .selectAll(),
+    // .innerJoin()
+  );
+
+  console.log(a);
   const myReports = useLiveQuery(
     db.report.liveMany({
       where: { disabled: false, OR: [{ createdBy: user.id }, { redactedById: user.id }] },
