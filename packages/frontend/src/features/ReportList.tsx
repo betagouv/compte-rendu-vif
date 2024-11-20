@@ -40,7 +40,7 @@ export const MyReports = () => {
     // .innerJoin()
   );
 
-  console.log(a);
+  // console.log(a);
   const myReports = useLiveQuery(
     db.report.liveMany({
       where: { disabled: false, OR: [{ createdBy: user.id }, { redactedById: user.id }] },

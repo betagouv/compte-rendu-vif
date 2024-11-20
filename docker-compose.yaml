@@ -86,7 +86,7 @@ services:
     depends_on:
       mongo-rs-init:
         condition: service_completed_successfully
-      pg: # This is not required, but is nice to have
+      pg:
         condition: service_healthy
     image: journeyapps/powersync-service:latest
     command: ["start", "-r", "unified"]

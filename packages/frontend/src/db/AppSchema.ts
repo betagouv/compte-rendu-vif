@@ -25,9 +25,32 @@ const report = new Table({
   zipCode: column.text,
 });
 
+const udap = new Table({
+  department: column.text,
+  completeCoords: column.text,
+  visible: column.integer,
+  name: column.text,
+  address: column.text,
+  zipCode: column.text,
+  city: column.text,
+  phone: column.text,
+  email: column.text,
+  marianne_text: column.text,
+  drac_text: column.text,
+  udap_text: column.text,
+});
+
+const user = new Table({
+  name: column.text,
+  udap_id: column.text,
+});
+
 export const AppSchema = new Schema({
   report,
+  udap,
+  user,
 });
 
 export type Database = (typeof AppSchema)["types"];
 export type Report = Database["report"];
+export type Udap = Database["udap"];

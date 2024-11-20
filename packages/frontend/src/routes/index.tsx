@@ -13,7 +13,8 @@ import { useState } from "react";
 import { v4 } from "uuid";
 import { ElectricStatus, useElectricStatus, useUser } from "../contexts/AuthContext";
 import { AllReports, MyReports } from "../features/ReportList";
-import { powerSyncDb } from "../db/db";
+import { db, powerSyncDb } from "../db/db";
+import { useQuery } from "@powersync/react";
 
 const Index = () => {
   const [search, setSearch] = useState("");
@@ -38,11 +39,16 @@ const Index = () => {
     },
   ];
 
+  const udaps = useQuery(db.selectFrom("udap").where("id", "=", user.udap_id).selectAll());
+  const reports = useQuery(db.selectFrom("user").selectAll());
+  console.log("udaps", reports);
+
   const navigate = useNavigate();
 
   const createReportMutation = useMutation({
     mutationFn: async () => {
-      await powerSyncDb.execute(
+      const id = "report-" + v4();
+      const result = await powerSyncDb.execute(
         `INSERT INTO report (
           "id",
           "createdBy",
@@ -53,8 +59,10 @@ const Index = () => {
           "redactedBy",
           "redactedById"
         ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
-        ["report-" + v4(), user.id, new Date(), new Date(), false, user.udap.id, user.name, user.id],
+        [id, user.id, new Date(), new Date(), false, user.udap.id, user.name, user.id],
       );
+
+      return id;
     },
     // db.report.create({
     //   data: {
@@ -68,8 +76,8 @@ const Index = () => {
     //     redactedById: user.id,
     //   },
     // }),
-    onSuccess: (data) => {
-      data.id && navigate({ to: "/edit/$reportId", params: { reportId: data.id } });
+    onSuccess: (id) => {
+      id && navigate({ to: "/edit/$reportId", params: { reportId: id } });
     },
   });
 

@@ -16,7 +16,5 @@ export const db = wrapPowerSyncWithKysely<Database>(powerSyncDb);
 export const setupPowersync = async () => {
   const connector = new Connector();
   await powerSyncDb.init();
-  await powerSyncDb.connect(connector, {
-    params: {},
-  });
+  await powerSyncDb.connect(connector, {});
 };
