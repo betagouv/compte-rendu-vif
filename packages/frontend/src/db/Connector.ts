@@ -24,9 +24,16 @@ export class Connector implements PowerSyncBackendConnector {
     };
   }
 
+  hasUpdated = false;
+
   async uploadData(database: AbstractPowerSyncDatabase) {
     // console.log(database);
-    // console.log(await database.getCrudBatch());
+    console.log(await database.getCrudBatch());
+    const transation = await database.getNextCrudTransaction();
+
+    window.complete = transation?.complete;
+    console.log(transation);
+
     // const a: CrudBatch;
     // Implement uploadData to send local changes to your backend service.
     // You can omit this method if you only want to sync data from the database to the client

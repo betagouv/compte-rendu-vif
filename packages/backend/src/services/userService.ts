@@ -3,21 +3,18 @@ import jwt from "jsonwebtoken";
 import crypto from "node:crypto";
 import { db } from "../db/db";
 
-import type { Prisma } from "@cr-vif/electric-client/backend";
-import * as Schemas from "@cr-vif/electric-client/typebox";
 import { Type } from "@sinclair/typebox";
-import { ENV, isDev } from "../envVars";
+import { ENV, isDev, isTest } from "../envVars";
 import { makeDebug } from "../features/debug";
 import { AppError } from "../features/errors";
 import { sendPasswordResetMail } from "../features/mail";
-import jose from "jose";
+import { InternalUser, User } from "../db-types";
+import { Expression, Simplify, sql } from "kysely";
+import { jsonArrayFrom, jsonObjectFrom } from "kysely/helpers/postgres";
 
 const debug = makeDebug("user_service");
 export class UserService {
-  async createUser(
-    payload: Pick<Prisma.internal_userUncheckedCreateInput, "email" | "password"> &
-      Pick<Prisma.userUncheckedCreateInput, "name" | "udap_id">,
-  ) {
+  async createUser(payload: Pick<InternalUser, "email" | "password"> & Pick<User, "name" | "udap_id">) {
     await assertEmailDoesNotAlreadyExist(payload.email);
     await assertEmailInWhitelist(payload.email);
 
@@ -26,73 +23,83 @@ export class UserService {
     const { name, udap_id, ...rest } = payload;
 
     const id = "user-" + crypto.randomUUID();
-    const internalUser = await db.internal_user.create({
-      data: {
+    await db.insertInto("user").values({ id, name, udap_id }).returningAll().execute();
+
+    await db
+      .insertInto("internal_user")
+      .values({
         id,
         ...rest,
         role: "user",
-        user: {
-          create: {
-            id,
-            name,
-            udap_id,
-          },
-        },
+        userId: id,
         password,
-      },
-      include: {
-        user: {
-          include: {
-            udap: true,
-          },
-        },
-      },
-    });
+      })
+      .execute();
 
-    const user = internalUser.user;
+    const { token, expiresAt } = this.generateJWT(id);
 
-    const { token, expiresAt } = this.generateJWT(internalUser);
+    const { user } = (await this.getUserById(id))!;
 
-    return { user: user, token, expiresAt, refreshToken: this.generateRefreshToken(internalUser) };
-  }
-
-  async getUserByEmail(email: string) {
-    const user = await db.internal_user.findFirst({
-      where: { email },
-      include: { user: { include: { udap: true } } },
-    });
-    assertUserExists(user);
-    return user!;
+    return { user: user, token, expiresAt, refreshToken: this.generateRefreshToken(id) };
   }
 
   async getUserById(id: string) {
-    const user = await db.internal_user.findFirst({ where: { id }, include: { user: { include: { udap: true } } } });
+    const internalUserResults = await db
+      .selectFrom("internal_user")
+      .where("internal_user.id", "=", id)
+      .select((eb) => [
+        jsonObjectFrom(
+          eb
+            .selectFrom("user")
+            .whereRef("internal_user.id", "=", "user.id")
+            .selectAll()
+            .select((eb) => [
+              jsonObjectFrom(eb.selectFrom("udap").whereRef("user.udap_id", "=", "udap.id").selectAll()).as("udap"),
+            ]),
+        ).as("user"),
+        // jsonObjectFrom(eb.selectFrom("udap").whereRef())
+      ])
+      .selectAll()
+      .execute();
+    // .innerJoin("user", "internal_user.userId", "user.id")
+    // .innerJoin("udap", "user.udap_id", "udap.id")
+    // .selectAll()
+    // .execute();
+
+    const user = internalUserResults[0];
+
+    // const user = await db.internal_user.findFirst({ where: { id }, include: { user: { include: { udap: true } } } });
     assertUserExists(user);
 
     return user;
   }
 
-  async login(payload: Pick<Prisma.internal_userCreateInput, "email" | "password">) {
-    const user = await db.internal_user.findFirst({
-      where: { email: payload.email },
-      include: {
-        user: {
-          include: {
-            udap: true,
-          },
-        },
-      },
-    });
-    assertUserExists(user);
-    await assertPasswordsMatch(payload.password, user!.password);
+  async login(payload: Pick<InternalUser, "email" | "password">) {
+    const internalUserInsertResults = await db
+      .selectFrom("internal_user")
+      .where("email", "=", payload.email)
+      .selectAll()
+      .execute();
+    const internalUser = internalUserInsertResults[0]!;
 
-    const { token, expiresAt } = this.generateJWT(user!);
+    assertUserExists(internalUser);
+    await assertPasswordsMatch(payload.password, internalUser.password);
 
-    return { user: user?.user, token, expiresAt, refreshToken: this.generateRefreshToken(user!) };
+    const { token, expiresAt } = this.generateJWT(internalUser.id);
+
+    const { user } = (await this.getUserById(internalUser.id))!;
+
+    return { user, token, expiresAt, refreshToken: this.generateRefreshToken(internalUser.id) };
+  }
+
+  async addToWhitelist(email: string) {
+    await db.insertInto("whitelist").values({ email }).execute();
+    return { message: "Courriel ajouté à la liste blanche." };
   }
 
   async generateResetLink(email: string) {
-    const user = await db.internal_user.findFirst({ where: { email } });
+    const userResults = await db.selectFrom("internal_user").where("email", "=", email).selectAll().execute();
+    const user = userResults[0]!;
     assertUserExists(user, "Aucun utilisateur avec ce courriel n'a été trouvé.");
 
     const temporaryLink = crypto.randomUUID();
@@ -100,10 +107,15 @@ export class UserService {
 
     const encryptedLink = md5(temporaryLink);
 
-    await db.internal_user.update({
-      where: { id: user!.id },
-      data: { temporaryLink: encryptedLink, temporaryLinkExpiresAt },
-    });
+    await db
+      .updateTable("internal_user")
+      .set({ temporaryLink: encryptedLink, temporaryLinkExpiresAt })
+      .where("id", "=", user.id)
+      .execute();
+
+    if (isTest) {
+      return temporaryLink;
+    }
 
     await sendPasswordResetMail({ email: user!.email, temporaryLink });
 
@@ -116,17 +128,21 @@ export class UserService {
   async resetPassword({ temporaryLink, newPassword }: { temporaryLink: string; newPassword: string }) {
     const encryptedLink = md5(temporaryLink);
 
-    const user = await db.internal_user.findFirst({
-      where: { temporaryLink: encryptedLink },
-    });
+    const userResults = await db
+      .selectFrom("internal_user")
+      .where("temporaryLink", "=", encryptedLink)
+      .selectAll()
+      .execute();
+    const user = userResults[0];
 
     await assertLinkIsValid(user, encryptedLink);
     const password = await encryptPassword(newPassword);
 
-    await db.internal_user.update({
-      where: { id: user!.id },
-      data: { password, temporaryLink: null, temporaryLinkExpiresAt: null },
-    });
+    await db
+      .updateTable("internal_user")
+      .set({ password, temporaryLink: null, temporaryLinkExpiresAt: null })
+      .where("id", "=", user!.id)
+      .execute();
 
     return { message: "Votre mot de passe a été modifié avec succès." };
   }
@@ -135,10 +151,10 @@ export class UserService {
     const payload = this.validateToken(token);
     const { sub } = payload;
     if (!sub) throw new AppError(403, "Token invalide");
-    return this.getUserById(sub);
+    return this.getUserById(sub as string);
   }
 
-  generateJWT(user: Prisma.internal_userUncheckedCreateInput) {
+  generateJWT(userId: InternalUser["id"]) {
     const expiresAt = addHours(new Date(), 1).toISOString();
 
     const key = {
@@ -151,7 +167,7 @@ export class UserService {
     const token = jwt.sign({}, Buffer.from(key.k, "base64"), {
       algorithm: key.alg as any,
       keyid: key.kid,
-      subject: user.id,
+      subject: userId,
       issuer: "test-client",
       audience: ["powersync"],
       expiresIn: "1h",
@@ -164,7 +180,7 @@ export class UserService {
     debug("refreshing token", token?.slice(0, 6), refreshToken?.slice(0, 6));
     try {
       const { sub } = this.validateToken(token);
-      const rToken = refreshToken ?? this.generateRefreshToken((await this.getUserById(sub))!);
+      const rToken = refreshToken ?? this.generateRefreshToken(sub as string);
       debug("token is valid");
       return { token, refreshToken: rToken };
     } catch (e: any) {
@@ -174,7 +190,7 @@ export class UserService {
           const { sub } = this.validateRefreshToken(refreshToken);
           const user = await this.getUserById(sub);
 
-          const { token, expiresAt } = this.generateJWT(user!);
+          const { token, expiresAt } = this.generateJWT(user!.id);
           return { token, expiresAt, refreshToken, user: user!.user };
         } catch (e) {
           debug("invalid refresh token", e);
@@ -186,10 +202,10 @@ export class UserService {
     }
   }
 
-  generateRefreshToken(user: Prisma.internal_userUncheckedCreateInput) {
+  generateRefreshToken(userId: InternalUser["id"]) {
     const token = jwt.sign(
       {
-        sub: user.id,
+        sub: userId,
       },
       ENV.JWT_REFRESH_SECRET,
     );
@@ -217,13 +233,6 @@ const key = {
 
 const md5 = (data: string) => crypto.createHash("md5").update(data).digest("hex");
 
-export const userAndTokenTSchema = Type.Object({
-  user: Type.Optional(Type.Pick(Schemas.user, ["id", "name", "udap_id", "udap"])),
-  token: Type.String(),
-  expiresAt: Type.String(),
-  refreshToken: Type.String(),
-});
-
 const encryptPassword = (password: string) => {
   return new Promise<string>((resolve, reject) => {
     const salt = crypto.randomBytes(16).toString("hex");
@@ -246,10 +255,7 @@ const verifyPassword = (password: string, hash: string) => {
   });
 };
 
-const assertLinkIsValid = async (
-  user: Prisma.internal_userUncheckedCreateInput | null | undefined,
-  encryptedLink: string,
-) => {
+const assertLinkIsValid = async (user: InternalUser | undefined, encryptedLink: string) => {
   if (!user) {
     throw new AppError(403, "Le lien est invalide");
   }
@@ -269,7 +275,7 @@ const assertLinkIsValid = async (
 };
 
 const assertUserExists = (user: any, errorDescription?: string) => {
-  if (!user) {
+  if (!user || !user.id) {
     throw new AppError(403, "Le courriel ou le mot de passe est incorrect");
   }
 };
@@ -283,22 +289,20 @@ const assertPasswordsMatch = async (password: string, hash: string) => {
 };
 
 const assertEmailDoesNotAlreadyExist = async (email: string) => {
-  const existingUser = await db.internal_user.findFirst({
-    where: {
-      email,
-    },
-  });
+  const existingUserResults = await db.selectFrom("internal_user").where("email", "=", email).selectAll().execute();
+  const existingUser = existingUserResults[0];
 
   if (existingUser) {
     throw new AppError(400, "Un utilisateur avec ce courriel existe déjà");
   }
 
-  return existingUser;
+  return null;
 };
 
 const assertEmailInWhitelist = async (email: string) => {
   if (isDev) return;
-  const whitelist = await db.whitelist.findFirst({ where: { email } });
+  const whitelistResults = await db.selectFrom("whitelist").where("email", "=", email).selectAll().execute();
+  const whitelist = whitelistResults[0];
 
   if (!whitelist) {
     throw new AppError(403, "Votre courriel n'est pas autorisée à accéder à cette application");
