@@ -24,6 +24,7 @@ import { css } from "#styled-system/css";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { ImageCanvas, Line } from "./DrawingCanvas";
 import { api } from "../../api";
+import imageCompression from "browser-image-compression";
 
 const modal = createModal({
   id: "edit-picture",
@@ -50,8 +51,6 @@ export const UploadImage = ({ reportId }: { reportId: string }) => {
     }
   });
 
-  // const linesQuery = useLiveQuery(db.picture_lines.liveMany({ where: { pictureId: selectedPicture?.id } }));
-
   const linesQuery = useQuery({
     queryKey: ["lines", selectedPicture?.id],
     queryFn: async () => {
@@ -66,7 +65,7 @@ export const UploadImage = ({ reportId }: { reportId: string }) => {
 
   const uploadImageMutation = useMutation(async (file: File) => {
     const picId = v4();
-    const buffer = await getArrayBufferFromBlob(file);
+    const buffer = await processImage(file);
 
     await db.tmp_pictures.create({ data: { id: picId, reportId, createdAt: new Date() } });
     await set(picId, buffer, getPicturesStore());
@@ -154,7 +153,6 @@ export const UploadImage = ({ reportId }: { reportId: string }) => {
         type="button"
         iconId="ri-add-line"
         priority="secondary"
-        disabled
         nativeButtonProps={{
           type: "button",
           onClick: () => ref.current?.click(),
@@ -162,9 +160,9 @@ export const UploadImage = ({ reportId }: { reportId: string }) => {
       >
         Ajouter photo
       </Button>
-      <styled.div mt="16px" color="gray">
+      {/* <styled.div mt="16px" color="gray">
         Le téléversement d'image est désactivé temporairement, mais il revient optimisé bientôt.
-      </styled.div>
+      </styled.div> */}
       <styled.input ref={ref as any} type="file" accept="image/*" onChange={onChange} display="none" />
       <ReportPictures setSelectedPicture={setSelectedPicture} statusMap={statusMap} />
     </>
@@ -415,10 +413,19 @@ const statusData = {
   error: { label: "Erreur", bgColor: "#FEC9C9", color: "#853C3C", icon: "fr-icon-warning-line" },
 };
 
-async function getArrayBufferFromBlob(blob: Blob) {
-  return new Promise<ArrayBuffer>((resolve, _) => {
-    const reader = new FileReader();
-    reader.onloadend = () => resolve(reader.result as ArrayBuffer);
-    reader.readAsArrayBuffer(blob);
-  });
-}
+const processImage = async (file: File) => {
+  try {
+    const options = {
+      maxSizeMB: 1,
+      maxWidthOrHeight: 1920,
+      useWebWorker: true,
+      preserveExif: false,
+    };
+
+    const compressedFile = await imageCompression(file, options);
+    return compressedFile.arrayBuffer();
+  } catch (error) {
+    console.error("Error processing image:", error);
+    throw error;
+  }
+};
