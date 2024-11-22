@@ -154,6 +154,7 @@ export const UploadImage = ({ reportId }: { reportId: string }) => {
         type="button"
         iconId="ri-add-line"
         priority="secondary"
+        disabled
         nativeButtonProps={{
           type: "button",
           onClick: () => ref.current?.click(),
@@ -161,6 +162,9 @@ export const UploadImage = ({ reportId }: { reportId: string }) => {
       >
         Ajouter photo
       </Button>
+      <styled.div mt="16px" color="gray">
+        Le téléversement d'image est désactivé temporairement, mais il revient optimisé bientôt.
+      </styled.div>
       <styled.input ref={ref as any} type="file" accept="image/*" onChange={onChange} display="none" />
       <ReportPictures setSelectedPicture={setSelectedPicture} statusMap={statusMap} />
     </>
