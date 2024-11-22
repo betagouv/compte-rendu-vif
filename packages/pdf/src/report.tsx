@@ -33,7 +33,6 @@ Font.registerHyphenationCallback((word) => {
 });
 
 export const ReportPDFDocument = ({ udap, htmlString, images, pictures }: ReportPDFDocumentProps) => {
-  console.log(pictures);
   return (
     <Document onRender={console.log}>
       <Page
@@ -184,6 +183,12 @@ export const ReportPDFDocument = ({ udap, htmlString, images, pictures }: Report
       {pictures
         ? pictures
             .filter((pic) => !!pic.url)
+            .sort((pic1, pic2) => {
+              const pic1Date = pic1.createdAt ? new Date(pic1.createdAt) : new Date();
+              const pic2Date = pic2.createdAt ? new Date(pic2.createdAt) : new Date();
+
+              return pic1Date.getTime() - pic2Date.getTime();
+            })
             .map((pic, index) => (
               <Page
                 break={index > 0}

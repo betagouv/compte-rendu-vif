@@ -66,6 +66,7 @@ export const UploadImage = ({ reportId }: { reportId: string }) => {
 
   const uploadImageMutation = useMutation(async (file: File) => {
     const picId = v4();
+    ref.current!.value = "";
     const buffer = await processImage(file);
 
     await db.tmp_pictures.create({ data: { id: picId, reportId, createdAt: new Date() } });
@@ -161,7 +162,7 @@ export const UploadImage = ({ reportId }: { reportId: string }) => {
       <Button
         type="button"
         iconId="ri-add-line"
-        disabled={!canUploadImage}
+        // disabled={!canUploadImage}
         priority="secondary"
         nativeButtonProps={{
           type: "button",
