@@ -25,7 +25,6 @@ import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { ImageCanvas, Line } from "./DrawingCanvas";
 import { api } from "../../api";
 import imageCompression from "browser-image-compression";
-import { useUser } from "../../contexts/AuthContext";
 
 const modal = createModal({
   id: "edit-picture",
@@ -113,14 +112,6 @@ export const UploadImage = ({ reportId }: { reportId: string }) => {
     return () => broadcastChannel.removeEventListener("message", listener);
   }, []);
 
-  const user = useUser()!;
-
-  // TODO delete this line, this is a temporary test
-  const canUploadImage = [
-    "user-e0960bb7-355e-4194-a8a9-5f059512e282",
-    "user-607d5ff4-df93-4823-bd94-1626d595ec74",
-  ].includes(user.id);
-
   return (
     <>
       <styled.div
@@ -171,11 +162,11 @@ export const UploadImage = ({ reportId }: { reportId: string }) => {
       >
         Ajouter photo
       </Button>
-      {!canUploadImage ? (
+      {/* {!canUploadImage ? (
         <styled.div mt="16px" color="gray">
           Le téléversement d'image est désactivé temporairement, mais il revient optimisé bientôt.
         </styled.div>
-      ) : null}
+      ) : null} */}
       <styled.input ref={ref as any} type="file" accept="image/*" onChange={onChange} display="none" />
       <ReportPictures setSelectedPicture={setSelectedPicture} statusMap={statusMap} />
     </>
