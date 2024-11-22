@@ -12,6 +12,7 @@ import { staticDataPlugin } from "./routes/staticDataRoutes";
 import { pdfPlugin } from "./routes/pdfRoutes";
 import { uploadPlugin } from "./routes/uploadRoutes";
 import { sentry } from "./features/sentry";
+import { syncPlugin } from "./routes/syncRoutes";
 
 const debug = makeDebug("fastify");
 
@@ -57,6 +58,7 @@ export const initFastify = async () => {
       await instance.register(staticDataPlugin);
       await instance.register(uploadPlugin, { prefix: "/upload" });
       await instance.register(pdfPlugin, { prefix: "/pdf" });
+      await instance.register(syncPlugin);
     },
     { prefix: "/api" },
   );

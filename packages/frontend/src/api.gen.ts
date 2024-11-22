@@ -10,31 +10,10 @@ export namespace Endpoints {
     method: "POST";
     path: "/api/create-user";
     parameters: {
-      body: { name: string; udap_id: string; email: string; password: string };
+      body: { email: string; password: string; name: string; udap_id: string };
     };
     response: {
-      user?:
-        | {
-            id: string;
-            name: string;
-            udap_id: string;
-            udap: {
-              id: string;
-              department: string;
-              completeCoords?: string | undefined;
-              visible?: boolean | undefined;
-              name?: string | undefined;
-              address?: string | undefined;
-              zipCode?: string | undefined;
-              city?: string | undefined;
-              phone?: string | undefined;
-              email?: string | undefined;
-              marianne_text?: string | undefined;
-              drac_text?: string | undefined;
-              udap_text?: string | undefined;
-            };
-          }
-        | undefined;
+      user?: { id: string; name: string; udap_id: string; udap: unknown } | undefined;
       token: string;
       expiresAt: string;
       refreshToken: string;
@@ -47,28 +26,7 @@ export namespace Endpoints {
       body: { email: string; password: string };
     };
     response: {
-      user?:
-        | {
-            id: string;
-            name: string;
-            udap_id: string;
-            udap: {
-              id: string;
-              department: string;
-              completeCoords?: string | undefined;
-              visible?: boolean | undefined;
-              name?: string | undefined;
-              address?: string | undefined;
-              zipCode?: string | undefined;
-              city?: string | undefined;
-              phone?: string | undefined;
-              email?: string | undefined;
-              marianne_text?: string | undefined;
-              drac_text?: string | undefined;
-              udap_text?: string | undefined;
-            };
-          }
-        | undefined;
+      user?: { id: string; name: string; udap_id: string; udap: unknown } | undefined;
       token: string;
       expiresAt: string;
       refreshToken: string;
@@ -81,28 +39,7 @@ export namespace Endpoints {
       query: { token: string; refreshToken: string };
     };
     response: {
-      user?:
-        | {
-            id: string;
-            name: string;
-            udap_id: string;
-            udap: {
-              id: string;
-              department: string;
-              completeCoords?: string | undefined;
-              visible?: boolean | undefined;
-              name?: string | undefined;
-              address?: string | undefined;
-              zipCode?: string | undefined;
-              city?: string | undefined;
-              phone?: string | undefined;
-              email?: string | undefined;
-              marianne_text?: string | undefined;
-              drac_text?: string | undefined;
-              udap_text?: string | undefined;
-            };
-          }
-        | undefined;
+      user?: { id: string; name: string; udap_id: string; udap: unknown } | undefined;
       token: string;
       expiresAt: string;
       refreshToken: string;
@@ -162,8 +99,9 @@ export namespace Endpoints {
     method: "POST";
     path: "/api/upload/picture/{pictureId}/lines";
     parameters: {
-      query: { reportId: string };
       path: { pictureId: string };
+
+      body: { lines: Array<{ points: Array<{ x: number; y: number }>; color: string }> };
     };
     response: string;
   };

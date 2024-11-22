@@ -1,5 +1,6 @@
 import { authenticate } from "../routes/authMiddleware";
 import { StaticDataService } from "./staticDataService";
+import { SyncService } from "./syncService";
 import { UploadService } from "./uploadService";
 import { UserService } from "./userService";
 
@@ -11,6 +12,7 @@ const makeServices = () => ({
   user: new UserService(),
   staticData: new StaticDataService(),
   upload: new UploadService(),
+  sync: new SyncService(),
 });
 
 export const getServices = () => {

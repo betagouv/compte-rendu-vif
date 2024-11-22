@@ -17,7 +17,7 @@ const StringEnum = <T extends string[]>(values: [...T]) =>
     enum: values,
   });
 
-const crudBatchTSchema = Type.Object({
+export const crudBatchTSchema = Type.Object({
   id: Type.String(),
   clientId: Type.Number(),
   table: Type.String(),
