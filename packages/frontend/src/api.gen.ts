@@ -121,6 +121,23 @@ export namespace Endpoints {
     };
     response: Partial<{}>;
   };
+  export type post_ApiuploadData = {
+    method: "POST";
+    path: "/api/upload-data";
+    parameters: {
+      body: Array<{
+        crudBatch: Array<{
+          id: string;
+          clientId: number;
+          table: string;
+          transactionId: number;
+          op: string;
+          opData?: Partial<{}> | undefined;
+        }>;
+      }>;
+    };
+    response: Partial<{}>;
+  };
 
   // </Endpoints>
 }
@@ -135,6 +152,7 @@ export type EndpointByMethod = {
     "/api/upload/image": Endpoints.post_Apiuploadimage;
     "/api/upload/picture/{pictureId}/lines": Endpoints.post_ApiuploadpicturePictureIdlines;
     "/api/pdf/report": Endpoints.post_Apipdfreport;
+    "/api/upload-data": Endpoints.post_ApiuploadData;
   };
   get: {
     "/api/refresh-token": Endpoints.get_ApirefreshToken;

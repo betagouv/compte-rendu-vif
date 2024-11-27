@@ -1,8 +1,8 @@
 import { useFormContext, useWatch } from "react-hook-form";
-import type { Report } from "@cr-vif/electric-client/frontend";
 import { ChipGroup, type ChipGroupOption } from "../Chip";
 import { FlexProps } from "#styled-system/jsx";
 import { useChipOptions } from "../../features/chips/useChipOptions";
+import { Report } from "../../db/AppSchema";
 
 export const FurtherInfoChips = (props: FlexProps & { disabled?: boolean }) => {
   const form = useFormContext<Report>();

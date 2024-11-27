@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { db } from "../db";
+// import { db } from "../db";
+import { db } from "../db/db";
 import { type UseFormReturn, useWatch } from "react-hook-form";
 import useDebounce from "react-use/lib/useDebounce";
 import { Banner } from "./Banner";
@@ -11,10 +12,10 @@ import { sva, cx, css } from "#styled-system/css";
 import { useNetworkState } from "react-use";
 import { useIntersectionObserver } from "../hooks/useIntersectionObserver";
 import Input from "@codegouvfr/react-dsfr/Input";
-import { Report } from "@cr-vif/electric-client/frontend";
 import { useEffect } from "react";
 import { ElectricStatus, useElectricStatus } from "../contexts/AuthContext";
 import { useIsFormDisabled } from "../features/DisabledContext";
+import { Report } from "../db/AppSchema";
 
 export function SyncFormBanner({ form, baseObject }: { form: UseFormReturn<Report>; baseObject: Record<string, any> }) {
   const newObject = useWatch({ control: form.control });
@@ -257,12 +258,9 @@ export type SyncFormStatus = "offline" | "pending" | "saved" | "saving";
 async function syncObject(id: string, diff: Record<string, any>) {
   if (!Object.keys(diff).length) return;
 
-  console.log("saving", diff);
+  console.log("saving", id, diff);
 
-  await db.report.update({
-    where: { id },
-    data: diff,
-  });
+  await db.updateTable("report").where("id", "=", id).set(diff).execute();
 }
 
 function isPrimitive(value: any) {

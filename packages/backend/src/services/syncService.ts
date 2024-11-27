@@ -22,7 +22,8 @@ export const crudBatchTSchema = Type.Object({
   clientId: Type.Number(),
   table: Type.String(),
   transactionId: Type.Number(),
-  op: StringEnum(["PUT", "PATCH", "DELETE"]),
+  op: Type.String(),
+  // op: StringEnum(["PUT", "PATCH", "DELETE"]),
   opData: Type.Optional(Type.Object({})),
 });
 

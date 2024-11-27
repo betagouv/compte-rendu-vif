@@ -26,7 +26,6 @@
     "cross-env": "^7.0.3",
     "dotenv": "^16.4.5",
     "dotenv-expand": "^11.0.6",
-    "electric-sql": "^0.12.1",
     "prettier": "^3.2.5",
     "prisma": "^4.8.1",
     "typed-openapi": "^0.4.1",

@@ -41,7 +41,6 @@ const Index = () => {
 
   const udaps = useQuery(db.selectFrom("udap").where("id", "=", user.udap_id).selectAll());
   const reports = useQuery(db.selectFrom("user").selectAll());
-  console.log("udaps", reports);
 
   const navigate = useNavigate();
 

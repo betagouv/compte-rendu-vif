@@ -9,6 +9,6 @@ export const syncPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
 };
 
 const uploadDataTSchema = {
-  body: applyCrudBatchTSchema,
+  body: Type.Array(applyCrudBatchTSchema),
   response: { 200: Type.Any() },
 };

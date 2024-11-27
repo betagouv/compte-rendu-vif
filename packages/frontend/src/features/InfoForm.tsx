@@ -6,10 +6,8 @@ import { useTabsContext } from "@ark-ui/react/tabs";
 import Button from "@codegouvfr/react-dsfr/Button";
 import Input from "@codegouvfr/react-dsfr/Input";
 import Select from "@codegouvfr/react-dsfr/Select";
-import type { Pictures, Report, Tmp_pictures } from "@cr-vif/electric-client/frontend";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { format, parse } from "date-fns";
-import { useLiveQuery } from "electric-sql/react";
 import { get, set } from "idb-keyval";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
@@ -21,6 +19,7 @@ import { ServiceInstructeurSelect } from "./ServiceInstructeurSelect";
 import { deleteImageFromIdb, getPicturesStore, getToUploadStore, getUploadStatusStore, syncImages } from "./idb";
 import Badge from "@codegouvfr/react-dsfr/Badge";
 import { UploadImage } from "./upload/UploadImage";
+import { Report } from "../db/AppSchema";
 
 export const InfoForm = () => {
   const form = useFormContext<Report>();
