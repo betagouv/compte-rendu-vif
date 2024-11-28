@@ -77,8 +77,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0
       '@fastify/type-provider-typebox':
-        specifier: ^5.0.1
-        version: 5.0.1(@sinclair/typebox@0.34.8)
+        specifier: ^4.1.0
+        version: 4.1.0(@sinclair/typebox@0.32.20)
       '@prisma/client':
         specifier: ^4.8.1
         version: 4.16.2(prisma@4.8.1)
@@ -89,8 +89,8 @@ importers:
         specifier: ^7.70.0
         version: 7.119.2
       '@sinclair/typebox':
-        specifier: ^0.34.8
-        version: 0.34.8
+        specifier: ^0.32.20
+        version: 0.32.20
       '@types/pg':
         specifier: ^8.11.10
         version: 8.11.10
@@ -114,7 +114,7 @@ importers:
         version: 0.30.6(@types/better-sqlite3@7.6.9)(@types/pg@8.11.10)(@types/react@18.2.74)(kysely@0.27.4)(pg@8.13.1)(postgres@3.4.4)(react@18.2.0)
       drizzle-typebox:
         specifier: ^0.1.1
-        version: 0.1.1(@sinclair/typebox@0.34.8)(drizzle-orm@0.30.6)
+        version: 0.1.1(@sinclair/typebox@0.32.20)(drizzle-orm@0.30.6)
       drizzle-zod:
         specifier: ^0.5.1
         version: 0.5.1(drizzle-orm@0.30.6)(zod@3.22.4)
@@ -4225,12 +4225,12 @@ packages:
       - supports-color
     dev: false
 
-  /@fastify/type-provider-typebox@5.0.1(@sinclair/typebox@0.34.8):
-    resolution: {integrity: sha512-zepdCWmgvpcLS06DN5vznMJLUP/5gLt/X3lVXZvddXmHSImQxm2Em+dV64b6x9P4G4V9DKuS4EL08ASjpCboNA==}
+  /@fastify/type-provider-typebox@4.1.0(@sinclair/typebox@0.32.20):
+    resolution: {integrity: sha512-mXNBaBEoS6Yf4/O2ujNhu9yEZwvBC7niqRESsiftE9NP1hV6ZdV3ZsFbPf1S520BK3rTZ0F28zr+sMdIXNJlfw==}
     peerDependencies:
       '@sinclair/typebox': '>=0.26 <=0.33'
     dependencies:
-      '@sinclair/typebox': 0.34.8
+      '@sinclair/typebox': 0.32.20
     dev: false
 
   /@floating-ui/core@1.6.0:
@@ -5891,10 +5891,6 @@ packages:
 
   /@sinclair/typebox@0.32.20:
     resolution: {integrity: sha512-ziK497ILSIYMxD/thl496idIb03IZPlha04itLQu1xAFQbumWZ+Dj4PMMCkDRpAYhvVSdmRlTjGu2B2MA5RplQ==}
-
-  /@sinclair/typebox@0.34.8:
-    resolution: {integrity: sha512-PuVkV/MmJOsjem7FIlmuPhd2Owvq4v+ZVvN6wxWuT1NduGDzz2jlc4xIvPQSUE0yS13BRaYOVNq9rnIOkucGVA==}
-    dev: false
 
   /@smithy/abort-controller@2.2.0:
     resolution: {integrity: sha512-wRlta7GuLWpTqtFfGo+nZyOO1vEvewdNR1R4rTxpC8XU6vG/NDyrFBhwLZsqg1NUoR1noVaXJPC/7ZK47QCySw==}
@@ -10250,13 +10246,13 @@ packages:
       react: 18.2.0
     dev: false
 
-  /drizzle-typebox@0.1.1(@sinclair/typebox@0.34.8)(drizzle-orm@0.30.6):
+  /drizzle-typebox@0.1.1(@sinclair/typebox@0.32.20)(drizzle-orm@0.30.6):
     resolution: {integrity: sha512-eNIDe+EOCB96/bbRHOPbrC+bsuCXFd2H0/96Fl0cJkY+NKnu2qLTnGI6ILXPbyu82Yr1tsShlzDypw+VeCDqaQ==}
     peerDependencies:
       '@sinclair/typebox': '>=0.17.6'
       drizzle-orm: '>=0.23.13'
     dependencies:
-      '@sinclair/typebox': 0.34.8
+      '@sinclair/typebox': 0.32.20
       drizzle-orm: 0.30.6(@types/better-sqlite3@7.6.9)(@types/pg@8.11.10)(@types/react@18.2.74)(kysely@0.27.4)(pg@8.13.1)(postgres@3.4.4)(react@18.2.0)
     dev: false
 

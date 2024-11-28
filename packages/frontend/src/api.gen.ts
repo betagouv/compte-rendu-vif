@@ -125,16 +125,14 @@ export namespace Endpoints {
     method: "POST";
     path: "/api/upload-data";
     parameters: {
-      body: Array<{
-        crudBatch: Array<{
-          id: string;
-          clientId: number;
-          table: string;
-          transactionId: number;
-          op: string;
-          opData?: Partial<{}> | undefined;
-        }>;
-      }>;
+      body: {
+        op_id: number;
+        tx_id?: number | Schemas.null | Array<number | Schemas.null> | undefined;
+        id: string;
+        type: string;
+        op: string;
+        data?: unknown | undefined;
+      };
     };
     response: Partial<{}>;
   };

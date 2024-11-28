@@ -30,9 +30,19 @@ export class Connector implements PowerSyncBackendConnector {
   async uploadData(database: AbstractPowerSyncDatabase) {
     // console.log(database);
     // console.log(await database.getCrudBatch());
-    const transation = await database.getNextCrudTransaction();
+    const batchTransactions = await database.getCrudBatch();
     // throw new Error("Method not implemented.");
-    transation?.complete();
+    if (!batchTransactions) return;
+
+    for (const operation of batchTransactions.crud) {
+      console.log("applying operation", operation.toJSON());
+
+      await api.post("/api/upload-data", { body: operation.toJSON() });
+    }
+
+    batchTransactions.complete();
+
+    // await api.post("/api/upload-data", {body: [{}]});
     // await api.post("/")
 
     // window.complete = transation?.complete;

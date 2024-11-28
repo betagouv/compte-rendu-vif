@@ -53,7 +53,10 @@ const useSearchResultsQuery = (search: string, additionnalWhere: { [key: string]
           eb("zipCode", "like", `%${search}%`),
         ]),
       )
-      .selectAll(),
+      .leftJoin("user", "user.id", "report.createdBy")
+      .selectAll(["report"])
+      .orderBy("createdAt desc")
+      .select(["user.name as createdByName"]),
   );
   // return useLiveQuery(
   //   db.report.liveMany({

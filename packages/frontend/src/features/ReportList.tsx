@@ -17,7 +17,7 @@ import { useIsDesktop } from "../hooks/useIsDesktop";
 import { chunk, makeArrayOf } from "pastable";
 import { Report } from "../db/AppSchema";
 // import type { VNodeRef }from '
-export type ReportWithUser = Report & { createdByName: string };
+export type ReportWithUser = Report & { createdByName: string | null };
 
 export const MyReports = () => {
   const [page, setPage] = useState(0);

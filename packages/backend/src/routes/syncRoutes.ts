@@ -1,14 +1,14 @@
 import { FastifyPluginAsyncTypebox } from "@fastify/type-provider-typebox";
-import { applyCrudBatchTSchema } from "../services/syncService";
 import { Type } from "@sinclair/typebox";
+import { crudTSchema } from "../services/syncService";
 
 export const syncPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
   fastify.post("/upload-data", { schema: uploadDataTSchema }, async (request) => {
-    return request.services.sync.applyCrudBatch(request.body);
+    return request.services.sync.applyCrud(request.body);
   });
 };
 
 const uploadDataTSchema = {
-  body: Type.Array(applyCrudBatchTSchema),
+  body: crudTSchema,
   response: { 200: Type.Any() },
 };
