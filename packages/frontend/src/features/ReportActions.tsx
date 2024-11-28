@@ -4,7 +4,6 @@ import Button, { ButtonProps } from "@codegouvfr/react-dsfr/Button";
 import { forwardRef } from "react";
 import { useUser } from "../contexts/AuthContext";
 import { useMutation } from "@tanstack/react-query";
-import { db } from "../db";
 import { downloadFile } from "../utils";
 import { v4 } from "uuid";
 import { omit } from "pastable";
@@ -12,6 +11,7 @@ import { ReportWithUser } from "./ReportList";
 import { useNavigate } from "@tanstack/react-router";
 import { api } from "../api";
 import { useCanEditReport } from "../hooks/useCanEditReport";
+import { db } from "../db/db";
 
 export const ReportActions = forwardRef<HTMLDivElement, { report: ReportWithUser }>(({ report }, ref) => {
   const user = useUser()!;
@@ -27,19 +27,17 @@ export const ReportActions = forwardRef<HTMLDivElement, { report: ReportWithUser
 
   const deleteMutation = useDeleteMutation();
   const duplicateMutation = useMutation(async () => {
-    const payload = omit(report, ["id", "createdAt", "pdf", "user", "title"]);
+    const payload = omit(report, ["id", "createdAt", "pdf", "title"]);
 
-    return db.report.create({
-      data: {
-        ...payload,
-        id: `report-${v4()}`,
-        title: `${report.title ?? "Sans titre"} - copie`,
-        createdAt: new Date(),
-        redactedBy: user.name,
-        redactedById: user.id,
-        createdBy: user.id,
-        pdf: undefined,
-      },
+    return db.insertInto("report").values({
+      ...payload,
+      id: `report-${v4()}`,
+      title: `${report.title ?? "Sans titre"} - copie`,
+      createdAt: new Date().toISOString(),
+      redactedBy: user.name,
+      redactedById: user.id,
+      createdBy: user.id,
+      pdf: undefined,
     });
   });
 
@@ -99,5 +97,5 @@ const ReportAction = ({
 
 const useDeleteMutation = () =>
   useMutation(async (id: string) => {
-    await db.report.update({ where: { id }, data: { disabled: true } });
+    await db.updateTable("report").set({ disabled: 0 }).where("id", "=", id).execute();
   });

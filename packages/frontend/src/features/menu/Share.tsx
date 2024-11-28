@@ -1,45 +1,36 @@
 import { Divider, Flex, Stack, styled } from "#styled-system/jsx";
-import { useLiveQuery } from "electric-sql/react";
 import { useUser } from "../../contexts/AuthContext";
-import { db } from "../../db";
-import { Delegation, User } from "@cr-vif/electric-client/frontend";
 import { ToggleSwitch } from "@codegouvfr/react-dsfr/ToggleSwitch";
 import { useMutation } from "@tanstack/react-query";
 import { css } from "#styled-system/css";
 import { MenuTitle } from "./MenuTitle";
 import { ClauseFormBanner } from "./ClauseMenu";
 import { fr } from "@codegouvfr/react-dsfr";
+import { db, useDbQuery } from "../../db/db";
+import { Delegation, User } from "../../db/AppSchema";
+import { v4 } from "uuid";
 
 export const ShareReport = ({ backButtonOnClick }: { backButtonOnClick: () => void }) => {
   const user = useUser()!;
 
-  const coworkersQuery = useLiveQuery(
-    db.user.liveMany({
-      where: {
-        udap_id: user.udap_id,
-        id: { not: user.id },
-      },
-    }),
+  const coworkersQuery = useDbQuery(
+    db.selectFrom("user").where("udap_id", "=", user.udap_id).where("id", "!=", user.id).selectAll(),
   );
 
-  const delegationsQuery = useLiveQuery(
-    db.delegation.liveMany({
-      where: {
-        createdBy: user.id,
-      },
-    }),
+  const delegationsQuery = useDbQuery(db.selectFrom("delegation").where("createdBy", "=", user.id).selectAll());
+
+  const delegatedToMeQuery = useDbQuery(
+    db
+      .selectFrom("delegation")
+      .where("delegatedTo", "=", user.id)
+      .innerJoin("user", "delegation.createdBy", "user.id")
+      .selectAll(["delegation"])
+      .select(["user.name as createdByName"]),
   );
 
-  const delegatedToMeQuery = useLiveQuery(
-    db.delegation.liveMany({
-      where: {
-        delegatedTo: user.id,
-      },
-      include: {
-        user_delegation_createdByTouser: true,
-      },
-    }),
-  );
+  const coworkers = coworkersQuery.data ?? [];
+  const delegations = delegationsQuery.data ?? [];
+  const delegatedToMe = delegatedToMeQuery.data ?? [];
 
   return (
     <>
@@ -59,13 +50,13 @@ export const ShareReport = ({ backButtonOnClick }: { backButtonOnClick: () => vo
 
       <Stack w="100%" px="20px">
         <styled.div>Ces personnes peuvent créer, modifier et supprimer vos CR : </styled.div>
-        <ManageDelegations coworkers={coworkersQuery.results ?? []} delegations={delegationsQuery.results ?? []} />
+        <ManageDelegations coworkers={coworkers ?? []} delegations={delegations ?? []} />
       </Stack>
 
       <Stack mt="49px" px="20px" color="#757575">
         <styled.div>Ces personnes vous permettent de créer, modifier et supprimer leurs CR :</styled.div>
         <styled.ul>
-          {delegatedToMeQuery.results?.map((delegation) => (
+          {delegatedToMe?.map((delegation) => (
             <styled.li key={delegation.createdBy}>
               {(delegation as any).user_delegation_createdByTouser?.name}
             </styled.li>
@@ -79,14 +70,16 @@ export const ShareReport = ({ backButtonOnClick }: { backButtonOnClick: () => vo
 const ManageDelegations = ({ coworkers, delegations }: { coworkers: User[]; delegations: Delegation[] }) => {
   const user = useUser()!;
 
-  const createMutation = useMutation((delegation: Delegation) => db.delegation.create({ data: delegation }));
+  // TODO: add string id everywhere in the db
+  const createMutation = useMutation((delegation: Omit<Delegation, "id">) =>
+    db
+      .insertInto("delegation")
+      .values({ ...delegation, id: v4() })
+      .execute(),
+  );
+  // TODO: test this
   const removeMutation = useMutation((delegation: Delegation) =>
-    db.delegation.deleteMany({
-      where: {
-        createdBy: delegation.createdBy,
-        delegatedTo: delegation.delegatedTo,
-      },
-    }),
+    db.deleteFrom("delegation").where("id", "=", delegation.id).execute(),
   );
 
   return (

@@ -13,9 +13,7 @@ import {
 import { Box, Flex, Grid, Stack, styled } from "#styled-system/jsx";
 import { InputGroup } from "#components/InputGroup.tsx";
 import { cx } from "#styled-system/css";
-import { Tmp_pictures, Pictures, Report } from "@cr-vif/electric-client/frontend";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useLiveQuery } from "electric-sql/react";
 import { del, get, set } from "idb-keyval";
 import { useFormContext } from "react-hook-form";
 import Badge from "@codegouvfr/react-dsfr/Badge";

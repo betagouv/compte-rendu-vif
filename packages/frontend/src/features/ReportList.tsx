@@ -39,6 +39,9 @@ export const MyReports = () => {
 
   // console.log(useDbQuery(db.selectFrom("user").selectAll())?.data);
 
+  const testQuery = useDbQuery(db.selectFrom("service_instructeurs").selectAll());
+  console.log(testQuery.data);
+
   const reports = reportsQuery.data;
   console.log(reports);
   const reportsCountQuery = useDbQuery(

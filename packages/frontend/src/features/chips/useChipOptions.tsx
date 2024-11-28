@@ -1,12 +1,16 @@
 import { useUser } from "../../contexts/AuthContext";
 
-import { useLiveQuery } from "electric-sql/react";
-import { db } from "../../db";
 import { groupBy } from "pastable";
-import { Clause_v2 } from "@cr-vif/electric-client/frontend";
+import { db, useDbQuery } from "../../db/db";
 
 export const useChipOptions = (key?: string) => {
   const user = useUser()!;
+
+  // const decisionsChipsQuery = useDbQuery(
+  //   // db.
+  // )
+
+  return [];
 
   // retrieve all chips with the given key
   const decisionsChipsQuery = useLiveQuery(

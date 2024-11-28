@@ -1,5 +1,3 @@
-import { useLiveQuery } from "electric-sql/react";
-import { db } from "../../db";
 import { Spinner } from "#components/Spinner";
 import { groupBy } from "pastable";
 import { useUser } from "../../contexts/AuthContext";
@@ -10,7 +8,6 @@ import type { ModalContentProps } from "./MenuButton";
 import { ReactNode, useEffect, useState } from "react";
 import Button, { ButtonProps } from "@codegouvfr/react-dsfr/Button";
 import { css, cx } from "#styled-system/css";
-import { Clause_v2 } from "@cr-vif/electric-client/frontend";
 import Input from "@codegouvfr/react-dsfr/Input";
 import { FormProvider, useFieldArray, useForm, useFormContext } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";

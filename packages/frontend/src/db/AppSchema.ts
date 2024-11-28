@@ -45,12 +45,44 @@ const user = new Table({
   udap_id: column.text,
 });
 
+const delegation = new Table({
+  createdBy: column.text,
+  delegatedTo: column.text,
+});
+
+const pdf_snapshot = new Table({
+  report_id: column.text,
+  html: column.text,
+  report: column.text,
+  user_id: column.text,
+});
+
+const service_instructeurs = new Table({
+  full_name: column.text,
+  short_name: column.text,
+  email: column.text,
+  tel: column.text,
+  udap_id: column.text,
+});
+
+const clauses = new Table({
+  report_id: column.text,
+  clause_id: column.text,
+});
+
 export const AppSchema = new Schema({
   report,
   udap,
   user,
+  delegation,
+  pdf_snapshot,
+  service_instructeurs,
 });
 
 export type Database = (typeof AppSchema)["types"];
 export type Report = Database["report"];
 export type Udap = Database["udap"];
+export type User = Database["user"];
+export type Delegation = Database["delegation"];
+export type PdfSnapshot = Database["pdf_snapshot"];
+export type ServiceInstructeurs = Database["service_instructeurs"];

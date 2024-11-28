@@ -14,6 +14,7 @@ export class Connector implements PowerSyncBackendConnector {
     // If you're using Supabase or Firebase, you can re-use the JWT from those clients, see
     // - https://docs.powersync.com/installation/authentication-setup/supabase-auth
     // - https://docs.powersync.com/installation/authentication-setup/firebase-auth
+    console.log("fetchCredentials");
 
     const token = await getTokenOrRefresh();
 
@@ -30,7 +31,8 @@ export class Connector implements PowerSyncBackendConnector {
     // console.log(database);
     // console.log(await database.getCrudBatch());
     const transation = await database.getNextCrudTransaction();
-
+    // throw new Error("Method not implemented.");
+    transation?.complete();
     // await api.post("/")
 
     // window.complete = transation?.complete;

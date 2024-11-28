@@ -4,27 +4,28 @@ import Input from "@codegouvfr/react-dsfr/Input";
 import { useState } from "react";
 // import { serviceInstructeurs } from "@cr-vif/pdf";
 import { useFormContext, useWatch } from "react-hook-form";
-import { Report, Service_instructeurs } from "@cr-vif/electric-client/frontend";
-import { useLiveQuery } from "electric-sql/react";
-import { db } from "../db";
 import { useUser } from "../contexts/AuthContext";
+import { db, useDbQuery } from "../db/db";
+import { Report } from "../db/AppSchema";
 
 export const ServiceInstructeurSelect = ({ disabled }: { disabled?: boolean }) => {
   const form = useFormContext<Report>();
   const user = useUser()!;
   const [inputValue, setInputValue] = useState("");
 
-  const serviceInstructeursQuery = useLiveQuery(
-    db.service_instructeurs.liveMany({
-      where: {
-        udap_id: user.udap_id,
-      },
-    }),
-  );
+  const serviceInstructeursQuery = useDbQuery(db.selectFrom("service_instructeurs").selectAll());
 
-  const rawItems = serviceInstructeursQuery.results ?? [];
+  // const serviceInstructeursQuery = useLiveQuery(
+  //   db.service_instructeurs.liveMany({
+  //     where: {
+  //       udap_id: user.udap_id,
+  //     },
+  //   }),
+  // );
 
-  const items = rawItems.filter((item) => item.short_name.toLowerCase().includes(inputValue.toLowerCase()));
+  const rawItems = serviceInstructeursQuery.data ?? [];
+
+  const items = rawItems.filter((item) => item.short_name?.toLowerCase().includes(inputValue.toLowerCase()));
 
   const selectItem = (item: ServiceInstructeur | null) => {
     form.setValue("serviceInstructeur", item?.id || null);
@@ -80,5 +81,3 @@ export const ServiceInstructeurSelect = ({ disabled }: { disabled?: boolean }) =
 const ProxyInput = (props: any) => {
   return <Input label="Service instructeur" nativeInputProps={props} />;
 };
-
-type ServiceInstructeur = Service_instructeurs;

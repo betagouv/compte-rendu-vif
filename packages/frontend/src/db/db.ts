@@ -8,7 +8,6 @@ export const powerSyncDb = new PowerSyncDatabase({
   schema: AppSchema,
   database: {
     dbFilename: "powersync.db",
-    debugMode: true,
   },
 });
 

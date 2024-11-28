@@ -22,7 +22,6 @@ const ResetPasswordAction = () => {
         <p>Veuillez saisir votre nouveau mot de passe</p>
 
         <form onSubmit={form.handleSubmit((values) => mutation.mutate(values))}>
-          {/* TODO: LA */}
           <SignupPasswordInput form={form} />
 
           <FullWidthButton type="submit">Valider</FullWidthButton>

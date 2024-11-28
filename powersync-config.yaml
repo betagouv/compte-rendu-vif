@@ -19,13 +19,20 @@ sync_rules:
   # TODO use specific sync rules here
   content: |
     bucket_definitions:
+      global_bucket:
+        data:
+          - SELECT * FROM service_instructeurs
       udap_bucket:
         parameters: SELECT udap_id as udap_id FROM "user" WHERE id = request.user_id()
         data: 
           - SELECT * FROM report WHERE udap_id = bucket.udap_id
           - SELECT * FROM udap WHERE id = bucket.udap_id
           - SELECT * FROM "user" WHERE udap_id = bucket.udap_id
-
+      user_bucket:
+        parameters: SELECT request.user_id() as user_id
+        data:
+          - SELECT * FROM delegation WHERE "createdBy" = bucket.user_id OR "delegatedTo" = bucket.user_id
+          - SELECT * FROM pdf_snapshot WHERE user_id = bucket.user_id
 # Settings for client authentication
 client_auth:
   jwks:

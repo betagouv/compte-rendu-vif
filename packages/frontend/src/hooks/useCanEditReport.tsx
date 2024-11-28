@@ -1,18 +1,22 @@
-import { Report } from "@cr-vif/electric-client/frontend";
 import { useUser } from "../contexts/AuthContext";
-import { useLiveQuery } from "electric-sql/react";
-import { db } from "../db";
+import { Report } from "../db/AppSchema";
+import { db, useDbQuery } from "../db/db";
 
 export const useCanEditReport = (report: Report) => {
   const user = useUser()!;
   const isOwner = report.redactedById === user.id;
   const isCreator = report.createdBy === user.id;
 
-  const userDelegations = useLiveQuery(
-    db.delegation.liveFirst({ where: { createdBy: report.createdBy, delegatedTo: user.id } }),
+  const delegationsQuery = useDbQuery(
+    db
+      .selectFrom("delegation")
+      .where("createdBy", "=", report.createdBy)
+      .where("delegatedTo", "=", user.id)
+      .selectAll(),
   );
 
-  const hasDelegation = !!userDelegations.results;
+  const hasDelegation = !!delegationsQuery.data?.[0];
+
   const canEdit = isOwner || isCreator || hasDelegation;
 
   return canEdit;
