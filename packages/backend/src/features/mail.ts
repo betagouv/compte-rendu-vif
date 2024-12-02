@@ -1,8 +1,8 @@
 import { createTransport } from "nodemailer";
 import { ENV } from "../envVars";
-import { Report } from "@cr-vif/electric-client/frontend";
 import { format } from "date-fns";
 import { sentry } from "./sentry";
+import { Report } from "../../../frontend/src/db/AppSchema";
 
 const transporter = createTransport({
   host: ENV.EMAIL_HOST,

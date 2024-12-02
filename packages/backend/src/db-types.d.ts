@@ -5,21 +5,20 @@
 
 import type { ColumnType } from "kysely";
 
-export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
-  ? ColumnType<S, I | undefined, U>
-  : ColumnType<T, T | undefined, T>;
+export type Generated<T> =
+  T extends ColumnType<infer S, infer I, infer U> ? ColumnType<S, I | undefined, U> : ColumnType<T, T | undefined, T>;
 
 export type Int8 = ColumnType<string, bigint | number | string, bigint | number | string>;
 
-export type Timestamp = ColumnType<Date, Date | string, Date | string>;
+export type Date = ColumnType<Date, Date | string, Date | string>;
 
 export interface AtdatabasesMigrationsApplied {
-  applied_at: Timestamp;
+  applied_at: Date;
   id: Generated<Int8>;
   ignored_error: string | null;
   index: number;
   name: string;
-  obsolete: boolean;
+  obsolete: number;
   script: string;
 }
 
@@ -29,7 +28,7 @@ export interface AtdatabasesMigrationsVersion {
 }
 
 export interface Clause {
-  hidden: boolean | null;
+  hidden: number | null;
   key: string;
   text: string;
   udap_id: string;
@@ -69,14 +68,14 @@ export interface PdfSnapshot {
 }
 
 export interface PictureLines {
-  createdAt: Timestamp | null;
+  createdAt: Date | null;
   id: string;
   lines: string;
   pictureId: string | null;
 }
 
 export interface Pictures {
-  createdAt: Timestamp | null;
+  createdAt: Date | null;
   finalUrl: string | null;
   id: string;
   reportId: string | null;
@@ -89,13 +88,13 @@ export interface Report {
   applicantName: string | null;
   city: string | null;
   contacts: string | null;
-  createdAt: Timestamp;
+  createdAt: Date;
   createdBy: string;
   decision: string | null;
-  disabled: boolean | null;
+  disabled: null;
   furtherInformation: string | null;
   id: string;
-  meetDate: Timestamp | null;
+  meetDate: Date | null;
   pdf: string | null;
   precisions: string | null;
   projectCadastralRef: string | null;
@@ -119,7 +118,7 @@ export interface ServiceInstructeurs {
 }
 
 export interface TmpPictures {
-  createdAt: Timestamp | null;
+  createdAt: Date | null;
   id: string;
   reportId: string | null;
 }
@@ -136,7 +135,7 @@ export interface Udap {
   name: string | null;
   phone: string | null;
   udap_text: string | null;
-  visible: boolean | null;
+  visible: number | null;
   zipCode: string | null;
 }
 

@@ -3,35 +3,20 @@ import { safeJSONParse } from "pastable";
 import { api } from "../api";
 
 export class Connector implements PowerSyncBackendConnector {
-  constructor() {
-    // Setup a connection to your server for uploads
-    // this.serverConnectionClient = TODO;
-  }
-
   async fetchCredentials() {
-    // Implement fetchCredentials to obtain a JWT from your authentication service.
-    // See https://docs.powersync.com/installation/authentication-setup
-    // If you're using Supabase or Firebase, you can re-use the JWT from those clients, see
-    // - https://docs.powersync.com/installation/authentication-setup/supabase-auth
-    // - https://docs.powersync.com/installation/authentication-setup/firebase-auth
-    console.log("fetchCredentials");
-
     const token = await getTokenOrRefresh();
 
     return {
       endpoint: "http://localhost:8080",
-      token, // Use a development token (see Authentication Setup https://docs.powersync.com/installation/authentication-setup/development-tokens) to get up and running quickly
-      // token: 'An authentication token'
+      token,
     };
   }
 
   hasUpdated = false;
 
   async uploadData(database: AbstractPowerSyncDatabase) {
-    // console.log(database);
-    // console.log(await database.getCrudBatch());
+    // See example implementation here: https://docs.powersync.com/client-sdk-references/javascript-web#3-integrate-with-your-backend
     const batchTransactions = await database.getCrudBatch();
-    // throw new Error("Method not implemented.");
     if (!batchTransactions) return;
 
     for (const operation of batchTransactions.crud) {
@@ -41,17 +26,6 @@ export class Connector implements PowerSyncBackendConnector {
     }
 
     batchTransactions.complete();
-
-    // await api.post("/api/upload-data", {body: [{}]});
-    // await api.post("/")
-
-    // window.complete = transation?.complete;
-    // console.log(transation);
-
-    // const a: CrudBatch;
-    // Implement uploadData to send local changes to your backend service.
-    // You can omit this method if you only want to sync data from the database to the client
-    // See example implementation here: https://docs.powersync.com/client-sdk-references/javascript-web#3-integrate-with-your-backend
   }
 }
 
