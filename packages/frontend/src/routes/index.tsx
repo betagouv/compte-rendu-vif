@@ -47,19 +47,16 @@ const Index = () => {
   const createReportMutation = useMutation({
     mutationFn: async () => {
       const id = "report-" + v4();
-      const result = await powerSyncDb.execute(
-        `INSERT INTO report (
-          "id",
-          "createdBy",
-          "createdAt",
-          "meetDate",
-          "disabled",
-          "udap_id",
-          "redactedBy",
-          "redactedById"
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
-        [id, user.id, new Date(), new Date(), false, user.udap.id, user.name, user.id],
-      );
+      await db.insertInto("report").values({
+        id,
+        createdBy: user.id,
+        createdAt: new Date().toISOString(),
+        meetDate: new Date().toISOString(),
+        disabled: 0,
+        udap_id: user.udap_id,
+        redactedBy: user.name,
+        redactedById: user.id,
+      }).execute();
 
       return id;
     },
