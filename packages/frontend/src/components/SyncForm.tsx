@@ -140,8 +140,16 @@ export const useStatus = (overrideStatus?: SyncFormStatus) => {
   return overrideStatus || formStatus;
 };
 
-export const Status = ({ status, className }: { status?: SyncFormStatus; className?: string }) => {
-  const formStatus = useStatus(status);
+import { useStatus as usePowersyncStatus } from "@powersync/react";
+
+export const Status = ({ className }: { status?: SyncFormStatus; className?: string }) => {
+  const powerSyncStatus = usePowersyncStatus();
+  const status: SyncFormStatus = powerSyncStatus.connected
+    ? powerSyncStatus.dataFlowStatus.downloading || powerSyncStatus.dataFlowStatus.uploading
+      ? "saving"
+      : "saved"
+    : "offline";
+  console.log(status);
 
   return (
     <styled.div
@@ -154,7 +162,7 @@ export const Status = ({ status, className }: { status?: SyncFormStatus; classNa
       textTransform="uppercase"
       fontSize="sm"
       fontWeight="500"
-      bgColor={messagesColor[formStatus]}
+      bgColor={messagesColor[status]}
     >
       <styled.span
         className={fr.cx("fr-icon-wifi-line")}
@@ -169,7 +177,7 @@ export const Status = ({ status, className }: { status?: SyncFormStatus; classNa
         }}
         mr="6px"
       />
-      {messages[formStatus]}
+      {messages[status]}
     </styled.div>
   );
 };
