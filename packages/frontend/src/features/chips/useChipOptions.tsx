@@ -2,25 +2,18 @@ import { useUser } from "../../contexts/AuthContext";
 
 import { groupBy } from "pastable";
 import { db, useDbQuery } from "../../db/db";
+import { Clause_v2 } from "../../db/AppSchema";
 
 export const useChipOptions = (key?: string) => {
   const user = useUser()!;
 
-  // const decisionsChipsQuery = useDbQuery(
-  //   // db.
-  // )
+  let query = db
+    .selectFrom("clause_v2")
+    .where((eb) => eb.or([eb("udap_id", "=", "ALL"), eb("udap_id", "=", user.udap_id)]));
 
-  console.log("key", key);
+  if (key) query = query.where("key", "=", key);
 
-  const chipsQuery = useDbQuery(
-    db
-      .selectFrom("clause_v2")
-      .where((eb) => eb.or([eb("udap_id", "=", "ALL"), eb("udap_id", "=", user.udap_id)]))
-      .where("key", "=", key!)
-      .selectAll(),
-  );
-
-  console.log(chipsQuery);
+  const chipsQuery = useDbQuery(query.selectAll());
 
   const grouped = groupBy(chipsQuery.data ?? [], (item) => `${item.key}-${item.value}`);
 

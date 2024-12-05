@@ -1,6 +1,7 @@
 import { Static, TSchema, Type } from "@sinclair/typebox";
 import { db } from "../db/db";
 import { makeDebug } from "../features/debug";
+import { getServices } from "./services";
 
 const debug = makeDebug("sync-service");
 
@@ -30,12 +31,24 @@ export class SyncService {
       const { type, data, id } = operation;
       await db
         .insertInto(type as any)
-        .values({ id, ...data, createdAt: new Date() } as any)
+        .values({ id, ...data } as any)
         .execute();
+    }
+
+    if (operation.type === "picture_lines") {
+      debug("updating picture lines");
+      const pictureLines = await db.selectFrom("picture_lines").where("id", "=", operation.id).selectAll().execute();
+
+      debug(pictureLines);
+      const pictureId = pictureLines?.[0]?.pictureId;
+
+      if (pictureId) await getServices().upload.handleNotifyPictureLines({ pictureId });
     }
 
     return { success: true };
   }
+
+  // async uploadPictures(operation: Static<typeof pictureTSchema>) {}
 }
 
 export const crudTSchema = Type.Object({

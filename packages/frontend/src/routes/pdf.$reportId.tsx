@@ -27,9 +27,8 @@ import { v4 } from "uuid";
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import { fr } from "@codegouvfr/react-dsfr";
 import { transformBold } from "../features/menu/ClauseMenu";
-import { Pictures } from "../../../electric-client/src/generated/client/index";
 import { db, useDbQuery } from "../db/db";
-import { Report, Udap } from "../db/AppSchema";
+import { Pictures, Report, Udap } from "../db/AppSchema";
 
 type Mode = "edit" | "view" | "send" | "sent";
 
@@ -58,10 +57,23 @@ export const PDF = () => {
     navigate({ search: { mode: mode === "edit" ? "view" : "edit" }, replace: true });
   };
 
-  const reportQuery = useDbQuery(db.selectFrom("report").where("id", "=", reportId).selectAll(), undefined, {
-    runQueryOnce: true,
+  const reportQuery = useQuery({
+    queryKey: ["report", reportId],
+    queryFn: async () => {
+      const reportQuery = await db.selectFrom("report").where("id", "=", reportId).selectAll().execute();
+      const picturesQuery = await db.selectFrom("pictures").where("reportId", "=", reportId).selectAll().execute();
+      const report = reportQuery?.[0];
+      const pictures = picturesQuery ?? [];
+
+      return { ...report, pictures };
+    },
   });
-  const report = reportQuery.data?.[0];
+
+  // useDbQuery(db.selectFrom("report").where("id", "=", reportId).selectAll(), undefined, {
+  //   runQueryOnce: true,
+  // });
+  // const picturesQuery = useDbQuery(db.selectFrom("pictures").where("report_id", "=", reportId).selectAll(), undefined, {
+  const report = reportQuery.data;
 
   const snapshotQuery = useQuery({
     queryKey: ["report-snapshot", reportId],
@@ -78,8 +90,6 @@ export const PDF = () => {
           createdAt: new Date(report!.createdAt!).toISOString(),
           meetDate: new Date(report!.meetDate!).toISOString(),
         });
-
-        console.log({ snapshotReport, report: report, diff });
 
         if (Object.keys(diff).length) return null;
 
@@ -393,8 +403,6 @@ export const WithReport = ({
 }) => {
   const { editor } = useContext(TextEditorContext);
   const [htmlString] = useState(initialHtmlString);
-
-  console.log(report);
 
   useEffect(() => {
     if (!editor) return;

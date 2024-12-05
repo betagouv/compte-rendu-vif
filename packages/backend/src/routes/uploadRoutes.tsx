@@ -19,6 +19,7 @@ export const uploadPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
 
   fastify.post("/image", async (request, reply) => {
     const file = await request.file();
+    console.log(request.query);
     const { reportId, id } = request.query || ({} as any);
 
     if (!file) throw new AppError(400, "No file provided");
@@ -30,31 +31,20 @@ export const uploadPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
       name: getPictureName(reportId, id),
     });
 
+    await db
+      .insertInto("pictures")
+      .values({
+        id,
+        url,
+        reportId,
+        createdAt: new Date(),
+        finalUrl: url,
+      })
+      .execute();
+
     debug("adding url to pic", id, "for report", reportId);
 
-    await db.pictures.create({ data: { id, url, reportId, createdAt: new Date(), finalUrl: url } });
-    // try {
-    //   await db.tmp_pictures.delete({ where: { id } });
-    // } catch (e) {}
-    // await db.pictures.update({ where: { id }, data: { url } });
-
     reply.send(url);
-
-    // for await (const file of files) {
-    //   const isImage = ["image/png", "image/jpeg", "image/jpg"].includes(file.mimetype);
-
-    //   if (!isImage) {
-    //     throw new AppError(400, "File is not an image");
-    //   }
-
-    //   //   await request.services.upload.addImageToReport({
-    //   //     reportId: "",
-    //   //     buffer: await file.toBuffer(),
-    //   //     name: getFileName(file),
-    //   //   });
-    // }
-
-    console.log("done");
 
     return "ok";
   });

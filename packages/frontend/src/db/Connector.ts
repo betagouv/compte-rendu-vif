@@ -1,6 +1,8 @@
 import { UpdateType, PowerSyncBackendConnector, AbstractPowerSyncDatabase, CrudBatch } from "@powersync/web";
 import { safeJSONParse } from "pastable";
 import { api } from "../api";
+import { get } from "idb-keyval";
+import { getPicturesStore } from "../features/idb";
 
 export class Connector implements PowerSyncBackendConnector {
   async fetchCredentials() {
@@ -21,6 +23,23 @@ export class Connector implements PowerSyncBackendConnector {
 
     for (const operation of batchTransactions.crud) {
       console.log("applying operation", operation.toJSON());
+
+      if (operation.table === "pictures" && operation.op === "PUT") {
+        const formData = new FormData();
+        const buffer = await get(operation.id, getPicturesStore());
+
+        formData.append("file", new Blob([buffer]), "file");
+
+        await api.post("/api/upload/image", {
+          body: formData,
+          query: {
+            id: operation.id,
+            reportId: operation.opData?.reportId,
+          },
+        } as any);
+
+        continue;
+      }
 
       await api.post("/api/upload-data", { body: operation.toJSON() });
     }

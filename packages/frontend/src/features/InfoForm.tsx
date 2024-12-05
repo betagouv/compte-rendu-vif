@@ -14,6 +14,7 @@ import { Report } from "../db/AppSchema";
 import { db, useDbQuery } from "../db/db";
 import { useIsFormDisabled } from "./DisabledContext";
 import { ServiceInstructeurSelect } from "./ServiceInstructeurSelect";
+import { UploadImage } from "./upload/UploadImage";
 
 export const InfoForm = () => {
   const form = useFormContext<Report>();
@@ -142,7 +143,7 @@ export const InfoForm = () => {
       <Divider mt="20px" mb="52px" />
 
       <InputGroupWithTitle title="Le projet">
-        {/* <UploadImage reportId={form.getValues().id} /> */}
+        <UploadImage reportId={form.getValues().id} />
 
         <Input
           className={css({ mb: { base: "24px", lg: undefined } })}

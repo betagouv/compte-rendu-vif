@@ -14,7 +14,7 @@ import { ReportActions } from "./ReportActions";
 import { Pagination } from "@codegouvfr/react-dsfr/Pagination";
 import welcomeImage from "../assets/welcome.svg";
 import { useIsDesktop } from "../hooks/useIsDesktop";
-import { chunk, makeArrayOf } from "pastable";
+import { chunk } from "pastable";
 import { Report } from "../db/AppSchema";
 
 export type ReportWithUser = Report & { createdByName: string | null };
@@ -69,7 +69,7 @@ export const AllReports = () => {
     db
       .selectFrom("report")
       .where("disabled", "=", 0)
-      .where("udap_id", "=", user.udap_id)
+      .where("report.udap_id", "=", user.udap_id)
       .limit(20)
       .offset(page * 20)
       .orderBy("createdAt desc")
@@ -83,7 +83,7 @@ export const AllReports = () => {
     db
       .selectFrom("report")
       .where("disabled", "=", 0)
-      .where("udap_id", "=", user.udap_id)
+      .where("report.udap_id", "=", user.udap_id)
       .select(db.fn.countAll().as("count")),
   );
 

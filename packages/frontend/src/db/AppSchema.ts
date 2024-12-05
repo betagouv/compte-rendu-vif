@@ -73,6 +73,19 @@ const clause_v2 = new Table({
   text: column.text,
 });
 
+const pictures = new Table({
+  reportId: column.text,
+  url: column.text,
+  createdAt: column.text,
+  finalUrl: column.text,
+});
+
+const picture_lines = new Table({
+  pictureId: column.text,
+  lines: column.text,
+  createdAt: column.text,
+});
+
 export const AppSchema = new Schema({
   report,
   udap,
@@ -81,6 +94,8 @@ export const AppSchema = new Schema({
   pdf_snapshot,
   service_instructeurs,
   clause_v2,
+  pictures,
+  picture_lines,
 });
 
 export type Database = (typeof AppSchema)["types"];
@@ -91,3 +106,5 @@ export type Delegation = Database["delegation"];
 export type PdfSnapshot = Database["pdf_snapshot"];
 export type ServiceInstructeurs = Database["service_instructeurs"];
 export type Clause_v2 = Database["clause_v2"];
+export type Pictures = Database["pictures"];
+export type PictureLines = Database["picture_lines"];

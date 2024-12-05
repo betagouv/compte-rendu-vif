@@ -92,15 +92,18 @@ export class UploadService {
 
   async handleNotifyPictureLines({
     pictureId,
-    lines,
+    // lines,
   }: {
     pictureId: string;
-    lines: Array<{ points: { x: number; y: number }[]; color: string }>;
+    // lines: Array<{ points: { x: number; y: number }[]; color: string }>;
   }) {
     debug("Handling picture lines", pictureId);
-    const picture = await db.pictures.findFirst({
-      where: { id: pictureId },
-    });
+    const pictureQuery = await db.selectFrom("pictures").where("id", "=", pictureId).selectAll().execute();
+    const picture = pictureQuery?.[0];
+
+    const linesQuery = await db.selectFrom("picture_lines").where("pictureId", "=", pictureId).selectAll().execute();
+    const lines = JSON.parse(linesQuery?.[0]?.lines || "[]");
+
     if (!picture) throw new AppError(404, "Picture not found");
 
     const buffer = await applyLinesToPicture({ pictureUrl: picture.url!, lines });
@@ -122,7 +125,7 @@ export class UploadService {
 
     const url = `${bucketUrl}/${name}`;
 
-    await db.pictures.update({ where: { id: pictureId }, data: { finalUrl: url } });
+    await db.updateTable("pictures").set({ finalUrl: url }).where("id", "=", pictureId).execute();
 
     debug(url);
     return url;

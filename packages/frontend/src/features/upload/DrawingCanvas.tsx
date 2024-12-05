@@ -3,9 +3,8 @@ import { fr } from "@codegouvfr/react-dsfr";
 import React, { useState, useRef, useEffect } from "react";
 import { css, cva } from "#styled-system/css";
 import Button from "@codegouvfr/react-dsfr/Button";
-import { db } from "../../db";
 import { v4 } from "uuid";
-import { Picture_lines } from "@cr-vif/electric-client/frontend";
+import { db } from "../../db/db";
 
 type DrawEvent = React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>;
 export type Line = { points: Array<{ x: number; y: number }>; color: string };
@@ -15,14 +14,12 @@ export const ImageCanvas = ({
   lines: dbLines,
   containerRef,
   closeModal,
-  notifyPictureLines,
 }: {
   url: string;
   containerRef: any;
   pictureId: string;
   lines: Array<Line>;
   closeModal: () => void;
-  notifyPictureLines: (args: { pictureId: string; lines: Array<Line> }) => void;
 }) => {
   const [tool, setTool] = useState("draw");
   const [lines, setLines] = useState<Array<{ points: Array<{ x: number; y: number }>; color: string }>>([]);
@@ -257,20 +254,27 @@ export const ImageCanvas = ({
   };
 
   const handleSave = async () => {
-    const existingLines = await db.picture_lines.findFirst({ where: { pictureId } });
+    const existingLinesQuery = await db
+      .selectFrom("picture_lines")
+      .where("pictureId", "=", pictureId)
+      .selectAll()
+      .execute();
+    const existingLines = existingLinesQuery?.[0];
+
     if (existingLines) {
       console.log("updating lines", existingLines, lines);
-      await db.picture_lines.update({
-        where: { id: existingLines.id },
-        data: { lines: JSON.stringify(lines) },
-      });
+      await db
+        .updateTable("picture_lines")
+        .where("id", "=", existingLines.id)
+        .set({ lines: JSON.stringify(lines), pictureId })
+        .execute();
     } else {
       console.log("creating lines", lines);
-      await db.picture_lines.create({
-        data: { id: v4(), pictureId, lines: JSON.stringify(lines) },
-      });
+      await db
+        .insertInto("picture_lines")
+        .values({ id: v4(), pictureId, lines: JSON.stringify(lines) })
+        .execute();
     }
-    notifyPictureLines({ pictureId, lines });
     closeModal();
   };
 

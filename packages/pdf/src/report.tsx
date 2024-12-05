@@ -2,7 +2,7 @@ import { Document, Font, Image, Page, Text, View } from "@react-pdf/renderer";
 import { Html } from "react-pdf-html";
 import React from "react";
 import { Buffer } from "buffer";
-import { Udap, Report, ServiceInstructeurs, Clauses, Pictures } from "../../frontend/src/db/AppSchema";
+import { Udap, Report, ServiceInstructeurs, Clause_v2, Pictures } from "../../frontend/src/db/AppSchema";
 
 export const initFonts = (folder: string = "") => {
   Font.register({
@@ -218,7 +218,7 @@ export type ReportWithUser = Report & { user?: { email: string; name: string } }
 
 export const getReportHtmlString = (
   report: ReportWithUser,
-  chipOptions: Clauses[],
+  chipOptions: Clause_v2[],
   udap: Udap,
   serviceInstructeur?: ServiceInstructeurs,
 ) => {
@@ -325,7 +325,7 @@ const formatPhoneNumber = (phoneNumber: string) => {
   )} ${phoneNumber.slice(7, 9)}`;
 };
 
-const getMultipleChips = (chipOptions: Clauses[], key: string, values: string) => {
+const getMultipleChips = (chipOptions: Clause_v2[], key: string, values: string) => {
   return values
     .split(",")
     .map((value) => {
