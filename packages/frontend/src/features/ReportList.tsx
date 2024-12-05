@@ -16,7 +16,7 @@ import welcomeImage from "../assets/welcome.svg";
 import { useIsDesktop } from "../hooks/useIsDesktop";
 import { chunk, makeArrayOf } from "pastable";
 import { Report } from "../db/AppSchema";
-// import type { VNodeRef }from '
+
 export type ReportWithUser = Report & { createdByName: string | null };
 
 export const MyReports = () => {
@@ -37,15 +37,12 @@ export const MyReports = () => {
       .select(["user.name as createdByName"]),
   );
 
-  const testQuery = useDbQuery(db.selectFrom("clause_v2").selectAll());
-  console.log(testQuery.data);
-
   const reports = reportsQuery.data;
   const reportsCountQuery = useDbQuery(
     db
       .selectFrom("report")
       .where("disabled", "=", 0)
-      .where("createdBy", "=", user.id)
+      .where((eb) => eb.or([eb("createdBy", "=", user.id), eb("redactedById", "=", user.id)]))
       .select(db.fn.countAll().as("count")),
   );
 
@@ -53,25 +50,6 @@ export const MyReports = () => {
 
   const hasError = reportsQuery.error || reportsCountQuery.error;
   const isLoading = reportsQuery.isLoading || reportsCountQuery.isLoading;
-
-  // const myReports = useLiveQuery(
-  //   db.report.liveMany({
-  //     where: { disabled: false, OR: [{ createdBy: user.id }, { redactedById: user.id }] },
-  //     take: 20,
-  //     skip: page * 20,
-  //     orderBy: { createdAt: "desc" },
-  //     include: {
-  //       user: true,
-  //     },
-  //   }),
-  // );
-
-  // const nbReports = useLiveQuery<[{ count: number }]>(
-  //   db.liveRawQuery({
-  //     sql: `SELECT COUNT(*) AS count FROM report WHERE (createdBy = ? OR redactedById = ?) AND disabled = FALSE`,
-  //     args: [user.id, user.id],
-  //   }),
-  // );
 
   if (hasError) {
     console.error(reportsQuery.error, reportsCountQuery.error);
@@ -84,45 +62,44 @@ export const MyReports = () => {
 };
 
 export const AllReports = () => {
-  return null;
   const [page, setPage] = useState(0);
-
   const user = useUser()!;
-  const allReports = useLiveQuery(
-    db.report.liveMany({
-      where: { disabled: false, udap_id: user.udap?.id },
-      take: 20,
-      skip: page * 20,
-      orderBy: { createdAt: "desc" },
-      include: {
-        user: true,
-      },
-    }),
+
+  const reportsQuery = useDbQuery(
+    db
+      .selectFrom("report")
+      .where("disabled", "=", 0)
+      .where("udap_id", "=", user.udap_id)
+      .limit(20)
+      .offset(page * 20)
+      .orderBy("createdAt desc")
+      .leftJoin("user", "user.id", "report.createdBy")
+      .selectAll(["report"])
+      .select(["user.name as createdByName"]),
   );
 
-  const nbReports = useLiveQuery<[{ count: number }]>(
-    db.liveRawQuery({
-      sql: `SELECT COUNT(*) AS count FROM report WHERE disabled=FALSE AND udap_id = ?`,
-      args: [user.udap?.id],
-    }),
+  const reports = reportsQuery.data;
+  const reportsCountQuery = useDbQuery(
+    db
+      .selectFrom("report")
+      .where("disabled", "=", 0)
+      .where("udap_id", "=", user.udap_id)
+      .select(db.fn.countAll().as("count")),
   );
 
-  if (allReports.error || nbReports.error) {
-    console.error(allReports.error);
+  const reportsCount = reportsCountQuery.data?.[0]?.count as number;
+
+  const hasError = reportsQuery.error || reportsCountQuery.error;
+  const isLoading = reportsQuery.isLoading || reportsCountQuery.isLoading;
+
+  if (hasError) {
+    console.error(reportsQuery.error, reportsCountQuery.error);
     return <Center>Une erreur s'est produite</Center>;
   }
 
-  const isLoading = !allReports.updatedAt;
   if (isLoading) return null;
 
-  return (
-    <ReportList
-      reports={allReports.results ?? []}
-      setPage={setPage}
-      count={nbReports.results?.[0].count ?? 0}
-      page={page}
-    />
-  );
+  return <ReportList reports={reports ?? []} setPage={setPage} count={reportsCount ?? 0} page={page} />;
 };
 
 const NoReport = () => {
