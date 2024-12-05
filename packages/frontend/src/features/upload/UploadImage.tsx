@@ -1,14 +1,6 @@
 import { useState, useRef, ChangeEvent, useEffect } from "react";
 import { v4 } from "uuid";
-import {
-  deleteImageFromIdb,
-  getPicturesStore,
-  getToPingStore,
-  getToUploadStore,
-  getUploadStatusStore,
-  syncImages,
-  syncPictureLines,
-} from "../idb";
+import { deleteImageFromIdb, getPicturesStore, getUploadStatusStore } from "../idb";
 import { Box, Center, Flex, Grid, Stack, styled } from "#styled-system/jsx";
 import { InputGroup } from "#components/InputGroup.tsx";
 import { cx } from "#styled-system/css";
@@ -70,6 +62,8 @@ export const UploadImage = ({ reportId }: { reportId: string }) => {
 
     await set(picId, buffer, getPicturesStore());
     await db.insertInto("pictures").values({ id: picId, reportId, createdAt: new Date().toISOString() }).execute();
+
+    setStatusMap((prev) => ({ ...prev, [picId]: "uploading" }));
 
     // try {
     //   const formData = new FormData();
@@ -170,7 +164,6 @@ export const UploadImage = ({ reportId }: { reportId: string }) => {
 };
 
 const broadcastChannel = new BroadcastChannel("sw-messages");
-const emitterChannel = new BroadcastChannel("sw-messages");
 
 const ReportPictures = ({
   statusMap,

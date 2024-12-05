@@ -4,6 +4,8 @@ import { api } from "../api";
 import { get } from "idb-keyval";
 import { getPicturesStore } from "../features/idb";
 
+const emitterChannel = new BroadcastChannel("sw-messages");
+
 export class Connector implements PowerSyncBackendConnector {
   async fetchCredentials() {
     const token = await getTokenOrRefresh();
@@ -37,6 +39,8 @@ export class Connector implements PowerSyncBackendConnector {
             reportId: operation.opData?.reportId,
           },
         } as any);
+
+        emitterChannel.postMessage({ type: "status", id: operation.id, status: "success" });
 
         continue;
       }
