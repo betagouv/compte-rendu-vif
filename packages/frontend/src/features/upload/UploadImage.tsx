@@ -9,7 +9,7 @@ import {
   syncImages,
   syncPictureLines,
 } from "../idb";
-import { Box, Flex, Grid, Stack, styled } from "#styled-system/jsx";
+import { Box, Center, Flex, Grid, Stack, styled } from "#styled-system/jsx";
 import { InputGroup } from "#components/InputGroup.tsx";
 import { cx } from "#styled-system/css";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -23,6 +23,7 @@ import { ImageCanvas, Line } from "./DrawingCanvas";
 import { api } from "../../api";
 import { db, useDbQuery } from "../../db/db";
 import { Pictures, Report } from "../../db/AppSchema";
+import imageCompression from "browser-image-compression";
 
 const modal = createModal({
   id: "edit-picture",
@@ -45,8 +46,6 @@ export const UploadImage = ({ reportId }: { reportId: string }) => {
   //   }
   // });
 
-  // const linesQuery = useLiveQuery(db.picture_lines.liveMany({ where: { pictureId: selectedPicture?.id } }));
-
   const linesQuery = useQuery({
     queryKey: ["lines", selectedPicture?.id],
     queryFn: async () => {
@@ -66,7 +65,8 @@ export const UploadImage = ({ reportId }: { reportId: string }) => {
 
   const uploadImageMutation = useMutation(async (file: File) => {
     const picId = v4();
-    const buffer = await getArrayBufferFromBlob(file);
+    ref.current!.value = "";
+    const buffer = await processImage(file);
 
     await set(picId, buffer, getPicturesStore());
     await db.insertInto("pictures").values({ id: picId, reportId, createdAt: new Date().toISOString() }).execute();
@@ -97,7 +97,7 @@ export const UploadImage = ({ reportId }: { reportId: string }) => {
 
   useEffect(() => {
     const listener = (event: MessageEvent) => {
-      console.log("message", event.data);
+      console.log(event.data);
       if (event.data.type === "status") {
         console.log("status", event.data.id, event.data.status);
         setStatusMap((prev) => ({ ...prev, [event.data.id]: event.data.status }));
@@ -112,7 +112,6 @@ export const UploadImage = ({ reportId }: { reportId: string }) => {
   return (
     <>
       <styled.div
-        ref={containerRef}
         display={selectedPicture ? "initial" : "none"}
         zIndex="1000"
         pos="fixed"
@@ -120,23 +119,37 @@ export const UploadImage = ({ reportId }: { reportId: string }) => {
         left="0"
         right="0"
         bottom="0"
-        w="100%"
-        h={{ base: "100vh" }}
-        bgColor="white"
+        w="100vw"
+        h="100vh"
+        // w={{ base: "100%", lg: "634px" }}
+        // h={{ base: "100vh", lg: "792px" }}
       >
-        {selectedPicture ? (
-          <ImageCanvas
-            closeModal={() => setSelectedPicture(null)}
-            pictureId={selectedPicture.id}
-            url={selectedPicture.url}
-            containerRef={containerRef}
-            lines={linesQuery.data}
-          />
-        ) : null}
+        <styled.div pos="fixed" top="0" left="0" right="0" bottom="0" bgColor="rgba(0, 0, 0, 0.5)"></styled.div>
+        <Center w="100%" h="100%">
+          <styled.div
+            ref={containerRef}
+            position="relative"
+            w={{ base: "100%", lg: "634px" }}
+            h={{ base: "100vh", lg: "792px" }}
+            maxH={{ base: "100vh", lg: "100vh" }}
+            bgColor="white"
+          >
+            {selectedPicture ? (
+              <ImageCanvas
+                closeModal={() => setSelectedPicture(null)}
+                pictureId={selectedPicture.id}
+                url={selectedPicture.url}
+                containerRef={containerRef}
+                lines={linesQuery.data}
+              />
+            ) : null}
+          </styled.div>
+        </Center>
       </styled.div>
       <Button
         type="button"
         iconId="ri-add-line"
+        // disabled={!canUploadImage}
         priority="secondary"
         nativeButtonProps={{
           type: "button",
@@ -145,6 +158,11 @@ export const UploadImage = ({ reportId }: { reportId: string }) => {
       >
         Ajouter photo
       </Button>
+      {/* {!canUploadImage ? (
+        <styled.div mt="16px" color="gray">
+          Le téléversement d'image est désactivé temporairement, mais il revient optimisé bientôt.
+        </styled.div>
+      ) : null} */}
       <styled.input ref={ref as any} type="file" accept="image/*" onChange={onChange} display="none" />
       <ReportPictures setSelectedPicture={setSelectedPicture} statusMap={statusMap} />
     </>
@@ -152,6 +170,7 @@ export const UploadImage = ({ reportId }: { reportId: string }) => {
 };
 
 const broadcastChannel = new BroadcastChannel("sw-messages");
+const emitterChannel = new BroadcastChannel("sw-messages");
 
 const ReportPictures = ({
   statusMap,
@@ -303,7 +322,7 @@ const PictureThumbnail = ({
     };
   };
 
-  const finalStatus = picture.url ? "success" : status ?? idbStatusQuery.data ?? "uploading";
+  const finalStatus = status ?? idbStatusQuery.data ?? "success";
 
   const bgUrl = bgUrlQuery.data;
 
@@ -379,10 +398,19 @@ const statusData = {
   error: { label: "Erreur", bgColor: "#FEC9C9", color: "#853C3C", icon: "fr-icon-warning-line" },
 };
 
-async function getArrayBufferFromBlob(blob: Blob) {
-  return new Promise<ArrayBuffer>((resolve, _) => {
-    const reader = new FileReader();
-    reader.onloadend = () => resolve(reader.result as ArrayBuffer);
-    reader.readAsArrayBuffer(blob);
-  });
-}
+const processImage = async (file: File) => {
+  try {
+    const options = {
+      maxSizeMB: 1,
+      maxWidthOrHeight: 1920,
+      useWebWorker: true,
+      preserveExif: false,
+    };
+
+    const compressedFile = await imageCompression(file, options);
+    return compressedFile.arrayBuffer();
+  } catch (error) {
+    console.error("Error processing image:", error);
+    throw error;
+  }
+};

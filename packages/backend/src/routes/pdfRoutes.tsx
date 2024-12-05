@@ -39,7 +39,10 @@ export const pdfPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
     await db.updateTable("report").set({ pdf: url }).where("id", "=", reportId).execute();
 
     const userMail = request.user.email;
-    const recipients = request.body.recipients.split(",").map((r) => r.trim());
+    const recipients = request.body.recipients
+      .replaceAll(";", ",")
+      .split(",")
+      .map((r) => r.trim());
     if (!recipients.includes(userMail)) recipients.push(userMail);
 
     const reportsQuery = await db.selectFrom("report").where("id", "=", reportId).selectAll().execute();

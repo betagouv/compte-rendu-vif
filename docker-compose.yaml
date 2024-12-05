@@ -6,18 +6,6 @@ volumes:
   mongo_storage:
 
 services:
-  # frontend:
-  #   image: ghcr.io/betagouv/compte-rendu-vif-frontend:latest
-  #   restart: always
-  #   depends_on:
-  #     - electric
-
-  # backend:
-  #   image: ghcr.io/betagouv/compte-rendu-vif-backend:latest
-  #   restart: always
-  #   depends_on:
-  #     - electric
-
   pg:
     image: postgres:14-alpine
     environment:

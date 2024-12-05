@@ -9,6 +9,7 @@ import { FurtherInfoChips } from "#components/chips/FurtherInfoChips";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { useIsFormDisabled } from "./DisabledContext";
 import { Report } from "../db/AppSchema";
+import { UploadImage } from "./upload/UploadImage";
 
 export const NotesForm = () => {
   const form = useFormContext<Report>();
@@ -27,6 +28,8 @@ export const NotesForm = () => {
           nativeTextAreaProps={{ ...form.register("precisions"), rows: 5 }}
         />
       </InputGroupWithTitle>
+
+      <UploadImage reportId={form.getValues().id} />
 
       <Divider mt="36px" mb="52px" />
 

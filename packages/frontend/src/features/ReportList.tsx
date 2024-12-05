@@ -31,6 +31,7 @@ export const MyReports = () => {
       .where((eb) => eb.or([eb("createdBy", "=", user.id), eb("redactedById", "=", user.id)]))
       .limit(20)
       .offset(page * 20)
+      .orderBy("meetDate desc")
       .orderBy("createdAt desc")
       .leftJoin("user", "user.id", "report.createdBy")
       .selectAll(["report"])

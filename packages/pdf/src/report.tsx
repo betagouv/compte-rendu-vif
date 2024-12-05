@@ -5,27 +5,27 @@ import { Buffer } from "buffer";
 import { Udap, Report, ServiceInstructeurs, Clause_v2, Pictures } from "../../frontend/src/db/AppSchema";
 
 export const initFonts = (folder: string = "") => {
-  Font.register({
-    family: "Marianne",
-    fonts: [
-      {
-        src: `${folder}/fonts/Marianne-Regular.ttf`,
-        fontStyle: "normal",
-        fontWeight: "normal",
-      },
-      { src: `${folder}/fonts/Marianne-Bold.ttf`, fontStyle: "normal", fontWeight: "bold" },
-      {
-        src: `${folder}/fonts/Marianne-RegularItalic.ttf`,
-        fontStyle: "italic",
-        fontWeight: "normal",
-      },
-      {
-        src: `${folder}/fonts/Marianne-BoldItalic.ttf`,
-        fontStyle: "italic",
-        fontWeight: "bold",
-      },
-    ],
-  });
+  // Font.register({
+  //   family: "Marianne",
+  //   fonts: [
+  //     {
+  //       src: `${folder}/fonts/Marianne-Regular.ttf`,
+  //       fontStyle: "normal",
+  //       fontWeight: "normal",
+  //     },
+  //     { src: `${folder}/fonts/Marianne-Bold.ttf`, fontStyle: "normal", fontWeight: "bold" },
+  //     {
+  //       src: `${folder}/fonts/Marianne-RegularItalic.ttf`,
+  //       fontStyle: "italic",
+  //       fontWeight: "normal",
+  //     },
+  //     {
+  //       src: `${folder}/fonts/Marianne-BoldItalic.ttf`,
+  //       fontStyle: "italic",
+  //       fontWeight: "bold",
+  //     },
+  //   ],
+  // });
 };
 
 Font.registerHyphenationCallback((word) => {
@@ -33,7 +33,6 @@ Font.registerHyphenationCallback((word) => {
 });
 
 export const ReportPDFDocument = ({ udap, htmlString, images, pictures }: ReportPDFDocumentProps) => {
-  console.log(pictures);
   return (
     <Document onRender={console.log}>
       <Page
@@ -57,15 +56,31 @@ export const ReportPDFDocument = ({ udap, htmlString, images, pictures }: Report
           <body>
             <style>
               body {
-                font-family: Marianne;
+                font-family: Helvetica;
               }
 
               strong {
-                font-weight: bold;
+                font-family: Helvetica-Bold;
               }
-              
+
               em {
-                font-style: italic;
+                font-family: Helvetica-Oblique;
+              }
+
+              strong em span {
+                font-family: Helvetica-BoldOblique;
+              }
+
+              em strong span {
+                font-family: Helvetica-BoldOblique;
+              }
+
+              strong em {
+                font-family: Helvetica-BoldOblique;
+              }
+
+              em strong {
+                font-family: Helvetica-BoldOblique;
               }
 
               .marianne-img {
@@ -111,7 +126,7 @@ export const ReportPDFDocument = ({ udap, htmlString, images, pictures }: Report
               .right-texts > div {
                 text-align: right;
                 font-size: 14px;
-                font-weight: bold;
+                font-family: Helvetica-Bold;
               }
 
               .meeting-date {
@@ -168,6 +183,12 @@ export const ReportPDFDocument = ({ udap, htmlString, images, pictures }: Report
       {pictures
         ? pictures
             .filter((pic) => !!pic.url)
+            .sort((pic1, pic2) => {
+              const pic1Date = pic1.createdAt ? new Date(pic1.createdAt) : new Date();
+              const pic2Date = pic2.createdAt ? new Date(pic2.createdAt) : new Date();
+
+              return pic1Date.getTime() - pic2Date.getTime();
+            })
             .map((pic, index) => (
               <Page
                 break={index > 0}

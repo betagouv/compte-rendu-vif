@@ -143,8 +143,6 @@ export const InfoForm = () => {
       <Divider mt="20px" mb="52px" />
 
       <InputGroupWithTitle title="Le projet">
-        <UploadImage reportId={form.getValues().id} />
-
         <Input
           className={css({ mb: { base: "24px", lg: undefined } })}
           label="Description"

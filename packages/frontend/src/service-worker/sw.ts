@@ -51,10 +51,12 @@ const syncPictureLines = async () => {
 
     for (let i = 0; i < pictureIds.length; i++) {
       const picId = pictureIds[i];
+      await set(picId, "uploading", getUploadStatusStore());
       console.log("syncing picture lines for", picId);
 
       const linesRaw = await get(picId, getToPingStore());
       const lines = JSON.parse(linesRaw);
+      broadcastChannel.postMessage({ type: "status", id: picId, status: "uploading" });
 
       await api.post(
         `/api/upload/picture/${picId}/lines` as any,
@@ -65,6 +67,9 @@ const syncPictureLines = async () => {
       );
 
       await del(picId, getToPingStore());
+
+      broadcastChannel.postMessage({ type: "status", id: picId, status: "success" });
+      await set(picId, "success", getUploadStatusStore());
     }
   } catch (e) {
     console.error("sync error", e);

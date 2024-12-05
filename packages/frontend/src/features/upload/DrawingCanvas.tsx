@@ -291,7 +291,7 @@ export const ImageCanvas = ({
           disabled={lines.length === 0}
           <i className={fr.cx("fr-icon--md", "ri-arrow-go-back-line")} />
 */}
-      <Stack pos="absolute" top="26px" right="16px" gap="18px" flexDir="row" alignItems="center">
+      <Stack pos="absolute" top="26px" right={{ base: "16px" }} gap="18px" flexDir="row" alignItems="center">
         {/* @ts-ignore */}
         <Button
           className={css({ bgColor: "white" })}
@@ -308,7 +308,7 @@ export const ImageCanvas = ({
         </Button>
       </Stack>
 
-      <styled.div flex="1" border="1px solid #e5e7eb" borderRadius="0.25rem" overflow="hidden">
+      <styled.div flex="1" borderRadius="0.25rem" overflow="hidden">
         <styled.canvas
           ref={canvasRef}
           onMouseDown={handleMouseDown}
@@ -324,7 +324,7 @@ export const ImageCanvas = ({
         />
       </styled.div>
       <Flex justifyContent="center" alignItems="center">
-        <Stack gap="20px" flexDir="row" justifyContent="center" alignItems="center" p="18px">
+        <Stack gap="14px" flexDir="row" justifyContent="center" alignItems="center" p="18px">
           {colors.map((color) => (
             <styled.button
               type="button"
