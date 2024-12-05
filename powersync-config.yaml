@@ -19,6 +19,10 @@ sync_rules:
   # TODO use specific sync rules here
   content: |
     bucket_definitions:
+      global_bucket:
+        data:
+          - SELECT * FROM clause_v2 WHERE udap_id = 'ALL'
+
       udap_bucket:
         parameters: SELECT udap_id as udap_id FROM "user" WHERE id = request.user_id()
         data: 
@@ -26,6 +30,7 @@ sync_rules:
           - SELECT * FROM udap WHERE id = bucket.udap_id
           - SELECT * FROM "user" WHERE udap_id = bucket.udap_id
           - SELECT * FROM service_instructeurs WHERE udap_id = bucket.udap_id
+          - SELECT * FROM clause_v2 WHERE udap_id = bucket.udap_id
 
       user_bucket:
         parameters: SELECT request.user_id() as user_id

@@ -14,7 +14,7 @@ import { v4 } from "uuid";
 import { ElectricStatus, useElectricStatus, useUser } from "../contexts/AuthContext";
 import { AllReports, MyReports } from "../features/ReportList";
 import { db, powerSyncDb } from "../db/db";
-import { useQuery } from "@powersync/react";
+import { useQuery, useStatus } from "@powersync/react";
 
 const Index = () => {
   const [search, setSearch] = useState("");
@@ -47,16 +47,19 @@ const Index = () => {
   const createReportMutation = useMutation({
     mutationFn: async () => {
       const id = "report-" + v4();
-      await db.insertInto("report").values({
-        id,
-        createdBy: user.id,
-        createdAt: new Date().toISOString(),
-        meetDate: new Date().toISOString(),
-        disabled: 0,
-        udap_id: user.udap_id,
-        redactedBy: user.name,
-        redactedById: user.id,
-      }).execute();
+      await db
+        .insertInto("report")
+        .values({
+          id,
+          createdBy: user.id,
+          createdAt: new Date().toISOString(),
+          meetDate: new Date().toISOString(),
+          disabled: 0,
+          udap_id: user.udap_id,
+          redactedBy: user.name,
+          redactedById: user.id,
+        })
+        .execute();
 
       return id;
     },
@@ -173,17 +176,9 @@ const Index = () => {
 };
 
 const SimpleBanner = (props: CenterProps) => {
-  const electricStatus = useElectricStatus();
+  const powerSyncStatus = useStatus();
 
-  const electricStatusToStatus: Record<ElectricStatus, SyncFormStatus> = {
-    error: "offline",
-    loading: "pending",
-    pending: "pending",
-    idle: "offline",
-    success: "saved",
-  };
-
-  const status: SyncFormStatus = electricStatusToStatus[electricStatus] || "saved";
+  const status = powerSyncStatus.connected ? "saved" : "offline";
 
   return <Banner status={status} {...props} />;
 };

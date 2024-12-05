@@ -149,7 +149,6 @@ export const Status = ({ className }: { status?: SyncFormStatus; className?: str
       ? "saving"
       : "saved"
     : "offline";
-  console.log(status);
 
   return (
     <styled.div

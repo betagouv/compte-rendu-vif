@@ -10,21 +10,20 @@ export const useChipOptions = (key?: string) => {
   //   // db.
   // )
 
-  return [];
+  console.log("key", key);
 
-  // retrieve all chips with the given key
-  const decisionsChipsQuery = useLiveQuery(
-    db.clause_v2.liveMany({
-      where: {
-        ...(key ? { key } : {}),
-        udap_id: { in: ["ALL", user.udap.id] },
-      },
-    }),
+  const chipsQuery = useDbQuery(
+    db
+      .selectFrom("clause_v2")
+      .where((eb) => eb.or([eb("udap_id", "=", "ALL"), eb("udap_id", "=", user.udap_id)]))
+      .where("key", "=", key!)
+      .selectAll(),
   );
 
-  const grouped = groupBy(decisionsChipsQuery.results ?? [], (item) => `${item.key}-${item.value}`);
+  console.log(chipsQuery);
 
-  // keep only the most specific chip for each value
+  const grouped = groupBy(chipsQuery.data ?? [], (item) => `${item.key}-${item.value}`);
+
   const chips = Object.values(grouped).map((value) => {
     if (value.length > 1) return value.find((chip) => chip.udap_id !== "ALL") ?? value[0];
     return value[0];

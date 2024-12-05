@@ -65,9 +65,12 @@ const service_instructeurs = new Table({
   udap_id: column.text,
 });
 
-const clauses = new Table({
-  report_id: column.text,
-  clause_id: column.text,
+const clause_v2 = new Table({
+  key: column.text,
+  value: column.text,
+  position: column.integer,
+  udap_id: column.text,
+  text: column.text,
 });
 
 export const AppSchema = new Schema({
@@ -77,6 +80,7 @@ export const AppSchema = new Schema({
   delegation,
   pdf_snapshot,
   service_instructeurs,
+  clause_v2,
 });
 
 export type Database = (typeof AppSchema)["types"];
@@ -86,3 +90,4 @@ export type User = Database["user"];
 export type Delegation = Database["delegation"];
 export type PdfSnapshot = Database["pdf_snapshot"];
 export type ServiceInstructeurs = Database["service_instructeurs"];
+export type Clause_v2 = Database["clause_v2"];

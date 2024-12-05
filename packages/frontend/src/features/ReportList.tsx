@@ -37,13 +37,10 @@ export const MyReports = () => {
       .select(["user.name as createdByName"]),
   );
 
-  // console.log(useDbQuery(db.selectFrom("user").selectAll())?.data);
-
-  const testQuery = useDbQuery(db.selectFrom("service_instructeurs").selectAll());
+  const testQuery = useDbQuery(db.selectFrom("clause_v2").selectAll());
   console.log(testQuery.data);
 
   const reports = reportsQuery.data;
-  console.log(reports);
   const reportsCountQuery = useDbQuery(
     db
       .selectFrom("report")
