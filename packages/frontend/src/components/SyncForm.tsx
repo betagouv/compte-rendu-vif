@@ -1,21 +1,18 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-// import { db } from "../db";
+import { useMutation } from "@tanstack/react-query";
 import { db } from "../db/db";
 import { type UseFormReturn, useWatch } from "react-hook-form";
 import useDebounce from "react-use/lib/useDebounce";
 import { Banner } from "./Banner";
-import { useNavigate, useRouter } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { Center, Flex, styled } from "#styled-system/jsx";
 import { fr } from "@codegouvfr/react-dsfr";
 import { sva, cx, css } from "#styled-system/css";
-import { useNetworkState } from "react-use";
 import { useIntersectionObserver } from "../hooks/useIntersectionObserver";
 import Input from "@codegouvfr/react-dsfr/Input";
-import { useEffect } from "react";
-import { ElectricStatus, useElectricStatus } from "../contexts/AuthContext";
 import { useIsFormDisabled } from "../features/DisabledContext";
 import { Report } from "../db/AppSchema";
+import { useAppStatus } from "../hooks/useAppStatus";
 
 export function SyncFormBanner({ form, baseObject }: { form: UseFormReturn<Report>; baseObject: Record<string, any> }) {
   const newObject = useWatch({ control: form.control });
@@ -29,11 +26,6 @@ export function SyncFormBanner({ form, baseObject }: { form: UseFormReturn<Repor
 
   const navigate = useNavigate();
   const goBack = () => navigate({ to: "/" });
-  // const goBack = () => router.history.back();
-  const { online } = useNetworkState();
-
-  const status = !online ? "offline" : Object.keys(diff).length ? "pending" : "saved";
-  const formStatus = useStatus(status);
 
   const { ref, isIntersecting } = useIntersectionObserver({
     threshold: 0.999999,
@@ -44,9 +36,11 @@ export function SyncFormBanner({ form, baseObject }: { form: UseFormReturn<Repor
 
   const styles = syncFormBanner({ isCollapsed });
 
+  const status = useAppStatus();
+
   return (
     <>
-      <Banner status={formStatus} display="flex" flexDir="row" justifyContent="center" alignItems="center" w="100%">
+      <Banner status={status} display="flex" flexDir="row" justifyContent="center" alignItems="center" w="100%">
         <Center w="calc((100% - 800px) / 2)">
           <styled.a
             className={"ri-arrow-left-line"}
@@ -94,12 +88,12 @@ export function SyncFormBanner({ form, baseObject }: { form: UseFormReturn<Repor
             <styled.span nowrap>{isCollapsed ? newObject.title : "Titre compte-rendu :"}</styled.span>
           </Flex>
           <Input className={styles.input} label="" nativeInputProps={{ ...form.register("title") }} />
-          <Status className={cx(styles.status, css({ hideFrom: "lg" }))} status={status} />
+          <Status className={cx(styles.status, css({ hideFrom: "lg" }))} />
         </Flex>
         {/* <div></div> */}
         <styled.div w="calc((100% - 800px) / 2)"></styled.div>
       </Banner>
-      <Banner ref={ref} status={formStatus} zIndex="3" position="sticky" top="-1px">
+      <Banner ref={ref} status={status} zIndex="3" position="sticky" top="-1px">
         <Flex className={styles.collapsed}>
           {isCollapsed ? (
             <>
@@ -112,7 +106,7 @@ export function SyncFormBanner({ form, baseObject }: { form: UseFormReturn<Repor
                 size="large"
               />
               <styled.div nowrap>{newObject.title}</styled.div>
-              <Status className={styles.status} status={status} />
+              <Status className={styles.status} />
             </>
           ) : null}
         </Flex>
@@ -121,34 +115,8 @@ export function SyncFormBanner({ form, baseObject }: { form: UseFormReturn<Repor
   );
 }
 
-const electricStatusToStatus: Record<ElectricStatus, SyncFormStatus> = {
-  error: "offline",
-  loading: "pending",
-  pending: "pending",
-  idle: "offline",
-  success: "saved",
-};
-
-export const useStatus = (overrideStatus?: SyncFormStatus) => {
-  const electricStatus = useElectricStatus();
-  if (electricStatus === "error" || overrideStatus === "offline") return "offline";
-
-  const formStatus = electricStatusToStatus[electricStatus];
-
-  if (formStatus === "pending") return "pending";
-
-  return overrideStatus || formStatus;
-};
-
-import { useStatus as usePowersyncStatus } from "@powersync/react";
-
 export const Status = ({ className }: { status?: SyncFormStatus; className?: string }) => {
-  const powerSyncStatus = usePowersyncStatus();
-  const status: SyncFormStatus = powerSyncStatus.connected
-    ? powerSyncStatus.dataFlowStatus.downloading || powerSyncStatus.dataFlowStatus.uploading
-      ? "saving"
-      : "saved"
-    : "offline";
+  const status = useAppStatus();
 
   return (
     <styled.div

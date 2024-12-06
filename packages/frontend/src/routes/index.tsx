@@ -174,7 +174,6 @@ const Index = () => {
 
 const SimpleBanner = (props: CenterProps) => {
   const powerSyncStatus = useStatus();
-
   const status = powerSyncStatus.connected ? "saved" : "offline";
 
   return <Banner status={status} {...props} />;
