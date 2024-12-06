@@ -15,7 +15,7 @@ const report = new Table({
   furtherInformation: column.text,
   createdBy: column.text,
   createdAt: column.text,
-  serviceInstructeur: column.integer,
+  serviceInstructeur: column.text,
   pdf: column.text,
   disabled: column.integer,
   udap_id: column.text,

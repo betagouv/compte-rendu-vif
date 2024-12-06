@@ -14,7 +14,6 @@ import { Report } from "../db/AppSchema";
 import { db, useDbQuery } from "../db/db";
 import { useIsFormDisabled } from "./DisabledContext";
 import { ServiceInstructeurSelect } from "./ServiceInstructeurSelect";
-import { UploadImage } from "./upload/UploadImage";
 
 export const InfoForm = () => {
   const form = useFormContext<Report>();
