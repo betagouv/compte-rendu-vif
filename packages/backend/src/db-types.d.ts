@@ -50,17 +50,6 @@ export interface Delegation {
   delegatedTo: string;
 }
 
-export interface FailedTransactions {
-  data: string | null;
-  entity_id: string;
-  id: string;
-  op: string;
-  op_id: number;
-  tx_id: number | null;
-  type: string;
-  user_id: string;
-}
-
 export interface InternalUser {
   email: string;
   id: string;
@@ -135,6 +124,19 @@ export interface TmpPictures {
   reportId: string | null;
 }
 
+export interface Transactions {
+  created_at: Timestamp | null;
+  data: string | null;
+  entity_id: string;
+  error: string | null;
+  id: string;
+  op: string;
+  op_id: number;
+  tx_id: number | null;
+  type: string;
+  user_id: string;
+}
+
 export interface Udap {
   address: string | null;
   city: string | null;
@@ -167,7 +169,6 @@ export interface DB {
   clause: Clause;
   clause_v2: ClauseV2;
   delegation: Delegation;
-  failed_transactions: FailedTransactions;
   internal_user: InternalUser;
   pdf_snapshot: PdfSnapshot;
   picture_lines: PictureLines;
@@ -175,6 +176,7 @@ export interface DB {
   report: Report;
   service_instructeurs: ServiceInstructeurs;
   tmp_pictures: TmpPictures;
+  transactions: Transactions;
   udap: Udap;
   user: User;
   whitelist: Whitelist;

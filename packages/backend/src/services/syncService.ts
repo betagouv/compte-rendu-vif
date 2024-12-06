@@ -10,6 +10,21 @@ const Nullable = <T extends TSchema>(schema: T) => Type.Optional(Type.Union([sch
 
 export class SyncService {
   async applyCrud(operation: Static<typeof crudTSchema>, userId: string) {
+    await db
+      .insertInto("transactions")
+      .values({
+        id: v4(),
+        entity_id: operation.id,
+        type: operation.type,
+        op_id: operation.op_id,
+        tx_id: operation.tx_id,
+        data: JSON.stringify(operation.data),
+        op: operation.op,
+        created_at: new Date(),
+        user_id: userId,
+      })
+      .execute();
+
     try {
       if (operation.op === "DELETE") {
         debug("Deleting row on table", operation.type, "with id", operation.id);
@@ -49,33 +64,16 @@ export class SyncService {
     } catch (e) {
       debug("Error on applyCrud", e);
 
-      await db
-        .insertInto("failed_transactions")
-        .values({
-          id: v4(),
-          entity_id: operation.id,
-          type: operation.type,
-          op_id: operation.op_id,
-          tx_id: operation.tx_id,
-          data: JSON.stringify(operation.data),
-          op: operation.op,
-          user_id: userId,
-        })
-        .execute();
-
       return { success: false, error: e };
     }
 
     return { success: true };
   }
-
-  // async uploadPictures(operation: Static<typeof pictureTSchema>) {}
 }
 
 export const crudTSchema = Type.Object({
   op_id: Type.Number(),
   tx_id: Nullable(Type.Number()),
-
   id: Type.String(),
   type: Type.String(),
   op: Type.String(),
