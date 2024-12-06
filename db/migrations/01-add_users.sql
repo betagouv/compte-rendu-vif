@@ -42,5 +42,4 @@ CREATE TABLE IF NOT EXISTS "delegation" (
     PRIMARY KEY("createdBy", "delegatedTo")
 );
 
-
 ALTER PUBLICATION powersync ADD TABLE "delegation";

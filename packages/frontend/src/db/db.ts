@@ -1,4 +1,4 @@
-import { PowerSyncDatabase, AbstractPowerSyncDatabase } from "@powersync/web";
+import { PowerSyncDatabase } from "@powersync/web";
 import { AppSchema, Database } from "./AppSchema";
 import { Connector } from "./Connector";
 import { wrapPowerSyncWithKysely } from "@powersync/kysely-driver";
@@ -7,7 +7,7 @@ import { useQuery } from "@powersync/react";
 export const powerSyncDb = new PowerSyncDatabase({
   schema: AppSchema,
   database: {
-    dbFilename: "powersync.db",
+    dbFilename: "crvif-sync.db",
   },
 });
 
@@ -22,4 +22,9 @@ export const setupPowersync = async () => {
       schema_version: 1,
     },
   });
+};
+
+export const clearDb = async () => {
+  await db.destroy();
+  await powerSyncDb.disconnectAndClear();
 };

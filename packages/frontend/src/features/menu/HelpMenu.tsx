@@ -1,15 +1,16 @@
 import { Divider, Stack, styled } from "#styled-system/jsx";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { MenuTitle } from "./MenuTitle";
+import { clearDb } from "../../db/db";
 
 export const HelpMenu = ({ backButtonOnClick }: { backButtonOnClick: () => void }) => {
   const deleteLocalData = () => {
-    // TODO: correctly clear powersync data
-    // if (electric.isConnected) electric.disconnect();
     localStorage.clear();
     indexedDB.deleteDatabase("crvif.db");
     unregisterSWs();
-    window.location.reload();
+    clearDb().then(() => {
+      window.location.reload();
+    });
   };
   return (
     <>
