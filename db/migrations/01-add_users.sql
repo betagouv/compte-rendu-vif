@@ -37,9 +37,9 @@ CREATE TABLE IF NOT EXISTS "internal_user" (
 ALTER PUBLICATION powersync ADD TABLE "user";
 
 CREATE TABLE IF NOT EXISTS "delegation" (
+    "id" text PRIMARY KEY NOT NULL,
     "createdBy" text NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
-    "delegatedTo" text NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
-    PRIMARY KEY("createdBy", "delegatedTo")
+    "delegatedTo" text NOT NULL REFERENCES "user"(id) ON DELETE CASCADE
 );
 
 ALTER PUBLICATION powersync ADD TABLE "delegation";

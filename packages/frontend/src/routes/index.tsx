@@ -13,8 +13,8 @@ import { useState } from "react";
 import { v4 } from "uuid";
 import { ElectricStatus, useElectricStatus, useUser } from "../contexts/AuthContext";
 import { AllReports, MyReports } from "../features/ReportList";
-import { db, powerSyncDb } from "../db/db";
-import { useQuery, useStatus } from "@powersync/react";
+import { db, powerSyncDb, useDbQuery } from "../db/db";
+import { useStatus } from "@powersync/react";
 
 const Index = () => {
   const [search, setSearch] = useState("");
@@ -38,9 +38,6 @@ const Index = () => {
       }),
     },
   ];
-
-  const udaps = useQuery(db.selectFrom("udap").where("id", "=", user.udap_id).selectAll());
-  const reports = useQuery(db.selectFrom("user").selectAll());
 
   const navigate = useNavigate();
 

@@ -104,7 +104,6 @@ export const PDF = () => {
   const serviceInstructeurQuery = useQuery({
     queryKey: ["service-instructeur", report?.serviceInstructeur],
     queryFn: async () => {
-      // TODO: turn id into a string
       return await db
         .selectFrom("service_instructeurs")
         .where("id", "=", report!.serviceInstructeur!)

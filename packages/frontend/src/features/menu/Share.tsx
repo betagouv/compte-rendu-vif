@@ -70,14 +70,12 @@ export const ShareReport = ({ backButtonOnClick }: { backButtonOnClick: () => vo
 const ManageDelegations = ({ coworkers, delegations }: { coworkers: User[]; delegations: Delegation[] }) => {
   const user = useUser()!;
 
-  // TODO: add string id everywhere in the db
   const createMutation = useMutation((delegation: Omit<Delegation, "id">) =>
     db
       .insertInto("delegation")
       .values({ ...delegation, id: v4() })
       .execute(),
   );
-  // TODO: test this
   const removeMutation = useMutation((delegation: Delegation) =>
     db.deleteFrom("delegation").where("id", "=", delegation.id).execute(),
   );
