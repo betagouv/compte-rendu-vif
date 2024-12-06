@@ -26,18 +26,6 @@ export const UploadImage = ({ reportId }: { reportId: string }) => {
   const [statusMap, setStatusMap] = useState<Record<string, string>>({});
   const [selectedPicture, setSelectedPicture] = useState<{ id: string; url: string } | null>(null);
 
-  // const notifyPictureLines = useMutation(async ({ pictureId, lines }: { pictureId: string; lines: Array<Line> }) => {
-  //   try {
-  //     const result = await api.post(`/api/upload/picture/${pictureId}/lines` as any, { body: { lines } });
-  //     await del(pictureId, getToPingStore());
-
-  //     return result;
-  //   } catch (e) {
-  //     await set(pictureId, JSON.stringify(lines), getToPingStore());
-  //     syncPictureLines();
-  //   }
-  // });
-
   const linesQuery = useQuery({
     queryKey: ["lines", selectedPicture?.id],
     queryFn: async () => {
@@ -64,22 +52,6 @@ export const UploadImage = ({ reportId }: { reportId: string }) => {
     await db.insertInto("pictures").values({ id: picId, reportId, createdAt: new Date().toISOString() }).execute();
 
     setStatusMap((prev) => ({ ...prev, [picId]: "uploading" }));
-
-    // try {
-    //   const formData = new FormData();
-
-    //   formData.append("file", new Blob([buffer]), "file");
-    //   formData.append("reportId", reportId);
-    //   formData.append("pictureId", picId);
-
-    //   await api.post("/api/upload/image", {
-    //     body: formData,
-    //     query: { reportId: reportId, id: picId },
-    //   } as any);
-    // } catch {
-    //   await set(picId, reportId, getToUploadStore());
-    //   syncImages();
-    // }
   });
 
   const onChange = async (e: ChangeEvent<HTMLInputElement>) => {
@@ -91,7 +63,6 @@ export const UploadImage = ({ reportId }: { reportId: string }) => {
 
   useEffect(() => {
     const listener = (event: MessageEvent) => {
-      console.log(event.data);
       if (event.data.type === "status") {
         console.log("status", event.data.id, event.data.status);
         setStatusMap((prev) => ({ ...prev, [event.data.id]: event.data.status }));

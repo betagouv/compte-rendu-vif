@@ -5,20 +5,21 @@
 
 import type { ColumnType } from "kysely";
 
-export type Generated<T> =
-  T extends ColumnType<infer S, infer I, infer U> ? ColumnType<S, I | undefined, U> : ColumnType<T, T | undefined, T>;
+export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
+  ? ColumnType<S, I | undefined, U>
+  : ColumnType<T, T | undefined, T>;
 
 export type Int8 = ColumnType<string, bigint | number | string, bigint | number | string>;
 
-export type Date = ColumnType<Date, Date | string, Date | string>;
+export type Timestamp = ColumnType<Date, Date | string, Date | string>;
 
 export interface AtdatabasesMigrationsApplied {
-  applied_at: Date;
+  applied_at: Timestamp;
   id: Generated<Int8>;
   ignored_error: string | null;
   index: number;
   name: string;
-  obsolete: number;
+  obsolete: boolean;
   script: string;
 }
 
@@ -28,7 +29,7 @@ export interface AtdatabasesMigrationsVersion {
 }
 
 export interface Clause {
-  hidden: number | null;
+  hidden: boolean | null;
   key: string;
   text: string;
   udap_id: string;
@@ -47,6 +48,17 @@ export interface ClauseV2 {
 export interface Delegation {
   createdBy: string;
   delegatedTo: string;
+}
+
+export interface FailedTransactions {
+  data: string | null;
+  entity_id: string;
+  id: string;
+  op: string;
+  op_id: number;
+  tx_id: number | null;
+  type: string;
+  user_id: string;
 }
 
 export interface InternalUser {
@@ -68,14 +80,14 @@ export interface PdfSnapshot {
 }
 
 export interface PictureLines {
-  createdAt: Date | null;
+  createdAt: Timestamp | null;
   id: string;
   lines: string;
   pictureId: string | null;
 }
 
 export interface Pictures {
-  createdAt: Date | null;
+  createdAt: Timestamp | null;
   finalUrl: string | null;
   id: string;
   reportId: string | null;
@@ -88,13 +100,13 @@ export interface Report {
   applicantName: string | null;
   city: string | null;
   contacts: string | null;
-  createdAt: Date;
+  createdAt: Timestamp;
   createdBy: string;
   decision: string | null;
-  disabled: null;
+  disabled: boolean | null;
   furtherInformation: string | null;
   id: string;
-  meetDate: Date | null;
+  meetDate: Timestamp | null;
   pdf: string | null;
   precisions: string | null;
   projectCadastralRef: string | null;
@@ -118,7 +130,7 @@ export interface ServiceInstructeurs {
 }
 
 export interface TmpPictures {
-  createdAt: Date | null;
+  createdAt: Timestamp | null;
   id: string;
   reportId: string | null;
 }
@@ -135,7 +147,7 @@ export interface Udap {
   name: string | null;
   phone: string | null;
   udap_text: string | null;
-  visible: number | null;
+  visible: boolean | null;
   zipCode: string | null;
 }
 
@@ -155,6 +167,7 @@ export interface DB {
   clause: Clause;
   clause_v2: ClauseV2;
   delegation: Delegation;
+  failed_transactions: FailedTransactions;
   internal_user: InternalUser;
   pdf_snapshot: PdfSnapshot;
   picture_lines: PictureLines;

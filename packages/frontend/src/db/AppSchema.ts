@@ -86,6 +86,17 @@ const picture_lines = new Table({
   createdAt: column.text,
 });
 
+const failed_transactions = new Table({
+  id: column.text,
+  entity_id: column.text,
+  type: column.text,
+  op_id: column.text,
+  tx_id: column.text,
+  data: column.text,
+  op: column.text,
+  user_id: column.text,
+});
+
 export const AppSchema = new Schema({
   report,
   udap,
@@ -96,6 +107,7 @@ export const AppSchema = new Schema({
   clause_v2,
   pictures,
   picture_lines,
+  failed_transactions,
 });
 
 export type Database = (typeof AppSchema)["types"];
@@ -108,3 +120,4 @@ export type ServiceInstructeurs = Database["service_instructeurs"];
 export type Clause_v2 = Database["clause_v2"];
 export type Pictures = Database["pictures"];
 export type PictureLines = Database["picture_lines"];
+export type FailedTransactions = Database["failed_transactions"];

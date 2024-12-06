@@ -17,5 +17,9 @@ export const useDbQuery = useQuery;
 export const setupPowersync = async () => {
   const connector = new Connector();
   await powerSyncDb.init();
-  await powerSyncDb.connect(connector, {});
+  await powerSyncDb.connect(connector, {
+    params: {
+      schema_version: 1,
+    },
+  });
 };
