@@ -1,10 +1,10 @@
 import { ENV } from "../envVars";
 import { DB } from "../db-types"; // this is the Database interface we defined earlier
-import { Pool } from "pg";
+import pg from "pg";
 import { Kysely, PostgresDialect } from "kysely";
 
 const dialect = new PostgresDialect({
-  pool: new Pool({
+  pool: new pg.Pool({
     connectionString: ENV.DATABASE_URL,
   }),
 });
