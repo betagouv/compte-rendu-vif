@@ -12,7 +12,7 @@ storage:
   uri: mongodb://mongo:27017/powersync_demo
 
 # The port which the PowerSync API server will listen on
-port: 8080
+port: !env PS_PORT
 
 # Specify sync rules
 sync_rules:

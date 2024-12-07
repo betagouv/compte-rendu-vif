@@ -5,11 +5,10 @@ export const isDev = !z.boolean().parse(import.meta.env.PROD);
 const envSchema = z.object({
   VITE_BACKEND_URL: z.string(),
   VITE_ELECTRIC_URL: z.string(),
+  VITE_POWERSYNC_URL: z.string(),
 });
 
 const isSW = typeof window === "undefined";
-console.log("isSW", isSW);
-console.log("isDev", isDev);
 
 const safeParseEnv = (env: Record<string, string>): z.infer<typeof envSchema> => {
   try {

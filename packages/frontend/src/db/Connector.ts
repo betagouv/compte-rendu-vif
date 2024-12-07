@@ -3,6 +3,7 @@ import { safeJSONParse } from "pastable";
 import { api } from "../api";
 import { get } from "idb-keyval";
 import { getPicturesStore } from "../features/idb";
+import { ENV } from "../envVars";
 
 const emitterChannel = new BroadcastChannel("sw-messages");
 
@@ -11,7 +12,7 @@ export class Connector implements PowerSyncBackendConnector {
     const token = await getTokenOrRefresh();
 
     return {
-      endpoint: "http://localhost:8080",
+      endpoint: ENV.VITE_POWERSYNC_URL,
       token,
     };
   }

@@ -85,7 +85,7 @@ services:
       PS_DATABASE_URL: ${PS_DATABASE_URL}
       PS_JWT_SECRET: ${JWT_SECRET}
     ports:
-      - 8080:8080
+      - ${POWERSYNC_PORT:-3003}:8080
 
   adminer:
     image: adminer
