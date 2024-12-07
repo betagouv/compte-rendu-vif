@@ -97,5 +97,5 @@ const ReportAction = ({
 
 const useDeleteMutation = () =>
   useMutation(async (id: string) => {
-    await db.updateTable("report").set({ disabled: 0 }).where("id", "=", id).execute();
+    await db.updateTable("report").set({ disabled: 1 }).where("id", "=", id).execute();
   });
