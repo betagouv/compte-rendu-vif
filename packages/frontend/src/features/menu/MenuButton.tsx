@@ -61,6 +61,7 @@ export const MenuButton = ({ headerRef }: { headerRef: any }) => {
                         className={css({ ml: "16px", mb: "0" })}
                         priority="tertiary"
                         iconId="fr-icon-account-circle-fill"
+                        data-test-id="account-menu"
                       >
                         Mon compte
                       </Button>

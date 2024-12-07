@@ -20,7 +20,7 @@ export const MenuActions = ({ menu }: { menu: NestedMenu | null }) => {
     { text: "Clauses départementales", onClick: () => setMenu("clauses-departementales") },
     { text: "Clauses nationales", onClick: () => setMenu("clauses-nationales") },
     { text: "Assistance technique", onClick: () => setMenu("help") },
-    { text: "Se déconnecter", onClick: logout },
+    { text: "Se déconnecter", onClick: logout, dataTestId: "logout" },
   ];
 
   return (
@@ -43,10 +43,11 @@ export const MenuActions = ({ menu }: { menu: NestedMenu | null }) => {
           },
         })}
       >
-        {actions.map(({ text, onClick }, index) => (
+        {actions.map(({ text, onClick, dataTestId }, index) => (
           <Fragment key={text}>
             <Button
               className={css({ w: "100%" })}
+              data-test-id={dataTestId}
               type="button"
               priority="tertiary no outline"
               onClick={(e) => {

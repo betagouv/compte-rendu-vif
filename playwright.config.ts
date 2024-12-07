@@ -1,5 +1,8 @@
 import { defineConfig, devices } from "@playwright/test";
+import dotenv from "dotenv";
+import { expand } from "dotenv-expand";
 
+expand(dotenv.config({ path: "./.env" }));
 /**
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
