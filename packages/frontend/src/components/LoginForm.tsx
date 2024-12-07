@@ -19,6 +19,7 @@ export const LoginForm = () => {
 
   const login = async (values: LoginFormProps) => {
     const response = await mutation.mutateAsync(values);
+    localStorage.setItem("crvif/version", "1");
     setAuthData({ ...authData, ...response });
   };
 

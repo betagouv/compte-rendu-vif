@@ -2,7 +2,6 @@ import { Center, Divider, Stack, styled } from "#styled-system/jsx";
 import { css } from "#styled-system/css";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { useLogout } from "../../contexts/AuthContext";
-import { electric } from "../../db";
 import { NestedMenu } from "./MenuButton";
 import { menuStore } from "./menuStore";
 import { Fragment } from "react/jsx-runtime";

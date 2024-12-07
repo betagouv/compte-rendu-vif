@@ -1,7 +1,6 @@
-import { type PropsWithChildren, createContext, useContext, useState } from "react";
+import { type PropsWithChildren, createContext, useContext, useEffect, useState } from "react";
 import { safeParseLocalStorage } from "../utils";
 import { useQuery } from "@tanstack/react-query";
-import { electric } from "../db";
 import { api, setToken, type RouterOutputs } from "../api";
 
 const initialAuth = safeParseLocalStorage("crvif/auth");
@@ -16,6 +15,15 @@ const AuthContext = createContext<AuthContextProps>({
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
   const [data, setData] = useState<Omit<AuthContextProps, "setData">>(initialAuth);
+
+  const logout = useLogout();
+
+  useEffect(() => {
+    const version = localStorage.getItem("crvif/version");
+    if (!version) {
+      return logout();
+    }
+  }, []);
 
   const setDataAndSaveInStorage = (data: Omit<AuthContextProps, "setData" | "electricStatus">) => {
     setData((d) => ({ ...d, ...data }));

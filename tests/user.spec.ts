@@ -1,5 +1,4 @@
 import { test, expect, type Route } from "@playwright/test";
-import type { RouterOutputs } from "../packages/frontend/src/api";
 import { db } from "../packages/backend/src/db/db";
 
 test.beforeEach(async ({ page }) => {
