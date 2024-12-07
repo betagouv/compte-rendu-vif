@@ -25,7 +25,6 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY patches ./patches/
 
 COPY packages/backend/package.json ./packages/backend/
-COPY packages/electric-client/package.json ./packages/electric-client/
 COPY packages/pdf/package.json ./packages/pdf/
 
 COPY packages/frontend/package.json ./packages/frontend/
