@@ -43,6 +43,7 @@ Cordialement`,
   });
 };
 
+// TODO: CR_commune_demandeur_date.pdf
 const getPDFInMailName = (report: Report) => {
   const date = format(report.meetDate || new Date(), "dd-MM-yyyy");
   return `compte_rendu_UDAP_${[report.applicantName?.replaceAll(" ", ""), date].filter(Boolean).join("_")}.pdf`;
