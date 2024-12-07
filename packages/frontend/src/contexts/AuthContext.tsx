@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { api, setToken, type RouterOutputs } from "../api";
 
 const initialAuth = safeParseLocalStorage("crvif/auth");
+if (!initialAuth) localStorage.setItem("crvif/version", "1");
 setToken(initialAuth?.token);
 
 const AuthContext = createContext<AuthContextProps>({
@@ -16,12 +17,12 @@ const AuthContext = createContext<AuthContextProps>({
 export const AuthProvider = ({ children }: PropsWithChildren) => {
   const [data, setData] = useState<Omit<AuthContextProps, "setData">>(initialAuth);
 
-  const logout = useLogout();
-
   useEffect(() => {
     const version = localStorage.getItem("crvif/version");
     if (!version) {
-      return logout();
+      localStorage.removeItem("crvif/auth");
+      localStorage.setItem("crvif/version", "1");
+      window.location.reload();
     }
   }, []);
 
