@@ -27,18 +27,21 @@ export const ReportActions = forwardRef<HTMLDivElement, { report: ReportWithUser
 
   const deleteMutation = useDeleteMutation();
   const duplicateMutation = useMutation(async () => {
-    const payload = omit(report, ["id", "createdAt", "pdf", "title"]);
+    const payload = omit(report, ["id", "createdAt", "pdf", "title", "createdByName"]);
 
-    return db.insertInto("report").values({
-      ...payload,
-      id: `report-${v4()}`,
-      title: `${report.title ?? "Sans titre"} - copie`,
-      createdAt: new Date().toISOString(),
-      redactedBy: user.name,
-      redactedById: user.id,
-      createdBy: user.id,
-      pdf: undefined,
-    });
+    return db
+      .insertInto("report")
+      .values({
+        ...payload,
+        id: `report-${v4()}`,
+        title: `${report.title ?? "Sans titre"} - copie`,
+        createdAt: new Date().toISOString(),
+        redactedBy: user.name,
+        redactedById: user.id,
+        createdBy: user.id,
+        pdf: undefined,
+      })
+      .execute();
   });
 
   return (
