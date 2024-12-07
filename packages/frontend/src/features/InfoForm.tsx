@@ -1,26 +1,19 @@
-import { InputGroup, InputGroupWithTitle } from "#components/InputGroup";
+import { InputGroupWithTitle } from "#components/InputGroup";
 import { SpaceTypeChips } from "#components/chips/SpaceTypeChips";
-import { css, cx } from "#styled-system/css";
-import { Box, Center, Divider, Flex, Grid, Stack, styled } from "#styled-system/jsx";
+import { css } from "#styled-system/css";
+import { Box, Center, Divider, Flex, Stack, styled } from "#styled-system/jsx";
 import { useTabsContext } from "@ark-ui/react/tabs";
 import Button from "@codegouvfr/react-dsfr/Button";
 import Input from "@codegouvfr/react-dsfr/Input";
 import Select from "@codegouvfr/react-dsfr/Select";
-import type { Pictures, Report, Tmp_pictures } from "@cr-vif/electric-client/frontend";
-import { useMutation, useQuery } from "@tanstack/react-query";
 import { format, parse } from "date-fns";
-import { useLiveQuery } from "electric-sql/react";
-import { get, set } from "idb-keyval";
-import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
-import { v4 } from "uuid";
 import { useUser } from "../contexts/AuthContext";
-import { db } from "../db";
+import { Report } from "../db/AppSchema";
+import { db, useDbQuery } from "../db/db";
 import { useIsFormDisabled } from "./DisabledContext";
 import { ServiceInstructeurSelect } from "./ServiceInstructeurSelect";
-import { deleteImageFromIdb, getPicturesStore, getToUploadStore, getUploadStatusStore, syncImages } from "./idb";
-import Badge from "@codegouvfr/react-dsfr/Badge";
-import { UploadImage } from "./upload/UploadImage";
 
 export const InfoForm = () => {
   const form = useFormContext<Report>();
@@ -59,18 +52,27 @@ export const InfoForm = () => {
     tryToSetMeetDate();
   };
 
-  const redactedByQuery = useLiveQuery(
-    db.delegation.liveMany({ where: { delegatedTo: user.id }, include: { user_delegation_createdByTouser: true } }),
+  const redactedByQuery = useDbQuery(
+    db
+      .selectFrom("delegation")
+      .where("delegatedTo", "=", user.id)
+      .innerJoin("user", "user.id", "delegation.createdBy")
+      .selectAll("delegation")
+      .select("user.name as createdByName"),
   );
+
+  // const redactedByQuery = useLiveQuery(
+  //   db.delegation.liveMany({ where: { delegatedTo: user.id }, include: { user_delegation_createdByTouser: true } }),
+  // );
 
   const redactedByOptions: { value: string; label: string }[] = [
     {
       value: user.id,
       label: user.name,
     },
-    ...(redactedByQuery.results?.map((delegation) => ({
-      value: (delegation as any).user_delegation_createdByTouser?.id,
-      label: (delegation as any).user_delegation_createdByTouser?.name,
+    ...(redactedByQuery.data?.map((delegation) => ({
+      value: delegation.createdBy!,
+      label: delegation.createdByName!,
     })) ?? []),
   ];
 

@@ -4,29 +4,20 @@ import Input from "@codegouvfr/react-dsfr/Input";
 import { useState } from "react";
 // import { serviceInstructeurs } from "@cr-vif/pdf";
 import { useFormContext, useWatch } from "react-hook-form";
-import { Report, Service_instructeurs } from "@cr-vif/electric-client/frontend";
-import { useLiveQuery } from "electric-sql/react";
-import { db } from "../db";
-import { useUser } from "../contexts/AuthContext";
+import { db, useDbQuery } from "../db/db";
+import { Report, ServiceInstructeurs } from "../db/AppSchema";
 
 export const ServiceInstructeurSelect = ({ disabled }: { disabled?: boolean }) => {
   const form = useFormContext<Report>();
-  const user = useUser()!;
   const [inputValue, setInputValue] = useState("");
 
-  const serviceInstructeursQuery = useLiveQuery(
-    db.service_instructeurs.liveMany({
-      where: {
-        udap_id: user.udap_id,
-      },
-    }),
-  );
+  const serviceInstructeursQuery = useDbQuery(db.selectFrom("service_instructeurs").selectAll());
 
-  const rawItems = serviceInstructeursQuery.results ?? [];
+  const rawItems = serviceInstructeursQuery.data ?? [];
 
-  const items = rawItems.filter((item) => item.short_name.toLowerCase().includes(inputValue.toLowerCase()));
+  const items = rawItems.filter((item) => item.short_name?.toLowerCase().includes(inputValue.toLowerCase()));
 
-  const selectItem = (item: ServiceInstructeur | null) => {
+  const selectItem = (item: ServiceInstructeurs | null) => {
     form.setValue("serviceInstructeur", item?.id || null);
   };
 
@@ -36,8 +27,8 @@ export const ServiceInstructeurSelect = ({ disabled }: { disabled?: boolean }) =
     <Combobox.Root
       disabled={disabled}
       selectionBehavior="replace"
-      itemToString={(item) => (item as ServiceInstructeur)?.short_name ?? ""}
-      itemToValue={(item) => (item as ServiceInstructeur)?.id.toString() ?? ""}
+      itemToString={(item) => (item as ServiceInstructeurs)?.short_name ?? ""}
+      itemToValue={(item) => (item as ServiceInstructeurs)?.id.toString() ?? ""}
       items={items}
       value={value ? [value.toString()] : undefined}
       inputValue={value ? items.find((item) => item.id === value)?.short_name : inputValue}
@@ -45,7 +36,7 @@ export const ServiceInstructeurSelect = ({ disabled }: { disabled?: boolean }) =
         if (value) selectItem(null);
         setInputValue(e.value);
       }}
-      onValueChange={(e) => selectItem(e.items?.[0] as ServiceInstructeur)}
+      onValueChange={(e) => selectItem(e.items?.[0] as ServiceInstructeurs)}
     >
       <Combobox.Control>
         <Combobox.Input asChild placeholder="Sélectionner un service instructeur">
@@ -80,5 +71,3 @@ export const ServiceInstructeurSelect = ({ disabled }: { disabled?: boolean }) =
 const ProxyInput = (props: any) => {
   return <Input label="Service instructeur" nativeInputProps={props} />;
 };
-
-type ServiceInstructeur = Service_instructeurs;

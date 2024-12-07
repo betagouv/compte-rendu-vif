@@ -13,7 +13,6 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@cr-vif/electric-client": "workspace:*",
     "@types/react": "^18.2.64",
     "typescript": "^5.4.5"
   },

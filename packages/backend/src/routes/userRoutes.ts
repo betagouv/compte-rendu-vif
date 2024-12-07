@@ -1,19 +1,16 @@
-import type { FastifyPluginAsyncTypebox } from "@fastify/type-provider-typebox";
+import type { FastifyPluginAsyncTypebox, Static } from "@fastify/type-provider-typebox";
 import { Type } from "@sinclair/typebox";
-import { userAndTokenTSchema } from "../services/userService";
-import { internal_userInput, userInput } from "@cr-vif/electric-client/typebox";
+import { userAndTokenTSchema } from "./tschemas";
 
 export const userPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
-  // @ts-expect-error null / undefined mismatch
   fastify.post("/create-user", { schema: createUserTSchema }, async (request) => {
-    const resp = await request.services.user.createUser(request.body);
+    const resp = (await request.services.user.createUser(request.body)) as Static<typeof userAndTokenTSchema>;
 
     return resp;
   });
 
-  // @ts-expect-error null / undefined mismatch
   fastify.post("/login", { schema: loginTSchema }, async (request) => {
-    const result = await request.services.user.login(request.body);
+    const result = (await request.services.user.login(request.body)) as Static<typeof userAndTokenTSchema>;
     return result;
   });
 
@@ -23,7 +20,7 @@ export const userPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
   });
 
   fastify.post("/send-reset-password", { schema: sendResetPasswordTSchema }, async (request) => {
-    return request.services.user.generateResetLink(request.body.email);
+    return request.services.user.generateResetLink(request.body.email) as Promise<{ message: string }>;
   });
 
   fastify.post("/reset-password", { schema: resetPasswordTSchema }, async (request) => {
@@ -32,15 +29,17 @@ export const userPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
 };
 
 export const createUserTSchema = {
-  body: Type.Composite([
-    Type.Pick(userInput, ["name", "udap_id"]),
-    Type.Pick(internal_userInput, ["email", "password"]),
-  ]),
+  body: Type.Object({
+    email: Type.String(),
+    password: Type.String(),
+    name: Type.String(),
+    udap_id: Type.String(),
+  }),
   response: { 200: userAndTokenTSchema },
 };
 
 export const loginTSchema = {
-  body: Type.Pick(internal_userInput, ["email", "password"]),
+  body: Type.Object({ email: Type.String(), password: Type.String() }),
   response: { 200: userAndTokenTSchema },
 };
 

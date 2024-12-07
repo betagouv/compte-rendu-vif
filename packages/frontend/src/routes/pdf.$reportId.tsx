@@ -6,21 +6,18 @@ import { css, cx } from "#styled-system/css";
 import { Center, Flex, Stack, styled } from "#styled-system/jsx";
 import Button from "@codegouvfr/react-dsfr/Button";
 import Input from "@codegouvfr/react-dsfr/Input";
-import type { Report, Service_instructeurs, Udap } from "@cr-vif/electric-client/frontend";
 import { ReportPDFDocument, ReportPDFDocumentProps, getReportHtmlString } from "@cr-vif/pdf";
 import { usePdf } from "@mikecousins/react-pdf";
 import { pdf } from "@react-pdf/renderer";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate, useRouter } from "@tanstack/react-router";
 import { Editor } from "@tiptap/react";
-import { useLiveQuery } from "electric-sql/react";
 import { makeArrayOf } from "pastable";
 import { PropsWithChildren, ReactNode, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import { api } from "../api";
 import sentImage from "../assets/sent.svg";
 import { useUser } from "../contexts/AuthContext";
-import { db } from "../db";
 import { useChipOptions } from "../features/chips/useChipOptions";
 import { TextEditor } from "../features/text-editor/TextEditor";
 import { TextEditorContext, TextEditorContextProvider } from "../features/text-editor/TextEditorContext";
@@ -30,7 +27,8 @@ import { v4 } from "uuid";
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import { fr } from "@codegouvfr/react-dsfr";
 import { transformBold } from "../features/menu/ClauseMenu";
-import { Pictures } from "../../../electric-client/src/generated/client/index";
+import { db, useDbQuery } from "../db/db";
+import { Pictures, Report, Udap } from "../db/AppSchema";
 
 type Mode = "edit" | "view" | "send" | "sent";
 
@@ -59,23 +57,38 @@ export const PDF = () => {
     navigate({ search: { mode: mode === "edit" ? "view" : "edit" }, replace: true });
   };
 
-  const reportQuery = useLiveQuery(
-    db.report.liveUnique({ where: { id: reportId }, include: { user: true, pictures: true } }),
-  );
-  const reportRef = useRef<(Report & { pictures?: Pictures[] }) | null>(null);
+  const reportQuery = useQuery({
+    queryKey: ["report", reportId],
+    queryFn: async () => {
+      const reportQuery = await db.selectFrom("report").where("id", "=", reportId).selectAll().execute();
+      const picturesQuery = await db.selectFrom("pictures").where("reportId", "=", reportId).selectAll().execute();
+      const report = reportQuery?.[0];
+      const pictures = picturesQuery ?? [];
+
+      return { ...report, pictures };
+    },
+  });
+
+  // useDbQuery(db.selectFrom("report").where("id", "=", reportId).selectAll(), undefined, {
+  //   runQueryOnce: true,
+  // });
+  // const picturesQuery = useDbQuery(db.selectFrom("pictures").where("report_id", "=", reportId).selectAll(), undefined, {
+  const report = reportQuery.data;
 
   const snapshotQuery = useQuery({
     queryKey: ["report-snapshot", reportId],
     queryFn: async () => {
-      const snapshot = await db.pdf_snapshot.findFirst({ where: { report_id: reportId } });
+      const snapshotQuery = await db.selectFrom("pdf_snapshot").where("report_id", "=", reportId).selectAll().execute();
+      const snapshot = snapshotQuery?.[0];
+
       if (!snapshot || !snapshot.report) return null;
 
       try {
         const snapshotReport = JSON.parse(snapshot.report);
         const diff = getDiff(snapshotReport, {
-          ...reportQuery.results!,
-          createdAt: reportQuery.results!.createdAt?.toISOString(),
-          meetDate: reportQuery.results!.meetDate?.toISOString(),
+          ...report,
+          createdAt: new Date(report!.createdAt!).toISOString(),
+          meetDate: new Date(report!.meetDate!).toISOString(),
         });
 
         if (Object.keys(diff).length) return null;
@@ -85,36 +98,40 @@ export const PDF = () => {
         return null;
       }
     },
-    enabled: !!reportQuery.results,
+    enabled: !!report,
   });
 
-  const serviceInstructeurQuery = useLiveQuery(
-    db.service_instructeurs.liveUnique({ where: { id: reportQuery.results?.serviceInstructeur ?? undefined } }),
-  );
-  const serviceInstructeur = serviceInstructeurQuery.results;
-  const isServiceInstructeurLoaded = reportQuery.results?.serviceInstructeur ? !!serviceInstructeur : true;
+  const serviceInstructeurQuery = useQuery({
+    queryKey: ["service-instructeur", report?.serviceInstructeur],
+    queryFn: async () => {
+      return await db
+        .selectFrom("service_instructeurs")
+        .where("id", "=", report!.serviceInstructeur!)
+        .selectAll()
+        .execute();
+    },
+    enabled: !!report?.serviceInstructeur,
+  });
 
-  if (!reportRef.current && reportQuery.results) {
-    reportRef.current = reportQuery.results;
-  }
+  const serviceInstructeur = serviceInstructeurQuery.data?.[0];
+  const isServiceInstructeurLoaded = report?.serviceInstructeur ? !!serviceInstructeur : true;
 
-  const report = reportRef.current;
   const htmlString = snapshotQuery.data;
 
   const saveSnapshotMutation = useMutation(
     async ({ report, html }: { report: string; html: string }) => {
-      await db.pdf_snapshot.deleteMany({
-        where: { report_id: reportId, user_id: user.id },
-      });
-      await db.pdf_snapshot.create({
-        data: {
+      await db.deleteFrom("pdf_snapshot").where("report_id", "=", reportId).where("user_id", "=", user.id).execute();
+
+      await db
+        .insertInto("pdf_snapshot")
+        .values({
           id: v4(),
           report_id: reportId,
           report,
           html,
           user_id: user.id,
-        },
-      });
+        })
+        .execute();
     },
     { onSuccess: () => toggleMode() },
   );
@@ -276,8 +293,11 @@ const SendForm = ({
 
 const getBaseRecipients = async (report: Report) => {
   const serviceEmail = report.serviceInstructeur
-    ? (await db.service_instructeurs.findFirst({ where: { id: report.serviceInstructeur } }))?.email
+    ? (
+        await db.selectFrom("service_instructeurs").where("id", "=", report.serviceInstructeur).selectAll().execute()
+      )?.[0]?.email
     : null;
+
   const recipients = [serviceEmail, report.applicantEmail].filter(Boolean).join(", ");
   return recipients;
 };
@@ -383,8 +403,6 @@ export const WithReport = ({
   const { editor } = useContext(TextEditorContext);
   const [htmlString] = useState(initialHtmlString);
 
-  console.log(report);
-
   useEffect(() => {
     if (!editor) return;
 
@@ -483,14 +501,14 @@ const PdfCanvasPage = ({ file, page }: { file: string; page: number }) => {
 
 const SendReportPage = ({ children }: PropsWithChildren) => {
   const { reportId } = Route.useParams();
-  const reportQuery = useLiveQuery(db.report.liveUnique({ where: { id: reportId } }));
+  // const reportQuery = useLiveQuery(db.report.liveUnique({ where: { id: reportId } }));
+  const reportQuery = useDbQuery(db.selectFrom("report").where("id", "=", reportId).selectAll());
 
   const form = useFormContext();
 
-  const isLoading = !reportQuery.updatedAt;
-  if (isLoading) return null;
+  if (reportQuery.isLoading) return null;
 
-  const report = reportQuery.results;
+  const report = reportQuery.data?.[0];
 
   if (!report) return <div>Report not found</div>;
 

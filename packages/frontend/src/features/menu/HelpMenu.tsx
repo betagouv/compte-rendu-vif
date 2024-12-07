@@ -1,15 +1,16 @@
 import { Divider, Stack, styled } from "#styled-system/jsx";
 import Button from "@codegouvfr/react-dsfr/Button";
-import { electric } from "../../db";
 import { MenuTitle } from "./MenuTitle";
+import { clearDb } from "../../db/db";
 
 export const HelpMenu = ({ backButtonOnClick }: { backButtonOnClick: () => void }) => {
   const deleteLocalData = () => {
-    if (electric.isConnected) electric.disconnect();
     localStorage.clear();
     indexedDB.deleteDatabase("crvif.db");
-    unregisterSWs()
-    window.location.reload();
+    unregisterSWs();
+    clearDb().then(() => {
+      window.location.reload();
+    });
   };
   return (
     <>
@@ -26,12 +27,10 @@ export const HelpMenu = ({ backButtonOnClick }: { backButtonOnClick: () => void 
 };
 
 const unregisterSWs = async () => {
-  if ('serviceWorker' in navigator) {
+  if ("serviceWorker" in navigator) {
     const registrations = await navigator.serviceWorker.getRegistrations();
-    
+
     // Unregister all service workers
-    await Promise.all(
-      registrations.map(registration => registration.unregister())
-    );
-  } 
+    await Promise.all(registrations.map((registration) => registration.unregister()));
+  }
 };

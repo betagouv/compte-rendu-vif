@@ -1,21 +1,30 @@
 import { Type, type FastifyPluginAsyncTypebox } from "@fastify/type-provider-typebox";
 import { renderToBuffer } from "@react-pdf/renderer";
 import { ReportPDFDocument } from "@cr-vif/pdf";
-import { Pictures, Udap } from "@cr-vif/electric-client/frontend";
 import { authenticate } from "./authMiddleware";
 import { db } from "../db/db";
 import { sendReportMail } from "../features/mail";
 import { getPDFName } from "../services/uploadService";
 import React from "react";
+import { Udap } from "../../../frontend/src/db/AppSchema";
+import { Pictures } from "../db-types";
 
 export const pdfPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
   fastify.addHook("preHandler", authenticate);
 
   fastify.post("/report", { schema: reportPdfTSchema }, async (request) => {
     const { reportId, htmlString } = request.body;
-    const { udap } = request.user.user;
+    const { udap_id } = request.user.user!;
 
-    const pictures = await db.pictures.findMany({ where: { reportId }, orderBy: { createdAt: "asc" } });
+    const pictures = await db
+      .selectFrom("pictures")
+      .where("reportId", "=", reportId)
+      .orderBy("createdAt asc")
+      .selectAll()
+      .execute();
+
+    const udapsQuery = await db.selectFrom("udap").where("id", "=", udap_id).selectAll().execute();
+    const udap = udapsQuery[0]!;
 
     const pdf = await generatePdf({ htmlString, udap, pictures });
 
@@ -27,7 +36,7 @@ export const pdfPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
       name,
     });
 
-    await db.report.update({ where: { id: reportId }, data: { pdf: url } });
+    await db.updateTable("report").set({ pdf: url }).where("id", "=", reportId).execute();
 
     const userMail = request.user.email;
     const recipients = request.body.recipients
@@ -36,7 +45,8 @@ export const pdfPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
       .map((r) => r.trim());
     if (!recipients.includes(userMail)) recipients.push(userMail);
 
-    const report = await db.report.findUnique({ where: { id: reportId } });
+    const reportsQuery = await db.selectFrom("report").where("id", "=", reportId).selectAll().execute();
+    const report = reportsQuery[0];
 
     await sendReportMail({ recipients: recipients.join(","), pdfBuffer: pdf, report: report! });
 

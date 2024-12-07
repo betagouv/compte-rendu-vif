@@ -1,0 +1,59 @@
+replication:
+  connections:
+    - type: postgresql
+      uri: !env PS_DATABASE_URL
+
+      # SSL settings
+      sslmode: disable # 'verify-full' (default) or 'verify-ca' or 'disable'
+
+# Connection settings for sync bucket storage
+storage:
+  type: mongodb
+  uri: mongodb://mongo:27017/powersync_demo
+
+# The port which the PowerSync API server will listen on
+port: !env PS_PORT
+
+# Specify sync rules
+sync_rules:
+  # TODO use specific sync rules here
+  content: |
+    bucket_definitions:
+      global_bucket:
+        data:
+          - SELECT * FROM clause_v2 WHERE udap_id = 'ALL'
+          - SELECT * FROM pictures
+          - SELECT * FROM picture_lines
+
+      udap_bucket:
+        parameters: SELECT udap_id as udap_id FROM "user" WHERE id = request.user_id()
+        data: 
+          - SELECT * FROM report WHERE udap_id = bucket.udap_id
+          - SELECT * FROM udap WHERE id = bucket.udap_id
+          - SELECT * FROM "user" WHERE udap_id = bucket.udap_id
+          - SELECT * FROM service_instructeurs WHERE udap_id = bucket.udap_id
+          - SELECT * FROM clause_v2 WHERE udap_id = bucket.udap_id
+
+      user_bucket:
+        parameters: SELECT request.user_id() as user_id
+        data:
+          - SELECT * FROM delegation WHERE "createdBy" = bucket.user_id OR "delegatedTo" = bucket.user_id
+          - SELECT * FROM pdf_snapshot WHERE user_id = bucket.user_id
+          - SELECT * FROM transactions WHERE user_id = bucket.user_id
+
+# Settings for client authentication
+client_auth:
+  jwks:
+    keys:
+      - kty: oct
+        alg: HS256
+        kid: powersync
+        k: !env PS_JWT_SECRET
+
+  audience: ["powersync"]
+
+  # Settings for telemetry reporting
+  # See https://docs.powersync.com/self-hosting/telemetry
+  telemetry:
+    # Opt out of reporting anonymized usage metrics to PowerSync telemetry service
+    disable_telemetry_sharing: false

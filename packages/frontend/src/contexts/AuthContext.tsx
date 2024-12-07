@@ -54,55 +54,9 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     refetchOnWindowFocus: false,
   });
 
-  const electricQuery = useQuery({
-    queryKey: ["electric", data?.token!],
-    queryFn: async () => {
-      console.log("connecting to electric");
-      if (electric.isConnected) electric.disconnect();
-
-      await electric.connect(data!.token);
-      await electric.db.clause_v2.sync({ where: { udap_id: { in: ["ALL", data!.user!.udap_id!] } } });
-      await electric.db.user.sync({ where: { udap_id: data!.user!.udap_id } });
-      await electric.db.report.sync({
-        where: {
-          udap_id: data!.user!.udap_id,
-        },
-        include: {
-          user: true,
-          pictures: true,
-        },
-      });
-      await electric.db.service_instructeurs.sync({ where: { udap_id: data!.user!.udap_id } });
-      await electric.db.delegation.sync({
-        where: {
-          OR: [{ createdBy: data!.user!.id }, { delegatedTo: data!.user!.id }],
-        },
-        include: {
-          user_delegation_createdByTouser: true,
-        },
-      });
-      await electric.db.pdf_snapshot.sync({
-        where: {
-          user_id: data!.user!.id,
-        },
-      });
-      await electric.db.picture_lines.sync({});
-
-      return true;
-    },
-    enabled: !!data?.token && refreshTokenQuery.isSuccess,
-    refetchOnWindowFocus: false,
-    onError: (e) => console.error("aaaaa", e),
-  });
-
-  if (electricQuery.isError) {
-    console.error("electricQuery error", electricQuery.error);
-  }
-
   const value = {
     ...data,
     setData: setDataAndSaveInStorage,
-    electricStatus: electricQuery.status,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
@@ -126,11 +80,6 @@ export const useLogout = () => {
   };
 };
 
-export const useElectricStatus = () => {
-  const { electricStatus } = useContext(AuthContext);
-  return electricStatus;
-};
-
 export const useUser = () => {
   const { user } = useContext(AuthContext);
   return user;
@@ -142,3 +91,5 @@ type AuthContextProps = Partial<RouterOutputs<"/api/login">> & {
 };
 
 export type ElectricStatus = "error" | "pending" | "success" | "idle" | "loading";
+
+export const useElectricStatus = () => "idle" as ElectricStatus;

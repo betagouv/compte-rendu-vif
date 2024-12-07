@@ -1,8 +1,8 @@
 import { Document, Font, Image, Page, Text, View } from "@react-pdf/renderer";
 import { Html } from "react-pdf-html";
 import React from "react";
-import type { Udap, Report, Service_instructeurs, Clause_v2, Pictures } from "@cr-vif/electric-client/frontend";
 import { Buffer } from "buffer";
+import { Udap, Report, ServiceInstructeurs, Clause_v2, Pictures } from "../../frontend/src/db/AppSchema";
 
 export const initFonts = (folder: string = "") => {
   // Font.register({
@@ -241,7 +241,7 @@ export const getReportHtmlString = (
   report: ReportWithUser,
   chipOptions: Clause_v2[],
   udap: Udap,
-  serviceInstructeur?: Service_instructeurs,
+  serviceInstructeur?: ServiceInstructeurs,
 ) => {
   const spaceType = chipOptions.find((chip) => chip.key === "type-espace" && chip.value === report.projectSpaceType);
   const decision = chipOptions.find((chip) => chip.key === "decision" && chip.value === report.decision);
@@ -334,7 +334,7 @@ export const getReportHtmlString = (
     `);
 };
 
-const formatServiceInstructeur = (serviceInstructeur: Service_instructeurs) => {
+const formatServiceInstructeur = (serviceInstructeur: ServiceInstructeurs) => {
   const contact = [serviceInstructeur.email, serviceInstructeur.tel].filter(Boolean).join(", ");
   return `${serviceInstructeur.full_name}${contact ? `, ${contact}` : ""}.`;
 };

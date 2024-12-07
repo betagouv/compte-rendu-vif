@@ -5,4 +5,4 @@ CREATE TABLE pictures (
     "createdAt" TIMESTAMP
 );
 
-ALTER TABLE pictures ENABLE ELECTRIC;
+ALTER PUBLICATION powersync ADD TABLE "pictures";

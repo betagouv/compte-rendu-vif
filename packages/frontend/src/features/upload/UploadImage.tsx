@@ -1,21 +1,10 @@
 import { useState, useRef, ChangeEvent, useEffect } from "react";
 import { v4 } from "uuid";
-import { db } from "../../db";
-import {
-  deleteImageFromIdb,
-  getPicturesStore,
-  getToPingStore,
-  getToUploadStore,
-  getUploadStatusStore,
-  syncImages,
-  syncPictureLines,
-} from "../idb";
+import { deleteImageFromIdb, getPicturesStore, getUploadStatusStore } from "../idb";
 import { Box, Center, Flex, Grid, Stack, styled } from "#styled-system/jsx";
 import { InputGroup } from "#components/InputGroup.tsx";
 import { cx } from "#styled-system/css";
-import { Tmp_pictures, Pictures, Report } from "@cr-vif/electric-client/frontend";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useLiveQuery } from "electric-sql/react";
 import { del, get, set } from "idb-keyval";
 import { useFormContext } from "react-hook-form";
 import Badge from "@codegouvfr/react-dsfr/Badge";
@@ -24,6 +13,8 @@ import { css } from "#styled-system/css";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { ImageCanvas, Line } from "./DrawingCanvas";
 import { api } from "../../api";
+import { db, useDbQuery } from "../../db/db";
+import { Pictures, Report } from "../../db/AppSchema";
 import imageCompression from "browser-image-compression";
 
 const modal = createModal({
@@ -35,27 +26,16 @@ export const UploadImage = ({ reportId }: { reportId: string }) => {
   const [statusMap, setStatusMap] = useState<Record<string, string>>({});
   const [selectedPicture, setSelectedPicture] = useState<{ id: string; url: string } | null>(null);
 
-  const notifyPictureLines = useMutation(async ({ pictureId, lines }: { pictureId: string; lines: Array<Line> }) => {
-    try {
-      emitterChannel.postMessage({ type: "status", id: pictureId, status: "uploading" });
-
-      const result = await api.post(`/api/upload/picture/${pictureId}/lines` as any, { body: { lines } });
-      await del(pictureId, getToPingStore());
-
-      emitterChannel.postMessage({ type: "status", id: pictureId, status: "success" });
-
-      return result;
-    } catch (e) {
-      await set(pictureId, JSON.stringify(lines), getToPingStore());
-      syncPictureLines();
-    }
-  });
-
   const linesQuery = useQuery({
     queryKey: ["lines", selectedPicture?.id],
     queryFn: async () => {
-      const pictureLines = await db.picture_lines.findFirst({ where: { pictureId: selectedPicture?.id } });
-      return JSON.parse(pictureLines?.lines ?? "[]");
+      const linesQuery = await db
+        .selectFrom("picture_lines")
+        .where("pictureId", "=", selectedPicture!.id)
+        .selectAll()
+        .execute();
+
+      return JSON.parse(linesQuery?.[0]?.lines ?? "[]");
     },
     enabled: !!selectedPicture,
   });
@@ -68,27 +48,10 @@ export const UploadImage = ({ reportId }: { reportId: string }) => {
     ref.current!.value = "";
     const buffer = await processImage(file);
 
-    await db.tmp_pictures.create({ data: { id: picId, reportId, createdAt: new Date() } });
     await set(picId, buffer, getPicturesStore());
+    await db.insertInto("pictures").values({ id: picId, reportId, createdAt: new Date().toISOString() }).execute();
 
-    try {
-      const formData = new FormData();
-
-      formData.append("file", new Blob([buffer]), "file");
-      formData.append("reportId", reportId);
-      formData.append("pictureId", picId);
-      emitterChannel.postMessage({ type: "status", id: picId, status: "uploading" });
-
-      await api.post("/api/upload/image", {
-        body: formData,
-        query: { reportId: reportId, id: picId },
-      } as any);
-
-      emitterChannel.postMessage({ type: "status", id: picId, status: "success" });
-    } catch {
-      await set(picId, reportId, getToUploadStore());
-      syncImages();
-    }
+    setStatusMap((prev) => ({ ...prev, [picId]: "uploading" }));
   });
 
   const onChange = async (e: ChangeEvent<HTMLInputElement>) => {
@@ -100,7 +63,6 @@ export const UploadImage = ({ reportId }: { reportId: string }) => {
 
   useEffect(() => {
     const listener = (event: MessageEvent) => {
-      console.log(event.data);
       if (event.data.type === "status") {
         console.log("status", event.data.id, event.data.status);
         setStatusMap((prev) => ({ ...prev, [event.data.id]: event.data.status }));
@@ -140,7 +102,6 @@ export const UploadImage = ({ reportId }: { reportId: string }) => {
             {selectedPicture ? (
               <ImageCanvas
                 closeModal={() => setSelectedPicture(null)}
-                notifyPictureLines={notifyPictureLines.mutate}
                 pictureId={selectedPicture.id}
                 url={selectedPicture.url}
                 containerRef={containerRef}
@@ -174,7 +135,6 @@ export const UploadImage = ({ reportId }: { reportId: string }) => {
 };
 
 const broadcastChannel = new BroadcastChannel("sw-messages");
-const emitterChannel = new BroadcastChannel("sw-messages");
 
 const ReportPictures = ({
   statusMap,
@@ -187,18 +147,20 @@ const ReportPictures = ({
 
   const reportId = form.getValues().id;
 
-  const tmpPicturesQuery = useLiveQuery(
-    db.tmp_pictures.liveMany({ where: { reportId }, orderBy: { createdAt: "desc" } }),
-  );
+  const picturesQuery = useDbQuery(db.selectFrom("pictures").where("reportId", "=", reportId).selectAll());
 
-  const picturesQuery = useLiveQuery(
-    db.pictures.liveMany({
-      where: { reportId },
-      orderBy: { createdAt: "desc" },
-    }),
-  );
+  // const tmpPicturesQuery = useLiveQuery(
+  //   db.tmp_pictures.liveMany({ where: { reportId }, orderBy: { createdAt: "desc" } }),
+  // );
 
-  const pictures = mergePictureArrays(tmpPicturesQuery.results ?? [], picturesQuery.results ?? []);
+  // const picturesQuery = useLiveQuery(
+  //   db.pictures.liveMany({
+  //     where: { reportId },
+  //     orderBy: { createdAt: "desc" },
+  //   }),
+  // );
+
+  const pictures = picturesQuery.data ?? [];
 
   return (
     <Flex direction="column" w="100%" my="40px">
@@ -221,24 +183,6 @@ const ReportPictures = ({
   );
 };
 
-const mergePictureArrays = (a: Tmp_pictures[], b: Pictures[]) => {
-  const map = new Map<string, Tmp_pictures>();
-
-  const sortByDate = (a: Tmp_pictures, b: Tmp_pictures) => {
-    return new Date(a.createdAt!).getTime() - new Date(b.createdAt!).getTime();
-  };
-
-  for (const item of a) {
-    map.set(item.id, item);
-  }
-
-  for (const item of b) {
-    map.set(item.id, item);
-  }
-
-  return Array.from(map.values()).sort(sortByDate);
-};
-
 const PictureThumbnail = ({
   picture,
   index,
@@ -252,8 +196,7 @@ const PictureThumbnail = ({
 }) => {
   const deletePictureMutation = useMutation(async () => {
     await deleteImageFromIdb(picture.id);
-    await db.tmp_pictures.delete({ where: { id: picture.id } }).catch(() => {});
-    await db.pictures.delete({ where: { id: picture.id } }).catch(() => {});
+    await db.deleteFrom("pictures").where("id", "=", picture.id).execute();
 
     return "ok";
   });
@@ -273,7 +216,9 @@ const PictureThumbnail = ({
     refetchOnWindowFocus: false,
   });
 
-  const pictureLines = useLiveQuery(db.picture_lines.liveMany({ where: { pictureId: picture.id } }));
+  const pictureLines = useDbQuery(db.selectFrom("picture_lines").where("pictureId", "=", picture.id).selectAll());
+
+  // const pictureLines = useLiveQuery(db.picture_lines.liveMany({ where: { pictureId: picture.id } }));
 
   const idbStatusQuery = useQuery({
     queryKey: ["picture-status", picture.id],
@@ -286,12 +231,12 @@ const PictureThumbnail = ({
 
   useEffect(() => {
     drawCanvas();
-  }, [bgUrlQuery.data, pictureLines.results]);
+  }, [bgUrlQuery.data, pictureLines.data]);
 
   const drawCanvas = () => {
     if (!canvasRef.current) return;
     if (!bgUrlQuery.data) return;
-    if (!pictureLines.results) return;
+    if (!pictureLines.data) return;
 
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d")!;
@@ -321,7 +266,7 @@ const PictureThumbnail = ({
 
       ctx.drawImage(image, 0, 0, image.width, image.height);
 
-      const lines = JSON.parse(pictureLines.results?.[0]?.lines ?? "[]");
+      const lines = JSON.parse(pictureLines.data?.[0]?.lines ?? "[]");
 
       ctx.lineWidth = 5;
       ctx.lineCap = "round";

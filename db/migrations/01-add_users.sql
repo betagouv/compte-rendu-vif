@@ -15,7 +15,7 @@ CREATE TABLE "udap"(
     ,udap_text       TEXT
 );
 
-ALTER TABLE "udap" ENABLE ELECTRIC;
+CREATE PUBLICATION powersync FOR TABLE "udap";
     
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "user" (
@@ -34,13 +34,12 @@ CREATE TABLE IF NOT EXISTS "internal_user" (
     "userId" text NOT NULL REFERENCES "user"(id) ON DELETE CASCADE
 );
 
-ALTER TABLE "user" ENABLE ELECTRIC;
+ALTER PUBLICATION powersync ADD TABLE "user";
 
 CREATE TABLE IF NOT EXISTS "delegation" (
+    "id" text PRIMARY KEY NOT NULL,
     "createdBy" text NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
-    "delegatedTo" text NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
-    PRIMARY KEY("createdBy", "delegatedTo")
+    "delegatedTo" text NOT NULL REFERENCES "user"(id) ON DELETE CASCADE
 );
 
-
-ALTER TABLE "delegation" ENABLE ELECTRIC;
+ALTER PUBLICATION powersync ADD TABLE "delegation";

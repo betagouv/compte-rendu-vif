@@ -3,7 +3,6 @@ import { SyncFormBanner } from "#components/SyncForm";
 import { Tabs } from "#components/Tabs";
 import { css } from "#styled-system/css";
 import { Box, Flex } from "#styled-system/jsx";
-import type { Report } from "@cr-vif/electric-client/frontend";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useLiveQuery } from "electric-sql/react";
 import { useEffect, useRef } from "react";
@@ -16,28 +15,31 @@ import {
   type UseFormProps,
   type UseFormRegister,
 } from "react-hook-form";
-import { db, electric } from "../db";
 import { InfoForm } from "../features/InfoForm";
 import { NotesForm } from "../features/NotesForm";
 import { DisabledContext } from "../features/DisabledContext";
 import { useQuery } from "@tanstack/react-query";
 import { useCanEditReport } from "../hooks/useCanEditReport";
+import { db, useDbQuery } from "../db/db";
+import { Report } from "../db/AppSchema";
 
 const EditReport = () => {
   const { reportId } = Route.useParams();
 
-  useQuery({
-    queryKey: ["report", reportId],
-    queryFn: () =>
-      electric.db.report.sync({
-        where: { id: reportId },
-        include: {
-          pictures: true,
-        },
-      }),
-  });
+  // useQuery({
+  //   queryKey: ["report", reportId],
+  //   queryFn: () =>
+  //     electric.db.report.sync({
+  //       where: { id: reportId },
+  //       include: {
+  //         pictures: true,
+  //       },
+  //     }),
+  // });
 
-  const { results: report } = useLiveQuery(db.report.liveUnique({ where: { id: reportId } }));
+  const reportQuery = useDbQuery(db.selectFrom("report").where("id", "=", reportId).selectAll());
+
+  const report = reportQuery.data?.[0];
 
   return <Flex direction="column">{report ? <WithReport report={report} /> : null}</Flex>;
 };

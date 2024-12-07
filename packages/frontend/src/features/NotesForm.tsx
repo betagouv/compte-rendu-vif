@@ -2,13 +2,13 @@ import { Center, Divider, Flex, Stack, styled } from "#styled-system/jsx";
 import { useFormContext } from "react-hook-form";
 import { InputGroupWithTitle } from "#components/InputGroup";
 import Input from "@codegouvfr/react-dsfr/Input";
-import type { Report } from "@cr-vif/electric-client/frontend";
 import { DecisionChips } from "#components/chips/DecisionChips";
 import { ContactChips } from "#components/chips/ContactChips";
 import { css } from "#styled-system/css";
 import { FurtherInfoChips } from "#components/chips/FurtherInfoChips";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { useIsFormDisabled } from "./DisabledContext";
+import { Report } from "../db/AppSchema";
 import { UploadImage } from "./upload/UploadImage";
 
 export const NotesForm = () => {

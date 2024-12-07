@@ -1,10 +1,10 @@
 import { useFormContext, useWatch } from "react-hook-form";
-import type { Report } from "@cr-vif/electric-client/frontend";
 import { ChipGroup, type ChipGroupOption } from "../Chip";
 import { useChipOptions } from "../../features/chips/useChipOptions";
+import { Report } from "../../db/AppSchema";
 
 export const DecisionChips = ({ disabled }: { disabled?: boolean }) => {
-  const form = useFormContext<Report>();
+  const form = useFormContext<Reportt>();
 
   const selected = useWatch({ control: form.control, name: "decision" });
   const value = selected ? [selected] : [];

@@ -20,6 +20,5 @@ CREATE TABLE IF NOT EXISTS "report" (
   "udap_id" TEXT
 );
 
+ALTER PUBLICATION powersync ADD TABLE "report";
 
-ALTER TABLE
-  "report" ENABLE ELECTRIC;

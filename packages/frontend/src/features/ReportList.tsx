@@ -1,9 +1,7 @@
 import { Center, Divider, Flex, Grid, Stack, styled } from "#styled-system/jsx";
 import { flex } from "#styled-system/patterns";
-import { useLiveQuery } from "electric-sql/react";
 import { useUser } from "../contexts/AuthContext";
-import type { Report } from "@cr-vif/electric-client/frontend";
-import { db } from "../db";
+import { db, useDbQuery } from "../db/db";
 import Button from "@codegouvfr/react-dsfr/Button";
 import Badge from "@codegouvfr/react-dsfr/Badge";
 import { css, cx } from "#styled-system/css";
@@ -17,89 +15,92 @@ import { Pagination } from "@codegouvfr/react-dsfr/Pagination";
 import welcomeImage from "../assets/welcome.svg";
 import { useIsDesktop } from "../hooks/useIsDesktop";
 import { chunk } from "pastable";
+import { Report } from "../db/AppSchema";
 
-export type ReportWithUser = Report & { user?: { email: string; name: string } };
+export type ReportWithUser = Report & { createdByName: string | null };
 
 export const MyReports = () => {
   const [page, setPage] = useState(0);
 
   const user = useUser()!;
-  const myReports = useLiveQuery(
-    db.report.liveMany({
-      where: { disabled: false, OR: [{ createdBy: user.id }, { redactedById: user.id }] },
-      take: 20,
-      skip: page * 20,
-      orderBy: [{ meetDate: "desc" }, { createdAt: "desc" }],
-      include: {
-        user: true,
-      },
-    }),
+
+  const reportsQuery = useDbQuery(
+    db
+      .selectFrom("report")
+      .where("disabled", "=", 0)
+      .where((eb) => eb.or([eb("createdBy", "=", user.id), eb("redactedById", "=", user.id)]))
+      .limit(20)
+      .offset(page * 20)
+      .orderBy("meetDate desc")
+      .orderBy("createdAt desc")
+      .leftJoin("user", "user.id", "report.createdBy")
+      .selectAll(["report"])
+      .select(["user.name as createdByName"]),
   );
 
-  const nbReports = useLiveQuery<[{ count: number }]>(
-    db.liveRawQuery({
-      sql: `SELECT COUNT(*) AS count FROM report WHERE (createdBy = ? OR redactedById = ?) AND disabled = FALSE`,
-      args: [user.id, user.id],
-    }),
+  const reports = reportsQuery.data;
+  const reportsCountQuery = useDbQuery(
+    db
+      .selectFrom("report")
+      .where("disabled", "=", 0)
+      .where((eb) => eb.or([eb("createdBy", "=", user.id), eb("redactedById", "=", user.id)]))
+      .select(db.fn.countAll().as("count")),
   );
 
-  if (myReports.error || nbReports.error) {
-    console.error(myReports.error, nbReports.error);
+  const reportsCount = reportsCountQuery.data?.[0]?.count as number;
+
+  const hasError = reportsQuery.error || reportsCountQuery.error;
+  const isLoading = reportsQuery.isLoading || reportsCountQuery.isLoading;
+
+  if (hasError) {
+    console.error(reportsQuery.error, reportsCountQuery.error);
     return <Center>Une erreur s'est produite</Center>;
   }
 
-  const isLoading = !myReports.updatedAt;
   if (isLoading) return null;
 
-  return (
-    <ReportList
-      reports={myReports.results ?? []}
-      setPage={setPage}
-      count={nbReports.results?.[0].count ?? 0}
-      page={page}
-    />
-  );
+  return <ReportList reports={reports ?? []} setPage={setPage} count={reportsCount ?? 0} page={page} />;
 };
 
 export const AllReports = () => {
   const [page, setPage] = useState(0);
-
   const user = useUser()!;
-  const allReports = useLiveQuery(
-    db.report.liveMany({
-      where: { disabled: false, udap_id: user.udap?.id },
-      take: 20,
-      skip: page * 20,
-      orderBy: { createdAt: "desc" },
-      include: {
-        user: true,
-      },
-    }),
+
+  const reportsQuery = useDbQuery(
+    db
+      .selectFrom("report")
+      .where("disabled", "=", 0)
+      .where("report.udap_id", "=", user.udap_id)
+      .limit(20)
+      .offset(page * 20)
+      .orderBy("createdAt desc")
+      .leftJoin("user", "user.id", "report.createdBy")
+      .selectAll(["report"])
+      .select(["user.name as createdByName"]),
   );
 
-  const nbReports = useLiveQuery<[{ count: number }]>(
-    db.liveRawQuery({
-      sql: `SELECT COUNT(*) AS count FROM report WHERE disabled=FALSE AND udap_id = ?`,
-      args: [user.udap?.id],
-    }),
+  const reports = reportsQuery.data;
+  const reportsCountQuery = useDbQuery(
+    db
+      .selectFrom("report")
+      .where("disabled", "=", 0)
+      .where("report.udap_id", "=", user.udap_id)
+      .select(db.fn.countAll().as("count")),
   );
 
-  if (allReports.error || nbReports.error) {
-    console.error(allReports.error);
+  const reportsCount = reportsCountQuery.data?.[0]?.count as number;
+
+  const hasError = reportsQuery.error || reportsCountQuery.error;
+  const isLoading = reportsQuery.isLoading || reportsCountQuery.isLoading;
+
+  if (hasError) {
+    console.error(reportsQuery.error, reportsCountQuery.error);
     return <Center>Une erreur s'est produite</Center>;
   }
 
-  const isLoading = !allReports.updatedAt;
   if (isLoading) return null;
 
-  return (
-    <ReportList
-      reports={allReports.results ?? []}
-      setPage={setPage}
-      count={nbReports.results?.[0].count ?? 0}
-      page={page}
-    />
-  );
+  return <ReportList reports={reports ?? []} setPage={setPage} count={reportsCount ?? 0} page={page} />;
 };
 
 const NoReport = () => {
@@ -195,7 +196,10 @@ const ReportListItem = ({
 
   const whereText = report.city ? `à ${report.city}` : null;
   const forText = report.applicantName ? uppercaseFirstLetterIf(`pour ${report.applicantName}`, !whereText) : null;
-  const byText = uppercaseFirstLetterIf(`par ${report.redactedBy ?? report.user?.name ?? ""}`, !whereText && !forText);
+  const byText = uppercaseFirstLetterIf(
+    `par ${report.redactedBy ?? report.createdByName ?? ""}`,
+    !whereText && !forText,
+  );
 
   return (
     <Flex position="relative" direction="column" w="100%">

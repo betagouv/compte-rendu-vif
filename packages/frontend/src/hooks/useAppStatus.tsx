@@ -1,8 +1,6 @@
-import { styled } from "#styled-system/jsx";
 import { useStatus } from "@powersync/react";
-import { PropsWithChildren } from "react";
 
-export const AppBanner = ({ children }: PropsWithChildren) => {
+export const useAppStatus = () => {
   const powerSyncStatus = useStatus();
 
   const status = powerSyncStatus.connected
@@ -11,5 +9,5 @@ export const AppBanner = ({ children }: PropsWithChildren) => {
       : "saved"
     : "offline";
 
-  return <styled.div>{children}</styled.div>;
+  return status;
 };

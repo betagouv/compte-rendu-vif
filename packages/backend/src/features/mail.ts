@@ -1,8 +1,8 @@
 import { createTransport } from "nodemailer";
 import { ENV } from "../envVars";
-import { Report } from "@cr-vif/electric-client/frontend";
 import { format } from "date-fns";
 import { sentry } from "./sentry";
+import { Report } from "../../../frontend/src/db/AppSchema";
 
 const transporter = createTransport({
   host: ENV.EMAIL_HOST,
@@ -43,6 +43,7 @@ Cordialement`,
   });
 };
 
+// TODO: CR_commune_demandeur_date.pdf
 const getPDFInMailName = (report: Report) => {
   const date = format(report.meetDate || new Date(), "dd-MM-yyyy");
   return `compte_rendu_UDAP_${[report.applicantName?.replaceAll(" ", ""), date].filter(Boolean).join("_")}.pdf`;

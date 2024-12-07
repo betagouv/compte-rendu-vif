@@ -49,9 +49,17 @@ export default defineConfig({
       filename: "sw.ts",
     }),
   ],
+  optimizeDeps: {
+    exclude: ["@journeyapps/wa-sqlite", "@powersync/web"],
+    include: ["@powersync/web > js-logger"],
+  },
   envDir: "../..",
   preview: {},
   build: {
     target: "esnext",
+  },
+  worker: {
+    format: "es",
+    plugins: () => [wasm(), topLevelAwait()],
   },
 });

@@ -1,26 +1,22 @@
 import { useUser } from "../../contexts/AuthContext";
 
-import { useLiveQuery } from "electric-sql/react";
-import { db } from "../../db";
 import { groupBy } from "pastable";
-import { Clause_v2 } from "@cr-vif/electric-client/frontend";
+import { db, useDbQuery } from "../../db/db";
+import { Clause_v2 } from "../../db/AppSchema";
 
 export const useChipOptions = (key?: string) => {
   const user = useUser()!;
 
-  // retrieve all chips with the given key
-  const decisionsChipsQuery = useLiveQuery(
-    db.clause_v2.liveMany({
-      where: {
-        ...(key ? { key } : {}),
-        udap_id: { in: ["ALL", user.udap.id] },
-      },
-    }),
-  );
+  let query = db
+    .selectFrom("clause_v2")
+    .where((eb) => eb.or([eb("udap_id", "=", "ALL"), eb("udap_id", "=", user.udap_id)]));
 
-  const grouped = groupBy(decisionsChipsQuery.results ?? [], (item) => `${item.key}-${item.value}`);
+  if (key) query = query.where("key", "=", key);
 
-  // keep only the most specific chip for each value
+  const chipsQuery = useDbQuery(query.selectAll());
+
+  const grouped = groupBy(chipsQuery.data ?? [], (item) => `${item.key}-${item.value}`);
+
   const chips = Object.values(grouped).map((value) => {
     if (value.length > 1) return value.find((chip) => chip.udap_id !== "ALL") ?? value[0];
     return value[0];

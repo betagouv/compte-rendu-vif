@@ -3,9 +3,8 @@ import { fr } from "@codegouvfr/react-dsfr";
 import React, { useState, useRef, useEffect } from "react";
 import { css, cva } from "#styled-system/css";
 import Button from "@codegouvfr/react-dsfr/Button";
-import { db } from "../../db";
 import { v4 } from "uuid";
-import { Picture_lines } from "@cr-vif/electric-client/frontend";
+import { db } from "../../db/db";
 
 type DrawEvent = React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>;
 export type Line = { points: Array<{ x: number; y: number }>; color: string };
@@ -15,14 +14,12 @@ export const ImageCanvas = ({
   lines: dbLines,
   containerRef,
   closeModal,
-  notifyPictureLines,
 }: {
   url: string;
   containerRef: any;
   pictureId: string;
   lines: Array<Line>;
   closeModal: () => void;
-  notifyPictureLines: (args: { pictureId: string; lines: Array<Line> }) => void;
 }) => {
   const [tool, setTool] = useState("draw");
   const [lines, setLines] = useState<Array<{ points: Array<{ x: number; y: number }>; color: string }>>([]);
@@ -133,17 +130,7 @@ export const ImageCanvas = ({
     return x >= 0 && x <= imageRef.current.width && y >= 0 && y <= imageRef.current.height;
   };
 
-  // const getMousePos = (e) => {
-  //   const clientX = "clientX" in e ? e.clientX : e.touches[0].clientX;
-  //   const clientY = "clientY" in e ? e.clientY : e.touches[0].clientY;
-
-  //   const canvas = canvasRef.current!;
-  //   const rect = canvas.getBoundingClientRect();
-  //   const x = (clientX - rect.left - offset.x) / scale;
-  //   const y = (clientY - rect.top - offset.y) / scale;
-  //   return { x, y };
-  // };
-  const getMousePos = (e) => {
+  const getMousePos = (e: any) => {
     const canvas = canvasRef.current!;
     const rect = canvas.getBoundingClientRect();
     const dpr = window.devicePixelRatio || 1;
@@ -156,7 +143,7 @@ export const ImageCanvas = ({
 
     return { x, y };
   };
-  const handleMouseDown = (e) => {
+  const handleMouseDown = (e: any) => {
     const clientX = "clientX" in e ? e.clientX : e.touches[0].clientX;
     const clientY = "clientY" in e ? e.clientY : e.touches[0].clientY;
     const pos = getMousePos(e);
@@ -173,7 +160,7 @@ export const ImageCanvas = ({
     }
   };
 
-  const handleMouseMove = (e) => {
+  const handleMouseMove = (e: any) => {
     const pos = getMousePos(e);
 
     if (isDrawing) {
@@ -203,90 +190,52 @@ export const ImageCanvas = ({
     setStartPan(null);
   };
 
-  const handleWheel = (e) => {
-    // e.preventDefault();
-    // const scaleBy = 1.1;
-    // const newScale = e.deltaY < 0 ? scale * scaleBy : scale / scaleBy;
-    // // Calculate zoom point
-    // const pos = getMousePos(e);
-    // const newOffset = {
-    //   x: offset.x - pos.x * (newScale - scale),
-    //   y: offset.y - pos.y * (newScale - scale),
-    // };
-    // setScale(newScale);
-    // setOffset(newOffset);
-  };
+  const handleWheel = (e: any) => {};
 
   const handleUndo = () => {
     setLines(lines.slice(0, -1));
   };
 
-  // const [lastDistance, setLastDistance] = useState<number | null>(null);
-  // const getDistance = (touches) => {
-  //   return Math.hypot(touches[0].clientX - touches[1].clientX, touches[0].clientY - touches[1].clientY);
-  // };
-
-  const handleTouchStart = (e) => {
-    // if (e.touches.length === 2) {
-    //   e.preventDefault();
-    //   setLastDistance(getDistance(e.touches));
-    // } else {
+  const handleTouchStart = (e: any) => {
     handleMouseDown(e);
-    // }
   };
 
-  const handleTouchMove = (e) => {
-    // if (e.touches.length === 2) {
-    //   e.preventDefault();
-
-    //   const newDistance = getDistance(e.touches);
-    //   if (lastDistance) {
-    //     const delta = newDistance - lastDistance;
-    //     const scaleChange = delta > 0 ? 1.01 : 0.99;
-    //     setScale(scale * scaleChange);
-    //   }
-    //   setLastDistance(newDistance);
-    // } else {
+  const handleTouchMove = (e: any) => {
     handleMouseMove(e);
-    // }
   };
 
-  const handleTouchEnd = (e) => {
+  const handleTouchEnd = (e: any) => {
     // setLastDistance(null);
-    handleMouseUp(e);
+    handleMouseUp();
   };
 
   const handleSave = async () => {
-    const existingLines = await db.picture_lines.findFirst({ where: { pictureId } });
+    const existingLinesQuery = await db
+      .selectFrom("picture_lines")
+      .where("pictureId", "=", pictureId)
+      .selectAll()
+      .execute();
+    const existingLines = existingLinesQuery?.[0];
+
     if (existingLines) {
       console.log("updating lines", existingLines, lines);
-      await db.picture_lines.update({
-        where: { id: existingLines.id },
-        data: { lines: JSON.stringify(lines) },
-      });
+      await db
+        .updateTable("picture_lines")
+        .where("id", "=", existingLines.id)
+        .set({ lines: JSON.stringify(lines), pictureId })
+        .execute();
     } else {
       console.log("creating lines", lines);
-      await db.picture_lines.create({
-        data: { id: v4(), pictureId, lines: JSON.stringify(lines) },
-      });
+      await db
+        .insertInto("picture_lines")
+        .values({ id: v4(), pictureId, lines: JSON.stringify(lines) })
+        .execute();
     }
-    notifyPictureLines({ pictureId, lines });
     closeModal();
   };
 
   return (
     <styled.div display="flex" flexDirection="column" width="100%" h="100%">
-      {/* 
-          onClick={() => setScale(scale * 1.1)}
-          <i className={fr.cx("fr-icon--md", "ri-zoom-in-line")} />
-
-          onClick={() => setScale(scale / 1.1)}
-          <i className={fr.cx("fr-icon--md", "ri-zoom-out-line")} />
-
-          onClick={handleUndo}
-          disabled={lines.length === 0}
-          <i className={fr.cx("fr-icon--md", "ri-arrow-go-back-line")} />
-*/}
       <Stack pos="absolute" top="26px" right={{ base: "16px" }} gap="18px" flexDir="row" alignItems="center">
         {/* @ts-ignore */}
         <Button
@@ -297,8 +246,6 @@ export const ImageCanvas = ({
           onClick={handleUndo}
           disabled={lines.length === 0}
         />
-        {/* <i className={fr.cx("fr-icon--md", "ri-arrow-go-back-line")} /> */}
-        {/* </Button> */}
         <Button className={css({ bgColor: "white" })} type="button" priority="secondary" onClick={handleSave}>
           OK
         </Button>

@@ -13,7 +13,7 @@ const envSchema = z.object({
   POSTGRES_PASSWORD: z.string(),
   POSTGRES_DB: z.string(),
   DATABASE_URL: z.string(),
-  TOKEN_LIFETIME: z.string().default("1w"),
+  TOKEN_LIFETIME: z.string().default("60m"),
   JWT_SECRET: z.string(),
   JWT_REFRESH_SECRET: z.string(),
   NODE_ENV: z.string().default("development"),
@@ -37,3 +37,4 @@ const envSchema = z.object({
 
 export const ENV = envSchema.parse(process.env);
 export const isDev = ENV.NODE_ENV === "development";
+export const isTest = ENV.NODE_ENV === "test";

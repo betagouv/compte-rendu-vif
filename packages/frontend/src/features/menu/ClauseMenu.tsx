@@ -1,5 +1,3 @@
-import { useLiveQuery } from "electric-sql/react";
-import { db } from "../../db";
 import { Spinner } from "#components/Spinner";
 import { groupBy } from "pastable";
 import { useUser } from "../../contexts/AuthContext";
@@ -10,29 +8,27 @@ import type { ModalContentProps } from "./MenuButton";
 import { ReactNode, useEffect, useState } from "react";
 import Button, { ButtonProps } from "@codegouvfr/react-dsfr/Button";
 import { css, cx } from "#styled-system/css";
-import { Clause_v2 } from "@cr-vif/electric-client/frontend";
 import Input from "@codegouvfr/react-dsfr/Input";
 import { FormProvider, useFieldArray, useForm, useFormContext } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import Select from "@codegouvfr/react-dsfr/Select";
 import { v4 } from "uuid";
 import { fr } from "@codegouvfr/react-dsfr";
+import { db, useDbQuery } from "../../db/db";
+import { Clause_v2 } from "../../db/AppSchema";
 
 export const ClauseMenu = ({ isNational, ...props }: { isNational: boolean } & ModalContentProps) => {
   const user = useUser()!;
 
-  const clausesQuery = useLiveQuery(
-    db.clause_v2.liveMany({
-      where: {
-        key: {
-          in: isNational ? ["type-espace", "decision"] : ["contacts-utiles", "bonnes-pratiques"],
-        },
-        OR: [{ udap_id: "ALL" }, { udap_id: user.udap_id! }],
-      },
-    }),
+  const clausesQuery = useDbQuery(
+    db
+      .selectFrom("clause_v2")
+      .where("key", "in", isNational ? ["type-espace", "decision"] : ["contacts-utiles", "bonnes-pratiques"])
+      .where("udap_id", "in", ["ALL", user.udap_id])
+      .selectAll(),
   );
 
-  if (!clausesQuery.updatedAt) return <Spinner />;
+  if (clausesQuery.isLoading) return <Spinner />;
 
   if (isNational)
     return (
@@ -50,14 +46,14 @@ export const ClauseMenu = ({ isNational, ...props }: { isNational: boolean } & M
           {...props}
         />
         <styled.div px="20px">
-          <ClauseList clauses={(clausesQuery.results as any) ?? []} isEditing={false} />
+          <ClauseList clauses={(clausesQuery.data as any) ?? []} isEditing={false} />
         </styled.div>
       </>
     );
 
   return (
     <ClauseForm
-      clauses={clausesQuery.results?.map((c) => ({ ...c, text: c.text?.replaceAll("\\n", "\n") ?? "" })) ?? []}
+      clauses={clausesQuery.data?.map((c) => ({ ...c, text: c.text?.replaceAll("\\n", "\n") ?? "" })) ?? []}
       {...props}
       isNational={isNational}
     />
@@ -116,10 +112,11 @@ const ClauseForm = ({
   const applyDiffMutation = useMutation(
     async (diff: { updatedClauses: Clause_v2[] }) => {
       for (const clause of diff.updatedClauses) {
-        await db.clause_v2.update({
-          where: { id: clause.id },
-          data: { text: clause.text, value: clause.value },
-        });
+        await db
+          .updateTable("clause_v2")
+          .set({ text: clause.text, value: clause.value })
+          .where("id", "=", clause.id)
+          .execute();
       }
     },
     {
@@ -136,7 +133,6 @@ const ClauseForm = ({
 
   const onSubmit = (data: Form) => {
     const diff = getDiff(clauses, data.clauses);
-    console.log(clauses, data.clauses, diff);
     applyDiffMutation.mutate(diff);
   };
 
@@ -309,7 +305,7 @@ const ClauseView = ({ clause }: { clause: ClauseWithIndex }) => {
       <styled.div color="text-action-high-blue-france" fontWeight="bold">
         {clause.value}
       </styled.div>
-      {clause.text.split("\\n").map((text, i) => {
+      {(clause.text || "").split("\\n").map((text, i) => {
         return (
           <styled.div key={i} whiteSpace="pre-wrap">
             {text}
@@ -325,7 +321,7 @@ const ClauseEdit = ({ clause }: { clause: ClauseWithIndex }) => {
 
   const deleteClauseMutation = useMutation(
     async () => {
-      await db.clause_v2.delete({ where: { id: clause.id } });
+      await db.deleteFrom("clause_v2").where("id", "=", clause.id).execute();
     },
     {
       onSuccess: () => {},
@@ -377,7 +373,7 @@ const ClauseAdd = ({ onSuccess, isNational }: { onSuccess: () => void; isNationa
 
   const addClauseMutation = useMutation(
     async (clause: Clause_v2) => {
-      await db.clause_v2.create({ data: clause });
+      await db.insertInto("clause_v2").values(clause).execute();
     },
     {
       onSuccess,
