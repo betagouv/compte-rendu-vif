@@ -49,16 +49,12 @@ FROM with-deps AS backend
 WORKDIR /usr/src/app
 COPY packages/backend/ ./packages/backend/
 COPY packages/pdf/ ./packages/pdf/
-COPY packages/electric-client/ ./packages/electric-client/
-
 
 COPY db/ ./db/
 COPY --from=with-deps /usr/src/app/packages/backend/node_modules ./packages/backend/node_modules
-COPY --from=with-deps /usr/src/app/packages/electric-client/node_modules ./packages/electric-client/node_modules
 
-RUN pnpm electric-client generate:back
 RUN pnpm backend build
-CMD pnpm electric:up;pnpm backend start
+CMD pnpm migration:up;pnpm backend start
 
 
 ################################
@@ -66,7 +62,6 @@ CMD pnpm electric:up;pnpm backend start
 ################################
 FROM with-deps AS frontend
 COPY packages/frontend/ ./packages/frontend/
-COPY packages/electric-client/ ./packages/electric-client/
 COPY packages/pdf/ ./packages/pdf/
 COPY --from=with-deps /usr/src/app/packages/frontend/node_modules ./packages/frontend/node_modules
 COPY --from=with-deps /usr/src/app/packages/frontend/styled-system ./packages/frontend/styled-system
