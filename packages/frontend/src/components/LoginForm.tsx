@@ -10,6 +10,7 @@ import { InputGroup } from "./InputGroup";
 import { PasswordInput } from "./PasswordInput";
 import { useMutation } from "@tanstack/react-query";
 import { type RouterInputs, api, getErrorMessage } from "../api";
+import { useState } from "react";
 
 export const LoginForm = () => {
   const [authData, setAuthData] = useAuthContext();
@@ -17,9 +18,12 @@ export const LoginForm = () => {
 
   const mutation = useMutation((body: LoginFormProps) => api.post("/api/login", { body }));
 
+  const [shouldShowPopup] = useState(localStorage.getItem("crvif/update-popup"));
+
   const login = async (values: LoginFormProps) => {
     const response = await mutation.mutateAsync(values);
     localStorage.setItem("crvif/version", "1");
+    localStorage.removeItem("crvif/update-popup");
     setAuthData({ ...authData, ...response });
   };
 
@@ -34,6 +38,13 @@ export const LoginForm = () => {
             className={css({ mb: "1.5rem" })}
             severity="error"
             title={<styled.span fontWeight="regular">{getErrorMessage(mutationError)}</styled.span>}
+          />
+        ) : null}
+        {shouldShowPopup && !mutationError ? (
+          <Alert
+            className={css({ mb: "1.5rem" })}
+            severity="info"
+            title="Vous avez été déconnecté suite à une mise à jour de l'application."
           />
         ) : null}
         <InputGroup state={mutationError ? "error" : undefined}>

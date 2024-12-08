@@ -21,6 +21,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     const version = localStorage.getItem("crvif/version");
     if (!version) {
       localStorage.removeItem("crvif/auth");
+      localStorage.setItem("crvif/update-popup", "true");
       localStorage.setItem("crvif/version", "1");
       window.location.reload();
     }
