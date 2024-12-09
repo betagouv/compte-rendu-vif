@@ -84,6 +84,7 @@ services:
       POWERSYNC_CONFIG_PATH: /config/config.yaml
       PS_DATABASE_URL: ${PS_DATABASE_URL}
       PS_JWT_SECRET: ${JWT_SECRET}
+      PS_PORT: ${POWERSYNC_PORT:-3003}
     ports:
       - ${POWERSYNC_PORT:-3003}:8080
 

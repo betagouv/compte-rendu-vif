@@ -43,7 +43,6 @@ export const ReportPDFDocument = ({ udap, htmlString, images, pictures }: Report
         }}
       >
         <Html
-          resetStyles
           collapse
           style={{
             fontSize: "10px",
