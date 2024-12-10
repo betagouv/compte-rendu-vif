@@ -3,13 +3,16 @@ import { db } from "../db/db";
 import { makeDebug } from "../features/debug";
 import { getServices } from "./services";
 import { v4 } from "uuid";
+import { DB, Delegation, PdfSnapshot, PictureLines } from "../db-types";
+import { Awaitable } from "../types";
+import { FastifyRequest } from "fastify";
 
 const debug = makeDebug("sync-service");
 
 const Nullable = <T extends TSchema>(schema: T) => Type.Optional(Type.Union([schema, Type.Null()]));
 
 export class SyncService {
-  async applyCrud(operation: Static<typeof crudTSchema>, userId: string) {
+  async applyCrud(operation: Static<typeof crudTSchema>, user: FastifyRequest["user"]) {
     await db
       .insertInto("transactions")
       .values({
@@ -21,9 +24,13 @@ export class SyncService {
         data: JSON.stringify(operation.data),
         op: operation.op,
         created_at: new Date(),
-        user_id: userId,
+        user_id: user.id,
       })
       .execute();
+
+    const hasPermission =
+      await accessMap[operation.type as keyof AccessibleTables]?.[operation.op as keyof TablePermissions]?.();
+    if (!hasPermission) return { success: false, error: "Unauthorized" };
 
     try {
       if (operation.op === "DELETE") {
@@ -79,3 +86,86 @@ export const crudTSchema = Type.Object({
   op: Type.String(),
   data: Type.Optional(Type.Any()),
 });
+
+type PermissionPayload<TData extends any> = {
+  operation: Omit<Static<typeof crudTSchema>, "data"> & { data: TData };
+  user: FastifyRequest["user"];
+};
+
+type TablePermissions<T = any> = {
+  PUT: (payload: PermissionPayload<T>) => Awaitable<boolean>;
+  PATCH: (payload: PermissionPayload<Partial<T>>) => Awaitable<boolean>;
+  DELETE: (payload: PermissionPayload<{}>) => Awaitable<boolean>;
+};
+
+type AccessibleTables = Omit<DB, "clause" | "internal_user" | "tmp_pictures">;
+
+const isSameUdap = ({ operation, user }: PermissionPayload) => operation.data?.udap_id === user.user?.udap_id;
+const isPictureLinesOwner = async ({ operation, user }: PermissionPayload) => {
+  const reportsQuery = await db
+    .selectFrom("pictures")
+    .where("id", "=", (operation.data as PictureLines).pictureId)
+    .innerJoin("report", "report.id", "pictures.reportId")
+    .select(["report.createdBy as createdBy"])
+    .execute();
+  const createdBy = reportsQuery?.[0]?.createdBy;
+
+  return createdBy === user.id;
+};
+export const accessMap: Record<keyof AccessibleTables, TablePermissions> = {
+  clause_v2: {
+    PUT: isSameUdap,
+    PATCH: isSameUdap,
+    DELETE: isSameUdap,
+  },
+  delegation: {
+    PUT: ({ operation, user }) => (operation.data as Delegation).createdBy === user.id,
+    PATCH: ({ operation, user }) => (operation.data as Delegation).createdBy === user.id,
+    DELETE: ({ operation, user }) => (operation.data as Delegation).createdBy === user.id,
+  },
+  pdf_snapshot: {
+    PUT: ({ operation, user }) => (operation.data as PdfSnapshot).user_id === user.id,
+    PATCH: ({ operation, user }) => (operation.data as PdfSnapshot).user_id === user.id,
+    DELETE: ({ operation, user }) => (operation.data as PdfSnapshot).user_id === user.id,
+  },
+  picture_lines: {
+    PUT: isPictureLinesOwner,
+    PATCH: isPictureLinesOwner,
+    DELETE: isPictureLinesOwner,
+  },
+  pictures: {
+    PUT: () => true,
+    PATCH: () => true,
+    DELETE: () => true,
+  },
+  report: {
+    PUT: () => true,
+    PATCH: () => true,
+    DELETE: () => true,
+  },
+  service_instructeurs: {
+    PUT: () => true,
+    PATCH: () => true,
+    DELETE: () => true,
+  },
+  transactions: {
+    PUT: () => true,
+    PATCH: () => true,
+    DELETE: () => true,
+  },
+  udap: {
+    PUT: () => true,
+    PATCH: () => true,
+    DELETE: () => true,
+  },
+  user: {
+    PUT: () => true,
+    PATCH: () => true,
+    DELETE: () => true,
+  },
+  whitelist: {
+    PUT: () => true,
+    PATCH: () => true,
+    DELETE: () => true,
+  },
+};
