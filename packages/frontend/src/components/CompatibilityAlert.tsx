@@ -6,7 +6,8 @@ const browser = Bowser.getParser(window.navigator.userAgent);
 const isWrongVersion = browser.getBrowser().name === "Firefox" && browser.getBrowserVersion().startsWith("102");
 
 export const CompatibilityAlert = () => {
-  if (!isWrongVersion) return null;
+  // if (!isWrongVersion) return null;
+  return null;
   return (
     <Center>
       <Alert

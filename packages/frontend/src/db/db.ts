@@ -3,9 +3,16 @@ import { AppSchema, Database } from "./AppSchema";
 import { Connector } from "./Connector";
 import { wrapPowerSyncWithKysely } from "@powersync/kysely-driver";
 import { useQuery } from "@powersync/react";
+import Bowser from "bowser";
+
+const browser = Bowser.getParser(window.navigator.userAgent);
+const isFirefox = browser.getBrowser().name === "Firefox";
 
 export const powerSyncDb = new PowerSyncDatabase({
   schema: AppSchema,
+  flags: {
+    useWebWorker: !isFirefox,
+  },
   database: {
     dbFilename: "crvif-sync.db",
   },
