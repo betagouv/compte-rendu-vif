@@ -308,6 +308,9 @@ importers:
       '@xstate/store':
         specifier: ^0.0.5
         version: 0.0.5(react@18.2.0)
+      bowser:
+        specifier: ^2.11.0
+        version: 2.11.0
       browser-image-compression:
         specifier: ^2.0.2
         version: 2.0.2

@@ -11,6 +11,7 @@ import type { RouterOutputs } from "../api";
 import { useIsLoggedIn } from "../contexts/AuthContext";
 import { MenuButton } from "../features/menu/MenuButton";
 import { useIsDesktop } from "../hooks/useIsDesktop";
+import { CompatibilityAlert } from "#components/CompatibilityAlert";
 
 export const Route = createRootRouteWithContext<Partial<RouterOutputs<"/api/login">>>()({
   beforeLoad: (ctx) => {
@@ -131,7 +132,7 @@ const Layout = ({ children }: PropsWithChildren) => {
       />
       {isLoggedIn ? <MenuButton headerRef={headerRef} /> : null}
       {/* <Menu headerRef={headerRef} /> */}
-
+      <CompatibilityAlert />
       <Box flex="1">{children}</Box>
       {/* <TanStackRouterDevtools /> */}
 
