@@ -4,7 +4,7 @@ import { fr } from "@codegouvfr/react-dsfr";
 import Badge from "@codegouvfr/react-dsfr/Badge";
 import Input from "@codegouvfr/react-dsfr/Input";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { useDebounce } from "react-use";
 import { Report } from "../db/AppSchema";
@@ -19,6 +19,8 @@ export const SmartAddressInput = () => {
   const [isFrozen, setIsFrozen] = useState(true);
 
   const applicantAddress = useWatch({ control: form.control, name: "applicantAddress" });
+  const prevValueRef = useRef(applicantAddress);
+
   const [debouncedAddress, setDebouncedAddress] = useState(applicantAddress);
 
   useDebounce(() => setDebouncedAddress(applicantAddress), 500, [applicantAddress]);
@@ -38,17 +40,24 @@ export const SmartAddressInput = () => {
     <Stack mb="28px">
       <Combobox.Root
         disabled={isFormDisabled}
-        selectionBehavior="replace"
         itemToString={(item) => (item as AddressResult).address ?? ""}
         itemToValue={(item) => (item as AddressResult).label ?? ""}
         items={suggestions ?? []}
         value={applicantAddress ? [applicantAddress.toString()] : undefined}
         inputValue={applicantAddress ?? ""}
+        onBlur={() => {
+          if (prevValueRef.current) {
+            form.setValue("applicantAddress", prevValueRef.current);
+          }
+        }}
         onInputValueChange={(e) => {
+          prevValueRef.current = applicantAddress;
           form.setValue("applicantAddress", e.value);
           setIsFrozen(false);
         }}
         onValueChange={(e) => {
+          if (e.items?.length === 0) return;
+          prevValueRef.current = null;
           form.setValue("applicantAddress", (e.items?.[0] as AddressResult)?.address ?? "");
           form.setValue("zipCode", (e.items?.[0] as AddressResult)?.zipCode ?? "");
           form.setValue("city", (e.items?.[0] as AddressResult)?.city ?? "");
