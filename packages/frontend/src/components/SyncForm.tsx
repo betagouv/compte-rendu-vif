@@ -168,7 +168,7 @@ const syncFormBanner = sva({
       justifyContent: "flex-end",
       w: "100%",
       maxW: { base: "unset", sm: "800px" },
-      h: { base: "56px", lg: "unset" },
+      // h: { base: "56px", lg: "unset" },
       px: "15px",
     },
     back: {
@@ -200,6 +200,7 @@ const syncFormBanner = sva({
         collapsed: {
           justifyContent: "space-between",
           alignItems: "center",
+          h: { base: "56px", lg: "unset" },
         },
         status: {
           display: "flex",

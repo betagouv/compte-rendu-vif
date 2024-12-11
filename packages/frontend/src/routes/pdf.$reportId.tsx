@@ -69,10 +69,6 @@ export const PDF = () => {
     },
   });
 
-  // useDbQuery(db.selectFrom("report").where("id", "=", reportId).selectAll(), undefined, {
-  //   runQueryOnce: true,
-  // });
-  // const picturesQuery = useDbQuery(db.selectFrom("pictures").where("report_id", "=", reportId).selectAll(), undefined, {
   const report = reportQuery.data;
 
   const snapshotQuery = useQuery({
@@ -176,6 +172,13 @@ export const PDF = () => {
     );
   };
 
+  if (generatePdfMutation.isLoading)
+    return (
+      <Center flexDir="column" w="100%" h="100%">
+        <Spinner />
+      </Center>
+    );
+
   const SendButtons = () => {
     return (
       <Center gap="10px" direction="row">
@@ -207,14 +210,18 @@ export const PDF = () => {
   }
 
   return (
-    <styled.div w="100%" h="100%" bgColor={mode === "edit" ? "background-open-blue-france" : "unset"}>
+    <styled.div
+      display="flex"
+      flexDirection="column"
+      w="100%"
+      h="100%"
+      bgColor={mode === "edit" ? "background-open-blue-france" : "unset"}
+    >
       <Flex justifyContent="center" py="16px" px="32px" bgColor={"#E8EDFF"}>
         <i className={cx(fr.cx("fr-icon-alert-fill"), css({ color: "#0063CB" }))} />
         <styled.div
           dangerouslySetInnerHTML={{
-            __html:
-              transformBold(`**Si vous modifiez un champ dans le formulaire, votre mise en page sera ré-initialisée.** <br/>
-Les modifications du compte-rendu se font uniquement sur l'appareil utilisé. Utilisez le même appareil pour continuer les modifications et l'envoi.`),
+            __html: transformBold(`**La modification du formulaire ré-initialisera cette mise en page.`),
           }}
           ml="16px"
           pr="24px"
@@ -234,7 +241,7 @@ Les modifications du compte-rendu se font uniquement sur l'appareil utilisé. Ut
               reportId={report?.id}
               buttons={buttons}
             />
-            <Center w="100%" h="100%" maxH="100%" mt="10px" overflowY="auto">
+            <Center w="100%" h="100%" maxH="100%" overflowY="auto">
               <Stack w="800px" h="100%">
                 {report && snapshotQuery.isSuccess && chipOptions?.length && isServiceInstructeurLoaded ? (
                   <WithReport
@@ -285,9 +292,9 @@ const SendForm = ({
   };
 
   return (
-    <form onSubmit={form.handleSubmit(send)}>
+    <styled.form onSubmit={form.handleSubmit(send)} display="flex" flex="1" flexDirection="column">
       <FormProvider {...form}>{children}</FormProvider>
-    </form>
+    </styled.form>
   );
 };
 
@@ -425,7 +432,7 @@ export const WithReport = ({
   if (mode === "send") {
     return (
       <SendReportPage>
-        <styled.div mt="16px">{ViewDocument}</styled.div>
+        <styled.div>{ViewDocument}</styled.div>
       </SendReportPage>
     );
   }
@@ -448,7 +455,12 @@ const View = (props: ReportPDFDocumentProps) => {
     enabled: !!props.htmlString,
   });
 
-  if (query.isLoading) return <Spinner />;
+  if (query.isLoading)
+    return (
+      <Center h="100%">
+        <Spinner />
+      </Center>
+    );
 
   return (
     <styled.div px="16px">
