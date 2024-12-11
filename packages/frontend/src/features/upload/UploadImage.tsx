@@ -293,14 +293,13 @@ const PictureThumbnail = ({
   const bgUrl = bgUrlQuery.data;
 
   return (
-    <Stack>
+    <Stack minW="150px" maxW="180px">
       {/* <Badge severity={finalStatus === "uploading" ? }></Badge> */}
       <ReportStatus status={finalStatus as any} />
       <Flex
         // style={bgUrl ? { backgroundImage: `url(${bgUrl})` } : { backgroundColor: "gray" }}
         flexDir="column"
         justifyContent="flex-end"
-        w="180px"
         h="170px"
         // bgPosition="center calc(50% - 20px)"
         // bgRepeat="no-repeat"
