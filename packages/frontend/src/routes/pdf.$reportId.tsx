@@ -221,9 +221,7 @@ export const PDF = () => {
         <i className={cx(fr.cx("fr-icon-alert-fill"), css({ color: "#0063CB" }))} />
         <styled.div
           dangerouslySetInnerHTML={{
-            __html:
-              transformBold(`**Si vous modifiez un champ dans le formulaire, votre mise en page sera ré-initialisée.** <br/>
-Les modifications du compte-rendu se font uniquement sur l'appareil utilisé. Utilisez le même appareil pour continuer les modifications et l'envoi.`),
+            __html: transformBold(`**La modification du formulaire ré-initialisera cette mise en page.`),
           }}
           ml="16px"
           pr="24px"
