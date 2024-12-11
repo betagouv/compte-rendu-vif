@@ -2,6 +2,7 @@ import { Divider, Stack, styled } from "#styled-system/jsx";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { MenuTitle } from "./MenuTitle";
 import { clearDb } from "../../db/db";
+import { css } from "#styled-system/css";
 
 export const HelpMenu = ({ backButtonOnClick }: { backButtonOnClick: () => void }) => {
   const deleteLocalData = () => {
@@ -15,12 +16,18 @@ export const HelpMenu = ({ backButtonOnClick }: { backButtonOnClick: () => void 
   return (
     <>
       <MenuTitle backButtonOnClick={backButtonOnClick}>Assistance technique</MenuTitle>
-      <Divider height="2px" my={{ base: "27px", lg: "44px" }} color="#C1C1FB" />
-      <Stack px="20px">
-        <styled.div mb="10px">
+      <Divider height="2px" my={{ base: "27px", lg: "0" }} mb={{ base: 0, lg: "27px" }} color="#C1C1FB" />
+      <Stack>
+        <styled.div px="20px" fontWeight="bold">
+          Vous pouvez contacter l'équipe à contact@compte-rendu-vif.beta.gouv.fr.
+        </styled.div>
+        <Divider height="2px" mt="18px" mb="16px" color="#C1C1FB" />
+        <styled.div mb="10px" px="20px">
           Vous ne voyez pas vos dernières informations enregistrées ? Essayez de réinitialiser les données locales :
         </styled.div>
-        <Button onClick={() => deleteLocalData()}>Réinitialiser</Button>
+        <Button className={css({ ml: "20px" })} onClick={() => deleteLocalData()}>
+          Réinitialiser
+        </Button>
       </Stack>
     </>
   );
