@@ -14,6 +14,7 @@ import { Report } from "../db/AppSchema";
 import { db, useDbQuery } from "../db/db";
 import { useIsFormDisabled } from "./DisabledContext";
 import { ServiceInstructeurSelect } from "./ServiceInstructeurSelect";
+import { SmartAddressInput } from "#components/SmartAddressInput.tsx";
 
 export const InfoForm = () => {
   const form = useFormContext<Report>();
@@ -150,12 +151,13 @@ export const InfoForm = () => {
           nativeTextAreaProps={{ ...form.register("projectDescription"), rows: 5 }}
         />
 
-        <Input
+        <SmartAddressInput />
+        {/* <Input
           className={css({ flex: { base: "none", lg: 2 }, mt: "16px", mb: { base: "24px", lg: undefined } })}
           disabled={isFormDisabled}
           label="Adresse"
           nativeInputProps={form.register("applicantAddress")}
-        />
+        /> */}
         <Stack gap={{ base: "0", lg: "16px" }} direction={{ base: "column", lg: "row" }}>
           <Input
             className={css({ flex: { base: "none", lg: 1 }, mb: { base: "24px", lg: undefined } })}
