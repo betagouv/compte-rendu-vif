@@ -69,10 +69,6 @@ export const PDF = () => {
     },
   });
 
-  // useDbQuery(db.selectFrom("report").where("id", "=", reportId).selectAll(), undefined, {
-  //   runQueryOnce: true,
-  // });
-  // const picturesQuery = useDbQuery(db.selectFrom("pictures").where("report_id", "=", reportId).selectAll(), undefined, {
   const report = reportQuery.data;
 
   const snapshotQuery = useQuery({
@@ -175,6 +171,13 @@ export const PDF = () => {
       </Center>
     );
   };
+
+  if (generatePdfMutation.isLoading)
+    return (
+      <Center flexDir="column" w="100%" h="100%">
+        <Spinner />
+      </Center>
+    );
 
   const SendButtons = () => {
     return (
