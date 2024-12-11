@@ -251,6 +251,8 @@ const ReportListItem = ({
                 height: "32px",
                 minHeight: "32px",
                 maxHeight: "32px",
+                bgColor: "#ECECFE",
+                boxShadow: "none",
               })}
               onClick={() => setIsOpen((prev) => !prev)}
               iconId="ri-more-fill"

@@ -45,7 +45,7 @@ export const ReportActions = forwardRef<HTMLDivElement, { report: ReportWithUser
   });
 
   return (
-    <Stack ref={ref} gap="0">
+    <Stack ref={ref} gap="0" bgColor="#ECECFE">
       {canEdit ? (
         <>
           <ReportAction
