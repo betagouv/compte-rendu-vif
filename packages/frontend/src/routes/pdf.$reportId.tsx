@@ -455,7 +455,7 @@ const View = (props: ReportPDFDocumentProps) => {
     enabled: !!props.htmlString,
   });
 
-  if (true || query.isLoading)
+  if (query.isLoading)
     return (
       <Center h="100%">
         <Spinner />
