@@ -3,18 +3,24 @@ import { type GetEndpoints, type PostEndpoints, createApiClient } from "./api.ge
 import { ENV } from "./envVars";
 
 import { createStore, get, set } from "idb-keyval";
+import { getTokenOrRefresh } from "./db/Connector";
 
 export const apiStore = createStore("auth", "access");
 
 export const createApiClientWithUrl = (url: string) => {
-  return createApiClient((method, url, parameters) => {
+  return createApiClient(async (method, url, parameters) => {
     const { body, query, header } = parameters || {};
+
+    let token;
+    if (ref.token) {
+      token = await getTokenOrRefresh();
+    }
 
     return ofetch(url, {
       method,
       body: body as any,
       query,
-      headers: { ...header, Authorization: ref.token ? `Bearer ${ref.token}` : undefined } as Record<string, string>,
+      headers: { ...header, Authorization: token ? `Bearer ${token}` : undefined } as Record<string, string>,
     });
   }, url);
 };
@@ -27,6 +33,7 @@ const ref = {
 
 export const setToken = (token?: string | null) => {
   ref.token = token ?? null;
+
   set("token", token, apiStore);
 };
 

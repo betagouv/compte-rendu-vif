@@ -53,7 +53,7 @@ export class Connector implements PowerSyncBackendConnector {
   }
 }
 
-const getTokenOrRefresh = async () => {
+export const getTokenOrRefresh = async () => {
   const authData = safeJSONParse(window.localStorage.getItem("crvif/auth") ?? "");
   if (!authData) throw new Error("No auth data found");
 
@@ -71,5 +71,5 @@ const getTokenOrRefresh = async () => {
     }
   }
 
-  return authData.token;
+  return authData.token as string;
 };
