@@ -43,22 +43,24 @@ export const UploadImage = ({ reportId }: { reportId: string }) => {
   const ref = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const uploadImageMutation = useMutation(async (file: File) => {
-    const picId = v4();
-    ref.current!.value = "";
-    const buffer = await processImage(file);
+  const uploadImageMutation = useMutation(async (files: File[]) => {
+    for (const file of files) {
+      const picId = v4();
+      ref.current!.value = "";
+      const buffer = await processImage(file);
 
-    await set(picId, buffer, getPicturesStore());
-    await db.insertInto("pictures").values({ id: picId, reportId, createdAt: new Date().toISOString() }).execute();
+      await set(picId, buffer, getPicturesStore());
+      await db.insertInto("pictures").values({ id: picId, reportId, createdAt: new Date().toISOString() }).execute();
 
-    setStatusMap((prev) => ({ ...prev, [picId]: "uploading" }));
+      setStatusMap((prev) => ({ ...prev, [picId]: "uploading" }));
+    }
   });
 
   const onChange = async (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const files = e.target.files;
+    if (!files) return;
 
-    await uploadImageMutation.mutateAsync(file);
+    await uploadImageMutation.mutateAsync(Array.from(files));
   };
 
   useEffect(() => {
@@ -128,7 +130,7 @@ export const UploadImage = ({ reportId }: { reportId: string }) => {
           Le téléversement d'image est désactivé temporairement, mais il revient optimisé bientôt.
         </styled.div>
       ) : null} */}
-      <styled.input ref={ref as any} type="file" accept="image/*" onChange={onChange} display="none" />
+      <styled.input ref={ref as any} type="file" accept="image/*" onChange={onChange} multiple display="none" />
       <ReportPictures setSelectedPicture={setSelectedPicture} statusMap={statusMap} />
     </>
   );

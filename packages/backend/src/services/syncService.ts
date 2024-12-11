@@ -56,7 +56,6 @@ export class SyncService {
         debug("updating picture lines");
         const pictureLines = await db.selectFrom("picture_lines").where("id", "=", operation.id).selectAll().execute();
 
-        debug(pictureLines);
         const pictureId = pictureLines?.[0]?.pictureId;
 
         if (pictureId) await getServices().upload.handleNotifyPictureLines({ pictureId });
