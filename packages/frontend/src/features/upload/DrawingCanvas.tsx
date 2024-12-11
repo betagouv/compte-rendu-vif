@@ -287,7 +287,7 @@ export const ImageCanvas = ({
                 <styled.i
                   className={fr.cx("fr-icon--md", "ri-pencil-line")}
                   style={{ display: activeColor === color ? "block" : "none" }}
-                  color={color === "white" ? "black" : "white"}
+                  color={blackPenColors.includes(color) ? "black" : "white"}
                 />
               </styled.div>
             </styled.button>
@@ -317,4 +317,5 @@ const colorButtton = cva({
   },
 });
 
+const blackPenColors = ["#FFD600", "#3DFF7F", "white"];
 const colors = ["#000AFF", "#FF3F3F", "#FF8A00", "#FFD600", "#3DFF7F", "white", "black"];
