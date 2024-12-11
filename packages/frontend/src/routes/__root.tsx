@@ -75,7 +75,7 @@ const Layout = ({ children }: PropsWithChildren) => {
                 Beta
               </Badge>
             </>
-          ) : null
+          ) : undefined
         }
         homeLinkProps={{ title: "Compte rendu vif", to: "/" }}
         quickAccessItems={
