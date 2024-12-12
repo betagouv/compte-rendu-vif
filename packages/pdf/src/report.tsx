@@ -1,9 +1,9 @@
-import { Document, Font, Image, Page, StyleSheet, Text, View } from "@react-pdf/renderer";
+import { Document, Font, Image, Page, StyleSheet, Text, View, ViewProps } from "@react-pdf/renderer";
 import { Html } from "react-pdf-html";
 import React from "react";
 import { Buffer } from "buffer";
 import { Udap, Report, ServiceInstructeurs, Clause_v2, Pictures } from "../../frontend/src/db/AppSchema";
-
+import type { Style } from "@react-pdf/types";
 export const initFonts = (folder: string = "") => {
   // Font.register({
   //   family: "Marianne",
@@ -32,16 +32,69 @@ Font.registerHyphenationCallback((word) => {
   return [word];
 });
 
+const MarianneHeader = ({
+  marianneUrl,
+  styles,
+}: {
+  marianneUrl: string;
+  styles?: ({ pageNumber }: { pageNumber: number }) => ViewProps["style"];
+}) => {
+  return (
+    <View
+      fixed
+      render={({ pageNumber }) => (
+        <View
+          style={{
+            position: "absolute",
+            // marginBottom: 28,
+            top: -36,
+            left: 40,
+            height: 13,
+            width: 34,
+            ...styles?.({ pageNumber }),
+          }}
+          fixed
+        >
+          <Image
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "contain",
+            }}
+            src={marianneUrl}
+          />
+        </View>
+      )}
+    />
+  );
+};
+
+const Pagination = () => {
+  return (
+    <View fixed style={{ position: "absolute", bottom: 40, right: 40, fontSize: 10 }}>
+      <Text
+        render={({ pageNumber, totalPages }) => (
+          <Text>
+            {pageNumber} / {totalPages}
+          </Text>
+        )}
+      />
+    </View>
+  );
+};
+
 export const ReportPDFDocument = ({ udap, htmlString, images, pictures }: ReportPDFDocumentProps) => {
   return (
     <Document onRender={console.log}>
       <Page
         size="A4"
         style={{
-          paddingTop: "48px",
-          paddingBottom: "32px",
+          paddingBottom: 56,
+          paddingTop: 72,
         }}
+        wrap
       >
+        <MarianneHeader marianneUrl={images.marianne} />
         <Html
           collapse
           style={{
@@ -56,6 +109,7 @@ export const ReportPDFDocument = ({ udap, htmlString, images, pictures }: Report
             <style>
               body {
                 font-family: Helvetica;
+                margin-top: -20px;
               }
 
               strong {
@@ -82,9 +136,6 @@ export const ReportPDFDocument = ({ udap, htmlString, images, pictures }: Report
                 font-family: Helvetica-BoldOblique;
               }
 
-              .marianne-img {
-                width: 35px;
-              }
                 
               .marianne-footer-img {
                 width: 50px;
@@ -103,6 +154,9 @@ export const ReportPDFDocument = ({ udap, htmlString, images, pictures }: Report
 
               }
 
+              .marianne {
+                margin-top: 13px;
+              }
 
               .marianne-text {
                 text-align: left;
@@ -151,7 +205,6 @@ export const ReportPDFDocument = ({ udap, htmlString, images, pictures }: Report
             <div class="header">
               <div class="marianne">
 
-                <img class="marianne-img" src="${images.marianne}" />
                 <div class="marianne-text">
                   <strong>
                 ${udap.marianne_text
@@ -187,69 +240,76 @@ export const ReportPDFDocument = ({ udap, htmlString, images, pictures }: Report
           </body>
         </html>
       `}</Html>
+        <Pagination />
       </Page>
-      {pictures ? <PicturesGrid pictures={pictures} /> : null}
+      {pictures ? <PicturesGrid pictures={pictures} marianneUrl={images.marianne} /> : null}
     </Document>
   );
 };
 
 const picturesPerPage = 4;
 
-const PicturesGrid = ({ pictures }: { pictures: Pictures[] }) => {
+const PicturesGrid = ({ pictures, marianneUrl }: { pictures: Pictures[]; marianneUrl: string }) => {
   const pages = Math.ceil(pictures.length / picturesPerPage);
   return (
     <>
       {Array.from({ length: pages }).map((_, pageIndex) => (
-        <Page key={pageIndex} size="A4" style={styles.page}>
-          <View style={styles.gridContainer}>
+        <Page
+          key={pageIndex}
+          size="A4"
+          style={{
+            paddingBottom: 56,
+            paddingTop: 72,
+            backgroundColor: "#ffffff",
+          }}
+        >
+          <MarianneHeader
+            marianneUrl={marianneUrl}
+            styles={({}) => ({
+              top: -37,
+            })}
+          />
+          <View
+            style={{
+              flexDirection: "row",
+              flexWrap: "wrap",
+              justifyContent: "flex-start",
+              gap: 20,
+              paddingLeft: "40px",
+              paddingRight: "40px",
+            }}
+          >
             {pictures.slice(pageIndex * picturesPerPage, (pageIndex + 1) * picturesPerPage).map((image, index) => (
-              <View key={index} style={styles.gridItem}>
-                <View style={styles.imageContainer}>
-                  <Image src={image.finalUrl ?? image.url!} style={styles.image} />
+              <View
+                key={index}
+                style={{
+                  width: "48%",
+                  maxHeight: "40vh",
+                  marginBottom: 20,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+                <View style={{ width: "100%", marginBottom: 5 }}>
+                  <Image
+                    src={image.finalUrl ?? image.url!}
+                    style={{ width: "100%", objectFit: "scale-down", objectPosition: "left", maxHeight: 300 }}
+                  />
                 </View>
-                <Text style={styles.label}>N° {pageIndex * picturesPerPage + index + 1}</Text>
+                <Text style={{ fontSize: "10px", textAlign: "left", width: "100%" }}>
+                  N° {pageIndex * picturesPerPage + index + 1}
+                </Text>
               </View>
             ))}
           </View>
+          <Pagination />
         </Page>
       ))}
     </>
   );
 };
 
-const styles = StyleSheet.create({
-  page: {
-    paddingHorizontal: "40px",
-    backgroundColor: "#ffffff",
-  },
-  gridContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "flex-start",
-    gap: 20,
-  },
-  gridItem: {
-    width: "48%",
-    marginBottom: 20,
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    breakInside: "avoid",
-  },
-  imageContainer: {
-    width: "100%",
-    marginBottom: 5,
-  },
-  image: {
-    width: "100%",
-    objectFit: "scale-down",
-    objectPosition: "left",
-    maxHeight: 300,
-  },
-  label: {
-    fontSize: "10px",
-  },
-});
 export type ReportPDFDocumentProps = {
   htmlString: string;
   udap: Udap;

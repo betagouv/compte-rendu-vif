@@ -387,6 +387,9 @@ importers:
       '@park-ui/panda-preset':
         specifier: ^0.36.1
         version: 0.36.1(@internationalized/date@3.5.4)(@pandacss/dev@0.36.1)(@pandacss/types@0.39.2)
+      '@react-pdf/types':
+        specifier: ^2.7.0
+        version: 2.7.0
       '@tanstack/router-vite-plugin':
         specifier: ^1.20.5
         version: 1.26.6(vite@5.2.7)
@@ -499,6 +502,9 @@ importers:
         specifier: ^2.0.4
         version: 2.0.4(patch_hash=ajbwlajmqkscjlvqhgfpcsaiai)(@react-pdf/renderer@4.1.5)(react@18.2.0)
     devDependencies:
+      '@react-pdf/types':
+        specifier: ^2.7.0
+        version: 2.7.0
       '@types/react':
         specifier: ^18.2.64
         version: 18.2.74
@@ -5360,7 +5366,7 @@ packages:
       '@react-pdf/pdfkit': 3.1.9
       '@react-pdf/primitives': 3.1.1
       '@react-pdf/render': 3.4.3
-      '@react-pdf/types': 2.4.1
+      '@react-pdf/types': 2.7.0
       events: 3.3.0
       object-assign: 4.1.1
       prop-types: 15.8.1
@@ -5435,13 +5441,8 @@ packages:
       unicode-properties: 1.4.1
     dev: false
 
-  /@react-pdf/types@2.4.1:
-    resolution: {integrity: sha512-w8pk7svhjVj5f7d7kjEGXSk26ffCqRSQcgWR4DwcFltNpSM18ZJmzmM6WrNeeP437y48LlykLnmGDA3oATakgw==}
-    dev: false
-
   /@react-pdf/types@2.7.0:
     resolution: {integrity: sha512-7KrPPCpgRPKR+g+T127PE4bpw9Q84ZiY07EYRwXKVtTEVW9wJ5BZiF9smT9IvH19s+MQaDLmYRgjESsnqlyH0Q==}
-    dev: false
 
   /@remirror/core-constants@2.0.2:
     resolution: {integrity: sha512-dyHY+sMF0ihPus3O27ODd4+agdHMEmuRdyiZJ2CCWjPV5UFmn17ZbElvk6WOGVE4rdCJKZQCrPV2BcikOMLUGQ==}

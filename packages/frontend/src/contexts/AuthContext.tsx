@@ -2,6 +2,7 @@ import { type PropsWithChildren, createContext, useContext, useEffect, useState 
 import { safeParseLocalStorage } from "../utils";
 import { useQuery } from "@tanstack/react-query";
 import { api, setToken, type RouterOutputs } from "../api";
+import { setupPowersync } from "../db/db";
 
 const initialAuth = safeParseLocalStorage("crvif/auth");
 if (!initialAuth) localStorage.setItem("crvif/version", "1");
@@ -16,7 +17,7 @@ const AuthContext = createContext<AuthContextProps>({
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
   const [data, setData] = useState<Omit<AuthContextProps, "setData">>(initialAuth);
-
+  console.log(data);
   useEffect(() => {
     const version = localStorage.getItem("crvif/version");
     if (!version) {
