@@ -1,6 +1,6 @@
 import { UpdateType, PowerSyncBackendConnector, AbstractPowerSyncDatabase, CrudBatch } from "@powersync/web";
 import { safeJSONParse } from "pastable";
-import { api } from "../api";
+import { api, unauthenticatedApi } from "../api";
 import { get } from "idb-keyval";
 import { getPicturesStore } from "../features/idb";
 import { ENV } from "../envVars";
@@ -54,11 +54,11 @@ export class Connector implements PowerSyncBackendConnector {
 }
 
 export const getTokenOrRefresh = async () => {
-  const authData = safeJSONParse(window.localStorage.getItem("crvif/auth") ?? "");
+  let authData = safeJSONParse(window.localStorage.getItem("crvif/auth") ?? "");
   if (!authData) throw new Error("No auth data found");
 
   if (new Date(authData.expiresAt) < new Date()) {
-    const resp = await api.get("/api/refresh-token", {
+    const resp = await unauthenticatedApi.get("/api/refresh-token", {
       query: { token: authData.token, refreshToken: authData.refreshToken! },
     });
 
@@ -69,6 +69,8 @@ export const getTokenOrRefresh = async () => {
       console.log("token refreshed");
       window.localStorage.setItem("crvif/auth", JSON.stringify({ ...authData, ...resp }));
     }
+
+    authData = safeJSONParse(window.localStorage.getItem("crvif/auth") ?? "");
   }
 
   return authData.token as string;
