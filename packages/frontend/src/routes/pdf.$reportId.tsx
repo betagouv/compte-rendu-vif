@@ -221,7 +221,7 @@ export const PDF = () => {
         <i className={cx(fr.cx("fr-icon-alert-fill"), css({ color: "#0063CB" }))} />
         <styled.div
           dangerouslySetInnerHTML={{
-            __html: transformBold(`**La modification du formulaire ré-initialisera cette mise en page.`),
+            __html: transformBold(`La modification du formulaire ré-initialisera cette mise en page.`),
           }}
           ml="16px"
           pr="24px"
