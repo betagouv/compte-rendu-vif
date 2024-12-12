@@ -3,29 +3,29 @@ import { Html } from "react-pdf-html";
 import React from "react";
 import { Buffer } from "buffer";
 import { Udap, Report, ServiceInstructeurs, Clause_v2, Pictures } from "../../frontend/src/db/AppSchema";
-import type { Style } from "@react-pdf/types";
+
 export const initFonts = (folder: string = "") => {
-  // Font.register({
-  //   family: "Marianne",
-  //   fonts: [
-  //     {
-  //       src: `${folder}/fonts/Marianne-Regular.ttf`,
-  //       fontStyle: "normal",
-  //       fontWeight: "normal",
-  //     },
-  //     { src: `${folder}/fonts/Marianne-Bold.ttf`, fontStyle: "normal", fontWeight: "bold" },
-  //     {
-  //       src: `${folder}/fonts/Marianne-RegularItalic.ttf`,
-  //       fontStyle: "italic",
-  //       fontWeight: "normal",
-  //     },
-  //     {
-  //       src: `${folder}/fonts/Marianne-BoldItalic.ttf`,
-  //       fontStyle: "italic",
-  //       fontWeight: "bold",
-  //     },
-  //   ],
-  // });
+  Font.register({
+    family: "Marianne",
+    fonts: [
+      {
+        src: `${folder}/fonts/Marianne-Regular.ttf`,
+        fontStyle: "normal",
+        fontWeight: "normal",
+      },
+      { src: `${folder}/fonts/Marianne-Bold.ttf`, fontStyle: "normal", fontWeight: "bold" },
+      {
+        src: `${folder}/fonts/Marianne-RegularItalic.ttf`,
+        fontStyle: "italic",
+        fontWeight: "normal",
+      },
+      {
+        src: `${folder}/fonts/Marianne-BoldItalic.ttf`,
+        fontStyle: "italic",
+        fontWeight: "bold",
+      },
+    ],
+  });
 };
 
 Font.registerHyphenationCallback((word) => {
@@ -46,7 +46,6 @@ const MarianneHeader = ({
         <View
           style={{
             position: "absolute",
-            // marginBottom: 28,
             top: -36,
             left: 40,
             height: 13,
@@ -89,6 +88,7 @@ export const ReportPDFDocument = ({ udap, htmlString, images, pictures }: Report
       <Page
         size="A4"
         style={{
+          fontFamily: "Marianne",
           paddingBottom: 56,
           paddingTop: 72,
         }}
@@ -108,32 +108,35 @@ export const ReportPDFDocument = ({ udap, htmlString, images, pictures }: Report
           <body>
             <style>
               body {
-                font-family: Helvetica;
+                font-family: Marianne;
                 margin-top: -20px;
               }
 
               strong {
-                font-family: Helvetica-Bold;
+                font-weight: bold;
               }
 
               em {
-                font-family: Helvetica-Oblique;
+                font-style: italic;
               }
 
               strong em span {
-                font-family: Helvetica-BoldOblique;
+                font-weight: bold;
+                font-style: italic;
               }
 
               em strong span {
-                font-family: Helvetica-BoldOblique;
+                font-weight: bold;
               }
 
               strong em {
-                font-family: Helvetica-BoldOblique;
-              }
+                font-style: italic;
+                font-weight: bold;
+                }
 
               em strong {
-                font-family: Helvetica-BoldOblique;
+              font-style: italic;
+                font-weight: bold;
               }
 
                 
@@ -175,13 +178,12 @@ export const ReportPDFDocument = ({ udap, htmlString, images, pictures }: Report
                 flex-direction: column;
                 justify-content: flex-start;
                 font-size: 14px;
-                font-family: Helvetica;
                 margin-right: 50px;
                 max-width: 250px;
               }
 
               .right-texts > div:first-child {
-                font-family: Helvetica-Bold
+                font-weight: bold;
               }
 
 
@@ -261,6 +263,7 @@ const PicturesGrid = ({ pictures, marianneUrl }: { pictures: Pictures[]; mariann
             paddingBottom: 56,
             paddingTop: 72,
             backgroundColor: "#ffffff",
+            fontFamily: "Marianne",
           }}
         >
           <MarianneHeader

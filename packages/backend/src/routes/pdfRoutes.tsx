@@ -1,6 +1,6 @@
 import { Type, type FastifyPluginAsyncTypebox } from "@fastify/type-provider-typebox";
-import { renderToBuffer } from "@react-pdf/renderer";
-import { ReportPDFDocument } from "@cr-vif/pdf";
+import { Font, renderToBuffer } from "@react-pdf/renderer";
+import { initFonts, ReportPDFDocument } from "@cr-vif/pdf";
 import { authenticate } from "./authMiddleware";
 import { db } from "../db/db";
 import { sendReportMail } from "../features/mail";
@@ -8,6 +8,10 @@ import { getPDFName } from "../services/uploadService";
 import React from "react";
 import { Udap } from "../../../frontend/src/db/AppSchema";
 import { Pictures } from "../db-types";
+import path from "path";
+import { makeDebug } from "../features/debug";
+
+const debug = makeDebug("pdf-plugin");
 
 export const pdfPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
   fastify.addHook("preHandler", authenticate);
@@ -79,6 +83,30 @@ const generatePdf = async ({
   udap: Udap;
   pictures: Pictures[];
 }) => {
+  const fontsPath = path.resolve(__dirname, "../../public");
+  debug(fontsPath);
+  Font.register({
+    family: "Marianne",
+    fonts: [
+      {
+        src: path.join(fontsPath, `fonts/Marianne-Regular.ttf`),
+        fontStyle: "normal",
+        fontWeight: "normal",
+      },
+      { src: path.join(fontsPath, `/fonts/Marianne-Bold.ttf`), fontStyle: "normal", fontWeight: "bold" },
+      {
+        src: path.join(fontsPath, `/fonts/Marianne-RegularItalic.ttf`),
+        fontStyle: "italic",
+        fontWeight: "normal",
+      },
+      {
+        src: path.join(fontsPath, `/fonts/Marianne-BoldItalic.ttf`),
+        fontStyle: "italic",
+        fontWeight: "bold",
+      },
+    ],
+  });
+
   return renderToBuffer(
     <ReportPDFDocument
       udap={udap as Udap}
