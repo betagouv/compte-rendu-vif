@@ -74,7 +74,7 @@ const Pagination = () => {
       <Text
         render={({ pageNumber, totalPages }) => (
           <Text>
-            {pageNumber} / {totalPages}
+            {pageNumber}/{totalPages}
           </Text>
         )}
       />

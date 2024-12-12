@@ -61,7 +61,12 @@ export const PDF = () => {
     queryKey: ["report", reportId],
     queryFn: async () => {
       const reportQuery = await db.selectFrom("report").where("id", "=", reportId).selectAll().execute();
-      const picturesQuery = await db.selectFrom("pictures").where("reportId", "=", reportId).selectAll().execute();
+      const picturesQuery = await db
+        .selectFrom("pictures")
+        .where("reportId", "=", reportId)
+        .orderBy("createdAt asc")
+        .selectAll()
+        .execute();
       const report = reportQuery?.[0];
       const pictures = picturesQuery ?? [];
 
