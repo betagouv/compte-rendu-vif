@@ -1,4 +1,4 @@
-import { Document, Font, Image, Page, Text, View } from "@react-pdf/renderer";
+import { Document, Font, Image, Page, StyleSheet, Text, View } from "@react-pdf/renderer";
 import { Html } from "react-pdf-html";
 import React from "react";
 import { Buffer } from "buffer";
@@ -114,19 +114,22 @@ export const ReportPDFDocument = ({ udap, htmlString, images, pictures }: Report
               }
 
               .right-texts {
+                text-align: left;
                 margin-top: 13px;
                 display: flex;
-                align-items: flex-end;
+                align-items: flex-start;
                 flex-direction: column;
-                justify-content: flex-end;
-                gap: 20px;
+                justify-content: flex-start;
+                font-size: 14px;
+                font-family: Helvetica;
+                margin-right: 50px;
+                max-width: 250px;
               }
 
-              .right-texts > div {
-                text-align: right;
-                font-size: 14px;
-                font-family: Helvetica-Bold;
+              .right-texts > div:first-child {
+                font-family: Helvetica-Bold
               }
+
 
               .meeting-date {
                 text-align: right;
@@ -137,6 +140,11 @@ export const ReportPDFDocument = ({ udap, htmlString, images, pictures }: Report
 
               .pictures {
                 background-color: #f5f5f5;
+              }
+                
+              hr {
+                border: 0;
+                border-top: 1px solid #EDEDED;
               }
 
             </style>
@@ -152,7 +160,7 @@ export const ReportPDFDocument = ({ udap, htmlString, images, pictures }: Report
                   .join("<br/>")}
                   </strong>
                 </div>
-                <img class="marianne-footer-img"  src="${images.marianneFooter}" />
+                <img class="marianne-footer-img" src="${images.marianneFooter}" />
 
               </div>
 
@@ -171,6 +179,7 @@ export const ReportPDFDocument = ({ udap, htmlString, images, pictures }: Report
                 </div>
               </div>
             </div>
+            <hr/>
             <div class="content">
               ${htmlString}
             </div>
@@ -179,49 +188,68 @@ export const ReportPDFDocument = ({ udap, htmlString, images, pictures }: Report
         </html>
       `}</Html>
       </Page>
-      {pictures
-        ? pictures
-            .filter((pic) => !!pic.url)
-            .sort((pic1, pic2) => {
-              const pic1Date = pic1.createdAt ? new Date(pic1.createdAt) : new Date();
-              const pic2Date = pic2.createdAt ? new Date(pic2.createdAt) : new Date();
-
-              return pic1Date.getTime() - pic2Date.getTime();
-            })
-            .map((pic, index) => (
-              <Page
-                break={index > 0}
-                style={{
-                  paddingTop: "48px",
-                  paddingBottom: "32px",
-                  maxHeight: "100vh",
-                }}
-                key={pic.id}
-                size="A4"
-              >
-                <View
-                  style={{
-                    marginHorizontal: "10%",
-                    maxHeight: "100vh",
-                  }}
-                >
-                  <Image
-                    style={{
-                      width: `auto`,
-                      height: "auto",
-                      objectFit: "contain",
-                      overflow: "hidden",
-                    }}
-                    src={pic.finalUrl ?? pic.url!}
-                  />
-                </View>
-              </Page>
-            ))
-        : null}
+      {pictures ? <PicturesGrid pictures={pictures} /> : null}
     </Document>
   );
 };
 
+const picturesPerPage = 4;
+
+const PicturesGrid = ({ pictures }: { pictures: Pictures[] }) => {
+  const pages = Math.ceil(pictures.length / picturesPerPage);
+  return (
+    <>
+      {Array.from({ length: pages }).map((_, pageIndex) => (
+        <Page key={pageIndex} size="A4" style={styles.page}>
+          <View style={styles.gridContainer}>
+            {pictures.slice(pageIndex * picturesPerPage, (pageIndex + 1) * picturesPerPage).map((image, index) => (
+              <View key={index} style={styles.gridItem}>
+                <View style={styles.imageContainer}>
+                  <Image src={image.finalUrl ?? image.url!} style={styles.image} />
+                </View>
+                <Text style={styles.label}>N° {pageIndex * picturesPerPage + index + 1}</Text>
+              </View>
+            ))}
+          </View>
+        </Page>
+      ))}
+    </>
+  );
+};
+
+const styles = StyleSheet.create({
+  page: {
+    paddingHorizontal: "40px",
+    backgroundColor: "#ffffff",
+  },
+  gridContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "flex-start",
+    gap: 20,
+  },
+  gridItem: {
+    width: "48%",
+    marginBottom: 20,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    breakInside: "avoid",
+  },
+  imageContainer: {
+    width: "100%",
+    marginBottom: 5,
+  },
+  image: {
+    width: "100%",
+    objectFit: "scale-down",
+    objectPosition: "left",
+    maxHeight: 300,
+  },
+  label: {
+    fontSize: "10px",
+  },
+});
 export type ReportPDFDocumentProps = {
   htmlString: string;
   udap: Udap;
@@ -276,6 +304,8 @@ export const getReportHtmlString = (
     <p>
       <strong>Objet de la demande : ${report.title ?? ""}</strong>
     </p>
+
+    <hr />
     
     ${spaceType ? `<p>${spaceType?.text}</p>` : ""}
   
