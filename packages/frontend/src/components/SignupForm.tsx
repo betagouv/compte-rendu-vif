@@ -8,7 +8,7 @@ import { InputGroup } from "./InputGroup";
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import { useAuthContext } from "../contexts/AuthContext";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { type RouterInputs, api, getErrorMessage } from "../api";
+import { type RouterInputs, api, getErrorMessage, unauthenticatedApi } from "../api";
 import Select from "@codegouvfr/react-dsfr/Select";
 
 export const SignupForm = () => {
@@ -23,7 +23,7 @@ export const SignupForm = () => {
 
   const [_, setData] = useAuthContext();
 
-  const mutation = useMutation((body: SignupFormProps) => api.post("/api/create-user", { body }));
+  const mutation = useMutation((body: SignupFormProps) => unauthenticatedApi.post("/api/create-user", { body }));
 
   const udapsQuery = useQuery({
     queryKey: ["udaps"],

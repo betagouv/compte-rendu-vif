@@ -9,14 +9,14 @@ import { FullWidthButton } from "./FullWidthButton";
 import { InputGroup } from "./InputGroup";
 import { PasswordInput } from "./PasswordInput";
 import { useMutation } from "@tanstack/react-query";
-import { type RouterInputs, api, getErrorMessage } from "../api";
+import { type RouterInputs, api, getErrorMessage, unauthenticatedApi } from "../api";
 import { useState } from "react";
 
 export const LoginForm = () => {
   const [authData, setAuthData] = useAuthContext();
   const form = useForm<LoginFormProps>();
 
-  const mutation = useMutation((body: LoginFormProps) => api.post("/api/login", { body }));
+  const mutation = useMutation((body: LoginFormProps) => unauthenticatedApi.post("/api/login", { body }));
 
   const [shouldShowPopup] = useState(localStorage.getItem("crvif/update-popup"));
 

@@ -7,12 +7,12 @@ import { getTokenOrRefresh } from "./db/Connector";
 
 export const apiStore = createStore("auth", "access");
 
-export const createApiClientWithUrl = (url: string) => {
+export const createApiClientWithUrl = (url: string, ignoreToken?: boolean) => {
   return createApiClient(async (method, url, parameters) => {
     const { body, query, header } = parameters || {};
 
     let token;
-    if (ref.token) {
+    if (!ignoreToken && ref.token) {
       token = await getTokenOrRefresh();
     }
 
@@ -26,6 +26,7 @@ export const createApiClientWithUrl = (url: string) => {
 };
 
 export const api = createApiClientWithUrl(ENV.VITE_BACKEND_URL);
+export const unauthenticatedApi = createApiClientWithUrl(ENV.VITE_BACKEND_URL, true);
 set("url", ENV.VITE_BACKEND_URL, apiStore);
 const ref = {
   token: null as string | null,
