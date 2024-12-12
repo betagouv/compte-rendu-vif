@@ -60,7 +60,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         console.error("refreshTokenQuery error", e);
       }
     },
-    enabled: !!data?.token,
+    enabled: false && !!data?.token,
     refetchOnWindowFocus: false,
   });
 
