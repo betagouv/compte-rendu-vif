@@ -48,7 +48,7 @@ export const ServiceInstructeurSelect = ({ disabled }: { disabled?: boolean }) =
         </Combobox.Trigger>
       </Combobox.Control>
       <Combobox.Positioner>
-        <Combobox.Content maxH="400px" overflow="auto">
+        <Combobox.Content maxH="400px" mt="-1.5rem" bgColor="background-contrast-grey" overflow="auto">
           <Combobox.ItemGroup id="service-instructeur">
             {items?.length ? (
               items.map((item) => (

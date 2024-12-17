@@ -11,7 +11,6 @@ import { registerSW } from "virtual:pwa-register";
 import { initFonts } from "@cr-vif/pdf";
 import { powerSyncDb, setupPowersync } from "./db/db";
 import { PowerSyncContext } from "@powersync/react";
-import { TestPowersync } from "./features/testPowersync";
 
 if ("serviceWorker" in navigator) {
   registerSW({});
@@ -41,11 +40,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <ErrorBoundary fallback={<div>Une erreur s'est produite</div>}>
       <QueryClientProvider client={queryClient}>
-        {/* <TestPowersync /> */}
         <AuthProvider>
           <WithPowersync>
             <App />
-            <TestPowersync />
           </WithPowersync>
         </AuthProvider>
       </QueryClientProvider>
