@@ -29,9 +29,8 @@ export const sendReportMail = ({
     to: recipients,
     subject: "Compte-rendu UDAP" + (report?.title ? ` : ${report.title}` : ""),
     text: `Bonjour,
-vous trouverez ci-joint le compte-rendu de notre rendez-vous.
 
-Ce compte-rendu est un nouveau dispositif en phase de développement pour but d’aider l’usager dans sa démarche. Aidez-nous à l’améliorer en répondant à ce questionnaire anonyme de moins d’une minute : https://adtk8x51mbw.eu.typeform.com/to/LHrKhXkd
+Vous trouverez ci-joint le compte-rendu de notre rendez-vous.
 
 Cordialement`,
     attachments: [
