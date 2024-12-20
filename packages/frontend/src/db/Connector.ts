@@ -9,7 +9,10 @@ const emitterChannel = new BroadcastChannel("sw-messages");
 
 export class Connector implements PowerSyncBackendConnector {
   async fetchCredentials() {
+    console.log("fetching credentials");
     const token = await getTokenOrRefresh();
+
+    console.log("aaaa");
 
     return {
       endpoint: ENV.VITE_POWERSYNC_URL,
@@ -56,6 +59,8 @@ export class Connector implements PowerSyncBackendConnector {
 export const getTokenOrRefresh = async () => {
   let authData = safeJSONParse(window.localStorage.getItem("crvif/auth") ?? "");
   if (!authData) throw new Error("No auth data found");
+
+  if (!authData.token || !authData.refreshToken) throw new Error("No token found");
 
   if (new Date(authData.expiresAt) < new Date()) {
     const resp = await unauthenticatedApi.get("/api/refresh-token", {

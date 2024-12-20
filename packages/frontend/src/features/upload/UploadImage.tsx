@@ -149,7 +149,9 @@ const ReportPictures = ({
 
   const reportId = form.getValues().id;
 
-  const picturesQuery = useDbQuery(db.selectFrom("pictures").where("reportId", "=", reportId).selectAll());
+  const picturesQuery = useDbQuery(
+    db.selectFrom("pictures").where("reportId", "=", reportId).orderBy("createdAt asc").selectAll(),
+  );
 
   // const tmpPicturesQuery = useLiveQuery(
   //   db.tmp_pictures.liveMany({ where: { reportId }, orderBy: { createdAt: "desc" } }),
