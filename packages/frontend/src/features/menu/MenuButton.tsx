@@ -1,32 +1,32 @@
 import { Popover } from "#components/Popover";
 import { Status } from "#components/SyncForm";
-import { css, cx } from "#styled-system/css";
+import { css } from "#styled-system/css";
 import { Center, Flex, styled } from "#styled-system/jsx";
-import { ButtonProps, Button } from "@codegouvfr/react-dsfr/Button";
-import { createModal } from "@codegouvfr/react-dsfr/Modal";
-import { PropsWithChildren, ReactNode, useEffect, useRef } from "react";
-import { useIsModalOpen } from "@codegouvfr/react-dsfr/Modal/useIsModalOpen";
+import { Button } from "@codegouvfr/react-dsfr/Button";
+import { PropsWithChildren, ReactNode, useEffect, useState } from "react";
 
 import { useSelector } from "@xstate/react";
-import { createPortal } from "react-dom";
 import { useIsDesktop } from "../../hooks/useIsDesktop";
 import { ClauseMenu } from "./ClauseMenu";
 import { HelpMenu } from "./HelpMenu";
 import { MenuActions } from "./MenuActions";
-import { menuStore } from "./menuStore";
 import { ShareReport } from "./Share";
 
+import { ReportSearch } from "#components/ReportSearch.tsx";
+import { useRouter } from "@tanstack/react-router";
 import { menuActor, MenuStates } from "./menuMachine";
+import { ModalCloseButton } from "./MenuTitle";
 
 export const MenuButton = () => {
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+
   const menu = useSelector(menuActor, (state) => state.value);
   const isDesktop = useIsDesktop();
 
-  const Content = modalContents[menu] ?? null;
-
   const isPopoverOpen = menu === "main" && isDesktop;
-  const isModalOpen = !isPopoverOpen && menu !== "closed";
 
+  const router = useRouter();
+  const isHome = router.latestLocation.pathname === "/";
   return (
     <>
       <Flex alignItems={{ base: "unset", lg: "center" }} h="100%">
@@ -62,6 +62,18 @@ export const MenuButton = () => {
           </Flex>
         ) : (
           <Center zIndex="1250" pos="absolute" top="0" right="24px" h="100%">
+            {isHome ? (
+              // @ts-ignore
+              <Button
+                className={css({ hideFrom: "lg" })}
+                iconId="fr-icon-search-line"
+                priority="tertiary no outline"
+                nativeButtonProps={{
+                  onClick: () => setIsSearchOpen(true),
+                  type: "button",
+                }}
+              />
+            ) : null}
             {/* @ts-ignore */}
             <Button
               iconId="fr-icon-account-circle-fill"
@@ -74,6 +86,8 @@ export const MenuButton = () => {
           </Center>
         )}
       </Flex>
+      <MenuModal />
+      <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
     </>
   );
 };
@@ -85,6 +99,26 @@ const modalContents: Record<MenuStates, (props: ModalContentProps) => ReactNode>
   clausesNationales: (props) => <ClauseMenu isNational {...props} />,
   share: (props) => <ShareReport {...props} />,
   closed: () => null,
+};
+
+const SearchModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
+  return (
+    <Modal isOpen={isOpen} onClose={onClose}>
+      <Flex flexDir="column" w="100%" h="100%" p="16px">
+        <Flex justifyContent="flex-end" mb="8px">
+          <ModalCloseButton onClose={onClose} />
+        </Flex>
+        <ReportSearch
+          inputProps={{
+            placeholder: "Rechercher",
+            className: "",
+            id: "search-input",
+            type: "text",
+          }}
+        />
+      </Flex>
+    </Modal>
+  );
 };
 
 export const MenuModal = () => {

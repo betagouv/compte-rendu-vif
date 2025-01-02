@@ -1,7 +1,6 @@
 import { Divider, Flex, styled } from "#styled-system/jsx";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { ReactNode } from "react";
-import { menuStore } from "./menuStore";
 import { menuActor } from "./menuMachine";
 
 export const MenuTitle = ({
@@ -49,16 +48,7 @@ export const MenuTitle = ({
       <Flex gap="16px" pl={{ base: "0", lg: "24px" }} fontSize="20px" fontWeight="bold" nowrap>
         {buttons}
       </Flex>
-      <button
-        className="fr-btn--close fr-btn"
-        title="Fermer"
-        aria-controls="menu-modal-2"
-        type="button"
-        data-fr-js-modal-button="true"
-        onClick={() => menuActor.send({ type: "CLOSE" })}
-      >
-        Fermer
-      </button>
+      <ModalCloseButton onClose={() => menuActor.send({ type: "CLOSE" })} />
     </Flex>
     {alert ? alert : null}
     {!hideDivider ? (
@@ -72,3 +62,17 @@ export const MenuTitle = ({
     ) : null}
   </>
 );
+
+export const ModalCloseButton = ({ onClose }: { onClose: () => void }) => {
+  return (
+    <button
+      className="fr-btn--close fr-btn"
+      title="Fermer"
+      type="button"
+      data-fr-js-modal-button="true"
+      onClick={onClose}
+    >
+      Fermer
+    </button>
+  );
+};

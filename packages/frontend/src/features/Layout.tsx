@@ -13,92 +13,14 @@ import { MenuButton, MenuModal } from "../features/menu/MenuButton";
 import { useIsDesktop } from "../hooks/useIsDesktop";
 
 export const Layout = ({ children }: PropsWithChildren) => {
-  const router = useRouter();
-
-  const isHome = router.latestLocation.pathname === "/";
-  const headerRef = useRef<HTMLDivElement>(null);
-
   return (
     <Flex pos="relative" flexDir={"column"} h="100vh">
       <AppHeader />
-      {/* <Header
-        ref={headerRef}
-        brandTop={
-          <>
-            Ministère
-            <br /> de la culture
-          </>
-        }
-        serviceTitle={
-          isDesktop ? (
-            <>
-              Compte-rendu VIF{" "}
-              <Badge as="span" noIcon severity="success">
-                Beta
-              </Badge>
-            </>
-          ) : undefined
-        }
-        homeLinkProps={{ title: "Compte rendu vif", to: "/" }}
-        quickAccessItems={
-          isLoggedIn
-            ? undefined
-            : [
-                ...(isLoggedIn
-                  ? []
-                  : [
-                      <>
-                        <Button linkProps={{ to: "/login" }}>Se connecter</Button>
-                        <Button linkProps={{ to: "/signup" }}>S'inscrire</Button>
-                      </>,
-                    ]),
-              ]
-        }
-        renderSearchInput={
-          !isDesktop && isHome
-            ? (inputProps) => {
-                return <ReportSearch inputProps={inputProps} />;
-              }
-            : undefined
-        }
-        classes={{
-          root: css({
-            "& .fr-btn--menu": isLoggedIn
-              ? {
-                  opacity: "0",
-                  pointerEvents: "none",
-                }
-              : {},
-          }),
-          logo: css({
-            "&::after": {
-              backgroundPosition: "0 0 !important",
-            },
-          }),
-          service: css({ display: { base: "none", lg: "unset" } }),
-          toolsLinks: css({
-            h: "100%",
-          }),
-          menuLinks: css({
-            "&::after": {
-              display: "none",
-            },
-          }),
-          bodyRow: css({
-            pos: "relative",
-            "& > .fr-header__tools": {
-              h: "26px",
-            },
-          }),
-        }}
-      /> */}
-      {/* <Menu headerRef={headerRef} /> */}
       <CompatibilityAlert />
       <Box flex="1">{children}</Box>
       {/* <TanStackRouterDevtools /> */}
 
       <AppFooter />
-      {/* <VersionDisplay /> */}
     </Flex>
   );
 };
@@ -262,7 +184,6 @@ const AppHeader = () => {
           </div>
         </div>
       </header>
-      <MenuModal />
     </>
   );
 };
