@@ -2,6 +2,7 @@ import { Divider, Flex, styled } from "#styled-system/jsx";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { ReactNode } from "react";
 import { menuStore } from "./menuStore";
+import { menuActor } from "./menuMachine";
 
 export const MenuTitle = ({
   children,
@@ -18,6 +19,7 @@ export const MenuTitle = ({
 }) => (
   <>
     <Flex
+      zIndex="5"
       position={{ base: "sticky", lg: "unset" }}
       top={{ base: "-1px", lg: "unset" }}
       justifyContent="space-between"
@@ -53,7 +55,7 @@ export const MenuTitle = ({
         aria-controls="menu-modal-2"
         type="button"
         data-fr-js-modal-button="true"
-        onClick={() => menuStore.send({ type: "setMenu", menu: null })}
+        onClick={() => menuActor.send({ type: "CLOSE" })}
       >
         Fermer
       </button>

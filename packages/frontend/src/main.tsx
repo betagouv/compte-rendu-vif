@@ -16,7 +16,10 @@ if ("serviceWorker" in navigator) {
   registerSW({});
 }
 
-startReactDsfr({ defaultColorScheme: "system", Link: Link });
+// force light mode
+localStorage.setItem("scheme", "light");
+
+startReactDsfr({ defaultColorScheme: "dark", Link: Link });
 initFonts();
 
 const queryClient = new QueryClient({

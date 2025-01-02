@@ -2,6 +2,7 @@ import { type PropsWithChildren, createContext, useContext, useEffect, useState 
 import { safeParseLocalStorage } from "../utils";
 import { useQuery } from "@tanstack/react-query";
 import { api, setToken, type RouterOutputs } from "../api";
+import { menuActor } from "../features/menu/menuMachine";
 
 const initialAuth = safeParseLocalStorage("crvif/auth");
 if (!initialAuth) localStorage.setItem("crvif/version", "1");
@@ -86,6 +87,7 @@ export const useLogout = () => {
   const [data, setData] = useAuthContext();
 
   return () => {
+    menuActor.send({ type: "CLOSE" });
     setData({ ...data, token: undefined, user: undefined, refreshToken: undefined });
   };
 };
