@@ -1,7 +1,7 @@
 import { Divider, Flex, styled } from "#styled-system/jsx";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { ReactNode } from "react";
-import { menuStore } from "./menuStore";
+import { menuActor } from "./menuMachine";
 
 export const MenuTitle = ({
   children,
@@ -18,6 +18,7 @@ export const MenuTitle = ({
 }) => (
   <>
     <Flex
+      zIndex="5"
       position={{ base: "sticky", lg: "unset" }}
       top={{ base: "-1px", lg: "unset" }}
       justifyContent="space-between"
@@ -47,16 +48,7 @@ export const MenuTitle = ({
       <Flex gap="16px" pl={{ base: "0", lg: "24px" }} fontSize="20px" fontWeight="bold" nowrap>
         {buttons}
       </Flex>
-      <button
-        className="fr-btn--close fr-btn"
-        title="Fermer"
-        aria-controls="menu-modal-2"
-        type="button"
-        data-fr-js-modal-button="true"
-        onClick={() => menuStore.send({ type: "setMenu", menu: null })}
-      >
-        Fermer
-      </button>
+      <ModalCloseButton onClose={() => menuActor.send({ type: "CLOSE" })} />
     </Flex>
     {alert ? alert : null}
     {!hideDivider ? (
@@ -70,3 +62,17 @@ export const MenuTitle = ({
     ) : null}
   </>
 );
+
+export const ModalCloseButton = ({ onClose }: { onClose: () => void }) => {
+  return (
+    <button
+      className="fr-btn--close fr-btn"
+      title="Fermer"
+      type="button"
+      data-fr-js-modal-button="true"
+      onClick={onClose}
+    >
+      Fermer
+    </button>
+  );
+};
