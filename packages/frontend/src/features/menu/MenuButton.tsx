@@ -93,8 +93,8 @@ export const MenuButton = () => {
 };
 
 const modalContents: Record<MenuStates, (props: ModalContentProps) => ReactNode> = {
-  main: (props) => <MenuActions />,
-  help: (props) => <HelpMenu />,
+  main: (_props) => <MenuActions />,
+  help: (_props) => <HelpMenu />,
   clausesDepartementales: (props) => <ClauseMenu isNational={false} {...props} />,
   clausesNationales: (props) => <ClauseMenu isNational {...props} />,
   share: (props) => <ShareReport {...props} />,
