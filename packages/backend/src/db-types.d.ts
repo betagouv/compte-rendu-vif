@@ -28,14 +28,6 @@ export interface AtdatabasesMigrationsVersion {
   version: string | null;
 }
 
-export interface Clause {
-  hidden: boolean | null;
-  key: string;
-  text: string;
-  udap_id: string;
-  value: string;
-}
-
 export interface ClauseV2 {
   id: string;
   key: string;
@@ -48,6 +40,7 @@ export interface ClauseV2 {
 export interface Delegation {
   createdBy: string;
   delegatedTo: string;
+  id: string;
 }
 
 export interface InternalUser {
@@ -112,7 +105,7 @@ export interface Report {
 export interface ServiceInstructeurs {
   email: string | null;
   full_name: string;
-  id: number;
+  id: string;
   short_name: string;
   tel: string | null;
   udap_id: string | null;
@@ -166,7 +159,6 @@ export interface Whitelist {
 export interface DB {
   atdatabases_migrations_applied: AtdatabasesMigrationsApplied;
   atdatabases_migrations_version: AtdatabasesMigrationsVersion;
-  clause: Clause;
   clause_v2: ClauseV2;
   delegation: Delegation;
   internal_user: InternalUser;

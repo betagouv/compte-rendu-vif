@@ -39,7 +39,7 @@ test.describe("Create user", () => {
     await page.waitForURL((url) => url.pathname === "/");
     expect(page.url()).toContain("/");
 
-    await page.click("button[data-test-id=account-menu]");
+    await page.click("button[data-test-id=settings-menu]");
 
     const button = await page.waitForSelector("[data-test-id=logout]");
     await button.click();

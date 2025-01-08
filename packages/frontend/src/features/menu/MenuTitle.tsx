@@ -45,16 +45,16 @@ export const MenuTitle = ({
       >
         {children}
       </styled.span>
-      <Flex gap="16px" pl={{ base: "0", lg: "24px" }} fontSize="20px" fontWeight="bold" nowrap>
+      <Flex gap="16px" pl={{ base: "16px", lg: "24px" }} fontSize="20px" fontWeight="bold" nowrap>
         {buttons}
       </Flex>
       <ModalCloseButton onClose={() => menuActor.send({ type: "CLOSE" })} />
     </Flex>
     {alert ? alert : null}
     {!hideDivider ? (
-      <styled.div hideFrom="lg" mb="24px">
+      <styled.div mb="24px">
         {buttons ? (
-          <styled.span hideFrom={"lg"} fontSize="20px" fontWeight="bold" nowrap>
+          <styled.span hideFrom={"lg"} fontSize="20px" fontWeight="bold">
             {children}
           </styled.span>
         ) : null}
