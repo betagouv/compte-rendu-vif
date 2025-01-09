@@ -18,7 +18,9 @@ type MenuMode = "view" | "add" | "edit";
 
 export const ServicesMenu = () => {
   const user = useUser()!;
-  const services = useDbQuery(db.selectFrom("service_instructeurs").where("udap_id", "=", user.udap_id).selectAll());
+  const services = useDbQuery(
+    db.selectFrom("service_instructeurs").where("udap_id", "=", user.udap_id).orderBy("short_name asc").selectAll(),
+  );
 
   const [mode, setMode] = useState<MenuMode>("view");
 
@@ -27,7 +29,7 @@ export const ServicesMenu = () => {
   const createServiceMutation = useMutation(async (service: ServiceInstructeurs) => {
     await db
       .insertInto("service_instructeurs")
-      .values({ ...service, id: v4() })
+      .values({ ...service, id: v4(), udap_id: user.udap_id })
       .execute();
 
     setBannerProps({
@@ -50,6 +52,7 @@ export const ServicesMenu = () => {
       icon: fr.cx("ri-check-fill"),
       text: `Modifications enregistrées`,
     });
+    setMode("view");
   });
 
   if (services.isLoading) {
@@ -73,7 +76,7 @@ export const ServicesMenu = () => {
               mr: { base: "0 !important", lg: "8px !important" },
             },
           })}
-          // disabled={applyDiffMutation.isLoading}
+          disabled={editServicesMutation.isLoading}
           iconId="ri-save-fill"
           priority="primary"
           type="submit"
@@ -123,7 +126,7 @@ export const ServicesMenu = () => {
             setBannerProps({
               status: "idle" as BannerStatus,
               icon: fr.cx("fr-icon-alert-fill"),
-              text: "**Vous ajoutez une clause pour toute l’UDAP.**",
+              text: "**Vous ajoutez un service pour toute l’UDAP.**",
             });
             setMode("add");
           }}
@@ -139,7 +142,7 @@ export const ServicesMenu = () => {
         <styled.div pl={{ base: "8px", lg: "0" }}>Services instructeurs et urbanistes</styled.div>
       </MenuTitle>
 
-      <Flex flexDir="column" px={{ base: "8px", lg: "32px" }} pb="40px">
+      <Flex gap="80px" flexDir="column" px={{ base: "8px", lg: "32px" }} pb="40px">
         {isAdding ? <ServiceAdd addService={createServiceMutation.mutate} /> : null}
         <ServicesList services={services.data} mode={mode} editServices={editServicesMutation.mutate} />
       </Flex>
@@ -152,7 +155,9 @@ type BannerProps = {
   icon: string;
   status: BannerStatus;
 };
+
 type BannerStatus = "idle" | "success";
+
 const ServiceFormBanner = ({ status, icon, text }: BannerProps) => {
   const bgColor = status === "idle" ? "#E8EDFF" : "#B8FEC9";
   const iconColor = status === "idle" ? "#0063CB" : "#18753C";
@@ -185,7 +190,12 @@ const ServicesList = ({
     },
   });
 
-  const { fields } = useFieldArray({ control: form.control, name: "services" });
+  const { fields, remove } = useFieldArray({ control: form.control, name: "services" });
+
+  const deleteServiceMutation = useMutation(async (id: string) => {
+    await db.deleteFrom("service_instructeurs").where("id", "=", id).execute();
+    remove(fields.findIndex((field) => field.id === id));
+  });
 
   useEffect(() => {
     form.reset({ services });
@@ -206,6 +216,7 @@ const ServicesList = ({
                 key={field.id}
                 name={`services[${index}]`}
                 form={form}
+                deleteService={deleteServiceMutation.mutate}
               />
             ))
           : services.map((service) => <Service key={service.id} service={service} />)}
@@ -248,39 +259,53 @@ const ServiceAdd = ({ addService }: { addService: (service: ServiceInstructeurs)
   );
 };
 
-const ServiceForm = ({ name, form, dividerBelow }: { name?: string; form: any; dividerBelow?: boolean }) => {
+const ServiceForm = ({
+  name,
+  form,
+  dividerBelow,
+  deleteService,
+}: {
+  name?: string;
+  form: any;
+  dividerBelow?: boolean;
+  deleteService?: (id: string) => any;
+}) => {
   const prefix = name ? `${name}.` : "";
 
   return (
     <Flex flexDir="column" w="100%" h="100%">
-      <Flex gap={{ base: "8px", lg: "20px" }} h="100%">
-        <Input
-          className={css({ flex: 1 })}
-          label="Intitulé complet"
-          nativeInputProps={form.register(`${prefix}full_name`, { required: true })}
-        />
+      <Input
+        className={css({ flex: 1 })}
+        label="Intitulé complet"
+        nativeInputProps={form.register(`${prefix}full_name`, { required: true })}
+      />
+      <Flex gap={{ base: "8px", lg: "20px" }}>
         <Input
           className={css({ flex: 1 })}
           label="Abréviation"
           nativeInputProps={form.register(`${prefix}short_name`, { required: true })}
         />
-      </Flex>
-      <Flex gap={{ base: "8px", lg: "20px" }} h="100%">
-        <Input className={css({ flex: 1 })} label="Courriel" nativeInputProps={form.register(`${prefix}email`)} />
         <Input className={css({ flex: 1 })} label="Téléphone" nativeInputProps={form.register(`${prefix}tel`)} />
       </Flex>
 
-      <Flex justifyContent="flex-end" my={{ base: 0, lg: "20px" }}>
-        <Button
-          iconId="ri-delete-bin-fill"
-          iconPosition="right"
-          priority="tertiary"
-          nativeButtonProps={{ type: "button" }}
-        >
-          Supprimer
-        </Button>
+      <Flex>
+        <Input className={css({ flex: 1 })} label="Courriel" nativeInputProps={form.register(`${prefix}email`)} />
       </Flex>
-      {dividerBelow ? <Divider mt="24px" /> : null}
+
+      {deleteService ? (
+        <Flex justifyContent="flex-end" my={{ base: "24px", lg: "40px" }}>
+          <Button
+            iconId="ri-delete-bin-fill"
+            iconPosition="right"
+            priority="tertiary"
+            nativeButtonProps={{ type: "button" }}
+            onClick={() => deleteService(form.watch(`${prefix}id`))}
+          >
+            Supprimer
+          </Button>
+        </Flex>
+      ) : null}
+      {dividerBelow ? <Divider /> : null}
     </Flex>
   );
 };
