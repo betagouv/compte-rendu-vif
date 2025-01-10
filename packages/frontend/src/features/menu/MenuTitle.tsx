@@ -19,8 +19,8 @@ export const MenuTitle = ({
   <>
     <Flex
       zIndex="5"
-      position={{ base: "sticky", lg: "unset" }}
-      top={{ base: "-1px", lg: "unset" }}
+      position={{ base: "sticky", lg: "sticky" }}
+      top={{ base: "0", lg: "0" }}
       justifyContent="space-between"
       alignItems="center"
       w="100%"

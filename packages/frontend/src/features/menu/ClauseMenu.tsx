@@ -28,7 +28,12 @@ export const ClauseMenu = ({ isNational, ...props }: { isNational: boolean } & M
       .selectAll(),
   );
 
-  if (clausesQuery.isLoading) return <Spinner />;
+  if (clausesQuery.isLoading)
+    return (
+      <styled.div h="100%">
+        <Spinner />
+      </styled.div>
+    );
 
   if (isNational)
     return (
