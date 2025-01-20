@@ -10,9 +10,10 @@ export const MenuActions = () => {
   const logout = useLogout();
 
   const actions = [
-    { text: "Partage des CR", onClick: () => menuActor.send({ type: "GO_TO_SHARE" }) },
     { text: "Clauses départementales", onClick: () => menuActor.send({ type: "GO_TO_CLAUSES_DEPT" }) },
     { text: "Clauses nationales", onClick: () => menuActor.send({ type: "GO_TO_CLAUSES_NAT" }) },
+    { text: "Partage des CR", onClick: () => menuActor.send({ type: "GO_TO_SHARE" }) },
+    { text: "Services", onClick: () => menuActor.send({ type: "GO_TO_SERVICES" }) },
     { text: "Assistance technique", onClick: () => menuActor.send({ type: "GO_TO_HELP" }) },
     { text: "Se déconnecter", onClick: logout, dataTestId: "logout" },
   ];
@@ -20,7 +21,7 @@ export const MenuActions = () => {
   return (
     <>
       <styled.div hideFrom="lg">
-        <MenuTitle hideDivider>Mon compte</MenuTitle>
+        <MenuTitle hideDivider>Paramètre</MenuTitle>
       </styled.div>
       <Stack
         className={css({

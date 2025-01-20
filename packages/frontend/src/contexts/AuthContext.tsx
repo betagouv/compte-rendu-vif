@@ -17,7 +17,7 @@ const AuthContext = createContext<AuthContextProps>({
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
   const [data, setData] = useState<Omit<AuthContextProps, "setData">>(initialAuth);
-  console.log(data);
+
   useEffect(() => {
     const version = localStorage.getItem("crvif/version");
     if (!version) {

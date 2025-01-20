@@ -11,6 +11,7 @@ export const menuMachine = setup({
       | { type: "GO_TO_CLAUSES_DEPT" }
       | { type: "GO_TO_CLAUSES_NAT" }
       | { type: "GO_TO_SHARE" }
+      | { type: "GO_TO_SERVICES" }
       | { type: "BACK" },
   },
 }).createMachine({
@@ -31,6 +32,7 @@ export const menuMachine = setup({
         GO_TO_CLAUSES_DEPT: "clausesDepartementales",
         GO_TO_CLAUSES_NAT: "clausesNationales",
         GO_TO_SHARE: "share",
+        GO_TO_SERVICES: "services",
       },
     },
     help: {
@@ -52,6 +54,12 @@ export const menuMachine = setup({
       },
     },
     share: {
+      on: {
+        CLOSE: "closed",
+        BACK: "main",
+      },
+    },
+    services: {
       on: {
         CLOSE: "closed",
         BACK: "main",

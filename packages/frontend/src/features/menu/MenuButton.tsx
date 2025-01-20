@@ -16,6 +16,7 @@ import { ReportSearch } from "#components/ReportSearch.tsx";
 import { useRouter } from "@tanstack/react-router";
 import { menuActor, MenuStates } from "./menuMachine";
 import { ModalCloseButton } from "./MenuTitle";
+import { ServicesMenu } from "./ServicesMenu";
 
 export const MenuButton = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -48,9 +49,9 @@ export const MenuButton = () => {
                   className={css({ ml: "16px", mb: "0" })}
                   priority="tertiary"
                   iconId="fr-icon-account-circle-fill"
-                  data-test-id="account-menu"
+                  data-test-id="settings-menu"
                 >
-                  Mon compte
+                  Paramètre
                 </Button>
               </Popover.Trigger>
               <Popover.Positioner>
@@ -98,6 +99,7 @@ const modalContents: Record<MenuStates, (props: ModalContentProps) => ReactNode>
   clausesDepartementales: (props) => <ClauseMenu isNational={false} {...props} />,
   clausesNationales: (props) => <ClauseMenu isNational {...props} />,
   share: (props) => <ShareReport {...props} />,
+  services: (_props) => <ServicesMenu />,
   closed: () => null,
 };
 
