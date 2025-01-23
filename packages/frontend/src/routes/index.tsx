@@ -11,7 +11,7 @@ import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { v4 } from "uuid";
-import { ElectricStatus, useElectricStatus, useUser } from "../contexts/AuthContext";
+import { useUser } from "../contexts/AuthContext";
 import { AllReports, MyReports } from "../features/ReportList";
 import { db, powerSyncDb, useDbQuery } from "../db/db";
 import { useStatus } from "@powersync/react";
@@ -60,18 +60,6 @@ const Index = () => {
 
       return id;
     },
-    // db.report.create({
-    //   data: {
-    //     id: `report-${v4()}`,
-    //     createdBy: user.id,
-    //     createdAt: new Date(),
-    //     meetDate: new Date(),
-    //     disabled: false,
-    //     udap_id: user.udap.id,
-    //     redactedBy: user.name,
-    //     redactedById: user.id,
-    //   },
-    // }),
     onSuccess: (id) => {
       id && navigate({ to: "/edit/$reportId", params: { reportId: id } });
     },

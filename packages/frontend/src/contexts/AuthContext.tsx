@@ -12,7 +12,6 @@ const AuthContext = createContext<AuthContextProps>({
   token: initialAuth?.token,
   user: initialAuth?.user,
   setData: null as any,
-  electricStatus: "idle",
 });
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
@@ -99,9 +98,4 @@ export const useUser = () => {
 
 type AuthContextProps = Partial<RouterOutputs<"/api/login">> & {
   setData: (data: Omit<AuthContextProps, "setData" | "electricStatus">) => void;
-  electricStatus: ElectricStatus;
 };
-
-export type ElectricStatus = "error" | "pending" | "success" | "idle" | "loading";
-
-export const useElectricStatus = () => "idle" as ElectricStatus;
