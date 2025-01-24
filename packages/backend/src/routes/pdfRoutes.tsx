@@ -83,7 +83,8 @@ const generatePdf = async ({
   udap: Udap;
   pictures: Pictures[];
 }) => {
-  const fontsPath = path.resolve(__dirname, "../../public");
+  const fontsPath = path.resolve(process.cwd(), "./public");
+
   Font.register({
     family: "Marianne",
     fonts: [
