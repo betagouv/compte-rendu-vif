@@ -1,20 +1,20 @@
 import { Banner } from "#components/Banner";
 import { EnsureUser } from "#components/EnsureUser";
 import { SearchResults } from "#components/ReportSearch.js";
-import { Status, SyncFormStatus } from "#components/SyncForm";
+import { Status } from "#components/SyncForm";
 import { Tabs } from "#components/Tabs";
 import { css } from "#styled-system/css";
 import { Box, Center, CenterProps, Flex, styled } from "#styled-system/jsx";
 import Button from "@codegouvfr/react-dsfr/Button";
 import Input from "@codegouvfr/react-dsfr/Input";
+import { useStatus } from "@powersync/react";
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { v4 } from "uuid";
-import { ElectricStatus, useElectricStatus, useUser } from "../contexts/AuthContext";
+import { useUser } from "../contexts/AuthContext";
+import { db } from "../db/db";
 import { AllReports, MyReports } from "../features/ReportList";
-import { db, powerSyncDb, useDbQuery } from "../db/db";
-import { useStatus } from "@powersync/react";
 
 const Index = () => {
   const [search, setSearch] = useState("");
@@ -60,18 +60,6 @@ const Index = () => {
 
       return id;
     },
-    // db.report.create({
-    //   data: {
-    //     id: `report-${v4()}`,
-    //     createdBy: user.id,
-    //     createdAt: new Date(),
-    //     meetDate: new Date(),
-    //     disabled: false,
-    //     udap_id: user.udap.id,
-    //     redactedBy: user.name,
-    //     redactedById: user.id,
-    //   },
-    // }),
     onSuccess: (id) => {
       id && navigate({ to: "/edit/$reportId", params: { reportId: id } });
     },
