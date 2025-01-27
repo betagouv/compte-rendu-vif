@@ -41,7 +41,6 @@ export default defineConfig({
       injectManifest: {
         maximumFileSizeToCacheInBytes: 2097152 * 3,
         globPatterns: ["**/*.{svg,woff2,js,wasm,css,html,png}"],
-        globIgnores: ["**/env.js"],
         rollupFormat: "es",
       },
       includeAssets: ["**/*.{svg,woff2,wasm}"],
