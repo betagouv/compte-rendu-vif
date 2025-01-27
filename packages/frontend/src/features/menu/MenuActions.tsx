@@ -2,30 +2,26 @@ import { Center, Divider, Stack, styled } from "#styled-system/jsx";
 import { css } from "#styled-system/css";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { useLogout } from "../../contexts/AuthContext";
-import { NestedMenu } from "./MenuButton";
-import { menuStore } from "./menuStore";
 import { Fragment } from "react/jsx-runtime";
 import { MenuTitle } from "./MenuTitle";
+import { menuActor } from "./menuMachine";
 
-export const MenuActions = ({ menu }: { menu: NestedMenu | null }) => {
-  const setMenu = (menu: NestedMenu) => {
-    menuStore.send({ type: "setMenu", menu });
-  };
-
+export const MenuActions = () => {
   const logout = useLogout();
 
   const actions = [
-    { text: "Partage des CR", onClick: () => setMenu("share") },
-    { text: "Clauses départementales", onClick: () => setMenu("clauses-departementales") },
-    { text: "Clauses nationales", onClick: () => setMenu("clauses-nationales") },
-    { text: "Assistance technique", onClick: () => setMenu("help") },
+    { text: "Clauses départementales", onClick: () => menuActor.send({ type: "GO_TO_CLAUSES_DEPT" }) },
+    { text: "Clauses nationales", onClick: () => menuActor.send({ type: "GO_TO_CLAUSES_NAT" }) },
+    { text: "Partage des CR", onClick: () => menuActor.send({ type: "GO_TO_SHARE" }) },
+    { text: "Services", onClick: () => menuActor.send({ type: "GO_TO_SERVICES" }) },
+    { text: "Assistance technique", onClick: () => menuActor.send({ type: "GO_TO_HELP" }) },
     { text: "Se déconnecter", onClick: logout, dataTestId: "logout" },
   ];
 
   return (
     <>
-      <styled.div hideFrom={menu === null ? "lg" : undefined}>
-        <MenuTitle hideDivider>Mon compte</MenuTitle>
+      <styled.div hideFrom="lg">
+        <MenuTitle hideDivider>Paramètre</MenuTitle>
       </styled.div>
       <Stack
         className={css({

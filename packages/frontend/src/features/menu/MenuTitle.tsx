@@ -1,7 +1,7 @@
 import { Divider, Flex, styled } from "#styled-system/jsx";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { ReactNode } from "react";
-import { menuStore } from "./menuStore";
+import { menuActor } from "./menuMachine";
 
 export const MenuTitle = ({
   children,
@@ -18,8 +18,9 @@ export const MenuTitle = ({
 }) => (
   <>
     <Flex
-      position={{ base: "sticky", lg: "unset" }}
-      top={{ base: "-1px", lg: "unset" }}
+      zIndex="5"
+      position={{ base: "sticky", lg: "sticky" }}
+      top={{ base: "0", lg: "0" }}
       justifyContent="space-between"
       alignItems="center"
       w="100%"
@@ -44,25 +45,16 @@ export const MenuTitle = ({
       >
         {children}
       </styled.span>
-      <Flex gap="16px" pl={{ base: "0", lg: "24px" }} fontSize="20px" fontWeight="bold" nowrap>
+      <Flex gap="16px" pl={{ base: "16px", lg: "24px" }} fontSize="20px" fontWeight="bold" nowrap>
         {buttons}
       </Flex>
-      <button
-        className="fr-btn--close fr-btn"
-        title="Fermer"
-        aria-controls="menu-modal-2"
-        type="button"
-        data-fr-js-modal-button="true"
-        onClick={() => menuStore.send({ type: "setMenu", menu: null })}
-      >
-        Fermer
-      </button>
+      <ModalCloseButton onClose={() => menuActor.send({ type: "CLOSE" })} />
     </Flex>
     {alert ? alert : null}
     {!hideDivider ? (
-      <styled.div hideFrom="lg" mb="24px">
+      <styled.div mb="24px">
         {buttons ? (
-          <styled.span hideFrom={"lg"} fontSize="20px" fontWeight="bold" nowrap>
+          <styled.span hideFrom={"lg"} fontSize="20px" fontWeight="bold">
             {children}
           </styled.span>
         ) : null}
@@ -70,3 +62,17 @@ export const MenuTitle = ({
     ) : null}
   </>
 );
+
+export const ModalCloseButton = ({ onClose }: { onClose: () => void }) => {
+  return (
+    <button
+      className="fr-btn--close fr-btn"
+      title="Fermer"
+      type="button"
+      data-fr-js-modal-button="true"
+      onClick={onClose}
+    >
+      Fermer
+    </button>
+  );
+};

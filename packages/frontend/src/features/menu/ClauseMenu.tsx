@@ -6,7 +6,7 @@ import { Fragment } from "react/jsx-runtime";
 import { MenuTitle } from "./MenuTitle";
 import type { ModalContentProps } from "./MenuButton";
 import { ReactNode, useEffect, useState } from "react";
-import Button, { ButtonProps } from "@codegouvfr/react-dsfr/Button";
+import Button from "@codegouvfr/react-dsfr/Button";
 import { css, cx } from "#styled-system/css";
 import Input from "@codegouvfr/react-dsfr/Input";
 import { FormProvider, useFieldArray, useForm, useFormContext } from "react-hook-form";
@@ -28,7 +28,12 @@ export const ClauseMenu = ({ isNational, ...props }: { isNational: boolean } & M
       .selectAll(),
   );
 
-  if (clausesQuery.isLoading) return <Spinner />;
+  if (clausesQuery.isLoading)
+    return (
+      <styled.div h="100%">
+        <Spinner />
+      </styled.div>
+    );
 
   if (isNational)
     return (

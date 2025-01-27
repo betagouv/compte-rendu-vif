@@ -8,6 +8,8 @@ const debug = makeDebug("sync-service");
 
 const Nullable = <T extends TSchema>(schema: T) => Type.Optional(Type.Union([schema, Type.Null()]));
 
+const blackListedTables = ["user", "internal_user"];
+
 export class SyncService {
   async applyCrud(operation: Static<typeof crudTSchema>, userId: string) {
     await db
@@ -24,6 +26,10 @@ export class SyncService {
         user_id: userId,
       })
       .execute();
+
+    if (blackListedTables.includes(operation.type)) {
+      return { error: "Unauthorized" };
+    }
 
     try {
       if (operation.op === "DELETE") {

@@ -3,8 +3,9 @@ import Button from "@codegouvfr/react-dsfr/Button";
 import { MenuTitle } from "./MenuTitle";
 import { clearDb } from "../../db/db";
 import { css } from "#styled-system/css";
+import { menuActor } from "./menuMachine";
 
-export const HelpMenu = ({ backButtonOnClick }: { backButtonOnClick: () => void }) => {
+export const HelpMenu = () => {
   const deleteLocalData = () => {
     localStorage.clear();
     indexedDB.deleteDatabase("crvif.db");
@@ -15,7 +16,7 @@ export const HelpMenu = ({ backButtonOnClick }: { backButtonOnClick: () => void 
   };
   return (
     <>
-      <MenuTitle backButtonOnClick={backButtonOnClick}>Assistance technique</MenuTitle>
+      <MenuTitle backButtonOnClick={() => menuActor.send({ type: "BACK" })}>Assistance technique</MenuTitle>
       <Divider height="2px" my={{ base: "27px", lg: "0" }} mb={{ base: 0, lg: "27px" }} color="#C1C1FB" />
       <Stack>
         <styled.div px="20px" fontWeight="bold">
