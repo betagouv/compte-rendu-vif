@@ -1,5 +1,5 @@
 import { startReactDsfr } from "@codegouvfr/react-dsfr/spa";
-import React, { PropsWithChildren, useEffect, useMemo } from "react";
+import React, { PropsWithChildren, useEffect, useMemo, useRef } from "react";
 import ReactDOM from "react-dom/client";
 import { App } from "./App";
 import { AuthProvider, useAuthContext } from "./contexts/AuthContext";
@@ -33,9 +33,14 @@ const queryClient = new QueryClient({
   },
 });
 
-setupPowersync();
-
 const WithPowersync = ({ children }: PropsWithChildren) => {
+  const initRef = useRef(false);
+  useEffect(() => {
+    if (initRef.current) return;
+    setupPowersync();
+    initRef.current = true;
+  }, []);
+
   return <PowerSyncContext.Provider value={powerSyncDb}>{children}</PowerSyncContext.Provider>;
 };
 
