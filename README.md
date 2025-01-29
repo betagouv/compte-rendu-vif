@@ -4,8 +4,6 @@ This app is divided in multiple packages :
 
 - `backend` is responsible for the user authentication, pdf generation and some static data serving
 - `frontend` contains the main app logic
-- `electric-client` is responsible for generating typescript clients listed down below
-  > This package exports .ts files, this means each app using this package will build it using its own rules
 
 # DB Workflow
 
@@ -87,35 +85,27 @@ erDiagram
 
 ## Live data
 
-#### ElectricSQL allows users to be notified when data changes.
+#### PowerSync allows users to be notified when data changes.
 
-To achieve this, every table containing "live" values must be created through the ElectricSQL proxy, with
+To achieve this, every table containing live values must be part of the "powersync" publication.
 
 ```sql
-ALTER TABLE table ENABLE ELECTRIC;
+ALTER PUBLICATION powersync ADD TABLE "table";
 ```
 
-[Electric SQL documentation](https://electric-sql.com/docs)
+[PowerSync documentation](https://docs.powersync.com/intro/powersync-overview)
 
 ## Migrations
 
-- Write migrations in `db/migrations/` and electrify tables using `ALTER TABLE table ENABLE ELECTRIC;`
-- `pnpm electric:migrate` applys migrations to the proxy db and generate the clients described below
+- Write SQL migrations in `db/migrations/`
+- `pnpm migration:up`
 
-# Clients
+# DB Clients
 
-Multiple clients are needed for this app to work :
-
-**They all are generated automatically when applying migrations**
-
-- An electric db client used by frontend to query from indexedDB and sync.
-
-  > You can generate it using `pnpm electric-client generate:front`
-
-- A Prisma db client used by backend to query from Postgres
-  > You can generate it using `pnpm electric-client generate:back`
-- An API client generated using `@fastify/swagger` and `typed-openapi`, used by the frontend to query the backend
-  > You can generate it using `pnpm client:generate`
+- Both packages use [Kysely](https://kysely.dev/)
+- `pnpm backend pull-types` generated a single .d.ts file describing the database structure
+- `frontend/src/db/AppSchema.ts` contains the schema that will be used against indexed-db
+  > It is quite similar to the generated .d.ts file except it uses SQLite types (so TIMESTAMP or JSONB becomes TEXT)
 
 # Scripts
 
@@ -123,4 +113,3 @@ Multiple clients are needed for this app to work :
 - `frontend/createEnvFile.ts` used in prod to inject env vars starting with VITE\_ at runtime
 - `frontend/generatePandaDS.ts` used in dev to generate [PandaCSS](https://panda-css.com/docs/theming/tokens) tokens
   from [DSFR](https://github.com/GouvernementFR/dsfr)
-- `electric-client/completePrismaClient.ts` resolves an issue with prisma not being properly typed
