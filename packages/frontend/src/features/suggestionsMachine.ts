@@ -115,6 +115,10 @@ export const createSuggestionMachine = <T extends any>({
             actions: "updateQuery",
           },
           BLUR: "idle",
+          CLEAR: {
+            target: "idle",
+            actions: "clearQuery",
+          },
         },
       },
       fetching: {
@@ -136,6 +140,10 @@ export const createSuggestionMachine = <T extends any>({
             actions: "updateQuery",
           },
           BLUR: "idle",
+          CLEAR: {
+            target: "idle",
+            actions: "clearQuery",
+          },
         },
       },
       suggesting: {

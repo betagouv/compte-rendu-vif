@@ -10,6 +10,7 @@ import { db, useDbQuery } from "../../db/db";
 import { Delegation, User } from "../../db/AppSchema";
 import { v4 } from "uuid";
 import { EmailInput } from "#components/EmailInput.tsx";
+import { Spinner } from "#components/Spinner.tsx";
 
 export const ShareReport = ({ backButtonOnClick }: { backButtonOnClick: () => void }) => {
   const user = useUser()!;
@@ -34,20 +35,31 @@ export const ShareReport = ({ backButtonOnClick }: { backButtonOnClick: () => vo
   const delegatedToMe = delegatedToMeQuery.data ?? [];
 
   const userSettingsQuery = useDbQuery(db.selectFrom("user_settings").where("user_id", "=", user.id).selectAll());
+  const isUserSettingsLoading = userSettingsQuery.isLoading;
+  const userSettings = userSettingsQuery.data?.[0] ?? {
+    default_emails: "",
+  };
 
-  const userSettings = userSettingsQuery.isLoading
-    ? null
-    : userSettingsQuery.data?.[0] ?? {
-        default_emails: "",
-      };
-  const selectedEmails = userSettings?.default_emails?.split(",").map((email: string) => email.trim()) ?? [];
+  const selectedEmails =
+    userSettings.default_emails
+      ?.split(",")
+      .map((email: string) => email.trim())
+      .filter(Boolean) ?? [];
 
-  const saveEmailsMutation = useMutation((emails: string[]) =>
-    db
+  const saveEmailsMutation = useMutation(async (emails: string[]) => {
+    if (userSettingsQuery.data?.length) {
+      return db
+        .updateTable("user_settings")
+        .set({ default_emails: emails.join(",") })
+        .where("user_id", "=", user.id)
+        .execute();
+    }
+
+    return db
       .insertInto("user_settings")
       .values({ id: v4(), user_id: user.id, default_emails: emails.join(",") })
-      .execute(),
-  );
+      .execute();
+  });
 
   return (
     <>
@@ -63,17 +75,20 @@ export const ShareReport = ({ backButtonOnClick }: { backButtonOnClick: () => vo
       >
         Partage des CR
       </MenuTitle>
-      {/* <Divider hideFrom="lg" height="2px" my={{ base: "20px", lg: "44px" }} color="#C1C1FB" /> */}
 
       <Stack w="100%" px="20px">
         <styled.h4 mb="16px">Envois</styled.h4>
         <styled.div>
-          <EmailInput
-            label="Courriel en copie par défaut :"
-            hintText="Pour tous mes CRs envoyés"
-            value={selectedEmails}
-            onValueChange={(e) => saveEmailsMutation.mutate(e)}
-          />
+          {isUserSettingsLoading ? (
+            <Spinner size={100} />
+          ) : (
+            <EmailInput
+              label="Courriel en copie par défaut :"
+              hintText="Pour tous mes CRs envoyés"
+              value={selectedEmails}
+              onValueChange={(e) => saveEmailsMutation.mutate(e)}
+            />
+          )}
         </styled.div>
       </Stack>
       <Center>

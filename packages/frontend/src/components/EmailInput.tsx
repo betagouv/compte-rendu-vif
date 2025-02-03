@@ -22,7 +22,7 @@ export const EmailInput = ({
   const wrapperRef = useRef<HTMLDivElement>(null);
 
   const onClick = () => {
-    const emailToAdd = state.context.selected;
+    const emailToAdd = state.context.query;
     if (!emailToAdd) return;
     if (!value.includes(emailToAdd)) {
       onValueChange([...value, emailToAdd]);
@@ -50,7 +50,7 @@ export const EmailInput = ({
 
   return (
     <Stack mb="28px">
-      <styled.div ref={wrapperRef} pos="relative" w="100%">
+      <styled.div ref={wrapperRef as any} pos="relative" w="100%">
         <Input
           className={css({})}
           label={label}
@@ -66,6 +66,7 @@ export const EmailInput = ({
 
         <Button
           className={css({
+            zIndex: 1,
             position: "absolute",
             right: "0",
             bottom: "1.5rem",
@@ -73,6 +74,7 @@ export const EmailInput = ({
           })}
           priority="tertiary no outline"
           iconId="ri-add-line"
+          onClick={onClick}
         >
           Ajouter
         </Button>
@@ -83,14 +85,12 @@ export const EmailInput = ({
             pos="absolute"
             borderRadius="5px"
             w="100%"
-            height="300px"
-            maxHeight="400px"
+            maxHeight="300px"
             bgColor="background-contrast-grey"
+            transform="translateY(-1.25rem)"
             overflow="auto"
           >
-            {isLoading ? null : suggestions.length === 0 ? (
-              "Aucun résultat"
-            ) : (
+            {suggestions.length === 0 ? null : (
               <styled.div>
                 {suggestions.map((item) => (
                   <styled.div
@@ -112,6 +112,14 @@ export const EmailInput = ({
           <styled.div></styled.div>
         )}
       </styled.div>
+
+      <Stack>
+        {value.map((email) => (
+          <styled.div key={email} borderRadius="5px" p="8px" bg="background-contrast-grey">
+            {email}
+          </styled.div>
+        ))}
+      </Stack>
       {/* {isLoading ? (
         <styled.div hideFrom="lg" mt="8px">
           <LoadingBadge />
@@ -123,7 +131,7 @@ export const EmailInput = ({
   return <styled.div ref={wrapperRef} position="relative"></styled.div>;
 };
 
-const emailMachine = createSuggestionMachine<EmailSuggestion>({
+export const emailMachine = createSuggestionMachine<EmailSuggestion>({
   fetchSuggestions: (query: string) =>
     db
       .selectFrom("suggested_email")

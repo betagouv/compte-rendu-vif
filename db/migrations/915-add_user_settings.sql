@@ -1,5 +1,6 @@
 CREATE TABLE user_settings (
-    user_id TEXT PRIMARY KEY,
+    id TEXT PRIMARY KEY,
+    user_id TEXT,
     default_emails TEXT
 );
 

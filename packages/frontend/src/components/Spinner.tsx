@@ -1,8 +1,23 @@
 import { styled } from "#styled-system/jsx";
-export const Spinner = () => {
+export const Spinner = ({ size = 150 }) => {
   return (
     <div className="preloader">
-      <div className="loader"></div>
+      <styled.div
+        className="loader"
+        style={{
+          width: size + "px",
+          height: size + "px",
+          margin: -size / 2 + "px 0 0 " + -size / 2 + "px",
+        }}
+        // style={{
+        /**
+       * 
+       * 
+  width: 150px;
+  height: 150px;
+  margin: -75px 0 0 -75px;
+       */
+      ></styled.div>
     </div>
     // <styled.div position="fixed" top="0" left="0" width="100%" height="100%">
     //   <styled.div
