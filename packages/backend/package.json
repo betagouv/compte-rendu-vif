@@ -8,7 +8,7 @@
     "build": "tsup ./src/index.ts --publicDir --format esm",
     "start": "cross-env NODE_ENV=production node ./dist/index.js",
     "dev": "vite-node --watch ./src/index.ts",
-    "pull-types": "pnpm kysely-codegen --env-file ../../.env --out-file ./src/db-types.d.ts",
+    "pull-types": "pnpm kysely-codegen --date-parser string --env-file ../../.env --out-file ./src/db-types.d.ts ",
     "test": "vitest"
   },
   "exports": {

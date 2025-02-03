@@ -345,7 +345,6 @@ export const getReportHtmlString = (
   const address = [report.applicantAddress, report.city].filter(Boolean).join(" ");
 
   return minifyHtml(`
-    
     <p class="meeting-date">
     ${
       meetDate
