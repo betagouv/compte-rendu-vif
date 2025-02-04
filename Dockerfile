@@ -1,7 +1,7 @@
 ################################
 # BASE IMAGE FOR EVERY SERVICE #
 ################################
-FROM --platform=linux/amd64  node:20.11-alpine AS with-pnpm
+FROM --platform=linux/amd64 node:20.11-alpine AS with-pnpm
 RUN apk add --no-cache \
 build-base \
 g++ \
@@ -13,7 +13,7 @@ pixman-dev \
 pangomm-dev \
 libjpeg-turbo-dev \
 freetype-dev 
-RUN npm i -g pnpm
+RUN npm i -g pnpm@8.4
 
 ################################
 #      DEPS INSTALLATION       #
