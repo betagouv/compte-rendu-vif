@@ -1,12 +1,13 @@
 import Button from "@codegouvfr/react-dsfr/Button";
 import Input, { InputProps } from "@codegouvfr/react-dsfr/Input";
 import { css } from "#styled-system/css";
-import { Stack, styled } from "#styled-system/jsx";
+import { Flex, Stack, styled } from "#styled-system/jsx";
 import { useRef, useState } from "react";
 import { useClickAway } from "react-use";
 import { useMachine } from "@xstate/react";
 import { createSuggestionMachine } from "../features/suggestionsMachine";
 import { db } from "../db/db";
+import Tag from "@codegouvfr/react-dsfr/Tag";
 
 export const EmailInput = ({
   label,
@@ -113,13 +114,25 @@ export const EmailInput = ({
         )}
       </styled.div>
 
-      <Stack>
+      <Flex gap="8px" w="100%" mt="-16px" flexWrap="wrap">
         {value.map((email) => (
-          <styled.div key={email} borderRadius="5px" p="8px" bg="background-contrast-grey">
+          <Tag
+            key={email}
+            dismissible
+            nativeButtonProps={{
+              onClick: () => {
+                onValueChange(value.filter((v) => v !== email));
+              },
+            }}
+            small
+          >
             {email}
-          </styled.div>
+          </Tag>
+          // <styled.div key={email} borderRadius="5px" p="8px" bg="background-contrast-grey">
+          //   {email}
+          // </styled.div>
         ))}
-      </Stack>
+      </Flex>
       {/* {isLoading ? (
         <styled.div hideFrom="lg" mt="8px">
           <LoadingBadge />
@@ -132,6 +145,7 @@ export const EmailInput = ({
 };
 
 export const emailMachine = createSuggestionMachine<EmailSuggestion>({
+  minLength: 1,
   fetchSuggestions: (query: string) =>
     db
       .selectFrom("suggested_email")

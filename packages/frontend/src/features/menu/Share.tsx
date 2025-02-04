@@ -11,6 +11,7 @@ import { Delegation, User } from "../../db/AppSchema";
 import { v4 } from "uuid";
 import { EmailInput } from "#components/EmailInput.tsx";
 import { Spinner } from "#components/Spinner.tsx";
+import { useUserSettings } from "../../hooks/useUserSettings";
 
 export const ShareReport = ({ backButtonOnClick }: { backButtonOnClick: () => void }) => {
   const user = useUser()!;
@@ -34,11 +35,7 @@ export const ShareReport = ({ backButtonOnClick }: { backButtonOnClick: () => vo
   const delegations = delegationsQuery.data ?? [];
   const delegatedToMe = delegatedToMeQuery.data ?? [];
 
-  const userSettingsQuery = useDbQuery(db.selectFrom("user_settings").where("user_id", "=", user.id).selectAll());
-  const isUserSettingsLoading = userSettingsQuery.isLoading;
-  const userSettings = userSettingsQuery.data?.[0] ?? {
-    default_emails: "",
-  };
+  const { userSettings, isLoading: isUserSettingsLoading, existing } = useUserSettings();
 
   const selectedEmails =
     userSettings.default_emails
@@ -47,7 +44,7 @@ export const ShareReport = ({ backButtonOnClick }: { backButtonOnClick: () => vo
       .filter(Boolean) ?? [];
 
   const saveEmailsMutation = useMutation(async (emails: string[]) => {
-    if (userSettingsQuery.data?.length) {
+    if (existing) {
       return db
         .updateTable("user_settings")
         .set({ default_emails: emails.join(",") })

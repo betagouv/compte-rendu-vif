@@ -2,8 +2,10 @@ import { fromPromise, setup } from "xstate";
 
 export const createSuggestionMachine = <T extends any>({
   fetchSuggestions,
+  minLength = 3,
 }: {
   fetchSuggestions: (query: string) => Promise<T[]>;
+  minLength?: number;
 }) => {
   return setup({
     types: {
@@ -23,7 +25,7 @@ export const createSuggestionMachine = <T extends any>({
         | { type: "FOCUS" },
     },
     guards: {
-      hasMinLength: ({ context }) => context.query.length >= 3,
+      hasMinLength: ({ context }) => context.query.length >= minLength,
     },
     actions: {
       updateQuery: ({ context, event }) => {
