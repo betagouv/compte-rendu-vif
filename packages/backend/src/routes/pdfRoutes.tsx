@@ -10,8 +10,12 @@ import { Pictures, Report } from "../db-types";
 import path from "path";
 import { makeDebug } from "../features/debug";
 import { v4 } from "uuid";
+import React from "react";
 
 const debug = makeDebug("pdf-plugin");
+
+// prevent the auto organize imports from removing React import
+React;
 
 export const pdfPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
   fastify.addHook("preHandler", authenticate);
