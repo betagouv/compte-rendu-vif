@@ -2,12 +2,14 @@ import Button from "@codegouvfr/react-dsfr/Button";
 import Input, { InputProps } from "@codegouvfr/react-dsfr/Input";
 import { css } from "#styled-system/css";
 import { Flex, Stack, styled } from "#styled-system/jsx";
-import { useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useClickAway } from "react-use";
 import { useMachine } from "@xstate/react";
 import { createSuggestionMachine } from "../features/suggestionsMachine";
-import { db } from "../db/db";
+import { db, useDbQuery } from "../db/db";
 import Tag from "@codegouvfr/react-dsfr/Tag";
+import { useMutation } from "@tanstack/react-query";
+import { useUser } from "../contexts/AuthContext";
 
 export const EmailInput = ({
   label,
@@ -15,13 +17,25 @@ export const EmailInput = ({
   nativeInputProps,
   value,
   onValueChange,
+  single,
 }: Partial<InputProps> & {
   value: string[];
+  single?: boolean;
   onValueChange: (value: string[]) => void;
 }) => {
-  const [state, send] = useMachine(emailMachine);
+  const [state, send] = useMachine(emailMachine, {
+    input: {
+      query: single ? value[0] : "",
+    },
+  });
   const wrapperRef = useRef<HTMLDivElement>(null);
 
+  useEffect(() => {
+    if (!single || !state.context.selected) return;
+    onValueChange([state.context.selected]);
+  }, [state.context.selected]);
+
+  // when clicking on the add button
   const onClick = () => {
     const emailToAdd = state.context.query;
     if (!emailToAdd) return;
@@ -45,40 +59,58 @@ export const EmailInput = ({
     send({ type: "BLUR" });
   });
 
+  const user = useUser()!;
+
+  const deleteSuggestionMutation = useMutation(async (email: string) => {
+    await db.deleteFrom("suggested_email").where("email", "=", email).where("udap_id", "=", user.udap_id).execute();
+
+    send({
+      type: "REMOVE",
+      item: email,
+    });
+  });
+
   const isOpen = state.matches("suggesting") || state.matches("error");
-  const isLoading = state.matches("fetching");
   const suggestions = state.context.suggestions;
 
   return (
-    <Stack mb="28px">
+    <Stack>
       <styled.div ref={wrapperRef as any} pos="relative" w="100%">
         <Input
-          className={css({})}
+          className={css({
+            mb: "1.5rem",
+          })}
           label={label}
           hintText={hintText}
           nativeInputProps={{
             ...nativeInputProps,
             type: "email",
             value: state.context.query,
-            onChange: (e) => send({ type: "TYPE", value: e.target.value }),
+            onChange: (e) => {
+              if (single) onValueChange([e.target.value]);
+              send({ type: "TYPE", value: e.target.value });
+            },
             onKeyDown: handleKeyPress,
           }}
         />
 
-        <Button
-          className={css({
-            zIndex: 1,
-            position: "absolute",
-            right: "0",
-            bottom: "1.5rem",
-            backgroundColor: "transparent !important",
-          })}
-          priority="tertiary no outline"
-          iconId="ri-add-line"
-          onClick={onClick}
-        >
-          Ajouter
-        </Button>
+        {!single ? (
+          <Button
+            className={css({
+              zIndex: 1,
+              position: "absolute",
+              right: "0",
+              bottom: "1.5rem",
+              backgroundColor: "transparent !important",
+            })}
+            type="button"
+            priority="tertiary no outline"
+            iconId="ri-add-line"
+            onClick={onClick}
+          >
+            Ajouter
+          </Button>
+        ) : null}
 
         {isOpen ? (
           <styled.div
@@ -87,7 +119,7 @@ export const EmailInput = ({
             borderRadius="5px"
             w="100%"
             maxHeight="300px"
-            bgColor="background-contrast-grey"
+            bgColor="white"
             transform="translateY(-1.25rem)"
             overflow="auto"
           >
@@ -99,49 +131,68 @@ export const EmailInput = ({
                     onClick={() => {
                       send({ type: "SELECT", item });
                     }}
+                    position="relative"
                     p="8px"
                     cursor="pointer"
-                    _hover={{ bg: "white" }}
+                    _hover={{
+                      bg: "#ECECFE",
+                      "& > div": {
+                        display: "block",
+                      },
+                    }}
                   >
                     {item}
+                    <styled.div display="none">
+                      {/* @ts-ignore */}
+                      <Button
+                        className={css({
+                          position: "absolute",
+                          top: 0,
+                          right: 0,
+                          backgroundColor: "transparent !important",
+                        })}
+                        type="button"
+                        priority="tertiary no outline"
+                        iconId="ri-close-line"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          e.preventDefault();
+                          deleteSuggestionMutation.mutate(item);
+                        }}
+                      ></Button>
+                    </styled.div>
                   </styled.div>
                 ))}
+                <styled.div w="100%" minH="46px" p="8px" color="#000091" textAlign="center" bg="#ECECFE">
+                  La suppression de contact s'appliquera à toute l'UDAP
+                </styled.div>
               </styled.div>
             )}
           </styled.div>
-        ) : (
-          <styled.div></styled.div>
-        )}
+        ) : null}
       </styled.div>
 
-      <Flex gap="8px" w="100%" mt="-16px" flexWrap="wrap">
-        {value.map((email) => (
-          <Tag
-            key={email}
-            dismissible
-            nativeButtonProps={{
-              onClick: () => {
-                onValueChange(value.filter((v) => v !== email));
-              },
-            }}
-            small
-          >
-            {email}
-          </Tag>
-          // <styled.div key={email} borderRadius="5px" p="8px" bg="background-contrast-grey">
-          //   {email}
-          // </styled.div>
-        ))}
-      </Flex>
-      {/* {isLoading ? (
-        <styled.div hideFrom="lg" mt="8px">
-          <LoadingBadge />
-        </styled.div>
-      ) : null} */}
+      {!single ? (
+        <Flex gap="8px" justifyContent="center" alignItems="center" w="100%" mt="-16px" flexWrap="wrap">
+          {value.filter(Boolean).map((email) => (
+            <Tag
+              key={email}
+              dismissible
+              nativeButtonProps={{
+                type: "button",
+                onClick: () => {
+                  onValueChange(value.filter((v) => v !== email));
+                },
+              }}
+              small
+            >
+              {email}
+            </Tag>
+          ))}
+        </Flex>
+      ) : null}
     </Stack>
   );
-
-  return <styled.div ref={wrapperRef} position="relative"></styled.div>;
 };
 
 export const emailMachine = createSuggestionMachine<EmailSuggestion>({

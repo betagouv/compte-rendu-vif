@@ -62,7 +62,11 @@ export const pdfPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
         .values({ id, report_id: reportId, sent_to: recipient, sent_at: new Date(), udap_id })
         .execute();
 
-      await db.insertInto("suggested_email").values({ email: recipient, udap_id }).execute();
+      await db
+        .insertInto("suggested_email")
+        .values({ id, email: recipient, udap_id })
+        .execute()
+        .catch(() => {});
     }
 
     return url;

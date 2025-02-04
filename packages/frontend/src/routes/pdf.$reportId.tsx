@@ -14,7 +14,7 @@ import { createFileRoute, useNavigate, useRouter } from "@tanstack/react-router"
 import { Editor } from "@tiptap/react";
 import { makeArrayOf } from "pastable";
 import { PropsWithChildren, ReactNode, useContext, useEffect, useMemo, useRef, useState } from "react";
-import { FormProvider, useForm, useFormContext } from "react-hook-form";
+import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form";
 import { api } from "../api";
 import sentImage from "../assets/sent.svg";
 import { useUser } from "../contexts/AuthContext";
@@ -29,6 +29,8 @@ import { fr } from "@codegouvfr/react-dsfr";
 import { transformBold } from "../features/menu/ClauseMenu";
 import { db, useDbQuery } from "../db/db";
 import { Pictures, Report, Udap } from "../db/AppSchema";
+import { useUserSettings } from "../hooks/useUserSettings";
+import { EmailInput } from "#components/EmailInput.tsx";
 
 type Mode = "edit" | "view" | "send" | "sent";
 
@@ -186,11 +188,11 @@ export const PDF = () => {
 
   const SendButtons = () => {
     return (
-      <Center gap="10px" direction="row">
+      <styled.div gap="10px" direction="row">
         <Button iconId="ri-send-plane-fill" type="submit" disabled={generatePdfMutation.isLoading}>
           Envoyer
         </Button>
-      </Center>
+      </styled.div>
     );
   };
 
@@ -237,6 +239,7 @@ export const PDF = () => {
         {report ? (
           <SendForm generatePdf={generatePdfMutation.mutate} report={report}>
             <EditBanner
+              mode={mode}
               title={
                 <styled.div nowrap>
                   <styled.span fontWeight="bold">{getModeTitle(mode)}</styled.span>
@@ -275,16 +278,20 @@ const SendForm = ({
   const { editor } = useContext(TextEditorContext);
 
   const form = useForm({ defaultValues: { recipients: "" } });
+  const userSettings = useUserSettings();
 
   useQuery({
     queryKey: ["service-instructeur", report.serviceInstructeur, report.applicantEmail],
     queryFn: async () => {
-      const recipents = await getBaseRecipients(report);
+      const defaultRecipients = userSettings.userSettings.default_emails ?? "";
+      const recipents = await getBaseRecipients(report, defaultRecipients);
+
       if (!form.getValues("recipients")) {
         form.setValue("recipients", recipents ?? "");
       }
       return null;
     },
+    enabled: !userSettings.isLoading,
   });
 
   const send = (values: { recipients: string }) => {
@@ -303,14 +310,14 @@ const SendForm = ({
   );
 };
 
-const getBaseRecipients = async (report: Report) => {
+const getBaseRecipients = async (report: Report, extra?: string) => {
   const serviceEmail = report.serviceInstructeur
     ? (
         await db.selectFrom("service_instructeurs").where("id", "=", report.serviceInstructeur).selectAll().execute()
       )?.[0]?.email
     : null;
 
-  const recipients = [serviceEmail, report.applicantEmail].filter(Boolean).join(", ");
+  const recipients = [extra, serviceEmail, report.applicantEmail].filter(Boolean).join(",");
   return recipients;
 };
 
@@ -335,7 +342,17 @@ const DownloadButton = () => {
   );
 };
 
-const EditBanner = ({ title, buttons, reportId }: { title: ReactNode; buttons: ReactNode; reportId?: string }) => {
+const EditBanner = ({
+  mode,
+  title,
+  buttons,
+  reportId,
+}: {
+  mode: Mode;
+  title: ReactNode;
+  buttons: ReactNode;
+  reportId?: string;
+}) => {
   const router = useRouter();
   const navigate = useNavigate();
   const goBack = () =>
@@ -343,6 +360,10 @@ const EditBanner = ({ title, buttons, reportId }: { title: ReactNode; buttons: R
       ? navigate({ to: "/edit/$reportId", params: { reportId }, search: { tab: "notes" } })
       : router.history.back();
 
+  const form = useFormContext();
+  const recipients = useWatch({ control: form.control, name: "recipients" });
+
+  const isSend = mode === "send";
   return (
     <Banner
       status="saved"
@@ -354,13 +375,13 @@ const EditBanner = ({ title, buttons, reportId }: { title: ReactNode; buttons: R
       <Flex
         direction="row"
         justifyContent={"flex-start"}
-        alignItems="center"
+        alignItems={isSend ? undefined : "center"}
         w={{ base: "100%", lg: "1000px" }}
         maxW={{ base: "100%", lg: "1000px" }}
-        h="header-height"
+        h={isSend ? undefined : "header-height"}
         px="16px"
       >
-        <Flex>
+        <styled.div mt={isSend ? "32px" : undefined}>
           <styled.a
             className={"ri-arrow-left-line"}
             href={""}
@@ -382,7 +403,7 @@ const EditBanner = ({ title, buttons, reportId }: { title: ReactNode; buttons: R
           >
             Retour
           </styled.a>
-        </Flex>
+        </styled.div>
         <styled.a
           className={"ri-arrow-left-line"}
           onClick={(e) => {
@@ -397,7 +418,16 @@ const EditBanner = ({ title, buttons, reportId }: { title: ReactNode; buttons: R
         <styled.div flex={1} ml={{ base: "0", lg: "32px" }} pr="8px" nowrap>
           {title}
         </styled.div>
-        <Flex>{buttons}</Flex>
+
+        {isSend ? (
+          <styled.div w="100%" mr="8px" mt="16px" mb="16px">
+            <EmailInput
+              value={recipients.split(",")}
+              onValueChange={(value) => form.setValue("recipients", value.join(","))}
+            />
+          </styled.div>
+        ) : null}
+        <Flex mt={isSend ? "24px" : undefined}>{buttons}</Flex>
       </Flex>
     </Banner>
   );
@@ -532,7 +562,7 @@ const SendReportPage = ({ children }: PropsWithChildren) => {
   return (
     <Center>
       <Flex flexDirection="column" alignItems="center" w={{ base: "100%", lg: "800px" }}>
-        <Input
+        {/* <Input
           className={css({ w: "100%", mt: "16px", px: { base: "16px", lg: "unset" } })}
           label="Destinataires"
           hintText="Liste de courriels, séparés par des virgules ou des espaces"
@@ -541,7 +571,7 @@ const SendReportPage = ({ children }: PropsWithChildren) => {
             ...form.register("recipients"),
             rows: 4,
           }}
-        />
+        /> */}
 
         {children}
       </Flex>

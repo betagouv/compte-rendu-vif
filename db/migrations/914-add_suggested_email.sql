@@ -1,5 +1,6 @@
 CREATE TABLE suggested_email (
-    email TEXT PRIMARY KEY,
+    id TEXT PRIMARY KEY,
+    email TEXT UNIQUE NOT NULL,
     udap_id TEXT NOT NULL
 );
 
