@@ -39,7 +39,6 @@ export class UserService {
     const { token, expiresAt } = this.generateJWT(id);
 
     const { user } = (await this.getUserById(id))!;
-
     return { user: user, token, expiresAt, refreshToken: this.generateRefreshToken(id) };
   }
 

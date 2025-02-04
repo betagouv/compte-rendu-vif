@@ -33,6 +33,8 @@ sync_rules:
           - SELECT * FROM "user" WHERE udap_id = bucket.udap_id
           - SELECT * FROM service_instructeurs WHERE udap_id = bucket.udap_id
           - SELECT * FROM clause_v2 WHERE udap_id = bucket.udap_id
+          - SELECT * FROM sent_email WHERE udap_id = bucket.udap_id
+          - SELECT * FROM suggested_email WHERE udap_id = bucket.udap_id
 
       user_bucket:
         parameters: SELECT request.user_id() as user_id
@@ -40,6 +42,7 @@ sync_rules:
           - SELECT * FROM delegation WHERE "createdBy" = bucket.user_id OR "delegatedTo" = bucket.user_id
           - SELECT * FROM pdf_snapshot WHERE user_id = bucket.user_id
           - SELECT * FROM transactions WHERE user_id = bucket.user_id
+          - SELECT * FROM user_settings WHERE user_id = bucket.user_id
 
 # Settings for client authentication
 client_auth:
