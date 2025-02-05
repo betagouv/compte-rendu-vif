@@ -70,7 +70,7 @@ export const createSuggestionMachine = <T extends any>({
     id: "addressAutocomplete",
     initial: "idle",
     context: ({ input }) => ({
-      query: "",
+      query: (input as any)?.query ?? "",
       suggestions: [],
     }),
     states: {
