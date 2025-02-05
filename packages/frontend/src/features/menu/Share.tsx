@@ -45,7 +45,8 @@ export const ShareReport = ({ backButtonOnClick }: { backButtonOnClick: () => vo
 
   const saveEmailsMutation = useMutation(async (emails: string[]) => {
     const doesUserSettingExist =
-      existing || !!(await db.selectFrom("user_settings").where("user_id", "=", user.id).executeTakeFirst());
+      existing ||
+      !!(await db.selectFrom("user_settings").where("user_id", "=", user.id).selectAll().executeTakeFirst());
 
     if (doesUserSettingExist) {
       return db
