@@ -15,7 +15,7 @@ import React from "react";
 const debug = makeDebug("pdf-plugin");
 
 // prevent the auto organize imports from removing React import
-React;
+const _noop = () => React;
 
 export const pdfPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
   fastify.addHook("preHandler", authenticate);

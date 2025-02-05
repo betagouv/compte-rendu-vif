@@ -44,7 +44,10 @@ export const ShareReport = ({ backButtonOnClick }: { backButtonOnClick: () => vo
       .filter(Boolean) ?? [];
 
   const saveEmailsMutation = useMutation(async (emails: string[]) => {
-    if (existing) {
+    const doesUserSettingExist =
+      existing || !!(await db.selectFrom("user_settings").where("user_id", "=", user.id).executeTakeFirst());
+
+    if (doesUserSettingExist) {
       return db
         .updateTable("user_settings")
         .set({ default_emails: emails.join(",") })
