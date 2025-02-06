@@ -38,7 +38,7 @@ services:
       - 27017:27017
     volumes:
       - mongo_storage:/data/db
-  # Initializes the MongoDB replica set. This service will not usually be actively running
+
   mongo-rs-init:
     image: mongo:7.0
     depends_on:
@@ -49,25 +49,6 @@ services:
       - -c
       - 'mongosh --host mongo:27017 --eval ''try{rs.status().ok && quit(0)} catch {} rs.initiate({_id: "rs0", version:
         1, members: [{ _id: 0, host : "mongo:27017" }]})'''
-
-  # electric:
-  #   image: electricsql/electric:0.12.0
-  #   depends_on:
-  #     - pg
-  #   environment:
-  #     DATABASE_REQUIRE_SSL: false
-  #     DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@pg:${POSTGRES_PORT}/${POSTGRES_DB}
-  #     AUTH_JWT_KEY: ${JWT_SECRET}
-  #     PG_PROXY_PASSWORD: ${PG_PROXY_PASSWORD}
-  #     PG_PROXY_PORT: ${PG_PROXY_PORT}
-  #     AUTH_MODE: secure
-  #     LOGICAL_PUBLISHER_HOST: electric
-  #     AUTH_JWT_ALG: HS256
-  #     ELECTRIC_PG_PROXY_PORT: 65432
-  #   ports:
-  #     - ${ELECTRIC_PORT}:5133
-  #     - ${PG_PROXY_PORT}:65432
-  #   restart: always
 
   powersync:
     restart: unless-stopped

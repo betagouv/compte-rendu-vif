@@ -75,10 +75,13 @@ export const EmailInput = ({
 
   return (
     <Stack>
-      <styled.div ref={wrapperRef as any} pos="relative" w="100%">
+      <styled.div ref={wrapperRef} pos="relative" w="100%">
         <Input
           className={css({
             mb: "1.5rem",
+            "& > input": {
+              pr: single ? "0" : "90px",
+            },
           })}
           label={label}
           hintText={hintText}

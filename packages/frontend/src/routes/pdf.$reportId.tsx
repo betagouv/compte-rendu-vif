@@ -28,7 +28,7 @@ import Alert from "@codegouvfr/react-dsfr/Alert";
 import { fr } from "@codegouvfr/react-dsfr";
 import { transformBold } from "../features/menu/ClauseMenu";
 import { db, useDbQuery } from "../db/db";
-import { Pictures, Report, Udap } from "../db/AppSchema";
+import { Clause_v2, Pictures, Report, Udap } from "../db/AppSchema";
 import { useUserSettings } from "../hooks/useUserSettings";
 import { EmailInput } from "#components/EmailInput.tsx";
 
@@ -257,7 +257,12 @@ export const PDF = () => {
                     mode={mode}
                     initialHtmlString={
                       htmlString ??
-                      getReportHtmlString(report, chipOptions, udap as Udap, serviceInstructeur ?? undefined)
+                      getReportHtmlString(
+                        report,
+                        chipOptions as Clause_v2[],
+                        udap as Udap,
+                        serviceInstructeur ?? undefined,
+                      )
                     }
                   />
                 ) : null}
@@ -287,11 +292,15 @@ const SendForm = ({
       const recipents = await getBaseRecipients(report, defaultRecipients);
 
       if (!form.getValues("recipients")) {
-        form.setValue("recipients", recipents ?? "");
+        const recipientsArray = recipents.split(",");
+        const noDup = Array.from(new Set(recipientsArray)).join(",");
+
+        form.setValue("recipients", noDup ?? "");
       }
       return null;
     },
     enabled: !userSettings.isLoading,
+    refetchOnWindowFocus: false,
   });
 
   const send = (values: { recipients: string }) => {
@@ -328,7 +337,7 @@ const getModeTitle = (mode: Mode) => {
     case "view":
       return "Prévisualisation";
     case "send":
-      return "Envoi";
+      return "Courriels";
   }
 };
 
@@ -364,6 +373,7 @@ const EditBanner = ({
   const recipients = useWatch({ control: form.control, name: "recipients" });
 
   const isSend = mode === "send";
+
   return (
     <Banner
       status="saved"
@@ -373,7 +383,7 @@ const EditBanner = ({
       flexDir="row"
     >
       <Flex
-        direction="row"
+        direction={{ base: isSend ? "column" : "row", lg: "row" }}
         justifyContent={"flex-start"}
         alignItems={isSend ? undefined : "center"}
         w={{ base: "100%", lg: "1000px" }}
@@ -381,53 +391,74 @@ const EditBanner = ({
         h={isSend ? undefined : "header-height"}
         px="16px"
       >
-        <styled.div mt={isSend ? "32px" : undefined}>
+        <Flex
+          flex={1}
+          direction="row"
+          justifyContent={{ base: isSend ? "space-between" : undefined, lg: "flex-start" }}
+          alignItems={{ base: "center", lg: "flex-start" }}
+          mt={{ base: 0, lg: isSend ? "32px" : 0 }}
+        >
+          <styled.div>
+            <styled.a
+              className={"ri-arrow-left-line"}
+              href={""}
+              onClick={(e) => {
+                e.preventDefault();
+                goBack();
+              }}
+              hideBelow="lg"
+              fontSize="16px"
+              whiteSpace="nowrap"
+              {...{
+                "&::before": {
+                  width: "16px !important",
+                  height: "16px !important",
+                  mb: "4px !important",
+                  mr: "4px",
+                },
+              }}
+            >
+              Retour
+            </styled.a>
+          </styled.div>
           <styled.a
             className={"ri-arrow-left-line"}
-            href={""}
             onClick={(e) => {
               e.preventDefault();
               goBack();
             }}
-            hideBelow="lg"
+            hideFrom="lg"
+            pr="8px"
+            color="black"
             fontSize="16px"
-            whiteSpace="nowrap"
-            {...{
-              "&::before": {
-                width: "16px !important",
-                height: "16px !important",
-                mb: "4px !important",
-                mr: "4px",
-              },
-            }}
+          ></styled.a>
+          <styled.div
+            w="100%"
+            ml={{ base: "0", lg: "32px" }}
+            mt={{ base: isSend ? "16px" : 0, lg: 0 }}
+            pr="8px"
+            textAlign="center"
+            nowrap
           >
-            Retour
-          </styled.a>
-        </styled.div>
-        <styled.a
-          className={"ri-arrow-left-line"}
-          onClick={(e) => {
-            e.preventDefault();
-            goBack();
-          }}
-          hideFrom="lg"
-          pr="8px"
-          color="black"
-          fontSize="16px"
-        ></styled.a>
-        <styled.div flex={1} ml={{ base: "0", lg: "32px" }} pr="8px" nowrap>
-          {title}
-        </styled.div>
+            {title}
+          </styled.div>
+        </Flex>
 
         {isSend ? (
-          <styled.div w="100%" mr="8px" mt="16px" mb="16px">
+          <styled.div w="100%" ml={{ base: 0, lg: "16px" }} mr="16px" mt="16px" mb="16px">
             <EmailInput
               value={recipients.split(",")}
               onValueChange={(value) => form.setValue("recipients", value.join(","))}
             />
           </styled.div>
         ) : null}
-        <Flex mt={isSend ? "24px" : undefined}>{buttons}</Flex>
+        <Flex
+          alignSelf={{ base: "center", lg: "flex-start" }}
+          mt={{ base: 0, lg: isSend ? "24px" : "20px" }}
+          mb={{ base: isSend ? "16px" : 0, lg: 0 }}
+        >
+          {buttons}
+        </Flex>
       </Flex>
     </Banner>
   );
