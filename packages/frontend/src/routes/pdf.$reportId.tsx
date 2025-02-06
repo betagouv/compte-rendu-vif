@@ -1,11 +1,11 @@
 import "@ungap/with-resolvers";
-import { Banner } from "#components/Banner.js";
-import { EnsureUser } from "#components/EnsureUser.js";
-import { Spinner } from "#components/Spinner";
+import { Banner } from "../components/Banner";
+import { EnsureUser } from "../components/EnsureUser";
+import { Spinner } from "../components/Spinner";
 import { css, cx } from "#styled-system/css";
 import { Center, Flex, Stack, styled } from "#styled-system/jsx";
+import { fr } from "@codegouvfr/react-dsfr";
 import Button from "@codegouvfr/react-dsfr/Button";
-import Input from "@codegouvfr/react-dsfr/Input";
 import { ReportPDFDocument, ReportPDFDocumentProps, getReportHtmlString } from "@cr-vif/pdf";
 import { usePdf } from "@mikecousins/react-pdf";
 import { pdf } from "@react-pdf/renderer";
@@ -15,22 +15,20 @@ import { Editor } from "@tiptap/react";
 import { makeArrayOf } from "pastable";
 import { PropsWithChildren, ReactNode, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form";
+import { v4 } from "uuid";
 import { api } from "../api";
 import sentImage from "../assets/sent.svg";
+import { EmailInput } from "../components/EmailInput";
+import { getDiff } from "../components/SyncForm";
 import { useUser } from "../contexts/AuthContext";
+import { Clause_v2, Pictures, Report, Udap } from "../db/AppSchema";
+import { db, useDbQuery } from "../db/db";
 import { useChipOptions } from "../features/chips/useChipOptions";
+import { transformBold } from "../features/menu/ClauseMenu";
 import { TextEditor } from "../features/text-editor/TextEditor";
 import { TextEditorContext, TextEditorContextProvider } from "../features/text-editor/TextEditorContext";
 import { TextEditorToolbar } from "../features/text-editor/TextEditorToolbar";
-import { getDiff } from "../components/SyncForm";
-import { v4 } from "uuid";
-import Alert from "@codegouvfr/react-dsfr/Alert";
-import { fr } from "@codegouvfr/react-dsfr";
-import { transformBold } from "../features/menu/ClauseMenu";
-import { db, useDbQuery } from "../db/db";
-import { Clause_v2, Pictures, Report, Udap } from "../db/AppSchema";
 import { useUserSettings } from "../hooks/useUserSettings";
-import { EmailInput } from "#components/EmailInput.tsx";
 
 type Mode = "edit" | "view" | "send" | "sent";
 
@@ -243,7 +241,7 @@ export const PDF = () => {
               title={
                 <styled.div nowrap>
                   <styled.span fontWeight="bold">{getModeTitle(mode)}</styled.span>
-                  {report?.title ? ` | ${report?.title}` : ""}
+                  {mode !== "send" && report?.title ? ` | ${report?.title}` : ""}
                 </styled.div>
               }
               reportId={report?.id}
@@ -428,6 +426,7 @@ const EditBanner = ({
               goBack();
             }}
             hideFrom="lg"
+            mt={isSend ? "8px" : 0}
             pr="8px"
             color="black"
             fontSize="16px"
