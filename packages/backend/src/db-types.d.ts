@@ -121,6 +121,7 @@ export interface ServiceInstructeurs {
 
 export interface SuggestedEmail {
   email: string;
+  id: string;
   udap_id: string;
 }
 
@@ -167,7 +168,8 @@ export interface User {
 
 export interface UserSettings {
   default_emails: string | null;
-  user_id: string;
+  id: string;
+  user_id: string | null;
 }
 
 export interface Whitelist {

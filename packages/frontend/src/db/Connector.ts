@@ -12,6 +12,8 @@ export class Connector implements PowerSyncBackendConnector {
     console.log("fetching credentials");
     const token = await getTokenOrRefresh();
 
+    console.log("aaaa");
+
     return {
       endpoint: ENV.VITE_POWERSYNC_URL,
       token,
