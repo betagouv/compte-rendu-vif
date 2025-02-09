@@ -15,6 +15,7 @@ import { db, useDbQuery } from "../db/db";
 import { useIsFormDisabled } from "./DisabledContext";
 import { ServiceInstructeurSelect } from "./ServiceInstructeurSelect";
 import { SmartAddressInput } from "#components/SmartAddressInput.tsx";
+import { EmailInput } from "#components/EmailInput.tsx";
 
 export const InfoForm = () => {
   const form = useFormContext<Report>();
@@ -90,6 +91,8 @@ export const InfoForm = () => {
     },
   };
 
+  const applicantEmail = useWatch({ control: form.control, name: "applicantEmail" });
+
   return (
     <Flex direction="column" w="100%" padding="16px">
       {/* <Badge severity="info">Les champs marqués d'un astérisque (*) sont obligatoires</Badge> */}
@@ -116,15 +119,21 @@ export const InfoForm = () => {
         </Stack>
 
         <styled.div mt="8px">
-          <Input
+          <EmailInput
+            value={[applicantEmail ?? ""]}
+            label={"Courriel demandeur"}
+            single
+            onValueChange={(e) => form.setValue("applicantEmail", e[0])}
+          />
+          {/* <Input
             className={css({})}
             disabled={isFormDisabled}
             label="Courriel demandeur"
             nativeInputProps={form.register("applicantEmail")}
-          />
+          /> */}
         </styled.div>
 
-        <Stack direction="row" mt="24px">
+        <Stack direction="row">
           <Input
             className={css({ flex: { base: "none", lg: 1 }, mb: { base: "16px", lg: undefined } })}
             disabled={isFormDisabled}

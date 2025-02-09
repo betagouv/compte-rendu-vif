@@ -3,6 +3,7 @@ import { safeParseLocalStorage } from "../utils";
 import { useQuery } from "@tanstack/react-query";
 import { api, setToken, type RouterOutputs } from "../api";
 import { menuActor } from "../features/menu/menuMachine";
+import { Udap } from "../db/AppSchema";
 
 const initialAuth = safeParseLocalStorage("crvif/auth");
 if (!initialAuth) localStorage.setItem("crvif/version", "1");
@@ -94,7 +95,7 @@ export const useLogout = () => {
 
 export const useUser = () => {
   const { user } = useContext(AuthContext);
-  return user;
+  return user as AuthContextProps["user"] & { udap: Udap };
 };
 
 type AuthContextProps = Partial<RouterOutputs<"/api/login">> & {

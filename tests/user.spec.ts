@@ -1,5 +1,6 @@
 import { test, expect, type Route } from "@playwright/test";
 import { db } from "../packages/backend/src/db/db";
+import { cleanupDb, mockUser1, signup } from "./utils";
 
 test.beforeEach(async ({ page }) => {
   await page.goto("./");
@@ -26,17 +27,7 @@ test.describe("Create user", () => {
   });
 
   test.only("should create a new user", async ({ page }) => {
-    await page.goto("./signup");
-
-    await page.fill("input[name=name]", mockUser.name);
-    await page.fill("input[name=email]", mockUser.email);
-    await page.fill("input[name=password]", mockUser.password);
-
-    await page.selectOption("select[name=udap_id]", "udap-landes");
-
-    await page.click("button[type=submit]");
-
-    await page.waitForURL((url) => url.pathname === "/");
+    await signup({ page, user: mockUser1 });
     expect(page.url()).toContain("/");
 
     await page.click("button[data-test-id=settings-menu]");
@@ -50,22 +41,11 @@ test.describe("Create user", () => {
   test("should login", async ({ page }) => {
     await page.goto("./login");
 
-    await page.fill("input[name=email]", mockUser.email);
-    await page.fill("input[name=password]", mockUser.password);
+    await page.fill("input[name=email]", mockUser1.email);
+    await page.fill("input[name=password]", mockUser1.password);
 
     await page.click("button[type=submit]");
     await page.waitForURL((url) => url.pathname === "/");
     expect(page.url()).toContain("/");
   });
 });
-
-const cleanupDb = async () => {
-  const result = await db.deleteFrom("internal_user").where("email", "=", mockUser.email).returning("id").execute();
-  await db.deleteFrom("user").where("id", "=", result[0].id).execute();
-};
-
-const mockUser = {
-  name: "Test runner",
-  email: "crvif@yopmail.com",
-  password: "Password123!",
-};

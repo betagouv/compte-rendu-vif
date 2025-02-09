@@ -1,11 +1,11 @@
 import "@ungap/with-resolvers";
-import { Banner } from "#components/Banner.js";
-import { EnsureUser } from "#components/EnsureUser.js";
-import { Spinner } from "#components/Spinner";
+import { Banner } from "../components/Banner";
+import { EnsureUser } from "../components/EnsureUser";
+import { Spinner } from "../components/Spinner";
 import { css, cx } from "#styled-system/css";
 import { Center, Flex, Stack, styled } from "#styled-system/jsx";
+import { fr } from "@codegouvfr/react-dsfr";
 import Button from "@codegouvfr/react-dsfr/Button";
-import Input from "@codegouvfr/react-dsfr/Input";
 import { ReportPDFDocument, ReportPDFDocumentProps, getReportHtmlString } from "@cr-vif/pdf";
 import { usePdf } from "@mikecousins/react-pdf";
 import { pdf } from "@react-pdf/renderer";
@@ -14,21 +14,21 @@ import { createFileRoute, useNavigate, useRouter } from "@tanstack/react-router"
 import { Editor } from "@tiptap/react";
 import { makeArrayOf } from "pastable";
 import { PropsWithChildren, ReactNode, useContext, useEffect, useMemo, useRef, useState } from "react";
-import { FormProvider, useForm, useFormContext } from "react-hook-form";
+import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form";
+import { v4 } from "uuid";
 import { api } from "../api";
 import sentImage from "../assets/sent.svg";
+import { EmailInput } from "../components/EmailInput";
+import { getDiff } from "../components/SyncForm";
 import { useUser } from "../contexts/AuthContext";
+import { Clause_v2, Pictures, Report, Udap } from "../db/AppSchema";
+import { db, useDbQuery } from "../db/db";
 import { useChipOptions } from "../features/chips/useChipOptions";
+import { transformBold } from "../features/menu/ClauseMenu";
 import { TextEditor } from "../features/text-editor/TextEditor";
 import { TextEditorContext, TextEditorContextProvider } from "../features/text-editor/TextEditorContext";
 import { TextEditorToolbar } from "../features/text-editor/TextEditorToolbar";
-import { getDiff } from "../components/SyncForm";
-import { v4 } from "uuid";
-import Alert from "@codegouvfr/react-dsfr/Alert";
-import { fr } from "@codegouvfr/react-dsfr";
-import { transformBold } from "../features/menu/ClauseMenu";
-import { db, useDbQuery } from "../db/db";
-import { Pictures, Report, Udap } from "../db/AppSchema";
+import { useUserSettings } from "../hooks/useUserSettings";
 
 type Mode = "edit" | "view" | "send" | "sent";
 
@@ -186,11 +186,11 @@ export const PDF = () => {
 
   const SendButtons = () => {
     return (
-      <Center gap="10px" direction="row">
+      <styled.div gap="10px" direction="row">
         <Button iconId="ri-send-plane-fill" type="submit" disabled={generatePdfMutation.isLoading}>
           Envoyer
         </Button>
-      </Center>
+      </styled.div>
     );
   };
 
@@ -237,10 +237,11 @@ export const PDF = () => {
         {report ? (
           <SendForm generatePdf={generatePdfMutation.mutate} report={report}>
             <EditBanner
+              mode={mode}
               title={
                 <styled.div nowrap>
                   <styled.span fontWeight="bold">{getModeTitle(mode)}</styled.span>
-                  {report?.title ? ` | ${report?.title}` : ""}
+                  {mode !== "send" && report?.title ? ` | ${report?.title}` : ""}
                 </styled.div>
               }
               reportId={report?.id}
@@ -254,7 +255,12 @@ export const PDF = () => {
                     mode={mode}
                     initialHtmlString={
                       htmlString ??
-                      getReportHtmlString(report, chipOptions, udap as Udap, serviceInstructeur ?? undefined)
+                      getReportHtmlString(
+                        report,
+                        chipOptions as Clause_v2[],
+                        udap as Udap,
+                        serviceInstructeur ?? undefined,
+                      )
                     }
                   />
                 ) : null}
@@ -275,16 +281,24 @@ const SendForm = ({
   const { editor } = useContext(TextEditorContext);
 
   const form = useForm({ defaultValues: { recipients: "" } });
+  const userSettings = useUserSettings();
 
   useQuery({
     queryKey: ["service-instructeur", report.serviceInstructeur, report.applicantEmail],
     queryFn: async () => {
-      const recipents = await getBaseRecipients(report);
+      const defaultRecipients = userSettings.userSettings.default_emails ?? "";
+      const recipents = await getBaseRecipients(report, defaultRecipients);
+
       if (!form.getValues("recipients")) {
-        form.setValue("recipients", recipents ?? "");
+        const recipientsArray = recipents.split(",");
+        const noDup = Array.from(new Set(recipientsArray)).join(",");
+
+        form.setValue("recipients", noDup ?? "");
       }
       return null;
     },
+    enabled: !userSettings.isLoading,
+    refetchOnWindowFocus: false,
   });
 
   const send = (values: { recipients: string }) => {
@@ -303,14 +317,14 @@ const SendForm = ({
   );
 };
 
-const getBaseRecipients = async (report: Report) => {
+const getBaseRecipients = async (report: Report, extra?: string) => {
   const serviceEmail = report.serviceInstructeur
     ? (
         await db.selectFrom("service_instructeurs").where("id", "=", report.serviceInstructeur).selectAll().execute()
       )?.[0]?.email
     : null;
 
-  const recipients = [serviceEmail, report.applicantEmail].filter(Boolean).join(", ");
+  const recipients = [extra, serviceEmail, report.applicantEmail].filter(Boolean).join(",");
   return recipients;
 };
 
@@ -321,7 +335,7 @@ const getModeTitle = (mode: Mode) => {
     case "view":
       return "Prévisualisation";
     case "send":
-      return "Envoi";
+      return "Courriels";
   }
 };
 
@@ -335,13 +349,28 @@ const DownloadButton = () => {
   );
 };
 
-const EditBanner = ({ title, buttons, reportId }: { title: ReactNode; buttons: ReactNode; reportId?: string }) => {
+const EditBanner = ({
+  mode,
+  title,
+  buttons,
+  reportId,
+}: {
+  mode: Mode;
+  title: ReactNode;
+  buttons: ReactNode;
+  reportId?: string;
+}) => {
   const router = useRouter();
   const navigate = useNavigate();
   const goBack = () =>
     reportId
       ? navigate({ to: "/edit/$reportId", params: { reportId }, search: { tab: "notes" } })
       : router.history.back();
+
+  const form = useFormContext();
+  const recipients = useWatch({ control: form.control, name: "recipients" });
+
+  const isSend = mode === "send";
 
   return (
     <Banner
@@ -352,52 +381,83 @@ const EditBanner = ({ title, buttons, reportId }: { title: ReactNode; buttons: R
       flexDir="row"
     >
       <Flex
-        direction="row"
+        direction={{ base: isSend ? "column" : "row", lg: "row" }}
         justifyContent={"flex-start"}
-        alignItems="center"
+        alignItems={isSend ? undefined : "center"}
         w={{ base: "100%", lg: "1000px" }}
         maxW={{ base: "100%", lg: "1000px" }}
-        h="header-height"
+        h={isSend ? undefined : "header-height"}
         px="16px"
       >
-        <Flex>
+        <Flex
+          flex={1}
+          direction="row"
+          justifyContent={{ base: isSend ? "space-between" : undefined, lg: "flex-start" }}
+          alignItems={{ base: "center", lg: "flex-start" }}
+          mt={{ base: 0, lg: isSend ? "32px" : 0 }}
+        >
+          <styled.div>
+            <styled.a
+              className={"ri-arrow-left-line"}
+              href={""}
+              onClick={(e) => {
+                e.preventDefault();
+                goBack();
+              }}
+              hideBelow="lg"
+              fontSize="16px"
+              whiteSpace="nowrap"
+              {...{
+                "&::before": {
+                  width: "16px !important",
+                  height: "16px !important",
+                  mb: "4px !important",
+                  mr: "4px",
+                },
+              }}
+            >
+              Retour
+            </styled.a>
+          </styled.div>
           <styled.a
             className={"ri-arrow-left-line"}
-            href={""}
             onClick={(e) => {
               e.preventDefault();
               goBack();
             }}
-            hideBelow="lg"
+            hideFrom="lg"
+            mt={isSend ? "8px" : 0}
+            pr="8px"
+            color="black"
             fontSize="16px"
-            whiteSpace="nowrap"
-            {...{
-              "&::before": {
-                width: "16px !important",
-                height: "16px !important",
-                mb: "4px !important",
-                mr: "4px",
-              },
-            }}
+          ></styled.a>
+          <styled.div
+            w="100%"
+            ml={{ base: "0", lg: "32px" }}
+            mt={{ base: isSend ? "16px" : 0, lg: 0 }}
+            pr="8px"
+            textAlign="center"
+            nowrap
           >
-            Retour
-          </styled.a>
+            {title}
+          </styled.div>
         </Flex>
-        <styled.a
-          className={"ri-arrow-left-line"}
-          onClick={(e) => {
-            e.preventDefault();
-            goBack();
-          }}
-          hideFrom="lg"
-          pr="8px"
-          color="black"
-          fontSize="16px"
-        ></styled.a>
-        <styled.div flex={1} ml={{ base: "0", lg: "32px" }} pr="8px" nowrap>
-          {title}
-        </styled.div>
-        <Flex>{buttons}</Flex>
+
+        {isSend ? (
+          <styled.div w="100%" ml={{ base: 0, lg: "16px" }} mr="16px" mt="16px" mb="16px">
+            <EmailInput
+              value={recipients.split(",")}
+              onValueChange={(value) => form.setValue("recipients", value.join(","))}
+            />
+          </styled.div>
+        ) : null}
+        <Flex
+          alignSelf={{ base: "center", lg: "flex-start" }}
+          mt={{ base: 0, lg: isSend ? "24px" : "20px" }}
+          mb={{ base: isSend ? "16px" : 0, lg: 0 }}
+        >
+          {buttons}
+        </Flex>
       </Flex>
     </Banner>
   );
@@ -532,7 +592,7 @@ const SendReportPage = ({ children }: PropsWithChildren) => {
   return (
     <Center>
       <Flex flexDirection="column" alignItems="center" w={{ base: "100%", lg: "800px" }}>
-        <Input
+        {/* <Input
           className={css({ w: "100%", mt: "16px", px: { base: "16px", lg: "unset" } })}
           label="Destinataires"
           hintText="Liste de courriels, séparés par des virgules ou des espaces"
@@ -541,7 +601,7 @@ const SendReportPage = ({ children }: PropsWithChildren) => {
             ...form.register("recipients"),
             rows: 4,
           }}
-        />
+        /> */}
 
         {children}
       </Flex>

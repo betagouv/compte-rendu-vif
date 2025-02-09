@@ -3,7 +3,7 @@ import { ENV } from "../envVars";
 import { makeDebug } from "../features/debug";
 import { AppError } from "../features/errors";
 import { S3 } from "@aws-sdk/client-s3";
-import { applyLinesToPicture, getPictureWithLines } from "../features/image";
+import { applyLinesToPicture } from "../features/image";
 import { db } from "../db/db";
 
 const client = new S3Client({ endpoint: ENV.AWS_ENDPOINT, region: ENV.AWS_REGION });

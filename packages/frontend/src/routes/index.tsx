@@ -78,6 +78,7 @@ const Index = () => {
           <Button
             className={css({ mr: { base: "0", lg: "1rem" }, mt: { base: "15px", lg: "0" } })}
             iconId="ri-add-line"
+            data-testid="create-report"
             nativeButtonProps={{ onClick: () => createReportMutation.mutate() }}
           >
             Créer un CR

@@ -202,7 +202,7 @@ const ReportListItem = ({
   );
 
   return (
-    <Flex position="relative" direction="column" w="100%">
+    <Flex className="report-list-item" position="relative" direction="column" w="100%">
       <Link
         className={css({
           backgroundImage: "none",

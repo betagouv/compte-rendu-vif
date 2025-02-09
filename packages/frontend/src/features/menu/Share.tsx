@@ -1,4 +1,4 @@
-import { Divider, Flex, Stack, styled } from "#styled-system/jsx";
+import { Center, Divider, Flex, Stack, styled } from "#styled-system/jsx";
 import { useUser } from "../../contexts/AuthContext";
 import { ToggleSwitch } from "@codegouvfr/react-dsfr/ToggleSwitch";
 import { useMutation } from "@tanstack/react-query";
@@ -9,6 +9,9 @@ import { fr } from "@codegouvfr/react-dsfr";
 import { db, useDbQuery } from "../../db/db";
 import { Delegation, User } from "../../db/AppSchema";
 import { v4 } from "uuid";
+import { EmailInput } from "#components/EmailInput.tsx";
+import { Spinner } from "#components/Spinner.tsx";
+import { useUserSettings } from "../../hooks/useUserSettings";
 
 export const ShareReport = ({ backButtonOnClick }: { backButtonOnClick: () => void }) => {
   const user = useUser()!;
@@ -32,6 +35,33 @@ export const ShareReport = ({ backButtonOnClick }: { backButtonOnClick: () => vo
   const delegations = delegationsQuery.data ?? [];
   const delegatedToMe = delegatedToMeQuery.data ?? [];
 
+  const { userSettings, isLoading: isUserSettingsLoading, existing } = useUserSettings();
+
+  const selectedEmails =
+    userSettings.default_emails
+      ?.split(",")
+      .map((email: string) => email.trim())
+      .filter(Boolean) ?? [];
+
+  const saveEmailsMutation = useMutation(async (emails: string[]) => {
+    const doesUserSettingExist =
+      existing ||
+      !!(await db.selectFrom("user_settings").where("user_id", "=", user.id).selectAll().executeTakeFirst());
+
+    if (doesUserSettingExist) {
+      return db
+        .updateTable("user_settings")
+        .set({ default_emails: emails.join(",") })
+        .where("user_id", "=", user.id)
+        .execute();
+    }
+
+    return db
+      .insertInto("user_settings")
+      .values({ id: v4(), user_id: user.id, default_emails: emails.join(",") })
+      .execute();
+  });
+
   return (
     <>
       <MenuTitle
@@ -46,9 +76,28 @@ export const ShareReport = ({ backButtonOnClick }: { backButtonOnClick: () => vo
       >
         Partage des CR
       </MenuTitle>
-      {/* <Divider hideFrom="lg" height="2px" my={{ base: "20px", lg: "44px" }} color="#C1C1FB" /> */}
 
       <Stack w="100%" px="20px">
+        <styled.h4 mb="16px">Envois</styled.h4>
+        <styled.div>
+          {isUserSettingsLoading ? (
+            <Spinner size={100} />
+          ) : (
+            <EmailInput
+              label="Courriel en copie par défaut :"
+              hintText="Pour tous mes CRs envoyés"
+              value={selectedEmails}
+              onValueChange={(e) => saveEmailsMutation.mutate(e)}
+            />
+          )}
+        </styled.div>
+      </Stack>
+      <Center>
+        <Divider mx="24px" mt="16px" mb="24px" />
+      </Center>
+
+      <Stack w="100%" px="20px">
+        <styled.h4 mb="16px">Droits d'édition</styled.h4>
         <styled.div>Ces personnes peuvent créer, modifier et supprimer vos CR : </styled.div>
         <ManageDelegations coworkers={coworkers ?? []} delegations={delegations ?? []} />
       </Stack>

@@ -11,7 +11,7 @@ const isFirefox = browser.getBrowser().name === "Firefox";
 export const powerSyncDb = new PowerSyncDatabase({
   schema: AppSchema,
   flags: {
-    useWebWorker: !isFirefox,
+    useWebWorker: false && !isFirefox,
   },
   database: {
     dbFilename: "crvif-sync.db",

@@ -5,13 +5,17 @@ import { authenticate } from "./authMiddleware";
 import { db } from "../db/db";
 import { sendReportMail } from "../features/mail";
 import { getPDFName } from "../services/uploadService";
-import React from "react";
 import { Udap } from "../../../frontend/src/db/AppSchema";
-import { Pictures } from "../db-types";
+import { Pictures, Report } from "../db-types";
 import path from "path";
 import { makeDebug } from "../features/debug";
+import { v4 } from "uuid";
+import React from "react";
 
 const debug = makeDebug("pdf-plugin");
+
+// prevent the auto organize imports from removing React import
+const _noop = () => React;
 
 export const pdfPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
   fastify.addHook("preHandler", authenticate);
@@ -28,9 +32,9 @@ export const pdfPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
       .execute();
 
     const udapsQuery = await db.selectFrom("udap").where("id", "=", udap_id).selectAll().execute();
-    const udap = udapsQuery[0]!;
+    const udap = udapsQuery[0]! as Udap;
 
-    const pdf = await generatePdf({ htmlString, udap, pictures });
+    const pdf = await generatePdf({ htmlString, udap, pictures: pictures as Pictures[] });
 
     const name = getPDFName(reportId);
 
@@ -50,9 +54,24 @@ export const pdfPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
     if (!recipients.includes(userMail)) recipients.push(userMail);
 
     const reportsQuery = await db.selectFrom("report").where("id", "=", reportId).selectAll().execute();
-    const report = reportsQuery[0];
+    const report = reportsQuery[0] as Omit<Report, "createdAt" | "meetDate"> & { createdAt: any; meetDate: any };
 
     await sendReportMail({ recipients: recipients.join(","), pdfBuffer: pdf, report: report! });
+
+    for (const recipient of recipients) {
+      const id = v4();
+
+      await db
+        .insertInto("sent_email")
+        .values({ id, report_id: reportId, sent_to: recipient, sent_at: new Date(), udap_id })
+        .execute();
+
+      await db
+        .insertInto("suggested_email")
+        .values({ id, email: recipient, udap_id })
+        .execute()
+        .catch(() => {});
+    }
 
     return url;
   });
@@ -112,7 +131,7 @@ const generatePdf = async ({
       udap={udap as Udap}
       htmlString={htmlString}
       images={{ marianne: "./public/marianne.png", marianneFooter: "./public/marianne_footer.png" }}
-      pictures={pictures}
+      pictures={pictures as (Omit<Pictures, "createdAt"> & { createdAt: any })[]}
     />,
   );
 };

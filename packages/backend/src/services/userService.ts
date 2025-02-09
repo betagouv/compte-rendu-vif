@@ -39,7 +39,6 @@ export class UserService {
     const { token, expiresAt } = this.generateJWT(id);
 
     const { user } = (await this.getUserById(id))!;
-
     return { user: user, token, expiresAt, refreshToken: this.generateRefreshToken(id) };
   }
 
@@ -301,9 +300,6 @@ const assertEmailDoesNotAlreadyExist = async (email: string) => {
 
 const assertEmailInWhitelist = async (email: string) => {
   if (isDev) return;
-
-  const isDefaultWhitelisted = email.endsWith("@culture.gouv.fr");
-  if (isDefaultWhitelisted) return;
 
   const whitelistResults = await db.selectFrom("whitelist").where("email", "=", email).selectAll().execute();
   const whitelist = whitelistResults[0];

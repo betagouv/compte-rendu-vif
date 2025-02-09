@@ -97,6 +97,23 @@ const transactions = new Table({
   user_id: column.text,
 });
 
+const sent_email = new Table({
+  id: column.text,
+  report_id: column.text,
+  sent_to: column.text,
+  sent_at: column.text,
+});
+
+const suggested_email = new Table({
+  email: column.text,
+  udap_id: column.text,
+});
+
+const user_settings = new Table({
+  user_id: column.text,
+  default_emails: column.text,
+});
+
 export const AppSchema = new Schema({
   report,
   udap,
@@ -108,6 +125,9 @@ export const AppSchema = new Schema({
   pictures,
   picture_lines,
   transactions,
+  sent_email,
+  suggested_email,
+  user_settings,
 });
 
 export type Database = (typeof AppSchema)["types"];
@@ -121,3 +141,6 @@ export type Clause_v2 = Database["clause_v2"];
 export type Pictures = Database["pictures"];
 export type PictureLines = Database["picture_lines"];
 export type Transactions = Database["transactions"];
+export type SentEmail = Database["sent_email"];
+export type SuggestedEmail = Database["suggested_email"];
+export type UserSettings = Database["user_settings"];

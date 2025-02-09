@@ -1,23 +1,4 @@
-import { db } from "../db/db";
-import canvas, { createCanvas, loadImage } from "canvas";
-import fs from "fs/promises";
-
-export const getPictureWithLines = async ({ pictureId }: { pictureId: string }) => {
-  const picture = await db.pictures.findFirst({
-    where: { id: pictureId },
-  });
-
-  const pictureLines = await db.picture_lines.findFirst({
-    where: { pictureId },
-  });
-
-  const lines = JSON.parse(pictureLines?.lines || "[]");
-  const buffer = await applyLinesToPicture({ pictureUrl: picture!.url!, lines });
-
-  await fs.writeFile("./test.png", buffer);
-
-  return buffer;
-};
+import { createCanvas, loadImage } from "canvas";
 
 export const applyLinesToPicture = async ({
   pictureUrl,

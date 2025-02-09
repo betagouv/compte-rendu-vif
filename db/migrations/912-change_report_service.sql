@@ -1,2 +1,2 @@
 
-ALTER TABLE report ALTER COLUMN service_instructeur TYPE TEXT;
+ALTER TABLE report ALTER COLUMN "serviceInstructeur" TYPE TEXT;

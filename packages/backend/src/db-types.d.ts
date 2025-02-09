@@ -96,10 +96,18 @@ export interface Report {
   projectSpaceType: string | null;
   redactedBy: string | null;
   redactedById: string | null;
-  serviceInstructeur: number | null;
+  serviceInstructeur: string | null;
   title: string | null;
   udap_id: string | null;
   zipCode: string | null;
+}
+
+export interface SentEmail {
+  id: string;
+  report_id: string | null;
+  sent_at: Timestamp;
+  sent_to: string;
+  udap_id: string;
 }
 
 export interface ServiceInstructeurs {
@@ -109,6 +117,12 @@ export interface ServiceInstructeurs {
   short_name: string;
   tel: string | null;
   udap_id: string | null;
+}
+
+export interface SuggestedEmail {
+  email: string;
+  id: string;
+  udap_id: string;
 }
 
 export interface TmpPictures {
@@ -152,6 +166,12 @@ export interface User {
   udap_id: string;
 }
 
+export interface UserSettings {
+  default_emails: string | null;
+  id: string;
+  user_id: string | null;
+}
+
 export interface Whitelist {
   email: string;
 }
@@ -166,10 +186,13 @@ export interface DB {
   picture_lines: PictureLines;
   pictures: Pictures;
   report: Report;
+  sent_email: SentEmail;
   service_instructeurs: ServiceInstructeurs;
+  suggested_email: SuggestedEmail;
   tmp_pictures: TmpPictures;
   transactions: Transactions;
   udap: Udap;
   user: User;
+  user_settings: UserSettings;
   whitelist: Whitelist;
 }
