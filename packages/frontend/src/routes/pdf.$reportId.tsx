@@ -411,116 +411,120 @@ const EditBanner = ({
 
   const isSend = mode === "send";
   const isView = mode === "view";
+  const isEdit = mode === "edit";
 
   return (
-    <Banner
-      status="saved"
-      zIndex={3}
-      position={{ base: "sticky", lg: "sticky" }}
-      top={{ base: "-1px", lg: "-1px" }}
-      flexDir="colum"
-      maxW={{ base: "100vw", lg: "unset" }}
-      overflowX="hidden"
-    >
-      <Flex flexDir="row" justifyContent={"center"} w="100%">
-        <Flex
-          direction={{ base: isSend ? "column" : "row", lg: "row" }}
-          justifyContent={"flex-start"}
-          alignItems={isSend ? undefined : "center"}
-          w={{ base: "100%", lg: "1000px" }}
-          maxW={{ base: "100%", lg: "1000px" }}
-          h={isSend || isView ? undefined : "header-height"}
-          px="16px"
-        >
+    <>
+      <Banner
+        status="saved"
+        zIndex={3}
+        position={{ base: "sticky", lg: "sticky" }}
+        top={{ base: "-1px", lg: "-1px" }}
+        flexDir="column"
+        maxW={{ base: "100vw", lg: "unset" }}
+      >
+        <Flex flexDir="row" justifyContent={"center"} w="100%">
           <Flex
-            flex={1}
-            flexShrink="0"
-            justifyContent={{ base: isSend ? "space-between" : undefined, lg: "flex-start" }}
-            alignItems={{ base: isView ? "flex-start" : "center", lg: "flex-start" }}
-            mr={"8px"}
-            mt={{ base: isView ? "32px" : 0, lg: isSend || isView ? "32px" : 0 }}
-            mb={isView ? "32px" : 0}
+            direction={{ base: isSend ? "column" : "row", lg: "row" }}
+            justifyContent={"flex-start"}
+            alignItems={isSend ? undefined : "center"}
+            w={{ base: "100%", lg: "1000px" }}
+            maxW={{ base: "100%", lg: "1000px" }}
+            h={isSend || isView ? undefined : "header-height"}
+            px="16px"
           >
-            <styled.div>
+            <Flex
+              flex={1}
+              flexShrink="0"
+              justifyContent={{ base: isSend ? "space-between" : undefined, lg: "flex-start" }}
+              alignItems={{ base: isView ? "flex-start" : "center", lg: "flex-start" }}
+              mr={"8px"}
+              mt={{ base: isView ? "32px" : 0, lg: isSend || isView ? "32px" : 0 }}
+              mb={isView ? "32px" : 0}
+            >
+              <styled.div>
+                <styled.a
+                  className={"ri-arrow-left-line"}
+                  href={""}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    goBack();
+                  }}
+                  hideBelow="lg"
+                  fontSize="16px"
+                  whiteSpace="nowrap"
+                  {...{
+                    "&::before": {
+                      width: "16px !important",
+                      height: "16px !important",
+                      mb: "4px !important",
+                      mr: "4px",
+                    },
+                  }}
+                >
+                  Retour
+                </styled.a>
+              </styled.div>
               <styled.a
                 className={"ri-arrow-left-line"}
-                href={""}
                 onClick={(e) => {
                   e.preventDefault();
                   goBack();
                 }}
-                hideBelow="lg"
+                hideFrom="lg"
+                mt={isSend ? "8px" : 0}
+                pr="8px"
+                color="black"
                 fontSize="16px"
-                whiteSpace="nowrap"
-                {...{
-                  "&::before": {
-                    width: "16px !important",
-                    height: "16px !important",
-                    mb: "4px !important",
-                    mr: "4px",
-                  },
-                }}
+              ></styled.a>
+              <styled.div
+                hideBelow={isEdit ? "lg" : undefined}
+                flexShrink="0"
+                w="100%"
+                minW="0"
+                ml={{ base: "0", lg: "32px" }}
+                mt={{ base: isSend ? "16px" : 0, lg: 0 }}
+                pr="8px"
+                textAlign="center"
               >
-                Retour
-              </styled.a>
-            </styled.div>
-            <styled.a
-              className={"ri-arrow-left-line"}
-              onClick={(e) => {
-                e.preventDefault();
-                goBack();
-              }}
-              hideFrom="lg"
-              mt={isSend ? "8px" : 0}
-              pr="8px"
-              color="black"
-              fontSize="16px"
-            ></styled.a>
-            <styled.div
-              flexShrink="0"
-              w="100%"
-              minW="0"
-              ml={{ base: "0", lg: "32px" }}
-              mt={{ base: isSend ? "16px" : 0, lg: 0 }}
-              pr="8px"
-              textAlign="center"
-            >
-              {title}
-            </styled.div>
-          </Flex>
+                {title}
+              </styled.div>
+            </Flex>
 
-          {isSend ? (
-            <styled.div w="100%" ml={{ base: 0, lg: "16px" }} mr="16px" mt="16px" mb="16px">
-              <EmailInput
-                value={recipients.split(",")}
-                onValueChange={(value) => form.setValue("recipients", value.join(","))}
-              />
-            </styled.div>
-          ) : null}
-          <Flex
-            gap="16px"
-            // hideBelow={isView ? "lg" : undefined}
-            alignSelf={{ base: "center", lg: "flex-start" }}
-            mt={{ base: 0, lg: isSend ? "24px" : "20px" }}
-            mb={{ base: isSend ? "16px" : 0, lg: 0 }}
-          >
-            {buttons}
+            {isSend ? (
+              <styled.div w="100%" ml={{ base: 0, lg: "16px" }} mr="16px" mt="16px" mb="16px">
+                <EmailInput
+                  value={recipients.split(",")}
+                  onValueChange={(value) => form.setValue("recipients", value.join(","))}
+                />
+              </styled.div>
+            ) : null}
+            <Flex
+              hideBelow={isView ? "lg" : undefined}
+              gap="8px"
+              alignSelf={{ base: "center", lg: "flex-start" }}
+              mt={{ base: 0, lg: isSend ? "24px" : "20px" }}
+              mb={{ base: isSend ? "16px" : 0, lg: 0 }}
+            >
+              {buttons}
+            </Flex>
           </Flex>
         </Flex>
-        {/* {isView ? (
-          <Flex
-            hideFrom="lg"
-            justifyContent="flex-end"
-            alignSelf="center"
-            w="100%"
-            mt={{ base: "16px" }}
-            mb={{ base: isSend ? "16px" : 0, lg: 0 }}
-          >
-            {buttons}
-          </Flex>
-        ) : null} */}
-      </Flex>
-    </Banner>
+      </Banner>
+      {isView ? (
+        <Flex
+          hideFrom="lg"
+          justifyContent="space-between"
+          alignSelf="center"
+          w="100%"
+          mt={{ base: "16px" }}
+          mb={{ base: isSend ? "16px" : 0, lg: 0 }}
+          px="16px"
+        >
+          {buttons}
+        </Flex>
+      ) : null}
+    </>
   );
 };
 
