@@ -29,6 +29,7 @@ import { TextEditor } from "../features/text-editor/TextEditor";
 import { TextEditorContext, TextEditorContextProvider } from "../features/text-editor/TextEditorContext";
 import { TextEditorToolbar } from "../features/text-editor/TextEditorToolbar";
 import { useUserSettings } from "../hooks/useUserSettings";
+import { format } from "date-fns";
 
 type Mode = "edit" | "view" | "send" | "sent";
 
@@ -141,7 +142,7 @@ export const PDF = () => {
     const { editor } = useContext(TextEditorContext);
 
     return (
-      <Stack gap="5px" flexDir="row" alignItems="center">
+      <>
         <TextEditorToolbar />
         <Button
           type="button"
@@ -156,13 +157,13 @@ export const PDF = () => {
         >
           Enregistrer
         </Button>
-      </Stack>
+      </>
     );
   };
 
   const ViewButtons = () => {
     return (
-      <Center gap="10px" direction="row">
+      <>
         <Button
           className={css({ bgColor: "white" })}
           type="button"
@@ -173,7 +174,7 @@ export const PDF = () => {
           Modifier
         </Button>
         <DownloadButton />
-      </Center>
+      </>
     );
   };
 
@@ -186,11 +187,11 @@ export const PDF = () => {
 
   const SendButtons = () => {
     return (
-      <styled.div gap="10px" direction="row">
+      <>
         <Button iconId="ri-send-plane-fill" type="submit" disabled={generatePdfMutation.isLoading}>
           Envoyer
         </Button>
-      </styled.div>
+      </>
     );
   };
 
@@ -239,9 +240,16 @@ export const PDF = () => {
             <EditBanner
               mode={mode}
               title={
-                <styled.div nowrap>
-                  <styled.span fontWeight="bold">{getModeTitle(mode)}</styled.span>
-                  {mode !== "send" && report?.title ? ` | ${report?.title}` : ""}
+                <styled.div display="flex" flexDir="column" alignItems="flex-start" textAlign="left">
+                  <styled.div>
+                    <styled.span fontWeight="bold">{getModeTitle(mode)}</styled.span>
+                    {mode !== "send" && report?.title ? ` | ${report?.title}` : ""}
+                  </styled.div>
+                  {mode === "view" ? (
+                    <styled.div>
+                      <SentEmailInfos report={report} />
+                    </styled.div>
+                  ) : null}
                 </styled.div>
               }
               reportId={report?.id}
@@ -270,6 +278,37 @@ export const PDF = () => {
         ) : null}
       </TextEditorContextProvider>
     </styled.div>
+  );
+};
+
+const SentEmailInfos = ({ report }: { report: Report }) => {
+  const query = useDbQuery(
+    db.selectFrom("sent_email").where("report_id", "=", report.id).orderBy("sent_at asc").selectAll(),
+  );
+
+  const groupedByDay = query.data?.reduce(
+    (acc, email) => {
+      if (!email.sent_at || !email.sent_to) return acc;
+
+      const day = format(new Date(email.sent_at), "dd/MM/yyyy");
+      if (!acc[day]) acc[day] = [];
+      acc[day].push(email.sent_to);
+
+      return acc;
+    },
+    {} as Record<string, string[]>,
+  );
+
+  if (!groupedByDay) return null;
+
+  return (
+    <Flex flexDir="column" flexShrink={0} color="text-mention-grey">
+      {Object.entries(groupedByDay).map(([day, emails]) => (
+        <styled.div key={day}>
+          Envoyé le {day} à {emails.join(", ")}
+        </styled.div>
+      ))}
+    </Flex>
   );
 };
 
@@ -371,6 +410,7 @@ const EditBanner = ({
   const recipients = useWatch({ control: form.control, name: "recipients" });
 
   const isSend = mode === "send";
+  const isView = mode === "view";
 
   return (
     <Banner
@@ -378,86 +418,107 @@ const EditBanner = ({
       zIndex={3}
       position={{ base: "sticky", lg: "sticky" }}
       top={{ base: "-1px", lg: "-1px" }}
-      flexDir="row"
+      flexDir="colum"
+      maxW={{ base: "100vw", lg: "unset" }}
+      overflowX="hidden"
     >
-      <Flex
-        direction={{ base: isSend ? "column" : "row", lg: "row" }}
-        justifyContent={"flex-start"}
-        alignItems={isSend ? undefined : "center"}
-        w={{ base: "100%", lg: "1000px" }}
-        maxW={{ base: "100%", lg: "1000px" }}
-        h={isSend ? undefined : "header-height"}
-        px="16px"
-      >
+      <Flex flexDir="row" justifyContent={"center"} w="100%">
         <Flex
-          flex={1}
-          direction="row"
-          justifyContent={{ base: isSend ? "space-between" : undefined, lg: "flex-start" }}
-          alignItems={{ base: "center", lg: "flex-start" }}
-          mt={{ base: 0, lg: isSend ? "32px" : 0 }}
+          direction={{ base: isSend ? "column" : "row", lg: "row" }}
+          justifyContent={"flex-start"}
+          alignItems={isSend ? undefined : "center"}
+          w={{ base: "100%", lg: "1000px" }}
+          maxW={{ base: "100%", lg: "1000px" }}
+          h={isSend || isView ? undefined : "header-height"}
+          px="16px"
         >
-          <styled.div>
+          <Flex
+            flex={1}
+            flexShrink="0"
+            justifyContent={{ base: isSend ? "space-between" : undefined, lg: "flex-start" }}
+            alignItems={{ base: isView ? "flex-start" : "center", lg: "flex-start" }}
+            mr={"8px"}
+            mt={{ base: isView ? "32px" : 0, lg: isSend || isView ? "32px" : 0 }}
+            mb={isView ? "32px" : 0}
+          >
+            <styled.div>
+              <styled.a
+                className={"ri-arrow-left-line"}
+                href={""}
+                onClick={(e) => {
+                  e.preventDefault();
+                  goBack();
+                }}
+                hideBelow="lg"
+                fontSize="16px"
+                whiteSpace="nowrap"
+                {...{
+                  "&::before": {
+                    width: "16px !important",
+                    height: "16px !important",
+                    mb: "4px !important",
+                    mr: "4px",
+                  },
+                }}
+              >
+                Retour
+              </styled.a>
+            </styled.div>
             <styled.a
               className={"ri-arrow-left-line"}
-              href={""}
               onClick={(e) => {
                 e.preventDefault();
                 goBack();
               }}
-              hideBelow="lg"
+              hideFrom="lg"
+              mt={isSend ? "8px" : 0}
+              pr="8px"
+              color="black"
               fontSize="16px"
-              whiteSpace="nowrap"
-              {...{
-                "&::before": {
-                  width: "16px !important",
-                  height: "16px !important",
-                  mb: "4px !important",
-                  mr: "4px",
-                },
-              }}
+            ></styled.a>
+            <styled.div
+              flexShrink="0"
+              w="100%"
+              minW="0"
+              ml={{ base: "0", lg: "32px" }}
+              mt={{ base: isSend ? "16px" : 0, lg: 0 }}
+              pr="8px"
+              textAlign="center"
             >
-              Retour
-            </styled.a>
-          </styled.div>
-          <styled.a
-            className={"ri-arrow-left-line"}
-            onClick={(e) => {
-              e.preventDefault();
-              goBack();
-            }}
-            hideFrom="lg"
-            mt={isSend ? "8px" : 0}
-            pr="8px"
-            color="black"
-            fontSize="16px"
-          ></styled.a>
-          <styled.div
-            w="100%"
-            ml={{ base: "0", lg: "32px" }}
-            mt={{ base: isSend ? "16px" : 0, lg: 0 }}
-            pr="8px"
-            textAlign="center"
-            nowrap
-          >
-            {title}
-          </styled.div>
-        </Flex>
+              {title}
+            </styled.div>
+          </Flex>
 
-        {isSend ? (
-          <styled.div w="100%" ml={{ base: 0, lg: "16px" }} mr="16px" mt="16px" mb="16px">
-            <EmailInput
-              value={recipients.split(",")}
-              onValueChange={(value) => form.setValue("recipients", value.join(","))}
-            />
-          </styled.div>
-        ) : null}
-        <Flex
-          alignSelf={{ base: "center", lg: "flex-start" }}
-          mt={{ base: 0, lg: isSend ? "24px" : "20px" }}
-          mb={{ base: isSend ? "16px" : 0, lg: 0 }}
-        >
-          {buttons}
+          {isSend ? (
+            <styled.div w="100%" ml={{ base: 0, lg: "16px" }} mr="16px" mt="16px" mb="16px">
+              <EmailInput
+                value={recipients.split(",")}
+                onValueChange={(value) => form.setValue("recipients", value.join(","))}
+              />
+            </styled.div>
+          ) : null}
+          <Flex
+            gap="16px"
+            // hideBelow={isView ? "lg" : undefined}
+            alignSelf={{ base: "center", lg: "flex-start" }}
+            mt={{ base: 0, lg: isSend ? "24px" : "20px" }}
+            mb={{ base: isSend ? "16px" : 0, lg: 0 }}
+          >
+            {buttons}
+          </Flex>
         </Flex>
+        {/* {isView ? (
+          <Flex
+            hideFrom="lg"
+            justifyContent="flex-end"
+            alignSelf="center"
+            w="100%"
+            mt={{ base: "16px" }}
+            mb={{ base: isSend ? "16px" : 0, lg: 0 }}
+          >
+            {buttons}
+          </Flex>
+        ) : null} */}
       </Flex>
     </Banner>
   );
