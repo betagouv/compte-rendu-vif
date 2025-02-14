@@ -9,10 +9,7 @@ const emitterChannel = new BroadcastChannel("sw-messages");
 
 export class Connector implements PowerSyncBackendConnector {
   async fetchCredentials() {
-    console.log("fetching credentials");
     const token = await getTokenOrRefresh();
-
-    console.log("aaaa");
 
     return {
       endpoint: ENV.VITE_POWERSYNC_URL,

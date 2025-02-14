@@ -201,6 +201,8 @@ const ReportListItem = ({
     !whereText && !forText,
   );
 
+  const isDraft = report.pdf === null;
+
   return (
     <Flex className="report-list-item" position="relative" direction="column" w="100%">
       <Link
@@ -211,7 +213,7 @@ const ReportListItem = ({
           },
         })}
         onClick={onClick}
-        to={"/edit/$reportId"}
+        to={isDraft ? "/edit/$reportId" : "/pdf/$reportId"}
         params={{ reportId: report.id }}
       >
         <article
