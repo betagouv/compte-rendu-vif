@@ -159,7 +159,7 @@ const AppHeader = () => {
                     </p>
                   </div>
                 </div>
-                <div className="fr-header__service d_none lg:d_unset">
+                <div className="fr-header__service lg:d_unset">
                   <p className="fr-header__service-title">
                     {isDesktop ? (
                       <>
