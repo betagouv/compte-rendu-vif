@@ -249,7 +249,7 @@ export const ReportPDFDocument = ({ udap, htmlString, images, pictures }: Report
   );
 };
 
-const picturesPerPage = 4;
+const picturesPerPage = 1;
 
 const PicturesGrid = ({ pictures, marianneUrl }: { pictures: Pictures[]; marianneUrl: string }) => {
   const pages = Math.ceil(pictures.length / picturesPerPage);
@@ -286,10 +286,11 @@ const PicturesGrid = ({ pictures, marianneUrl }: { pictures: Pictures[]; mariann
               <View
                 key={index}
                 style={{
-                  width: "48%",
-                  maxHeight: "40vh",
+                  width: "90%",
+                  maxHeight: "90vh",
                   marginBottom: 20,
                   display: "flex",
+                  justifyContent: "center",
                   flexDirection: "column",
                   alignItems: "center",
                 }}
@@ -297,7 +298,7 @@ const PicturesGrid = ({ pictures, marianneUrl }: { pictures: Pictures[]; mariann
                 <View style={{ width: "100%", marginBottom: 5 }}>
                   <Image
                     src={image.finalUrl ?? image.url!}
-                    style={{ width: "100%", objectFit: "scale-down", objectPosition: "left", maxHeight: 300 }}
+                    style={{ width: "100%", objectFit: "scale-down", objectPosition: "left", maxHeight: "80vh" }}
                   />
                 </View>
                 <Text style={{ fontSize: "10px", textAlign: "left", width: "100%" }}>
