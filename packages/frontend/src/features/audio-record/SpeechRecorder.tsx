@@ -16,6 +16,8 @@ export const SpeechRecorder = ({
   const [error, setError] = useState("");
   const recognitionRef = useRef<any>(null);
 
+  const isSupported = Boolean((window as any).SpeechRecognition || (window as any).webkitSpeechRecognition);
+
   useEffect(() => {
     if (recognitionRef.current) {
       recognitionRef.current.stop();
@@ -96,6 +98,10 @@ export const SpeechRecorder = ({
     }
     onStop();
   };
+
+  if (!isSupported) {
+    return null;
+  }
 
   return (
     <Button
