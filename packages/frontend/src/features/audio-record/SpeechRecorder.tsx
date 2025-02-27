@@ -1,6 +1,8 @@
 import Button from "@codegouvfr/react-dsfr/Button";
 import { useState, useRef, useEffect } from "react";
 
+const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+
 export const SpeechRecorder = ({
   onInterimText,
   onFinalText,
@@ -16,13 +18,12 @@ export const SpeechRecorder = ({
   const [error, setError] = useState("");
   const recognitionRef = useRef<any>(null);
 
-  const isSupported = Boolean((window as any).SpeechRecognition || (window as any).webkitSpeechRecognition);
+  const isSupported = Boolean(SpeechRecognition);
 
   useEffect(() => {
     if (recognitionRef.current) {
       recognitionRef.current.stop();
     }
-    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
 
     if (!SpeechRecognition) {
       setError("Speech recognition not supported");
