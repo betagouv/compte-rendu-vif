@@ -7,7 +7,7 @@ import Button from "@codegouvfr/react-dsfr/Button";
 import Input from "@codegouvfr/react-dsfr/Input";
 import Select from "@codegouvfr/react-dsfr/Select";
 import { format, parse } from "date-fns";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { useUser } from "../contexts/AuthContext";
 import { Report } from "../db/AppSchema";
@@ -16,6 +16,7 @@ import { useIsFormDisabled } from "./DisabledContext";
 import { ServiceInstructeurSelect } from "./ServiceInstructeurSelect";
 import { SmartAddressInput } from "#components/SmartAddressInput.tsx";
 import { EmailInput } from "#components/EmailInput.tsx";
+import { SpeechRecorder } from "./audio-record/SpeechRecorder";
 
 export const InfoForm = () => {
   const form = useFormContext<Report>();
@@ -152,13 +153,7 @@ export const InfoForm = () => {
       <Divider mt="20px" mb="52px" />
 
       <InputGroupWithTitle title="Le projet">
-        <Input
-          className={css({ mb: { base: "24px", lg: undefined } })}
-          label="Description"
-          disabled={isFormDisabled}
-          textArea
-          nativeTextAreaProps={{ ...form.register("projectDescription"), rows: 5 }}
-        />
+        <DescriptionInput />
 
         <SmartAddressInput />
         {/* <Input
@@ -219,5 +214,49 @@ export const InfoForm = () => {
         </Button>
       </Center>
     </Flex>
+  );
+};
+
+const DescriptionInput = () => {
+  const [isRecording, setIsRecording] = useState(false);
+  const isFormDisabled = useIsFormDisabled();
+  const form = useFormContext<Report>();
+
+  const [interimText, setInterimText] = useState("");
+  const valueRef = useRef("");
+
+  const isRecordingProps = {
+    value: valueRef.current + " " + interimText,
+  };
+
+  const isIdleProps = form.register("projectDescription");
+
+  return (
+    <Input
+      className={css({ mt: "24px", "& > textarea": { mt: "0 !important" } })}
+      disabled={isFormDisabled}
+      label={
+        <Flex justifyContent="space-between" w="100%">
+          <span>Description</span>
+          <SpeechRecorder
+            onStart={() => {
+              setIsRecording(true);
+              valueRef.current = form.watch("projectDescription") ?? "";
+            }}
+            onStop={() => setIsRecording(false)}
+            onInterimText={(text) => {
+              setInterimText(text);
+            }}
+            onFinalText={(text) => {
+              form.setValue("projectDescription", valueRef.current + " " + text);
+              valueRef.current = valueRef.current + " " + text;
+              setInterimText("");
+            }}
+          />
+        </Flex>
+      }
+      textArea
+      nativeTextAreaProps={{ ...(isRecording ? isRecordingProps : isIdleProps), rows: 5 }}
+    />
   );
 };
