@@ -344,9 +344,8 @@ const ClauseEdit = ({ clause }: { clause: ClauseWithIndex }) => {
           iconId="ri-delete-bin-fill"
           disabled={deleteClauseMutation.isLoading}
           onClick={() => deleteClauseMutation.mutate()}
-          priority="secondary"
+          priority="tertiary"
           type="button"
-          size="small"
         >
           <styled.span hideBelow="lg">Supprimer</styled.span>
         </Button>

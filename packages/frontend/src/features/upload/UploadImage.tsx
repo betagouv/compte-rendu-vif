@@ -166,6 +166,8 @@ const ReportPictures = ({
 
   const pictures = picturesQuery.data ?? [];
 
+  if (!pictures?.length) return null;
+
   return (
     <Flex direction="column" w="100%" my="40px">
       <InputGroup>
