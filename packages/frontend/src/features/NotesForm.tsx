@@ -1,14 +1,16 @@
-import { Center, Divider, Flex, Stack, styled } from "#styled-system/jsx";
-import { useFormContext } from "react-hook-form";
-import { InputGroupWithTitle } from "#components/InputGroup";
-import Input from "@codegouvfr/react-dsfr/Input";
-import { DecisionChips } from "#components/chips/DecisionChips";
 import { ContactChips } from "#components/chips/ContactChips";
-import { css } from "#styled-system/css";
+import { DecisionChips } from "#components/chips/DecisionChips";
 import { FurtherInfoChips } from "#components/chips/FurtherInfoChips";
+import { InputGroupWithTitle } from "#components/InputGroup";
+import { css } from "#styled-system/css";
+import { Center, Divider, Flex, Stack } from "#styled-system/jsx";
 import Button from "@codegouvfr/react-dsfr/Button";
-import { useIsFormDisabled } from "./DisabledContext";
+import Input from "@codegouvfr/react-dsfr/Input";
+import { useRef, useState } from "react";
+import { useFormContext } from "react-hook-form";
 import { Report } from "../db/AppSchema";
+import { SpeechRecorder } from "./audio-record/SpeechRecorder";
+import { useIsFormDisabled } from "./DisabledContext";
 import { UploadImage } from "./upload/UploadImage";
 
 export const NotesForm = () => {
@@ -20,13 +22,7 @@ export const NotesForm = () => {
     <Flex direction="column" w="100%" padding="16px">
       <InputGroupWithTitle title="Décision & suite à donner">
         <DecisionChips disabled={isFormDisabled} />
-        <Input
-          className={css({ mt: "24px" })}
-          disabled={isFormDisabled}
-          label="Commentaire"
-          textArea
-          nativeTextAreaProps={{ ...form.register("precisions"), rows: 5 }}
-        />
+        <PrecisionsTextArea />
       </InputGroupWithTitle>
 
       <UploadImage reportId={form.getValues().id} />
@@ -54,5 +50,53 @@ export const NotesForm = () => {
         </Button>
       </Center>
     </Flex>
+  );
+};
+
+const PrecisionsTextArea = () => {
+  const [isRecording, setIsRecording] = useState(false);
+  const isFormDisabled = useIsFormDisabled();
+  const form = useFormContext<Report>();
+
+  const [interimText, setInterimText] = useState("");
+  const valueRef = useRef("");
+
+  const isRecordingProps = {
+    value: valueRef.current + " " + interimText,
+  };
+
+  const isIdleProps = form.register("precisions");
+
+  return (
+    <Input
+      className={css({ mt: "24px", "& > textarea": { mt: "0 !important" } })}
+      disabled={isFormDisabled}
+      label={
+        <Flex justifyContent="space-between" w="100%">
+          <span>Commentaire</span>
+          <SpeechRecorder
+            onStart={() => {
+              setIsRecording(true);
+              valueRef.current = form.watch("precisions") ?? "";
+            }}
+            onStop={() => setIsRecording(false)}
+            onInterimText={(text) => {
+              setInterimText(text);
+            }}
+            onFinalText={(text) => {
+              form.setValue("precisions", valueRef.current + " " + text);
+              valueRef.current = valueRef.current + " " + text;
+              setInterimText("");
+            }}
+          />
+        </Flex>
+      }
+      textArea
+      nativeTextAreaProps={{
+        ...(isRecording ? isRecordingProps : isIdleProps),
+        id: "precisions",
+        rows: 5,
+      }}
+    />
   );
 };
