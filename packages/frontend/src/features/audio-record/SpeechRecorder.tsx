@@ -8,11 +8,13 @@ export const SpeechRecorder = ({
   onFinalText,
   onStart,
   onStop,
+  disabled,
 }: {
   onInterimText: (text: string) => void;
   onFinalText: (text: string) => void;
   onStart: () => void;
   onStop: () => void;
+  disabled?: boolean;
 }) => {
   const [isRecording, setIsRecording] = useState(false);
   const [error, setError] = useState("");
@@ -106,6 +108,7 @@ export const SpeechRecorder = ({
 
   return (
     <Button
+      disabled={disabled}
       type="button"
       priority={isRecording ? "primary" : "tertiary"}
       iconId="ri-mic-fill"

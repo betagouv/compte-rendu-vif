@@ -75,6 +75,7 @@ const PrecisionsTextArea = () => {
         <Flex justifyContent="space-between" w="100%">
           <span>Commentaire</span>
           <SpeechRecorder
+            disabled={isFormDisabled}
             onStart={() => {
               setIsRecording(true);
               valueRef.current = form.watch("precisions") ?? "";
