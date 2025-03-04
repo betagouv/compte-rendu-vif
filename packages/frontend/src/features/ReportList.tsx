@@ -133,7 +133,7 @@ export const ReportList = ({
   hideEmpty?: boolean;
 }) => {
   const error = reports.length === 0 ? <NoReport /> : null;
-
+  const isDesktop = useIsDesktop();
   const columns = reports.length < 6 ? [reports] : chunk(reports, Math.ceil(reports.length / 2));
 
   return (
@@ -142,15 +142,19 @@ export const ReportList = ({
         error
       ) : (
         <Stack gap={{ base: 0, lg: "126px" }} flexDir={{ base: "column", lg: "row" }} justifyContent="center">
-          {columns.slice(0, 2).map((reports, index) => {
+          {columns.slice(0, 2).map((reports, columnIndex) => {
             return (
-              <Stack key={index} flexDir="column" w={{ base: "100%", lg: "400px" }}>
+              <Stack key={columnIndex} flexDir="column" w={{ base: "100%", lg: "400px" }}>
                 {reports.map((report, index) => (
                   <ReportListItem
                     onClick={onClick}
                     key={report.id}
                     report={report}
-                    isLast={index === reports.length - 1}
+                    isLast={
+                      isDesktop
+                        ? index === reports.length - 1
+                        : index === reports.length - 1 && columnIndex === columns.length - 1
+                    }
                   />
                 ))}
               </Stack>
