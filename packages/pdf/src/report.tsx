@@ -386,7 +386,9 @@ export const getReportHtmlString = (
         : ""
     }
 
-    <p>
+    ${
+      report.projectDescription
+        ? `<p>
       <strong>Le projet pour rappel : </strong><br/>
       ${
         report.projectDescription
@@ -394,7 +396,9 @@ export const getReportHtmlString = (
           .map((s) => s.trim())
           .join("<br/>") ?? ""
       }
-    </p>
+    </p>`
+        : ""
+    }
   
     <p>
       <strong>Contacts utiles : </strong><br/>
@@ -415,10 +419,14 @@ export const getReportHtmlString = (
       </span>
     </p>
   
-    <p>
+    ${
+      furtherInfos.length
+        ? `<p>
         <strong>Bonnes pratiques</strong><br/>
         ${furtherInfos.map((furtherInfo) => `<span>${furtherInfo}</span>`).join("<br/><br/>")}
-    </p>
+    </p>`
+        : ""
+    }
   
     <p>
       <strong>Ce compte rendu ne remplace pas la demande d’autorisation de travaux.</strong>
