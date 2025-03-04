@@ -239,6 +239,7 @@ const DescriptionInput = () => {
         <Flex justifyContent="space-between" w="100%">
           <span>Description</span>
           <SpeechRecorder
+            disabled={isFormDisabled}
             onStart={() => {
               setIsRecording(true);
               valueRef.current = form.watch("projectDescription") ?? "";

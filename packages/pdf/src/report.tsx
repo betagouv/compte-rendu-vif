@@ -432,6 +432,7 @@ const formatServiceInstructeur = (serviceInstructeur: ServiceInstructeurs) => {
 };
 
 const formatPhoneNumber = (phoneNumber: string) => {
+  if (phoneNumber.includes(" ")) return phoneNumber;
   return `0${phoneNumber.slice(0, 1)} ${phoneNumber.slice(1, 3)} ${phoneNumber.slice(3, 5)} ${phoneNumber.slice(
     5,
     7,

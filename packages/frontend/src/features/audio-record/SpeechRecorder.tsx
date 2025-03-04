@@ -1,28 +1,31 @@
 import Button from "@codegouvfr/react-dsfr/Button";
 import { useState, useRef, useEffect } from "react";
 
+const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+
 export const SpeechRecorder = ({
   onInterimText,
   onFinalText,
   onStart,
   onStop,
+  disabled,
 }: {
   onInterimText: (text: string) => void;
   onFinalText: (text: string) => void;
   onStart: () => void;
   onStop: () => void;
+  disabled?: boolean;
 }) => {
   const [isRecording, setIsRecording] = useState(false);
   const [error, setError] = useState("");
   const recognitionRef = useRef<any>(null);
 
-  const isSupported = Boolean((window as any).SpeechRecognition || (window as any).webkitSpeechRecognition);
+  const isSupported = Boolean(SpeechRecognition);
 
   useEffect(() => {
     if (recognitionRef.current) {
       recognitionRef.current.stop();
     }
-    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
 
     if (!SpeechRecognition) {
       setError("Speech recognition not supported");
@@ -105,6 +108,7 @@ export const SpeechRecorder = ({
 
   return (
     <Button
+      disabled={disabled}
       type="button"
       priority={isRecording ? "primary" : "tertiary"}
       iconId="ri-mic-fill"
