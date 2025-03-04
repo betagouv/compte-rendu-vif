@@ -48,7 +48,7 @@ export const MenuButton = () => {
                 <Button
                   className={css({ ml: "16px", mb: "0" })}
                   priority="tertiary"
-                  iconId="fr-icon-account-circle-fill"
+                  iconId="ri-settings-2-fill"
                   data-test-id="settings-menu"
                 >
                   Paramètre

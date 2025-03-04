@@ -1,5 +1,5 @@
 import { cva, cx } from "#styled-system/css";
-import { type BoxProps, Flex, type FlexProps } from "#styled-system/jsx";
+import { type BoxProps, Flex, type FlexProps, styled } from "#styled-system/jsx";
 import Tag from "@codegouvfr/react-dsfr/Tag";
 import { useState } from "react";
 
@@ -57,7 +57,9 @@ export const ChipGroup = ({
 
   return (
     <Flex direction="column" {...props} className={cx(className, "fr-input-group")}>
-      <label className="fr-label">{label}</label>
+      <styled.label className="fr-label" mb="2px">
+        {label}
+      </styled.label>
       {ChipGroupList}
     </Flex>
   );
