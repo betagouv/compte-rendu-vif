@@ -163,29 +163,29 @@ const AppHeader = () => {
                       </p>
                     </div>
                   </div>
-                  <div className="fr-header__service lg:d_unset">
-                    <p className="fr-header__service-title">
-                      {isDesktop ? (
+                  {isDesktop ? (
+                    <div className="fr-header__service lg:d_unset">
+                      <p className="fr-header__service-title">
                         <>
                           Compte-rendu VIF{" "}
                           <Badge as="span" noIcon severity="success">
                             Beta
                           </Badge>
                         </>
-                      ) : undefined}
-                    </p>
-                  </div>
+                      </p>
+                    </div>
+                  ) : undefined}
                 </styled.div>
               </Link>
-              <div
-                className={css({
-                  display: "flex",
-                  alignItems: "center",
-                })}
-              >
-                {isLoggedIn ? <MenuButton /> : null}
-              </div>
             </div>
+          </div>
+          <div
+            className={css({
+              display: "flex",
+              alignItems: "center",
+            })}
+          >
+            {isLoggedIn ? <MenuButton /> : null}
           </div>
         </div>
       </header>

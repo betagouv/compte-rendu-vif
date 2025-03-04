@@ -150,7 +150,7 @@ const ClauseForm = ({
           className={css({
             "&::before": {
               ml: "0 !important",
-              mr: { base: "0 !important", lg: "8px !important" },
+              mr: { base: "8px !important", lg: "8px !important" },
             },
           })}
           disabled={applyDiffMutation.isLoading}
@@ -161,7 +161,7 @@ const ClauseForm = ({
             form: isEditing ? "edit-form" : "add-form",
           }}
         >
-          <styled.span hideBelow="lg">Enregistrer</styled.span>
+          Enregistrer
         </Button>
       </>
     ) : (
@@ -269,7 +269,7 @@ const ClauseTitle = ({
   ...props
 }: { alert?: ReactNode; isNational: boolean; buttons?: ReactNode; isEditing?: boolean } & ModalContentProps) => (
   <MenuTitle {...props} buttons={buttons} alert={alert}>
-    Clauses {isNational ? "nationales" : "départementales"}
+    <styled.span className={css({ pl: "16px" })}>Clauses {isNational ? "nationales" : "départementales"}</styled.span>
   </MenuTitle>
 );
 
@@ -341,14 +341,24 @@ const ClauseEdit = ({ clause }: { clause: ClauseWithIndex }) => {
           nativeInputProps={form.register(`clauses.${clause._index}.value`, { required: true })}
         />
         <Button
+          className={css({ hideBelow: "lg" })}
           iconId="ri-delete-bin-fill"
           disabled={deleteClauseMutation.isLoading}
           onClick={() => deleteClauseMutation.mutate()}
           priority="tertiary"
           type="button"
         >
-          <styled.span hideBelow="lg">Supprimer</styled.span>
+          Supprimer
         </Button>
+        <Button
+          className={css({ hideFrom: "lg" })}
+          iconId="ri-delete-bin-fill"
+          disabled={deleteClauseMutation.isLoading}
+          onClick={() => deleteClauseMutation.mutate()}
+          priority="secondary"
+          type="button"
+          size="small"
+        ></Button>
       </Flex>
 
       <Input

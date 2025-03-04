@@ -155,7 +155,7 @@ export const PDF = () => {
             })
           }
         >
-          Enregistrer
+          <styled.span hideBelow="lg">Enregistrer</styled.span>
         </Button>
       </>
     );
