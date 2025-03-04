@@ -422,6 +422,7 @@ const EditBanner = ({
         top={{ base: "-1px", lg: "-1px" }}
         flexDir="column"
         maxW={{ base: "100vw", lg: "unset" }}
+        height={{ base: "56px", lg: "unset" }}
       >
         <Flex flexDir="row" justifyContent={"center"} w="100%">
           <Flex

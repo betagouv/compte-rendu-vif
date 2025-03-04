@@ -151,8 +151,9 @@ const AppHeader = () => {
               <Link to="/" title="Compte rendu vif">
                 <styled.div
                   className="fr-header__brand"
+                  bgColor={{ base: "transparent", lg: "unset" }}
                   _hover={{
-                    bgColor: "background-raised-grey-hover",
+                    bgColor: { base: "transparent", lg: "background-raised-grey-hover" },
                   }}
                 >
                   <div className="fr-header__brand-top">
