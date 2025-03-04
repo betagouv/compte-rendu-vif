@@ -177,15 +177,15 @@ const AppHeader = () => {
                   ) : undefined}
                 </styled.div>
               </Link>
+              <div
+                className={css({
+                  display: "flex",
+                  alignItems: "center",
+                })}
+              >
+                {isLoggedIn ? <MenuButton /> : null}
+              </div>
             </div>
-          </div>
-          <div
-            className={css({
-              display: "flex",
-              alignItems: "center",
-            })}
-          >
-            {isLoggedIn ? <MenuButton /> : null}
           </div>
         </div>
       </header>
