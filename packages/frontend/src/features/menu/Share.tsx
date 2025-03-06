@@ -102,16 +102,18 @@ export const ShareReport = ({ backButtonOnClick }: { backButtonOnClick: () => vo
         <ManageDelegations coworkers={coworkers ?? []} delegations={delegations ?? []} />
       </Stack>
 
-      <Stack mt="49px" px="20px" color="#757575">
-        <styled.div>Ces personnes vous permettent de créer, modifier et supprimer leurs CR :</styled.div>
-        <styled.ul>
-          {delegatedToMe?.map((delegation) => (
-            <styled.li key={delegation.createdBy}>
-              {(delegation as any).user_delegation_createdByTouser?.name}
-            </styled.li>
-          ))}
-        </styled.ul>
-      </Stack>
+      {delegatedToMe?.length ? (
+        <Stack mt="49px" px="20px" color="#757575">
+          <styled.div>Ces personnes vous permettent de créer, modifier et supprimer leurs CR :</styled.div>
+          <styled.ul>
+            {delegatedToMe?.map((delegation) => (
+              <styled.li key={delegation.createdBy}>
+                {(delegation as any).user_delegation_createdByTouser?.name}
+              </styled.li>
+            ))}
+          </styled.ul>
+        </Stack>
+      ) : null}
     </>
   );
 };

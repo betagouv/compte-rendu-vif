@@ -148,30 +148,36 @@ const AppHeader = () => {
             <div
               className={cx("fr-header__body-row", css({ justifyContent: "space-between", w: "100%", margin: "0" }))}
             >
-              <div className="fr-header__brand ">
-                <div className="fr-header__brand-top">
-                  <div className="fr-header__logo">
-                    <p className="fr-logo" style={{ position: "relative" }}>
-                      <Link to="/" title="Compte rendu vif">
+              <Link to="/" title="Compte rendu vif">
+                <styled.div
+                  className="fr-header__brand"
+                  bgColor={{ base: "transparent", lg: "unset" }}
+                  _hover={{
+                    bgColor: { base: "transparent", lg: "background-raised-grey-hover" },
+                  }}
+                >
+                  <div className="fr-header__brand-top">
+                    <div className="fr-header__logo">
+                      <p className="fr-logo" style={{ position: "relative" }}>
                         Ministère
                         <br /> de la culture
-                      </Link>
-                    </p>
+                      </p>
+                    </div>
                   </div>
-                </div>
-                <div className="fr-header__service lg:d_unset">
-                  <p className="fr-header__service-title">
-                    {isDesktop ? (
-                      <>
-                        Compte-rendu VIF{" "}
-                        <Badge as="span" noIcon severity="success">
-                          Beta
-                        </Badge>
-                      </>
-                    ) : undefined}
-                  </p>
-                </div>
-              </div>
+                  {isDesktop ? (
+                    <div className="fr-header__service lg:d_unset">
+                      <p className="fr-header__service-title">
+                        <>
+                          Compte-rendu VIF{" "}
+                          <Badge as="span" noIcon severity="success">
+                            Beta
+                          </Badge>
+                        </>
+                      </p>
+                    </div>
+                  ) : undefined}
+                </styled.div>
+              </Link>
               <div
                 className={css({
                   display: "flex",

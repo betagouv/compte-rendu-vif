@@ -76,7 +76,11 @@ const Index = () => {
         </Flex>
         <Center justifyContent="center">
           <Button
-            className={css({ mr: { base: "0", lg: "1rem" }, mt: { base: "15px", lg: "0" } })}
+            className={css({
+              mr: { base: "0", lg: "1rem" },
+              mt: { base: "28px", lg: "0" },
+              mb: { base: "-12px", lg: "0" },
+            })}
             iconId="ri-add-line"
             data-testid="create-report"
             nativeButtonProps={{ onClick: () => createReportMutation.mutate() }}
