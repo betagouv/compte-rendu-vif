@@ -26,22 +26,22 @@ export const MenuActions = () => {
       <Stack
         className={css({
           gap: "0",
-          "& > button": {
-            h: "48px",
-            m: 0,
-            px: "16px !important",
-            color: "black",
-            fontSize: "14px",
-            "&:disabled": {
-              color: "text-disabled-grey",
-            },
-          },
         })}
       >
         {actions.map(({ text, onClick, dataTestId }, index) => (
           <Fragment key={text}>
             <Button
-              className={css({ w: "100%" })}
+              className={css({
+                w: "100%",
+                h: "48px",
+                m: 0,
+                px: "16px !important",
+                color: "black",
+                fontSize: "14px",
+                "&:disabled": {
+                  color: "text-disabled-grey",
+                },
+              })}
               data-test-id={dataTestId}
               type="button"
               priority="tertiary no outline"
@@ -52,13 +52,20 @@ export const MenuActions = () => {
             >
               {text}
             </Button>
-            {index < actions.length - 1 && (
-              <Center>
-                <Divider w="calc(100% - 32px)" />
-              </Center>
-            )}
+
+            <Center>
+              <Divider w="calc(100% - 32px)" />
+            </Center>
           </Fragment>
         ))}
+
+        <Button
+          className={css({ w: "100%", mt: "16px" })}
+          linkProps={{ href: "https://compte-rendu-vif.beta.gouv.fr/faq", target: "_blank" }}
+          priority="tertiary no outline"
+        >
+          En savoir plus
+        </Button>
       </Stack>
     </>
   );
