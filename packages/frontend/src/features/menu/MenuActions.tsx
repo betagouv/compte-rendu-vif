@@ -14,7 +14,7 @@ export const MenuActions = () => {
     { text: "Clauses nationales", onClick: () => menuActor.send({ type: "GO_TO_CLAUSES_NAT" }) },
     { text: "Partage des CR", onClick: () => menuActor.send({ type: "GO_TO_SHARE" }) },
     { text: "Services", onClick: () => menuActor.send({ type: "GO_TO_SERVICES" }) },
-    { text: "Assistance technique", onClick: () => menuActor.send({ type: "GO_TO_HELP" }) },
+    { text: "Aide", onClick: () => menuActor.send({ type: "GO_TO_HELP" }) },
     { text: "Se déconnecter", onClick: logout, dataTestId: "logout" },
   ];
 
