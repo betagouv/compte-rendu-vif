@@ -60,7 +60,7 @@ export const MenuActions = () => {
         ))}
 
         <Button
-          className={css({ w: "100%", mt: "16px" })}
+          className={css({ w: "100%", mt: "8px", fontSize: "14px" })}
           linkProps={{ href: "https://compte-rendu-vif.beta.gouv.fr/faq", target: "_blank" }}
           priority="tertiary no outline"
         >
