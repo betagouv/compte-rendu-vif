@@ -178,9 +178,11 @@ const Modal = ({ isOpen, onClose, children }: PropsWithChildren & { isOpen: bool
         onClick={(e) => e.stopPropagation()}
         open={isOpen}
         position="relative"
+        outline="none !important"
         w={{ base: "full", lg: "800px" }}
         h="full"
         m="0"
+        px={{ base: 0, lg: "64px" }}
         bg="white"
         overflowY="auto"
         pointerEvents="auto"
