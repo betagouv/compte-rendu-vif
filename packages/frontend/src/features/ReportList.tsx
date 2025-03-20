@@ -163,16 +163,39 @@ export const ReportList = ({
           {columns.length === 1 ? <Stack w="400px" /> : null}
         </Stack>
       )}
-      <Center w="100%" mt={{ base: "48px", lg: "85px" }} mb={{ base: "48px", lg: "110px" }}>
+      <Center
+        flexDir={{ base: "column", lg: "row" }}
+        w="100%"
+        mt={{ base: "48px", lg: "85px" }}
+        mb={{ base: "48px", lg: "110px" }}
+      >
         {hidePagination || error ? null : (
-          <Pagination
-            count={count === 0 ? 0 : Math.ceil(count! / 20)}
-            getPageLinkProps={(nb) => ({
-              key: `page-${nb}`,
-              onClick: () => setPage!(nb - 1),
-            })}
-            defaultPage={page! + 1}
-          />
+          <>
+            <Pagination
+              count={count === 0 ? 0 : Math.ceil(count! / 20)}
+              getPageLinkProps={(nb) => ({
+                key: `page-${nb}`,
+                onClick: () => setPage!(nb - 1),
+              })}
+              defaultPage={page! + 1}
+            />
+            <Button
+              className={css({
+                ml: { base: "0", lg: "80px" },
+                mt: { base: "40px", lg: "0" },
+                mb: "16px",
+                "&::after": { display: "none !important" },
+              })}
+              priority="secondary"
+              iconId="ri-chat-3-fill"
+              linkProps={{
+                target: "_blank",
+                to: "https://adtk8x51mbw.eu.typeform.com/to/ejUj012R",
+              }}
+            >
+              Je donne mon avis
+            </Button>
+          </>
         )}
       </Center>
     </Stack>
