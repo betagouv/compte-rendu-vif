@@ -1,0 +1,1 @@
+ALTER TABLE udap ADD COLUMN dept_number TEXT;

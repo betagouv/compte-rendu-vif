@@ -149,6 +149,7 @@ export interface Udap {
   city: string | null;
   completeCoords: string | null;
   department: string;
+  dept_number: string | null;
   drac_text: string | null;
   email: string | null;
   id: string;
