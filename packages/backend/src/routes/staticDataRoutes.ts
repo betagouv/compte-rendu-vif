@@ -21,6 +21,7 @@ export const udapTSchema = Type.Object({
   email: Type.Optional(Type.String()),
   marianne_text: Type.Optional(Type.String()),
   drac_text: Type.Optional(Type.String()),
+  dept_number: Type.Optional(Type.String()),
   udap_text: Type.Optional(Type.String()),
   user: Type.Array(
     Type.Object({
