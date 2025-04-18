@@ -82,16 +82,22 @@ export const PDF = () => {
     queryFn: async () => {
       const snapshotQuery = await db.selectFrom("pdf_snapshot").where("report_id", "=", reportId).selectAll().execute();
       const snapshot = snapshotQuery?.[0];
-
       if (!snapshot || !snapshot.report) return null;
 
       try {
         const snapshotReport = JSON.parse(snapshot.report);
-        const diff = getDiff(snapshotReport, {
-          ...report,
-          createdAt: new Date(report!.createdAt!).toISOString(),
-          meetDate: new Date(report!.meetDate!).toISOString(),
-        });
+        const diff = getDiff(
+          {
+            ...snapshotReport,
+            createdAt: new Date(snapshotReport.createdAt).toISOString(),
+            meetDate: new Date(snapshotReport.meetDate).toISOString(),
+          },
+          {
+            ...report,
+            createdAt: new Date(report!.createdAt!).toISOString(),
+            meetDate: new Date(report!.meetDate!).toISOString(),
+          },
+        );
 
         if (Object.keys(diff).length) return null;
 
