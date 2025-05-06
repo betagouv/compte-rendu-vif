@@ -20,6 +20,27 @@ La whitelist n'est pas active dans l'environnement de développement
 
 // TODO quand les pages "Mon UDAP" et "Mon compte" seront livrées
 
+# Infrastructure
+
+```mermaid
+graph TD
+    subgraph VPS
+        Backend[Node.js Backend] <--> DB[(PostgreSQL)]
+        Backend <--> MinIO[Stockage des images sur MinIO]
+        PowerSync <--> DB
+
+        subgraph PowerSync[PowerSync WS Server]
+            MongoDB[(Internal MongoDB)]
+        end
+    end
+
+    Backend <--> S3[Stockage des pdf sur S3]
+    Backend <--> SMTP[Scaleway SMTP]
+
+    Frontend[PWA] <--> Backend
+    Frontend <--> PowerSync
+```
+
 # Framework et dépendances
 
 ## Architecture du repo
@@ -30,26 +51,6 @@ L'application est un monorepo pnpm séparé en 3 packages
   de la génération du pdf
 - `frontend` qui est une PWA conçue avec Vite et ReactTS
 - `pdf` qui contient la logique partagée entre les 2 précédents packages
-
-```mermaid
-graph TD
-    subgraph VPS
-        Backend[Node.js Backend] --> DB[(PostgreSQL)]
-        Backend <--> PowerSync
-        Backend <--> MinIO[MinIO Object Storage]
-        PowerSync <--> DB
-
-        subgraph PowerSync[PowerSync WS Server]
-            MongoDB[(MongoDB)]
-        end
-    end
-
-    MinIO --- S3[Remote S3 Storage]
-    Backend <--> S3
-
-    Frontend[PWA] <--> Backend
-    Frontend <--> PowerSync
-```
 
 ## Base de données et synchronisation
 
