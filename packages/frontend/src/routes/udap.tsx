@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Center, Flex, styled } from "#styled-system/jsx";
+import { Center, Divider, Flex, styled } from "#styled-system/jsx";
 import Input from "@codegouvfr/react-dsfr/Input";
 import { css } from "#styled-system/css";
 import Button from "@codegouvfr/react-dsfr/Button";
@@ -12,6 +12,8 @@ import { useUser } from "../contexts/AuthContext";
 import { EnsureUser } from "#components/EnsureUser";
 import { useMutation } from "@tanstack/react-query";
 import { v4 } from "uuid";
+import { ClauseV2 } from "../../../backend/src/db-types";
+import { addDays } from "date-fns";
 
 const Udap = () => {
   return (
@@ -19,7 +21,12 @@ const Udap = () => {
       <div>lol</div>
       <Center flexDir="column" alignItems="flex-start" w="900px" mt="24px" textAlign="left">
         <UDAPForm />
+        <Divider my="80px" color="background-action-low-blue-france-hover" />
         <ServicesList />
+        <Divider my="80px" color="background-action-low-blue-france-hover" />
+        <Clauses />
+        <Divider my="80px" color="background-action-low-blue-france-hover" />
+        <Activity />
       </Center>
     </Flex>
   );
@@ -244,8 +251,227 @@ const ServiceForm = ({
   );
 };
 
+const Clauses = () => {
+  return (
+    <Flex gap="16px" flexDir="column" w="100%">
+      <Title>3. Clauses départementales</Title>
+      <div>Pensez à faire des contenus courts et explicites pour vos lecteurs.</div>
+
+      <SingleClause clauseKey="contacts-utiles" title="Contacts utiles" />
+      <Divider my="40px" color="background-action-low-blue-france-hover" />
+      <SingleClause clauseKey="bonnes-pratiques" title="Bonnes pratiques" />
+    </Flex>
+  );
+};
+
+const SingleClause = ({ clauseKey, title }: { clauseKey: string; title: string }) => {
+  const [selected, setSelected] = useState<Partial<ClauseV2> | null>(null);
+  const udap = useUser()!.udap;
+
+  const clausesQuery = useDbQuery(
+    db.selectFrom("clause_v2").where("key", "=", clauseKey).where("udap_id", "in", ["ALL", udap.id]).selectAll(),
+  );
+
+  return (
+    <Flex gap="16px" flexDir="column" ml="102px">
+      <div>{title}</div>
+      <Button
+        priority="secondary"
+        iconId="ri-add-line"
+        iconPosition="left"
+        type="button"
+        onClick={() => {
+          setSelected({ key: "contacts-utiles", text: "", udap_id: udap.id, value: "", position: 0 });
+        }}
+      >
+        Ajouter
+      </Button>
+      <div>Sélectionnez pour modifier ou supprimer</div>
+      <Flex gap="8px" flexWrap="wrap">
+        {clausesQuery.isLoading ? (
+          <Spinner />
+        ) : (
+          clausesQuery.data?.map((clause) => (
+            <Chip
+              key={clause.id}
+              onCheckChange={() => setSelected(clause as ClauseV2)}
+              isChecked={selected?.id === clause.id}
+            >
+              {clause.value}
+            </Chip>
+          ))
+        )}
+      </Flex>
+
+      {selected ? <ClauseForm selected={selected} setSelected={setSelected} /> : null}
+    </Flex>
+  );
+};
+
+const ClauseForm = ({
+  selected,
+  setSelected,
+}: {
+  selected: Partial<ClauseV2> | null;
+  setSelected: (item: Partial<ClauseV2> | null) => void;
+}) => {
+  if (!selected) return null;
+
+  const isNew = !selected.id;
+
+  const createOrEditClauseMutation = useMutation({
+    mutationFn: async (clause: Partial<ClauseV2>) => {
+      if (!clause.udap_id) throw new Error("udap_id is required");
+      if (!clause.key) throw new Error("key is required");
+
+      if (clause.id) {
+        await db.updateTable("clause_v2").set(clause).where("id", "=", clause.id).execute();
+      } else {
+        await db
+          .insertInto("clause_v2")
+          .values({ ...clause, id: v4() })
+          .execute();
+      }
+
+      setSelected(null);
+    },
+  });
+
+  const deleteClauseMutation = useMutation({
+    mutationFn: async (clause: Partial<ClauseV2>) => {
+      if (!clause.id) throw new Error("id is required");
+      await db.deleteFrom("clause_v2").where("id", "=", clause.id).execute();
+      setSelected(null);
+    },
+  });
+
+  return (
+    <Flex gap="16px" flexDir="column" w="100%">
+      <Input
+        className={css({ w: "100%" })}
+        label="Intitulé clause"
+        nativeInputProps={{
+          value: selected.value ?? "",
+          onChange: (e) => setSelected({ ...selected, value: e.target.value }),
+        }}
+      />
+
+      <Flex gap="24px" w="100%">
+        <Input
+          className={css({ w: "100%" })}
+          label="Texte"
+          nativeInputProps={{
+            value: selected.text ?? "",
+            onChange: (e) => setSelected({ ...selected, text: e.target.value }),
+          }}
+        />
+      </Flex>
+
+      <Flex gap="16px" justifyContent="flex-end" w="100%">
+        {!isNew ? (
+          <Button
+            className={css({
+              color: "background-flat-error",
+              boxShadow: "inset 0 0 0 1px var(--colors-background-flat-error)",
+            })}
+            priority="secondary"
+            type="button"
+            onClick={() => deleteClauseMutation.mutate(selected)}
+          >
+            Supprimer
+          </Button>
+        ) : null}
+        <Button
+          iconId="ri-save-3-line"
+          iconPosition="left"
+          type="button"
+          onClick={() => {
+            createOrEditClauseMutation.mutate(selected);
+          }}
+        >
+          {isNew ? "Créer" : "Modifier"}
+        </Button>
+      </Flex>
+    </Flex>
+  );
+};
+
+const Activity = () => {
+  const user = useUser();
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(addDays(new Date(), 7));
+
+  const query = useDbQuery(
+    db
+      .selectFrom("report")
+      .where("udap_id", "=", user.udap.id)
+      .where("createdBy", "=", user.id)
+      .where("createdAt", ">=", startDate.toISOString())
+      .where("createdAt", "<=", endDate.toISOString())
+      .where("pdf", "is not", null)
+      .select((eb) => [eb.fn.count("id").as("count")]),
+  );
+
+  const udapQuery = useDbQuery(
+    db
+      .selectFrom("report")
+      .where("udap_id", "=", user.udap.id)
+      .where("createdAt", ">=", startDate.toISOString())
+      .where("createdAt", "<=", endDate.toISOString())
+      .where("pdf", "is not", null)
+      .select((eb) => [eb.fn.count("id").as("count")]),
+  );
+
+  return (
+    <Flex gap="16px" flexDir="column" w="100%">
+      <Title>4. Rapport d'activité</Title>
+      <Flex gap="16px">
+        <Input
+          label="Date de début"
+          nativeInputProps={{
+            type: "date",
+            value: startDate.toISOString().split("T")[0],
+            onChange: (e) => {
+              if (new Date(e.target.value) > endDate) {
+                setEndDate(new Date(e.target.value));
+              }
+
+              setStartDate(new Date(e.target.value));
+            },
+          }}
+        />
+        <Input
+          label="Date de fin"
+          nativeInputProps={{
+            type: "date",
+            value: endDate.toISOString().split("T")[0],
+            onChange: (e) => {
+              if (new Date(e.target.value) < startDate) {
+                setStartDate(new Date(e.target.value));
+              }
+
+              setEndDate(new Date(e.target.value));
+            },
+          }}
+        />
+      </Flex>
+
+      <Flex gap="8px" w="100%">
+        <Center flex="1" flexDir="column" alignItems="center" h="215px" bg="green-emeraude-975-75">
+          <div>CR envoyés par {user.name} :</div>
+          <div>{query.isLoading ? <Spinner /> : <div>{query.data?.[0]?.count}</div>}</div>
+        </Center>
+        <Center flex="1" flexDir="column" alignItems="center" h="215px" bg="green-emeraude-975-75">
+          <div>CR envoyés par l'UDAP :</div>
+          <div>{query.isLoading ? <Spinner /> : <div>{udapQuery.data?.[0]?.count}</div>}</div>
+        </Center>
+      </Flex>
+    </Flex>
+  );
+};
+
 const Title = ({ children }: { children: React.ReactNode }) => {
-  return <styled.h2>{children}</styled.h2>;
+  return <styled.h2 mb="0">{children}</styled.h2>;
 };
 
 export const Route = createFileRoute("/udap")({
