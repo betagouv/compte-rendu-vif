@@ -150,14 +150,16 @@ const UDAPForm = () => {
       {/* TODO: set this */}
       {/* <Input className={css({ w: "100%" })} label="Lien où déposer l'avant projet" hintText="Figurera dans le CR" /> */}
 
-      <Alert
-        className={css({ mb: "16px" })}
-        small
-        description=""
-        closable={false}
-        severity="success"
-        title="Vos modifications ont bien été prises en compte"
-      />
+      {saveUdapMutation.isSuccess ? (
+        <Alert
+          className={css({ mb: "16px" })}
+          small
+          description=""
+          closable={false}
+          severity="success"
+          title="Vos modifications ont bien été prises en compte"
+        />
+      ) : null}
 
       <Flex gap="16px" justifyContent="flex-end" w="100%">
         <Button
