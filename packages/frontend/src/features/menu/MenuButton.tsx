@@ -34,6 +34,15 @@ export const MenuButton = () => {
         {isDesktop ? (
           <Flex alignItems="center">
             <Status className={css({ display: "flex", alignItems: "center", fontSize: "10px" })} />
+
+            <Button
+              className={css({ ml: "16px", mb: "0" })}
+              priority="tertiary"
+              linkProps={{ to: "/udap" }}
+              iconId="fr-icon-france-fill"
+            >
+              UDAP
+            </Button>
             <Popover.Root
               positioning={{ placement: "bottom-end" }}
               modal

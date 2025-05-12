@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Center, Divider, Flex, styled } from "#styled-system/jsx";
 import Input from "@codegouvfr/react-dsfr/Input";
+import Summary from "@codegouvfr/react-dsfr/Summary";
 import { css } from "#styled-system/css";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { useState } from "react";
@@ -8,17 +9,30 @@ import { db, useDbQuery } from "../db/db";
 import { Spinner } from "#components/Spinner";
 import { ServiceInstructeurs } from "../db/AppSchema";
 import { Chip } from "#components/Chip";
-import { useUser } from "../contexts/AuthContext";
+import { useRefreshUdap, useUser } from "../contexts/AuthContext";
 import { EnsureUser } from "#components/EnsureUser";
 import { useMutation } from "@tanstack/react-query";
 import { v4 } from "uuid";
 import { ClauseV2 } from "../../../backend/src/db-types";
 import { addDays } from "date-fns";
+import { Udap } from "../db/AppSchema";
+import { omit } from "pastable";
+import Alert from "@codegouvfr/react-dsfr/Alert";
 
-const Udap = () => {
+const UdapPage = () => {
   return (
-    <Flex justifyContent="center" alignItems="center" w="100%">
-      <div>lol</div>
+    <Flex gap="80px" justifyContent="center" alignItems="flex-start" w="100%" mb="40px">
+      <Summary
+        className={css({
+          bgColor: "transparent !important",
+        })}
+        links={[
+          { linkProps: { href: "#udap-informations" }, text: "Informations UDAP" },
+          { linkProps: { href: "#services-instructeurs" }, text: "Services instructeurs" },
+          { linkProps: { href: "#clauses-departementales" }, text: "Clauses départementales" },
+          { linkProps: { href: "#rapport-activite" }, text: "Rapport d'activité" },
+        ]}
+      />
       <Center flexDir="column" alignItems="flex-start" w="900px" mt="24px" textAlign="left">
         <UDAPForm />
         <Divider my="80px" color="background-action-low-blue-france-hover" />
@@ -32,32 +46,131 @@ const Udap = () => {
   );
 };
 
+const replaceCarriageReturn = (text: string) => {
+  return text.replaceAll("\n", " ");
+};
+
+const format = {
+  marianne_text: (text: string) => {
+    const [firstLine, ...rest] = text.split(" ");
+    const threeWords = rest.slice(0, 3).join(" ");
+    const restText = rest.slice(3).join(" ");
+
+    return `${firstLine}\n${threeWords}\n${restText}`;
+  },
+  drac_text: (text: string) => {
+    const splitted = text.split(" ");
+    const fourWords = splitted.slice(0, 4).join(" ");
+    const restText = splitted.slice(4).join(" ");
+    return `${fourWords}\n${restText}`;
+  },
+  udap_text: (text: string) => {
+    const splitted = text.split(" ");
+    const threeWords = splitted.slice(0, 3).join(" ");
+    const restText = splitted.slice(3).join(" ");
+    return `${threeWords}\n${restText}`;
+  },
+};
+
 const UDAPForm = () => {
+  const udap = useUser().udap;
+  const [udapData, setUdapData] = useState({
+    ...udap,
+    marianne_text: replaceCarriageReturn(udap.marianne_text ?? ""),
+    drac_text: replaceCarriageReturn(udap.drac_text ?? ""),
+    udap_text: replaceCarriageReturn(udap.udap_text ?? ""),
+  });
+
+  const refreshUdapMutation = useRefreshUdap();
+
+  const saveUdapMutation = useMutation({
+    mutationFn: async (udapData: Partial<Udap>) => {
+      const value = {
+        ...omit(udapData, ["id"]),
+        marianne_text: format.marianne_text(udapData.marianne_text ?? ""),
+        drac_text: format.drac_text(udapData.drac_text ?? ""),
+        udap_text: format.udap_text(udapData.udap_text ?? ""),
+      };
+
+      await db.updateTable("udap").set(value).where("id", "=", udap.id).execute();
+      refreshUdapMutation.mutate();
+    },
+  });
+
   return (
-    <Flex gap="16px" flexDir="column" w="100%">
-      <Title>1. Informations UDAP</Title>
+    <Flex gap="0px" flexDir="column" w="100%">
+      <Title anchor="udap-informations">1. Informations UDAP</Title>
       <Input
-        className={css({ w: "100%" })}
+        className={css({ w: "100%", mt: "16px" })}
         label="Intitulé marianne préfet"
         hintText="Ex : Préfet de la région Nouvelle-Aquitaine"
+        nativeInputProps={{
+          value: udapData.marianne_text ?? "",
+          onChange: (e) => setUdapData({ ...udapData, marianne_text: e.target.value }),
+        }}
       />
       <Input
         className={css({ w: "100%" })}
         label="Intitulé DRAC"
         hintText="Ex : Direction régionale des affaires culturelles de Nouvelle-Aquitaine"
+        nativeInputProps={{
+          value: udapData.drac_text ?? "",
+          onChange: (e) => setUdapData({ ...udapData, drac_text: e.target.value }),
+        }}
       />
       <Input
         className={css({ w: "100%" })}
         label="Intitulé UDAP"
         hintText="Ex : Unité départementale de l'architecture et du patrimoine des Deux-Sèvres"
+        nativeInputProps={{
+          value: udapData.udap_text ?? "",
+          onChange: (e) => setUdapData({ ...udapData, udap_text: e.target.value }),
+        }}
       />
 
       <Flex gap="24px" w="100%">
-        <Input className={css({ w: "100%" })} label="Téléphone UDAP" />
-        <Input className={css({ w: "100%" })} label="Courriel UDAP" />
+        <Input
+          className={css({ w: "100%" })}
+          label="Téléphone UDAP"
+          nativeInputProps={{
+            value: udapData.phone ?? "",
+            onChange: (e) => setUdapData({ ...udapData, phone: e.target.value }),
+          }}
+        />
+        <Input
+          className={css({ w: "100%" })}
+          label="Courriel UDAP"
+          nativeInputProps={{
+            value: udapData.email ?? "",
+            onChange: (e) => setUdapData({ ...udapData, email: e.target.value }),
+          }}
+        />
       </Flex>
 
-      <Input className={css({ w: "100%" })} label="Lien où déposer l'avant projet" hintText="Figurera dans le CR" />
+      {/* TODO: set this */}
+      {/* <Input className={css({ w: "100%" })} label="Lien où déposer l'avant projet" hintText="Figurera dans le CR" /> */}
+
+      <Alert
+        className={css({ mb: "16px" })}
+        small
+        description=""
+        closable={false}
+        severity="success"
+        title="Vos modifications ont bien été prises en compte"
+      />
+
+      <Flex gap="16px" justifyContent="flex-end" w="100%">
+        <Button
+          iconId="ri-save-3-line"
+          iconPosition="left"
+          type="button"
+          onClick={() => {
+            saveUdapMutation.mutate(udapData);
+          }}
+        >
+          Enregistrer
+        </Button>
+      </Flex>
     </Flex>
   );
 };
@@ -69,7 +182,7 @@ const ServicesList = () => {
 
   return (
     <Flex gap="16px" flexDir="column" w="100%">
-      <Title>2. Services instructeurs</Title>
+      <Title anchor="services-instructeurs">2. Services instructeurs</Title>
       <Flex gap="16px" alignItems="center">
         <div>
           <Button
@@ -128,15 +241,23 @@ const ServicePicker = ({
   );
 
   return (
-    <Flex flexDir="column">
+    <Flex gap="24px" flexDir="column" w="100%">
       {Object.entries(byFirstLetter)
         .sort(([a], [b]) => a.localeCompare(b))
         .map(([letter, items]) => (
           <Flex key={letter} gap="8px">
-            <div>{letter}</div>
-            <Flex>
+            <styled.div w="34px" minW="34px" mt="2px" color="text-action-high-blue-france" fontSize="24px">
+              {letter}
+            </styled.div>
+            <Flex gap="8px" flexWrap="wrap">
               {items.map((item) => (
-                <Chip onCheckChange={() => setSelected(item)} isChecked={selected?.id === item.id}>
+                <Chip
+                  className={css({
+                    whiteSpace: "nowrap",
+                  })}
+                  onCheckChange={() => setSelected(item)}
+                  isChecked={selected?.id === item.id}
+                >
                   {item.short_name}
                 </Chip>
               ))}
@@ -254,11 +375,11 @@ const ServiceForm = ({
 const Clauses = () => {
   return (
     <Flex gap="16px" flexDir="column" w="100%">
-      <Title>3. Clauses départementales</Title>
+      <Title anchor="clauses-departementales">3. Clauses départementales</Title>
       <div>Pensez à faire des contenus courts et explicites pour vos lecteurs.</div>
 
       <SingleClause clauseKey="contacts-utiles" title="Contacts utiles" />
-      <Divider my="40px" color="background-action-low-blue-france-hover" />
+      <Divider my="40px" ml="102px" color="background-action-low-blue-france-hover" />
       <SingleClause clauseKey="bonnes-pratiques" title="Bonnes pratiques" />
     </Flex>
   );
@@ -274,7 +395,7 @@ const SingleClause = ({ clauseKey, title }: { clauseKey: string; title: string }
 
   return (
     <Flex gap="16px" flexDir="column" ml="102px">
-      <div>{title}</div>
+      <styled.div fontSize="20px">{title}</styled.div>
       <Button
         priority="secondary"
         iconId="ri-add-line"
@@ -291,15 +412,17 @@ const SingleClause = ({ clauseKey, title }: { clauseKey: string; title: string }
         {clausesQuery.isLoading ? (
           <Spinner />
         ) : (
-          clausesQuery.data?.map((clause) => (
-            <Chip
-              key={clause.id}
-              onCheckChange={() => setSelected(clause as ClauseV2)}
-              isChecked={selected?.id === clause.id}
-            >
-              {clause.value}
-            </Chip>
-          ))
+          clausesQuery.data
+            ?.map((c) => ({ ...c, text: c.text?.replaceAll("\\n", "\n") ?? "" }))
+            .map((clause) => (
+              <Chip
+                key={clause.id}
+                onCheckChange={() => setSelected(clause as ClauseV2)}
+                isChecked={selected?.id === clause.id}
+              >
+                {clause.value}
+              </Chip>
+            ))
         )}
       </Flex>
 
@@ -360,10 +483,12 @@ const ClauseForm = ({
         <Input
           className={css({ w: "100%" })}
           label="Texte"
-          nativeInputProps={{
+          nativeTextAreaProps={{
+            rows: 5,
             value: selected.text ?? "",
             onChange: (e) => setSelected({ ...selected, text: e.target.value }),
           }}
+          textArea
         />
       </Flex>
 
@@ -424,7 +549,7 @@ const Activity = () => {
 
   return (
     <Flex gap="16px" flexDir="column" w="100%">
-      <Title>4. Rapport d'activité</Title>
+      <Title anchor="rapport-activite">4. Rapport d'activité</Title>
       <Flex gap="16px">
         <Input
           label="Date de début"
@@ -470,14 +595,18 @@ const Activity = () => {
   );
 };
 
-const Title = ({ children }: { children: React.ReactNode }) => {
-  return <styled.h2 mb="0">{children}</styled.h2>;
+const Title = ({ children, anchor }: { children: React.ReactNode; anchor?: string }) => {
+  return (
+    <styled.h3 id={anchor} mb="0">
+      {children}
+    </styled.h3>
+  );
 };
 
 export const Route = createFileRoute("/udap")({
   component: () => (
     <EnsureUser>
-      <Udap />
+      <UdapPage />
     </EnsureUser>
   ),
 });

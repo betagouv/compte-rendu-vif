@@ -1,9 +1,10 @@
 import { type PropsWithChildren, createContext, useContext, useEffect, useState } from "react";
 import { safeParseLocalStorage } from "../utils";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { api, setToken, type RouterOutputs } from "../api";
 import { menuActor } from "../features/menu/menuMachine";
 import { Udap } from "../db/AppSchema";
+import { db, useDbQuery } from "../db/db";
 
 const initialAuth = safeParseLocalStorage("crvif/auth");
 if (!initialAuth) localStorage.setItem("crvif/version", "1");
@@ -96,6 +97,23 @@ export const useLogout = () => {
 export const useUser = () => {
   const { user } = useContext(AuthContext);
   return user as AuthContextProps["user"] & { udap: Udap };
+};
+
+export const useRefreshUdap = () => {
+  const { setData, ...data } = useContext(AuthContext);
+  const user = data.user;
+
+  const refreshUdapMutation = useMutation({
+    mutationFn: async () => {
+      if (!user?.udap) return;
+      const resp = await db.selectFrom("udap").selectAll().where("id", "=", user.udap_id).executeTakeFirst();
+
+      if (!resp) return;
+      setData({ ...data, user: { ...user, udap: resp } });
+    },
+  });
+
+  return refreshUdapMutation;
 };
 
 type AuthContextProps = Partial<RouterOutputs<"/api/login">> & {

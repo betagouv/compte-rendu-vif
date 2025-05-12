@@ -10,10 +10,8 @@ export const MenuActions = () => {
   const logout = useLogout();
 
   const actions = [
-    { text: "Clauses départementales", onClick: () => menuActor.send({ type: "GO_TO_CLAUSES_DEPT" }) },
     { text: "Clauses nationales", onClick: () => menuActor.send({ type: "GO_TO_CLAUSES_NAT" }) },
     { text: "Partage des CR", onClick: () => menuActor.send({ type: "GO_TO_SHARE" }) },
-    { text: "Services", onClick: () => menuActor.send({ type: "GO_TO_SERVICES" }) },
     { text: "Aide", onClick: () => menuActor.send({ type: "GO_TO_HELP" }) },
     { text: "Se déconnecter", onClick: logout, dataTestId: "logout" },
   ];

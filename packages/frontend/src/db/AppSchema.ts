@@ -27,6 +27,7 @@ const report = new Table({
 
 const udap = new Table({
   department: column.text,
+  dept_number: column.text,
   completeCoords: column.text,
   visible: column.integer,
   name: column.text,
