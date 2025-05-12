@@ -74,13 +74,15 @@ export const Chip = ({
   children,
   onCheckChange,
   isChecked,
+  className,
 }: BoxProps & {
   isChecked?: boolean;
+  className?: string;
   onCheckChange: (value: boolean) => void;
 }) => {
   return (
     <Tag
-      // className={styles}
+      className={className}
       pressed={isChecked}
       nativeButtonProps={{
         onClick: () => onCheckChange(!isChecked),
