@@ -10,13 +10,11 @@ import { useIsDesktop } from "../../hooks/useIsDesktop";
 import { ClauseMenu } from "./ClauseMenu";
 import { HelpMenu } from "./HelpMenu";
 import { MenuActions } from "./MenuActions";
-import { ShareReport } from "./Share";
 
 import { ReportSearch } from "#components/ReportSearch.tsx";
 import { useRouter } from "@tanstack/react-router";
 import { menuActor, MenuStates } from "./menuMachine";
 import { ModalCloseButton } from "./MenuTitle";
-import { ServicesMenu } from "./ServicesMenu";
 
 export const MenuButton = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -104,7 +102,6 @@ export const MenuButton = () => {
           </Center>
         )}
       </Flex>
-      <MenuModal />
       <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
     </>
   );
@@ -113,10 +110,7 @@ export const MenuButton = () => {
 const modalContents: Record<MenuStates, (props: ModalContentProps) => ReactNode> = {
   main: (_props) => <MenuActions />,
   help: (_props) => <HelpMenu />,
-  clausesDepartementales: (props) => <ClauseMenu isNational={false} {...props} />,
-  clausesNationales: (props) => <ClauseMenu isNational {...props} />,
-  share: (props) => <ShareReport {...props} />,
-  services: (_props) => <ServicesMenu />,
+  clauses: (_props) => <ClauseMenu />,
   closed: () => null,
 };
 

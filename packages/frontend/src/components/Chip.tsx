@@ -1,7 +1,9 @@
-import { cva, cx } from "#styled-system/css";
+import { css, cva, cx } from "#styled-system/css";
 import { type BoxProps, Flex, type FlexProps, styled } from "#styled-system/jsx";
+import Button from "@codegouvfr/react-dsfr/Button";
 import Tag from "@codegouvfr/react-dsfr/Tag";
 import { useState } from "react";
+import { menuActor } from "../features/menu/menuMachine";
 
 export const ChipGroup = ({
   options,
@@ -10,6 +12,7 @@ export const ChipGroup = ({
   canBeEmpty = true,
   value,
   onChange,
+  clauseId,
   className,
   disabled,
   ...props
@@ -19,6 +22,7 @@ export const ChipGroup = ({
   value?: string[];
   label?: string;
   canBeEmpty?: boolean;
+  clauseId?: string;
   disabled?: boolean;
   onChange: (values: string[]) => void;
 } & Omit<FlexProps, "onChange">) => {
@@ -57,8 +61,17 @@ export const ChipGroup = ({
 
   return (
     <Flex direction="column" {...props} className={cx(className, "fr-input-group")}>
-      <styled.label className="fr-label" mb="2px">
-        {label}
+      <styled.label className={cx(css({ display: "flex", alignItems: "center" }), "fr-label")} mb="2px">
+        {label}{" "}
+        {clauseId ? (
+          <Button
+            iconId="ri-question-line"
+            type="button"
+            onClick={() => menuActor.send({ type: "GO_TO_CLAUSES", clause: { label, clauseId } })}
+            priority="tertiary no outline"
+          />
+        ) : null}
+        {/* // <styled.span className="ri-question-line"></styled.span> */}
       </styled.label>
       {ChipGroupList}
     </Flex>

@@ -22,6 +22,7 @@ export const DecisionChips = ({ disabled }: { disabled?: boolean }) => {
       disabled={disabled}
       onChange={(values) => form.setValue("decision", values?.[0])}
       label="Décision"
+      clauseId="decision"
     />
   );
 };

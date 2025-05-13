@@ -23,6 +23,7 @@ export const FurtherInfoChips = (props: FlexProps & { disabled?: boolean }) => {
       {...props}
       onChange={(values) => form.setValue("furtherInformation", values.join(","))}
       label="Bonnes pratiques"
+      clauseId="bonnes-pratiques"
     />
   );
 };

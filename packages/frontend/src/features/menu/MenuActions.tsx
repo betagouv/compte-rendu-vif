@@ -20,7 +20,6 @@ export const MenuActions = () => {
   const actions = [
     { text: "Mon compte", onClick: () => navigateAndClose({ to: "/account" }), mobileOnly: true },
     { text: "UDAP", onClick: () => navigateAndClose({ to: "/udap" }), mobileOnly: true },
-    { text: "Clauses nationales", onClick: () => menuActor.send({ type: "GO_TO_CLAUSES_NAT" }) },
     { text: "Aide", onClick: () => menuActor.send({ type: "GO_TO_HELP" }) },
     { text: "Se déconnecter", onClick: logout, dataTestId: "logout" },
   ];

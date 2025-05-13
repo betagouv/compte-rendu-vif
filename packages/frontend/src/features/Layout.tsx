@@ -190,6 +190,7 @@ const AppHeader = () => {
           </div>
         </div>
       </header>
+      <MenuModal />
     </>
   );
 };
