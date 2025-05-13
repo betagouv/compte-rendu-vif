@@ -113,6 +113,7 @@ const suggested_email = new Table({
 const user_settings = new Table({
   user_id: column.text,
   default_emails: column.text,
+  udap_id: column.text,
 });
 
 export const AppSchema = new Schema({

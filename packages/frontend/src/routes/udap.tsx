@@ -4,17 +4,17 @@ import Input from "@codegouvfr/react-dsfr/Input";
 import Summary from "@codegouvfr/react-dsfr/Summary";
 import { css } from "#styled-system/css";
 import Button from "@codegouvfr/react-dsfr/Button";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { db, useDbQuery } from "../db/db";
 import { Spinner } from "#components/Spinner";
 import { ServiceInstructeurs } from "../db/AppSchema";
-import { Chip } from "#components/Chip";
+import { Chip, ControlledChip } from "#components/Chip";
 import { useRefreshUdap, useUser } from "../contexts/AuthContext";
 import { EnsureUser } from "#components/EnsureUser";
 import { useMutation } from "@tanstack/react-query";
 import { v4 } from "uuid";
 import { ClauseV2 } from "../../../backend/src/db-types";
-import { addDays } from "date-fns";
+import { addDays, endOfYear, startOfYear } from "date-fns";
 import { Udap } from "../db/AppSchema";
 import { omit } from "pastable";
 import Alert from "@codegouvfr/react-dsfr/Alert";
@@ -44,7 +44,7 @@ const UdapPage = () => {
       <Center
         flexDir="column"
         alignItems="flex-start"
-        maxW="100vw"
+        maxW="900px"
         mt="24px"
         px={{ base: "16px", lg: "0" }}
         textAlign="left"
@@ -540,8 +540,8 @@ const ClauseForm = ({
 
 const Activity = () => {
   const user = useUser();
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(addDays(new Date(), 7));
+  const [startDate, setStartDate] = useState(datePresets[0].startDate);
+  const [endDate, setEndDate] = useState(datePresets[0].endDate);
 
   const query = useDbQuery(
     db
@@ -567,46 +567,115 @@ const Activity = () => {
   return (
     <Flex gap="16px" flexDir="column" w="100%">
       <Title anchor="rapport-activite">4. Rapport d'activité</Title>
-      <Flex gap={{ base: 0, lg: "16px" }} flexDir={{ base: "column", lg: "row" }}>
-        <Input
-          label="Date de début"
-          nativeInputProps={{
-            type: "date",
-            value: startDate.toISOString().split("T")[0],
-            onChange: (e) => {
-              if (new Date(e.target.value) > endDate) {
-                setEndDate(new Date(e.target.value));
-              }
 
-              setStartDate(new Date(e.target.value));
-            },
-          }}
-        />
-        <Input
-          label="Date de fin"
-          nativeInputProps={{
-            type: "date",
-            value: endDate.toISOString().split("T")[0],
-            onChange: (e) => {
-              if (new Date(e.target.value) < startDate) {
-                setStartDate(new Date(e.target.value));
-              }
-
-              setEndDate(new Date(e.target.value));
-            },
-          }}
-        />
-      </Flex>
+      <DateRangePicker startDate={startDate} setStartDate={setStartDate} endDate={endDate} setEndDate={setEndDate} />
 
       <Flex gap="8px" flexDir={{ base: "column", lg: "row" }} w="100%">
-        <Center flexDir="column" alignItems="center" w="100%" h="215px" textAlign="center" bg="green-emeraude-975-75">
+        <Center
+          flexDir="column"
+          alignItems="center"
+          borderRadius="5px"
+          w="100%"
+          h="215px"
+          textAlign="center"
+          bg="green-emeraude-975-75"
+        >
           <div>CR envoyés par {user.name} :</div>
           <div>{query.isLoading ? <Spinner /> : <div>{query.data?.[0]?.count}</div>}</div>
         </Center>
-        <Center flexDir="column" alignItems="center" w="100%" h="215px" textAlign="center" bg="green-emeraude-975-75">
+        <Center
+          flexDir="column"
+          alignItems="center"
+          borderRadius="5px"
+          w="100%"
+          h="215px"
+          textAlign="center"
+          bg="green-emeraude-975-75"
+        >
           <div>CR envoyés par l'UDAP :</div>
           <div>{query.isLoading ? <Spinner /> : <div>{udapQuery.data?.[0]?.count}</div>}</div>
         </Center>
+      </Flex>
+    </Flex>
+  );
+};
+
+export const datePresets = [
+  {
+    label: "Dernier mois",
+    startDate: new Date(new Date().setDate(new Date().getDate() - 30)),
+    endDate: new Date(),
+  },
+  {
+    label: "3 derniers mois",
+    startDate: new Date(new Date().setDate(new Date().getDate() - 90)),
+    endDate: new Date(),
+  },
+  {
+    label: "Année " + new Date().getFullYear(),
+    startDate: startOfYear(new Date()),
+    endDate: endOfYear(new Date()),
+  },
+];
+
+export const DateRangePicker = ({
+  startDate,
+  setStartDate,
+  endDate,
+  setEndDate,
+}: {
+  startDate: Date;
+  setStartDate: (date: Date) => void;
+  endDate: Date;
+  setEndDate: (date: Date) => void;
+}) => {
+  const isPresetSelected = (preset: (typeof datePresets)[0]) => {
+    return startDate.getTime() === preset.startDate.getTime() && endDate.getTime() === preset.endDate.getTime();
+  };
+
+  return (
+    <Flex gap={{ base: 0, lg: "16px" }} flexDir={{ base: "column", lg: "row" }}>
+      <Input
+        label="Date de début"
+        nativeInputProps={{
+          type: "date",
+          value: startDate.toISOString().split("T")[0],
+          onChange: (e) => {
+            if (new Date(e.target.value) > endDate) {
+              setEndDate(new Date(e.target.value));
+            }
+            setStartDate(new Date(e.target.value));
+          },
+        }}
+      />
+      <Input
+        label="Date de fin"
+        nativeInputProps={{
+          type: "date",
+          value: endDate.toISOString().split("T")[0],
+          onChange: (e) => {
+            if (new Date(e.target.value) < startDate) {
+              setStartDate(new Date(e.target.value));
+            }
+            setEndDate(new Date(e.target.value));
+          },
+        }}
+      />
+
+      <Flex gap="8px" flexDir="row" alignItems="flex-end">
+        {datePresets.map((preset) => (
+          <styled.div key={preset.label} mb="1.5rem">
+            <ControlledChip
+              onClick={() => {
+                setStartDate(preset.startDate);
+                setEndDate(preset.endDate);
+              }}
+              isChecked={isPresetSelected(preset)}
+            >
+              {preset.label}
+            </ControlledChip>
+          </styled.div>
+        ))}
       </Flex>
     </Flex>
   );

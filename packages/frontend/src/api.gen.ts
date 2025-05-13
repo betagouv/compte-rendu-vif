@@ -78,6 +78,7 @@ export namespace Endpoints {
       email?: string | undefined;
       marianne_text?: string | undefined;
       drac_text?: string | undefined;
+      dept_number?: string | undefined;
       udap_text?: string | undefined;
     }>;
   };
@@ -121,6 +122,14 @@ export namespace Endpoints {
     };
     response: Partial<{}>;
   };
+  export type get_Apipdfreports = {
+    method: "GET";
+    path: "/api/pdf/reports";
+    parameters: {
+      query: { reportIds: Array<string> };
+    };
+    response: Partial<{}>;
+  };
   export type post_ApiuploadData = {
     method: "POST";
     path: "/api/upload-data";
@@ -157,6 +166,7 @@ export type EndpointByMethod = {
     "/api/udaps": Endpoints.get_Apiudaps;
     "/api/upload/picture": Endpoints.get_Apiuploadpicture;
     "/api/pdf/report": Endpoints.get_Apipdfreport;
+    "/api/pdf/reports": Endpoints.get_Apipdfreports;
   };
 };
 

@@ -15,6 +15,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Route as rootRoute } from './routes/__root'
 import { Route as UdapImport } from './routes/udap'
 import { Route as LoginImport } from './routes/login'
+import { Route as AccountImport } from './routes/account'
 import { Route as IndexImport } from './routes/index'
 import { Route as ResetPasswordLinkImport } from './routes/reset-password.$link'
 import { Route as PdfReportIdImport } from './routes/pdf.$reportId'
@@ -39,6 +40,11 @@ const UdapRoute = UdapImport.update({
 
 const LoginRoute = LoginImport.update({
   path: '/login',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AccountRoute = AccountImport.update({
+  path: '/account',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -77,6 +83,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
+    '/account': {
+      preLoaderRoute: typeof AccountImport
+      parentRoute: typeof rootRoute
+    }
     '/login': {
       preLoaderRoute: typeof LoginImport
       parentRoute: typeof rootRoute
@@ -112,6 +122,7 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren([
   IndexRoute,
+  AccountRoute,
   LoginRoute,
   UdapRoute,
   SignupLazyRoute,

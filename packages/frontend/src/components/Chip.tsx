@@ -84,6 +84,7 @@ export const Chip = ({
     <Tag
       className={className}
       pressed={isChecked}
+      aria-pressed={isChecked}
       nativeButtonProps={{
         onClick: () => onCheckChange(!isChecked),
         type: "button",
@@ -91,5 +92,29 @@ export const Chip = ({
     >
       {children}
     </Tag>
+  );
+};
+
+export const ControlledChip = ({
+  children,
+  onClick,
+  isChecked,
+}: {
+  children: React.ReactNode;
+  onClick: () => void;
+  isChecked?: boolean;
+}) => {
+  return (
+    <button
+      className="fr-tag"
+      onClick={(e) => {
+        e.preventDefault();
+        onClick();
+      }}
+      type="button"
+      aria-pressed={isChecked ? true : undefined}
+    >
+      {children}
+    </button>
   );
 };

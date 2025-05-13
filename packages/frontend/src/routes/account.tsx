@@ -1,0 +1,290 @@
+import { EnsureUser } from "#components/EnsureUser.tsx";
+import { createFileRoute } from "@tanstack/react-router";
+import { Center, Divider, Flex, styled } from "#styled-system/jsx";
+import Summary from "@codegouvfr/react-dsfr/Summary";
+import Download from "@codegouvfr/react-dsfr/Download";
+import { css } from "#styled-system/css";
+import { useUserSettings } from "../hooks/useUserSettings";
+import { useMutation } from "@tanstack/react-query";
+import { db, useDbQuery } from "../db/db";
+import { useUser } from "../contexts/AuthContext";
+import { v4 } from "uuid";
+import { Spinner } from "#components/Spinner";
+import { EmailInput } from "../components/EmailInput";
+import { Delegation, User } from "../db/AppSchema";
+import ToggleSwitch from "@codegouvfr/react-dsfr/ToggleSwitch";
+import { Chip } from "#components/Chip";
+import Alert from "@codegouvfr/react-dsfr/Alert";
+import { api } from "../api";
+import JSZip from "jszip";
+import { downloadFile } from "../utils";
+import { datePresets, DateRangePicker } from "./udap";
+import { useState } from "react";
+import { format, subDays } from "date-fns";
+
+const AccountPage = () => {
+  return (
+    <Flex
+      gap={{ base: "0", lg: "80px" }}
+      flexDir={{ base: "column", lg: "row" }}
+      justifyContent="center"
+      alignItems="flex-start"
+      w="100%"
+      mb="40px"
+    >
+      <Summary
+        className={css({
+          bgColor: "transparent !important",
+        })}
+        links={[
+          { linkProps: { href: "#default-recipient" }, text: "Destinataire par défaut" },
+          { linkProps: { href: "#share" }, text: "Droit d'édition partagé" },
+          // { linkProps: { href: "#clauses-departementales" }, text: "Clauses départementales" },
+          // { linkProps: { href: "#rapport-activite" }, text: "Rapport d'activité" },
+        ]}
+      />
+      <Divider hideFrom="lg" w="90%" ml="5%" color="background-action-low-blue-france-hover" />
+      <Center
+        flex="1"
+        flexDir="column"
+        alignItems="flex-start"
+        maxW="900px"
+        mt="24px"
+        px={{ base: "16px", lg: "0" }}
+        textAlign="left"
+      >
+        <DefaultRecipient />
+        <Divider my="80px" color="background-action-low-blue-france-hover" />
+        <Share />
+        <Divider my="80px" color="background-action-low-blue-france-hover" />
+        <DownloadCRs />
+      </Center>
+    </Flex>
+  );
+};
+
+const DefaultRecipient = () => {
+  const user = useUser()!;
+  const { userSettings, isLoading: isUserSettingsLoading, existing } = useUserSettings();
+
+  const selectedEmails =
+    userSettings.default_emails
+      ?.split(",")
+      .map((email: string) => email.trim())
+      .filter(Boolean) ?? [];
+
+  const saveEmailsMutation = useMutation(async (emails: string[]) => {
+    const doesUserSettingExist =
+      existing ||
+      !!(await db.selectFrom("user_settings").where("user_id", "=", user.id).selectAll().executeTakeFirst());
+
+    if (doesUserSettingExist) {
+      return db
+        .updateTable("user_settings")
+        .set({ default_emails: emails.join(",") })
+        .where("user_id", "=", user.id)
+        .execute();
+    }
+
+    return db
+      .insertInto("user_settings")
+      .values({ id: v4(), user_id: user.id, default_emails: emails.join(",") })
+      .execute();
+  });
+
+  return (
+    <Flex gap="0px" flexDir="column" w="100%">
+      <Title anchor="default-recipient">1. Destinataire par défaut</Title>
+      <styled.div>
+        {isUserSettingsLoading ? (
+          <Spinner size={100} />
+        ) : (
+          <EmailInput
+            label="Courriel en copie par défaut :"
+            hintText="Pour tous mes CRs envoyés"
+            value={selectedEmails}
+            onValueChange={(e) => saveEmailsMutation.mutate(e)}
+          />
+        )}
+      </styled.div>
+    </Flex>
+  );
+};
+
+const Share = () => {
+  const user = useUser()!;
+
+  const coworkersQuery = useDbQuery(
+    db.selectFrom("user").where("udap_id", "=", user.udap_id).where("id", "!=", user.id).selectAll(),
+  );
+
+  const delegationsQuery = useDbQuery(db.selectFrom("delegation").where("createdBy", "=", user.id).selectAll());
+
+  const delegatedToMeQuery = useDbQuery(
+    db
+      .selectFrom("delegation")
+      .where("delegatedTo", "=", user.id)
+      .innerJoin("user", "delegation.createdBy", "user.id")
+      .selectAll(["delegation"])
+      .select(["user.name as createdByName"]),
+  );
+
+  const coworkers = coworkersQuery.data ?? [];
+  const delegations = delegationsQuery.data ?? [];
+  const delegatedToMe = delegatedToMeQuery.data ?? [];
+
+  return (
+    <Flex gap="0px" flexDir="column" w="100%">
+      <Title anchor="share">2. Droit d'édition partagé</Title>
+      <styled.div>
+        <styled.div mb="16px">Ces personnes peuvent créer, modifier et supprimer vos CR : </styled.div>
+        <ManageDelegations coworkers={coworkers} delegations={delegations} />
+        {delegatedToMe.length ? (
+          // @ts-ignore alert needs a title ?
+          <Alert
+            className={css({
+              mt: "16px",
+            })}
+            small={false}
+            closable={false}
+            severity="info"
+            description={
+              delegatedToMe.map((user) => user.createdByName).join(", ") +
+              ` vous autorise${delegatedToMe.length > 1 ? "nt" : ""} à créer, modifier et supprimer ${delegatedToMe.length > 1 ? "leurs" : "ses"} CRs.`
+            }
+          />
+        ) : null}
+      </styled.div>
+    </Flex>
+  );
+};
+
+const ManageDelegations = ({ coworkers, delegations }: { coworkers: User[]; delegations: Delegation[] }) => {
+  const user = useUser()!;
+
+  const createMutation = useMutation((delegation: Omit<Delegation, "id">) =>
+    db
+      .insertInto("delegation")
+      .values({ ...delegation, id: v4() })
+      .execute(),
+  );
+  const removeMutation = useMutation((delegation: Delegation) =>
+    db.deleteFrom("delegation").where("id", "=", delegation.id).execute(),
+  );
+
+  return (
+    <Flex gap="8px" flexWrap="wrap">
+      {coworkers.map((coworker) => {
+        const delegation = delegations.find((del) => del.delegatedTo === coworker.id);
+        return (
+          <Chip
+            className={css({
+              whiteSpace: "nowrap",
+            })}
+            key={coworker.id}
+            onCheckChange={(e) =>
+              e
+                ? createMutation.mutate({ createdBy: user.id, delegatedTo: coworker.id })
+                : removeMutation.mutate(delegation!)
+            }
+            isChecked={!!delegation}
+          >
+            {coworker.name!}
+          </Chip>
+        );
+      })}
+    </Flex>
+  );
+};
+
+const DownloadCRs = () => {
+  const [startDate, setStartDate] = useState(datePresets[0].startDate);
+  const [endDate, setEndDate] = useState(datePresets[0].endDate);
+
+  const user = useUser()!;
+
+  const downloadMutation = useMutation(async (ids: string[]) => {
+    if (!ids?.length) {
+      return;
+    }
+    const zip = new JSZip();
+
+    for (const id of ids) {
+      const pdf = await api.get("/api/pdf/report", { query: { reportId: id } });
+      zip.file(`${id}.pdf`, pdf as string, { base64: true });
+    }
+
+    const content = await zip.generateAsync({ type: "blob" });
+    const url = URL.createObjectURL(content);
+    downloadFile(url, getZipFilename(ids, startDate, endDate));
+    URL.revokeObjectURL(url);
+  });
+
+  const crs = useDbQuery(
+    db
+      .selectFrom("report")
+      .where("createdBy", "=", user.id)
+      .where("udap_id", "=", user.udap_id)
+      .where("pdf", "is not", null)
+      .where("disabled", "!=", 1)
+      .where("createdAt", ">=", startDate.toISOString())
+      .where("createdAt", "<=", endDate.toISOString())
+      .select(["id"]),
+  );
+
+  const ids = crs.data?.map((cr) => cr.id) ?? [];
+
+  return (
+    <Flex gap="0px" flexDir="column" w="100%">
+      <Title anchor="share">3. Télécharger mes CR</Title>
+      <DateRangePicker startDate={startDate} endDate={endDate} setStartDate={setStartDate} setEndDate={setEndDate} />
+      <styled.div mb="16px">
+        Pour une expérience optimale, nous vous invitons à <b>privilégier le mode Wi-Fi</b> pour le téléchargement de
+        vos comptes-rendus dont le poids peut être important.
+      </styled.div>
+      <styled.div px="24px" pt="18px" pb="4px" bgColor="background-alt-blue-france">
+        <Download
+          label={getZipFilename(ids, startDate, endDate)}
+          details={`ZIP - ${ids.length} compte${ids.length > 1 ? "s" : ""} rendu${ids.length > 1 ? "s" : ""}`}
+          linkProps={{ onClick: () => downloadMutation.mutate(ids) }}
+        />
+      </styled.div>
+      {/* <styled.button
+        onClick={() => {
+          if (!crs.data?.length) {
+            alert("Aucun CR à télécharger");
+            return;
+          }
+          downloadMutation.mutate(crs.data?.map((cr) => cr.id));
+        }}
+      >
+        Télécharger mes CRs
+      </styled.button> */}
+    </Flex>
+  );
+};
+
+const getZipFilename = (ids: string[], startDate: Date, endDate: Date) => {
+  const formatDate = (date: Date) => format(date, "ddMMyy");
+
+  const start = formatDate(startDate);
+  const end = formatDate(endDate);
+
+  return `mes-CR-${start}-${end}.zip`;
+};
+
+const Title = ({ children, anchor }: { children: React.ReactNode; anchor?: string }) => {
+  return (
+    <styled.h3 id={anchor} mb="24px">
+      {children}
+    </styled.h3>
+  );
+};
+
+export const Route = createFileRoute("/account")({
+  component: () => (
+    <EnsureUser>
+      <AccountPage />
+    </EnsureUser>
+  ),
+});
