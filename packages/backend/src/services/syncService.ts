@@ -8,7 +8,7 @@ const debug = makeDebug("sync-service");
 
 const Nullable = <T extends TSchema>(schema: T) => Type.Optional(Type.Union([schema, Type.Null()]));
 
-const blackListedTables = ["user", "internal_user"];
+const blackListedTables = ["internal_user"];
 
 export class SyncService {
   async applyCrud(operation: Static<typeof crudTSchema>, userId: string) {

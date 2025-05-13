@@ -38,7 +38,7 @@ export const MenuButton = () => {
             <Button
               className={css({ ml: "16px", mb: "0" })}
               priority="tertiary no outline"
-              linkProps={{ to: "/udap" }}
+              linkProps={{ to: "/account" }}
               iconId="fr-icon-account-circle-fill"
             >
               Mon compte

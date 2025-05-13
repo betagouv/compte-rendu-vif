@@ -61,6 +61,14 @@ export namespace Endpoints {
     };
     response: { message: string };
   };
+  export type post_ApichangeUdap = {
+    method: "POST";
+    path: "/api/change-udap";
+    parameters: {
+      body: { udap_id: string };
+    };
+    response: { message: string };
+  };
   export type get_Apiudaps = {
     method: "GET";
     path: "/api/udaps";
@@ -122,14 +130,6 @@ export namespace Endpoints {
     };
     response: Partial<{}>;
   };
-  export type get_Apipdfreports = {
-    method: "GET";
-    path: "/api/pdf/reports";
-    parameters: {
-      query: { reportIds: Array<string> };
-    };
-    response: Partial<{}>;
-  };
   export type post_ApiuploadData = {
     method: "POST";
     path: "/api/upload-data";
@@ -156,6 +156,7 @@ export type EndpointByMethod = {
     "/api/login": Endpoints.post_Apilogin;
     "/api/send-reset-password": Endpoints.post_ApisendResetPassword;
     "/api/reset-password": Endpoints.post_ApiresetPassword;
+    "/api/change-udap": Endpoints.post_ApichangeUdap;
     "/api/upload/image": Endpoints.post_Apiuploadimage;
     "/api/upload/picture/{pictureId}/lines": Endpoints.post_ApiuploadpicturePictureIdlines;
     "/api/pdf/report": Endpoints.post_Apipdfreport;
@@ -166,7 +167,6 @@ export type EndpointByMethod = {
     "/api/udaps": Endpoints.get_Apiudaps;
     "/api/upload/picture": Endpoints.get_Apiuploadpicture;
     "/api/pdf/report": Endpoints.get_Apipdfreport;
-    "/api/pdf/reports": Endpoints.get_Apipdfreports;
   };
 };
 
