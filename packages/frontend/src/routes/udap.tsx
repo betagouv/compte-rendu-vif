@@ -21,7 +21,14 @@ import Alert from "@codegouvfr/react-dsfr/Alert";
 
 const UdapPage = () => {
   return (
-    <Flex gap="80px" justifyContent="center" alignItems="flex-start" w="100%" mb="40px">
+    <Flex
+      gap={{ base: "0", lg: "80px" }}
+      flexDir={{ base: "column", lg: "row" }}
+      justifyContent="center"
+      alignItems="flex-start"
+      w="100%"
+      mb="40px"
+    >
       <Summary
         className={css({
           bgColor: "transparent !important",
@@ -33,7 +40,15 @@ const UdapPage = () => {
           { linkProps: { href: "#rapport-activite" }, text: "Rapport d'activité" },
         ]}
       />
-      <Center flexDir="column" alignItems="flex-start" w="900px" mt="24px" textAlign="left">
+      <Divider hideFrom="lg" w="90%" ml="5%" color="background-action-low-blue-france-hover" />
+      <Center
+        flexDir="column"
+        alignItems="flex-start"
+        maxW="100vw"
+        mt="24px"
+        px={{ base: "16px", lg: "0" }}
+        textAlign="left"
+      >
         <UDAPForm />
         <Divider my="80px" color="background-action-low-blue-france-hover" />
         <ServicesList />
@@ -128,7 +143,7 @@ const UDAPForm = () => {
         }}
       />
 
-      <Flex gap="24px" w="100%">
+      <Flex gap={{ base: 0, lg: "24px" }} flexDir={{ base: "column", lg: "row" }} w="100%">
         <Input
           className={css({ w: "100%" })}
           label="Téléphone UDAP"
@@ -161,7 +176,7 @@ const UDAPForm = () => {
         />
       ) : null}
 
-      <Flex gap="16px" justifyContent="flex-end" w="100%">
+      <Flex gap="16px" justifyContent="flex-end" w="100%" mt="24px">
         <Button
           iconId="ri-save-3-line"
           iconPosition="left"
@@ -381,7 +396,7 @@ const Clauses = () => {
       <div>Pensez à faire des contenus courts et explicites pour vos lecteurs.</div>
 
       <SingleClause clauseKey="contacts-utiles" title="Contacts utiles" />
-      <Divider my="40px" ml="102px" color="background-action-low-blue-france-hover" />
+      <Divider w="calc(100% - 104px)" my="40px" ml="102px" color="background-action-low-blue-france-hover" />
       <SingleClause clauseKey="bonnes-pratiques" title="Bonnes pratiques" />
     </Flex>
   );
@@ -552,7 +567,7 @@ const Activity = () => {
   return (
     <Flex gap="16px" flexDir="column" w="100%">
       <Title anchor="rapport-activite">4. Rapport d'activité</Title>
-      <Flex gap="16px">
+      <Flex gap={{ base: 0, lg: "16px" }} flexDir={{ base: "column", lg: "row" }}>
         <Input
           label="Date de début"
           nativeInputProps={{
@@ -583,12 +598,12 @@ const Activity = () => {
         />
       </Flex>
 
-      <Flex gap="8px" w="100%">
-        <Center flex="1" flexDir="column" alignItems="center" h="215px" bg="green-emeraude-975-75">
+      <Flex gap="8px" flexDir={{ base: "column", lg: "row" }} w="100%">
+        <Center flexDir="column" alignItems="center" w="100%" h="215px" textAlign="center" bg="green-emeraude-975-75">
           <div>CR envoyés par {user.name} :</div>
           <div>{query.isLoading ? <Spinner /> : <div>{query.data?.[0]?.count}</div>}</div>
         </Center>
-        <Center flex="1" flexDir="column" alignItems="center" h="215px" bg="green-emeraude-975-75">
+        <Center flexDir="column" alignItems="center" w="100%" h="215px" textAlign="center" bg="green-emeraude-975-75">
           <div>CR envoyés par l'UDAP :</div>
           <div>{query.isLoading ? <Spinner /> : <div>{udapQuery.data?.[0]?.count}</div>}</div>
         </Center>
