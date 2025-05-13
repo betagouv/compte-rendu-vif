@@ -57,11 +57,11 @@ const AccountPage = () => {
         textAlign="left"
       >
         <DefaultRecipient />
-        <Divider my="80px" color="background-action-low-blue-france-hover" />
+        <Divider my={{ base: "48px", lg: "80px" }} color="background-action-low-blue-france-hover" />
         <Share />
-        <Divider my="80px" color="background-action-low-blue-france-hover" />
+        <Divider my={{ base: "48px", lg: "80px" }} color="background-action-low-blue-france-hover" />
         <DownloadCRs />
-        <Divider my="80px" color="background-action-low-blue-france-hover" />
+        <Divider my={{ base: "48px", lg: "80px" }} color="background-action-low-blue-france-hover" />
         <ChangeUDAP />
       </Center>
     </Flex>
@@ -286,7 +286,7 @@ const ChangeUDAP = () => {
       body: { udap_id },
     });
 
-    setData({ ...data, user: { ...data.user, udap_id, udap } });
+    setData({ ...data, user: { ...data.user, udap_id, udap } as any });
   });
 
   return (
@@ -313,7 +313,7 @@ const ChangeUDAP = () => {
         }
       />
 
-      <Flex gap="16px" flexDir={{ base: "column", lg: "row" }} w="100%">
+      <Flex gap={{ base: 0, lg: "16px" }} flexDir={{ base: "column", lg: "row" }} w="100%">
         <Input label="Mon UDAP" disabled nativeInputProps={{ value: udap.name! }} />
         <Select
           label="Nouvelle UDAP"

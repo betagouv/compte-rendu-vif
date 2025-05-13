@@ -50,11 +50,11 @@ const UdapPage = () => {
         textAlign="left"
       >
         <UDAPForm />
-        <Divider my="80px" color="background-action-low-blue-france-hover" />
+        <Divider my={{ base: "48px", lg: "80px" }} color="background-action-low-blue-france-hover" />
         <ServicesList />
-        <Divider my="80px" color="background-action-low-blue-france-hover" />
+        <Divider my={{ base: "48px", lg: "80px" }} color="background-action-low-blue-france-hover" />
         <Clauses />
-        <Divider my="80px" color="background-action-low-blue-france-hover" />
+        <Divider my={{ base: "48px", lg: "80px" }} color="background-action-low-blue-france-hover" />
         <Activity />
       </Center>
     </Flex>
@@ -396,7 +396,12 @@ const Clauses = () => {
       <div>Pensez à faire des contenus courts et explicites pour vos lecteurs.</div>
 
       <SingleClause clauseKey="contacts-utiles" title="Contacts utiles" />
-      <Divider w="calc(100% - 104px)" my="40px" ml="102px" color="background-action-low-blue-france-hover" />
+      <Divider
+        w={{ base: "100%", lg: "calc(100% - 104px)" }}
+        my={{ base: "20px", lg: "40px" }}
+        ml={{ base: "0", lg: "102px" }}
+        color="background-action-low-blue-france-hover"
+      />
       <SingleClause clauseKey="bonnes-pratiques" title="Bonnes pratiques" />
     </Flex>
   );
@@ -411,7 +416,7 @@ const SingleClause = ({ clauseKey, title }: { clauseKey: string; title: string }
   );
 
   return (
-    <Flex gap="16px" flexDir="column" ml="102px">
+    <Flex gap="16px" flexDir="column" ml={{ base: 0, lg: "102px" }}>
       <styled.div fontSize="20px">{title}</styled.div>
       <Button
         priority="secondary"

@@ -94,7 +94,7 @@ export const MenuButton = () => {
             ) : null}
             {/* @ts-ignore */}
             <Button
-              iconId="fr-icon-account-circle-fill"
+              iconId="ri-settings-2-fill"
               priority="tertiary no outline"
               nativeButtonProps={{
                 onClick: () => menuActor.send({ type: "OPEN" }),
