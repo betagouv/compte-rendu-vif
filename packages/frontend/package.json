@@ -80,6 +80,7 @@
     "#components/*": "./src/components/*"
   },
   "devDependencies": {
+    "@csstools/postcss-cascade-layers": "^5.0.1",
     "@pandabox/unplugin": "^0.0.1",
     "@pandacss/dev": "^0.36.1",
     "@park-ui/panda-preset": "^0.36.1",
