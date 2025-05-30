@@ -424,7 +424,7 @@ const SingleClause = ({ clauseKey, title }: { clauseKey: string; title: string }
         iconPosition="left"
         type="button"
         onClick={() => {
-          setSelected({ key: "contacts-utiles", text: "", udap_id: udap.id, value: "", position: 0 });
+          setSelected({ key: clauseKey, text: "", udap_id: udap.id, value: "", position: 0 });
         }}
       >
         Ajouter
