@@ -1,6 +1,6 @@
 import { EnsureUser } from "#components/EnsureUser.tsx";
 import { createFileRoute } from "@tanstack/react-router";
-import { Center, Divider, Flex, styled } from "#styled-system/jsx";
+import { Center, Divider, Flex, Stack, styled } from "#styled-system/jsx";
 import Summary from "@codegouvfr/react-dsfr/Summary";
 import Download from "@codegouvfr/react-dsfr/Download";
 import { css } from "#styled-system/css";
@@ -18,14 +18,22 @@ import Alert from "@codegouvfr/react-dsfr/Alert";
 import { api } from "../api";
 import JSZip from "jszip";
 import { downloadFile } from "../utils";
-import { datePresets, DateRangePicker } from "./udap";
+import { datePresets, DateRangePicker, SuccessAlert } from "./udap";
 import { useContext, useState } from "react";
 import { format, subDays } from "date-fns";
 import Input from "@codegouvfr/react-dsfr/Input";
 import Select from "@codegouvfr/react-dsfr/Select";
 import Button from "@codegouvfr/react-dsfr/Button";
+import Breadcrumb from "@codegouvfr/react-dsfr/Breadcrumb";
 
 const AccountPage = () => {
+  const [isSuccess, setIsSuccess] = useState(false);
+
+  const onSuccess = () => {
+    setIsSuccess(true);
+    document.getElementById("root")?.scrollTo(0, 0);
+  };
+
   return (
     <Flex
       gap={{ base: "0", lg: "80px" }}
@@ -35,34 +43,46 @@ const AccountPage = () => {
       w="100%"
       mb="40px"
     >
-      <Summary
-        className={css({
-          bgColor: "transparent !important",
-        })}
-        links={[
-          { linkProps: { href: "#default-recipient" }, text: "Destinataire par défaut" },
-          { linkProps: { href: "#share" }, text: "Droit d'édition partagé" },
-          { linkProps: { href: "#download" }, text: "Télécharger mes CR" },
-          { linkProps: { href: "#change-udap" }, text: "Changer d'UDAP" },
-        ]}
-      />
+      <Stack>
+        <Breadcrumb
+          className={css({ mt: "32px", marginBottom: "0 !important", pl: "calc(2rem + 8px)" })}
+          homeLinkProps={{
+            to: "/",
+          }}
+          segments={[]}
+          currentPageLabel="UDAP"
+        />
+        <Summary
+          className={css({
+            bgColor: "transparent !important",
+          })}
+          links={[
+            { linkProps: { href: "#default-recipient" }, text: "Destinataire par défaut" },
+            { linkProps: { href: "#share" }, text: "Droit d'édition partagé" },
+            { linkProps: { href: "#download" }, text: "Télécharger mes CR" },
+            { linkProps: { href: "#change-udap" }, text: "Changer d'UDAP" },
+          ]}
+        />
+      </Stack>
       <Divider hideFrom="lg" w="90%" ml="5%" color="background-action-low-blue-france-hover" />
       <Center
         flex="1"
         flexDir="column"
         alignItems="flex-start"
         maxW="900px"
-        mt="24px"
+        mt="32px"
         px={{ base: "16px", lg: "0" }}
         textAlign="left"
       >
+        <styled.h1 mb="32px">Mon compte</styled.h1>
+        {isSuccess ? <SuccessAlert /> : null}
         <DefaultRecipient />
         <Divider my={{ base: "48px", lg: "80px" }} color="background-action-low-blue-france-hover" />
         <Share />
         <Divider my={{ base: "48px", lg: "80px" }} color="background-action-low-blue-france-hover" />
         <DownloadCRs />
         <Divider my={{ base: "48px", lg: "80px" }} color="background-action-low-blue-france-hover" />
-        <ChangeUDAP />
+        <ChangeUDAP onSuccess={onSuccess} />
       </Center>
     </Flex>
   );
@@ -258,7 +278,7 @@ const DownloadCRs = () => {
   );
 };
 
-const ChangeUDAP = () => {
+const ChangeUDAP = ({ onSuccess }) => {
   const user = useUser()!;
 
   const udap = user.udap;
@@ -287,6 +307,7 @@ const ChangeUDAP = () => {
     });
 
     setData({ ...data, user: { ...data.user, udap_id, udap } as any });
+    onSuccess?.();
   });
 
   return (
@@ -369,7 +390,7 @@ const getZipFilename = (startDate: Date, endDate: Date) => {
 
 const Title = ({ children, anchor }: { children: React.ReactNode; anchor?: string }) => {
   return (
-    <styled.h3 id={anchor} mb="24px">
+    <styled.h3 id={anchor} mb="24px" fontSize="26px">
       {children}
     </styled.h3>
   );

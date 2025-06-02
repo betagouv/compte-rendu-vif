@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Center, Divider, Flex, styled } from "#styled-system/jsx";
+import { Center, Divider, Flex, Stack, styled } from "#styled-system/jsx";
 import Input from "@codegouvfr/react-dsfr/Input";
 import Summary from "@codegouvfr/react-dsfr/Summary";
 import { css } from "#styled-system/css";
@@ -18,8 +18,16 @@ import { addDays, endOfYear, startOfYear } from "date-fns";
 import { Udap } from "../db/AppSchema";
 import { omit } from "pastable";
 import Alert from "@codegouvfr/react-dsfr/Alert";
+import Breadcrumb from "@codegouvfr/react-dsfr/Breadcrumb";
 
 const UdapPage = () => {
+  const [isSuccess, setIsSuccess] = useState(false);
+
+  const onSuccess = () => {
+    setIsSuccess(true);
+    document.getElementById("root")?.scrollTo(0, 0);
+  };
+
   return (
     <Flex
       gap={{ base: "0", lg: "80px" }}
@@ -29,27 +37,39 @@ const UdapPage = () => {
       w="100%"
       mb="40px"
     >
-      <Summary
-        className={css({
-          bgColor: "transparent !important",
-        })}
-        links={[
-          { linkProps: { href: "#udap-informations" }, text: "Informations UDAP" },
-          { linkProps: { href: "#services-instructeurs" }, text: "Services instructeurs" },
-          { linkProps: { href: "#clauses-departementales" }, text: "Clauses départementales" },
-          { linkProps: { href: "#rapport-activite" }, text: "Rapport d'activité" },
-        ]}
-      />
+      <Stack>
+        <Breadcrumb
+          className={css({ mt: "32px", marginBottom: "0 !important", pl: "calc(2rem + 8px)" })}
+          homeLinkProps={{
+            to: "/",
+          }}
+          segments={[]}
+          currentPageLabel="UDAP"
+        />
+        <Summary
+          className={css({
+            bgColor: "transparent !important",
+          })}
+          links={[
+            { linkProps: { href: "#udap-informations" }, text: "Informations UDAP" },
+            { linkProps: { href: "#services-instructeurs" }, text: "Services instructeurs" },
+            { linkProps: { href: "#clauses-departementales" }, text: "Clauses départementales" },
+            { linkProps: { href: "#rapport-activite" }, text: "Rapport d'activité" },
+          ]}
+        />
+      </Stack>
       <Divider hideFrom="lg" w="90%" ml="5%" color="background-action-low-blue-france-hover" />
       <Center
         flexDir="column"
         alignItems="flex-start"
         maxW="900px"
-        mt="24px"
+        mt="32px"
         px={{ base: "16px", lg: "0" }}
         textAlign="left"
       >
-        <UDAPForm />
+        <styled.h1 mb="32px">UDAP</styled.h1>
+        {isSuccess ? <SuccessAlert /> : null}
+        <UDAPForm onSuccess={onSuccess} />
         <Divider my={{ base: "48px", lg: "80px" }} color="background-action-low-blue-france-hover" />
         <ServicesList />
         <Divider my={{ base: "48px", lg: "80px" }} color="background-action-low-blue-france-hover" />
@@ -87,7 +107,7 @@ const format = {
   },
 };
 
-const UDAPForm = () => {
+const UDAPForm = ({ onSuccess }) => {
   const udap = useUser().udap;
   const [udapData, setUdapData] = useState({
     ...udap,
@@ -108,7 +128,8 @@ const UDAPForm = () => {
       };
 
       await db.updateTable("udap").set(value).where("id", "=", udap.id).execute();
-      refreshUdapMutation.mutate();
+      await refreshUdapMutation.mutateAsync();
+      onSuccess?.();
     },
   });
 
@@ -164,17 +185,6 @@ const UDAPForm = () => {
 
       {/* TODO: set this */}
       {/* <Input className={css({ w: "100%" })} label="Lien où déposer l'avant projet" hintText="Figurera dans le CR" /> */}
-
-      {saveUdapMutation.isSuccess ? (
-        <Alert
-          className={css({ mb: "16px" })}
-          small
-          description=""
-          closable={false}
-          severity="success"
-          title="Vos modifications ont bien été prises en compte"
-        />
-      ) : null}
 
       <Flex gap="16px" justifyContent="flex-end" w="100%" mt="24px">
         <Button
@@ -688,7 +698,7 @@ export const DateRangePicker = ({
 
 const Title = ({ children, anchor }: { children: React.ReactNode; anchor?: string }) => {
   return (
-    <styled.h3 id={anchor} mb="0">
+    <styled.h3 id={anchor} mb="0" fontSize="26px">
       {children}
     </styled.h3>
   );
@@ -701,3 +711,15 @@ export const Route = createFileRoute("/udap")({
     </EnsureUser>
   ),
 });
+
+export const SuccessAlert = () => {
+  return (
+    <Alert
+      className={css({ mb: "32px" })}
+      severity="success"
+      closable={false}
+      small={false}
+      description={"Vos modifications ont bien été prises en compte."}
+    ></Alert>
+  );
+};
