@@ -1,6 +1,6 @@
 module.exports = {
   plugins: {
     "@pandacss/dev/postcss": {},
-    "@csstools/postcss-cascade-layers": {},
+    "./remove-layers-plugin.cjs": {},
   },
 };
