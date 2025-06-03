@@ -25,7 +25,6 @@ export const menuMachine = setup({
       on: {
         TOGGLE: "closed",
         CLOSE: "closed",
-        GO_TO_HELP: "help",
       },
     },
     help: {
@@ -45,6 +44,7 @@ export const menuMachine = setup({
     },
   },
   on: {
+    GO_TO_HELP: ".help",
     GO_TO_CLAUSES: {
       target: ".clauses",
       actions: assign({

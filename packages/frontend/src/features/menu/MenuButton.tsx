@@ -6,7 +6,7 @@ import { Button } from "@codegouvfr/react-dsfr/Button";
 import { PropsWithChildren, ReactNode, useEffect, useState } from "react";
 
 import { useSelector } from "@xstate/react";
-import { useIsDesktop } from "../../hooks/useIsDesktop";
+import { useIsDesktop, useIsXL } from "../../hooks/useIsDesktop";
 import { ClauseMenu } from "./ClauseMenu";
 import { HelpMenu } from "./HelpMenu";
 import { MenuActions } from "./MenuActions";
@@ -15,12 +15,14 @@ import { ReportSearch } from "#components/ReportSearch.tsx";
 import { useRouter } from "@tanstack/react-router";
 import { menuActor, MenuStates } from "./menuMachine";
 import { ModalCloseButton } from "./MenuTitle";
+import { useLogout } from "../../contexts/AuthContext";
 
 export const MenuButton = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-
+  const logout = useLogout();
   const menu = useSelector(menuActor, (state) => state.value);
   const isDesktop = useIsDesktop();
+  const isXL = useIsXL();
 
   const isPopoverOpen = menu === "main" && isDesktop;
 
@@ -31,25 +33,70 @@ export const MenuButton = () => {
       <Flex alignItems={{ base: "unset", lg: "center" }} h="100%">
         {isDesktop ? (
           <Flex alignItems="center">
-            <Status className={css({ display: "flex", alignItems: "center", fontSize: "10px" })} />
+            {/* <Status className={css({ display: "flex", alignItems: "center", fontSize: "10px" })} /> */}
 
             <Button
-              className={css({ ml: "16px", mb: "0" })}
+              className={css({
+                ml: "16px",
+                mb: "0",
+                textWrap: "nowrap",
+                "&::before": {
+                  mr: isXL ? undefined : "0 !important",
+                },
+              })}
+              size={!isXL ? "large" : "medium"}
               priority="tertiary no outline"
               linkProps={{ to: "/account" }}
               iconId="fr-icon-account-circle-fill"
             >
-              Mon compte
+              <styled.span hideBelow="xl">Mon compte</styled.span>
             </Button>
             <Button
-              className={css({ ml: "16px", mb: "0" })}
+              className={css({
+                ml: "16px",
+                mb: "0",
+                "&::before": {
+                  mr: isXL ? undefined : "0 !important",
+                },
+              })}
+              size={!isXL ? "large" : "medium"}
               priority="tertiary no outline"
               linkProps={{ to: "/udap" }}
               iconId="fr-icon-france-fill"
             >
-              UDAP
+              <styled.span hideBelow="xl">UDAP</styled.span>
             </Button>
-            <Popover.Root
+            <Button
+              className={css({
+                ml: "16px",
+                mb: "0",
+                "&::before": {
+                  mr: isXL ? undefined : "0 !important",
+                },
+              })}
+              size={!isXL ? "large" : "medium"}
+              priority="tertiary no outline"
+              onClick={() => menuActor.send({ type: "GO_TO_HELP" })}
+              iconId="fr-icon-info-fill"
+            >
+              <styled.span hideBelow="xl">Aide</styled.span>
+            </Button>
+            <Button
+              className={css({
+                ml: "16px",
+                mb: "0",
+                "&::before": {
+                  mr: isXL ? undefined : "0 !important",
+                },
+              })}
+              size={!isXL ? "large" : "medium"}
+              onClick={() => logout()}
+              priority="tertiary no outline"
+              iconId="fr-icon-logout-box-r-line"
+            >
+              <styled.span hideBelow="xl">Déconnexion</styled.span>
+            </Button>
+            {/* <Popover.Root
               positioning={{ placement: "bottom-end" }}
               modal
               open={isPopoverOpen}
@@ -74,7 +121,7 @@ export const MenuButton = () => {
                   <MenuActions />
                 </Popover.Content>
               </Popover.Positioner>
-            </Popover.Root>
+            </Popover.Root> */}
           </Flex>
         ) : (
           <Center zIndex="1250" pos="absolute" top="0" right="24px" h="100%">
