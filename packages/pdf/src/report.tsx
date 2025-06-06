@@ -364,9 +364,13 @@ export const getReportHtmlString = (
       Ref cadastrale : ${report.projectCadastralRef ?? ""}<br/>
     </p>
 
-    <p>
+    ${
+      report.title
+        ? `<p>
       <strong>Objet de la demande : ${report.title ?? ""}</strong>
-    </p>
+    </p>`
+        : ""
+    }
 
     <hr />
     
@@ -400,7 +404,9 @@ export const getReportHtmlString = (
         : ""
     }
   
-    <p>
+    ${
+      serviceInstructeur || contacts.length
+        ? `<p>
       <strong>Contacts utiles : </strong><br/>
       ${
         serviceInstructeur
@@ -417,7 +423,9 @@ export const getReportHtmlString = (
       <span>
         Nous contacter :<br/>${udap.name}, ${udap.email}, ${udap.phone ? formatPhoneNumber(udap.phone?.toString()) : ""}
       </span>
-    </p>
+    </p>`
+        : ""
+    }
   
     ${
       furtherInfos.length
