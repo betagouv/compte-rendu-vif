@@ -19,7 +19,7 @@ import { api } from "../api";
 import JSZip from "jszip";
 import { downloadFile } from "../utils";
 import { datePresets, DateRangePicker, SuccessAlert } from "./udap";
-import { useContext, useState } from "react";
+import { PropsWithChildren, ReactNode, useContext, useState } from "react";
 import { format, subDays } from "date-fns";
 import Input from "@codegouvfr/react-dsfr/Input";
 import Select from "@codegouvfr/react-dsfr/Select";
@@ -43,26 +43,25 @@ const AccountPage = () => {
       w="100%"
       mb="40px"
     >
-      <Stack>
-        <Breadcrumb
-          className={css({ mt: "32px", marginBottom: "0 !important", pl: "calc(2rem + 8px)" })}
-          homeLinkProps={{
-            to: "/",
-          }}
-          segments={[]}
-          currentPageLabel="UDAP"
-        />
-        <Summary
-          className={css({
-            bgColor: "transparent !important",
-          })}
-          links={[
-            { linkProps: { href: "#default-recipient" }, text: "Destinataire par défaut" },
-            { linkProps: { href: "#share" }, text: "Droit d'édition partagé" },
-            { linkProps: { href: "#download" }, text: "Télécharger mes CR" },
-            { linkProps: { href: "#change-udap" }, text: "Changer d'UDAP" },
-          ]}
-        />
+      <Stack w="100%">
+        <BreadcrumbNav label="Mon compte" />
+        <styled.h1 mt="16px" mb="32px" px={{ base: "16px" }}>
+          Mon compte
+        </styled.h1>
+        <AccordionIfMobile>
+          <Summary
+            className={css({
+              px: "16px ",
+              bgColor: "transparent !important",
+            })}
+            links={[
+              { linkProps: { href: "#default-recipient" }, text: "Destinataire par défaut" },
+              { linkProps: { href: "#share" }, text: "Droit d'édition partagé" },
+              { linkProps: { href: "#download" }, text: "Télécharger mes CR" },
+              { linkProps: { href: "#change-udap" }, text: "Changer d'UDAP" },
+            ]}
+          />
+        </AccordionIfMobile>
       </Stack>
       <Divider hideFrom="lg" w="90%" ml="5%" color="background-action-low-blue-france-hover" />
       <Center
@@ -74,7 +73,6 @@ const AccountPage = () => {
         px={{ base: "16px", lg: "0" }}
         textAlign="left"
       >
-        <styled.h1 mb="32px">Mon compte</styled.h1>
         {isSuccess ? <SuccessAlert /> : null}
         <DefaultRecipient />
         <Divider my={{ base: "48px", lg: "80px" }} color="background-action-low-blue-france-hover" />
@@ -85,6 +83,28 @@ const AccountPage = () => {
         <ChangeUDAP onSuccess={onSuccess} />
       </Center>
     </Flex>
+  );
+};
+
+export const AccordionIfMobile = ({ children }: { children: NonNullable<ReactNode> }) => {
+  return (
+    <>
+      <Accordion
+        className={css({
+          hideFrom: "lg",
+          mx: "16px",
+          "& .fr-summary__title": { display: "none" },
+          "& .fr-summary": { pt: "0" },
+        })}
+        label="Sommaire"
+      >
+        {children}
+      </Accordion>
+
+      <styled.div hideBelow="lg" mb="32px" px="16px">
+        {children}
+      </styled.div>
+    </>
   );
 };
 
@@ -192,6 +212,46 @@ const Share = () => {
     </Flex>
   );
 };
+
+export const BreadcrumbNav = ({ label }: { label: string }) => {
+  return (
+    <>
+      <styled.nav w="100%" mt="32px" mb="0 !important" px="16px">
+        <ol className="fr-breadcrumb__list">
+          <li>
+            <a href="/" className="fr-breadcrumb__link">
+              Accueil
+            </a>
+          </li>
+          <li>
+            <a className="fr-breadcrumb__link" aria-current="page">
+              {label}
+            </a>
+          </li>
+        </ol>
+      </styled.nav>
+
+      {/* <Accordion className={css({ hideFrom: "lg", mx: "16px" })} label="Sommaire">
+        <styled.nav mb="0 !important" pl="calc(2rem + 8px)">
+          <ol className="fr-breadcrumb__list">
+            <li>
+              <a href="/" className="fr-breadcrumb__link">
+                Accueil
+              </a>
+            </li>
+            <li>
+              <a className="fr-breadcrumb__link" aria-current="page">
+                {label}
+              </a>
+            </li>
+          </ol>
+        </styled.nav>
+      </Accordion> */}
+    </>
+  );
+};
+
+import { Accordion } from "@codegouvfr/react-dsfr/Accordion";
 
 const ManageDelegations = ({ coworkers, delegations }: { coworkers: User[]; delegations: Delegation[] }) => {
   const user = useUser()!;

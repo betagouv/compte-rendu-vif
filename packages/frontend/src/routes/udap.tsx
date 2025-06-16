@@ -19,6 +19,7 @@ import { Udap } from "../db/AppSchema";
 import { omit } from "pastable";
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import Breadcrumb from "@codegouvfr/react-dsfr/Breadcrumb";
+import { AccordionIfMobile, BreadcrumbNav } from "./account";
 
 const UdapPage = () => {
   const [isSuccess, setIsSuccess] = useState(false);
@@ -37,26 +38,25 @@ const UdapPage = () => {
       w="100%"
       mb="40px"
     >
-      <Stack>
-        <Breadcrumb
-          className={css({ mt: "32px", marginBottom: "0 !important", pl: "calc(2rem + 8px)" })}
-          homeLinkProps={{
-            to: "/",
-          }}
-          segments={[]}
-          currentPageLabel="UDAP"
-        />
-        <Summary
-          className={css({
-            bgColor: "transparent !important",
-          })}
-          links={[
-            { linkProps: { href: "#udap-informations" }, text: "Informations UDAP" },
-            { linkProps: { href: "#services-instructeurs" }, text: "Services instructeurs" },
-            { linkProps: { href: "#clauses-departementales" }, text: "Clauses départementales" },
-            { linkProps: { href: "#rapport-activite" }, text: "Rapport d'activité" },
-          ]}
-        />
+      <Stack w="100%">
+        <BreadcrumbNav label="UDAP" />
+        <styled.h1 mt="16px" mb="32px" px={{ base: "16px" }}>
+          UDAP
+        </styled.h1>
+        <AccordionIfMobile>
+          <Summary
+            className={css({
+              pt: "0",
+              bgColor: "transparent !important",
+            })}
+            links={[
+              { linkProps: { href: "#udap-informations" }, text: "Informations UDAP" },
+              { linkProps: { href: "#services-instructeurs" }, text: "Services instructeurs" },
+              { linkProps: { href: "#clauses-departementales" }, text: "Clauses départementales" },
+              { linkProps: { href: "#rapport-activite" }, text: "Rapport d'activité" },
+            ]}
+          />
+        </AccordionIfMobile>
       </Stack>
       <Divider hideFrom="lg" w="90%" ml="5%" color="background-action-low-blue-france-hover" />
       <Center
@@ -67,7 +67,6 @@ const UdapPage = () => {
         px={{ base: "16px", lg: "0" }}
         textAlign="left"
       >
-        <styled.h1 mb="32px">UDAP</styled.h1>
         {isSuccess ? <SuccessAlert /> : null}
         <UDAPForm onSuccess={onSuccess} />
         <Divider my={{ base: "48px", lg: "48px" }} color="background-action-low-blue-france-hover" />
