@@ -30,7 +30,7 @@ const UdapPage = () => {
 
   return (
     <Flex
-      gap={{ base: "0", lg: "80px" }}
+      gap={{ base: "0", lg: "40px" }}
       flexDir={{ base: "column", lg: "row" }}
       justifyContent="center"
       alignItems="flex-start"
@@ -70,11 +70,11 @@ const UdapPage = () => {
         <styled.h1 mb="32px">UDAP</styled.h1>
         {isSuccess ? <SuccessAlert /> : null}
         <UDAPForm onSuccess={onSuccess} />
-        <Divider my={{ base: "48px", lg: "80px" }} color="background-action-low-blue-france-hover" />
+        <Divider my={{ base: "48px", lg: "48px" }} color="background-action-low-blue-france-hover" />
         <ServicesList />
-        <Divider my={{ base: "48px", lg: "80px" }} color="background-action-low-blue-france-hover" />
+        <Divider my={{ base: "48px", lg: "48px" }} color="background-action-low-blue-france-hover" />
         <Clauses />
-        <Divider my={{ base: "48px", lg: "80px" }} color="background-action-low-blue-france-hover" />
+        <Divider my={{ base: "48px", lg: "48px" }} color="background-action-low-blue-france-hover" />
         <Activity />
       </Center>
     </Flex>
