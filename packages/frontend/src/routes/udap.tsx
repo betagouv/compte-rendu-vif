@@ -282,7 +282,7 @@ const ServicePicker = ({
                   className={css({
                     whiteSpace: "nowrap",
                   })}
-                  onCheckChange={() => setSelected(item)}
+                  onCheckChange={() => setSelected(selected === item ? null : item)}
                   isChecked={selected?.id === item.id}
                 >
                   {item.short_name}
@@ -449,7 +449,7 @@ const SingleClause = ({ clauseKey, title }: { clauseKey: string; title: string }
             .map((clause) => (
               <Chip
                 key={clause.id}
-                onCheckChange={() => setSelected(clause as ClauseV2)}
+                onCheckChange={() => setSelected(selected?.id === clause?.id ? null : (clause as ClauseV2))}
                 isChecked={selected?.id === clause.id}
               >
                 {clause.value}
