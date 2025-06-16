@@ -176,7 +176,7 @@ export const EmailInput = ({
       </styled.div>
 
       {!single ? (
-        <Flex gap="8px" justifyContent="center" alignItems="center" w="100%" mt="-16px" flexWrap="wrap">
+        <Flex gap="8px" justifyContent="flex-start" alignItems="center" w="100%" mt="-16px" flexWrap="wrap">
           {value.filter(Boolean).map((email) => (
             <Tag
               key={email}
