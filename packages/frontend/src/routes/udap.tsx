@@ -282,6 +282,7 @@ const ServicePicker = ({
                   className={css({
                     whiteSpace: "nowrap",
                   })}
+                  key={item.id}
                   onCheckChange={() => setSelected(selected === item ? null : item)}
                   isChecked={selected?.id === item.id}
                 >
@@ -295,6 +296,18 @@ const ServicePicker = ({
   );
 };
 
+export const useScrollToRef = () => {
+  const scrollToRef = (element: any) => {
+    if (element) {
+      element.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+  };
+  return scrollToRef;
+};
+
 const ServiceForm = ({
   selected,
   setSelected,
@@ -302,8 +315,8 @@ const ServiceForm = ({
   selected: Partial<ServiceInstructeurs> | null;
   setSelected: (item: Partial<ServiceInstructeurs> | null) => void;
 }) => {
+  const scrollToRef = useScrollToRef();
   if (!selected) return null;
-
   const isNew = !selected.id;
 
   const createOrEditServiceMutation = useMutation({
@@ -333,7 +346,7 @@ const ServiceForm = ({
   });
 
   return (
-    <Flex gap="16px" flexDir="column" w="100%">
+    <Flex ref={scrollToRef} gap="16px" flexDir="column" w="100%">
       <Input
         className={css({ w: "100%" })}
         label="Intitulé service instructeur"
@@ -470,6 +483,7 @@ const ClauseForm = ({
   selected: Partial<ClauseV2> | null;
   setSelected: (item: Partial<ClauseV2> | null) => void;
 }) => {
+  const scrollToRef = useScrollToRef();
   if (!selected) return null;
 
   const isNew = !selected.id;
@@ -501,7 +515,7 @@ const ClauseForm = ({
   });
 
   return (
-    <Flex gap="16px" flexDir="column" w="100%">
+    <Flex ref={scrollToRef} gap="16px" flexDir="column" w="100%">
       <Input
         className={css({ w: "100%" })}
         label="Intitulé clause"
