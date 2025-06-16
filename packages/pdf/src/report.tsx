@@ -3,6 +3,7 @@ import { Html } from "react-pdf-html";
 import React from "react";
 import { Buffer } from "buffer";
 import { Udap, Report, ServiceInstructeurs, Clause_v2, Pictures } from "../../frontend/src/db/AppSchema";
+import { format } from "date-fns";
 
 export const initFonts = (folder: string = "") => {
   Font.register({
@@ -80,6 +81,16 @@ const Pagination = () => {
       />
     </View>
   );
+};
+export const getPDFInMailName = (report: Report) => {
+  const { city, applicantName, meetDate } = report;
+
+  const baseDate = meetDate ? new Date(meetDate.toString()) : new Date();
+  const date = format(baseDate, "dd-MM-yyyy");
+
+  const name = `CR_${[city?.replaceAll(" ", ""), applicantName?.replaceAll(" ", ""), date].filter(Boolean).join("_")}.pdf`;
+
+  return name;
 };
 
 export const ReportPDFDocument = ({ udap, htmlString, images, pictures }: ReportPDFDocumentProps) => {

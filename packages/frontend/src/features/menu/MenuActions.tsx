@@ -18,33 +18,37 @@ export const MenuActions = () => {
   };
 
   const actions = [
-    { text: "Mon compte", onClick: () => navigateAndClose({ to: "/account" }), mobileOnly: true },
-    { text: "UDAP", onClick: () => navigateAndClose({ to: "/udap" }), mobileOnly: true },
-    { text: "Aide", onClick: () => menuActor.send({ type: "GO_TO_HELP" }) },
-    { text: "Se déconnecter", onClick: logout, dataTestId: "logout" },
+    {
+      icon: "fr-icon-account-circle-fill",
+      text: "Mon compte",
+      onClick: () => navigateAndClose({ to: "/account" }),
+      mobileOnly: true,
+    },
+    { icon: "fr-icon-france-fill", text: "UDAP", onClick: () => navigateAndClose({ to: "/udap" }), mobileOnly: true },
+    { icon: "fr-icon-info-fill", text: "Aide", onClick: () => menuActor.send({ type: "GO_TO_HELP" }) },
+    { icon: "fr-icon-logout-box-r-line", text: "Déconnexion", onClick: logout, dataTestId: "logout" },
   ];
 
   return (
     <>
       <styled.div hideFrom="lg">
-        <MenuTitle hideDivider>Paramètre</MenuTitle>
+        <MenuTitle hideDivider> </MenuTitle>
       </styled.div>
       <Stack
         className={css({
           gap: "0",
         })}
       >
-        {actions.map(({ text, onClick, dataTestId, mobileOnly }, index) => (
-          <MenuAction key={index} text={text} onClick={onClick} dataTestId={dataTestId} mobileOnly={mobileOnly} />
+        {actions.map(({ text, onClick, dataTestId, mobileOnly, icon }, index) => (
+          <MenuAction
+            key={index}
+            text={text}
+            onClick={onClick}
+            dataTestId={dataTestId}
+            mobileOnly={mobileOnly}
+            icon={icon}
+          />
         ))}
-
-        <Button
-          className={css({ w: "100%", mt: "8px", fontSize: "14px" })}
-          linkProps={{ href: "https://compte-rendu-vif.beta.gouv.fr/faq", target: "_blank" }}
-          priority="tertiary no outline"
-        >
-          En savoir plus
-        </Button>
       </Stack>
     </>
   );
@@ -55,11 +59,13 @@ const MenuAction = ({
   onClick,
   dataTestId,
   mobileOnly,
+  icon,
 }: {
   text: string;
   onClick: () => void;
   dataTestId?: string;
   mobileOnly?: boolean;
+  icon: string;
 }) => {
   return (
     <>
@@ -79,6 +85,7 @@ const MenuAction = ({
         data-test-id={dataTestId}
         type="button"
         priority="tertiary no outline"
+        iconId={icon as any}
         onClick={(e) => {
           e.preventDefault();
           onClick();

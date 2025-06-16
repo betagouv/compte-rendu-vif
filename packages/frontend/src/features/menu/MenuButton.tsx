@@ -139,7 +139,7 @@ export const MenuButton = () => {
             ) : null}
             {/* @ts-ignore */}
             <Button
-              iconId="ri-settings-2-fill"
+              iconId="ri-menu-fill"
               priority="tertiary no outline"
               nativeButtonProps={{
                 onClick: () => menuActor.send({ type: "OPEN" }),

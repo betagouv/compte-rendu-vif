@@ -12,6 +12,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { api } from "../api";
 import { useCanEditReport } from "../hooks/useCanEditReport";
 import { db } from "../db/db";
+import { getPDFInMailName } from "@cr-vif/pdf";
 
 export const ReportActions = forwardRef<HTMLDivElement, { report: ReportWithUser }>(({ report }, ref) => {
   const user = useUser()!;
@@ -22,7 +23,8 @@ export const ReportActions = forwardRef<HTMLDivElement, { report: ReportWithUser
 
   const downloadPdfMutation = useMutation(async () => {
     const buffer = await api.get("/api/pdf/report", { query: { reportId: report.id } });
-    return downloadFile(`data:application/pdf;base64,${buffer}`);
+    const name = getPDFInMailName(report);
+    return downloadFile(`data:application/pdf;base64,${buffer}`, name);
   });
 
   const deleteMutation = useDeleteMutation();

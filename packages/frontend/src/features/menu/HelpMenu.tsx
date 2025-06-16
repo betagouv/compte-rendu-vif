@@ -3,8 +3,12 @@ import Button from "@codegouvfr/react-dsfr/Button";
 import { MenuTitle } from "./MenuTitle";
 import { clearDb } from "../../db/db";
 import { menuActor } from "./menuMachine";
+import Alert from "@codegouvfr/react-dsfr/Alert";
+import { useState } from "react";
 
 export const HelpMenu = () => {
+  const [showClipboardSuccess, setShowClipboardSuccess] = useState(false);
+
   const deleteLocalData = () => {
     localStorage.clear();
     indexedDB.deleteDatabase("crvif.db");
@@ -45,9 +49,28 @@ export const HelpMenu = () => {
 
         <Divider height="2px" mt={{ base: "27px", lg: "32px" }} mb={{ base: 0, lg: "24px" }} color="#C1C1FB" />
 
-        <Stack px="16px">
+        <Stack mb="32px" px="16px">
           <styled.h3 fontSize="20px">Contact</styled.h3>
-          <styled.div>Vous pouvez contacter l'équipe à contact@compte-rendu-vif.beta.gouv.fr.</styled.div>
+
+          {showClipboardSuccess ? (
+            // @ts-ignore
+            <Alert severity="info" title={undefined} description="Ajouté au presse-papier" />
+          ) : null}
+          <styled.div>
+            Vous pouvez contacter l'équipe à{" "}
+            <styled.span
+              onClick={() => {
+                navigator.clipboard.writeText("contact@compte-rendu-vif.beta.gouv.fr");
+                setShowClipboardSuccess(true);
+              }}
+              color="text-active-blue-france"
+              cursor="pointer"
+              _hover={{ textDecoration: "underline" }}
+            >
+              contact@compte-rendu-vif.beta.gouv.fr
+            </styled.span>
+            .
+          </styled.div>
         </Stack>
       </Stack>
     </>
