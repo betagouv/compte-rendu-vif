@@ -4,7 +4,7 @@ import { useChipOptions } from "../../features/chips/useChipOptions";
 import { Report } from "../../db/AppSchema";
 
 export const DecisionChips = ({ disabled }: { disabled?: boolean }) => {
-  const form = useFormContext<Reportt>();
+  const form = useFormContext<Report>();
 
   const selected = useWatch({ control: form.control, name: "decision" });
   const value = selected ? [selected] : [];
@@ -20,7 +20,7 @@ export const DecisionChips = ({ disabled }: { disabled?: boolean }) => {
       options={options}
       value={value}
       disabled={disabled}
-      onChange={(values) => form.setValue("decision", values?.[0])}
+      onChange={(values) => form.setValue("decision", values?.[0] ?? null)}
       label="Décision"
       clauseId="decision"
     />
