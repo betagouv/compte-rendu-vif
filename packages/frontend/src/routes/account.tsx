@@ -161,25 +161,34 @@ const Share = () => {
   return (
     <Flex gap="0px" flexDir="column" w="100%">
       <Title anchor="share">2. Droit d'édition partagé</Title>
-      <styled.div>
-        <styled.div mb="16px">Ces personnes peuvent créer, modifier et supprimer vos CR : </styled.div>
-        <ManageDelegations coworkers={coworkers} delegations={delegations} />
-        {delegatedToMe.length ? (
-          // @ts-ignore alert needs a title ?
-          <Alert
-            className={css({
-              mt: "16px",
-            })}
-            small={false}
-            closable={false}
-            severity="info"
-            description={
-              delegatedToMe.map((user) => user.createdByName).join(", ") +
-              ` vous autorise${delegatedToMe.length > 1 ? "nt" : ""} à créer, modifier et supprimer ${delegatedToMe.length > 1 ? "leurs" : "ses"} CRs.`
-            }
-          />
-        ) : null}
-      </styled.div>
+      {coworkers.length ? (
+        <styled.div>
+          <styled.div mb="16px">Ces personnes peuvent créer, modifier et supprimer vos CR : </styled.div>
+          <ManageDelegations coworkers={coworkers} delegations={delegations} />
+          {delegatedToMe.length ? (
+            // @ts-ignore alert needs a title ?
+            <Alert
+              className={css({
+                mt: "16px",
+              })}
+              small={false}
+              closable={false}
+              severity="info"
+              description={
+                delegatedToMe.map((user) => user.createdByName).join(", ") +
+                ` vous autorise${delegatedToMe.length > 1 ? "nt" : ""} à créer, modifier et supprimer ${delegatedToMe.length > 1 ? "leurs" : "ses"} CRs.`
+              }
+            />
+          ) : null}
+        </styled.div>
+      ) : (
+        <Alert
+          severity="info"
+          description={
+            "Aucun autre utilisateur de votre UDAP n'est enregistré sur Compte rendu VIF. Vous ne pouvez donc pas autoriser d'autres personnes à créer, modifier et supprimer vos CR."
+          }
+        />
+      )}
     </Flex>
   );
 };
@@ -335,7 +344,14 @@ const ChangeUDAP = ({ onSuccess }) => {
       />
 
       <Flex gap={{ base: 0, lg: "16px" }} flexDir={{ base: "column", lg: "row" }} w="100%">
-        <Input label="Mon UDAP" disabled nativeInputProps={{ value: udap.name! }} />
+        <Input
+          classes={{
+            nativeInputOrTextArea: css({ pr: "32px" }),
+          }}
+          label="Mon UDAP"
+          disabled
+          nativeInputProps={{ value: udap.name! }}
+        />
         <Select
           label="Nouvelle UDAP"
           nativeSelectProps={{
