@@ -337,11 +337,15 @@ const DownloadCRs = () => {
         vos comptes-rendus dont le poids peut être important.
       </styled.div>
       <styled.div px="24px" pt="18px" pb="4px" bgColor="background-alt-blue-france">
-        <Download
-          label={getZipFilename(startDate, endDate)}
-          details={`ZIP - ${reports.length} compte${reports.length > 1 ? "s" : ""} rendu${reports.length > 1 ? "s" : ""}`}
-          linkProps={{ onClick: () => downloadMutation.mutate(reports) }}
-        />
+        {reports.length ? (
+          <Download
+            label={getZipFilename(startDate, endDate)}
+            details={`ZIP - ${reports.length} compte${reports.length > 1 ? "s" : ""} rendu${reports.length > 1 ? "s" : ""}`}
+            linkProps={{ onClick: () => downloadMutation.mutate(reports) }}
+          />
+        ) : (
+          <styled.div pb="14px">Aucun CR disponible sur la période sélectionnée.</styled.div>
+        )}
       </styled.div>
     </Flex>
   );
