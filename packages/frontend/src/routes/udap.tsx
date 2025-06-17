@@ -34,7 +34,7 @@ const UdapPage = () => {
       gap={{ base: "0", lg: "40px" }}
       flexDir={{ base: "column", lg: "row" }}
       justifyContent="center"
-      alignItems="flex-start"
+      alignItems={{ lg: "flex-start", base: "center" }}
       w="100%"
       mb="40px"
     >
