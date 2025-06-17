@@ -25,6 +25,8 @@ import Input from "@codegouvfr/react-dsfr/Input";
 import Select from "@codegouvfr/react-dsfr/Select";
 import Button from "@codegouvfr/react-dsfr/Button";
 import Breadcrumb from "@codegouvfr/react-dsfr/Breadcrumb";
+import { Accordion } from "@codegouvfr/react-dsfr/Accordion";
+import { getPDFInMailName } from "@cr-vif/pdf";
 
 const AccountPage = () => {
   const [isSuccess, setIsSuccess] = useState(false);
@@ -251,8 +253,6 @@ export const BreadcrumbNav = ({ label }: { label: string }) => {
   );
 };
 
-import { Accordion } from "@codegouvfr/react-dsfr/Accordion";
-
 const ManageDelegations = ({ coworkers, delegations }: { coworkers: User[]; delegations: Delegation[] }) => {
   const user = useUser()!;
 
@@ -297,15 +297,15 @@ const DownloadCRs = () => {
 
   const user = useUser()!;
 
-  const downloadMutation = useMutation(async (ids: string[]) => {
-    if (!ids?.length) {
+  const downloadMutation = useMutation(async (reports: { id: string; name: string }[]) => {
+    if (!reports?.length) {
       return;
     }
     const zip = new JSZip();
 
-    for (const id of ids) {
-      const pdf = await api.get("/api/pdf/report", { query: { reportId: id } });
-      zip.file(`${id}.pdf`, pdf as string, { base64: true });
+    for (const report of reports) {
+      const pdf = await api.get("/api/pdf/report", { query: { reportId: report.id } });
+      zip.file(`${report.name}.pdf`, pdf as string, { base64: true });
     }
 
     const content = await zip.generateAsync({ type: "blob" });
@@ -323,10 +323,10 @@ const DownloadCRs = () => {
       .where("disabled", "!=", 1)
       .where("createdAt", ">=", startDate.toISOString())
       .where("createdAt", "<=", endDate.toISOString())
-      .select(["id"]),
+      .selectAll(),
   );
 
-  const ids = crs.data?.map((cr) => cr.id) ?? [];
+  const reports = crs.data?.map((cr) => ({ id: cr.id, name: getPDFInMailName(cr) })) ?? [];
 
   return (
     <Flex gap="0px" flexDir="column" w="100%">
@@ -339,8 +339,8 @@ const DownloadCRs = () => {
       <styled.div px="24px" pt="18px" pb="4px" bgColor="background-alt-blue-france">
         <Download
           label={getZipFilename(startDate, endDate)}
-          details={`ZIP - ${ids.length} compte${ids.length > 1 ? "s" : ""} rendu${ids.length > 1 ? "s" : ""}`}
-          linkProps={{ onClick: () => downloadMutation.mutate(ids) }}
+          details={`ZIP - ${reports.length} compte${reports.length > 1 ? "s" : ""} rendu${reports.length > 1 ? "s" : ""}`}
+          linkProps={{ onClick: () => downloadMutation.mutate(reports) }}
         />
       </styled.div>
     </Flex>
