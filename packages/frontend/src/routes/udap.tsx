@@ -33,14 +33,14 @@ const UdapPage = () => {
     <Flex
       gap={{ base: "0", lg: "40px" }}
       flexDir={{ base: "column", lg: "row" }}
-      justifyContent="center"
+      justifyContent={"center"}
       alignItems={{ lg: "flex-start", base: "center" }}
       w="100%"
       mb="40px"
     >
-      <Stack w="100%">
+      <Stack w={{ base: "100%", lg: "auto" }}>
         <BreadcrumbNav label="UDAP" />
-        <styled.h1 mt="16px" mb="32px" px={{ base: "16px" }}>
+        <styled.h1 hideFrom="lg" mt="16px" mb="32px" px={{ base: "16px" }}>
           UDAP
         </styled.h1>
         <AccordionIfMobile>
@@ -67,6 +67,9 @@ const UdapPage = () => {
         px={{ base: "16px", lg: "0" }}
         textAlign="left"
       >
+        <styled.h1 hideBelow="lg" mt="16px" mb="32px">
+          UDAP
+        </styled.h1>
         {isSuccess ? <SuccessAlert /> : null}
         <UDAPForm onSuccess={onSuccess} />
         <Divider my={{ base: "48px", lg: "48px" }} color="background-action-low-blue-france-hover" />

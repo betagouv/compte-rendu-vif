@@ -45,15 +45,15 @@ const AccountPage = () => {
       w="100%"
       mb="40px"
     >
-      <Stack w="100%">
+      <Stack w={{ base: "100%", lg: "auto" }}>
         <BreadcrumbNav label="Mon compte" />
-        <styled.h1 mt="16px" mb="32px" px={{ base: "16px" }}>
+        <styled.h1 hideFrom="lg" mt="16px" mb="32px" px={{ base: "16px" }}>
           Mon compte
         </styled.h1>
         <AccordionIfMobile>
           <Summary
             className={css({
-              px: "16px ",
+              px: "16px",
               bgColor: "transparent !important",
             })}
             links={[
@@ -75,6 +75,9 @@ const AccountPage = () => {
         px={{ base: "16px", lg: "0" }}
         textAlign="left"
       >
+        <styled.h1 hideBelow="lg" mt="16px" mb="32px">
+          Mon compte
+        </styled.h1>
         {isSuccess ? <SuccessAlert /> : null}
         <DefaultRecipient />
         <Divider my={{ base: "48px", lg: "80px" }} color="background-action-low-blue-france-hover" />
@@ -103,7 +106,7 @@ export const AccordionIfMobile = ({ children }: { children: NonNullable<ReactNod
         {children}
       </Accordion>
 
-      <styled.div hideBelow="lg" mb="32px" px="16px">
+      <styled.div hideBelow="lg" mb="32px" px={{ base: "16px", lg: "0" }} {...{ "& .fr-summary": { p: 0, m: 0 } }}>
         {children}
       </styled.div>
     </>
@@ -218,7 +221,7 @@ const Share = () => {
 export const BreadcrumbNav = ({ label }: { label: string }) => {
   return (
     <>
-      <styled.nav w="100%" mt="32px" mb="0 !important" px="16px">
+      <styled.nav w="100%" mt="32px" mb={{ base: "0", lg: "32px" }} px={{ base: "16px", lg: "8px" }}>
         <ol className="fr-breadcrumb__list">
           <li>
             <a href="/" className="fr-breadcrumb__link">
