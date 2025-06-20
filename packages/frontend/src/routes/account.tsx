@@ -479,6 +479,8 @@ const Title = ({ children, anchor }: { children: React.ReactNode; anchor?: strin
   );
 };
 
+export const TitleH3 = Title;
+
 export const Route = createFileRoute("/account")({
   component: () => (
     <EnsureUser>

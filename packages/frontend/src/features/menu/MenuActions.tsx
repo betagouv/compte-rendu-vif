@@ -76,8 +76,9 @@ const MenuAction = ({
           h: "48px",
           m: 0,
           px: "16px !important",
-          color: "black",
-          fontSize: "14px",
+
+          color: "text-active-blue-france",
+          fontSize: "16px",
           "&:disabled": {
             color: "text-disabled-grey",
           },
