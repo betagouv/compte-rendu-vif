@@ -8,6 +8,19 @@ const dsfrPreset = definePreset(theme);
 export default defineConfig({
   // Whether to use css reset
   preflight: true,
+  // hooks: {
+  //   "cssgen:done": ({ artifact, content }) => {
+  //     if (artifact === "styles.css") {
+  //       return content
+  //         .replace("@layer utilities", "body")
+  //         .replace("@layer recipes", "body")
+  //         .replace("@layer tokens", "body")
+  //         .replace("@layer utilities", "body")
+  //         .replace("@layer utilities", "body")
+  //         .replace("@layer utilities", "body"); // ou là où tu veux genre html ou :root
+  //     }
+  //   },
+  // },
 
   // Where to look for your css declarations
   include: ["./src/**/*.{js,jsx,ts,tsx}", "theme/**/*.ts"],

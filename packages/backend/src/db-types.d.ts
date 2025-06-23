@@ -170,6 +170,7 @@ export interface User {
 export interface UserSettings {
   default_emails: string | null;
   id: string;
+  udap_id: string | null;
   user_id: string | null;
 }
 

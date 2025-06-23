@@ -4,7 +4,13 @@ import { db, useDbQuery } from "../db/db";
 export const useUserSettings = () => {
   const user = useUser()!;
 
-  const userSettingsQuery = useDbQuery(db.selectFrom("user_settings").where("user_id", "=", user.id).selectAll());
+  const userSettingsQuery = useDbQuery(
+    db
+      .selectFrom("user_settings")
+      .where("user_id", "=", user.id)
+      .where("udap_id", "=", user.udap_id)
+      .selectAll(),
+  );
   const isLoading = userSettingsQuery.isLoading;
 
   const userSettings = userSettingsQuery.data?.[0] ?? {

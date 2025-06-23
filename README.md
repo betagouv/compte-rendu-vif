@@ -1,115 +1,103 @@
-# Monorepo architecture
+# Installation
 
-This app is divided in multiple packages :
+### Prérequis:
 
-- `backend` is responsible for the user authentication, pdf generation and some static data serving
-- `frontend` contains the main app logic
+- node >= 20
+- pnpm = 8.4.0
 
-# DB Workflow
+### Utilisation
+
+- `pnpm install`
+- Copy `.env.dist` to `.env` and fill the variables
+- `docker compose up -d`
+- `pnpm migration:up`
+- `pnpm backend dev`
+- `pnpm frontend dev`
+
+La whitelist n'est pas active dans l'environnement de développement
+
+# Découverte du service, premiers pas
+
+// TODO quand les pages "Mon UDAP" et "Mon compte" seront livrées
+
+# Infrastructure
 
 ```mermaid
-erDiagram
-    chip {
-        text key PK
-        text text
-        text udap_id PK
-        text value PK
-    }
+graph TD
+    subgraph VPS
+        Backend[Node.js Backend] <--> DB[(PostgreSQL)]
+        Backend <--> MinIO[Stockage des images sur MinIO]
+        PowerSync <--> DB
 
-    clause {
-        text id PK
-        text label
-        text value
-    }
+        subgraph PowerSync[PowerSync WS Server]
+            MongoDB[(Internal MongoDB)]
+        end
+    end
 
-    delegation {
-        text createdBy PK,FK
-        text delegatedTo PK,FK
-    }
+    Backend <--> S3[Stockage des pdf sur S3]
+    Backend <--> SMTP[Scaleway SMTP]
 
-    report {
-        text applicantAddress
-        text applicantName
-        text contacts
-        timestamp_without_time_zone createdAt
-        text createdByEmail FK
-        text decision
-        text furtherInformation
-        text id PK
-        timestamp_without_time_zone meetDate
-        text precisions
-        text projectCadastralRef
-        text projectDescription
-        text projectSpaceType
-        text redactedBy
-        text serviceInstructeur
-        text title
-    }
-
-    report_to_clause {
-        text clauseId FK
-        text id PK
-        text reportId FK
-    }
-
-    udap {
-        text address
-        text city
-        text completeCoords
-        text department
-        text email
-        text id PK
-        text name
-        text phone
-        boolean visible
-        text zipCode
-    }
-
-    user {
-        text email PK
-        text name
-        text password
-        text temporaryLink
-        text temporaryLinkExpiresAt
-        text udap_id FK
-    }
-
-    report_to_clause }o--|| clause : "clauseId"
-    delegation }o--|| user : "createdBy"
-    delegation }o--|| user : "delegatedTo"
-    report }o--|| user : "createdByEmail"
-    report_to_clause }o--|| report : "reportId"
-    user }o--|| udap : "udap_id"
-
+    Frontend[PWA] <--> Backend
+    Frontend <--> PowerSync
 ```
 
-## Live data
+# Framework et dépendances
 
-#### PowerSync allows users to be notified when data changes.
+## Architecture du repo
 
-To achieve this, every table containing live values must be part of the "powersync" publication.
+L'application est un monorepo pnpm séparé en 3 packages
 
-```sql
-ALTER PUBLICATION powersync ADD TABLE "table";
-```
+- `backend` qui est une application NodeTS reponsable de l'authentification, du CRUD sur la base de données, ainsi que
+  de la génération du pdf
+- `frontend` qui est une PWA conçue avec Vite et ReactTS
+- `pdf` qui contient la logique partagée entre les 2 précédents packages
 
-[PowerSync documentation](https://docs.powersync.com/intro/powersync-overview)
+## Base de données et synchronisation
 
-## Migrations
+L'application utilise une base de données Postgres, définie par la variable `DATABASE_URL` dans le fichier `.env`. Pour
+effectuer des requêtes, le frontend et le backend utilisent `kysely`.
 
-- Write SQL migrations in `db/migrations/`
-- `pnpm migration:up`
+### Synchronisation
 
-# DB Clients
+L'application utilise le service [PowerSync](https://docs.powersync.com/intro/powersync-overview) comme moteur de
+synchronisation. Il est composé :
 
-- Both packages use [Kysely](https://kysely.dev/)
-- `pnpm backend pull-types` generated a single .d.ts file describing the database structure
-- `frontend/src/db/AppSchema.ts` contains the schema that will be used against indexed-db
-  > It is quite similar to the generated .d.ts file except it uses SQLite types (so TIMESTAMP or JSONB becomes TEXT)
+- d'un serveur WebSocket connecté à un replica de la base de données
+- d'une base de données Mongo interne (qui n'a pas besoin d'être persistente)
+
+Le workflow est le suivant :
+
+- Les règles d'accès au données sont définies dans le fichier `powersync-config.yaml`
+- Le frontend se connecte via WebSocket et reçoit les données auxquelles il a accès, ainsi que leurs modifications en
+  temps réel, et les stocke dans une base de données IndexedDB
+- L'utilisateur modifie ses données locales
+- Le frontend envoie les données au backend via une requête POST, qui applique les modifications sur la base de données
+- Le service PowerSync est notifié grâce au replica, et diffuse ces modifications à tous les utilisateurs concernés
+
+### Migrations
+
+Les migrations sont écrites en SQL et placées dans le dossier `db/migrations`.
+
+Elles sont exécutées grâce à la commande `pnpm migration:up`, qui utilise le package
+[@databases/pg-migrations](https://www.npmjs.com/package/@databases/pg-migrations).
+
+### Types Typescript
+
+Après avoir effectué des migrations, `pnpm backend pull-types` génère les types typescript dans le fichier
+[db-types.d.ts](./packages/backend/src/db-types.d.ts)
+
+## API
+
+Le routeur est défini avec `fastify` et les requêtes sont validées avec `typebox`.
+
+Le RPC se génère grâce à la commande `pnpm client:generate`, qui
+
+- génére le fichier `openapi.json` grâce à [`@fastify/swagger`](https://github.com/fastify/fastify-swagger)
+- génére le fichier `api.ts` grâce à [`typed-openapi`](https://github.com/astahmer/typed-openapi)
 
 # Scripts
 
-- `clearDb.sh` clears postgres db
+- `clearDb.sh` clears local postgres db
 - `frontend/createEnvFile.ts` used in prod to inject env vars starting with VITE\_ at runtime
 - `frontend/generatePandaDS.ts` used in dev to generate [PandaCSS](https://panda-css.com/docs/theming/tokens) tokens
   from [DSFR](https://github.com/GouvernementFR/dsfr)

@@ -1,6 +1,7 @@
 import type { FastifyPluginAsyncTypebox, Static } from "@fastify/type-provider-typebox";
 import { Type } from "@sinclair/typebox";
 import { userAndTokenTSchema } from "./tschemas";
+import { authenticate } from "./authMiddleware";
 
 export const userPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
   fastify.post("/create-user", { schema: createUserTSchema }, async (request) => {
@@ -26,6 +27,19 @@ export const userPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
   fastify.post("/reset-password", { schema: resetPasswordTSchema }, async (request) => {
     return request.services.user.resetPassword(request.body);
   });
+
+  fastify.post("/change-udap", { schema: changeUdapTSchema, preHandler: authenticate }, async (request) => {
+    const { udap_id } = request.body;
+    const { id } = request.user.user!;
+    return request.services.user.changeUdap(id, udap_id);
+  });
+};
+
+export const changeUdapTSchema = {
+  body: Type.Object({
+    udap_id: Type.String(),
+  }),
+  response: { 200: Type.Object({ message: Type.String() }) },
 };
 
 export const createUserTSchema = {

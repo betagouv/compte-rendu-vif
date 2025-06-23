@@ -61,6 +61,14 @@ export namespace Endpoints {
     };
     response: { message: string };
   };
+  export type post_ApichangeUdap = {
+    method: "POST";
+    path: "/api/change-udap";
+    parameters: {
+      body: { udap_id: string };
+    };
+    response: { message: string };
+  };
   export type get_Apiudaps = {
     method: "GET";
     path: "/api/udaps";
@@ -78,6 +86,7 @@ export namespace Endpoints {
       email?: string | undefined;
       marianne_text?: string | undefined;
       drac_text?: string | undefined;
+      dept_number?: string | undefined;
       udap_text?: string | undefined;
     }>;
   };
@@ -147,6 +156,7 @@ export type EndpointByMethod = {
     "/api/login": Endpoints.post_Apilogin;
     "/api/send-reset-password": Endpoints.post_ApisendResetPassword;
     "/api/reset-password": Endpoints.post_ApiresetPassword;
+    "/api/change-udap": Endpoints.post_ApichangeUdap;
     "/api/upload/image": Endpoints.post_Apiuploadimage;
     "/api/upload/picture/{pictureId}/lines": Endpoints.post_ApiuploadpicturePictureIdlines;
     "/api/pdf/report": Endpoints.post_Apipdfreport;

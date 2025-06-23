@@ -5,68 +5,99 @@ import { useLogout } from "../../contexts/AuthContext";
 import { Fragment } from "react/jsx-runtime";
 import { MenuTitle } from "./MenuTitle";
 import { menuActor } from "./menuMachine";
+import { useNavigate } from "@tanstack/react-router";
 
 export const MenuActions = () => {
   const logout = useLogout();
 
+  const navigate = useNavigate();
+
+  const navigateAndClose = (props: any) => {
+    navigate(props);
+    menuActor.send({ type: "CLOSE" });
+  };
+
   const actions = [
-    { text: "Clauses départementales", onClick: () => menuActor.send({ type: "GO_TO_CLAUSES_DEPT" }) },
-    { text: "Clauses nationales", onClick: () => menuActor.send({ type: "GO_TO_CLAUSES_NAT" }) },
-    { text: "Partage des CR", onClick: () => menuActor.send({ type: "GO_TO_SHARE" }) },
-    { text: "Services", onClick: () => menuActor.send({ type: "GO_TO_SERVICES" }) },
-    { text: "Aide", onClick: () => menuActor.send({ type: "GO_TO_HELP" }) },
-    { text: "Se déconnecter", onClick: logout, dataTestId: "logout" },
+    {
+      icon: "fr-icon-account-circle-fill",
+      text: "Mon compte",
+      onClick: () => navigateAndClose({ to: "/account" }),
+      mobileOnly: true,
+    },
+    { icon: "fr-icon-france-fill", text: "UDAP", onClick: () => navigateAndClose({ to: "/udap" }), mobileOnly: true },
+    { icon: "fr-icon-info-fill", text: "Aide", onClick: () => menuActor.send({ type: "GO_TO_HELP" }) },
+    { icon: "fr-icon-logout-box-r-line", text: "Déconnexion", onClick: logout, dataTestId: "logout" },
   ];
 
   return (
     <>
       <styled.div hideFrom="lg">
-        <MenuTitle hideDivider>Paramètre</MenuTitle>
+        <MenuTitle hideDivider> </MenuTitle>
       </styled.div>
       <Stack
         className={css({
           gap: "0",
         })}
       >
-        {actions.map(({ text, onClick, dataTestId }, index) => (
-          <Fragment key={text}>
-            <Button
-              className={css({
-                w: "100%",
-                h: "48px",
-                m: 0,
-                px: "16px !important",
-                color: "black",
-                fontSize: "14px",
-                "&:disabled": {
-                  color: "text-disabled-grey",
-                },
-              })}
-              data-test-id={dataTestId}
-              type="button"
-              priority="tertiary no outline"
-              onClick={(e) => {
-                e.preventDefault();
-                onClick();
-              }}
-            >
-              {text}
-            </Button>
-
-            <Center>
-              <Divider w="calc(100% - 32px)" />
-            </Center>
-          </Fragment>
+        {actions.map(({ text, onClick, dataTestId, mobileOnly, icon }, index) => (
+          <MenuAction
+            key={index}
+            text={text}
+            onClick={onClick}
+            dataTestId={dataTestId}
+            mobileOnly={mobileOnly}
+            icon={icon}
+          />
         ))}
-
-        <Button
-          className={css({ w: "100%", mt: "8px", fontSize: "14px" })}
-          linkProps={{ href: "https://compte-rendu-vif.beta.gouv.fr/faq", target: "_blank" }}
-          priority="tertiary no outline"
-        >
-          En savoir plus
-        </Button>
       </Stack>
+    </>
+  );
+};
+
+const MenuAction = ({
+  text,
+  onClick,
+  dataTestId,
+  mobileOnly,
+  icon,
+}: {
+  text: string;
+  onClick: () => void;
+  dataTestId?: string;
+  mobileOnly?: boolean;
+  icon: string;
+}) => {
+  return (
+    <>
+      <Button
+        className={css({
+          hideFrom: mobileOnly ? "lg" : undefined,
+          w: "100%",
+          h: "48px",
+          m: 0,
+          px: "16px !important",
+
+          color: "text-active-blue-france",
+          fontSize: "16px",
+          "&:disabled": {
+            color: "text-disabled-grey",
+          },
+        })}
+        data-test-id={dataTestId}
+        type="button"
+        priority="tertiary no outline"
+        iconId={icon as any}
+        onClick={(e) => {
+          e.preventDefault();
+          onClick();
+        }}
+      >
+        {text}
+      </Button>
+
+      <Center>
+        <Divider w="calc(100% - 32px)" />
+      </Center>
     </>
   );
 };

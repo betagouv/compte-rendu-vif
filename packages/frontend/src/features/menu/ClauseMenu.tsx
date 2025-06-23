@@ -16,14 +16,18 @@ import { v4 } from "uuid";
 import { fr } from "@codegouvfr/react-dsfr";
 import { db, useDbQuery } from "../../db/db";
 import { Clause_v2 } from "../../db/AppSchema";
+import { useSelector } from "@xstate/react";
+import { menuActor } from "./menuMachine";
 
-export const ClauseMenu = ({ isNational, ...props }: { isNational: boolean } & ModalContentProps) => {
+export const ClauseMenu = () => {
   const user = useUser()!;
+
+  const clauseData = useSelector(menuActor, (state) => state.context.clause)!;
 
   const clausesQuery = useDbQuery(
     db
       .selectFrom("clause_v2")
-      .where("key", "in", isNational ? ["type-espace", "decision"] : ["contacts-utiles", "bonnes-pratiques"])
+      .where("key", "=", clauseData.clauseId)
       .where("udap_id", "in", ["ALL", user.udap_id])
       .selectAll(),
   );
@@ -35,33 +39,29 @@ export const ClauseMenu = ({ isNational, ...props }: { isNational: boolean } & M
       </styled.div>
     );
 
-  if (isNational)
-    return (
-      <>
-        <ClauseTitle
-          isNational={isNational}
-          buttons={null}
-          alert={
-            <ClauseFormBanner
-              status="idle"
-              icon={fr.cx("fr-icon-alert-fill")}
-              text={`Ces clauses sont communes à toutes les UDAP et ne peuvent pas être modifiées.`}
-            />
-          }
-          {...props}
-        />
-        <styled.div px="20px">
-          <ClauseList clauses={(clausesQuery.data as any) ?? []} isEditing={false} />
-        </styled.div>
-      </>
-    );
-
   return (
-    <ClauseForm
-      clauses={clausesQuery.data?.map((c) => ({ ...c, text: c.text?.replaceAll("\\n", "\n") ?? "" })) ?? []}
-      {...props}
-      isNational={isNational}
-    />
+    <>
+      {/* <ClauseTitle
+        isNational={isNational}
+        buttons={null}
+        alert={
+          <ClauseFormBanner
+            status="idle"
+            icon={fr.cx("fr-icon-alert-fill")}
+            text={`Ces clauses sont communes à toutes les UDAP et ne peuvent pas être modifiées.`}
+          />
+        }
+        {...props}
+      /> */}
+      <MenuTitle>
+        <styled.span fontSize="20px" fontWeight="normal">
+          {clauseData.label}
+        </styled.span>
+      </MenuTitle>
+      <styled.div px="20px" pb="20px">
+        <ClauseList clauses={(clausesQuery.data as any) ?? []} isEditing={false} />
+      </styled.div>
+    </>
   );
 };
 
@@ -281,9 +281,6 @@ const ClauseList = ({ clauses, isEditing }: { clauses: ClauseWithIndex[]; isEdit
       {Object.entries(groupedByKey).map(([key, clauses], index) => (
         <Fragment key={key}>
           <Stack gap="20px">
-            <styled.span fontSize="20px" fontWeight="normal">
-              {(clauseNameMap as any)[key] ?? key}
-            </styled.span>
             {clauses.map((clause) => (
               <DivOrTextarea key={clause.id} clause={clause} isEditing={isEditing ?? false} />
             ))}

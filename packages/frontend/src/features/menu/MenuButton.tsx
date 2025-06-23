@@ -6,23 +6,23 @@ import { Button } from "@codegouvfr/react-dsfr/Button";
 import { PropsWithChildren, ReactNode, useEffect, useState } from "react";
 
 import { useSelector } from "@xstate/react";
-import { useIsDesktop } from "../../hooks/useIsDesktop";
+import { useIsDesktop, useIsXL } from "../../hooks/useIsDesktop";
 import { ClauseMenu } from "./ClauseMenu";
 import { HelpMenu } from "./HelpMenu";
 import { MenuActions } from "./MenuActions";
-import { ShareReport } from "./Share";
 
 import { ReportSearch } from "#components/ReportSearch.tsx";
 import { useRouter } from "@tanstack/react-router";
 import { menuActor, MenuStates } from "./menuMachine";
 import { ModalCloseButton } from "./MenuTitle";
-import { ServicesMenu } from "./ServicesMenu";
+import { useLogout } from "../../contexts/AuthContext";
 
 export const MenuButton = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-
+  const logout = useLogout();
   const menu = useSelector(menuActor, (state) => state.value);
   const isDesktop = useIsDesktop();
+  const isXL = useIsXL();
 
   const isPopoverOpen = menu === "main" && isDesktop;
 
@@ -33,8 +33,70 @@ export const MenuButton = () => {
       <Flex alignItems={{ base: "unset", lg: "center" }} h="100%">
         {isDesktop ? (
           <Flex alignItems="center">
-            <Status className={css({ display: "flex", alignItems: "center", fontSize: "10px" })} />
-            <Popover.Root
+            {/* <Status className={css({ display: "flex", alignItems: "center", fontSize: "10px" })} /> */}
+
+            <Button
+              className={css({
+                ml: "16px",
+                mb: "0",
+                textWrap: "nowrap",
+                "&::before": {
+                  mr: isXL ? undefined : "0 !important",
+                },
+              })}
+              size={!isXL ? "large" : "medium"}
+              priority="tertiary no outline"
+              linkProps={{ to: "/account" }}
+              iconId="fr-icon-account-circle-fill"
+            >
+              <styled.span hideBelow="xl">Mon compte</styled.span>
+            </Button>
+            <Button
+              className={css({
+                ml: "16px",
+                mb: "0",
+                "&::before": {
+                  mr: isXL ? undefined : "0 !important",
+                },
+              })}
+              size={!isXL ? "large" : "medium"}
+              priority="tertiary no outline"
+              linkProps={{ to: "/udap" }}
+              iconId="fr-icon-france-fill"
+            >
+              <styled.span hideBelow="xl">UDAP</styled.span>
+            </Button>
+            <Button
+              className={css({
+                ml: "16px",
+                mb: "0",
+                "&::before": {
+                  mr: isXL ? undefined : "0 !important",
+                },
+              })}
+              size={!isXL ? "large" : "medium"}
+              priority="tertiary no outline"
+              onClick={() => menuActor.send({ type: "GO_TO_HELP" })}
+              iconId="fr-icon-info-fill"
+            >
+              <styled.span hideBelow="xl">Aide</styled.span>
+            </Button>
+            <Button
+              className={css({
+                ml: "16px",
+                mb: "0",
+                "&::before": {
+                  mr: isXL ? undefined : "0 !important",
+                },
+              })}
+              size={!isXL ? "large" : "medium"}
+              onClick={() => logout()}
+              priority="tertiary no outline"
+              iconId="fr-icon-logout-box-r-line"
+            >
+              <styled.span hideBelow="xl">Déconnexion</styled.span>
+            </Button>
+            {/* <Popover.Root
               positioning={{ placement: "bottom-end" }}
               modal
               open={isPopoverOpen}
@@ -47,7 +109,7 @@ export const MenuButton = () => {
               <Popover.Trigger asChild>
                 <Button
                   className={css({ ml: "16px", mb: "0" })}
-                  priority="tertiary"
+                  priority="tertiary no outline"
                   iconId="ri-settings-2-fill"
                   data-test-id="settings-menu"
                 >
@@ -59,7 +121,7 @@ export const MenuButton = () => {
                   <MenuActions />
                 </Popover.Content>
               </Popover.Positioner>
-            </Popover.Root>
+            </Popover.Root> */}
           </Flex>
         ) : (
           <Center zIndex="1250" pos="absolute" top="0" right="24px" h="100%">
@@ -77,7 +139,7 @@ export const MenuButton = () => {
             ) : null}
             {/* @ts-ignore */}
             <Button
-              iconId="fr-icon-account-circle-fill"
+              iconId="ri-menu-fill"
               priority="tertiary no outline"
               nativeButtonProps={{
                 onClick: () => menuActor.send({ type: "OPEN" }),
@@ -87,7 +149,6 @@ export const MenuButton = () => {
           </Center>
         )}
       </Flex>
-      <MenuModal />
       <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
     </>
   );
@@ -96,10 +157,7 @@ export const MenuButton = () => {
 const modalContents: Record<MenuStates, (props: ModalContentProps) => ReactNode> = {
   main: (_props) => <MenuActions />,
   help: (_props) => <HelpMenu />,
-  clausesDepartementales: (props) => <ClauseMenu isNational={false} {...props} />,
-  clausesNationales: (props) => <ClauseMenu isNational {...props} />,
-  share: (props) => <ShareReport {...props} />,
-  services: (_props) => <ServicesMenu />,
+  clauses: (_props) => <ClauseMenu />,
   closed: () => null,
 };
 

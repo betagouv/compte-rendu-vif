@@ -148,7 +148,7 @@ const AppHeader = () => {
             <div
               className={cx("fr-header__body-row", css({ justifyContent: "space-between", w: "100%", margin: "0" }))}
             >
-              <Link to="/" title="Compte rendu vif">
+              <Link className={css({ textWrap: "nowrap" })} to="/" title="Compte rendu vif">
                 <styled.div
                   className="fr-header__brand"
                   bgColor={{ base: "transparent", lg: "unset" }}
@@ -190,6 +190,7 @@ const AppHeader = () => {
           </div>
         </div>
       </header>
+      <MenuModal />
     </>
   );
 };

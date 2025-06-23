@@ -14,26 +14,26 @@ import { Spinner } from "#components/Spinner.tsx";
 import { useUserSettings } from "../../hooks/useUserSettings";
 
 export const ShareReport = ({ backButtonOnClick }: { backButtonOnClick: () => void }) => {
-  const user = useUser()!;
+    const user = useUser()!;
 
-  const coworkersQuery = useDbQuery(
-    db.selectFrom("user").where("udap_id", "=", user.udap_id).where("id", "!=", user.id).selectAll(),
-  );
+    const coworkersQuery = useDbQuery(
+      db.selectFrom("user").where("udap_id", "=", user.udap_id).where("id", "!=", user.id).selectAll(),
+    );
 
-  const delegationsQuery = useDbQuery(db.selectFrom("delegation").where("createdBy", "=", user.id).selectAll());
+    const delegationsQuery = useDbQuery(db.selectFrom("delegation").where("createdBy", "=", user.id).selectAll());
 
-  const delegatedToMeQuery = useDbQuery(
-    db
-      .selectFrom("delegation")
-      .where("delegatedTo", "=", user.id)
-      .innerJoin("user", "delegation.createdBy", "user.id")
-      .selectAll(["delegation"])
-      .select(["user.name as createdByName"]),
-  );
+    const delegatedToMeQuery = useDbQuery(
+      db
+        .selectFrom("delegation")
+        .where("delegatedTo", "=", user.id)
+        .innerJoin("user", "delegation.createdBy", "user.id")
+        .selectAll(["delegation"])
+        .select(["user.name as createdByName"]),
+    );
 
-  const coworkers = coworkersQuery.data ?? [];
-  const delegations = delegationsQuery.data ?? [];
-  const delegatedToMe = delegatedToMeQuery.data ?? [];
+    const coworkers = coworkersQuery.data ?? [];
+    const delegations = delegationsQuery.data ?? [];
+    const delegatedToMe = delegatedToMeQuery.data ?? [];
 
   const { userSettings, isLoading: isUserSettingsLoading, existing } = useUserSettings();
 

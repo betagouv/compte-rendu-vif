@@ -42,7 +42,9 @@ export const InfoForm = () => {
       return;
     }
 
-    form.setValue("meetDate", date.toISOString() as any);
+    const offsetMs = date.getTimezoneOffset() * 60000;
+    const localDate = new Date(date.getTime() - offsetMs);
+    form.setValue("meetDate", localDate.toISOString() as any);
   };
 
   const setTime = (e: any) => {

@@ -3,6 +3,7 @@ import { ENV } from "../envVars";
 import { format } from "date-fns";
 import { sentry } from "./sentry";
 import { Report } from "../db-types";
+import { getPDFInMailName } from "@cr-vif/pdf";
 
 const transporter = createTransport({
   host: ENV.EMAIL_HOST,
@@ -40,18 +41,6 @@ Cordialement`,
       },
     ],
   });
-};
-
-// TODO: CR_commune_demandeur_date.pdf
-const getPDFInMailName = (report: Report) => {
-  const { city, applicantName, meetDate } = report;
-
-  const baseDate = meetDate ? new Date(meetDate.toString()) : new Date();
-  const date = format(baseDate, "dd-MM-yyyy");
-
-  const name = `CR_${[city?.replaceAll(" ", ""), applicantName?.replaceAll(" ", ""), date].filter(Boolean).join("_")}.pdf`;
-
-  return name;
 };
 
 export const sendPasswordResetMail = ({ email, temporaryLink }: { email: string; temporaryLink: string }) => {

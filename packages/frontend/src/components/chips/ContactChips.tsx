@@ -23,6 +23,7 @@ export const ContactChips = (props: FlexProps & { disabled?: boolean }) => {
       {...props}
       onChange={(values) => form.setValue("contacts", values.join(","))}
       label="Contacts utiles"
+      clauseId="contacts-utiles"
     />
   );
 };

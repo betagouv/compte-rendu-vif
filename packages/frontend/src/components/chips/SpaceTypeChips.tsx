@@ -22,6 +22,7 @@ export const SpaceTypeChips = (props: FlexProps & { disabled?: boolean }) => {
       {...props}
       onChange={(values) => form.setValue("projectSpaceType", values.join(","))}
       label="Type d'espace protégé"
+      clauseId="type-espace"
     />
   );
 };

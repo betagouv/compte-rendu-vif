@@ -221,6 +221,17 @@ export class UserService {
   validateRefreshToken(token: string) {
     return jwt.verify(token, ENV.JWT_REFRESH_SECRET) as { sub: string };
   }
+
+  async changeUdap(userId: string, udapId: string) {
+    const udap = await db.selectFrom("udap").where("id", "=", udapId).selectAll().execute();
+    if (!udap[0]) {
+      throw new AppError(400, "L'udap n'existe pas");
+    }
+
+    await db.updateTable("user").set({ udap_id: udapId }).where("id", "=", userId).execute();
+
+    return { message: "L'udap a été changé avec succès" };
+  }
 }
 
 const key = {
