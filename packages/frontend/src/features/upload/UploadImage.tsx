@@ -22,7 +22,7 @@ const modal = createModal({
   isOpenedByDefault: false,
 });
 
-export const UploadImage = ({ reportId }: { reportId: string }) => {
+export const UploadImage = ({ reportId, disabled }: { reportId: string; disabled: boolean }) => {
   const [statusMap, setStatusMap] = useState<Record<string, string>>({});
   const [selectedPicture, setSelectedPicture] = useState<{ id: string; url: string } | null>(null);
 
@@ -114,6 +114,7 @@ export const UploadImage = ({ reportId }: { reportId: string }) => {
         </Center>
       </styled.div>
       <Button
+        disabled={disabled}
         type="button"
         iconId="ri-add-line"
         // disabled={!canUploadImage}

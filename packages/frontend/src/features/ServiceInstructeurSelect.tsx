@@ -39,8 +39,8 @@ export const ServiceInstructeurSelect = ({ disabled }: { disabled?: boolean }) =
       onValueChange={(e) => selectItem(e.items?.[0] as ServiceInstructeurs)}
     >
       <Combobox.Control>
-        <Combobox.Input asChild placeholder="Sélectionner un service instructeur">
-          <ProxyInput />
+        <Combobox.Input asChild placeholder="Sélectionner un service instructeur" disabled={disabled}>
+          <ProxyInput disabled={disabled} />
         </Combobox.Input>
         <Combobox.Trigger asChild top="unset !important" bottom="28px">
           {/* @ts-expect-error */}
@@ -69,5 +69,5 @@ export const ServiceInstructeurSelect = ({ disabled }: { disabled?: boolean }) =
 };
 
 const ProxyInput = (props: any) => {
-  return <Input label="Service instructeur" nativeInputProps={props} />;
+  return <Input label="Service instructeur" disabled={props.disabled} nativeInputProps={props} />;
 };

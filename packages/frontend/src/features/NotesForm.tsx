@@ -25,7 +25,7 @@ export const NotesForm = () => {
         <PrecisionsTextArea />
       </InputGroupWithTitle>
 
-      <UploadImage reportId={form.getValues().id} />
+      <UploadImage reportId={form.getValues().id} disabled={isFormDisabled} />
 
       <Divider mt="36px" mb="52px" />
 

@@ -18,6 +18,7 @@ export const EmailInput = ({
   value,
   onValueChange,
   single,
+  disabled = false,
 }: Partial<InputProps> & {
   value: string[];
   single?: boolean;
@@ -83,6 +84,7 @@ export const EmailInput = ({
               pr: single ? "0" : "90px",
             },
           })}
+          disabled={disabled}
           label={label}
           hintText={hintText}
           nativeInputProps={{

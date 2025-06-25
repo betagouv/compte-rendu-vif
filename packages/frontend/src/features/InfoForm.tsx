@@ -123,6 +123,7 @@ export const InfoForm = () => {
 
         <styled.div mt="8px">
           <EmailInput
+            disabled={isFormDisabled}
             value={[applicantEmail ?? ""]}
             label={"Courriel demandeur"}
             single

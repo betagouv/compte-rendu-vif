@@ -34,6 +34,7 @@ export const ChipGroup = ({
     <Flex {...props} gap="8px" mt={label ? "8px" : 0} flexWrap="wrap">
       {values.map((option) => (
         <Chip
+          disabled={disabled}
           key={option.key}
           isChecked={selectedOptions.has(option.key)}
           onCheckChange={(isChecked) => {
@@ -87,15 +88,17 @@ export const Chip = ({
   children,
   onCheckChange,
   isChecked,
+  disabled,
   className,
 }: BoxProps & {
   isChecked?: boolean;
+  disabled?: boolean;
   className?: string;
   onCheckChange: (value: boolean) => void;
 }) => {
   return (
     <Tag
-      className={className}
+      className={cx(className, css({ pointerEvents: disabled ? "none" : "auto" }))}
       pressed={isChecked}
       aria-pressed={isChecked}
       nativeButtonProps={{
