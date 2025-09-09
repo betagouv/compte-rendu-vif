@@ -1,8 +1,9 @@
+import "./polyfill";
 import { startReactDsfr } from "@codegouvfr/react-dsfr/spa";
 import React, { PropsWithChildren, useEffect, useMemo, useRef } from "react";
 import ReactDOM from "react-dom/client";
 import { App } from "./App";
-import { AuthProvider, useAuthContext } from "./contexts/AuthContext";
+import { AuthProvider } from "./contexts/AuthContext";
 // import "./index.css";
 import { Link } from "@tanstack/react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -19,7 +20,7 @@ if ("serviceWorker" in navigator) {
 // force light mode
 localStorage.setItem("scheme", "light");
 
-startReactDsfr({ defaultColorScheme: "dark", Link: Link });
+startReactDsfr({ defaultColorScheme: "light", Link: Link });
 initFonts();
 
 const queryClient = new QueryClient({

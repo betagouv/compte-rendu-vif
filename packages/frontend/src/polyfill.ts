@@ -1,0 +1,5 @@
+// @ts-ignore
+import structuredClone from "@ungap/structured-clone";
+if (!("structuredClone" in globalThis)) {
+  globalThis.structuredClone = structuredClone;
+}

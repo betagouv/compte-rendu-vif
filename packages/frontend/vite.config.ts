@@ -51,13 +51,13 @@ export default defineConfig({
     }),
   ],
   optimizeDeps: {
-    exclude: ["@journeyapps/wa-sqlite", "@powersync/web"],
+    exclude: ["@journeyapps/wa-sqlite", "@powersync/web", "wa-sqlite"],
     include: ["@powersync/web > js-logger"],
   },
   envDir: "../..",
   preview: {},
   build: {
-    target: "esnext",
+    target: "es2015",
   },
   worker: {
     format: "es",
