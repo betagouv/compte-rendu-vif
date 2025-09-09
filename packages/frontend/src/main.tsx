@@ -12,6 +12,7 @@ import { registerSW } from "virtual:pwa-register";
 import { initFonts } from "@cr-vif/pdf";
 import { powerSyncDb, setupPowersync } from "./db/db";
 import { PowerSyncContext } from "@powersync/react";
+import MuiDsfrThemeProvider from "@codegouvfr/react-dsfr/mui";
 
 if ("serviceWorker" in navigator) {
   registerSW({});
@@ -47,15 +48,17 @@ const WithPowersync = ({ children }: PropsWithChildren) => {
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <ErrorBoundary fallback={<div>Une erreur s'est produite</div>}>
-      <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <WithPowersync>
-            <App />
-          </WithPowersync>
-        </AuthProvider>
-      </QueryClientProvider>
-    </ErrorBoundary>
+    <MuiDsfrThemeProvider>
+      <ErrorBoundary fallback={<div>Une erreur s'est produite</div>}>
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
+            <WithPowersync>
+              <App />
+            </WithPowersync>
+          </AuthProvider>
+        </QueryClientProvider>
+      </ErrorBoundary>
+    </MuiDsfrThemeProvider>
   </React.StrictMode>,
 );
 

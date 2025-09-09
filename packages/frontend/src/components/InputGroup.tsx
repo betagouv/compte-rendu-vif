@@ -48,6 +48,7 @@ const Title = ({ children, ...props }: PropsWithChildren & BoxProps) => (
 
 export const stateMap: Record<NonNullable<InputProps["state"]>, string> = {
   default: "",
+  info: "fr-input-group--info",
   error: "fr-input-group--error",
   success: "fr-input-group--valid",
 };
