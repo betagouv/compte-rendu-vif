@@ -1119,6 +1119,24 @@
               "_dark": "#ff5655"
             }
           },
+          "background-action-high-grey": {
+            "value": {
+              "base": "#3a3a3a",
+              "_dark": "#cecece"
+            }
+          },
+          "background-action-high-grey-hover": {
+            "value": {
+              "base": "#616161",
+              "_dark": "#a8a8a8"
+            }
+          },
+          "background-action-high-grey-active": {
+            "value": {
+              "base": "#777",
+              "_dark": "#939393"
+            }
+          },
           "background-action-high-blue-france": {
             "value": {
               "base": "#000091",
@@ -2667,6 +2685,12 @@
               "_dark": "#aea397"
             }
           },
+          "border-contrast-grey": {
+            "value": {
+              "base": "#929292",
+              "_dark": "#666"
+            }
+          },
           "border-active-blue-france": {
             "value": {
               "base": "#000091",
@@ -3871,6 +3895,18 @@
             "value": {
               "base": "#3a3a3a",
               "_dark": "#cecece"
+            }
+          },
+          "grey-200-850-hover": {
+            "value": {
+              "base": "#616161",
+              "_dark": "#a8a8a8"
+            }
+          },
+          "grey-200-850-active": {
+            "value": {
+              "base": "#777",
+              "_dark": "#939393"
             }
           },
           "grey-925-125": {

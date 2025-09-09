@@ -30,11 +30,22 @@
     "vite-node": "^1.4.0"
   },
   "pnpm": {
-    "patchedDependencies": {
-      "react-pdf-html@2.0.4": "patches/react-pdf-html@2.0.4.patch"
-    },
     "overrides": {
       "restructure": "3.0.0"
-    }
+    },
+    "ignoredBuiltDependencies": [
+      "@biomejs/biome",
+      "@prisma/client",
+      "@prisma/engines",
+      "@swc/core",
+      "prisma"
+    ],
+    "onlyBuiltDependencies": [
+      "@journeyapps/wa-sqlite",
+      "arktype",
+      "canvas",
+      "es5-ext",
+      "esbuild"
+    ]
   }
 }

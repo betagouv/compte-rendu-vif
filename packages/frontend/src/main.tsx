@@ -3,7 +3,7 @@ import React, { PropsWithChildren, useEffect, useMemo, useRef } from "react";
 import ReactDOM from "react-dom/client";
 import { App } from "./App";
 import { AuthProvider, useAuthContext } from "./contexts/AuthContext";
-import "./index.css";
+// import "./index.css";
 import { Link } from "@tanstack/react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ErrorBoundary } from "react-error-boundary";
