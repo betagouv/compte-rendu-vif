@@ -1,10 +1,8 @@
 import { Banner } from "#components/Banner";
 import { EnsureUser } from "#components/EnsureUser";
-import { SearchResults } from "#components/ReportSearch.js";
+import { SearchResults } from "#components/ReportSearch.tsx";
 import { Status } from "#components/SyncForm";
-import { Tabs } from "#components/Tabs";
 import { css } from "#styled-system/css";
-import { Box, Center, CenterProps, Flex, styled } from "#styled-system/jsx";
 import Button from "@codegouvfr/react-dsfr/Button";
 import Input from "@codegouvfr/react-dsfr/Input";
 import { useStatus } from "@powersync/react";
@@ -15,29 +13,16 @@ import { v4 } from "uuid";
 import { useUser } from "../contexts/AuthContext";
 import { db } from "../db/db";
 import { AllReports, MyReports } from "../features/ReportList";
-
+import { Flex } from "#components/ui/Flex.tsx";
+import { Box, BoxProps, styled, Tab, Tabs } from "@mui/material";
+import { Center } from "#components/ui/Center.tsx";
+import { Button as MUIButton } from "@mui/material";
+import { useStyles } from "tss-react";
 const Index = () => {
   const [search, setSearch] = useState("");
   const user = useUser()!;
 
-  const options = [
-    {
-      id: "my",
-      label: user.name,
-      className: css({
-        position: "absolute",
-        left: { base: "16px", lg: "calc((100vw - 400px * 2 - 126px) / 2)" },
-      }),
-    },
-    {
-      id: "udap",
-      label: "UDAP",
-      className: css({
-        position: "absolute",
-        left: "16px",
-      }),
-    },
-  ];
+  const { css } = useStyles();
 
   const navigate = useNavigate();
 
@@ -66,28 +51,32 @@ const Index = () => {
   });
 
   return (
-    <Flex direction="column" color="text-label-grey">
-      <SimpleBanner pt={{ base: "15px", lg: "82px" }} pb={{ base: "49px", lg: "82px" }}>
-        <Flex hideFrom="lg" justifyContent="space-between" w="100%" px="16px">
-          <styled.div fontSize="16px" fontWeight="bold">
+    <Flex flexDirection="column" color="text-label-grey">
+      <SimpleBanner pt={{ xs: "15px", lg: "82px" }} pb={{ xs: "49px", lg: "82px" }}>
+        <Flex
+          sx={{
+            display: { xs: "flex", lg: "none" },
+          }}
+          justifyContent="space-between"
+          width="100%"
+          px="16px"
+        >
+          <Box fontSize="16px" fontWeight="bold">
             Compte-rendu VIF
-          </styled.div>
+          </Box>
           <Status className={css({ fontSize: "10px" })} status="saved" />
         </Flex>
         <Center justifyContent="center">
-          <Button
-            className={css({
-              mr: { base: "0", lg: "1rem" },
-              mt: { base: "28px", lg: "0" },
-              mb: { base: "-12px", lg: "0" },
-            })}
-            iconId="ri-add-line"
-            data-testid="create-report"
-            nativeButtonProps={{ onClick: () => createReportMutation.mutate() }}
-          >
-            Créer un CR
-          </Button>
-          <styled.div hideBelow="lg">
+          <Box display="flex" mr={{ xs: 0, lg: "1rem" }} mt={{ xs: "28px", lg: 0 }} mb={{ xs: "-12px", lg: 0 }}>
+            <Button
+              iconId="ri-add-line"
+              data-testid="create-report"
+              nativeButtonProps={{ onClick: () => createReportMutation.mutate() }}
+            >
+              Créer un CR
+            </Button>
+          </Box>
+          <Box sx={{ display: { xs: "none", lg: "block" } }}>
             <Input
               className={css({
                 "& input": {
@@ -105,8 +94,8 @@ const Index = () => {
                 placeholder: "Rechercher nom, ville, titre...",
               }}
               addon={
-                <styled.div display="flex" pos="relative" alignItems="center">
-                  <styled.div pos="absolute" left="-32px">
+                <Box display="flex" position="relative" alignItems="center">
+                  <Box position="absolute" left="-32px">
                     {search ? (
                       // @ts-expect-error dsfr buttons props must have children
                       <Button
@@ -118,28 +107,62 @@ const Index = () => {
                         priority="tertiary no outline"
                       ></Button>
                     ) : null}
-                  </styled.div>
+                  </Box>
                   <Button className={css({ position: "relative" })}>Rechercher</Button>
-                </styled.div>
+                </Box>
               }
             />
-          </styled.div>
+          </Box>
         </Center>
       </SimpleBanner>
 
-      {search ? (
-        <SearchResults hideEmpty search={search} />
-      ) : (
-        <Tabs.Root defaultValue="my">
-          <Tabs.List>
-            {options.map((option) => (
-              <Tabs.Trigger key={option.id} value={option.id} position="relative">
-                <Box className={option.className}>{option.label}</Box>
-              </Tabs.Trigger>
-            ))}
-            <Tabs.Indicator />
-          </Tabs.List>
-          <Center>
+      {search ? <SearchResults hideEmpty search={search} /> : <MainContentTabs />}
+    </Flex>
+  );
+};
+
+const MainContentTabs = () => {
+  const [value, setValue] = useState("my");
+  const user = useUser()!;
+
+  const options = [
+    {
+      id: "my",
+      label: user.name,
+      props: {
+        position: "absolute" as const,
+        left: { xs: "100px", lg: "calc((100vw - 400px * 2 - 126px) / 2 + 100px)" },
+      },
+    },
+    {
+      id: "udap",
+      label: "UDAP",
+      props: {
+        position: "absolute" as const,
+        left: "16px",
+      },
+    },
+  ];
+
+  return (
+    <Flex flex="1" flexDirection={"row"} justifyContent={"center"} width="100%">
+      {options.map((option) => (
+        <TabButton key={option.id} selected={value === option.id} onClick={() => setValue(option.id)}>
+          <Box {...option.props}>{option.label}</Box>
+        </TabButton>
+      ))}
+      {/* <Tabs onChange={(_, index) => setValue(index)} value={value}>
+        {options.map((option, index) => (
+          <Tab
+            key={option.id}
+            label={option.label}
+            id={`tab-${index}`}
+            aria-controls={`tabpanel-${index}`}
+            {...option.props}
+          />
+        ))}
+      </Tabs> */}
+      {/* <Center>
             <Tabs.Content
               value="my"
               display="flex"
@@ -158,14 +181,49 @@ const Index = () => {
             >
               <AllReports />
             </Tabs.Content>
-          </Center>
-        </Tabs.Root>
-      )}
+          </Center> */}
+      {/* <TabPanel value={value} >
+        <MyReports />
+      </TabPanel> */}
     </Flex>
   );
 };
 
-const SimpleBanner = (props: CenterProps) => {
+const TabButton = styled(Button)<{ selected?: boolean }>(({ selected }) => ({
+  backgroundColor: selected ? "white" : "#ececfe",
+  color: "black",
+  fontSize: "20px",
+  fontWeight: "bold",
+  position: "relative",
+  flex: "1",
+  zIndex: selected ? "2" : "1",
+  height: "56px",
+  overflow: "hidden",
+  whiteSpace: "nowrap",
+  textOverflow: "ellipsis",
+  boxShadow: selected ? "6px 0px 10px 3px rgba(0, 0, 0, .05), -6px 0px 10px 3px rgba(0, 0, 0, .05)" : "none",
+  ":hover": {
+    backgroundColor: selected ? "white !important" : "#dadafd !important",
+  },
+}));
+
+const TabPanel = (props: { children?: React.ReactNode; index: number; value: number }) => {
+  const { children, value, index, ...rest } = props;
+  return (
+    <Box
+      role="tabpanel"
+      hidden={value !== index}
+      id={`tabpanel-${index}`}
+      aria-labelledby={`tab-${index}`}
+      display={value === index ? "block" : "none"}
+      {...rest}
+    >
+      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+    </Box>
+  );
+};
+
+const SimpleBanner = (props: Omit<BoxProps, "ref">) => {
   const powerSyncStatus = useStatus();
   const status = powerSyncStatus.connected ? "saved" : "offline";
 

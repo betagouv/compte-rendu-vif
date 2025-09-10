@@ -4,10 +4,21 @@ import { TanStackRouterVite } from "@tanstack/router-vite-plugin";
 import wasm from "vite-plugin-wasm";
 import { VitePWA } from "vite-plugin-pwa";
 import topLevelAwait from "vite-plugin-top-level-await";
-
+import { devtools } from "@tanstack/devtools-vite";
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
+    devtools({
+      editor: {
+        name: "VSCode",
+        open: async (path, lineNumber, columnNumber) => {
+          const { exec } = await import("node:child_process");
+          exec(
+            `code -g "${path.replaceAll("$", "\\$")}${lineNumber ? `:${lineNumber}` : ""}${columnNumber ? `:${columnNumber}` : ""}"`,
+          );
+        },
+      },
+    }),
     react(),
     TanStackRouterVite(),
     wasm(),
@@ -57,7 +68,7 @@ export default defineConfig({
   envDir: "../..",
   preview: {},
   build: {
-    target: "es2015",
+    target: "esnext",
   },
   worker: {
     format: "es",

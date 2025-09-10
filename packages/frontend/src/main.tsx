@@ -13,6 +13,7 @@ import { initFonts } from "@cr-vif/pdf";
 import { powerSyncDb, setupPowersync } from "./db/db";
 import { PowerSyncContext } from "@powersync/react";
 import MuiDsfrThemeProvider from "@codegouvfr/react-dsfr/mui";
+import { TanStackDevtools } from "@tanstack/react-devtools";
 
 if ("serviceWorker" in navigator) {
   registerSW({});
@@ -48,6 +49,7 @@ const WithPowersync = ({ children }: PropsWithChildren) => {
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
+    <TanStackDevtools />
     <MuiDsfrThemeProvider>
       <ErrorBoundary fallback={<div>Une erreur s'est produite</div>}>
         <QueryClientProvider client={queryClient}>
