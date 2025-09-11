@@ -19,3 +19,7 @@ export const downloadFile = (url: string, filename = "report.pdf") => {
   a.click();
   a.remove();
 };
+
+export const uppercaseFirstLetterIf = (str: string, condition: boolean) => {
+  return condition ? str.charAt(0).toUpperCase() + str.slice(1) : str;
+};

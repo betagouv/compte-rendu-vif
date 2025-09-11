@@ -131,8 +131,9 @@ const MainContentTabs = () => {
       label: user.name,
       props: {
         position: "absolute" as const,
-        left: { xs: "100px", lg: "calc((100vw - 400px * 2 - 126px) / 2 + 100px)" },
+        left: { xs: "24px", lg: "calc((100vw - 400px * 2 - 126px) / 2 + 100px)" },
       },
+      component: <MyReports />,
     },
     {
       id: "udap",
@@ -141,61 +142,50 @@ const MainContentTabs = () => {
         position: "absolute" as const,
         left: "16px",
       },
+      component: <AllReports />,
     },
   ];
 
   return (
-    <Flex flex="1" flexDirection={"row"} justifyContent={"center"} width="100%">
-      {options.map((option) => (
-        <TabButton key={option.id} selected={value === option.id} onClick={() => setValue(option.id)}>
-          <Box {...option.props}>{option.label}</Box>
-        </TabButton>
-      ))}
-      {/* <Tabs onChange={(_, index) => setValue(index)} value={value}>
-        {options.map((option, index) => (
-          <Tab
+    <Flex flex="1" flexDirection="column" pb={{ xs: "16px", lg: "0" }}>
+      <Flex flex="1" flexDirection={"row"} justifyContent={"center"} width="100%" height="56px" overflow="hidden">
+        {options.map((option) => (
+          <TabButton
             key={option.id}
-            label={option.label}
-            id={`tab-${index}`}
-            aria-controls={`tabpanel-${index}`}
+            selected={value === option.id}
+            onClick={() => setValue(option.id)}
+            aria-controls={`tabpanel-${option.id}`}
+            id={`tab-${option.id}`}
             {...option.props}
-          />
+          >
+            <Box sx={option.props}>{option.label}</Box>
+          </TabButton>
         ))}
-      </Tabs> */}
-      {/* <Center>
-            <Tabs.Content
-              value="my"
-              display="flex"
-              justifyContent={{ base: "center", lg: "center" }}
-              w="100%"
-              px="16px"
-            >
-              <MyReports />
-            </Tabs.Content>
-            <Tabs.Content
-              value="udap"
-              display="flex"
-              justifyContent={{ base: "center", lg: "center" }}
-              w="100%"
-              px="16px"
-            >
-              <AllReports />
-            </Tabs.Content>
-          </Center> */}
-      {/* <TabPanel value={value} >
-        <MyReports />
-      </TabPanel> */}
+      </Flex>
+
+      <Box flex="1">
+        {options.map((option) => (
+          <TabPanel key={option.id} value={value} id={option.id}>
+            {option.component}
+          </TabPanel>
+        ))}
+      </Box>
     </Flex>
   );
 };
 
-const TabButton = styled(Button)<{ selected?: boolean }>(({ selected }) => ({
+const TabButton = styled(Button)<{ selected?: boolean }>(({ selected, theme }) => ({
   backgroundColor: selected ? "white" : "#ececfe",
   color: "black",
-  fontSize: "20px",
+  fontSize: "16px",
+  [theme.breakpoints.up("lg")]: {
+    fontSize: "20px",
+  },
   fontWeight: "bold",
   position: "relative",
   flex: "1",
+  justifyContent: "start",
+  textAlign: "left",
   zIndex: selected ? "2" : "1",
   height: "56px",
   overflow: "hidden",
@@ -207,18 +197,11 @@ const TabButton = styled(Button)<{ selected?: boolean }>(({ selected }) => ({
   },
 }));
 
-const TabPanel = (props: { children?: React.ReactNode; index: number; value: number }) => {
-  const { children, value, index, ...rest } = props;
+const TabPanel = (props: { children?: React.ReactNode; value: string; id: string }) => {
+  const { children, value, id, ...rest } = props;
   return (
-    <Box
-      role="tabpanel"
-      hidden={value !== index}
-      id={`tabpanel-${index}`}
-      aria-labelledby={`tab-${index}`}
-      display={value === index ? "block" : "none"}
-      {...rest}
-    >
-      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+    <Box role="tabpanel" hidden={value !== id} id={`tabpanel-${id}`} aria-labelledby={`tab-${id}`} {...rest}>
+      {value === id && <Box sx={{ p: 3 }}>{children}</Box>}
     </Box>
   );
 };
