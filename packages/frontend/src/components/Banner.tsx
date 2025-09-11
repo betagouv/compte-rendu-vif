@@ -1,8 +1,8 @@
 import { SyncFormStatus } from "./SyncForm";
 import { forwardRef } from "react";
 import { BoxProps } from "@mui/material";
-import { Center } from "./ui/Center";
 import { fr } from "@codegouvfr/react-dsfr";
+import { Center } from "./MUIDsfr";
 
 export const Banner = forwardRef<HTMLDivElement, BoxProps & { status: SyncFormStatus }>(
   ({ status, className, ...props }, ref) => {

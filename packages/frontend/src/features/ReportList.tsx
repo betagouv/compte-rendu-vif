@@ -13,7 +13,7 @@ import welcomeImage from "../assets/welcome.svg";
 import { useIsDesktop } from "../hooks/useIsDesktop";
 import { chunk } from "pastable";
 import { Report } from "../db/AppSchema";
-import { Center } from "#components/ui/Center.tsx";
+import { Center } from "#components/MUIDsfr.tsx";
 import { Box, Stack, Typography } from "@mui/material";
 import { fr } from "@codegouvfr/react-dsfr";
 import { Flex } from "#components/ui/Flex.tsx";

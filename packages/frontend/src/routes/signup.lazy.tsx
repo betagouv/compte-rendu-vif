@@ -2,7 +2,7 @@ import { createLazyFileRoute } from "@tanstack/react-router";
 import { SignupForm } from "#components/SignupForm";
 import { styled } from "#styled-system/jsx";
 import { RedirectIfUser } from "#components/RedirectIfUser";
-import { Center } from "#components/ui/Center.tsx";
+import { Center } from "#components/MUIDsfr.tsx";
 import { Flex } from "#components/ui/Flex.tsx";
 import { Typography } from "@mui/material";
 

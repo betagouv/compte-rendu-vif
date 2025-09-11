@@ -2,8 +2,6 @@ import { Banner } from "#components/Banner";
 import { EnsureUser } from "#components/EnsureUser";
 import { SearchResults } from "#components/ReportSearch.tsx";
 import { Status } from "#components/SyncForm";
-import { css } from "#styled-system/css";
-import Button from "@codegouvfr/react-dsfr/Button";
 import Input from "@codegouvfr/react-dsfr/Input";
 import { useStatus } from "@powersync/react";
 import { useMutation } from "@tanstack/react-query";
@@ -14,10 +12,12 @@ import { useUser } from "../contexts/AuthContext";
 import { db } from "../db/db";
 import { AllReports, MyReports } from "../features/ReportList";
 import { Flex } from "#components/ui/Flex.tsx";
-import { Box, BoxProps, styled, Tab, Tabs } from "@mui/material";
-import { Center } from "#components/ui/Center.tsx";
-import { Button as MUIButton } from "@mui/material";
+import { Box, BoxProps } from "@mui/material";
+import { Center } from "#components/MUIDsfr.tsx";
 import { useStyles } from "tss-react";
+import { Tabs } from "#components/Tabs.tsx";
+import { Button } from "#components/MUIDsfr.tsx";
+
 const Index = () => {
   const [search, setSearch] = useState("");
   const user = useUser()!;
@@ -122,7 +122,6 @@ const Index = () => {
 };
 
 const MainContentTabs = () => {
-  const [value, setValue] = useState("my");
   const user = useUser()!;
 
   const options = [
@@ -131,7 +130,7 @@ const MainContentTabs = () => {
       label: user.name,
       props: {
         position: "absolute" as const,
-        left: { xs: "24px", lg: "calc((100vw - 400px * 2 - 126px) / 2 + 100px)" },
+        left: { xs: "24px", lg: "calc((100vw - 400px * 2 - 126px) / 2)" },
       },
       component: <MyReports />,
     },
@@ -148,61 +147,8 @@ const MainContentTabs = () => {
 
   return (
     <Flex flex="1" flexDirection="column" pb={{ xs: "16px", lg: "0" }}>
-      <Flex flex="1" flexDirection={"row"} justifyContent={"center"} width="100%" height="56px" overflow="hidden">
-        {options.map((option) => (
-          <TabButton
-            key={option.id}
-            selected={value === option.id}
-            onClick={() => setValue(option.id)}
-            aria-controls={`tabpanel-${option.id}`}
-            id={`tab-${option.id}`}
-            {...option.props}
-          >
-            <Box sx={option.props}>{option.label}</Box>
-          </TabButton>
-        ))}
-      </Flex>
-
-      <Box flex="1">
-        {options.map((option) => (
-          <TabPanel key={option.id} value={value} id={option.id}>
-            {option.component}
-          </TabPanel>
-        ))}
-      </Box>
+      <Tabs options={options} />
     </Flex>
-  );
-};
-
-const TabButton = styled(Button)<{ selected?: boolean }>(({ selected, theme }) => ({
-  backgroundColor: selected ? "white" : "#ececfe",
-  color: "black",
-  fontSize: "16px",
-  [theme.breakpoints.up("lg")]: {
-    fontSize: "20px",
-  },
-  fontWeight: "bold",
-  position: "relative",
-  flex: "1",
-  justifyContent: "start",
-  textAlign: "left",
-  zIndex: selected ? "2" : "1",
-  height: "56px",
-  overflow: "hidden",
-  whiteSpace: "nowrap",
-  textOverflow: "ellipsis",
-  boxShadow: selected ? "6px 0px 10px 3px rgba(0, 0, 0, .05), -6px 0px 10px 3px rgba(0, 0, 0, .05)" : "none",
-  ":hover": {
-    backgroundColor: selected ? "white !important" : "#dadafd !important",
-  },
-}));
-
-const TabPanel = (props: { children?: React.ReactNode; value: string; id: string }) => {
-  const { children, value, id, ...rest } = props;
-  return (
-    <Box role="tabpanel" hidden={value !== id} id={`tabpanel-${id}`} aria-labelledby={`tab-${id}`} {...rest}>
-      {value === id && <Box sx={{ p: 3 }}>{children}</Box>}
-    </Box>
   );
 };
 

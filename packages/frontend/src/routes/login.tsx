@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { LoginForm } from "#components/LoginForm";
 import { RedirectIfUser } from "#components/RedirectIfUser";
-import { Center } from "#components/ui/Center.tsx";
+import { Center } from "#components/MUIDsfr.tsx";
 import { Flex } from "#components/ui/Flex.tsx";
 import { Typography } from "@mui/material";
 
