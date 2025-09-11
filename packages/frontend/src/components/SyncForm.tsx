@@ -6,13 +6,12 @@ import { Banner } from "./Banner";
 import { useNavigate } from "@tanstack/react-router";
 import { fr } from "@codegouvfr/react-dsfr";
 import { useIntersectionObserver } from "../hooks/useIntersectionObserver";
-import Input from "@codegouvfr/react-dsfr/Input";
 import { useIsFormDisabled } from "../features/DisabledContext";
 import { Report } from "../db/AppSchema";
 import { useAppStatus } from "../hooks/useAppStatus";
 import { Box, BoxProps, styled, Typography } from "@mui/material";
 import { Flex } from "./ui/Flex";
-import { Button, Center } from "./MUIDsfr";
+import { Button, Center, Input } from "./MUIDsfr";
 
 export function SyncFormBanner({ form, baseObject }: { form: UseFormReturn<Report>; baseObject: Record<string, any> }) {
   const newObject = useWatch({ control: form.control });
@@ -33,7 +32,6 @@ export function SyncFormBanner({ form, baseObject }: { form: UseFormReturn<Repor
   });
 
   const isCollapsed = !isIntersecting;
-  console.log(isCollapsed);
   // const styles = syncFormBanner({ isCollapsed });
 
   const status = useAppStatus();
@@ -122,8 +120,10 @@ export function SyncFormBanner({ form, baseObject }: { form: UseFormReturn<Repor
             {...{
               width: { xs: "100%", lg: "100%" },
               mb: "1em",
+            }}
+            sx={{
               "& input": {
-                bgColor: "rgba(50, 50, 50, .15) !important",
+                bgcolor: "rgba(50, 50, 50, .15) !important",
               },
             }}
             label=""

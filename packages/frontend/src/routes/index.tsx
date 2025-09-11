@@ -2,7 +2,6 @@ import { Banner } from "#components/Banner";
 import { EnsureUser } from "#components/EnsureUser";
 import { SearchResults } from "#components/ReportSearch.tsx";
 import { Status } from "#components/SyncForm";
-import Input from "@codegouvfr/react-dsfr/Input";
 import { useStatus } from "@powersync/react";
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
@@ -13,7 +12,7 @@ import { db } from "../db/db";
 import { AllReports, MyReports } from "../features/ReportList";
 import { Flex } from "#components/ui/Flex.tsx";
 import { Box, BoxProps } from "@mui/material";
-import { Center } from "#components/MUIDsfr.tsx";
+import { Center, Input } from "#components/MUIDsfr.tsx";
 import { useStyles } from "tss-react";
 import { Tabs } from "#components/Tabs.tsx";
 import { Button } from "#components/MUIDsfr.tsx";
@@ -78,15 +77,15 @@ const Index = () => {
           </Box>
           <Box sx={{ display: { xs: "none", lg: "block" } }}>
             <Input
-              className={css({
+              sx={{
                 "& input": {
                   width: "334px",
-                  bgColor: "white !important",
+                  bgcolor: "white !important",
                 },
                 "& .fr-input-wrap": {
                   mt: 0,
                 },
-              })}
+              }}
               label={null}
               nativeInputProps={{
                 value: search,

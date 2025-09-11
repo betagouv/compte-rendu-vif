@@ -82,7 +82,7 @@ function useFormWithFocus<TFieldValues extends FieldValues = FieldValues>(props:
 const WithReport = ({ report }: { report: Report }) => {
   const { tab } = Route.useSearch();
   const setTab = (tab: string) => {
-    navigate({ search: { tab }, replace: true });
+    navigate({ search: { tab } as any, replace: true });
     document.getElementById("root")!.scrollTo(0, 0);
   };
 
@@ -90,6 +90,8 @@ const WithReport = ({ report }: { report: Report }) => {
     defaultValues: report!,
     resetOptions: {},
   });
+
+  console.log(form.getValues());
 
   const canEdit = useCanEditReport(report);
 
