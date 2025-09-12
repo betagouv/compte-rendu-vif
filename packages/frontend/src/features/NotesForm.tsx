@@ -2,16 +2,17 @@ import { ContactChips } from "#components/chips/ContactChips";
 import { DecisionChips } from "#components/chips/DecisionChips";
 import { FurtherInfoChips } from "#components/chips/FurtherInfoChips";
 import { InputGroupWithTitle } from "#components/InputGroup";
-import { css } from "#styled-system/css";
-import { Center, Divider, Flex, Stack } from "#styled-system/jsx";
-import Button from "@codegouvfr/react-dsfr/Button";
-import Input from "@codegouvfr/react-dsfr/Input";
 import { useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { Report } from "../db/AppSchema";
 import { SpeechRecorder } from "./audio-record/SpeechRecorder";
 import { useIsFormDisabled } from "./DisabledContext";
 import { UploadImage } from "./upload/UploadImage";
+import { Flex } from "#components/ui/Flex.tsx";
+import { Divider } from "#components/ui/Divider.tsx";
+import { Stack } from "@mui/material";
+import { Button, Center, Input } from "#components/MUIDsfr.tsx";
+import { useStyles } from "tss-react";
 
 export const NotesForm = () => {
   const form = useFormContext<Report>();
@@ -19,7 +20,7 @@ export const NotesForm = () => {
   const isFormDisabled = useIsFormDisabled();
 
   return (
-    <Flex direction="column" w="100%" padding="16px">
+    <Flex flexDirection="column" width="100%" padding="16px">
       <InputGroupWithTitle title="Décision & suite à donner">
         <DecisionChips disabled={isFormDisabled} />
         <PrecisionsTextArea />
@@ -29,22 +30,12 @@ export const NotesForm = () => {
 
       <Divider mt="36px" mb="52px" />
 
-      <Stack gap={{ base: "0", lg: "16px" }} direction={{ base: "column", lg: "row" }}>
-        <ContactChips
-          className={css({
-            flex: { base: "none", lg: 1 },
-          })}
-          disabled={isFormDisabled}
-        />
-        <FurtherInfoChips
-          className={css({
-            flex: { base: "none", lg: 1 },
-          })}
-          disabled={isFormDisabled}
-        />
+      <Stack gap={{ xs: "0", lg: "16px" }} direction={{ xs: "column", lg: "row" }}>
+        <ContactChips disabled={isFormDisabled} />
+        <FurtherInfoChips disabled={isFormDisabled} />
       </Stack>
 
-      <Center justifyContent={{ base: "center", lg: "flex-start" }} mt={{ base: "80px", lg: "50px" }} mb="120px">
+      <Center justifyContent={{ xs: "center", lg: "flex-start" }} mt={{ xs: "80px", lg: "50px" }} mb="120px">
         <Button iconId="ri-article-fill" type="submit" disabled={isFormDisabled}>
           Créer le CR
         </Button>
@@ -69,10 +60,10 @@ const PrecisionsTextArea = () => {
 
   return (
     <Input
-      className={css({ mt: "24px", "& > textarea": { mt: "0 !important" } })}
+      sx={{ mt: "24px", "& > textarea": { mt: "0 !important" } }}
       disabled={isFormDisabled}
       label={
-        <Flex justifyContent="space-between" w="100%">
+        <Flex justifyContent="space-between" width="100%">
           <span>Commentaire</span>
           <SpeechRecorder
             disabled={isFormDisabled}

@@ -1,25 +1,15 @@
-import { useUser } from "../contexts/AuthContext";
-import { db, useDbQuery } from "../db/db";
-import Button from "@codegouvfr/react-dsfr/Button";
-import Badge from "@codegouvfr/react-dsfr/Badge";
-import { css, cx } from "#styled-system/css";
-import { Popover } from "#components/Popover";
-import { useClickAway } from "react-use";
-import { useRef, useState } from "react";
-import { PopoverTrigger } from "@ark-ui/react/popover";
-import { ReportActions } from "./ReportActions";
-import { Pagination } from "@codegouvfr/react-dsfr/Pagination";
-import welcomeImage from "../assets/welcome.svg";
-import { useIsDesktop } from "../hooks/useIsDesktop";
-import { chunk } from "pastable";
-import { Report } from "../db/AppSchema";
 import { Center } from "#components/MUIDsfr.tsx";
-import { Box, Stack, Typography } from "@mui/material";
-import { fr } from "@codegouvfr/react-dsfr";
-import { Flex } from "#components/ui/Flex.tsx";
-import { Divider } from "#components/ui/Divider.tsx";
-import { useStyles } from "tss-react";
-import { uppercaseFirstLetterIf } from "../utils";
+import { css } from "#styled-system/css";
+import Button from "@codegouvfr/react-dsfr/Button";
+import { Pagination } from "@codegouvfr/react-dsfr/Pagination";
+import { Box, Stack } from "@mui/material";
+import { chunk } from "pastable";
+import { useState } from "react";
+import welcomeImage from "../assets/welcome.svg";
+import { useUser } from "../contexts/AuthContext";
+import { Report } from "../db/AppSchema";
+import { db, useDbQuery } from "../db/db";
+import { useIsDesktop } from "../hooks/useIsDesktop";
 import { ReportListItem } from "./ReportListItem";
 
 export type ReportWithUser = Report & { createdByName: string | null };
@@ -142,14 +132,14 @@ export const ReportList = ({
   const columns = reports.length < 6 ? [reports] : chunk(reports, Math.ceil(reports.length / 2));
 
   return (
-    <Stack component="div" width="100%" mt={{ base: "20px", lg: "30px" }}>
+    <Stack component="div" width="100%" mt={{ xs: "20px", lg: "30px" }}>
       {!hideEmpty && error ? (
         error
       ) : (
-        <Stack gap={{ base: 0, lg: "126px" }} flexDirection={{ base: "column", lg: "row" }} justifyContent="center">
+        <Stack gap={{ xs: 0, lg: "126px" }} flexDirection={{ xs: "column", lg: "row" }} justifyContent="center">
           {columns.slice(0, 2).map((reports, columnIndex) => {
             return (
-              <Stack key={columnIndex} flexDirection="column" width={{ base: "100%", lg: "400px" }}>
+              <Stack key={columnIndex} flexDirection="column" width={{ xs: "100%", lg: "400px" }}>
                 {reports.map((report, index) => (
                   <ReportListItem
                     onClick={onClick}
@@ -169,10 +159,10 @@ export const ReportList = ({
         </Stack>
       )}
       <Center
-        flexDirection={{ base: "column", lg: "row" }}
+        flexDirection={{ xs: "column", lg: "row" }}
         width="100%"
-        mt={{ base: "48px", lg: "85px" }}
-        mb={{ base: "48px", lg: "110px" }}
+        mt={{ xs: "48px", lg: "85px" }}
+        mb={{ xs: "48px", lg: "110px" }}
       >
         {hidePagination || error ? null : (
           <>
@@ -186,8 +176,8 @@ export const ReportList = ({
             />
             <Button
               className={css({
-                ml: { base: "0", lg: "80px" },
-                mt: { base: "40px", lg: "0" },
+                ml: { xs: "0", lg: "80px" },
+                mt: { xs: "40px", lg: "0" },
                 mb: "16px",
                 "&::after": { display: "none !important" },
               })}
