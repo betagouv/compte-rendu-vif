@@ -39,6 +39,7 @@ const udap = new Table({
   marianne_text: column.text,
   drac_text: column.text,
   udap_text: column.text,
+  demarches_simplifiees_url: column.text,
 });
 
 const user = new Table({

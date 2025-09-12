@@ -148,6 +148,7 @@ export interface Udap {
   address: string | null;
   city: string | null;
   completeCoords: string | null;
+  demarches_simplifiees_url: string | null;
   department: string;
   dept_number: string | null;
   drac_text: string | null;

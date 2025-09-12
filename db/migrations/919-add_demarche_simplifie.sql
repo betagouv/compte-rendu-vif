@@ -1,0 +1,1 @@
+ALTER TABLE udap ADD COLUMN IF NOT EXISTS demarches_simplifiees_url text;

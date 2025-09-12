@@ -184,6 +184,15 @@ const UDAPForm = ({ onSuccess }) => {
           }}
         />
       </Flex>
+      <Input
+        className={css({ w: "100%", mt: { base: "24px", lg: "0" } })}
+        label="Lien où déposer l'avant projet"
+        hintText="Figurera dans le CR"
+        nativeInputProps={{
+          value: udapData.demarches_simplifiees_url ?? "",
+          onChange: (e) => setUdapData({ ...udapData, demarches_simplifiees_url: e.target.value }),
+        }}
+      />
 
       {/* TODO: set this */}
       {/* <Input className={css({ w: "100%" })} label="Lien où déposer l'avant projet" hintText="Figurera dans le CR" /> */}

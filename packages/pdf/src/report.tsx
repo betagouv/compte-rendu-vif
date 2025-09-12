@@ -388,7 +388,7 @@ export const getReportHtmlString = (
     ${spaceType ? `<p>${spaceType?.text}</p>` : ""}
   
     ${decision ? `<p><strong>${decision?.text}</strong></p>` : ""}
-  
+    ${udap.demarches_simplifiees_url ? `<p><a href="${udap.demarches_simplifiees_url}">Lien vers la demande</a></p>` : ""}
     ${
       report.precisions
         ? `<p>
