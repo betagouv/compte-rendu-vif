@@ -1,11 +1,11 @@
-import { Center, Divider, Stack, styled } from "#styled-system/jsx";
-import { css } from "#styled-system/css";
-import Button from "@codegouvfr/react-dsfr/Button";
 import { useLogout } from "../../contexts/AuthContext";
 import { Fragment } from "react/jsx-runtime";
 import { MenuTitle } from "./MenuTitle";
 import { menuActor } from "./menuMachine";
 import { useNavigate } from "@tanstack/react-router";
+import { Box, Stack } from "@mui/material";
+import { Button, Center } from "#components/MUIDsfr.tsx";
+import { Divider } from "#components/ui/Divider.tsx";
 
 export const MenuActions = () => {
   const logout = useLogout();
@@ -31,14 +31,10 @@ export const MenuActions = () => {
 
   return (
     <>
-      <styled.div hideFrom="lg">
+      <Box display={{ lg: "none" }}>
         <MenuTitle hideDivider> </MenuTitle>
-      </styled.div>
-      <Stack
-        className={css({
-          gap: "0",
-        })}
-      >
+      </Box>
+      <Stack gap="0">
         {actions.map(({ text, onClick, dataTestId, mobileOnly, icon }, index) => (
           <MenuAction
             key={index}
@@ -70,10 +66,10 @@ const MenuAction = ({
   return (
     <>
       <Button
-        className={css({
-          hideFrom: mobileOnly ? "lg" : undefined,
-          w: "100%",
-          h: "48px",
+        sx={{
+          display: mobileOnly ? { lg: "none" } : undefined,
+          width: "100%",
+          height: "48px",
           m: 0,
           px: "16px !important",
 
@@ -82,7 +78,7 @@ const MenuAction = ({
           "&:disabled": {
             color: "text-disabled-grey",
           },
-        })}
+        }}
         data-test-id={dataTestId}
         type="button"
         priority="tertiary no outline"
@@ -96,7 +92,7 @@ const MenuAction = ({
       </Button>
 
       <Center>
-        <Divider w="calc(100% - 32px)" />
+        <Divider width="calc(100% - 32px)" />
       </Center>
     </>
   );

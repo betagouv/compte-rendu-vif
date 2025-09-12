@@ -1,15 +1,15 @@
-import Button from "@codegouvfr/react-dsfr/Button";
-import Input, { InputProps } from "@codegouvfr/react-dsfr/Input";
-import { css } from "#styled-system/css";
-import { Flex, Stack, styled } from "#styled-system/jsx";
-import { useEffect, useRef } from "react";
-import { useClickAway } from "react-use";
-import { useMachine } from "@xstate/react";
-import { createSuggestionMachine } from "../features/suggestionsMachine";
-import { db, useDbQuery } from "../db/db";
+import { InputProps } from "@codegouvfr/react-dsfr/Input";
 import Tag from "@codegouvfr/react-dsfr/Tag";
 import { useMutation } from "@tanstack/react-query";
+import { useMachine } from "@xstate/react";
+import { useEffect, useRef } from "react";
+import { useClickAway } from "react-use";
 import { useUser } from "../contexts/AuthContext";
+import { db } from "../db/db";
+import { createSuggestionMachine } from "../features/suggestionsMachine";
+import { Box, Stack } from "@mui/material";
+import { Button, Input } from "./MUIDsfr";
+import { Flex } from "./ui/Flex";
 
 export const EmailInput = ({
   label,
@@ -75,14 +75,14 @@ export const EmailInput = ({
 
   return (
     <Stack>
-      <styled.div ref={wrapperRef} pos="relative" w="100%">
+      <Box ref={wrapperRef} position="relative" width="100%">
         <Input
-          className={css({
+          sx={{
             mb: "1.5rem",
             "& > input": {
               pr: single ? "0" : "90px",
             },
-          })}
+          }}
           label={label}
           hintText={hintText}
           nativeInputProps={{
@@ -99,13 +99,13 @@ export const EmailInput = ({
 
         {!single ? (
           <Button
-            className={css({
+            sx={{
               zIndex: 1,
               position: "absolute",
               right: "0",
               bottom: "1.5rem",
               backgroundColor: "transparent !important",
-            })}
+            }}
             type="button"
             priority="tertiary no outline"
             iconId="ri-add-line"
@@ -116,44 +116,46 @@ export const EmailInput = ({
         ) : null}
 
         {isOpen ? (
-          <styled.div
+          <Box
+            bgcolor="white"
+            sx={{
+              transform: "translateY(-1.25rem)",
+            }}
             zIndex="10"
-            pos="absolute"
+            position="absolute"
             borderRadius="5px"
-            w="100%"
+            width="100%"
             maxHeight="300px"
-            bgColor="white"
-            transform="translateY(-1.25rem)"
             overflow="auto"
           >
             {suggestions.length === 0 ? null : (
-              <styled.div>
+              <Box>
                 {suggestions.map((item) => (
-                  <styled.div
+                  <Box
                     key={item}
                     onClick={() => {
                       send({ type: "SELECT", item });
                     }}
-                    position="relative"
-                    p="8px"
-                    cursor="pointer"
-                    _hover={{
-                      bg: "#ECECFE",
-                      "& > div": {
+                    sx={{
+                      ":hover > div": {
+                        bg: "#ECECFE",
                         display: "block",
+                        cursor: "pointer",
                       },
                     }}
+                    position="relative"
+                    p="8px"
                   >
                     {item}
-                    <styled.div display="none">
+                    <Box display="none">
                       {/* @ts-ignore */}
                       <Button
-                        className={css({
+                        sx={{
                           position: "absolute",
                           top: 0,
                           right: 0,
                           backgroundColor: "transparent !important",
-                        })}
+                        }}
                         type="button"
                         priority="tertiary no outline"
                         iconId="ri-close-line"
@@ -163,20 +165,20 @@ export const EmailInput = ({
                           deleteSuggestionMutation.mutate(item);
                         }}
                       ></Button>
-                    </styled.div>
-                  </styled.div>
+                    </Box>
+                  </Box>
                 ))}
-                <styled.div w="100%" minH="46px" p="8px" color="#000091" textAlign="center" bg="#ECECFE">
+                <Box bgcolor="#ECECFE" width="100%" minHeight="46px" p="8px" color="#000091" textAlign="center">
                   La suppression de contact s'appliquera à toute l'UDAP
-                </styled.div>
-              </styled.div>
+                </Box>
+              </Box>
             )}
-          </styled.div>
+          </Box>
         ) : null}
-      </styled.div>
+      </Box>
 
       {!single ? (
-        <Flex gap="8px" justifyContent="flex-start" alignItems="center" w="100%" mt="-16px" flexWrap="wrap">
+        <Flex gap="8px" justifyContent="flex-start" alignItems="center" width="100%" mt="-16px" flexWrap="wrap">
           {value.filter(Boolean).map((email) => (
             <Tag
               key={email}

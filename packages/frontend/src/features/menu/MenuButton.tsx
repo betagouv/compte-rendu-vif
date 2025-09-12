@@ -10,7 +10,7 @@ import { Button, Center } from "#components/MUIDsfr.tsx";
 import { ReportSearch } from "#components/ReportSearch.tsx";
 import { Flex } from "#components/ui/Flex.tsx";
 import { Box, Drawer, Modal, Typography } from "@mui/material";
-import { useRouter } from "@tanstack/react-router";
+import { useLocation, useRouter } from "@tanstack/react-router";
 import { useLogout } from "../../contexts/AuthContext";
 import { menuActor, MenuStates } from "./menuMachine";
 import { ModalCloseButton } from "./MenuTitle";
@@ -24,8 +24,9 @@ export const MenuButton = () => {
 
   const isPopoverOpen = menu === "main" && isDesktop;
 
-  const router = useRouter();
-  const isHome = router.latestLocation.pathname === "/";
+  const location = useLocation();
+  const isHome = location.pathname === "/";
+
   return (
     <>
       <Flex alignItems={{ xs: "unset", lg: "center" }} height="100%">
@@ -138,11 +139,12 @@ export const MenuButton = () => {
             </Popover.Root> */}
           </Flex>
         ) : (
-          <Center zIndex="1250" position="absolute" top="0" right="24px" height="100%">
+          <Center zIndex="1150" position="absolute" top="0" right="24px" height="100%">
             {isHome ? (
               <Button
                 sx={{
                   display: { lg: "none" },
+                  "::before": { width: "24px", height: "24px" },
                 }}
                 iconId="fr-icon-search-line"
                 priority="tertiary no outline"
@@ -155,6 +157,10 @@ export const MenuButton = () => {
               </Button>
             ) : null}
             <Button
+              sx={{
+                "::before": { width: "24px", height: "24px" },
+                p: 0,
+              }}
               iconId="ri-menu-fill"
               priority="tertiary no outline"
               nativeButtonProps={{
@@ -210,7 +216,12 @@ export const MenuModal = () => {
 
   return (
     <Drawer open={isModalOpen} onClose={() => menuActor.send({ type: "CLOSE" })} anchor="right">
-      <Box width={{ xs: "100%", lg: "800px" }} px={{ base: 0, lg: "64px" }}>
+      <Box
+        zIndex="1300 !important"
+        width={{ xs: "100vw", lg: "800px" }}
+        px={{ xs: 0, lg: "64px" }}
+        pt={{ xs: "16px", lg: 0 }}
+      >
         <Content backButtonOnClick={() => menuActor.send({ type: "BACK" })} />
       </Box>
     </Drawer>

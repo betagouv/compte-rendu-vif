@@ -1,6 +1,7 @@
 import { Button as DsfrButton } from "@codegouvfr/react-dsfr/Button";
 import { Select as DsfrSelect } from "@codegouvfr/react-dsfr/Select";
 import { Input as DsfrInput } from "@codegouvfr/react-dsfr/Input";
+import { Accordion as DsfrAccordion } from "@codegouvfr/react-dsfr/Accordion";
 import { Box, styled } from "@mui/material";
 
 export const Center = styled(Box)({
@@ -12,3 +13,4 @@ export const Center = styled(Box)({
 export const Button = styled(DsfrButton)();
 export const Select = styled(DsfrSelect)();
 export const Input = styled(DsfrInput)();
+export const Accordion = styled(DsfrAccordion)();
