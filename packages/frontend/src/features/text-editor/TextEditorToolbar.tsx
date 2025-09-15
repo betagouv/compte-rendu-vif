@@ -1,25 +1,16 @@
-import { cva } from "#styled-system/css";
-import { Flex, HStack, Stack, styled } from "#styled-system/jsx";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { useContext, useState } from "react";
-import { ColorPicker } from "../../components/ColorPicker";
 import { TextEditorContext } from "./TextEditorContext";
-import { Popover } from "#components/Popover";
+import { Box, Popover, Stack, styled } from "@mui/material";
+import { fr } from "@codegouvfr/react-dsfr";
 
-const toolbarButtonRecipe = cva({
-  base: {
-    color: "background-flat-blue-france",
-    bg: "white",
+const ToolbarButton = styled(Button)<{ isActive?: boolean }>(({ isActive }) => ({
+  color: isActive ? "white" : fr.colors.decisions.background.flat.blueFrance.default,
+  backgroundColor: isActive ? fr.colors.decisions.background.flat.blueFrance.default : "white",
+  "::before": {
+    marginRight: "0px !important",
   },
-  variants: {
-    active: {
-      true: {
-        color: "white",
-        bg: "background-flat-blue-france",
-      },
-    },
-  },
-});
+}));
 
 export const TextEditorToolbar = () => {
   const { editor } = useContext(TextEditorContext);
@@ -28,10 +19,8 @@ export const TextEditorToolbar = () => {
 
   return (
     <>
-      <Button
-        className={toolbarButtonRecipe({
-          active: editor.isActive("bold"),
-        })}
+      <ToolbarButton
+        isActive={editor.isActive("bold")}
         size="medium"
         priority="tertiary no outline"
         iconId="fr-icon-bold"
@@ -40,11 +29,11 @@ export const TextEditorToolbar = () => {
           onPointerDown: (event) => event.preventDefault(),
           onClick: () => editor.chain().focus().toggleBold().run(),
         }}
-      ></Button>
-      <Button
-        className={toolbarButtonRecipe({
-          active: editor.isActive("italic"),
-        })}
+      >
+        {null}
+      </ToolbarButton>
+      <ToolbarButton
+        isActive={editor.isActive("italic")}
         size="medium"
         priority="tertiary no outline"
         type="button"
@@ -53,11 +42,11 @@ export const TextEditorToolbar = () => {
           onPointerDown: (event) => event.preventDefault(),
           onClick: () => editor.chain().focus().toggleItalic().run(),
         }}
-      ></Button>
-      <Button
-        className={toolbarButtonRecipe({
-          active: editor.isActive("underline"),
-        })}
+      >
+        {null}
+      </ToolbarButton>
+      <ToolbarButton
+        isActive={editor.isActive("underline")}
         size="medium"
         priority="tertiary no outline"
         iconId="ri-underline"
@@ -66,7 +55,9 @@ export const TextEditorToolbar = () => {
           onPointerDown: (event) => event.preventDefault(),
           onClick: () => editor.chain().focus().toggleUnderline().run(),
         }}
-      ></Button>
+      >
+        {null}
+      </ToolbarButton>
 
       <ColorInput />
     </>
@@ -75,69 +66,83 @@ export const TextEditorToolbar = () => {
 
 const ColorInput = () => {
   const editor = useContext(TextEditorContext).editor!;
-  const [isOpen, baseSetIsOpen] = useState(false);
+  const [anchorEl, baseSetAnchorEl] = useState<Element | null>(null);
   const [currentValue, setCurrentValue] = useState(editor.getAttributes("textStyle").color ?? "#000000");
 
-  const setIsOpen = (isOpen: boolean) => {
-    baseSetIsOpen(isOpen);
+  const setAnchorEl = (e: React.MouseEvent) => {
+    baseSetAnchorEl(e.currentTarget);
 
-    if (isOpen) {
+    if (anchorEl) {
       setCurrentValue(editor.getAttributes("textStyle").color ?? "#000000");
     }
   };
 
+  const onClose = () => {
+    baseSetAnchorEl(null);
+  };
+
   return (
-    <Popover.Root open={isOpen} onOpenChange={({ open }) => setIsOpen(open)}>
-      <Popover.Trigger>
-        <Button
-          className={toolbarButtonRecipe({})}
-          size="medium"
-          priority="tertiary no outline"
-          iconId="ri-palette-line"
-          type="button"
-          nativeButtonProps={{
-            onPointerDown: (event) => event.preventDefault(),
-          }}
-        ></Button>
-      </Popover.Trigger>
-      <Popover.Positioner>
-        <Popover.Content>
-          <Stack p="8px">
-            <Stack gap="8px" flexDir="row" justifyContent="space-around" w="100%">
-              <ColorButton value={currentValue} color="black" />
-              <ColorButton value={currentValue} color="#e1000f" />
-              <ColorButton value={currentValue} color="#d64d00" />
-            </Stack>
-            <Stack flexDir="row" w="100%">
-              <ColorButton value={currentValue} color="#000091" />
-              <ColorButton value={currentValue} color="#118d49" />
-              <div />
-            </Stack>
+    <>
+      <ToolbarButton
+        aria-describedby="color-picker"
+        size="medium"
+        priority="tertiary no outline"
+        iconId="ri-palette-line"
+        type="button"
+        nativeButtonProps={{
+          onPointerDown: (event) => event.preventDefault(),
+          onClick: (event) => setAnchorEl(event),
+        }}
+      >
+        {null}
+      </ToolbarButton>
+      <Popover
+        id="color-picker"
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={onClose}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "center",
+        }}
+      >
+        <Stack gap="8px" width="100%" p="8px">
+          <Stack gap="8px" flexDirection="row" justifyContent="space-around" width="100%">
+            <ColorButton onClose={onClose} value={currentValue} color="black" />
+            <ColorButton onClose={onClose} value={currentValue} color="#e1000f" />
+            <ColorButton onClose={onClose} value={currentValue} color="#d64d00" />
           </Stack>
-        </Popover.Content>
-      </Popover.Positioner>
-    </Popover.Root>
+          <Stack gap="8px" flexDirection="row" width="100%">
+            <ColorButton onClose={onClose} value={currentValue} color="#000091" />
+            <ColorButton onClose={onClose} value={currentValue} color="#118d49" />
+            <div />
+          </Stack>
+        </Stack>
+      </Popover>
+    </>
   );
 };
 
-const ColorButton = ({ color, value }: { color: string; value: string }) => {
+const ColorButton = ({ color, value, onClose }: { color: string; value: string; onClose: () => void }) => {
   const editor = useContext(TextEditorContext).editor!;
 
   const isSelected = value === color;
 
   return (
-    <styled.button
+    <Box
+      component="button"
       type="button"
       onClick={() => {
         editor.chain().focus().setColor(color).run();
+        onClose?.();
       }}
       style={{
         backgroundColor: color,
       }}
       border={isSelected ? "1px solid black" : undefined}
       borderRadius="50%"
-      w="30px"
-      h="30px"
-    ></styled.button>
+      width="30px"
+      height="30px"
+    ></Box>
   );
 };

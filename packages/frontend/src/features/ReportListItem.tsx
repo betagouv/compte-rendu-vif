@@ -1,6 +1,5 @@
 import { Box, Popover, Typography } from "@mui/material";
 import { ReportWithUser } from "./ReportList";
-import { PopoverTrigger } from "@ark-ui/react/popover";
 import { fr } from "@codegouvfr/react-dsfr";
 import { useState, useRef } from "react";
 import { useStyles } from "tss-react";

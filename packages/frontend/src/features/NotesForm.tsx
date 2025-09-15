@@ -20,7 +20,7 @@ export const NotesForm = () => {
   const isFormDisabled = useIsFormDisabled();
 
   return (
-    <Flex flexDirection="column" width="100%" padding="16px">
+    <Flex flexDirection="column" width="100%" maxWidth="800px" padding="16px">
       <InputGroupWithTitle title="Décision & suite à donner">
         <DecisionChips disabled={isFormDisabled} />
         <PrecisionsTextArea />

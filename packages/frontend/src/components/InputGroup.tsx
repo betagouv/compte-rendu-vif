@@ -1,8 +1,9 @@
 import type { PropsWithChildren, ReactNode } from "react";
 import type { InputProps } from "@codegouvfr/react-dsfr/Input";
 import React from "react";
-import { Flex, styled, type BoxProps } from "#styled-system/jsx";
-import { cx } from "#styled-system/css";
+import { Flex } from "./ui/Flex";
+import { useStyles } from "tss-react";
+import { BoxProps, Typography, TypographyProps } from "@mui/material";
 
 export const InputGroup = ({ children, state, asChild }: InputGroupProps) => {
   const stateClass = state ? stateMap[state] : "";
@@ -17,7 +18,7 @@ type InputGroupProps = PropsWithChildren & Pick<InputProps, "state"> & { asChild
 export const InputGroupWithTitle = ({ title, children, ...props }: InputGroupProps & { title: ReactNode }) => {
   return (
     <InputGroup {...props} asChild>
-      <Flex direction="column">
+      <Flex flexDirection="column">
         <Title>{title}</Title>
         {children}
       </Flex>
@@ -26,6 +27,7 @@ export const InputGroupWithTitle = ({ title, children, ...props }: InputGroupPro
 };
 
 const Slot = ({ children, className, ...props }: PropsWithChildren & BoxProps) => {
+  const { cx } = useStyles();
   if (React.Children.count(children) !== 1) {
     throw new Error("Slot component should have exactly one child");
   }
@@ -33,17 +35,17 @@ const Slot = ({ children, className, ...props }: PropsWithChildren & BoxProps) =
   if (React.isValidElement(children)) {
     return React.cloneElement<any>(children, {
       ...props,
-      className: cx(children.props.className, className),
+      className: cx((children.props as any)?.className, className),
     });
   }
 
   return null;
 };
 
-const Title = ({ children, ...props }: PropsWithChildren & BoxProps) => (
-  <styled.h6 mb="30px" fontSize="20px" {...props}>
+const Title = ({ children, ...props }: PropsWithChildren & TypographyProps) => (
+  <Typography variant="h6" mb="30px" fontSize="20px" {...props}>
     {children}
-  </styled.h6>
+  </Typography>
 );
 
 export const stateMap: Record<NonNullable<InputProps["state"]>, string> = {

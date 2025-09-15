@@ -2,10 +2,7 @@ import "@ungap/with-resolvers";
 import { Banner } from "../components/Banner";
 import { EnsureUser } from "../components/EnsureUser";
 import { Spinner } from "../components/Spinner";
-import { css, cx } from "#styled-system/css";
-import { Center, Flex, Stack, styled } from "#styled-system/jsx";
 import { fr } from "@codegouvfr/react-dsfr";
-import Button from "@codegouvfr/react-dsfr/Button";
 import { ReportPDFDocument, ReportPDFDocumentProps, getReportHtmlString } from "@cr-vif/pdf";
 import { usePdf } from "@mikecousins/react-pdf";
 import { pdf } from "@react-pdf/renderer";
@@ -30,6 +27,9 @@ import { TextEditorContext, TextEditorContextProvider } from "../features/text-e
 import { TextEditorToolbar } from "../features/text-editor/TextEditorToolbar";
 import { useUserSettings } from "../hooks/useUserSettings";
 import { format } from "date-fns";
+import { Button, Center } from "#components/MUIDsfr.tsx";
+import { Box, Stack, Typography } from "@mui/material";
+import { Flex } from "#components/ui/Flex.tsx";
 
 type Mode = "edit" | "view" | "send" | "sent";
 
@@ -49,13 +49,13 @@ export const PDF = () => {
     },
     {
       onSuccess: () => {
-        navigate({ search: { mode: "sent" } });
+        navigate({ search: { mode: "sent" } as any });
       },
     },
   );
 
   const toggleMode = () => {
-    navigate({ search: { mode: mode === "edit" ? "view" : "edit" }, replace: true });
+    navigate({ search: { mode: mode === "edit" ? "view" : "edit" } as any, replace: true });
   };
 
   const reportQuery = useQuery({
@@ -152,6 +152,9 @@ export const PDF = () => {
         <TextEditorToolbar />
         <Button
           type="button"
+          sx={{
+            display: { xs: "none", lg: "inline-flex" },
+          }}
           iconId="ri-save-line"
           size="medium"
           onClick={() =>
@@ -161,7 +164,7 @@ export const PDF = () => {
             })
           }
         >
-          <styled.span hideBelow="lg">Enregistrer</styled.span>
+          Enregistrer
         </Button>
       </>
     );
@@ -171,7 +174,7 @@ export const PDF = () => {
     return (
       <>
         <Button
-          className={css({ bgColor: "white" })}
+          sx={{ bgcolor: "white" }}
           type="button"
           iconId="ri-pencil-line"
           priority="secondary"
@@ -186,7 +189,7 @@ export const PDF = () => {
 
   if (generatePdfMutation.isLoading)
     return (
-      <Center flexDir="column" w="100%" h="100%">
+      <Center flexDirection="column" width="100%" height="100%">
         <Spinner />
       </Center>
     );
@@ -205,16 +208,12 @@ export const PDF = () => {
 
   if (mode === "sent") {
     return (
-      <Center flexDir="column" w="100%" mt="24px">
-        <styled.img src={sentImage} alt="Courriel envoyé" width={{ base: "80px", lg: "120px" }} mt="100px" />
-        <styled.div mt="16px" color="text-title-blue-france" textAlign="center" fontSize={{ base: "18px", lg: "24px" }}>
+      <Center flexDirection="column" width="100%" mt="24px">
+        <Box component="img" src={sentImage} alt="Courriel envoyé" width={{ xs: "80px", lg: "120px" }} mt="100px" />
+        <Box mt="16px" color="text-title-blue-france" textAlign="center" fontSize={{ xs: "18px", lg: "24px" }}>
           Votre compte-rendu a bien été envoyé !
-        </styled.div>
-        <Button
-          className={css({ mt: { base: "24px", lg: "48px" } })}
-          type="button"
-          onClick={() => navigate({ to: "/" })}
-        >
+        </Box>
+        <Button sx={{ mt: { xs: "24px", lg: "48px" } }} type="button" onClick={() => navigate({ to: "/" })}>
           Accueil
         </Button>
       </Center>
@@ -222,23 +221,23 @@ export const PDF = () => {
   }
 
   return (
-    <styled.div
+    <Box
+      bgcolor={mode === "edit" ? fr.colors.decisions.background.open.blueFrance : "unset"}
       display="flex"
       flexDirection="column"
-      w="100%"
-      h="100%"
-      bgColor={mode === "edit" ? "background-open-blue-france" : "unset"}
+      width="100%"
+      height="100%"
     >
-      <Flex justifyContent="center" py="16px" px="32px" bgColor={"#E8EDFF"}>
-        <i className={cx(fr.cx("fr-icon-alert-fill"), css({ color: "#0063CB" }))} />
-        <styled.div
+      <Flex bgcolor={"#E8EDFF"} justifyContent="center" py="16px" px="32px">
+        <Box className={fr.cx("fr-icon-alert-fill")} component="i" color="#0063CB" />
+        <Box
           dangerouslySetInnerHTML={{
             __html: transformBold(`La modification du formulaire ré-initialisera cette mise en page.`),
           }}
           ml="16px"
           pr="24px"
           color={"#0063CB"}
-        ></styled.div>
+        ></Box>
       </Flex>
       <TextEditorContextProvider>
         {report ? (
@@ -246,23 +245,23 @@ export const PDF = () => {
             <EditBanner
               mode={mode}
               title={
-                <styled.div display="flex" flexDir="column" alignItems="flex-start" textAlign="left">
-                  <styled.div>
-                    <styled.span fontWeight="bold">{getModeTitle(mode)}</styled.span>
+                <Box display="flex" flexDirection="column" alignItems="flex-start" textAlign="left">
+                  <Box>
+                    <Typography fontWeight="bold">{getModeTitle(mode)}</Typography>
                     {mode !== "send" && report?.title ? ` | ${report?.title}` : ""}
-                  </styled.div>
+                  </Box>
                   {mode === "view" ? (
-                    <styled.div>
+                    <Box>
                       <SentEmailInfos report={report} />
-                    </styled.div>
+                    </Box>
                   ) : null}
-                </styled.div>
+                </Box>
               }
               reportId={report?.id}
               buttons={buttons}
             />
-            <Center w="100%" h="100%" maxH="100%" overflowY="auto">
-              <Stack w="800px" h="100%">
+            <Center sx={{ overflowY: "auto" }} width="100%" height="100%" maxHeight="100%">
+              <Stack width="800px" height="100%">
                 {report && snapshotQuery.isSuccess && chipOptions?.length && isServiceInstructeurLoaded ? (
                   <WithReport
                     report={report as any}
@@ -283,7 +282,7 @@ export const PDF = () => {
           </SendForm>
         ) : null}
       </TextEditorContextProvider>
-    </styled.div>
+    </Box>
   );
 };
 
@@ -308,11 +307,11 @@ const SentEmailInfos = ({ report }: { report: Report }) => {
   if (!groupedByDay) return null;
 
   return (
-    <Flex flexDir="column" flexShrink={0} color="text-mention-grey">
+    <Flex flexDirection="column" flexShrink={0} color="text-mention-grey">
       {Object.entries(groupedByDay).map(([day, emails]) => (
-        <styled.div key={day}>
+        <Box key={day}>
           Envoyé le {day} à {emails.join(", ")}
-        </styled.div>
+        </Box>
       ))}
     </Flex>
   );
@@ -356,9 +355,9 @@ const SendForm = ({
   };
 
   return (
-    <styled.form onSubmit={form.handleSubmit(send)} display="flex" flex="1" flexDirection="column">
+    <Box component="form" onSubmit={form.handleSubmit(send)} display="flex" flex="1" flexDirection="column">
       <FormProvider {...form}>{children}</FormProvider>
-    </styled.form>
+    </Box>
   );
 };
 
@@ -388,7 +387,7 @@ const DownloadButton = () => {
   const navigate = useNavigate();
 
   return (
-    <Button type="button" onClick={() => navigate({ search: { mode: "send" } })} iconId="ri-send-plane-fill">
+    <Button type="button" onClick={() => navigate({ search: { mode: "send" } as any })} iconId="ri-send-plane-fill">
       Envoyer
     </Button>
   );
@@ -424,94 +423,96 @@ const EditBanner = ({
       <Banner
         status="saved"
         zIndex={3}
-        position={{ base: "sticky", lg: "sticky" }}
-        top={{ base: "-1px", lg: "-1px" }}
-        flexDir="column"
-        maxW={{ base: "100vw", lg: "unset" }}
-        height={{ base: "56px", lg: "unset" }}
+        position={{ xs: "sticky", lg: "sticky" }}
+        top={{ xs: "-1px", lg: "-1px" }}
+        flexDirection="column"
+        maxWidth={{ xs: "100vw", lg: "unset" }}
+        height={{ xs: "56px", lg: "unset" }}
       >
-        <Flex flexDir="row" justifyContent={"center"} w="100%">
+        <Flex flexDirection="row" justifyContent={"center"} width="100%">
           <Flex
-            direction={{ base: isSend ? "column" : "row", lg: "row" }}
+            flexDirection={{ xs: isSend ? "column" : "row", lg: "row" }}
             justifyContent={"flex-start"}
             alignItems={isSend ? undefined : "center"}
-            w={{ base: "100%", lg: "1000px" }}
-            maxW={{ base: "100%", lg: "1000px" }}
-            h={isSend || isView ? undefined : "header-height"}
+            width={{ xs: "100%", lg: "1000px" }}
+            maxWidth={{ xs: "100%", lg: "1000px" }}
+            height={isSend || isView ? undefined : "header-height"}
             px="16px"
           >
             <Flex
               flex={1}
               flexShrink="0"
-              justifyContent={{ base: isSend ? "space-between" : undefined, lg: "flex-start" }}
-              alignItems={{ base: isView ? "flex-start" : "center", lg: "flex-start" }}
+              justifyContent={{ xs: isSend ? "space-between" : undefined, lg: "flex-start" }}
+              alignItems={{ xs: isView ? "flex-start" : "center", lg: "flex-start" }}
               mr={"8px"}
-              mt={{ base: isView ? "32px" : 0, lg: isSend || isView ? "32px" : 0 }}
+              mt={{ xs: isView ? "32px" : 0, lg: isSend || isView ? "32px" : 0 }}
               mb={isView ? "32px" : 0}
             >
-              <styled.div>
-                <styled.a
+              <Box>
+                <Box
                   className={"ri-arrow-left-line"}
+                  component="a"
                   href={""}
                   onClick={(e) => {
                     e.preventDefault();
                     goBack();
                   }}
-                  hideBelow="lg"
-                  fontSize="16px"
-                  whiteSpace="nowrap"
-                  {...{
-                    "&::before": {
+                  sx={{
+                    display: { xs: "none", lg: "inline-flex" },
+                    "::before": {
                       width: "16px !important",
-                      height: "16px !important",
                       mb: "4px !important",
                       mr: "4px",
                     },
                   }}
+                  fontSize="16px"
+                  whiteSpace="nowrap"
                 >
                   Retour
-                </styled.a>
-              </styled.div>
-              <styled.a
+                </Box>
+              </Box>
+              <Box
                 className={"ri-arrow-left-line"}
+                component="a"
                 onClick={(e) => {
                   e.preventDefault();
                   goBack();
                 }}
-                hideFrom="lg"
+                display={{ lg: "none" }}
                 mt={isSend ? "8px" : 0}
                 pr="8px"
                 color="black"
                 fontSize="16px"
-              ></styled.a>
-              <styled.div
-                hideBelow={isEdit ? "lg" : undefined}
+              ></Box>
+              <Box
+                display={{ xs: isEdit ? "none" : "block", lg: "block" }}
                 flexShrink="0"
-                w="100%"
-                minW="0"
-                ml={{ base: "0", lg: "32px" }}
-                mt={{ base: isSend ? "16px" : 0, lg: 0 }}
+                width="100%"
+                minWidth="0"
+                ml={{ xs: "0", lg: "32px" }}
+                mt={{ xs: isSend ? "16px" : 0, lg: 0 }}
                 pr="8px"
                 textAlign="center"
               >
                 {title}
-              </styled.div>
+              </Box>
             </Flex>
 
             {isSend ? (
-              <styled.div w="100%" ml={{ base: 0, lg: "16px" }} mr="16px" mt="16px" mb="16px">
+              <Box width="100%" ml={{ xs: 0, lg: "16px" }} mr="16px" mt="16px" mb="16px">
                 <EmailInput
                   value={recipients.split(",")}
                   onValueChange={(value) => form.setValue("recipients", value.join(","))}
                 />
-              </styled.div>
+              </Box>
             ) : null}
             <Flex
-              hideBelow={isView ? "lg" : undefined}
+              display={{ xs: isView ? "none" : "flex", lg: "flex" }}
               gap="8px"
-              alignSelf={{ base: "center", lg: "flex-start" }}
-              mt={{ base: 0, lg: isSend ? "24px" : "20px" }}
-              mb={{ base: isSend ? "16px" : 0, lg: 0 }}
+              alignItems="center"
+              alignSelf={{ xs: "center", lg: "flex-start" }}
+              my={{ xs: 0, lg: isSend ? "24px" : "20px" }}
+              // mb={{ xs: isSend ? "16px" : 0, lg: 0 }}
             >
               {buttons}
             </Flex>
@@ -520,12 +521,12 @@ const EditBanner = ({
       </Banner>
       {isView ? (
         <Flex
-          hideFrom="lg"
+          display={{ lg: "none" }}
           justifyContent="space-between"
           alignSelf="center"
-          w="100%"
-          mt={{ base: "16px" }}
-          mb={{ base: isSend ? "16px" : 0, lg: 0 }}
+          width="100%"
+          mt={{ xs: "16px" }}
+          mb={{ xs: isSend ? "16px" : 0, lg: 0 }}
           px="16px"
         >
           {buttons}
@@ -569,15 +570,15 @@ export const WithReport = ({
   if (mode === "send") {
     return (
       <SendReportPage>
-        <styled.div>{ViewDocument}</styled.div>
+        <Box>{ViewDocument}</Box>
       </SendReportPage>
     );
   }
 
   return (
-    <styled.div p="16px">
+    <Box p="16px">
       <TextEditor />
-    </styled.div>
+    </Box>
   );
 };
 
@@ -594,15 +595,15 @@ const View = (props: ReportPDFDocumentProps) => {
 
   if (query.isLoading)
     return (
-      <Center h="100%">
+      <Center height="100%">
         <Spinner />
       </Center>
     );
 
   return (
-    <styled.div px="16px">
+    <Box px="16px">
       <PdfCanvas blob={query.data as Blob} />
-    </styled.div>
+    </Box>
   );
 };
 
@@ -638,10 +639,10 @@ const PdfCanvasPage = ({ file, page }: { file: string; page: number }) => {
   });
 
   return (
-    <styled.canvas
-      // @ts-ignore
+    <Box
       ref={canvasRef}
-      width={{ base: "100%", lg: "800px" }}
+      component="canvas"
+      width={{ xs: "100%", lg: "800px" }}
       my="16px"
       boxShadow="0px 10.18px 30.54px 0px #00001229"
     />
@@ -663,9 +664,9 @@ const SendReportPage = ({ children }: PropsWithChildren) => {
 
   return (
     <Center>
-      <Flex flexDirection="column" alignItems="center" w={{ base: "100%", lg: "800px" }}>
+      <Flex flexDirection="column" alignItems="center" width={{ xs: "100%", lg: "800px" }}>
         {/* <Input
-          className={css({ w: "100%", mt: "16px", px: { base: "16px", lg: "unset" } })}
+          className={css({ w: "100%", mt: "16px", px: { xs: "16px", lg: "unset" } })}
           label="Destinataires"
           hintText="Liste de courriels, séparés par des virgules ou des espaces"
           textArea
