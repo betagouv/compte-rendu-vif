@@ -1,8 +1,4 @@
-import { css } from "#styled-system/css";
-import { Flex, Stack, styled } from "#styled-system/jsx";
 import { fr } from "@codegouvfr/react-dsfr";
-import Badge from "@codegouvfr/react-dsfr/Badge";
-import Input from "@codegouvfr/react-dsfr/Input";
 import { useMachine } from "@xstate/react";
 import { useRef } from "react";
 import { useFormContext } from "react-hook-form";
@@ -11,6 +7,9 @@ import { Report } from "../db/AppSchema";
 import { AddressSuggestion, searchAddress } from "../features/address";
 import { useIsFormDisabled } from "../features/DisabledContext";
 import { createSuggestionMachine } from "../features/suggestionsMachine";
+import { Box, Stack, Typography } from "@mui/material";
+import { Badge, Input } from "./MUIDsfr";
+import { Flex } from "./ui/Flex";
 
 export const SmartAddressInput = () => {
   const form = useFormContext<Report>();
@@ -31,16 +30,16 @@ export const SmartAddressInput = () => {
 
   return (
     <Stack mb="28px">
-      <styled.div ref={wrapperRef} pos="relative" w="100%">
+      <Box ref={wrapperRef} position="relative" width="100%">
         <Input
-          className={css({ mb: "8px" })}
+          sx={{ mb: "8px" }}
           label={
-            <Flex flexDir="row" alignItems="center">
-              <styled.span mr="12px">Adresse (numéro, voie)</styled.span>
+            <Flex flexDirection="row" alignItems="center">
+              <Typography mr="12px">Adresse (numéro, voie)</Typography>
               {isLoading ? (
-                <styled.div hideBelow="lg">
+                <Box display={{ xs: "none", lg: "block" }}>
                   <LoadingBadge />
-                </styled.div>
+                </Box>
               ) : null}
             </Flex>
           }
@@ -57,22 +56,22 @@ export const SmartAddressInput = () => {
         />
 
         {isOpen ? (
-          <styled.div
+          <Box
+            bgcolor="background-contrast-grey"
             zIndex="10"
-            pos="absolute"
+            position="absolute"
             borderRadius="5px"
-            w="100%"
+            width="100%"
             height="300px"
             maxHeight="400px"
-            bgColor="background-contrast-grey"
             overflow="auto"
           >
             {isLoading ? null : suggestions.length === 0 ? (
               "Aucun résultat"
             ) : (
-              <styled.div>
+              <Box>
                 {suggestions.map((item) => (
-                  <styled.div
+                  <Box
                     key={item.label}
                     onClick={() => {
                       form.setValue("applicantAddress", item?.address ?? "");
@@ -81,24 +80,28 @@ export const SmartAddressInput = () => {
 
                       send({ type: "SELECT", item: item });
                     }}
+                    sx={{
+                      cursor: "pointer",
+                      ":hover": {
+                        bgcolor: "white",
+                      },
+                    }}
                     p="8px"
-                    cursor="pointer"
-                    _hover={{ bg: "white" }}
                   >
                     {item.label}
-                  </styled.div>
+                  </Box>
                 ))}
-              </styled.div>
+              </Box>
             )}
-          </styled.div>
+          </Box>
         ) : (
-          <styled.div></styled.div>
+          <Box></Box>
         )}
-      </styled.div>
+      </Box>
       {isLoading ? (
-        <styled.div hideFrom="lg" mt="8px">
+        <Box display={{ lg: "none" }} mt="8px">
           <LoadingBadge />
-        </styled.div>
+        </Box>
       ) : null}
     </Stack>
   );
@@ -107,22 +110,25 @@ export const SmartAddressInput = () => {
 const LoadingBadge = () => {
   return (
     <Badge
-      className={css({
+      sx={{
         display: "flex",
         flexDir: "row",
         alignItems: "center",
         fontWeight: "normal",
-      })}
+      }}
       severity="info"
       noIcon
     >
-      <styled.i
+      <Box
         className={fr.cx("fr-icon-refresh-line", "fr-icon--sm")}
-        _before={{
-          verticalAlign: "middle",
-          mr: "4px",
+        component="i"
+        sx={{
+          "::before": {
+            verticalAlign: "middle",
+            mr: "4px",
+          },
         }}
-      ></styled.i>
+      ></Box>
       Recherche en cours
     </Badge>
   );

@@ -5,7 +5,6 @@ import { useFieldArray, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { Spinner } from "#components/Spinner.tsx";
 import { MenuTitle } from "./MenuTitle";
-import { css, cx } from "#styled-system/css";
 import { fr } from "@codegouvfr/react-dsfr";
 import { useMutation } from "@tanstack/react-query";
 import { transformBold } from "./ClauseMenu";
@@ -168,7 +167,7 @@ const ServiceFormBanner = ({ status, icon, text }: BannerProps) => {
 
   return (
     <Flex bgcolor={bgColor} mb="24px" py="16px" px="32px">
-      <i className={cx(icon, css({ color: iconColor }))} />
+      <i className={icon} style={{ color: iconColor }} />
       <Box dangerouslySetInnerHTML={{ __html: transformBold(text) }} ml="16px" pr="24px" color={iconColor}></Box>
     </Flex>
   );

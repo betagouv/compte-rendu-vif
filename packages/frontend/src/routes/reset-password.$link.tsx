@@ -1,11 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
-import { Center, Flex, styled } from "#styled-system/jsx";
 import { FullWidthButton } from "#components/FullWidthButton";
 import { SignupPasswordInput } from "#components/SignupForm";
 import { useMutation } from "@tanstack/react-query";
 import { api } from "../api";
 import { MutationAlert } from "#components/MutationAlert.js";
+import { Center } from "#components/MUIDsfr.tsx";
+import { Flex } from "#components/ui/Flex.tsx";
+import { Typography } from "@mui/material";
 
 const ResetPasswordAction = () => {
   const form = useForm<any>();
@@ -21,8 +23,8 @@ const ResetPasswordAction = () => {
 
   return (
     <Center mt="20px" mb="80px">
-      <Flex flexDirection="column" w="484px" p="16px">
-        <styled.h4>Récupération de mot de passe pour Compte-rendu VIF</styled.h4>
+      <Flex flexDirection="column" width="484px" p="16px">
+        <Typography variant="h4">Récupération de mot de passe pour Compte-rendu VIF</Typography>
         <p>Veuillez saisir votre nouveau mot de passe</p>
 
         <form onSubmit={form.handleSubmit((values) => mutation.mutate(values))}>

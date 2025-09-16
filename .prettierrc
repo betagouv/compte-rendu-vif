@@ -7,5 +7,5 @@
   "semi": true,
   "tabWidth": 2,
   "trailingComma": "all",
-  "plugins": ["@pandabox/prettier-plugin"]
+  "plugins": []
 }

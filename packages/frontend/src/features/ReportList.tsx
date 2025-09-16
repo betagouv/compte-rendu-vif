@@ -1,6 +1,4 @@
-import { Center } from "#components/MUIDsfr.tsx";
-import { css } from "#styled-system/css";
-import Button from "@codegouvfr/react-dsfr/Button";
+import { Button, Center } from "#components/MUIDsfr.tsx";
 import { Pagination } from "@codegouvfr/react-dsfr/Pagination";
 import { Box, Stack } from "@mui/material";
 import { chunk } from "pastable";
@@ -175,12 +173,12 @@ export const ReportList = ({
               defaultPage={page! + 1}
             />
             <Button
-              className={css({
+              sx={{
                 ml: { xs: "0", lg: "80px" },
                 mt: { xs: "40px", lg: "0" },
                 mb: "16px",
-                "&::after": { display: "none !important" },
-              })}
+                "::after": { display: "none !important" },
+              }}
               priority="secondary"
               iconId="ri-chat-3-fill"
               linkProps={{

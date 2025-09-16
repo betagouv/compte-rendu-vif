@@ -1,7 +1,7 @@
-import { css, cx } from "#styled-system/css";
 import { EditorContent } from "@tiptap/react";
 import { useContext, useEffect } from "react";
 import { TextEditorContext } from "./TextEditorContext";
+import { Box, styled } from "@mui/material";
 
 export const TextEditor = (props: { hasSubmitted?: boolean }) => {
   const { hasSubmitted } = props;
@@ -18,29 +18,30 @@ export const TextEditor = (props: { hasSubmitted?: boolean }) => {
   }, [isEditorActive, hasSubmitted]);
 
   return (
-    <div className={cx(css({ h: "100%", mt: "2" }))}>
+    <Box height="100%" mt="2">
       {/* {editor && <TextEditorToolbar editor={editor} />} */}
-      <EditorContent className={textEditorClassName} editor={editor} />
-    </div>
+      <StyledEditorContent editor={editor} />
+    </Box>
   );
 };
 
-export const textEditorClassName = css({
-  h: "100%",
-  minH: "160px",
-  "& > div": {
+const StyledEditorContent = styled(EditorContent)({
+  height: "100%",
+  minHeight: "160px",
+  "> div": {
     outline: "none",
     borderRadius: "0 !important",
-    roundedTop: "md",
+    borderTopLeftRadius: "0.375rem", // to check
+    borderTopRightRadius: "0.375rem",
     borderWidth: "0px",
-    h: "100%",
-    minH: "160px",
+    height: "100%",
+    minHeight: "160px",
     maxHeight: "100%",
-    p: "40px",
+    padding: "40px",
     fontSize: "13px",
-    bgColor: "white",
+    backgroundColor: "white",
     overflowY: "auto",
-    _focusVisible: {
+    ":focus-visible": {
       outlineWidth: "1px",
       outlineStyle: "solid",
     },
@@ -51,7 +52,7 @@ export const textEditorClassName = css({
       listStyle: "unset",
     },
     "& :where(ul, ol)": {
-      paddingStart: "1rem",
+      paddingInlineStart: "1rem",
     },
     "& blockquote": {
       borderLeftWidth: "3px",

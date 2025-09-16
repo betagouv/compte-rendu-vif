@@ -1,23 +1,18 @@
-import { CompatibilityAlert } from "#components/CompatibilityAlert.tsx";
-import { ReportSearch } from "#components/ReportSearch.tsx";
+import { Flex } from "#components/ui/Flex.tsx";
+import { fr } from "@codegouvfr/react-dsfr";
 import Badge from "@codegouvfr/react-dsfr/Badge";
-import Button from "@codegouvfr/react-dsfr/Button";
-import Header from "@codegouvfr/react-dsfr/Header/Header";
-import { Link, useRouter } from "@tanstack/react-router";
-import { type PropsWithChildren, useRef } from "react";
+import { Typography } from "@mui/material";
+import Box from "@mui/material/Box/Box";
+import { Link } from "@tanstack/react-router";
+import { type PropsWithChildren } from "react";
 import { useIsLoggedIn } from "../contexts/AuthContext";
 import { MenuButton, MenuModal } from "../features/menu/MenuButton";
 import { useIsDesktop } from "../hooks/useIsDesktop";
-import Box from "@mui/material/Box/Box";
-import { Flex } from "#components/ui/Flex.tsx";
-import { Typography } from "@mui/material";
-import { fr } from "@codegouvfr/react-dsfr";
 
 export const Layout = ({ children }: PropsWithChildren) => {
   return (
     <Box display="flex" position="relative" flexDirection={"column"} height="100vh">
       <AppHeader />
-      <CompatibilityAlert />
       <Box flex="1">{children}</Box>
       {/* <TanStackRouterDevtools /> */}
 

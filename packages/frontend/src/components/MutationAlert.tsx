@@ -1,8 +1,7 @@
-import Alert from "@codegouvfr/react-dsfr/Alert";
 import { UseMutationResult } from "@tanstack/react-query";
-import { css, cx } from "#styled-system/css";
-import { styled } from "#styled-system/jsx";
 import { getErrorMessage } from "../api";
+import { Alert } from "./MUIDsfr";
+import { Typography } from "@mui/material";
 
 export const MutationAlert = ({
   mutation,
@@ -17,14 +16,17 @@ export const MutationAlert = ({
 
   return (
     <Alert
-      className={cx(css({ my: "1.5rem" }), className)}
+      className={className}
+      sx={{
+        my: "1.5rem",
+      }}
       severity={mutation.error ? "error" : "success"}
       title={
-        <styled.span fontWeight="regular">
+        <Typography fontWeight="regular">
           {mutation.error
             ? getErrorMessage(mutation.error)
-            : mutation.data!.message ?? "Votre demande a été transmise."}
-        </styled.span>
+            : (mutation.data!.message ?? "Votre demande a été transmise.")}
+        </Typography>
       }
     />
   );
