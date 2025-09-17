@@ -105,8 +105,6 @@ const MenuPopoverTrigger = ({ report, ...props }: { report: ReportWithUser; onCl
     setAnchorEl(null);
   };
 
-  console.log(anchorEl);
-
   return (
     <>
       <Button

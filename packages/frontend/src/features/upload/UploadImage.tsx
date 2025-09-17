@@ -66,7 +66,6 @@ export const UploadImage = ({ reportId }: { reportId: string }) => {
   useEffect(() => {
     const listener = (event: MessageEvent) => {
       if (event.data.type === "status") {
-        console.log("status", event.data.id, event.data.status);
         setStatusMap((prev) => ({ ...prev, [event.data.id]: event.data.status }));
       }
     };

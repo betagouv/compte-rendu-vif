@@ -218,14 +218,12 @@ export const ImageCanvas = ({
     const existingLines = existingLinesQuery?.[0];
 
     if (existingLines) {
-      console.log("updating lines", existingLines, lines);
       await db
         .updateTable("picture_lines")
         .where("id", "=", existingLines.id)
         .set({ lines: JSON.stringify(lines), pictureId })
         .execute();
     } else {
-      console.log("creating lines", lines);
       await db
         .insertInto("picture_lines")
         .values({ id: v4(), pictureId, lines: JSON.stringify(lines) })

@@ -91,8 +91,6 @@ const WithReport = ({ report }: { report: Report }) => {
     resetOptions: {},
   });
 
-  console.log(form.getValues());
-
   const canEdit = useCanEditReport(report);
 
   const navigate = useNavigate();

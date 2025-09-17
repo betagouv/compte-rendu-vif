@@ -107,7 +107,6 @@ export const useRefreshUser = () => {
     mutationFn: async () => {
       if (!user) return;
       const newUser = await db.selectFrom("user").selectAll().where("id", "=", user.id).executeTakeFirst();
-      console.log({ newUser });
       if (!newUser) return;
       const udap = await db.selectFrom("udap").selectAll().where("id", "=", newUser.udap_id).executeTakeFirst();
       if (!udap) return;

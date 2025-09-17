@@ -22,7 +22,6 @@ export const db = wrapPowerSyncWithKysely<Database>(powerSyncDb);
 export const useDbQuery = useQuery;
 
 export const setupPowersync = async () => {
-  console.log("setup");
   const connector = new Connector();
   await powerSyncDb.init();
   await powerSyncDb.connect(connector, {

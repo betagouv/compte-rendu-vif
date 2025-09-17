@@ -459,7 +459,6 @@ const ChangeUDAP = ({ onSuccess }: { onSuccess: () => void }) => {
           type="button"
           onClick={() => {
             if (!selectedUdapId) return;
-            console.log(selectedUdapId);
 
             changeUdapMutation.mutate(selectedUdapId!);
           }}
