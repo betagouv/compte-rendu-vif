@@ -19,17 +19,15 @@ export const MenuTitle = ({
 }) => (
   <>
     <Flex
-      // mt={{ base: "0", lg: "48px" }}
-      // mb={{ base: "16px", lg: "48px" }}
       bgcolor="white"
       zIndex="5"
-      position={{ base: "sticky", lg: "sticky" }}
-      top={{ base: "0", lg: "0" }}
+      position={{ xs: "sticky", lg: "sticky" }}
+      top={{ xs: "0", lg: "0" }}
       justifyContent="space-between"
       alignItems="center"
       width="100%"
-      py={{ base: "16px", lg: "30px" }}
-      pl={{ base: undefined, lg: "0" }}
+      py={{ xs: "16px", lg: "30px" }}
+      pl={{ xs: undefined, lg: "0" }}
     >
       <Box display={{ lg: "none" }}>
         {backButtonOnClick ? (
@@ -54,7 +52,7 @@ export const MenuTitle = ({
       </Typography>
       <Flex
         gap="16px"
-        pl={{ base: "16px", lg: "24px" }}
+        pl={{ xs: "16px", lg: "24px" }}
         textOverflow="ellipsis"
         fontSize="20px"
         fontWeight="bold"

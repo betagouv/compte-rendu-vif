@@ -82,7 +82,7 @@ export const SearchResults = ({ search, hideEmpty }: { search: string; hideEmpty
 
   return (
     <Center width="100%">
-      <Stack flexDirection={{ base: "column", lg: "row" }} width={{ base: "100%", lg: "unset" }} mt="24px">
+      <Stack flexDirection={{ xs: "column", lg: "row" }} width={{ xs: "100%", lg: "unset" }} mt="24px">
         {myReports.length ? (
           <Stack>
             <Box mb="16px" fontSize="20px" fontWeight="bold">

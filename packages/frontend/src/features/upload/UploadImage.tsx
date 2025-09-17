@@ -88,8 +88,6 @@ export const UploadImage = ({ reportId }: { reportId: string }) => {
         bottom="0"
         width="100vw"
         height="100vh"
-        // width={{ base: "100%", lg: "634px" }}
-        // h={{ base: "100vh", lg: "792px" }}
       >
         <Box bgcolor="rgba(0, 0, 0, 0.5)" position="fixed" top="0" left="0" right="0" bottom="0"></Box>
         <Center width="100%" height="100%">
@@ -97,9 +95,9 @@ export const UploadImage = ({ reportId }: { reportId: string }) => {
             ref={containerRef}
             bgcolor="white"
             position="relative"
-            width={{ base: "100%", lg: "634px" }}
-            height={{ base: "100vh", lg: "792px" }}
-            maxHeight={{ base: "100vh", lg: "100vh" }}
+            width={{ xs: "100%", lg: "634px" }}
+            height={{ xs: "100vh", lg: "792px" }}
+            maxHeight={{ xs: "100vh", lg: "100vh" }}
           >
             {selectedPicture ? (
               <ImageCanvas
@@ -125,11 +123,6 @@ export const UploadImage = ({ reportId }: { reportId: string }) => {
       >
         Ajouter photo
       </Button>
-      {/* {!canUploadImage ? (
-        <Box mt="16px" color="gray">
-          Le téléversement d'image est désactivé temporairement, mais il revient optimisé bientôt.
-        </Box>
-      ) : null} */}
       <input ref={ref as any} type="file" accept="image/*" onChange={onChange} multiple style={{ display: "none" }} />
       <ReportPictures setSelectedPicture={setSelectedPicture} statusMap={statusMap} />
     </>
@@ -153,17 +146,6 @@ const ReportPictures = ({
     db.selectFrom("pictures").where("reportId", "=", reportId).orderBy("createdAt asc").selectAll(),
   );
 
-  // const tmpPicturesQuery = useLiveQuery(
-  //   db.tmp_pictures.liveMany({ where: { reportId }, orderBy: { createdAt: "desc" } }),
-  // );
-
-  // const picturesQuery = useLiveQuery(
-  //   db.pictures.liveMany({
-  //     where: { reportId },
-  //     orderBy: { createdAt: "desc" },
-  //   }),
-  // );
-
   const pictures = picturesQuery.data ?? [];
 
   if (!pictures?.length) return null;
@@ -171,8 +153,7 @@ const ReportPictures = ({
   return (
     <Flex flexDirection="column" width="100%" my="40px">
       <InputGroup>
-        {/* <Flex gap="16px" direction="column"> */}
-        <Grid gap="16px" gridTemplateColumns={{ base: "repeat(2, 1fr)", md: "repeat(3, 1fr)", lg: "repeat(4, 1fr)" }}>
+        <Grid gap="16px" gridTemplateColumns={{ xs: "repeat(2, 1fr)", md: "repeat(3, 1fr)", lg: "repeat(4, 1fr)" }}>
           {pictures?.map((picture, index) => (
             <PictureThumbnail
               setSelectedPicture={setSelectedPicture}
@@ -212,7 +193,6 @@ const PictureThumbnail = ({
   const bgUrlQuery = useQuery({
     queryKey: ["picture", picture.id, picture.url],
     queryFn: async () => {
-      // if (picture.url) return picture.finalUrl ?? picture.url;
       const buffer = await get(picture.id, getPicturesStore());
       if (!buffer) return picture.url;
       const blob = new Blob([buffer], { type: "image/png" });
@@ -223,8 +203,6 @@ const PictureThumbnail = ({
   });
 
   const pictureLines = useDbQuery(db.selectFrom("picture_lines").where("pictureId", "=", picture.id).selectAll());
-
-  // const pictureLines = useLiveQuery(db.picture_lines.liveMany({ where: { pictureId: picture.id } }));
 
   const idbStatusQuery = useQuery({
     queryKey: ["picture-status", picture.id],
@@ -298,17 +276,8 @@ const PictureThumbnail = ({
 
   return (
     <Stack minWidth="150px" maxWidth="180px">
-      {/* <Badge severity={finalStatus === "uploading" ? }></Badge> */}
       <ReportStatus status={finalStatus as any} />
-      <Flex
-        // style={bgUrl ? { backgroundImage: `url(${bgUrl})` } : { backgroundColor: "gray" }}
-        flexDirection="column"
-        justifyContent="flex-end"
-        height="170px"
-        // bgPosition="center calc(50% - 20px)"
-        // bgRepeat="no-repeat"
-        // backgroundSize="cover"
-      >
+      <Flex flexDirection="column" justifyContent="flex-end" height="170px">
         <Box ref={canvasRef} component="canvas" flex="1"></Box>
         <Flex bgcolor="white" alignItems="center" border="1px solid #DFDFDF" height="40px">
           <Box
@@ -329,8 +298,6 @@ const PictureThumbnail = ({
             <Button type="button" iconId="ri-close-circle-fill" priority="tertiary no outline">
               {null}
             </Button>
-            {/* {finalStatus ? <span>{finalStatus}</span> : null} */}
-            {/* <styled.i className={fr.cx("fr-icon--md", "fr-icon-close-circle-fill")} /> */}
           </Box>
         </Flex>
       </Flex>
@@ -351,8 +318,6 @@ const ReportStatus = ({ status }: { status: "uploading" | "success" | "error" })
         color,
         display: "flex",
         alignItems: "center",
-        // backgroundColor: colors[status][1],
-        // color: colors[status][0],
       }}
     >
       <Typography

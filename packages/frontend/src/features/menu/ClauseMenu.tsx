@@ -77,7 +77,7 @@ const ClauseList = ({ clauses }: { clauses: ClauseWithIndex[] }) => {
             ))}
           </Stack>
           {index < Object.keys(groupedByKey).length - 1 && (
-            <Divider height="1px" my={{ base: "16px", lg: "30px" }} color="#C1C1FB" />
+            <Divider height="1px" my={{ xs: "16px", lg: "30px" }} color="#C1C1FB" />
           )}
         </Fragment>
       ))}

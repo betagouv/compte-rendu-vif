@@ -1,5 +1,12 @@
+import { EmailInput } from "#components/EmailInput.tsx";
 import { InputGroupWithTitle } from "#components/InputGroup";
+import { Button, Center, Input, Select } from "#components/MUIDsfr.tsx";
+import { SmartAddressInput } from "#components/SmartAddressInput.tsx";
+import { useTabsContext } from "#components/Tabs.tsx";
 import { SpaceTypeChips } from "#components/chips/SpaceTypeChips";
+import { Divider } from "#components/ui/Divider.tsx";
+import { Flex } from "#components/ui/Flex.tsx";
+import { Box } from "@mui/material";
 import { format, parse } from "date-fns";
 import { useRef, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
@@ -8,14 +15,7 @@ import { Report } from "../db/AppSchema";
 import { db, useDbQuery } from "../db/db";
 import { useIsFormDisabled } from "./DisabledContext";
 import { ServiceInstructeurSelect } from "./ServiceInstructeurSelect";
-import { SmartAddressInput } from "#components/SmartAddressInput.tsx";
-import { EmailInput } from "#components/EmailInput.tsx";
 import { SpeechRecorder } from "./audio-record/SpeechRecorder";
-import { useTabsContext } from "#components/Tabs.tsx";
-import { Flex } from "#components/ui/Flex.tsx";
-import { Box, styled } from "@mui/material";
-import { Button, Center, Input, Select } from "#components/MUIDsfr.tsx";
-import { Divider } from "#components/ui/Divider.tsx";
 
 export const InfoForm = () => {
   const form = useFormContext<Report>();
@@ -65,10 +65,6 @@ export const InfoForm = () => {
       .select("user.name as createdByName"),
   );
 
-  // const redactedByQuery = useLiveQuery(
-  //   db.delegation.liveMany({ where: { delegatedTo: user.id }, include: { user_delegation_createdByTouser: true } }),
-  // );
-
   const redactedByOptions: { value: string; label: string }[] = [
     {
       value: user.id,
@@ -97,7 +93,6 @@ export const InfoForm = () => {
 
   return (
     <Flex flexDirection="column" width="100%" maxWidth="800px" padding="16px">
-      {/* <Badge severity="info">Les champs marqués d'un astérisque (*) sont obligatoires</Badge> */}
       <InputGroupWithTitle title="Le rendez-vous">
         <Flex gap={{ xs: "0", lg: "16px" }} flexDirection={{ xs: "column", lg: "row" }}>
           <Select
@@ -127,12 +122,6 @@ export const InfoForm = () => {
             single
             onValueChange={(e) => form.setValue("applicantEmail", e[0])}
           />
-          {/* <Input
-            className={css({})}
-            disabled={isFormDisabled}
-            label="Courriel demandeur"
-            nativeInputProps={form.register("applicantEmail")}
-          /> */}
         </Box>
 
         <Flex gap="16px" flexDirection="row" mt="32px">
@@ -157,25 +146,17 @@ export const InfoForm = () => {
         <DescriptionInput />
 
         <SmartAddressInput />
-        {/* <Input
-          className={css({ flex: { base: "none", lg: 2 }, mt: "16px", mb: { base: "24px", lg: undefined } })}
-          disabled={isFormDisabled}
-          label="Adresse"
-          nativeInputProps={form.register("applicantAddress")}
-        /> */}
         <Flex gap={{ xs: "0", lg: "16px" }} flexDirection={{ xs: "column", lg: "row" }}>
           <Input
             sx={{ flex: { xs: "none", lg: 1 }, mb: { xs: "24px", lg: undefined } }}
             disabled={isFormDisabled}
             label="Code postal"
-            // hintText="Ce champ apparaitra dans la liste des compte-rendus"
             nativeInputProps={form.register("zipCode")}
           />
           <Input
             sx={{ flex: { xs: "none", lg: 1 }, mb: { xs: "24px", lg: undefined } }}
             disabled={isFormDisabled}
             label="Commune"
-            // hintText="Ce champ apparaitra dans la liste des compte-rendus"
             nativeInputProps={form.register("city")}
           />
         </Flex>

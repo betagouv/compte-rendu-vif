@@ -26,9 +26,9 @@ export const HelpMenu = () => {
         <Divider
           bgcolor="#C1C1FB"
           height="2px"
-          mt={{ base: "0", lg: "0" }}
-          mb={{ base: "24px", lg: "32px" }}
-          px={{ base: "16px", lg: 0 }}
+          mt={{ xs: "0", lg: "0" }}
+          mb={{ xs: "24px", lg: "32px" }}
+          px={{ xs: "16px", lg: 0 }}
         />
       </Box>
       <Stack>
@@ -41,7 +41,7 @@ export const HelpMenu = () => {
           <Button linkProps={{ href: "https://compte-rendu-vif.beta.gouv.fr/faq" }}>Consulter FAQ</Button>
         </Stack>
         <Box px="16px">
-          <Divider height="2px" mt={{ base: "27px", lg: "32px" }} mb={{ base: 0, lg: "24px" }} color="#C1C1FB" />
+          <Divider height="2px" mt={{ xs: "27px", lg: "32px" }} mb={{ xs: 0, lg: "24px" }} color="#C1C1FB" />
         </Box>
         <Stack mt="8px" px="16px">
           <TitleH3>Assistance technique</TitleH3>
@@ -52,7 +52,7 @@ export const HelpMenu = () => {
         </Stack>
 
         <Box px="16px">
-          <Divider height="2px" mt={{ base: "27px", lg: "32px" }} mb={{ base: 0, lg: "24px" }} color="#C1C1FB" />
+          <Divider height="2px" mt={{ xs: "27px", lg: "32px" }} mb={{ xs: 0, lg: "24px" }} color="#C1C1FB" />
         </Box>
 
         <Stack mt="8px" mb="32px" px="16px">

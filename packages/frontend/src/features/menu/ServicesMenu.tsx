@@ -95,7 +95,7 @@ export const ServicesMenu = () => {
             display: { xs: "none", lg: "inline-flex" },
             "::before": {
               ml: "0 !important",
-              mr: { base: "0 !important", lg: "8px !important" },
+              mr: { xs: "0 !important", lg: "8px !important" },
             },
           }}
           nativeButtonProps={{ type: "button" }}
@@ -118,7 +118,7 @@ export const ServicesMenu = () => {
             display: { xs: "none", lg: "inline-flex" },
             "::before": {
               ml: "0 !important",
-              mr: { base: "0 !important", lg: "8px !important" },
+              mr: { xs: "0 !important", lg: "8px !important" },
             },
           }}
           nativeButtonProps={{ type: "button" }}
@@ -278,7 +278,7 @@ const ServiceForm = ({
         label="Intitulé complet"
         nativeInputProps={form.register(`${prefix}full_name`, { required: true })}
       />
-      <Flex gap={{ base: "8px", lg: "20px" }}>
+      <Flex gap={{ xs: "8px", lg: "20px" }}>
         <Input
           sx={{ flex: "1" }}
           label="Abréviation"
@@ -292,7 +292,7 @@ const ServiceForm = ({
       </Flex>
 
       {deleteService ? (
-        <Flex justifyContent="flex-end" my={{ base: "24px", lg: "40px" }}>
+        <Flex justifyContent="flex-end" my={{ xs: "24px", lg: "40px" }}>
           <Button
             iconId="ri-delete-bin-fill"
             iconPosition="right"

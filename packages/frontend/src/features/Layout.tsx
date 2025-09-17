@@ -14,8 +14,6 @@ export const Layout = ({ children }: PropsWithChildren) => {
     <Box display="flex" position="relative" flexDirection={"column"} height="100vh">
       <AppHeader />
       <Box flex="1">{children}</Box>
-      {/* <TanStackRouterDevtools /> */}
-
       <AppFooter />
     </Box>
   );
