@@ -24,7 +24,6 @@
     "dotenv": "^16.4.5",
     "dotenv-expand": "^11.0.6",
     "prettier": "^3.2.5",
-    "prisma": "^4.8.1",
     "typed-openapi": "^0.4.1",
     "vite-node": "^1.4.0"
   },
@@ -34,10 +33,7 @@
     },
     "ignoredBuiltDependencies": [
       "@biomejs/biome",
-      "@prisma/client",
-      "@prisma/engines",
-      "@swc/core",
-      "prisma"
+      "@swc/core"
     ],
     "onlyBuiltDependencies": [
       "@journeyapps/wa-sqlite",

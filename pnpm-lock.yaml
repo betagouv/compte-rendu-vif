@@ -35,9 +35,6 @@ importers:
       prettier:
         specifier: ^3.2.5
         version: 3.6.2
-      prisma:
-        specifier: ^4.8.1
-        version: 4.16.2
       typed-openapi:
         specifier: ^0.4.1
         version: 0.4.1(@types/node@20.19.13)(openapi-types@12.1.3)(react@18.3.1)(xstate@5.21.0)
@@ -68,9 +65,6 @@ importers:
       '@fastify/type-provider-typebox':
         specifier: ^4.1.0
         version: 4.1.0(@sinclair/typebox@0.32.35)
-      '@prisma/client':
-        specifier: ^4.8.1
-        version: 4.16.2(prisma@4.16.2)
       '@react-pdf/renderer':
         specifier: ^3.4.2
         version: 3.4.5(react@18.3.1)
@@ -2191,6 +2185,7 @@ packages:
       pdfjs-dist: 4.2.67
       react: ^18.2.0
       react-dom: ^18.2.0
+    bundledDependencies: []
 
   '@mui/core-downloads-tracker@5.18.0':
     resolution: {integrity: sha512-jbhwoQ1AY200PSSOrNXmrFCaSDSJWP7qk6urkTmIirvRXDROkqe+QwcLlUiw/PrREwsIF/vm3/dAXvjlMHF0RA==}
@@ -2377,21 +2372,6 @@ packages:
     peerDependencies:
       '@journeyapps/wa-sqlite': ^1.3.1
       '@powersync/common': ^1.38.0
-
-  '@prisma/client@4.16.2':
-    resolution: {integrity: sha512-qCoEyxv1ZrQ4bKy39GnylE8Zq31IRmm8bNhNbZx7bF2cU5aiCCnSa93J2imF88MBjn7J9eUQneNxUQVJdl/rPQ==}
-    engines: {node: '>=14.17'}
-    peerDependencies:
-      prisma: '*'
-    peerDependenciesMeta:
-      prisma:
-        optional: true
-
-  '@prisma/engines-version@4.16.1-1.4bc8b6e1b66cb932731fb1bdbbc550d1e010de81':
-    resolution: {integrity: sha512-q617EUWfRIDTriWADZ4YiWRZXCa/WuhNgLTVd+HqWLffjMSPzyM5uOWoauX91wvQClSKZU4pzI4JJLQ9Kl62Qg==}
-
-  '@prisma/engines@4.16.2':
-    resolution: {integrity: sha512-vx1nxVvN4QeT/cepQce68deh/Turxy5Mr+4L4zClFuK1GlxN3+ivxfuv+ej/gvidWn1cE1uAhW7ALLNlYbRUAw==}
 
   '@rawwee/react-pdf-html@1.2.1':
     resolution: {integrity: sha512-u9BohIh+tkbCWxAZ0KUMCX8s45QnBMewt8BSSYhanwybgG9Broy0Vc6+0TYu+Vw3KobQvACh2S6e8LFJtz8VQw==}
@@ -6073,11 +6053,6 @@ packages:
     resolution: {integrity: sha512-mQUvGU6aUFQ+rNvTIAcZuWGRT9a6f6Yrg9bHs4ImKF+HZCEK+plBvnAZYSIQztknZF2qnzNtr6F8s0+IuptdlQ==}
     engines: {node: ^14.13.1 || >=16.0.0}
 
-  prisma@4.16.2:
-    resolution: {integrity: sha512-SYCsBvDf0/7XSJyf2cHTLjLeTLVXYfqp7pG5eEVafFLeT0u/hLFz/9W196nDRGUOo1JfPatAEb+uEnTQImQC1g==}
-    engines: {node: '>=14.17'}
-    hasBin: true
-
   process-nextick-args@2.0.1:
     resolution: {integrity: sha512-3ouUOpQhtgrbOa17J7+uxOTpITYWaGP7/AhoR3+A+/1e9skrzelGi/dXzEYyvbxubEF6Wn2ypscTKiKJFFn1ag==}
 
@@ -9626,16 +9601,6 @@ snapshots:
       bson: 6.10.4
       comlink: 4.4.2
       commander: 12.1.0
-
-  '@prisma/client@4.16.2(prisma@4.16.2)':
-    dependencies:
-      '@prisma/engines-version': 4.16.1-1.4bc8b6e1b66cb932731fb1bdbbc550d1e010de81
-    optionalDependencies:
-      prisma: 4.16.2
-
-  '@prisma/engines-version@4.16.1-1.4bc8b6e1b66cb932731fb1bdbbc550d1e010de81': {}
-
-  '@prisma/engines@4.16.2': {}
 
   '@rawwee/react-pdf-html@1.2.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
@@ -13678,10 +13643,6 @@ snapshots:
   pretty-bytes@5.6.0: {}
 
   pretty-bytes@6.1.1: {}
-
-  prisma@4.16.2:
-    dependencies:
-      '@prisma/engines': 4.16.2
 
   process-nextick-args@2.0.1: {}
 
