@@ -13,7 +13,7 @@ pixman-dev \
 pangomm-dev \
 libjpeg-turbo-dev \
 freetype-dev 
-RUN npm i -g pnpm@8.4
+RUN npm i -g pnpm@10.12.4
 
 ################################
 #      DEPS INSTALLATION       #
@@ -30,7 +30,6 @@ COPY packages/pdf/package.json ./packages/pdf/
 COPY packages/frontend/package.json ./packages/frontend/
 COPY packages/frontend/public ./packages/frontend/public
 COPY packages/frontend/scripts ./packages/frontend/scripts
-COPY packages/frontend/index.dist.css ./packages/frontend/index.dist.css
 COPY packages/frontend/vite.config.ts ./packages/frontend/
 
 RUN pnpm install --frozen-lockfile
