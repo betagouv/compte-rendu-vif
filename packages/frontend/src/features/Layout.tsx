@@ -1,27 +1,21 @@
-import { CompatibilityAlert } from "#components/CompatibilityAlert.tsx";
-import { ReportSearch } from "#components/ReportSearch.tsx";
-import { css, cx } from "#styled-system/css";
-import { Box, styled } from "#styled-system/jsx";
-import { Flex } from "#styled-system/jsx";
+import { Flex } from "#components/ui/Flex.tsx";
+import { fr } from "@codegouvfr/react-dsfr";
 import Badge from "@codegouvfr/react-dsfr/Badge";
-import Button from "@codegouvfr/react-dsfr/Button";
-import Header from "@codegouvfr/react-dsfr/Header/Header";
-import { Link, useRouter } from "@tanstack/react-router";
-import { type PropsWithChildren, useRef } from "react";
+import { Typography } from "@mui/material";
+import Box from "@mui/material/Box/Box";
+import { Link } from "@tanstack/react-router";
+import { type PropsWithChildren } from "react";
 import { useIsLoggedIn } from "../contexts/AuthContext";
 import { MenuButton, MenuModal } from "../features/menu/MenuButton";
 import { useIsDesktop } from "../hooks/useIsDesktop";
 
 export const Layout = ({ children }: PropsWithChildren) => {
   return (
-    <Flex pos="relative" flexDir={"column"} h="100vh">
+    <Box display="flex" position="relative" flexDirection={"column"} height="100vh">
       <AppHeader />
-      <CompatibilityAlert />
       <Box flex="1">{children}</Box>
-      {/* <TanStackRouterDevtools /> */}
-
       <AppFooter />
-    </Flex>
+    </Box>
   );
 };
 
@@ -90,7 +84,7 @@ const AppFooter = () => {
             </li>
           </ul>
 
-          <Flex flexDir="column">
+          <Flex flexDirection="column">
             <VersionDisplay />
             <div className="fr-footer__bottom-copy">
               <p>
@@ -118,7 +112,9 @@ const VersionDisplay = () => {
   if (!version) return null;
   return (
     <div className="fr-footer__bottom-copy">
-      <styled.p mb="10px">Version {version}</styled.p>
+      <Typography mb="10px" fontSize=".75rem">
+        Version {version}
+      </Typography>
     </div>
   );
 };
@@ -135,26 +131,28 @@ const AppHeader = () => {
         className="fr-header [&amp;_.fr-btn--menu]:opacity_0 [&amp;_.fr-btn--menu]:pointer-events_none"
       >
         <div className="fr-header__body">
-          <div
-            className={cx(
-              "fr-container",
-              css({
-                marginLeft: { base: "0", lg: "auto" },
-                marginRight: { base: "0", lg: "auto" },
-                paddingX: { base: "0", lg: "1rem" },
-              }),
-            )}
+          <Box
+            className={"fr-container"}
+            marginLeft={{ xs: "0", lg: "auto" }}
+            marginRight={{ xs: "0", lg: "auto" }}
+            paddingX={{ xs: "0", lg: "1rem" }}
           >
-            <div
-              className={cx("fr-header__body-row", css({ justifyContent: "space-between", w: "100%", margin: "0" }))}
+            <Box
+              className={"fr-header__body-row"}
+              display="flex"
+              justifyContent="space-between"
+              width="100%"
+              margin="0"
             >
-              <Link className={css({ textWrap: "nowrap" })} to="/" title="Compte rendu vif">
-                <styled.div
+              <Link style={{ textWrap: "nowrap" }} to="/" title="Compte rendu vif">
+                <Box
                   className="fr-header__brand"
-                  bgColor={{ base: "transparent", lg: "unset" }}
-                  _hover={{
-                    bgColor: { base: "transparent", lg: "background-raised-grey-hover" },
+                  sx={{
+                    "&:hover": {
+                      bgcolor: { xs: "transparent", lg: fr.colors.decisions.background.raised.grey.hover },
+                    },
                   }}
+                  bgcolor={{ xs: "transparent", lg: "unset" }}
                 >
                   <div className="fr-header__brand-top">
                     <div className="fr-header__logo">
@@ -176,18 +174,13 @@ const AppHeader = () => {
                       </p>
                     </div>
                   ) : undefined}
-                </styled.div>
+                </Box>
               </Link>
-              <div
-                className={css({
-                  display: "flex",
-                  alignItems: "center",
-                })}
-              >
+              <Box display="flex" alignItems="center">
                 {isLoggedIn ? <MenuButton /> : null}
-              </div>
-            </div>
-          </div>
+              </Box>
+            </Box>
+          </Box>
         </div>
       </header>
       <MenuModal />

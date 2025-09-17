@@ -1,22 +1,24 @@
-import { type CenterProps, Center } from "#styled-system/jsx";
-import { cva, cx } from "#styled-system/css";
 import { SyncFormStatus } from "./SyncForm";
 import { forwardRef } from "react";
+import { BoxProps } from "@mui/material";
+import { fr } from "@codegouvfr/react-dsfr";
+import { Center } from "./MUIDsfr";
 
-export const Banner = forwardRef<HTMLDivElement, CenterProps & { status: SyncFormStatus }>(
+export const Banner = forwardRef<HTMLDivElement, BoxProps & { status: SyncFormStatus }>(
   ({ status, className, ...props }, ref) => {
-    return <Center ref={ref as any} className={cx(banner({ status }), className)} flexDir="column" {...props} />;
+    const statusColorMap = {
+      offline: "#FFE9E6",
+      pending: "#FEECC2",
+    };
+
+    const bgColor = (statusColorMap as any)[status] || fr.colors.decisions.background.open.blueFrance.default;
+
+    return <Center ref={ref as any} className={className} bgcolor={bgColor} flexDirection="column" {...props} />;
   },
 );
 
-const banner = cva({
-  base: { bgColor: "background-open-blue-france" },
-  variants: {
-    status: {
-      offline: { bgColor: "red-offline" },
-      pending: { bgColor: "yellow-waiting" },
-      saved: {},
-      saving: {},
-    },
-  },
-});
+/*
+ "yellow-waiting": { value: "#FEECC2" },
+  "red-offline": { value: "#FFE9E6" },
+  "blue-connected": { value: "#E3E3FD" },
+*/

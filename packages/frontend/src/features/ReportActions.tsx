@@ -1,5 +1,3 @@
-import { css } from "#styled-system/css";
-import { Divider, Stack } from "#styled-system/jsx";
 import Button, { ButtonProps } from "@codegouvfr/react-dsfr/Button";
 import { forwardRef } from "react";
 import { useUser } from "../contexts/AuthContext";
@@ -13,6 +11,10 @@ import { api } from "../api";
 import { useCanEditReport } from "../hooks/useCanEditReport";
 import { db } from "../db/db";
 import { getPDFInMailName } from "@cr-vif/pdf";
+import { Flex } from "#components/ui/Flex.tsx";
+import { Divider } from "#components/ui/Divider.tsx";
+import { useStyles } from "tss-react";
+import { styled } from "@mui/material";
 
 export const ReportActions = forwardRef<HTMLDivElement, { report: ReportWithUser }>(({ report }, ref) => {
   const user = useUser()!;
@@ -47,7 +49,7 @@ export const ReportActions = forwardRef<HTMLDivElement, { report: ReportWithUser
   });
 
   return (
-    <Stack ref={ref} gap="0" bgColor="#ECECFE">
+    <Flex ref={ref} bgcolor="#ECECFE" gap="0" flexDirection="column">
       {canEdit ? (
         <>
           <ReportAction
@@ -75,7 +77,7 @@ export const ReportActions = forwardRef<HTMLDivElement, { report: ReportWithUser
         </>
       ) : null}
       <ReportAction iconId="ri-file-add-line" label="Dupliquer" onClick={() => duplicateMutation.mutate()} />
-    </Stack>
+    </Flex>
   );
 });
 
@@ -89,16 +91,18 @@ const ReportAction = ({
   onClick: () => void;
 }) => {
   return (
-    <Button
-      className={css({ width: "100%", height: { base: "56px", lg: "auto" } })}
-      iconId={iconId as any}
-      onClick={onClick}
-      priority="tertiary no outline"
-    >
+    <ReportActionButton iconId={iconId as any} onClick={onClick} priority="tertiary no outline">
       {label}
-    </Button>
+    </ReportActionButton>
   );
 };
+
+const ReportActionButton = styled(Button)(({ theme }) => ({
+  width: "100%",
+  [theme.breakpoints.down("lg")]: {
+    height: "56px",
+  },
+}));
 
 const useDeleteMutation = () =>
   useMutation(async (id: string) => {

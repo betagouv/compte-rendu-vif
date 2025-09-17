@@ -1,10 +1,6 @@
 import { EnsureUser } from "#components/EnsureUser";
 import { SyncFormBanner } from "#components/SyncForm";
-import { Tabs } from "#components/Tabs";
-import { css } from "#styled-system/css";
-import { Box, Flex } from "#styled-system/jsx";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useLiveQuery } from "electric-sql/react";
 import { useEffect, useRef } from "react";
 import {
   FormProvider,
@@ -22,6 +18,11 @@ import { useQuery } from "@tanstack/react-query";
 import { useCanEditReport } from "../hooks/useCanEditReport";
 import { db, useDbQuery } from "../db/db";
 import { Report } from "../db/AppSchema";
+import { Flex } from "#components/ui/Flex.tsx";
+import { Box } from "@mui/material";
+import Button from "@codegouvfr/react-dsfr/Button";
+import { Tabs } from "#components/Tabs.tsx";
+import { Center } from "#components/MUIDsfr.tsx";
 
 const EditReport = () => {
   const { reportId } = Route.useParams();
@@ -41,7 +42,7 @@ const EditReport = () => {
 
   const report = reportQuery.data?.[0];
 
-  return <Flex direction="column">{report ? <WithReport report={report} /> : null}</Flex>;
+  return <Flex flexDirection="column">{report ? <WithReport report={report} /> : null}</Flex>;
 };
 
 function useFormWithFocus<TFieldValues extends FieldValues = FieldValues>(props: UseFormProps<TFieldValues, any>) {
@@ -80,19 +81,21 @@ function useFormWithFocus<TFieldValues extends FieldValues = FieldValues>(props:
 }
 const WithReport = ({ report }: { report: Report }) => {
   const { tab } = Route.useSearch();
+  const setTab = (tab: string) => {
+    navigate({ search: { tab } as any, replace: true });
+    document.getElementById("root")!.scrollTo(0, 0);
+  };
+
   const [form, getFocused] = useFormWithFocus<Report>({
     defaultValues: report!,
     resetOptions: {},
   });
 
+  console.log(form.getValues());
+
   const canEdit = useCanEditReport(report);
 
   const navigate = useNavigate();
-
-  const setTab = (tab: string) => {
-    navigate({ search: { tab }, replace: true });
-    document.getElementById("root")!.scrollTo(0, 0);
-  };
 
   // @ts-ignore
   const isChrome = !!window.chrome;
@@ -101,19 +104,29 @@ const WithReport = ({ report }: { report: Report }) => {
     {
       id: "info",
       label: "RDV",
-      className: css({
-        position: "absolute",
+      props: {
+        position: "absolute" as const,
         // there is a difference in padding between chrome and other browsers due to scrollbar width (i guess)
         left: isChrome ? "max(calc((100vw - 800px) / 2 + 8px), 16px)" : "max(calc((100vw - 800px) / 2 + 16px), 16px)",
-      }),
+      },
+      component: (
+        <Center>
+          <InfoForm />
+        </Center>
+      ),
     },
     {
       id: "notes",
       label: "Bilan",
-      className: css({
-        position: "absolute",
+      props: {
+        position: "absolute" as const,
         left: "16px",
-      }),
+      },
+      component: (
+        <Center>
+          <NotesForm />
+        </Center>
+      ),
     },
   ];
 
@@ -145,32 +158,11 @@ const WithReport = ({ report }: { report: Report }) => {
 
   return (
     <DisabledContext.Provider value={!canEdit}>
-      <Flex direction="column">
+      <Flex flexDirection="column">
         <FormProvider {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <SyncFormBanner form={form} baseObject={report} />
-            <Flex justifyContent="center" w="100%">
-              <Tabs.Root defaultValue="info" onValueChange={(e) => setTab(e.value)} value={tab}>
-                <Tabs.List>
-                  {options.map((option) => (
-                    <Tabs.Trigger key={option.id} value={option.id} position="relative">
-                      <Box className={option.className}>{option.label}</Box>
-                    </Tabs.Trigger>
-                  ))}
-                  <Tabs.Indicator />
-                </Tabs.List>
-                <Tabs.Content value="info" display="flex" justifyContent="center">
-                  <Box w="100%" maxWidth="800px">
-                    <InfoForm />
-                  </Box>
-                </Tabs.Content>
-                <Tabs.Content value="notes" display="flex" justifyContent="center">
-                  <Box w="100%" maxWidth="800px">
-                    <NotesForm />
-                  </Box>
-                </Tabs.Content>
-              </Tabs.Root>
-            </Flex>
+            <Tabs control={[tab ?? "info", setTab]} options={options} />
           </form>
         </FormProvider>
       </Flex>

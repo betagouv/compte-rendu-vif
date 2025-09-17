@@ -14,7 +14,6 @@ export const useChipOptions = (key?: string) => {
   if (key) query = query.where("key", "=", key);
 
   const chipsQuery = useDbQuery(query.selectAll());
-
   const grouped = groupBy(chipsQuery.data ?? [], (item) => `${item.key}-${item.value}`);
 
   const chips = Object.values(grouped).map((value) => {

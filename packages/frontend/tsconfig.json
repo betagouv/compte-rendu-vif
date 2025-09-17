@@ -20,7 +20,6 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "paths": {
-      "#styled-system/*": ["./styled-system/*"],
       "#components/*": ["./src/components/*"]
     },
     "types": ["vite-plugin-pwa/client"]

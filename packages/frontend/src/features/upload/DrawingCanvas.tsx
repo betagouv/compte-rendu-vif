@@ -1,10 +1,10 @@
-import { Flex, Stack, styled } from "#styled-system/jsx";
 import { fr } from "@codegouvfr/react-dsfr";
 import React, { useState, useRef, useEffect } from "react";
-import { css, cva } from "#styled-system/css";
-import Button from "@codegouvfr/react-dsfr/Button";
 import { v4 } from "uuid";
 import { db } from "../../db/db";
+import { Box, Stack } from "@mui/material";
+import { Flex } from "#components/ui/Flex.tsx";
+import { Button } from "#components/MUIDsfr.tsx";
 
 type DrawEvent = React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>;
 export type Line = { points: Array<{ x: number; y: number }>; color: string };
@@ -235,25 +235,26 @@ export const ImageCanvas = ({
   };
 
   return (
-    <styled.div display="flex" flexDirection="column" width="100%" h="100%">
-      <Stack pos="absolute" top="26px" right={{ base: "16px" }} gap="18px" flexDir="row" alignItems="center">
+    <Box display="flex" flexDirection="column" width="100%" height="100%" maxHeight="100vh">
+      <Stack position="absolute" top="26px" right={{ xs: "16px" }} gap="18px" flexDirection="row" alignItems="center">
         {/* @ts-ignore */}
         <Button
-          className={css({ bgColor: "white" })}
+          sx={{ bgColor: "white" }}
           type="button"
           priority="secondary"
           iconId="ri-arrow-go-back-line"
           onClick={handleUndo}
           disabled={lines.length === 0}
         />
-        <Button className={css({ bgColor: "white" })} type="button" priority="secondary" onClick={handleSave}>
+        <Button sx={{ bgcolor: "white" }} type="button" priority="secondary" onClick={handleSave}>
           OK
         </Button>
       </Stack>
 
-      <styled.div flex="1" borderRadius="0.25rem" overflow="hidden">
-        <styled.canvas
+      <Box flex="1" borderRadius="0.25rem" overflow="hidden">
+        <Box
           ref={canvasRef}
+          component="canvas"
           onMouseDown={handleMouseDown}
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUp}
@@ -262,60 +263,54 @@ export const ImageCanvas = ({
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
-          touchAction="none"
-          userSelect="none"
+          sx={{
+            touchAction: "none",
+            userSelect: "none",
+          }}
         />
-      </styled.div>
+      </Box>
       <Flex justifyContent="center" alignItems="center">
-        <Stack gap="14px" flexDir="row" justifyContent="center" alignItems="center" p="18px">
+        <Stack gap="14px" flexDirection="row" justifyContent="center" alignItems="center" p="18px">
           {colors.map((color) => (
-            <styled.button
+            <Button
               type="button"
               key={color}
+              priority="tertiary no outline"
               onClick={() => setColor(color)}
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-              w="40px"
-              h="40px"
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                widht: "40px",
+                height: "40px",
+              }}
             >
-              <styled.div
-                className={colorButtton({ active: activeColor === color })}
-                style={{ backgroundColor: color }}
-                border={color === "white" ? "1px solid black" : "none"}
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderRadius: "50%",
+                  width: activeColor === color ? "40px" : "20px",
+                  height: activeColor === color ? "40px" : "20px",
+                  bgcolor: color,
+                  border: color === "white" ? "1px solid black" : "none",
+                }}
               >
-                <styled.i
+                <Box
                   className={fr.cx("fr-icon--md", "ri-pencil-line")}
+                  component="i"
                   style={{ display: activeColor === color ? "block" : "none" }}
                   color={blackPenColors.includes(color) ? "black" : "white"}
                 />
-              </styled.div>
-            </styled.button>
+              </Box>
+            </Button>
           ))}
         </Stack>
       </Flex>
-    </styled.div>
+    </Box>
   );
 };
-
-const colorButtton = cva({
-  base: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: "50%",
-    w: "20px",
-    h: "20px",
-  },
-  variants: {
-    active: {
-      true: {
-        w: "40px",
-        h: "40px",
-      },
-    },
-  },
-});
 
 const blackPenColors = ["#FFD600", "#3DFF7F", "white"];
 const colors = ["#000AFF", "#FF3F3F", "#FF8A00", "#FFD600", "#3DFF7F", "white", "black"];

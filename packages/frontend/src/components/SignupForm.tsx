@@ -1,15 +1,16 @@
-import { Divider, Flex, styled } from "#styled-system/jsx";
 import { type UseFormReturn, useForm, useWatch } from "react-hook-form";
 import Input from "@codegouvfr/react-dsfr/Input";
 import { PasswordInput } from "./PasswordInput";
 import { FullWidthButton } from "./FullWidthButton";
-import { css } from "#styled-system/css";
 import { InputGroup } from "./InputGroup";
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import { useAuthContext } from "../contexts/AuthContext";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { type RouterInputs, api, getErrorMessage, unauthenticatedApi } from "../api";
 import Select from "@codegouvfr/react-dsfr/Select";
+import { Flex } from "./ui/Flex";
+import { Typography } from "@mui/material";
+import { Divider } from "./ui/Divider";
 
 export const SignupForm = () => {
   const form = useForm<SignupFormProps>({
@@ -43,13 +44,13 @@ export const SignupForm = () => {
   const { error: mutationError } = mutation;
 
   return (
-    <Flex direction="column">
+    <Flex flexDirection="column">
       <form onSubmit={form.handleSubmit(signup)}>
         {mutationError ? (
           <Alert
-            className={css({ mb: "1.5rem" })}
+            style={{ marginBottom: "1.5rem" }}
             severity="error"
-            title={<styled.span fontWeight="regular">{getErrorMessage(mutationError)}</styled.span>}
+            title={<Typography fontWeight="regular">{getErrorMessage(mutationError)}</Typography>}
           />
         ) : null}
         <InputGroup state={mutationError ? "error" : undefined}>
@@ -98,12 +99,18 @@ export const SignupForm = () => {
           ))}
         </Select>
 
-        <FullWidthButton className={css({ mt: "1.5rem" })} type="submit" nativeButtonProps={{ type: "submit" }}>
+        <FullWidthButton
+          style={{
+            marginTop: "1.5rem",
+          }}
+          type="submit"
+          nativeButtonProps={{ type: "submit" }}
+        >
           Valider
         </FullWidthButton>
       </form>
 
-      <Divider my="20px" color="#DDDDDD" />
+      <Divider my="20px" />
 
       <h5>Vous avez déjà un compte ?</h5>
 

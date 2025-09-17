@@ -1,11 +1,12 @@
+import { EmailInput } from "#components/EmailInput.tsx";
 import { InputGroupWithTitle } from "#components/InputGroup";
+import { Button, Center, Input, Select } from "#components/MUIDsfr.tsx";
+import { SmartAddressInput } from "#components/SmartAddressInput.tsx";
+import { useTabsContext } from "#components/Tabs.tsx";
 import { SpaceTypeChips } from "#components/chips/SpaceTypeChips";
-import { css } from "#styled-system/css";
-import { Box, Center, Divider, Flex, Stack, styled } from "#styled-system/jsx";
-import { useTabsContext } from "@ark-ui/react/tabs";
-import Button from "@codegouvfr/react-dsfr/Button";
-import Input from "@codegouvfr/react-dsfr/Input";
-import Select from "@codegouvfr/react-dsfr/Select";
+import { Divider } from "#components/ui/Divider.tsx";
+import { Flex } from "#components/ui/Flex.tsx";
+import { Box } from "@mui/material";
 import { format, parse } from "date-fns";
 import { useRef, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
@@ -14,8 +15,6 @@ import { Report } from "../db/AppSchema";
 import { db, useDbQuery } from "../db/db";
 import { useIsFormDisabled } from "./DisabledContext";
 import { ServiceInstructeurSelect } from "./ServiceInstructeurSelect";
-import { SmartAddressInput } from "#components/SmartAddressInput.tsx";
-import { EmailInput } from "#components/EmailInput.tsx";
 import { SpeechRecorder } from "./audio-record/SpeechRecorder";
 
 export const InfoForm = () => {
@@ -66,10 +65,6 @@ export const InfoForm = () => {
       .select("user.name as createdByName"),
   );
 
-  // const redactedByQuery = useLiveQuery(
-  //   db.delegation.liveMany({ where: { delegatedTo: user.id }, include: { user_delegation_createdByTouser: true } }),
-  // );
-
   const redactedByOptions: { value: string; label: string }[] = [
     {
       value: user.id,
@@ -81,7 +76,7 @@ export const InfoForm = () => {
     })) ?? []),
   ];
 
-  const tab = useTabsContext();
+  const { setTab } = useTabsContext();
 
   const baseRedactedByProps = form.register("redactedById");
   const redactedByProps = {
@@ -97,12 +92,11 @@ export const InfoForm = () => {
   const applicantEmail = useWatch({ control: form.control, name: "applicantEmail" });
 
   return (
-    <Flex direction="column" w="100%" padding="16px">
-      {/* <Badge severity="info">Les champs marqués d'un astérisque (*) sont obligatoires</Badge> */}
+    <Flex flexDirection="column" width="100%" maxWidth="800px" padding="16px">
       <InputGroupWithTitle title="Le rendez-vous">
-        <Stack gap={{ base: "0", lg: "16px" }} direction={{ base: "column", lg: "row" }}>
+        <Flex gap={{ xs: "0", lg: "16px" }} flexDirection={{ xs: "column", lg: "row" }}>
           <Select
-            className={css({ flex: { base: "none", lg: 1 }, mb: { base: "24px", lg: "16px" } })}
+            sx={{ flex: { xs: "none", lg: 1 }, mb: { xs: "24px", lg: "16px" } }}
             label="Rédigé par"
             disabled={isFormDisabled}
             nativeSelectProps={redactedByProps}
@@ -114,42 +108,36 @@ export const InfoForm = () => {
             )) ?? null}
           </Select>
           <Input
-            className={css({ flex: { base: "none", lg: 1 }, mb: { base: "16px", lg: "16px" } })}
+            sx={{ flex: { xs: "none", lg: 1 }, mb: { xs: "16px", lg: "16px" } }}
             disabled={isFormDisabled}
             label="Nom du demandeur"
             nativeInputProps={form.register("applicantName")}
           />
-        </Stack>
+        </Flex>
 
-        <styled.div mt="8px">
+        <Box mt="8px">
           <EmailInput
             value={[applicantEmail ?? ""]}
             label={"Courriel demandeur"}
             single
             onValueChange={(e) => form.setValue("applicantEmail", e[0])}
           />
-          {/* <Input
-            className={css({})}
-            disabled={isFormDisabled}
-            label="Courriel demandeur"
-            nativeInputProps={form.register("applicantEmail")}
-          /> */}
-        </styled.div>
+        </Box>
 
-        <Stack direction="row">
+        <Flex gap="16px" flexDirection="row" mt="32px">
           <Input
-            className={css({ flex: { base: "none", lg: 1 }, mb: { base: "16px", lg: undefined } })}
+            sx={{ flex: { xs: "none", lg: 1 }, mb: { xs: "16px", lg: undefined } }}
             disabled={isFormDisabled}
             label="Date"
             nativeInputProps={{ type: "date", onChange: setDay, value: meetDateRef.current.day }}
           />
           <Input
-            className={css({ flex: { base: "none", lg: 1 }, mb: { base: "16px", lg: undefined } })}
+            sx={{ flex: { xs: "none", lg: 1 }, mb: { xs: "16px", lg: undefined } }}
             disabled={isFormDisabled}
             label="Horaire"
             nativeInputProps={{ type: "time", onChange: setTime, value: meetDateRef.current.time }}
           />
-        </Stack>
+        </Flex>
       </InputGroupWithTitle>
 
       <Divider mt="20px" mb="52px" />
@@ -158,57 +146,49 @@ export const InfoForm = () => {
         <DescriptionInput />
 
         <SmartAddressInput />
-        {/* <Input
-          className={css({ flex: { base: "none", lg: 2 }, mt: "16px", mb: { base: "24px", lg: undefined } })}
-          disabled={isFormDisabled}
-          label="Adresse"
-          nativeInputProps={form.register("applicantAddress")}
-        /> */}
-        <Stack gap={{ base: "0", lg: "16px" }} direction={{ base: "column", lg: "row" }}>
+        <Flex gap={{ xs: "0", lg: "16px" }} flexDirection={{ xs: "column", lg: "row" }}>
           <Input
-            className={css({ flex: { base: "none", lg: 1 }, mb: { base: "24px", lg: undefined } })}
+            sx={{ flex: { xs: "none", lg: 1 }, mb: { xs: "24px", lg: undefined } }}
             disabled={isFormDisabled}
             label="Code postal"
-            // hintText="Ce champ apparaitra dans la liste des compte-rendus"
             nativeInputProps={form.register("zipCode")}
           />
           <Input
-            className={css({ flex: { base: "none", lg: 1 }, mb: { base: "24px", lg: undefined } })}
+            sx={{ flex: { xs: "none", lg: 1 }, mb: { xs: "24px", lg: undefined } }}
             disabled={isFormDisabled}
             label="Commune"
-            // hintText="Ce champ apparaitra dans la liste des compte-rendus"
             nativeInputProps={form.register("city")}
           />
-        </Stack>
-        <Stack gap={{ base: "0", lg: "16px" }} direction={{ base: "column", lg: "row" }}>
+        </Flex>
+        <Flex gap={{ xs: "0", lg: "16px" }} flexDirection={{ xs: "column", lg: "row" }}>
           <Input
-            className={css({ flex: { base: "none", lg: 1 }, mb: "24px" })}
+            sx={{ flex: { xs: "none", lg: 1 }, mb: "24px" }}
             disabled={isFormDisabled}
             label="Référence cadastrale"
             nativeInputProps={{ ...form.register("projectCadastralRef"), placeholder: "Seulement la principale" }}
           />
           <Box
-            className={css({
+            sx={{
               flex: {
-                base: "none",
+                xs: "none",
                 lg: 1,
               },
-            })}
+            }}
           >
             <ServiceInstructeurSelect disabled={isFormDisabled} />
           </Box>
-        </Stack>
-        <SpaceTypeChips className={css({ flex: { base: "none", lg: 1 } })} disabled={isFormDisabled} />
+        </Flex>
+        <SpaceTypeChips className={{ flex: { xs: "none", lg: 1 } }.toString()} disabled={isFormDisabled} />
       </InputGroupWithTitle>
 
-      <Center justifyContent={{ base: "center", lg: "flex-start" }} mt={{ base: "30px", lg: "50px" }} mb="120px">
+      <Center justifyContent={{ xs: "center", lg: "flex-start" }} mt={{ xs: "30px", lg: "50px" }} mb="120px">
         <Button
           type="button"
           iconId="ri-arrow-right-line"
           nativeButtonProps={{
             type: "button",
             onClick: () => {
-              tab.setValue("notes");
+              setTab("notes");
             },
           }}
         >
@@ -235,10 +215,10 @@ const DescriptionInput = () => {
 
   return (
     <Input
-      className={css({ mt: "24px", "& > textarea": { mt: "0 !important" } })}
+      sx={{ mt: "24px", "& > textarea": { mt: "0 !important" } }}
       disabled={isFormDisabled}
       label={
-        <Flex justifyContent="space-between" w="100%">
+        <Flex justifyContent="space-between" width="100%">
           <span>Description</span>
           <SpeechRecorder
             disabled={isFormDisabled}
