@@ -5,16 +5,14 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "pnpm icons && pnpm build:only",
-    "build:only": "vite build && pnpm version:gen",
+    "build": "vite build && pnpm version:gen",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "pnpm env:gen && vite preview --host",
     "predev": "react-dsfr update-icons",
     "prebuild": "react-dsfr update-icons",
     "env:gen": "vite-node ./scripts/createEnvFile.ts",
     "version:gen": "vite-node ./scripts/setVersion.ts",
-    "dsfr": "copy-dsfr-to-public",
-    "icons": "mkdirp ./public/dsfr/icons/remixicon && only-include-used-icons"
+    "dsfr": "copy-dsfr-to-public"
   },
   "dependencies": {
     "@codegouvfr/react-dsfr": "^1.26.0",
