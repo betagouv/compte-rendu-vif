@@ -66,7 +66,9 @@ export default defineConfig({
     include: ["@powersync/web > js-logger"],
   },
   envDir: "../..",
-  preview: {},
+  preview: {
+    allowedHosts: ["app.compte-rendu-vif.beta.gouv.fr", "compte-rendu-vif.incubateur.net"],
+  },
   build: {
     target: "esnext",
   },
