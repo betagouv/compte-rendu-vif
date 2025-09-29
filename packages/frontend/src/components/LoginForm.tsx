@@ -13,6 +13,8 @@ import { Flex } from "./ui/Flex";
 import { Box, Typography } from "@mui/material";
 import { fr } from "@codegouvfr/react-dsfr";
 import { Divider } from "./ui/Divider";
+import { Button } from "./MUIDsfr";
+import { auth } from "../features/keycloak/auth";
 
 export const LoginForm = () => {
   const [authData, setAuthData] = useAuthContext();
@@ -34,6 +36,7 @@ export const LoginForm = () => {
 
   return (
     <Flex flexDirection="column">
+      <Button onClick={() => auth.login()}>Se connecter avec Keycloak</Button>
       <form onSubmit={form.handleSubmit(login)}>
         {mutationError ? (
           <Alert
