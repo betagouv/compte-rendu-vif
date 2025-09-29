@@ -13,6 +13,8 @@ import { pdfPlugin } from "./routes/pdfRoutes";
 import { uploadPlugin } from "./routes/uploadRoutes";
 import { sentry } from "./features/sentry";
 import { syncPlugin } from "./routes/syncRoutes";
+import { authPlugin } from "./routes/authRoutes";
+import { isDev } from "./envVars";
 
 const debug = makeDebug("fastify");
 
@@ -50,10 +52,16 @@ export const initFastify = async () => {
         if (error instanceof AppError) {
           reply.status(error.status).send({ error: error.message });
         } else {
-          reply.status(500).send({ error: "Une erreur s'est produite" });
+          reply
+            .status(500)
+            .send({
+              error: "Une erreur s'est produite",
+              ...(isDev ? { stack: error.stack, message: error.message } : {}),
+            });
         }
       });
 
+      await instance.register(authPlugin);
       await instance.register(userPlugin);
       await instance.register(staticDataPlugin);
       await instance.register(uploadPlugin, { prefix: "/upload" });

@@ -62,6 +62,7 @@
     "jsonwebtoken": "^9.0.2",
     "kysely": "^0.27.4",
     "nodemailer": "^6.9.13",
+    "ofetch": "^1.4.1",
     "pastable": "^2.2.1",
     "pg": "^8.13.1",
     "postgres": "^3.4.4",

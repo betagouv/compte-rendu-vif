@@ -14,6 +14,7 @@ const envSchema = z.object({
   POSTGRES_DB: z.string(),
   DATABASE_URL: z.string(),
   TOKEN_LIFETIME: z.string().default("60m"),
+  KEYCLOAK_CLIENT_SECRET: z.string(),
   JWT_SECRET: z.string(),
   JWT_REFRESH_SECRET: z.string(),
   NODE_ENV: z.string().default("development"),
@@ -33,6 +34,9 @@ const envSchema = z.object({
   MINIO_URL: z.string(),
   MINIO_BUCKET: z.string(),
   SENTRY_DSN: z.string().optional(),
+  VITE_AUTH_CLIENT_ID: z.string(),
+  VITE_AUTH_URL: z.string(),
+  VITE_AUTH_REALM: z.string(),
 });
 
 export const ENV = envSchema.parse(process.env);

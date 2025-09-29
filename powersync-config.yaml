@@ -45,14 +45,9 @@ sync_rules:
 
 # Settings for client authentication
 client_auth:
-  jwks:
-    keys:
-      - kty: oct
-        alg: HS256
-        kid: powersync
-        k: !env PS_JWT_SECRET
-
-  audience: ["powersync"]
+  jwks_uri: http://localhost:8081/realms/master/protocol/openid-connect/certs
+  audience: ["powersync", "crvif-dev"]
+  issuer: http://localhost:8081/realms/master
 
   # Settings for telemetry reporting
   # See https://docs.powersync.com/self-hosting/telemetry

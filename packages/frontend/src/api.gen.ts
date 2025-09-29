@@ -6,6 +6,14 @@ export namespace Schemas {
 export namespace Endpoints {
   // <Endpoints>
 
+  export type post_Apiauthenticate = {
+    method: "POST";
+    path: "/api/authenticate";
+    parameters: {
+      body: { code: string };
+    };
+    response: Partial<{}>;
+  };
   export type post_ApicreateUser = {
     method: "POST";
     path: "/api/create-user";
@@ -152,6 +160,7 @@ export namespace Endpoints {
 // <EndpointByMethod>
 export type EndpointByMethod = {
   post: {
+    "/api/authenticate": Endpoints.post_Apiauthenticate;
     "/api/create-user": Endpoints.post_ApicreateUser;
     "/api/login": Endpoints.post_Apilogin;
     "/api/send-reset-password": Endpoints.post_ApisendResetPassword;

@@ -13,6 +13,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as UdapRouteImport } from './routes/udap'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as AuthCallbackRouteImport } from './routes/auth-callback'
 import { Route as AccountRouteImport } from './routes/account'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ResetPasswordLinkRouteImport } from './routes/reset-password.$link'
@@ -35,6 +36,11 @@ const UdapRoute = UdapRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthCallbackRoute = AuthCallbackRouteImport.update({
+  id: '/auth-callback',
+  path: '/auth-callback',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AccountRoute = AccountRouteImport.update({
@@ -73,6 +79,7 @@ const EditReportIdRoute = EditReportIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/account': typeof AccountRoute
+  '/auth-callback': typeof AuthCallbackRoute
   '/login': typeof LoginRoute
   '/udap': typeof UdapRoute
   '/signup': typeof SignupLazyRoute
@@ -84,6 +91,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/account': typeof AccountRoute
+  '/auth-callback': typeof AuthCallbackRoute
   '/login': typeof LoginRoute
   '/udap': typeof UdapRoute
   '/signup': typeof SignupLazyRoute
@@ -96,6 +104,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/account': typeof AccountRoute
+  '/auth-callback': typeof AuthCallbackRoute
   '/login': typeof LoginRoute
   '/udap': typeof UdapRoute
   '/signup': typeof SignupLazyRoute
@@ -109,6 +118,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/account'
+    | '/auth-callback'
     | '/login'
     | '/udap'
     | '/signup'
@@ -120,6 +130,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/account'
+    | '/auth-callback'
     | '/login'
     | '/udap'
     | '/signup'
@@ -131,6 +142,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/account'
+    | '/auth-callback'
     | '/login'
     | '/udap'
     | '/signup'
@@ -143,6 +155,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AccountRoute: typeof AccountRoute
+  AuthCallbackRoute: typeof AuthCallbackRoute
   LoginRoute: typeof LoginRoute
   UdapRoute: typeof UdapRoute
   SignupLazyRoute: typeof SignupLazyRoute
@@ -173,6 +186,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth-callback': {
+      id: '/auth-callback'
+      path: '/auth-callback'
+      fullPath: '/auth-callback'
+      preLoaderRoute: typeof AuthCallbackRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/account': {
@@ -223,6 +243,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AccountRoute: AccountRoute,
+  AuthCallbackRoute: AuthCallbackRoute,
   LoginRoute: LoginRoute,
   UdapRoute: UdapRoute,
   SignupLazyRoute: SignupLazyRoute,

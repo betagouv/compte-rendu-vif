@@ -62,7 +62,7 @@ export default defineConfig({
     }),
   ],
   optimizeDeps: {
-    exclude: ["@journeyapps/wa-sqlite", "@powersync/web", "wa-sqlite"],
+    exclude: ["@journeyapps/wa-sqlite", "@powersync/web", "wa-sqlite", "workbox-precaching", "workbox-routing"],
     include: ["@powersync/web > js-logger"],
   },
   envDir: "../..",
