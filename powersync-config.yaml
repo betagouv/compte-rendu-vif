@@ -45,9 +45,9 @@ sync_rules:
 
 # Settings for client authentication
 client_auth:
-  jwks_uri: http://localhost:8081/realms/master/protocol/openid-connect/certs
-  audience: ["powersync", "crvif-dev"]
-  issuer: http://localhost:8081/realms/master
+  jwks_uri: http://keycloak:8080/realms/master/protocol/openid-connect/certs
+  issuer: "http://keycloak:8080/realms/master"
+  audience: ["account"]
 
   # Settings for telemetry reporting
   # See https://docs.powersync.com/self-hosting/telemetry

@@ -165,7 +165,7 @@ export const Route = createFileRoute("/")({
     </EnsureUser>
   ),
   beforeLoad: ({ context, location }) => {
-    if (!context.token || !context.user) {
+    if (!context.tokens || !context.user) {
       throw redirect({ to: "/login", search: { redirect: location.href } });
     }
   },

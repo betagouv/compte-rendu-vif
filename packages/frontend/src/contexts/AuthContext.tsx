@@ -135,7 +135,7 @@ export const useRefreshUdap = () => {
   return refreshUdapMutation;
 };
 
-type AuthContextProps = Partial<RouterOutputs<"/api/login">> & {
+type AuthContextProps = Partial<RouterOutputs<"/api/authenticate">> & {
   setData: (data: Omit<AuthContextProps, "setData" | "electricStatus">) => void;
   electricStatus: ElectricStatus;
 };

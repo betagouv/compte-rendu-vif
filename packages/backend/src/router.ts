@@ -52,17 +52,15 @@ export const initFastify = async () => {
         if (error instanceof AppError) {
           reply.status(error.status).send({ error: error.message });
         } else {
-          reply
-            .status(500)
-            .send({
-              error: "Une erreur s'est produite",
-              ...(isDev ? { stack: error.stack, message: error.message } : {}),
-            });
+          reply.status(500).send({
+            error: "Une erreur s'est produite",
+            ...(isDev ? { stack: error.stack, message: error.message } : {}),
+          });
         }
       });
 
       await instance.register(authPlugin);
-      await instance.register(userPlugin);
+      // await instance.register(userPlugin);
       await instance.register(staticDataPlugin);
       await instance.register(uploadPlugin, { prefix: "/upload" });
       await instance.register(pdfPlugin, { prefix: "/pdf" });
