@@ -6,6 +6,7 @@ on:
     branches:
       - main
       - development
+      - patrimoine-embarque
 
 env:
   REGISTRY: ghcr.io
