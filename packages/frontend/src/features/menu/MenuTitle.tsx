@@ -1,7 +1,8 @@
-import { Divider, Flex, styled } from "#styled-system/jsx";
-import Button from "@codegouvfr/react-dsfr/Button";
 import { ReactNode } from "react";
 import { menuActor } from "./menuMachine";
+import { Flex } from "#components/ui/Flex.tsx";
+import { Box, Typography } from "@mui/material";
+import { Button } from "#components/MUIDsfr.tsx";
 
 export const MenuTitle = ({
   children,
@@ -18,47 +19,59 @@ export const MenuTitle = ({
 }) => (
   <>
     <Flex
+      bgcolor="white"
       zIndex="5"
-      position={{ base: "sticky", lg: "sticky" }}
-      top={{ base: "0", lg: "0" }}
+      position={{ xs: "sticky", lg: "sticky" }}
+      top={{ xs: "0", lg: "0" }}
       justifyContent="space-between"
       alignItems="center"
-      w="100%"
-      py={{ base: "16px", lg: "30px" }}
-      pl={{ base: undefined, lg: "0" }}
-      // mt={{ base: "0", lg: "48px" }}
-      // mb={{ base: "16px", lg: "48px" }}
-      bgColor="white"
+      width="100%"
+      py={{ xs: "16px", lg: "30px" }}
+      pl={{ xs: undefined, lg: "0" }}
     >
-      <styled.div hideFrom="lg">
+      <Box display={{ lg: "none" }}>
         {backButtonOnClick ? (
-          // @ts-ignore
-          <Button priority="tertiary no outline" iconId="ri-arrow-left-s-line" onClick={backButtonOnClick}></Button>
+          <Button priority="tertiary no outline" iconId="ri-arrow-left-s-line" onClick={backButtonOnClick}>
+            {null}
+          </Button>
         ) : null}
-      </styled.div>
-      <styled.span
-        hideBelow={buttons ? "lg" : undefined}
+      </Box>
+      <Typography
+        display={{
+          xs: buttons ? "none" : "block",
+          lg: "block",
+        }}
         pl={backButtonOnClick ? undefined : "16px"}
+        textOverflow="ellipsis"
         fontSize="20px"
         fontWeight="bold"
-        nowrap
+        whiteSpace="nowrap"
+        overflow="hidden"
       >
         {children}
-      </styled.span>
-      <Flex gap="16px" pl={{ base: "16px", lg: "24px" }} fontSize="20px" fontWeight="bold" nowrap>
+      </Typography>
+      <Flex
+        gap="16px"
+        pl={{ xs: "16px", lg: "24px" }}
+        textOverflow="ellipsis"
+        fontSize="20px"
+        fontWeight="bold"
+        whiteSpace="nowrap"
+        overflow="hidden"
+      >
         {buttons}
       </Flex>
       <ModalCloseButton onClose={() => menuActor.send({ type: "CLOSE" })} />
     </Flex>
     {alert ? alert : null}
     {!hideDivider ? (
-      <styled.div mb="24px">
+      <Box mb="24px">
         {buttons ? (
-          <styled.span hideFrom={"lg"} fontSize="20px" fontWeight="bold">
+          <Typography display={{ lg: "none" }} fontSize="20px" fontWeight="bold">
             {children}
-          </styled.span>
+          </Typography>
         ) : null}
-      </styled.div>
+      </Box>
     ) : null}
   </>
 );

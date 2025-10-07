@@ -54,17 +54,19 @@ export class Connector implements PowerSyncBackendConnector {
 }
 
 export const getTokenOrRefresh = async () => {
-  let authData = safeJSONParse(window.localStorage.getItem("crvif/auth") ?? "");
+  const authData = safeJSONParse(window.localStorage.getItem("crvif/auth") ?? "");
   if (!authData) throw new Error("No auth data found");
 
-  if (!authData.token || !authData.refreshToken) throw new Error("No token found");
+  let tokens = authData.tokens;
+
+  if (!tokens.access_token || !tokens.refresh_token) throw new Error("No token found");
 
   if (new Date(authData.expiresAt) < new Date()) {
-    const resp = await unauthenticatedApi.get("/api/refresh-token", {
-      query: { token: authData.token, refreshToken: authData.refreshToken! },
+    const resp = await unauthenticatedApi.post("/api/refresh-token", {
+      body: { refreshToken: tokens.refresh_token! },
     });
 
-    if (resp.token === null) {
+    if (resp.access_token === null) {
       console.log("token expired but couldn't find a refresh token, logging out");
       window.localStorage.removeItem("crvif/auth");
     } else {
@@ -72,8 +74,8 @@ export const getTokenOrRefresh = async () => {
       window.localStorage.setItem("crvif/auth", JSON.stringify({ ...authData, ...resp }));
     }
 
-    authData = safeJSONParse(window.localStorage.getItem("crvif/auth") ?? "");
+    tokens = resp;
   }
 
-  return authData.token as string;
+  return tokens.access_token;
 };

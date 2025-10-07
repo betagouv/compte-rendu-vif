@@ -6,7 +6,7 @@ import { v4 } from "uuid";
 
 const debug = makeDebug("sync-service");
 
-const Nullable = <T extends TSchema>(schema: T) => Type.Optional(Type.Union([schema, Type.Null()]));
+export const Nullable = <T extends TSchema>(schema: T) => Type.Optional(Type.Union([schema, Type.Null()]));
 
 const blackListedTables = ["internal_user"];
 

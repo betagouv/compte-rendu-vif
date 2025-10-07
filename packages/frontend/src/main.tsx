@@ -1,8 +1,9 @@
+import "./polyfill";
 import { startReactDsfr } from "@codegouvfr/react-dsfr/spa";
 import React, { PropsWithChildren, useEffect, useMemo, useRef } from "react";
 import ReactDOM from "react-dom/client";
 import { App } from "./App";
-import { AuthProvider, useAuthContext } from "./contexts/AuthContext";
+import { AuthProvider } from "./contexts/AuthContext";
 import "./index.css";
 import { Link } from "@tanstack/react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -11,6 +12,8 @@ import { registerSW } from "virtual:pwa-register";
 import { initFonts } from "@cr-vif/pdf";
 import { powerSyncDb, setupPowersync } from "./db/db";
 import { PowerSyncContext } from "@powersync/react";
+import MuiDsfrThemeProvider from "@codegouvfr/react-dsfr/mui";
+import { TanStackDevtools } from "@tanstack/react-devtools";
 
 if ("serviceWorker" in navigator) {
   registerSW({});
@@ -19,7 +22,7 @@ if ("serviceWorker" in navigator) {
 // force light mode
 localStorage.setItem("scheme", "light");
 
-startReactDsfr({ defaultColorScheme: "dark", Link: Link });
+startReactDsfr({ defaultColorScheme: "light", Link: Link });
 initFonts();
 
 const queryClient = new QueryClient({
@@ -46,15 +49,18 @@ const WithPowersync = ({ children }: PropsWithChildren) => {
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <ErrorBoundary fallback={<div>Une erreur s'est produite</div>}>
-      <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <WithPowersync>
-            <App />
-          </WithPowersync>
-        </AuthProvider>
-      </QueryClientProvider>
-    </ErrorBoundary>
+    <TanStackDevtools />
+    <MuiDsfrThemeProvider>
+      <ErrorBoundary fallback={<div>Une erreur s'est produite</div>}>
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
+            <WithPowersync>
+              <App />
+            </WithPowersync>
+          </AuthProvider>
+        </QueryClientProvider>
+      </ErrorBoundary>
+    </MuiDsfrThemeProvider>
   </React.StrictMode>,
 );
 

@@ -1,12 +1,7 @@
 import { Banner } from "#components/Banner";
 import { EnsureUser } from "#components/EnsureUser";
-import { SearchResults } from "#components/ReportSearch.js";
+import { SearchResults } from "#components/ReportSearch.tsx";
 import { Status } from "#components/SyncForm";
-import { Tabs } from "#components/Tabs";
-import { css } from "#styled-system/css";
-import { Box, Center, CenterProps, Flex, styled } from "#styled-system/jsx";
-import Button from "@codegouvfr/react-dsfr/Button";
-import Input from "@codegouvfr/react-dsfr/Input";
 import { useStatus } from "@powersync/react";
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
@@ -15,29 +10,18 @@ import { v4 } from "uuid";
 import { useUser } from "../contexts/AuthContext";
 import { db } from "../db/db";
 import { AllReports, MyReports } from "../features/ReportList";
+import { Flex } from "#components/ui/Flex.tsx";
+import { Box, BoxProps } from "@mui/material";
+import { Center, Input } from "#components/MUIDsfr.tsx";
+import { useStyles } from "tss-react";
+import { Tabs } from "#components/Tabs.tsx";
+import { Button } from "#components/MUIDsfr.tsx";
 
 const Index = () => {
   const [search, setSearch] = useState("");
   const user = useUser()!;
 
-  const options = [
-    {
-      id: "my",
-      label: user.name,
-      className: css({
-        position: "absolute",
-        left: { base: "16px", lg: "calc((100vw - 400px * 2 - 126px) / 2)" },
-      }),
-    },
-    {
-      id: "udap",
-      label: "UDAP",
-      className: css({
-        position: "absolute",
-        left: "16px",
-      }),
-    },
-  ];
+  const { css } = useStyles();
 
   const navigate = useNavigate();
 
@@ -66,38 +50,42 @@ const Index = () => {
   });
 
   return (
-    <Flex direction="column" color="text-label-grey">
-      <SimpleBanner pt={{ base: "15px", lg: "82px" }} pb={{ base: "49px", lg: "82px" }}>
-        <Flex hideFrom="lg" justifyContent="space-between" w="100%" px="16px">
-          <styled.div fontSize="16px" fontWeight="bold">
+    <Flex flexDirection="column" color="text-label-grey">
+      <SimpleBanner pt={{ xs: "15px", lg: "82px" }} pb={{ xs: "49px", lg: "82px" }}>
+        <Flex
+          sx={{
+            display: { xs: "flex", lg: "none" },
+          }}
+          justifyContent="space-between"
+          width="100%"
+          px="16px"
+        >
+          <Box fontSize="16px" fontWeight="bold">
             Compte-rendu VIF
-          </styled.div>
+          </Box>
           <Status className={css({ fontSize: "10px" })} status="saved" />
         </Flex>
         <Center justifyContent="center">
-          <Button
-            className={css({
-              mr: { base: "0", lg: "1rem" },
-              mt: { base: "28px", lg: "0" },
-              mb: { base: "-12px", lg: "0" },
-            })}
-            iconId="ri-add-line"
-            data-testid="create-report"
-            nativeButtonProps={{ onClick: () => createReportMutation.mutate() }}
-          >
-            Créer un CR
-          </Button>
-          <styled.div hideBelow="lg">
+          <Box display="flex" mr={{ xs: 0, lg: "1rem" }} mt={{ xs: "28px", lg: 0 }} mb={{ xs: "-12px", lg: 0 }}>
+            <Button
+              iconId="ri-add-line"
+              data-testid="create-report"
+              nativeButtonProps={{ onClick: () => createReportMutation.mutate() }}
+            >
+              Créer un CR
+            </Button>
+          </Box>
+          <Box sx={{ display: { xs: "none", lg: "block" } }}>
             <Input
-              className={css({
+              sx={{
                 "& input": {
                   width: "334px",
-                  bgColor: "white !important",
+                  bgcolor: "white !important",
                 },
                 "& .fr-input-wrap": {
                   mt: 0,
                 },
-              })}
+              }}
               label={null}
               nativeInputProps={{
                 value: search,
@@ -105,8 +93,8 @@ const Index = () => {
                 placeholder: "Rechercher nom, ville, titre...",
               }}
               addon={
-                <styled.div display="flex" pos="relative" alignItems="center">
-                  <styled.div pos="absolute" left="-32px">
+                <Box display="flex" position="relative" alignItems="center">
+                  <Box position="absolute" left="-32px">
                     {search ? (
                       // @ts-expect-error dsfr buttons props must have children
                       <Button
@@ -118,54 +106,52 @@ const Index = () => {
                         priority="tertiary no outline"
                       ></Button>
                     ) : null}
-                  </styled.div>
+                  </Box>
                   <Button className={css({ position: "relative" })}>Rechercher</Button>
-                </styled.div>
+                </Box>
               }
             />
-          </styled.div>
+          </Box>
         </Center>
       </SimpleBanner>
 
-      {search ? (
-        <SearchResults hideEmpty search={search} />
-      ) : (
-        <Tabs.Root defaultValue="my">
-          <Tabs.List>
-            {options.map((option) => (
-              <Tabs.Trigger key={option.id} value={option.id} position="relative">
-                <Box className={option.className}>{option.label}</Box>
-              </Tabs.Trigger>
-            ))}
-            <Tabs.Indicator />
-          </Tabs.List>
-          <Center>
-            <Tabs.Content
-              value="my"
-              display="flex"
-              justifyContent={{ base: "center", lg: "center" }}
-              w="100%"
-              px="16px"
-            >
-              <MyReports />
-            </Tabs.Content>
-            <Tabs.Content
-              value="udap"
-              display="flex"
-              justifyContent={{ base: "center", lg: "center" }}
-              w="100%"
-              px="16px"
-            >
-              <AllReports />
-            </Tabs.Content>
-          </Center>
-        </Tabs.Root>
-      )}
+      {search ? <SearchResults hideEmpty search={search} /> : <MainContentTabs />}
     </Flex>
   );
 };
 
-const SimpleBanner = (props: CenterProps) => {
+const MainContentTabs = () => {
+  const user = useUser()!;
+
+  const options = [
+    {
+      id: "my",
+      label: user.name,
+      props: {
+        position: "absolute" as const,
+        left: { xs: "24px", lg: "calc((100vw - 400px * 2 - 126px) / 2)" },
+      },
+      component: <MyReports />,
+    },
+    {
+      id: "udap",
+      label: "UDAP",
+      props: {
+        position: "absolute" as const,
+        left: "16px",
+      },
+      component: <AllReports />,
+    },
+  ];
+
+  return (
+    <Flex flex="1" flexDirection="column" pb={{ xs: "16px", lg: "0" }}>
+      <Tabs options={options} />
+    </Flex>
+  );
+};
+
+const SimpleBanner = (props: Omit<BoxProps, "ref">) => {
   const powerSyncStatus = useStatus();
   const status = powerSyncStatus.connected ? "saved" : "offline";
 
@@ -179,7 +165,7 @@ export const Route = createFileRoute("/")({
     </EnsureUser>
   ),
   beforeLoad: ({ context, location }) => {
-    if (!context.token || !context.user) {
+    if (!context.tokens || !context.user) {
       throw redirect({ to: "/login", search: { redirect: location.href } });
     }
   },

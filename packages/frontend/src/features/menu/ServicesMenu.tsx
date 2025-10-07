@@ -1,18 +1,18 @@
 import { useUser } from "../../contexts/AuthContext";
 import { ServiceInstructeurs } from "../../db/AppSchema";
 import { db, useDbQuery } from "../../db/db";
-import { Divider, Flex, styled } from "#styled-system/jsx";
-import Input from "@codegouvfr/react-dsfr/Input";
 import { useFieldArray, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { Spinner } from "#components/Spinner.tsx";
 import { MenuTitle } from "./MenuTitle";
-import Button from "@codegouvfr/react-dsfr/Button";
-import { css, cx } from "#styled-system/css";
 import { fr } from "@codegouvfr/react-dsfr";
 import { useMutation } from "@tanstack/react-query";
 import { transformBold } from "./ClauseMenu";
 import { v4 } from "uuid";
+import { Box, Typography } from "@mui/material";
+import { Button, Input } from "#components/MUIDsfr.tsx";
+import { Flex } from "#components/ui/Flex.tsx";
+import { Divider } from "#components/ui/Divider.tsx";
 
 type MenuMode = "view" | "add" | "edit";
 
@@ -57,9 +57,9 @@ export const ServicesMenu = () => {
 
   if (services.isLoading) {
     return (
-      <styled.div h="100%">
+      <Box height="100%">
         <Spinner />
-      </styled.div>
+      </Box>
     );
   }
 
@@ -70,12 +70,13 @@ export const ServicesMenu = () => {
     isEditing || isAdding ? (
       <>
         <Button
-          className={css({
-            "&::before": {
+          sx={{
+            "::before": {
               ml: "0 !important",
-              mr: { base: "0 !important", lg: "8px !important" },
+              mr: { xs: "0 !important", lg: "8px !important" },
             },
-          })}
+            display: { xs: "none", lg: "inline-flex" },
+          }}
           disabled={editServicesMutation.isLoading}
           iconId="ri-save-fill"
           priority="primary"
@@ -84,18 +85,19 @@ export const ServicesMenu = () => {
             form: isEditing ? "edit-form" : "add-form",
           }}
         >
-          <styled.span hideBelow="lg">Enregistrer</styled.span>
+          Enregistrer
         </Button>
       </>
     ) : (
       <>
         <Button
-          className={css({
-            "&::before": {
+          sx={{
+            display: { xs: "none", lg: "inline-flex" },
+            "::before": {
               ml: "0 !important",
-              mr: { base: "0 !important", lg: "8px !important" },
+              mr: { xs: "0 !important", lg: "8px !important" },
             },
-          })}
+          }}
           nativeButtonProps={{ type: "button" }}
           iconId="ri-pencil-fill"
           priority="secondary"
@@ -109,15 +111,16 @@ export const ServicesMenu = () => {
             setMode("edit");
           }}
         >
-          <styled.span hideBelow="lg">Modifier</styled.span>
+          Modifier
         </Button>
         <Button
-          className={css({
-            "&::before": {
+          sx={{
+            display: { xs: "none", lg: "inline-flex" },
+            "::before": {
               ml: "0 !important",
-              mr: { base: "0 !important", lg: "8px !important" },
+              mr: { xs: "0 !important", lg: "8px !important" },
             },
-          })}
+          }}
           nativeButtonProps={{ type: "button" }}
           iconId="ri-add-fill"
           priority="secondary"
@@ -131,18 +134,18 @@ export const ServicesMenu = () => {
             setMode("add");
           }}
         >
-          <styled.span hideBelow="lg">Ajouter</styled.span>
+          Ajouter
         </Button>
       </>
     );
 
   return (
-    <Flex flexDir="column" h="100%">
+    <Flex flexDirection="column" height="100%">
       <MenuTitle buttons={buttons} alert={bannerProps ? <ServiceFormBanner {...bannerProps} /> : null}>
-        <styled.div pl={{ base: "8px", lg: "0" }}>Services instructeurs et urbanistes</styled.div>
+        <Box pl={{ xs: "8px", lg: "0" }}>Services instructeurs et urbanistes</Box>
       </MenuTitle>
 
-      <Flex gap="80px" flexDir="column" px={{ base: "8px", lg: "32px" }} pb="40px">
+      <Flex gap="80px" flexDirection="column" px={{ xs: "8px", lg: "32px" }} pb="40px">
         {isAdding ? <ServiceAdd addService={createServiceMutation.mutate} /> : null}
         <ServicesList services={services.data} mode={mode} editServices={editServicesMutation.mutate} />
       </Flex>
@@ -163,14 +166,9 @@ const ServiceFormBanner = ({ status, icon, text }: BannerProps) => {
   const iconColor = status === "idle" ? "#0063CB" : "#18753C";
 
   return (
-    <Flex mb="24px" py="16px" px="32px" bgColor={bgColor}>
-      <i className={cx(icon, css({ color: iconColor }))} />
-      <styled.div
-        dangerouslySetInnerHTML={{ __html: transformBold(text) }}
-        ml="16px"
-        pr="24px"
-        color={iconColor}
-      ></styled.div>
+    <Flex bgcolor={bgColor} mb="24px" py="16px" px="32px">
+      <i className={icon} style={{ color: iconColor }} />
+      <Box dangerouslySetInnerHTML={{ __html: transformBold(text) }} ml="16px" pr="24px" color={iconColor}></Box>
     </Flex>
   );
 };
@@ -203,12 +201,13 @@ const ServicesList = ({
 
   const isEditing = mode === "edit";
   return (
-    <styled.form
+    <Box
+      component="form"
       onSubmit={form.handleSubmit((data) => isEditing && editServices(data.services))}
       id="edit-form"
-      h="100%"
+      height="100%"
     >
-      <Flex gap="24px" flexDir="column" h="100%">
+      <Flex gap="24px" flexDirection="column" height="100%">
         {isEditing
           ? fields.map((field, index) => (
               <ServiceForm
@@ -221,7 +220,7 @@ const ServicesList = ({
             ))
           : services.map((service) => <Service key={service.id} service={service} />)}
       </Flex>
-    </styled.form>
+    </Box>
   );
 };
 
@@ -251,11 +250,11 @@ const ServiceAdd = ({ addService }: { addService: (service: ServiceInstructeurs)
   });
 
   return (
-    <styled.form onSubmit={form.handleSubmit((data) => addService(data))} id="add-form">
+    <Box component="form" onSubmit={form.handleSubmit((data) => addService(data))} id="add-form">
       <Flex>
         <ServiceForm form={form} dividerBelow />
       </Flex>
-    </styled.form>
+    </Box>
   );
 };
 
@@ -273,27 +272,27 @@ const ServiceForm = ({
   const prefix = name ? `${name}.` : "";
 
   return (
-    <Flex flexDir="column" w="100%" h="100%">
+    <Flex flexDirection="column" width="100%" height="100%">
       <Input
-        className={css({ flex: 1 })}
+        sx={{ flex: "1" }}
         label="Intitulé complet"
         nativeInputProps={form.register(`${prefix}full_name`, { required: true })}
       />
-      <Flex gap={{ base: "8px", lg: "20px" }}>
+      <Flex gap={{ xs: "8px", lg: "20px" }}>
         <Input
-          className={css({ flex: 1 })}
+          sx={{ flex: "1" }}
           label="Abréviation"
           nativeInputProps={form.register(`${prefix}short_name`, { required: true })}
         />
-        <Input className={css({ flex: 1 })} label="Téléphone" nativeInputProps={form.register(`${prefix}tel`)} />
+        <Input sx={{ flex: "1" }} label="Téléphone" nativeInputProps={form.register(`${prefix}tel`)} />
       </Flex>
 
       <Flex>
-        <Input className={css({ flex: 1 })} label="Courriel" nativeInputProps={form.register(`${prefix}email`)} />
+        <Input sx={{ flex: "1" }} label="Courriel" nativeInputProps={form.register(`${prefix}email`)} />
       </Flex>
 
       {deleteService ? (
-        <Flex justifyContent="flex-end" my={{ base: "24px", lg: "40px" }}>
+        <Flex justifyContent="flex-end" my={{ xs: "24px", lg: "40px" }}>
           <Button
             iconId="ri-delete-bin-fill"
             iconPosition="right"
@@ -312,17 +311,19 @@ const ServiceForm = ({
 
 const Service = ({ service }: { service: ServiceInstructeurs }) => {
   return (
-    <Flex flexDir="column">
-      <styled.div color="text-title-blue-france" fontWeight="bold">
+    <Flex flexDirection="column">
+      <Box color={fr.colors.decisions.text.title.blueFrance} fontWeight="bold">
         {service.short_name}
-      </styled.div>
-      <styled.div>
-        <styled.span fontWeight="bold">{service.full_name}</styled.span>
+      </Box>
+      <Box>
+        <Typography fontWeight="bold">{service.full_name}</Typography>
         {" : "}
-        <styled.span>{service.email}</styled.span>
+        <Typography>{service.email}</Typography>
         {", "}
-        <styled.span nowrap>{service.tel}</styled.span>
-      </styled.div>
+        <Typography textOverflow="ellipsis" overflow="hidden" whiteSpace="nowrap">
+          {service.tel}
+        </Typography>
+      </Box>
     </Flex>
   );
 };

@@ -1,4 +1,5 @@
 import { authenticate } from "../routes/authMiddleware";
+import { AuthService } from "./authService";
 import { StaticDataService } from "./staticDataService";
 import { SyncService } from "./syncService";
 import { UploadService } from "./uploadService";
@@ -13,6 +14,7 @@ const makeServices = () => ({
   staticData: new StaticDataService(),
   upload: new UploadService(),
   sync: new SyncService(),
+  auth: new AuthService(),
 });
 
 export const getServices = () => {

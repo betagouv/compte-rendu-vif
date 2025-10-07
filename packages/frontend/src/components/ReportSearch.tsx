@@ -1,6 +1,3 @@
-import { Center, Stack, styled } from "#styled-system/jsx";
-import { css, cx } from "#styled-system/css";
-import Input from "@codegouvfr/react-dsfr/Input";
 import { useState } from "react";
 import { db } from "../db/db";
 import { Spinner } from "./Spinner";
@@ -8,6 +5,8 @@ import noResultsImage from "../assets/noResults.svg";
 import { ReportList } from "../features/ReportList";
 import { useUser } from "../contexts/AuthContext";
 import { useDbQuery } from "../db/db";
+import { Box, Stack } from "@mui/material";
+import { Center, Input } from "./MUIDsfr";
 
 export const ReportSearch = ({
   inputProps,
@@ -22,9 +21,9 @@ export const ReportSearch = ({
   const [search, setSearch] = useState("");
 
   return (
-    <Stack w="100%" h="100%">
+    <Stack width="100%" height="100%">
       <Input
-        className={css({ w: "100%", bgColor: "white !important" })}
+        sx={{ width: "100%", bgcolor: "white !important" }}
         label={null}
         nativeInputProps={{ ...inputProps, value: search, onChange: (e) => setSearch(e.target.value) }}
       />
@@ -33,13 +32,7 @@ export const ReportSearch = ({
   );
 };
 
-const isNullOrContains = (field: string, search: string) => {
-  return {
-    [field]: { contains: search },
-  };
-};
-
-const useSearchResultsQuery = (search: string, additionnalWhere: { [key: string]: any } = {}) => {
+const useSearchResultsQuery = (search: string) => {
   return useDbQuery(
     db
       .selectFrom("report")
@@ -58,25 +51,6 @@ const useSearchResultsQuery = (search: string, additionnalWhere: { [key: string]
       .orderBy("createdAt desc")
       .select(["user.name as createdByName"]),
   );
-  // return useLiveQuery(
-  //   db.report.liveMany({
-  //     where: {
-  //       OR: [
-  //         isNullOrContains("title", search),
-  //         isNullOrContains("redactedBy", search),
-  //         isNullOrContains("applicantName", search),
-  //         isNullOrContains("applicantAddress", search),
-  //         isNullOrContains("city", search),
-  //         isNullOrContains("zipCode", search),
-  //       ],
-  //       disabled: false,
-  //       ...additionnalWhere,
-  //     },
-  //     include: {
-  //       user: true,
-  //     },
-  //   }),
-  // );
 };
 
 export const SearchResults = ({ search, hideEmpty }: { search: string; hideEmpty?: boolean }) => {
@@ -107,22 +81,22 @@ export const SearchResults = ({ search, hideEmpty }: { search: string; hideEmpty
   const otherReports = data.filter((report) => report.createdBy !== user.id);
 
   return (
-    <Center w="100%">
-      <Stack flexDir={{ base: "column", lg: "row" }} w={{ base: "100%", lg: "unset" }} mt="24px">
+    <Center width="100%">
+      <Stack flexDirection={{ xs: "column", lg: "row" }} width={{ xs: "100%", lg: "unset" }} mt="24px">
         {myReports.length ? (
           <Stack>
-            <styled.div mb="16px" fontSize="20px" fontWeight="bold">
+            <Box mb="16px" fontSize="20px" fontWeight="bold">
               Mes compte-rendus :
-            </styled.div>
+            </Box>
             <ReportList hidePagination hideEmpty={hideEmpty} reports={myReports ?? []} />
           </Stack>
         ) : null}
         <Stack>
           {otherReports.length ? (
             <>
-              <styled.div mb="16px" fontSize="20px" fontWeight="bold">
+              <Box mb="16px" fontSize="20px" fontWeight="bold">
                 Compte-rendus UDAP :
-              </styled.div>
+              </Box>
               <ReportList hidePagination hideEmpty={hideEmpty} reports={otherReports ?? []} />
             </>
           ) : null}
@@ -134,11 +108,11 @@ export const SearchResults = ({ search, hideEmpty }: { search: string; hideEmpty
 
 const NoResults = () => {
   return (
-    <Center flexDir="column" h="100%" mt="100px" mb="24px">
-      <styled.span fontSize="16px" fontWeight="bold">
+    <Center flexDirection="column" height="100%" mt="100px" mb="24px">
+      <Box component="span" fontSize="16px" fontWeight="bold">
         Aucun résultat
-      </styled.span>
-      <styled.img src={noResultsImage} alt="Aucun résultat" />
+      </Box>
+      <Box component="img" src={noResultsImage} alt="Aucun résultat" />
     </Center>
   );
 };

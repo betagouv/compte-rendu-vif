@@ -6,68 +6,42 @@ export namespace Schemas {
 export namespace Endpoints {
   // <Endpoints>
 
-  export type post_ApicreateUser = {
+  export type post_Apiauthenticate = {
     method: "POST";
-    path: "/api/create-user";
+    path: "/api/authenticate";
     parameters: {
-      body: { email: string; password: string; name: string; udap_id: string };
+      body: { code: string };
     };
     response: {
-      user?: { id: string; name: string; udap_id: string; udap: unknown } | undefined;
-      token: string;
-      expiresAt: string;
-      refreshToken: string;
+      tokens: {
+        access_token: string;
+        expires_in: string;
+        refresh_token: string;
+        refresh_expires_in: string;
+        token_type: string;
+        session_state: string;
+        scope: string;
+        id_token: string;
+      };
+      user: { id: string; name: string; udap_id: string };
     };
   };
-  export type post_Apilogin = {
+  export type post_ApirefreshToken = {
     method: "POST";
-    path: "/api/login";
-    parameters: {
-      body: { email: string; password: string };
-    };
-    response: {
-      user?: { id: string; name: string; udap_id: string; udap: unknown } | undefined;
-      token: string;
-      expiresAt: string;
-      refreshToken: string;
-    };
-  };
-  export type get_ApirefreshToken = {
-    method: "GET";
     path: "/api/refresh-token";
     parameters: {
-      query: { token: string; refreshToken: string };
+      body: { refreshToken: string };
     };
     response: {
-      user?: { id: string; name: string; udap_id: string; udap: unknown } | undefined;
-      token: string;
-      expiresAt: string;
-      refreshToken: string;
+      access_token: string;
+      expires_in: string;
+      refresh_token: string;
+      refresh_expires_in: string;
+      token_type: string;
+      session_state: string;
+      scope: string;
+      id_token: string;
     };
-  };
-  export type post_ApisendResetPassword = {
-    method: "POST";
-    path: "/api/send-reset-password";
-    parameters: {
-      body: { email: string };
-    };
-    response: { message: string };
-  };
-  export type post_ApiresetPassword = {
-    method: "POST";
-    path: "/api/reset-password";
-    parameters: {
-      body: { temporaryLink: string; newPassword: string };
-    };
-    response: { message: string };
-  };
-  export type post_ApichangeUdap = {
-    method: "POST";
-    path: "/api/change-udap";
-    parameters: {
-      body: { udap_id: string };
-    };
-    response: { message: string };
   };
   export type get_Apiudaps = {
     method: "GET";
@@ -152,18 +126,14 @@ export namespace Endpoints {
 // <EndpointByMethod>
 export type EndpointByMethod = {
   post: {
-    "/api/create-user": Endpoints.post_ApicreateUser;
-    "/api/login": Endpoints.post_Apilogin;
-    "/api/send-reset-password": Endpoints.post_ApisendResetPassword;
-    "/api/reset-password": Endpoints.post_ApiresetPassword;
-    "/api/change-udap": Endpoints.post_ApichangeUdap;
+    "/api/authenticate": Endpoints.post_Apiauthenticate;
+    "/api/refresh-token": Endpoints.post_ApirefreshToken;
     "/api/upload/image": Endpoints.post_Apiuploadimage;
     "/api/upload/picture/{pictureId}/lines": Endpoints.post_ApiuploadpicturePictureIdlines;
     "/api/pdf/report": Endpoints.post_Apipdfreport;
     "/api/upload-data": Endpoints.post_ApiuploadData;
   };
   get: {
-    "/api/refresh-token": Endpoints.get_ApirefreshToken;
     "/api/udaps": Endpoints.get_Apiudaps;
     "/api/upload/picture": Endpoints.get_Apiuploadpicture;
     "/api/pdf/report": Endpoints.get_Apipdfreport;

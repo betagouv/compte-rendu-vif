@@ -1,8 +1,8 @@
-import { styled } from "#styled-system/jsx";
+import { Box } from "@mui/material";
 export const Spinner = ({ size = 150 }) => {
   return (
     <div className="preloader">
-      <styled.div
+      <Box
         className="loader"
         style={{
           width: size + "px",
@@ -17,7 +17,7 @@ export const Spinner = ({ size = 150 }) => {
   height: 150px;
   margin: -75px 0 0 -75px;
        */
-      ></styled.div>
+      ></Box>
     </div>
     // <styled.div position="fixed" top="0" left="0" width="100%" height="100%">
     //   <styled.div

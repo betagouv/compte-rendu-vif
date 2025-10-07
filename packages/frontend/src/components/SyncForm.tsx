@@ -4,15 +4,14 @@ import { type UseFormReturn, useWatch } from "react-hook-form";
 import useDebounce from "react-use/lib/useDebounce";
 import { Banner } from "./Banner";
 import { useNavigate } from "@tanstack/react-router";
-import Button from "@codegouvfr/react-dsfr/Button";
-import { Center, Flex, styled } from "#styled-system/jsx";
 import { fr } from "@codegouvfr/react-dsfr";
-import { sva, cx, css } from "#styled-system/css";
 import { useIntersectionObserver } from "../hooks/useIntersectionObserver";
-import Input from "@codegouvfr/react-dsfr/Input";
 import { useIsFormDisabled } from "../features/DisabledContext";
 import { Report } from "../db/AppSchema";
 import { useAppStatus } from "../hooks/useAppStatus";
+import { Box, BoxProps, styled, Typography } from "@mui/material";
+import { Flex } from "./ui/Flex";
+import { Button, Center, Input } from "./MUIDsfr";
 
 export function SyncFormBanner({ form, baseObject }: { form: UseFormReturn<Report>; baseObject: Record<string, any> }) {
   const newObject = useWatch({ control: form.control });
@@ -33,24 +32,32 @@ export function SyncFormBanner({ form, baseObject }: { form: UseFormReturn<Repor
   });
 
   const isCollapsed = !isIntersecting;
-
-  const styles = syncFormBanner({ isCollapsed });
+  // const styles = syncFormBanner({ isCollapsed });
 
   const status = useAppStatus();
 
   return (
     <>
-      <Banner status={status} display="flex" flexDir="row" justifyContent="center" alignItems="center" w="100%">
-        <Center w="calc((100% - 800px) / 2)">
-          <styled.a
+      <Banner
+        status={status}
+        display="flex"
+        flexDirection="row"
+        justifyContent="center"
+        alignItems="center"
+        width="100%"
+      >
+        <Center width="calc((100% - 800px) / 2)">
+          <Typography
             className={"ri-arrow-left-line"}
+            component="a"
             href={""}
             onClick={(e) => {
               e.preventDefault();
 
               goBack();
             }}
-            hideBelow="lg"
+            display={{ xs: "none", lg: "inline-flex" }}
+            flex={isCollapsed ? "1 0 auto" : undefined}
             fontSize="16px"
             {...{
               "&::before": {
@@ -62,51 +69,112 @@ export function SyncFormBanner({ form, baseObject }: { form: UseFormReturn<Repor
             }}
           >
             Retour
-          </styled.a>
+          </Typography>
         </Center>
-        <Flex className={styles.root}>
+        <Flex
+          {...{
+            display: "flex",
+            zIndex: 3,
+            flexDirection: "column",
+            justifyContent: "space-between",
+            width: { xs: "100%", lg: "800px" },
+            py: { xs: 0, lg: "56px" },
+            px: "15px",
+          }}
+        >
           <Flex
             justifyContent="space-between"
             alignItems="center"
-            w="100%"
-            maxW={{ base: "100%", lg: "800px" }}
-            h="100%"
+            width="100%"
+            maxWidth={{ xs: "100%", lg: "800px" }}
+            height="100%"
           >
             {!isCollapsed ? (
-              <styled.div hideFrom="lg">
+              <Box display={{ xs: "block", lg: "none" }}>
                 {/* @ts-ignore dsfr buttons props must have children */}
                 <Button
-                  className={styles.back}
+                  // className={styles.back}
+                  sx={{
+                    ":hover": { bgColor: "blue" },
+                    "::before": {
+                      width: "24px !important",
+                    },
+                    bgcolor: "transparent !important",
+                    ml: "-10px",
+                    color: "black",
+                  }}
                   priority="tertiary no outline"
                   iconId="ri-arrow-left-line"
                   onClick={() => goBack()}
                   size="large"
                 />
-              </styled.div>
+              </Box>
             ) : null}
             {/* @ts-ignore dsfr buttons props must have children */}
-            <styled.span nowrap>{isCollapsed ? newObject.title : "Titre compte-rendu :"}</styled.span>
+            <Typography textOverflow="ellipsis" overflow="hidden" whiteSpace="nowrap">
+              {isCollapsed ? newObject.title : "Titre compte-rendu :"}
+            </Typography>
           </Flex>
-          <Input className={styles.input} label="" nativeInputProps={{ ...form.register("title") }} />
-          <Status className={cx(styles.status, css({ hideFrom: "lg" }))} />
+          <Input
+            // className={styles.input}
+            {...{
+              width: { xs: "100%", lg: "100%" },
+              mb: "1em",
+            }}
+            sx={{
+              "& input": {
+                bgcolor: "rgba(50, 50, 50, .15) !important",
+              },
+            }}
+            label=""
+            nativeInputProps={{ ...form.register("title") }}
+          />
+          <Status isCollapsed={isCollapsed} display={{ xs: "flex", lg: "none" }} />
         </Flex>
         {/* <div></div> */}
-        <styled.div w="calc((100% - 800px) / 2)"></styled.div>
+        <Box width="calc((100% - 800px) / 2)"></Box>
       </Banner>
       <Banner ref={ref} status={status} zIndex="3" position="sticky" top="-1px">
-        <Flex className={styles.collapsed}>
+        <Flex
+          // className={styles.collapsed}
+          /**
+           * justifyContent: "space-between",
+          alignItems: "center",
+          h: { xs: "56px", lg: "unset" }
+           */
+          {...{
+            display: "flex",
+            zIndex: 5,
+            flexDirection: "row",
+            justifyContent: isCollapsed ? "space-between" : "flex-end",
+            alignItems: isCollapsed ? "center" : undefined,
+            height: { xs: isCollapsed ? "56px" : "unset", lg: "unset" },
+            width: "100%",
+            maxW: { xs: "unset", sm: "800px" },
+            px: "15px",
+          }}
+        >
           {isCollapsed ? (
             <>
               {/* @ts-ignore dsfr buttons props must have children */}
               <Button
-                className={styles.back}
+                {...{
+                  ml: "-10px",
+                  color: "black",
+                  _hover: { bgColor: "transparent" },
+                  "&::before": {
+                    width: "24px !important",
+                  },
+                }}
                 priority="tertiary no outline"
                 iconId="ri-arrow-left-line"
                 onClick={() => goBack()}
                 size="large"
               />
-              <styled.div nowrap>{newObject.title}</styled.div>
-              <Status className={styles.status} />
+              <Box textOverflow="ellipsis" overflow="hidden" whiteSpace="nowrap">
+                {newObject.title}
+              </Box>
+              <Status isCollapsed={isCollapsed} />
             </>
           ) : null}
         </Flex>
@@ -115,23 +183,36 @@ export function SyncFormBanner({ form, baseObject }: { form: UseFormReturn<Repor
   );
 }
 
-export const Status = ({ className }: { status?: SyncFormStatus; className?: string }) => {
-  const status = useAppStatus();
+export const Status = ({
+  isCollapsed,
+  status: baseStatus,
+  ...props
+}: { isCollapsed?: boolean; status?: SyncFormStatus } & BoxProps) => {
+  const status = baseStatus ?? useAppStatus();
 
   return (
-    <styled.div
-      className={className}
+    <Box
+      bgcolor={messagesColor[status]}
       display="flex"
       borderRadius="4px"
       height="20px"
       px="6px"
       color="black"
       textTransform="uppercase"
-      fontSize="sm"
       fontWeight="500"
-      bgColor={messagesColor[status]}
+      {...{
+        /**
+         * display: "flex",
+          alignSelf: "initial",
+          mb: "0",
+         */
+        alignSelf: isCollapsed ? "initial" : "flex-end",
+        mb: isCollapsed ? "0" : "16px",
+        fontSize: "10px",
+      }}
+      {...props}
     >
-      <styled.span
+      <Typography
         className={fr.cx("fr-icon-wifi-line")}
         aria-hidden={true}
         height="24px"
@@ -145,75 +226,9 @@ export const Status = ({ className }: { status?: SyncFormStatus; className?: str
         mr="6px"
       />
       {messages[status]}
-    </styled.div>
+    </Box>
   );
 };
-
-const syncFormBanner = sva({
-  slots: ["root", "collapsed", "back", "label", "input", "status"],
-  base: {
-    root: {
-      display: "flex",
-      zIndex: 3,
-      flexDirection: "column",
-      justifyContent: "space-between",
-      w: { base: "100%", lg: "800px" },
-      py: { base: 0, lg: "56px" },
-      px: "15px",
-    },
-    collapsed: {
-      display: "flex",
-      zIndex: 5,
-      flexDirection: "row",
-      justifyContent: "flex-end",
-      w: "100%",
-      maxW: { base: "unset", sm: "800px" },
-      // h: { base: "56px", lg: "unset" },
-      px: "15px",
-    },
-    back: {
-      ml: "-10px",
-      color: "black",
-      _hover: { bgColor: "transparent" },
-      "&::before": {
-        width: "24px !important",
-      },
-    },
-    label: {},
-    input: {
-      w: { base: "100%", lg: "100%" },
-      // mt: "-5px !important",
-      mb: "1em",
-      "& input": {
-        bgColor: "rgba(50, 50, 50, .15) !important",
-      },
-    },
-    status: {
-      alignSelf: "flex-end",
-      mb: "16px",
-      fontSize: "10px",
-    },
-  },
-  variants: {
-    isCollapsed: {
-      true: {
-        collapsed: {
-          justifyContent: "space-between",
-          alignItems: "center",
-          h: { base: "56px", lg: "unset" },
-        },
-        status: {
-          display: "flex",
-          alignSelf: "initial",
-          mb: "0",
-        },
-        back: {
-          flex: "1 0 auto",
-        },
-      },
-    },
-  },
-});
 
 const messages: Record<SyncFormStatus, string> = {
   offline: "Hors ligne",

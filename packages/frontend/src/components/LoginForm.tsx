@@ -1,5 +1,3 @@
-import { css } from "#styled-system/css";
-import { Divider, Flex, styled } from "#styled-system/jsx";
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import Input from "@codegouvfr/react-dsfr/Input";
 import { Link } from "@tanstack/react-router";
@@ -11,6 +9,12 @@ import { PasswordInput } from "./PasswordInput";
 import { useMutation } from "@tanstack/react-query";
 import { type RouterInputs, api, getErrorMessage, unauthenticatedApi } from "../api";
 import { useState } from "react";
+import { Flex } from "./ui/Flex";
+import { Box, Typography } from "@mui/material";
+import { fr } from "@codegouvfr/react-dsfr";
+import { Divider } from "./ui/Divider";
+import { Button } from "./MUIDsfr";
+import { auth } from "../features/keycloak/auth";
 
 export const LoginForm = () => {
   const [authData, setAuthData] = useAuthContext();
@@ -31,18 +35,19 @@ export const LoginForm = () => {
   const { errors: formErrors } = form.formState;
 
   return (
-    <Flex direction="column">
+    <Flex flexDirection="column">
+      <Button onClick={() => auth.login()}>Se connecter avec Keycloak</Button>
       <form onSubmit={form.handleSubmit(login)}>
         {mutationError ? (
           <Alert
-            className={css({ mb: "1.5rem" })}
+            style={{ marginBottom: "1.5rem" }}
             severity="error"
-            title={<styled.span fontWeight="regular">{getErrorMessage(mutationError)}</styled.span>}
+            title={<Typography fontWeight="regular">{getErrorMessage(mutationError)}</Typography>}
           />
         ) : null}
         {shouldShowPopup && !mutationError ? (
           <Alert
-            className={css({ mb: "1.5rem" })}
+            style={{ marginBottom: "1.5rem" }}
             severity="info"
             title="Vous avez été déconnecté suite à une mise à jour de l'application."
           />
@@ -80,12 +85,14 @@ export const LoginForm = () => {
           />
         </InputGroup>
 
-        <styled.div color="text.actionHigh.blueFrance">
+        <Box color={fr.colors.decisions.text.actionHigh.blueFrance}>
           <Link to="/reset-password">Mot de passe oublié</Link>
-        </styled.div>
+        </Box>
 
         <FullWidthButton
-          className={css({ mt: "1.5rem" })}
+          style={{
+            marginTop: "1.5rem",
+          }}
           type="submit"
           nativeButtonProps={{ type: "submit" }}
           onClick={form.handleSubmit(login)}
