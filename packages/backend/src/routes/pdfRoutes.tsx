@@ -22,7 +22,7 @@ export const pdfPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
 
   fastify.post("/report", { schema: reportPdfTSchema }, async (request) => {
     const { reportId, htmlString } = request.body;
-    const { udap_id } = request.user.user!;
+    const { udap_id } = request.user!;
 
     const pictures = await db
       .selectFrom("pictures")
@@ -46,7 +46,7 @@ export const pdfPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
 
     await db.updateTable("report").set({ pdf: url }).where("id", "=", reportId).execute();
 
-    const userMail = request.user.email;
+    const userMail = request.user!.email;
     const recipients = request.body.recipients
       .replaceAll(";", ",")
       .split(",")

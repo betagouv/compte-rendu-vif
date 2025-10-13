@@ -23,7 +23,27 @@ export namespace Endpoints {
         scope: string;
         id_token: string;
       };
-      user: { id: string; name: string; udap_id: string };
+      user: {
+        id: string;
+        name: string;
+        udap_id: string;
+        udap: {
+          id: string;
+          department: string;
+          completeCoords?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+          visible?: boolean | Schemas.null | Array<boolean | Schemas.null> | undefined;
+          name?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+          address?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+          zipCode?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+          city?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+          phone?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+          email?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+          marianne_text?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+          drac_text?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+          dept_number?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+          udap_text?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+        };
+      };
     };
   };
   export type post_ApirefreshToken = {
@@ -43,6 +63,14 @@ export namespace Endpoints {
       id_token: string;
     };
   };
+  export type post_ApichangeUdap = {
+    method: "POST";
+    path: "/api/change-udap";
+    parameters: {
+      body: { udap_id: string };
+    };
+    response: { message: string };
+  };
   export type get_Apiudaps = {
     method: "GET";
     path: "/api/udaps";
@@ -50,18 +78,18 @@ export namespace Endpoints {
     response: Array<{
       id: string;
       department: string;
-      completeCoords?: string | undefined;
-      visible?: boolean | undefined;
-      name?: string | undefined;
-      address?: string | undefined;
-      zipCode?: string | undefined;
-      city?: string | undefined;
-      phone?: string | undefined;
-      email?: string | undefined;
-      marianne_text?: string | undefined;
-      drac_text?: string | undefined;
-      dept_number?: string | undefined;
-      udap_text?: string | undefined;
+      completeCoords?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+      visible?: boolean | Schemas.null | Array<boolean | Schemas.null> | undefined;
+      name?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+      address?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+      zipCode?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+      city?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+      phone?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+      email?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+      marianne_text?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+      drac_text?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+      dept_number?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+      udap_text?: string | Schemas.null | Array<string | Schemas.null> | undefined;
     }>;
   };
   export type post_Apiuploadimage = {
@@ -128,6 +156,7 @@ export type EndpointByMethod = {
   post: {
     "/api/authenticate": Endpoints.post_Apiauthenticate;
     "/api/refresh-token": Endpoints.post_ApirefreshToken;
+    "/api/change-udap": Endpoints.post_ApichangeUdap;
     "/api/upload/image": Endpoints.post_Apiuploadimage;
     "/api/upload/picture/{pictureId}/lines": Endpoints.post_ApiuploadpicturePictureIdlines;
     "/api/pdf/report": Endpoints.post_Apipdfreport;

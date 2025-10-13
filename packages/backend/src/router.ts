@@ -60,7 +60,7 @@ export const initFastify = async () => {
       });
 
       await instance.register(authPlugin);
-      // await instance.register(userPlugin);
+      await instance.register(userPlugin);
       await instance.register(staticDataPlugin);
       await instance.register(uploadPlugin, { prefix: "/upload" });
       await instance.register(pdfPlugin, { prefix: "/pdf" });

@@ -30,7 +30,7 @@ sync_rules:
         data: 
           - SELECT * FROM report WHERE udap_id = bucket.udap_id
           - SELECT * FROM udap WHERE id = bucket.udap_id
-          - SELECT * FROM "user" WHERE udap_id = bucket.udap_id
+          - SELECT id, name, udap_id FROM "user" WHERE udap_id = bucket.udap_id
           - SELECT * FROM service_instructeurs WHERE udap_id = bucket.udap_id
           - SELECT * FROM clause_v2 WHERE udap_id = bucket.udap_id
           - SELECT * FROM sent_email WHERE udap_id = bucket.udap_id

@@ -153,7 +153,9 @@ const MainContentTabs = () => {
 
 const SimpleBanner = (props: Omit<BoxProps, "ref">) => {
   const powerSyncStatus = useStatus();
-  const status = powerSyncStatus.connected ? "saved" : "offline";
+
+  const isOk = powerSyncStatus.connected || powerSyncStatus.connecting;
+  const status = isOk ? "saved" : "offline";
 
   return <Banner status={status} {...props} />;
 };
@@ -164,9 +166,4 @@ export const Route = createFileRoute("/")({
       <Index />
     </EnsureUser>
   ),
-  beforeLoad: ({ context, location }) => {
-    if (!context.tokens || !context.user) {
-      throw redirect({ to: "/login", search: { redirect: location.href } });
-    }
-  },
 });

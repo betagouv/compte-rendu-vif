@@ -4,33 +4,9 @@ import { userAndTokenTSchema } from "./tschemas";
 import { authenticate } from "./authMiddleware";
 
 export const userPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
-  fastify.post("/create-user", { schema: createUserTSchema }, async (request) => {
-    const resp = (await request.services.user.createUser(request.body)) as Static<typeof userAndTokenTSchema>;
-
-    return resp;
-  });
-
-  fastify.post("/login", { schema: loginTSchema }, async (request) => {
-    const result = (await request.services.user.login(request.body)) as Static<typeof userAndTokenTSchema>;
-    return result;
-  });
-
-  // @ts-expect-error null / undefined mismatch
-  fastify.get("/refresh-token", { schema: refreshTokenTSchema }, async (request) => {
-    return request.services.user.verifyTokenAndRefreshIfNeeded(request.query.token, request.query.refreshToken);
-  });
-
-  fastify.post("/send-reset-password", { schema: sendResetPasswordTSchema }, async (request) => {
-    return request.services.user.generateResetLink(request.body.email) as Promise<{ message: string }>;
-  });
-
-  fastify.post("/reset-password", { schema: resetPasswordTSchema }, async (request) => {
-    return request.services.user.resetPassword(request.body);
-  });
-
   fastify.post("/change-udap", { schema: changeUdapTSchema, preHandler: authenticate }, async (request) => {
     const { udap_id } = request.body;
-    const { id } = request.user.user!;
+    const { id } = request.user!;
     return request.services.user.changeUdap(id, udap_id);
   });
 };

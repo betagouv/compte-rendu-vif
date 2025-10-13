@@ -1,24 +1,41 @@
-import { type PropsWithChildren, createContext, useContext, useEffect, useState } from "react";
-import { safeParseLocalStorage } from "../utils";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { api, setToken, type RouterOutputs } from "../api";
-import { menuActor } from "../features/menu/menuMachine";
-import { Udap } from "../db/AppSchema";
+import { createContext, useContext, useEffect, useState, type PropsWithChildren } from "react";
+import { type RouterOutputs } from "../api";
+import { apiStore } from "../ApiStore";
 import { db, useDbQuery } from "../db/db";
+import { menuActor } from "../features/menu/menuMachine";
 
-const initialAuth = safeParseLocalStorage("crvif/auth");
-if (!initialAuth) localStorage.setItem("crvif/version", "1");
-setToken(initialAuth?.token);
+const emptyAuth = {
+  accessToken: null,
+  expiresAt: null,
+  refreshToken: null,
+  user: null,
+};
 
 export const AuthContext = createContext<AuthContextProps>({
-  token: initialAuth?.token,
-  user: initialAuth?.user,
-  setData: null as any,
-  electricStatus: "idle",
+  auth: { ...emptyAuth },
+  setAuth: () => {},
 });
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
-  const [data, setData] = useState<Omit<AuthContextProps, "setData">>(initialAuth);
+  const [auth, setAuth] = useState<AuthContextProps["auth"]>({ ...emptyAuth });
+
+  const loadAuthQuery = useQuery({
+    queryKey: ["load-stored-auth"],
+    queryFn: async () => {
+      await apiStore.load();
+
+      setAuth((auth) => ({
+        ...auth,
+        accessToken: apiStore.accessToken,
+        expiresAt: apiStore.expiresAt,
+        refreshToken: apiStore.refreshToken,
+        user: apiStore.user,
+      }));
+
+      return apiStore;
+    },
+  });
 
   useEffect(() => {
     const version = localStorage.getItem("crvif/version");
@@ -30,88 +47,67 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     }
   }, []);
 
-  const setDataAndSaveInStorage = (data: Omit<AuthContextProps, "setData" | "electricStatus">) => {
-    setData((d) => ({ ...d, ...data }));
-    setToken(data?.token);
-    if (data) {
-      window.localStorage.setItem("crvif/auth", JSON.stringify(data));
-    } else {
-      window.localStorage.removeItem("crvif/auth");
-    }
+  const setAuthAndSaveInStorage = (data: AuthContextProps["auth"]) => {
+    setAuth(data);
+    apiStore.accessToken = data.accessToken;
+    apiStore.expiresAt = data.expiresAt;
+    apiStore.refreshToken = data.refreshToken;
+    apiStore.user = data.user;
+    apiStore.save();
   };
-
-  const refreshTokenQuery = useQuery({
-    queryKey: ["refresh-token"],
-    queryFn: async () => {
-      if (!data?.token) return;
-
-      if (new Date(data.expiresAt!) > new Date()) return null;
-      try {
-        const resp = await api.get("/api/refresh-token", {
-          query: { token: data.token, refreshToken: data.refreshToken! },
-        });
-
-        if (resp.token === null) {
-          console.log("token expired but couldn't find a refresh token, logging out");
-          setDataAndSaveInStorage({ token: undefined, user: undefined });
-        } else {
-          console.log("token refreshed");
-          setDataAndSaveInStorage({ ...data, ...resp });
-        }
-        return resp;
-      } catch (e) {
-        console.error("refreshTokenQuery error", e);
-      }
-    },
-    enabled: false && !!data?.token,
-    refetchOnWindowFocus: false,
-  });
 
   const value = {
-    ...data,
-    setData: setDataAndSaveInStorage,
+    auth,
+    setAuth: setAuthAndSaveInStorage,
   };
+
+  if (loadAuthQuery.isLoading || !apiStore.loaded) {
+    return <div>Chargement...</div>;
+  }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
-export const useAuthContext = () => {
-  const { setData, ...data } = useContext(AuthContext);
-  return [data, setData] as const;
-};
+export const useAuthContext = () => useContext(AuthContext);
 
 export const useIsLoggedIn = () => {
-  const data = useContext(AuthContext);
-  return data.token && data.user;
+  const { auth } = useContext(AuthContext);
+  return auth.accessToken && auth.user;
 };
 
 export const useLogout = () => {
-  const [data, setData] = useAuthContext();
+  const { auth, setAuth } = useAuthContext();
 
   return () => {
     menuActor.send({ type: "CLOSE" });
-    setData({ ...data, token: undefined, user: undefined, refreshToken: undefined });
+    setAuth({ ...auth, accessToken: null, user: null, refreshToken: null, expiresAt: null });
   };
 };
 
 export const useUser = () => {
-  const { user } = useContext(AuthContext);
-  return user as AuthContextProps["user"] & { udap: Udap };
+  const { auth } = useAuthContext();
+  return auth.user;
+};
+
+export const useUdap = () => {
+  const user = useUser();
+
+  return user!.udap;
 };
 
 export const useRefreshUser = () => {
-  const { setData, ...data } = useContext(AuthContext);
-  const user = data.user;
+  const { setAuth, auth } = useContext(AuthContext);
+  const user = auth.user;
 
   const refreshUserMutation = useMutation({
     mutationFn: async () => {
       if (!user) return;
       const newUser = await db.selectFrom("user").selectAll().where("id", "=", user.id).executeTakeFirst();
       if (!newUser) return;
-      const udap = await db.selectFrom("udap").selectAll().where("id", "=", newUser.udap_id).executeTakeFirst();
-      if (!udap) return;
+      const newUdap = await db.selectFrom("udap").selectAll().where("id", "=", newUser.udap_id).executeTakeFirst();
+      if (newUdap) (newUser as any).udap = newUdap;
 
-      setData({ ...data, user: { ...newUser, udap } as any });
+      setAuth({ ...auth, user: newUser as any });
     },
   });
 
@@ -119,27 +115,15 @@ export const useRefreshUser = () => {
 };
 
 export const useRefreshUdap = () => {
-  const { setData, ...data } = useContext(AuthContext);
-  const user = data.user;
-
-  const refreshUdapMutation = useMutation({
-    mutationFn: async () => {
-      if (!user?.udap) return;
-      const resp = await db.selectFrom("udap").selectAll().where("id", "=", user.udap_id).executeTakeFirst();
-
-      if (!resp) return;
-      setData({ ...data, user: { ...user, udap: resp } });
-    },
-  });
-
-  return refreshUdapMutation;
+  return () => {};
 };
 
-type AuthContextProps = Partial<RouterOutputs<"/api/authenticate">> & {
-  setData: (data: Omit<AuthContextProps, "setData" | "electricStatus">) => void;
-  electricStatus: ElectricStatus;
+type AuthContextProps = {
+  auth: {
+    accessToken: string | null;
+    expiresAt: string | null;
+    refreshToken: string | null;
+    user: RouterOutputs<"/api/authenticate">["user"] | null;
+  };
+  setAuth: (data: AuthContextProps["auth"]) => void;
 };
-
-export type ElectricStatus = "error" | "pending" | "success" | "idle" | "loading";
-
-export const useElectricStatus = () => "idle" as ElectricStatus;

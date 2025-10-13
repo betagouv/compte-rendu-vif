@@ -8,26 +8,15 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { createFileRoute } from '@tanstack/react-router'
-
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as UdapRouteImport } from './routes/udap'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthCallbackRouteImport } from './routes/auth-callback'
 import { Route as AccountRouteImport } from './routes/account'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as ResetPasswordLinkRouteImport } from './routes/reset-password.$link'
 import { Route as PdfReportIdRouteImport } from './routes/pdf.$reportId'
 import { Route as EditReportIdRouteImport } from './routes/edit.$reportId'
 
-const SignupLazyRouteImport = createFileRoute('/signup')()
-const ResetPasswordIndexLazyRouteImport = createFileRoute('/reset-password/')()
-
-const SignupLazyRoute = SignupLazyRouteImport.update({
-  id: '/signup',
-  path: '/signup',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/signup.lazy').then((d) => d.Route))
 const UdapRoute = UdapRouteImport.update({
   id: '/udap',
   path: '/udap',
@@ -53,18 +42,6 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ResetPasswordIndexLazyRoute = ResetPasswordIndexLazyRouteImport.update({
-  id: '/reset-password/',
-  path: '/reset-password/',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() =>
-  import('./routes/reset-password.index.lazy').then((d) => d.Route),
-)
-const ResetPasswordLinkRoute = ResetPasswordLinkRouteImport.update({
-  id: '/reset-password/$link',
-  path: '/reset-password/$link',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const PdfReportIdRoute = PdfReportIdRouteImport.update({
   id: '/pdf/$reportId',
   path: '/pdf/$reportId',
@@ -82,11 +59,8 @@ export interface FileRoutesByFullPath {
   '/auth-callback': typeof AuthCallbackRoute
   '/login': typeof LoginRoute
   '/udap': typeof UdapRoute
-  '/signup': typeof SignupLazyRoute
   '/edit/$reportId': typeof EditReportIdRoute
   '/pdf/$reportId': typeof PdfReportIdRoute
-  '/reset-password/$link': typeof ResetPasswordLinkRoute
-  '/reset-password': typeof ResetPasswordIndexLazyRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -94,11 +68,8 @@ export interface FileRoutesByTo {
   '/auth-callback': typeof AuthCallbackRoute
   '/login': typeof LoginRoute
   '/udap': typeof UdapRoute
-  '/signup': typeof SignupLazyRoute
   '/edit/$reportId': typeof EditReportIdRoute
   '/pdf/$reportId': typeof PdfReportIdRoute
-  '/reset-password/$link': typeof ResetPasswordLinkRoute
-  '/reset-password': typeof ResetPasswordIndexLazyRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -107,11 +78,8 @@ export interface FileRoutesById {
   '/auth-callback': typeof AuthCallbackRoute
   '/login': typeof LoginRoute
   '/udap': typeof UdapRoute
-  '/signup': typeof SignupLazyRoute
   '/edit/$reportId': typeof EditReportIdRoute
   '/pdf/$reportId': typeof PdfReportIdRoute
-  '/reset-password/$link': typeof ResetPasswordLinkRoute
-  '/reset-password/': typeof ResetPasswordIndexLazyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -121,11 +89,8 @@ export interface FileRouteTypes {
     | '/auth-callback'
     | '/login'
     | '/udap'
-    | '/signup'
     | '/edit/$reportId'
     | '/pdf/$reportId'
-    | '/reset-password/$link'
-    | '/reset-password'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -133,11 +98,8 @@ export interface FileRouteTypes {
     | '/auth-callback'
     | '/login'
     | '/udap'
-    | '/signup'
     | '/edit/$reportId'
     | '/pdf/$reportId'
-    | '/reset-password/$link'
-    | '/reset-password'
   id:
     | '__root__'
     | '/'
@@ -145,11 +107,8 @@ export interface FileRouteTypes {
     | '/auth-callback'
     | '/login'
     | '/udap'
-    | '/signup'
     | '/edit/$reportId'
     | '/pdf/$reportId'
-    | '/reset-password/$link'
-    | '/reset-password/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -158,22 +117,12 @@ export interface RootRouteChildren {
   AuthCallbackRoute: typeof AuthCallbackRoute
   LoginRoute: typeof LoginRoute
   UdapRoute: typeof UdapRoute
-  SignupLazyRoute: typeof SignupLazyRoute
   EditReportIdRoute: typeof EditReportIdRoute
   PdfReportIdRoute: typeof PdfReportIdRoute
-  ResetPasswordLinkRoute: typeof ResetPasswordLinkRoute
-  ResetPasswordIndexLazyRoute: typeof ResetPasswordIndexLazyRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/signup': {
-      id: '/signup'
-      path: '/signup'
-      fullPath: '/signup'
-      preLoaderRoute: typeof SignupLazyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/udap': {
       id: '/udap'
       path: '/udap'
@@ -209,20 +158,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/reset-password/': {
-      id: '/reset-password/'
-      path: '/reset-password'
-      fullPath: '/reset-password'
-      preLoaderRoute: typeof ResetPasswordIndexLazyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/reset-password/$link': {
-      id: '/reset-password/$link'
-      path: '/reset-password/$link'
-      fullPath: '/reset-password/$link'
-      preLoaderRoute: typeof ResetPasswordLinkRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/pdf/$reportId': {
       id: '/pdf/$reportId'
       path: '/pdf/$reportId'
@@ -246,11 +181,8 @@ const rootRouteChildren: RootRouteChildren = {
   AuthCallbackRoute: AuthCallbackRoute,
   LoginRoute: LoginRoute,
   UdapRoute: UdapRoute,
-  SignupLazyRoute: SignupLazyRoute,
   EditReportIdRoute: EditReportIdRoute,
   PdfReportIdRoute: PdfReportIdRoute,
-  ResetPasswordLinkRoute: ResetPasswordLinkRoute,
-  ResetPasswordIndexLazyRoute: ResetPasswordIndexLazyRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

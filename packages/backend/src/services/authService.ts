@@ -65,15 +65,23 @@ export class AuthService {
 
     const userPayload = {
       id: checked.sub!,
-      name: checked.name,
+      name: checked.name ?? checked.preferred_username!,
       udap_id: "no-udap",
+      email: checked.email,
     };
 
-    const existingUser = await db.selectFrom("user").where("id", "=", userPayload.id).selectAll().executeTakeFirst();
-    if (existingUser) return populateUdap(existingUser);
+    const existingUser = await this.getUserFromToken(token);
+    if (existingUser) return existingUser;
 
     const user = await db.insertInto("user").values(userPayload).returningAll().executeTakeFirstOrThrow();
     return { ...(await populateUdap(user)), isFirstConnection: true };
+  }
+
+  async getUserFromToken(token: string) {
+    const checked = await this.checkToken(token);
+    const user = await db.selectFrom("user").where("id", "=", checked.sub!).selectAll().executeTakeFirst();
+    if (!user) return null;
+    return populateUdap(user);
   }
 }
 

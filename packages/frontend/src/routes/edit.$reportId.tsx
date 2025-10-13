@@ -23,6 +23,7 @@ import { Box } from "@mui/material";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { Tabs } from "#components/Tabs.tsx";
 import { Center } from "#components/MUIDsfr.tsx";
+import { useStatus } from "@powersync/react";
 
 const EditReport = () => {
   const { reportId } = Route.useParams();
@@ -85,6 +86,8 @@ const WithReport = ({ report }: { report: Report }) => {
     navigate({ search: { tab } as any, replace: true });
     document.getElementById("root")!.scrollTo(0, 0);
   };
+
+  console.log(useStatus());
 
   const [form, getFocused] = useFormWithFocus<Report>({
     defaultValues: report!,

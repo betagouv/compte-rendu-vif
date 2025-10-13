@@ -3,7 +3,9 @@ import { useStatus } from "@powersync/react";
 export const useAppStatus = () => {
   const powerSyncStatus = useStatus();
 
-  const status = powerSyncStatus.connected
+  const isOk = powerSyncStatus.connected || powerSyncStatus.connecting;
+
+  const status = isOk
     ? powerSyncStatus.dataFlowStatus.downloading || powerSyncStatus.dataFlowStatus.uploading
       ? "saving"
       : "saved"

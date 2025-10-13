@@ -162,6 +162,7 @@ export interface Udap {
 }
 
 export interface User {
+  email: string;
   id: string;
   name: string;
   udap_id: string;

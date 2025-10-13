@@ -1,115 +1,23 @@
 import Alert from "@codegouvfr/react-dsfr/Alert";
-import Input from "@codegouvfr/react-dsfr/Input";
-import { Link } from "@tanstack/react-router";
-import { useForm } from "react-hook-form";
-import { useAuthContext } from "../contexts/AuthContext";
-import { FullWidthButton } from "./FullWidthButton";
-import { InputGroup } from "./InputGroup";
-import { PasswordInput } from "./PasswordInput";
-import { useMutation } from "@tanstack/react-query";
-import { type RouterInputs, api, getErrorMessage, unauthenticatedApi } from "../api";
 import { useState } from "react";
-import { Flex } from "./ui/Flex";
-import { Box, Typography } from "@mui/material";
-import { fr } from "@codegouvfr/react-dsfr";
-import { Divider } from "./ui/Divider";
-import { Button } from "./MUIDsfr";
 import { auth } from "../features/keycloak/auth";
+import { Button } from "./MUIDsfr";
+import { Flex } from "./ui/Flex";
 
 export const LoginForm = () => {
-  const [authData, setAuthData] = useAuthContext();
-  const form = useForm<LoginFormProps>();
-
-  const mutation = useMutation((body: LoginFormProps) => unauthenticatedApi.post("/api/login", { body }));
-
   const [shouldShowPopup] = useState(localStorage.getItem("crvif/update-popup"));
-
-  const login = async (values: LoginFormProps) => {
-    const response = await mutation.mutateAsync(values);
-    localStorage.setItem("crvif/version", "1");
-    localStorage.removeItem("crvif/update-popup");
-    setAuthData({ ...authData, ...response });
-  };
-
-  const { error: mutationError } = mutation;
-  const { errors: formErrors } = form.formState;
 
   return (
     <Flex flexDirection="column">
       <Button onClick={() => auth.login()}>Se connecter avec Keycloak</Button>
-      <form onSubmit={form.handleSubmit(login)}>
-        {mutationError ? (
-          <Alert
-            style={{ marginBottom: "1.5rem" }}
-            severity="error"
-            title={<Typography fontWeight="regular">{getErrorMessage(mutationError)}</Typography>}
-          />
-        ) : null}
-        {shouldShowPopup && !mutationError ? (
-          <Alert
-            style={{ marginBottom: "1.5rem" }}
-            severity="info"
-            title="Vous avez été déconnecté suite à une mise à jour de l'application."
-          />
-        ) : null}
-        <InputGroup state={mutationError ? "error" : undefined}>
-          <Input
-            label="Courriel"
-            hintText="prenom.nom@culture.gouv.fr"
-            nativeInputProps={{
-              type: "email",
-              autoComplete: "username",
-              ...form.register("email", {
-                required: "Le courriel est requis",
-                pattern: {
-                  value: /\S+@\S+\.\S+/,
-                  message: "Le courriel n'est pas valide",
-                },
-              }),
-            }}
-            state={formErrors.email ? "error" : undefined}
-            stateRelatedMessage={formErrors.email?.message as string}
-          />
-          <PasswordInput
-            state={formErrors?.password ? "error" : undefined}
-            nativeInputProps={{
-              autoComplete: "current-password",
-              ...form.register("password", {
-                required: "Le mot de passe est requis",
-                minLength: {
-                  value: 8,
-                  message: "Le mot de passe doit contenir au moins 8 caractères",
-                },
-              }),
-            }}
-          />
-        </InputGroup>
 
-        <Box color={fr.colors.decisions.text.actionHigh.blueFrance}>
-          <Link to="/reset-password">Mot de passe oublié</Link>
-        </Box>
-
-        <FullWidthButton
-          style={{
-            marginTop: "1.5rem",
-          }}
-          type="submit"
-          nativeButtonProps={{ type: "submit" }}
-          onClick={form.handleSubmit(login)}
-        >
-          Se connecter
-        </FullWidthButton>
-      </form>
-
-      <Divider my="20px" />
-
-      <h5>Vous n'avez pas de compte ?</h5>
-
-      <FullWidthButton linkProps={{ to: "/signup" }} priority="secondary">
-        Créer un compte
-      </FullWidthButton>
+      {shouldShowPopup ? (
+        <Alert
+          style={{ marginBottom: "1.5rem" }}
+          severity="info"
+          title="Vous avez été déconnecté suite à une mise à jour de l'application."
+        />
+      ) : null}
     </Flex>
   );
 };
-
-export type LoginFormProps = RouterInputs<"/api/login">["body"];

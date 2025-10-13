@@ -14,7 +14,7 @@ import { omit } from "pastable";
 import { useState } from "react";
 import { v4 } from "uuid";
 import { ClauseV2 } from "../../../backend/src/db-types";
-import { useRefreshUdap, useUser } from "../contexts/AuthContext";
+import { useRefreshUdap, useRefreshUser, useUser } from "../contexts/AuthContext";
 import { ServiceInstructeurs, Udap } from "../db/AppSchema";
 import { db, useDbQuery } from "../db/db";
 import { AccordionIfMobile, BreadcrumbNav } from "./account";
@@ -108,7 +108,7 @@ const format = {
 };
 
 const UDAPForm = ({ onSuccess }: { onSuccess: () => void }) => {
-  const udap = useUser().udap;
+  const udap = useUser()!.udap;
   const [udapData, setUdapData] = useState({
     ...udap,
     marianne_text: replaceCarriageReturn(udap.marianne_text ?? ""),
@@ -116,7 +116,7 @@ const UDAPForm = ({ onSuccess }: { onSuccess: () => void }) => {
     udap_text: replaceCarriageReturn(udap.udap_text ?? ""),
   });
 
-  const refreshUdapMutation = useRefreshUdap();
+  const refreshUdapMutation = useRefreshUser();
 
   const saveUdapMutation = useMutation({
     mutationFn: async (udapData: Partial<Udap>) => {

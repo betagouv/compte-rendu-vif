@@ -223,6 +223,7 @@ export class UserService {
   }
 
   async changeUdap(userId: string, udapId: string) {
+    debug("Changing udap for user", userId, "to", udapId);
     const udap = await db.selectFrom("udap").where("id", "=", udapId).selectAll().execute();
     if (!udap[0]) {
       throw new AppError(400, "L'udap n'existe pas");

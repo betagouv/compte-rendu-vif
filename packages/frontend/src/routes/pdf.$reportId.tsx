@@ -77,6 +77,8 @@ export const PDF = () => {
 
   const report = reportQuery.data;
 
+  console.log(report);
+
   const snapshotQuery = useQuery({
     queryKey: ["report-snapshot", reportId],
     queryFn: async () => {
@@ -123,7 +125,7 @@ export const PDF = () => {
 
   const serviceInstructeur = serviceInstructeurQuery.data?.[0];
   const isServiceInstructeurLoaded = report?.serviceInstructeur ? !!serviceInstructeur : true;
-
+  console.log(report && snapshotQuery.isSuccess && chipOptions?.length && isServiceInstructeurLoaded);
   const htmlString = snapshotQuery.data;
 
   const saveSnapshotMutation = useMutation(
@@ -262,7 +264,7 @@ export const PDF = () => {
             />
             <Center sx={{ overflowY: "auto" }} width="100%" height="100%" maxHeight="100%">
               <Stack width="800px" height="100%">
-                {report && snapshotQuery.isSuccess && chipOptions?.length && isServiceInstructeurLoaded ? (
+                {report && snapshotQuery.isSuccess && isServiceInstructeurLoaded ? (
                   <WithReport
                     report={report as any}
                     mode={mode}
@@ -547,7 +549,7 @@ export const WithReport = ({
 }) => {
   const { editor } = useContext(TextEditorContext);
   const [htmlString] = useState(initialHtmlString);
-
+  console.log("lol");
   useEffect(() => {
     if (!editor) return;
 

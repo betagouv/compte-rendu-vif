@@ -14,7 +14,9 @@ import { powerSyncDb, setupPowersync } from "./db/db";
 import { PowerSyncContext } from "@powersync/react";
 import MuiDsfrThemeProvider from "@codegouvfr/react-dsfr/mui";
 import { TanStackDevtools } from "@tanstack/react-devtools";
+import { Buffer } from "buffer";
 
+globalThis.Buffer = Buffer;
 if ("serviceWorker" in navigator) {
   registerSW({});
 }

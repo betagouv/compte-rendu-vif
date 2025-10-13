@@ -1,9 +1,9 @@
-import { UpdateType, PowerSyncBackendConnector, AbstractPowerSyncDatabase, CrudBatch } from "@powersync/web";
-import { safeJSONParse } from "pastable";
-import { api, unauthenticatedApi } from "../api";
+import { AbstractPowerSyncDatabase, PowerSyncBackendConnector } from "@powersync/web";
 import { get } from "idb-keyval";
-import { getPicturesStore } from "../features/idb";
+import { api, RouterOutputs, unauthenticatedApi } from "../api";
+import { apiStore, get80PercentOfTokenLifespan } from "../ApiStore";
 import { ENV } from "../envVars";
+import { getPicturesStore } from "../features/idb";
 
 const emitterChannel = new BroadcastChannel("sw-messages");
 
@@ -54,28 +54,36 @@ export class Connector implements PowerSyncBackendConnector {
 }
 
 export const getTokenOrRefresh = async () => {
-  const authData = safeJSONParse(window.localStorage.getItem("crvif/auth") ?? "");
-  if (!authData) throw new Error("No auth data found");
+  console.log("getting token or refresh");
+  if (!apiStore.loaded) throw new Error("Auth not loaded");
 
-  let tokens = authData.tokens;
+  if (!apiStore.accessToken || !apiStore.refreshToken || !apiStore.expiresAt) throw new Error("No token found");
 
-  if (!tokens.access_token || !tokens.refresh_token) throw new Error("No token found");
-
-  if (new Date(authData.expiresAt) < new Date()) {
-    const resp = await unauthenticatedApi.post("/api/refresh-token", {
-      body: { refreshToken: tokens.refresh_token! },
+  if (new Date(apiStore.expiresAt) < new Date()) {
+    console.log("token expired, refreshing...", { ...apiStore });
+    const resp: RouterOutputs<"/api/refresh-token"> = await unauthenticatedApi.post("/api/refresh-token", {
+      body: { refreshToken: apiStore.refreshToken },
     });
 
     if (resp.access_token === null) {
       console.log("token expired but couldn't find a refresh token, logging out");
-      window.localStorage.removeItem("crvif/auth");
+
+      apiStore.accessToken = null;
+      apiStore.refreshToken = null;
+      apiStore.expiresAt = null;
+      apiStore.user = null;
+      await apiStore.save();
+
+      throw new Error("Session expirée, veuillez vous reconnecter");
     } else {
       console.log("token refreshed");
-      window.localStorage.setItem("crvif/auth", JSON.stringify({ ...authData, ...resp }));
+
+      apiStore.accessToken = resp.access_token;
+      apiStore.refreshToken = resp.refresh_token;
+      apiStore.expiresAt = new Date(get80PercentOfTokenLifespan(Number(resp.expires_in))).toISOString();
+      await apiStore.save();
     }
+  } else console.log("token valid");
 
-    tokens = resp;
-  }
-
-  return tokens.access_token;
+  return apiStore.accessToken;
 };

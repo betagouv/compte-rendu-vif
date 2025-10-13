@@ -3,7 +3,7 @@ import { useAuthContext } from "./contexts/AuthContext";
 import { routeTree } from "./routeTree.gen";
 
 export const App = () => {
-  const [auth] = useAuthContext();
+  const { auth } = useAuthContext();
   return <RouterProvider router={router} context={auth} />;
 };
 
