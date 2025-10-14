@@ -92,6 +92,29 @@ export const useUser = () => {
   return auth.user;
 };
 
+export const useLiveUser = () => {
+  const user = useUser();
+
+  const liveUsers = useDbQuery(
+    db
+      .selectFrom("user")
+      .selectAll()
+      .where("id", "=", user?.id ?? ""),
+  );
+  const liveUser = liveUsers.data[0];
+
+  const liveUdaps = useDbQuery(
+    db
+      .selectFrom("udap")
+      .selectAll()
+      .where("id", "=", liveUser?.udap_id ?? ""),
+  );
+  const liveUdap = liveUdaps.data[0];
+
+  if (!liveUser || !liveUdap) return user;
+  return { ...liveUser, udap: liveUdap };
+};
+
 export const useUdap = () => {
   const user = useUser();
 

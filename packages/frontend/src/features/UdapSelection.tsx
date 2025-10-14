@@ -1,5 +1,5 @@
 import { PropsWithChildren, useState } from "react";
-import { useAuthContext, useRefreshUser, useUser } from "../contexts/AuthContext";
+import { useAuthContext, useLiveUser, useRefreshUser, useUser } from "../contexts/AuthContext";
 import { Autocomplete, Box, Dialog, DialogTitle, Modal } from "@mui/material";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { api, unauthenticatedApi } from "../api";
@@ -8,7 +8,7 @@ import { Button } from "#components/MUIDsfr.tsx";
 import { Flex } from "#components/ui/Flex.tsx";
 
 export const UdapSelection = ({ children }: PropsWithChildren) => {
-  const user = useUser();
+  const user = useLiveUser();
   const shouldSelectUdap = user?.udap_id === "no-udap";
 
   return (
@@ -20,7 +20,6 @@ export const UdapSelection = ({ children }: PropsWithChildren) => {
 };
 
 const UdapSelectionModal = () => {
-  const { setAuth } = useAuthContext();
   const { cx } = useStyles();
 
   const [value, setValue] = useState<string | null>(null);
@@ -34,7 +33,6 @@ const UdapSelectionModal = () => {
       if (!targetUdap) throw new Error("Udap not found");
 
       await api.post("/api/change-udap", { body: { udap_id } });
-      setAuth((old) => ({ ...old, user: { ...old.user!, udap: targetUdap, udap_id } }));
     },
   });
 

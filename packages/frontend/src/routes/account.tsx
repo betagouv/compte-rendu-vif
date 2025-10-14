@@ -5,7 +5,15 @@ import Download from "@codegouvfr/react-dsfr/Download";
 import { useUserSettings } from "../hooks/useUserSettings";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { db, useDbQuery } from "../db/db";
-import { AuthContext, useAuthContext, useRefreshUdap, useRefreshUser, useUdap, useUser } from "../contexts/AuthContext";
+import {
+  AuthContext,
+  useAuthContext,
+  useLiveUser,
+  useRefreshUdap,
+  useRefreshUser,
+  useUdap,
+  useUser,
+} from "../contexts/AuthContext";
 import { v4 } from "uuid";
 import { Spinner } from "#components/Spinner";
 import { EmailInput } from "../components/EmailInput";
@@ -362,10 +370,11 @@ const DownloadCRs = () => {
 };
 
 const ChangeUDAP = ({ onSuccess }: { onSuccess: () => void }) => {
-  const udap = useUdap();
+  const user = useLiveUser()!;
+  const udap = user.udap;
+
   const [selectedUdapId, setSelectedUdapId] = useState<string | null>(null);
 
-  const refreshUserMutation = useRefreshUser();
   const udapsQuery = useQuery({
     queryKey: ["udaps", udap.id],
     queryFn: async () => {
@@ -386,7 +395,6 @@ const ChangeUDAP = ({ onSuccess }: { onSuccess: () => void }) => {
       body: { udap_id },
     });
 
-    await refreshUserMutation.mutateAsync();
     onSuccess?.();
   });
 
