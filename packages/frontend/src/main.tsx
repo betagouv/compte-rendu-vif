@@ -15,6 +15,7 @@ import { PowerSyncContext } from "@powersync/react";
 import MuiDsfrThemeProvider from "@codegouvfr/react-dsfr/mui";
 import { TanStackDevtools } from "@tanstack/react-devtools";
 import { Buffer } from "buffer";
+import { UdapSelection } from "./features/UdapSelection";
 
 globalThis.Buffer = Buffer;
 if ("serviceWorker" in navigator) {
@@ -57,7 +58,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         <QueryClientProvider client={queryClient}>
           <AuthProvider>
             <WithPowersync>
-              <App />
+              <UdapSelection>
+                <App />
+              </UdapSelection>
             </WithPowersync>
           </AuthProvider>
         </QueryClientProvider>

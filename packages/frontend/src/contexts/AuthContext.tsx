@@ -47,12 +47,15 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     }
   }, []);
 
-  const setAuthAndSaveInStorage = (data: AuthContextProps["auth"]) => {
-    setAuth(data);
-    apiStore.accessToken = data.accessToken;
-    apiStore.expiresAt = data.expiresAt;
-    apiStore.refreshToken = data.refreshToken;
-    apiStore.user = data.user;
+  const setAuthAndSaveInStorage = (
+    dataOrCallback: AuthContextProps["auth"] | ((old: AuthContextProps["auth"]) => AuthContextProps["auth"]),
+  ) => {
+    const values = typeof dataOrCallback === "function" ? dataOrCallback(auth) : dataOrCallback;
+    setAuth(values);
+    apiStore.accessToken = values.accessToken;
+    apiStore.expiresAt = values.expiresAt;
+    apiStore.refreshToken = values.refreshToken;
+    apiStore.user = values.user;
     apiStore.save();
   };
 
@@ -125,5 +128,7 @@ type AuthContextProps = {
     refreshToken: string | null;
     user: RouterOutputs<"/api/authenticate">["user"] | null;
   };
-  setAuth: (data: AuthContextProps["auth"]) => void;
+  setAuth: (
+    dataOrCallback: AuthContextProps["auth"] | ((old: AuthContextProps["auth"]) => AuthContextProps["auth"]),
+  ) => void;
 };
