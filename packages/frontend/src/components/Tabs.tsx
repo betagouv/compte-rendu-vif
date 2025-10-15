@@ -61,9 +61,17 @@ export type TabsProps = {
 
 const TabPanel = (props: { children?: React.ReactNode; value: string; id: string }) => {
   const { children, value, id, ...rest } = props;
+  console.log(rest);
+
   return (
-    <Box role="tabpanel" hidden={value !== id} id={`tabpanel-${id}`} aria-labelledby={`tab-${id}`} {...rest}>
-      {value === id && <Box sx={{ p: 3 }}>{children}</Box>}
+    <Box
+      role="tabpanel"
+      style={{ display: value !== id ? "none" : "block" }}
+      id={`tabpanel-${id}`}
+      aria-labelledby={`tab-${id}`}
+      {...rest}
+    >
+      <Box sx={{ p: 3 }}>{children}</Box>
     </Box>
   );
 };

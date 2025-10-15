@@ -4,11 +4,9 @@ import { useAuthContext, useUser } from "../contexts/AuthContext";
 
 export const EnsureUser = ({ children }: PropsWithChildren) => {
   const user = useUser();
-  const href = window.location.pathname;
-  const { auth } = useAuthContext();
 
   if (!user) {
-    console.log("no user");
+    const href = window.location.pathname;
     return <Navigate to="/login" search={{ redirect: href }} />;
   }
 
