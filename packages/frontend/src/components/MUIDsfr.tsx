@@ -4,6 +4,7 @@ import { Input as DsfrInput } from "@codegouvfr/react-dsfr/Input";
 import { Accordion as DsfrAccordion } from "@codegouvfr/react-dsfr/Accordion";
 import { Alert as DsfrAlert } from "@codegouvfr/react-dsfr/Alert";
 import { Badge as DsfrBadge } from "@codegouvfr/react-dsfr/Badge";
+import { Tile as DsfrTile } from "@codegouvfr/react-dsfr/Tile";
 import { Box, styled } from "@mui/material";
 
 export const Center = styled(Box)({
@@ -18,3 +19,4 @@ export const Input = styled(DsfrInput)();
 export const Accordion = styled(DsfrAccordion)();
 export const Alert = styled(DsfrAlert)();
 export const Badge = styled(DsfrBadge)();
+export const Tile = styled(DsfrTile)();

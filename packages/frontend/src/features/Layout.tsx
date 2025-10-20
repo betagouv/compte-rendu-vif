@@ -166,7 +166,7 @@ const AppHeader = () => {
                     <div className="fr-header__service lg:d_unset">
                       <p className="fr-header__service-title">
                         <>
-                          Compte-rendu VIF{" "}
+                          Patrimoine Embarqué{" "}
                           <Badge as="span" noIcon severity="success">
                             Beta
                           </Badge>

@@ -29,7 +29,7 @@ export const Tabs = ({ options, control }: TabsProps) => {
           ))}
         </Flex>
 
-        <Box flex="1">
+        <Box flex="1" width={{ xs: "100%", lg: "926px" }} alignSelf="center">
           {options.map((option) => (
             <TabPanel key={option.id} value={value} id={option.id}>
               {option.component}
@@ -71,7 +71,7 @@ const TabPanel = (props: { children?: React.ReactNode; value: string; id: string
       aria-labelledby={`tab-${id}`}
       {...rest}
     >
-      <Box sx={{ p: 3 }}>{children}</Box>
+      <Box>{children}</Box>
     </Box>
   );
 };
