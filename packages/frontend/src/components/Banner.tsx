@@ -3,6 +3,7 @@ import { forwardRef } from "react";
 import { BoxProps } from "@mui/material";
 import { fr } from "@codegouvfr/react-dsfr";
 import { Center } from "./MUIDsfr";
+import { useStatus } from "@powersync/react";
 
 export const Banner = forwardRef<HTMLDivElement, BoxProps & { status: SyncFormStatus }>(
   ({ status, className, ...props }, ref) => {
@@ -16,6 +17,15 @@ export const Banner = forwardRef<HTMLDivElement, BoxProps & { status: SyncFormSt
     return <Center ref={ref as any} className={className} bgcolor={bgColor} flexDirection="column" {...props} />;
   },
 );
+
+export const SimpleBanner = (props: Omit<BoxProps, "ref">) => {
+  const powerSyncStatus = useStatus();
+
+  const isOk = powerSyncStatus.connected || powerSyncStatus.connecting;
+  const status = isOk ? "saved" : "offline";
+
+  return <Banner status={status} {...props} />;
+};
 
 /*
  "yellow-waiting": { value: "#FEECC2" },

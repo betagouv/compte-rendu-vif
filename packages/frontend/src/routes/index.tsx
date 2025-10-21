@@ -1,4 +1,4 @@
-import { Banner } from "#components/Banner";
+import { Banner, SimpleBanner } from "#components/Banner";
 import { EnsureUser } from "#components/EnsureUser";
 import { SearchResults } from "#components/ReportSearch.tsx";
 import { Status } from "#components/SyncForm";
@@ -172,15 +172,6 @@ const DocumentSelector = () => {
       </Flex>
     </Flex>
   );
-};
-
-const SimpleBanner = (props: Omit<BoxProps, "ref">) => {
-  const powerSyncStatus = useStatus();
-
-  const isOk = powerSyncStatus.connected || powerSyncStatus.connecting;
-  const status = isOk ? "saved" : "offline";
-
-  return <Banner status={status} {...props} />;
 };
 
 export const Route = createFileRoute("/")({

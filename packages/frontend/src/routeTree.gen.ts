@@ -16,6 +16,7 @@ import { Route as AccountRouteImport } from './routes/account'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PdfReportIdRouteImport } from './routes/pdf.$reportId'
 import { Route as EditReportIdRouteImport } from './routes/edit.$reportId'
+import { Route as ConstatConstatIdRouteImport } from './routes/constat.$constatId'
 
 const UdapRoute = UdapRouteImport.update({
   id: '/udap',
@@ -52,6 +53,11 @@ const EditReportIdRoute = EditReportIdRouteImport.update({
   path: '/edit/$reportId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ConstatConstatIdRoute = ConstatConstatIdRouteImport.update({
+  id: '/constat/$constatId',
+  path: '/constat/$constatId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -59,6 +65,7 @@ export interface FileRoutesByFullPath {
   '/auth-callback': typeof AuthCallbackRoute
   '/login': typeof LoginRoute
   '/udap': typeof UdapRoute
+  '/constat/$constatId': typeof ConstatConstatIdRoute
   '/edit/$reportId': typeof EditReportIdRoute
   '/pdf/$reportId': typeof PdfReportIdRoute
 }
@@ -68,6 +75,7 @@ export interface FileRoutesByTo {
   '/auth-callback': typeof AuthCallbackRoute
   '/login': typeof LoginRoute
   '/udap': typeof UdapRoute
+  '/constat/$constatId': typeof ConstatConstatIdRoute
   '/edit/$reportId': typeof EditReportIdRoute
   '/pdf/$reportId': typeof PdfReportIdRoute
 }
@@ -78,6 +86,7 @@ export interface FileRoutesById {
   '/auth-callback': typeof AuthCallbackRoute
   '/login': typeof LoginRoute
   '/udap': typeof UdapRoute
+  '/constat/$constatId': typeof ConstatConstatIdRoute
   '/edit/$reportId': typeof EditReportIdRoute
   '/pdf/$reportId': typeof PdfReportIdRoute
 }
@@ -89,6 +98,7 @@ export interface FileRouteTypes {
     | '/auth-callback'
     | '/login'
     | '/udap'
+    | '/constat/$constatId'
     | '/edit/$reportId'
     | '/pdf/$reportId'
   fileRoutesByTo: FileRoutesByTo
@@ -98,6 +108,7 @@ export interface FileRouteTypes {
     | '/auth-callback'
     | '/login'
     | '/udap'
+    | '/constat/$constatId'
     | '/edit/$reportId'
     | '/pdf/$reportId'
   id:
@@ -107,6 +118,7 @@ export interface FileRouteTypes {
     | '/auth-callback'
     | '/login'
     | '/udap'
+    | '/constat/$constatId'
     | '/edit/$reportId'
     | '/pdf/$reportId'
   fileRoutesById: FileRoutesById
@@ -117,6 +129,7 @@ export interface RootRouteChildren {
   AuthCallbackRoute: typeof AuthCallbackRoute
   LoginRoute: typeof LoginRoute
   UdapRoute: typeof UdapRoute
+  ConstatConstatIdRoute: typeof ConstatConstatIdRoute
   EditReportIdRoute: typeof EditReportIdRoute
   PdfReportIdRoute: typeof PdfReportIdRoute
 }
@@ -172,6 +185,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EditReportIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/constat/$constatId': {
+      id: '/constat/$constatId'
+      path: '/constat/$constatId'
+      fullPath: '/constat/$constatId'
+      preLoaderRoute: typeof ConstatConstatIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -181,6 +201,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthCallbackRoute: AuthCallbackRoute,
   LoginRoute: LoginRoute,
   UdapRoute: UdapRoute,
+  ConstatConstatIdRoute: ConstatConstatIdRoute,
   EditReportIdRoute: EditReportIdRoute,
   PdfReportIdRoute: PdfReportIdRoute,
 }
