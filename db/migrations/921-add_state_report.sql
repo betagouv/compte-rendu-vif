@@ -13,3 +13,5 @@ CREATE TABLE "state_report" (
     description TEXT,
     observations TEXT
 );
+
+ALTER PUBLICATION powersync ADD TABLE "state_report";
