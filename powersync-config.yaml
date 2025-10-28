@@ -26,7 +26,7 @@ sync_rules:
           - SELECT * FROM picture_lines
 
       udap_bucket:
-        parameters: SELECT udap_id as udap_id FROM "user" WHERE id = request.user_id()
+        parameters: SELECT udap_id FROM "user" WHERE id = request.user_id()
         data: 
           - SELECT * FROM report WHERE udap_id = bucket.udap_id
           - SELECT * FROM udap WHERE id = bucket.udap_id
@@ -35,7 +35,14 @@ sync_rules:
           - SELECT * FROM clause_v2 WHERE udap_id = bucket.udap_id
           - SELECT * FROM sent_email WHERE udap_id = bucket.udap_id
           - SELECT * FROM suggested_email WHERE udap_id = bucket.udap_id
+          - SELECT * FROM state_report WHERE udap_id = bucket.udap_id
 
+
+      dept_bucket:
+        parameters: SELECT dept_number FROM "user_dept" WHERE user_id = request.user_id()
+        data:
+          - SELECT * FROM pop_immeubles WHERE departement_format_numerique = bucket.dept_number
+      
       user_bucket:
         parameters: SELECT request.user_id() as user_id
         data:

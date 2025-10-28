@@ -4,6 +4,8 @@ import { type RouterOutputs } from "../api";
 import { apiStore } from "../ApiStore";
 import { db, useDbQuery } from "../db/db";
 import { menuActor } from "../features/menu/menuMachine";
+import { Center } from "#components/MUIDsfr.tsx";
+import { Spinner } from "#components/Spinner.tsx";
 
 const emptyAuth = {
   accessToken: null,
@@ -65,7 +67,11 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   };
 
   if (loadAuthQuery.isLoading || !apiStore.loaded) {
-    return <div>Chargement...</div>;
+    return (
+      <Center height="100%">
+        <Spinner />
+      </Center>
+    );
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -49,6 +49,7 @@
     "@sinclair/typebox": "^0.32.20",
     "@types/pg": "^8.11.10",
     "canvas": "^2.11.2",
+    "csv-parser": "^3.2.0",
     "date-fns": "^3.6.0",
     "debug": "^4.3.4",
     "dotenv": "^16.4.5",

@@ -9,10 +9,10 @@ import { useIsLoggedIn } from "../contexts/AuthContext";
 import { MenuButton, MenuModal } from "../features/menu/MenuButton";
 import { useIsDesktop } from "../hooks/useIsDesktop";
 
-export const Layout = ({ children }: PropsWithChildren) => {
+export const Layout = ({ children, noProvider }: PropsWithChildren & { noProvider?: boolean }) => {
   return (
     <Box display="flex" position="relative" flexDirection={"column"} height="100vh">
-      <AppHeader />
+      <AppHeader noProvider={noProvider} />
       <Box flex="1">{children}</Box>
       <AppFooter />
     </Box>
@@ -119,9 +119,9 @@ const VersionDisplay = () => {
   );
 };
 
-const AppHeader = () => {
+const AppHeader = ({ noProvider }: { noProvider?: boolean }) => {
   const isDesktop = useIsDesktop();
-  const isLoggedIn = useIsLoggedIn();
+  const isLoggedIn = noProvider ? null : useIsLoggedIn();
 
   return (
     <>

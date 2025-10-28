@@ -11,7 +11,11 @@ CREATE TABLE "state_report" (
     nature_protection TEXT,
     parties_protegees TEXT,
     description TEXT,
-    observations TEXT
+    observations TEXT,
+    created_by TEXT NOT NULL REFERENCES "user"(id),
+    created_at TIMESTAMP NOT NULL,
+    disabled boolean,
+    udap_id TEXT NOT NULL REFERENCES udap(id)
 );
 
 ALTER PUBLICATION powersync ADD TABLE "state_report";

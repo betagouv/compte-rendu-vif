@@ -150,7 +150,7 @@ export interface Merimee {
   PRODUCTEUR: string | null;
   PROT: string | null;
   PSTA: string | null;
-  REF: string | null;
+  REF: string;
   REFE: string | null;
   REFIM: string | null;
   REFJOC: string | null;
@@ -164,6 +164,7 @@ export interface Merimee {
   RENV: string | null;
   REPR: string | null;
   RFPA: string | null;
+  rowid: number | null;
   SCLD: string | null;
   SCLE: string | null;
   SCLX: string | null;
@@ -190,8 +191,9 @@ export interface Merimee {
 export interface MerimeeToMemoire {
   COPY: string | null;
   NAME: string | null;
-  REF_MEMOIRE: string | null;
-  REF_MERIMEE: string | null;
+  REF_MEMOIRE: string;
+  REF_MERIMEE: string;
+  rowid: number | null;
   URL: string | null;
 }
 
@@ -216,6 +218,86 @@ export interface Pictures {
   id: string;
   reportId: string | null;
   url: string | null;
+}
+
+export interface PopImmeubles {
+  adresse_forme_editoriale: string | null;
+  adresse_forme_index: string | null;
+  auteur_de_l_edifice: string | null;
+  autre_appellation_de_l_edifice: string | null;
+  cadastre: string | null;
+  cadre_de_l_etude: string | null;
+  cog_insee_lors_de_la_protection: string | null;
+  commune_forme_editoriale: string | null;
+  commune_forme_index: string | null;
+  coordonnees_au_format_wgs84: string | null;
+  copyright: string | null;
+  couverts_ou_decouverts_du_jardin_de_l_edifice: string | null;
+  datation_de_l_edifice: string | null;
+  date_de_creation_de_la_notice: string | null;
+  date_de_la_derniere_mise_a_jour: string | null;
+  date_de_label: string | null;
+  date_et_typologie_de_la_protection: string | null;
+  denomination_de_l_edifice: string | null;
+  "département": string | null;
+  departement_format_numerique: string | null;
+  description_de_l_edifice: string | null;
+  description_de_l_elevation_interieure: string | null;
+  description_de_l_iconographie: string | null;
+  destination_actuelle_de_l_edifice: string | null;
+  dimensions_normalisees_des_edicules_uniquement: string | null;
+  domaine: string | null;
+  elements_remarquables_dans_l_edifice: string | null;
+  emplacement__forme_et_structure_de_l_escalier: string | null;
+  etablissement_affectataire_de_l_edifice: string | null;
+  etat_de_conservation: string | null;
+  format_abrege_du_siecle_de_construction: string | null;
+  genre_du_destinataire: string | null;
+  historique: string | null;
+  id: string | null;
+  identifiant_agregee: string | null;
+  indexation_iconographique_normalisee: string | null;
+  justification_attribution: string | null;
+  justification_de_la_datation: string | null;
+  lien_vers_la_base_archiv_mh: string | null;
+  lien_vers_la_base_joconde: string | null;
+  lien_vers_la_base_palissy: string | null;
+  liens_externes: string | null;
+  lieu_de_conservation_d_un_element_architectural_deplace: string | null;
+  lieudit: string | null;
+  materiaux_de_la_couverture: string | null;
+  materiaux_du_gros_oeuvre: string | null;
+  nature_de_la_protection: string | null;
+  nom_du_cours_d_eau_traversant_ou_bordant_l_edifice: string | null;
+  observations: string | null;
+  partie_constituante: string | null;
+  partie_constituante_non_etudiee: string | null;
+  partie_d_elevation_exterieure: string | null;
+  personnes_liees_a_l_edifice: string | null;
+  precision_affectataire: string | null;
+  precision_de_la_localisation: string | null;
+  precision_de_la_protection: string | null;
+  precision_sur_la_denomination: string | null;
+  precision_sur_le_statut_de_l_edifice: string | null;
+  reference: string;
+  reference_a_un_ensemble: string | null;
+  references_des_parties_constituantes_etudiees: string | null;
+  "région": string | null;
+  remploi: string | null;
+  renvoi_vers_une_notice_de_la_base_merimee_ou_palissy: string | null;
+  siecle_de_campagne_secondaire_de_construction: string | null;
+  siecle_de_la_campagne_principale_de_construction: string | null;
+  source_de_l_energie_utilisee_par_l_edifice: string | null;
+  statut_juridique_de_l_edifice: string | null;
+  technique_du_decor_porte_de_l_edifice: string | null;
+  titre_editorial_de_la_notice: string | null;
+  type_de_couverture: string | null;
+  typologie_de_la_protection: string | null;
+  typologie_de_la_zone_de_protection: string | null;
+  typologie_de_plan: string | null;
+  typologie_du_couvrement: string | null;
+  typologie_du_dossier: string | null;
+  vocable___pour_les_edifices_cultuels: string | null;
 }
 
 export interface Report {
@@ -275,6 +357,7 @@ export interface StateReport {
   periode_construction: string | null;
   reference_cadastrale: string | null;
   reference_pop: string | null;
+  udap_id: string;
 }
 
 export interface SuggestedEmail {
@@ -326,6 +409,11 @@ export interface User {
   udap_id: string;
 }
 
+export interface UserDept {
+  dept_number: string;
+  user_id: string;
+}
+
 export interface UserSettings {
   default_emails: string | null;
   id: string;
@@ -348,6 +436,7 @@ export interface DB {
   pdf_snapshot: PdfSnapshot;
   picture_lines: PictureLines;
   pictures: Pictures;
+  pop_immeubles: PopImmeubles;
   report: Report;
   sent_email: SentEmail;
   service_instructeurs: ServiceInstructeurs;
@@ -357,6 +446,7 @@ export interface DB {
   transactions: Transactions;
   udap: Udap;
   user: User;
+  user_dept: UserDept;
   user_settings: UserSettings;
   whitelist: Whitelist;
 }

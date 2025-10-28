@@ -6,27 +6,23 @@ import { generateOpenApi, initFastify } from "./router";
 import { makeDebug } from "./features/debug";
 import { initClauseV2 } from "./tmp";
 import { initFonts } from "@cr-vif/pdf";
-import { fetchMerimee } from "./features/data/fetchDataFromPop";
-import { ofetch } from "ofetch";
 
 const debug = makeDebug("index");
 
 const start = async () => {
   await registerViteHmrServerRestart();
 
-  await fetchMerimee();
+  // await initClauseV2();
+  debug("Starting fastify server in", ENV.NODE_ENV, "mode");
 
-  // // await initClauseV2();
-  // debug("Starting fastify server in", ENV.NODE_ENV, "mode");
+  const fastifyInstance = await initFastify();
+  await fastifyInstance.listen({ port: ENV.PORT, host: "0.0.0.0" });
 
-  // const fastifyInstance = await initFastify();
-  // await fastifyInstance.listen({ port: ENV.PORT, host: "0.0.0.0" });
+  debug(`Server listening on ${ENV.PORT}`);
 
-  // debug(`Server listening on ${ENV.PORT}`);
-
-  // onHmr(async () => {
-  //   await fastifyInstance.close();
-  // });
+  onHmr(async () => {
+    await fastifyInstance.close();
+  });
 };
 
 const shouldCreateOnly = process.argv.includes("--create-only");

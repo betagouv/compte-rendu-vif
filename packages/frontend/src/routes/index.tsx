@@ -51,6 +51,27 @@ const Index = () => {
     },
   });
 
+  const createStateReportMutation = useMutation({
+    mutationFn: async () => {
+      const id = "state_report-" + v4();
+      await db
+        .insertInto("state_report")
+        .values({
+          id,
+          created_by: user.id,
+          created_at: new Date().toISOString(),
+          disabled: 0,
+          udap_id: user.udap_id,
+        })
+        .execute();
+
+      return id;
+    },
+    onSuccess: (id) => {
+      id && navigate({ to: "/constat/$constatId", params: { constatId: id } });
+    },
+  });
+
   return (
     <Flex flexDirection="column" color="text-label-grey">
       <SimpleBanner pt={{ xs: "15px", lg: "82px" }} pb={{ xs: "49px", lg: "82px" }} alignItems="flex-start">
@@ -73,14 +94,18 @@ const Index = () => {
                 sx={{ h3: { margin: "0 !important", fontSize: "18px !important" }, mt: "32px" }}
                 small
                 title="Créer un constat d'état"
-                buttonProps={{}}
+                buttonProps={{
+                  onClick: () => createStateReportMutation.mutate(),
+                }}
                 noIcon
               />
               <Tile
                 sx={{ h3: { margin: "0 !important", fontSize: "18px !important" }, mt: "16px" }}
                 small
                 title="Créer un compte-rendu"
-                buttonProps={{}}
+                buttonProps={{
+                  onClick: () => createReportMutation.mutate(),
+                }}
                 noIcon
               />
             </Flex>
