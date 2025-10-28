@@ -14,6 +14,7 @@ const envSchema = z.object({
   POSTGRES_DB: z.string(),
   DATABASE_URL: z.string(),
   TOKEN_LIFETIME: z.string().default("60m"),
+  COLLECTIF_OBJETS_DATASETTE_URL: z.string(),
   KEYCLOAK_CLIENT_SECRET: z.string(),
   JWT_SECRET: z.string(),
   JWT_REFRESH_SECRET: z.string(),

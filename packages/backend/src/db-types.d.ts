@@ -53,6 +53,148 @@ export interface InternalUser {
   userId: string;
 }
 
+export interface Merimee {
+  ACMH: string | null;
+  ACTU: string | null;
+  ACURL: string | null;
+  ADRS: string | null;
+  AFFE: string | null;
+  AIRE: string | null;
+  APPL: string | null;
+  APRO: string | null;
+  ARCHEO: string | null;
+  AUTP: string | null;
+  AUTR: string | null;
+  BASE: string | null;
+  CADA: string | null;
+  CANT: string | null;
+  COLL: string | null;
+  COM: string | null;
+  CONTACT: string | null;
+  CONTIENT_IMAGE: string | null;
+  COOR: string | null;
+  COORM: string | null;
+  COPY: string | null;
+  COUV: string | null;
+  DATE: string | null;
+  DBOR: string | null;
+  DENO: string | null;
+  DENQ: string | null;
+  DEPL: string | null;
+  DESC: string | null;
+  DIMS: string | null;
+  DLAB: string | null;
+  "DMAJ(DATE)": string | null;
+  "DMIS(DATE)": string | null;
+  DOMN: string | null;
+  DOSADRS: string | null;
+  DOSS: string | null;
+  DOSURL: string | null;
+  DOSURLPDF: string | null;
+  DPRO: string | null;
+  DPT: string | null;
+  DPT_LETTRE: string | null;
+  EDIF: string | null;
+  ELEV: string | null;
+  ENER: string | null;
+  ESCA: string | null;
+  ETAG: string | null;
+  ETAT: string | null;
+  ETUD: string | null;
+  GENR: string | null;
+  HIST: string | null;
+  HYDR: string | null;
+  IDAGR: string | null;
+  IMAGE: string | null;
+  IMG: string | null;
+  IMPL: string | null;
+  INSEE: string | null;
+  INTE: string | null;
+  JATT: string | null;
+  JDAT: string | null;
+  LIENS: string | null;
+  LIEU: string | null;
+  LINHA: string | null;
+  LMDP: string | null;
+  LOCA: string | null;
+  LREG: string | null;
+  MFICH: string | null;
+  MHPP: string | null;
+  MICR: string | null;
+  MOSA: string | null;
+  MURS: string | null;
+  NBOR: string | null;
+  NOMS: string | null;
+  OBS: string | null;
+  PAFF: string | null;
+  PARN: string | null;
+  PART: string | null;
+  PDEN: string | null;
+  PERS: string | null;
+  PINT: string | null;
+  PLAN: string | null;
+  PLOC: string | null;
+  POP_ARRETE_PROTECTION: string | null;
+  POP_CONTIENT_GEOLOCALISATION: string | null;
+  POP_COORDINATES_POINT: string | null;
+  POP_COORDINATES_POLYGON: string | null;
+  POP_COORDONNEES: string | null;
+  POP_DATE: string | null;
+  POP_DOSSIER_PROTECTION: string | null;
+  POP_DOSSIER_VERT: string | null;
+  POP_FLAGS: string | null;
+  POP_HAS_LOCATION: string | null;
+  POP_IMPORT: string | null;
+  PPRO: string | null;
+  PREP: string | null;
+  PRODUCTEUR: string | null;
+  PROT: string | null;
+  PSTA: string | null;
+  REF: string | null;
+  REFE: string | null;
+  REFIM: string | null;
+  REFJOC: string | null;
+  REFM: string | null;
+  REFMUS: string | null;
+  REFO: string | null;
+  REFP: string | null;
+  REG: string | null;
+  REMA: string | null;
+  REMP: string | null;
+  RENV: string | null;
+  REPR: string | null;
+  RFPA: string | null;
+  SCLD: string | null;
+  SCLE: string | null;
+  SCLX: string | null;
+  SITE: string | null;
+  STAT: string | null;
+  TECH: string | null;
+  THEM: string | null;
+  TICO: string | null;
+  TOIT: string | null;
+  TOUT: string | null;
+  TYPO: string | null;
+  VERT: string | null;
+  VIDEO: string | null;
+  VISI: string | null;
+  VOCA: string | null;
+  VOUT: string | null;
+  WADRS: string | null;
+  WCOM: string | null;
+  WEB: string | null;
+  WRENV: string | null;
+  ZONE: string | null;
+}
+
+export interface MerimeeToMemoire {
+  COPY: string | null;
+  NAME: string | null;
+  REF_MEMOIRE: string | null;
+  REF_MERIMEE: string | null;
+  URL: string | null;
+}
+
 export interface PdfSnapshot {
   html: string | null;
   id: string;
@@ -117,6 +259,22 @@ export interface ServiceInstructeurs {
   short_name: string;
   tel: string | null;
   udap_id: string | null;
+}
+
+export interface StateReport {
+  adresse: string | null;
+  code_postal: string | null;
+  commune: string | null;
+  commune_historique: string | null;
+  description: string | null;
+  id: string;
+  nature_edifice: string | null;
+  nature_protection: string | null;
+  observations: string | null;
+  parties_protegees: string | null;
+  periode_construction: string | null;
+  reference_cadastrale: string | null;
+  reference_pop: string | null;
 }
 
 export interface SuggestedEmail {
@@ -185,12 +343,15 @@ export interface DB {
   clause_v2: ClauseV2;
   delegation: Delegation;
   internal_user: InternalUser;
+  merimee: Merimee;
+  merimee_to_memoire: MerimeeToMemoire;
   pdf_snapshot: PdfSnapshot;
   picture_lines: PictureLines;
   pictures: Pictures;
   report: Report;
   sent_email: SentEmail;
   service_instructeurs: ServiceInstructeurs;
+  state_report: StateReport;
   suggested_email: SuggestedEmail;
   tmp_pictures: TmpPictures;
   transactions: Transactions;
