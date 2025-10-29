@@ -4,42 +4,30 @@ import { Box, Stack } from "@mui/material";
 import { chunk } from "pastable";
 import { useState } from "react";
 import welcomeImage from "../assets/welcome.svg";
-import { useUser } from "../contexts/AuthContext";
-import { Report } from "../db/AppSchema";
-import { db, useDbQuery } from "../db/db";
-import { useIsDesktop } from "../hooks/useIsDesktop";
+import { useUser } from "../../contexts/AuthContext";
+import { Report, StateReport } from "../../db/AppSchema";
+import { db, useDbQuery } from "../../db/db";
+import { useIsDesktop } from "../../hooks/useIsDesktop";
 import { ReportListItem } from "./ReportListItem";
+import { getRouteApi } from "@tanstack/react-router";
+import { getReportQueries, getStateReportQueries } from "../useDocumentQueries";
+import { StateReportListItem } from "../state-report/StateReportListItem";
 
 export type ReportWithUser = Report & { createdByName: string | null };
+export type StateReportWithUser = StateReport & { createdByName: string | null };
+
+const routeApi = getRouteApi("/");
 
 export const MyReports = () => {
   const [page, setPage] = useState(0);
+  const document = routeApi.useSearch().document;
 
-  const user = useUser()!;
+  const currentQueries = useRightQueries(page);
 
-  const reportsQuery = useDbQuery(
-    db
-      .selectFrom("report")
-      .where("disabled", "=", 0)
-      .where((eb) => eb.or([eb("createdBy", "=", user.id), eb("redactedById", "=", user.id)]))
-      .limit(20)
-      .offset(page * 20)
-      .orderBy("meetDate desc")
-      .orderBy("createdAt desc")
-      .leftJoin("user", "user.id", "report.createdBy")
-      .selectAll(["report"])
-      .select(["user.name as createdByName"]),
-  );
-
+  const reportsQuery = useDbQuery(currentQueries.baseQuery);
   const reports = reportsQuery.data;
-  const reportsCountQuery = useDbQuery(
-    db
-      .selectFrom("report")
-      .where("disabled", "=", 0)
-      .where((eb) => eb.or([eb("createdBy", "=", user.id), eb("redactedById", "=", user.id)]))
-      .select(db.fn.countAll().as("count")),
-  );
 
+  const reportsCountQuery = useDbQuery(currentQueries.countQuery);
   const reportsCount = reportsCountQuery.data?.[0]?.count as number;
 
   const hasError = reportsQuery.error || reportsCountQuery.error;
@@ -51,36 +39,21 @@ export const MyReports = () => {
   }
 
   if (isLoading) return null;
-
-  return <ReportList reports={reports ?? []} setPage={setPage} count={reportsCount ?? 0} page={page} />;
+  if (document === "compte-rendus") {
+    return <ReportList reports={reports ?? []} setPage={setPage} count={reportsCount ?? 0} page={page} />;
+  } else return <StateReportList reports={reports ?? []} setPage={setPage} count={reportsCount ?? 0} page={page} />;
 };
 
 export const AllReports = () => {
   const [page, setPage] = useState(0);
-  const user = useUser()!;
+  const document = routeApi.useSearch().document;
 
-  const reportsQuery = useDbQuery(
-    db
-      .selectFrom("report")
-      .where("disabled", "=", 0)
-      .where("report.udap_id", "=", user.udap_id)
-      .limit(20)
-      .offset(page * 20)
-      .orderBy("createdAt desc")
-      .leftJoin("user", "user.id", "report.createdBy")
-      .selectAll(["report"])
-      .select(["user.name as createdByName"]),
-  );
+  const currentQueries = useRightQueries(page);
 
+  const reportsQuery = useDbQuery(currentQueries.baseQuery);
   const reports = reportsQuery.data;
-  const reportsCountQuery = useDbQuery(
-    db
-      .selectFrom("report")
-      .where("disabled", "=", 0)
-      .where("report.udap_id", "=", user.udap_id)
-      .select(db.fn.countAll().as("count")),
-  );
 
+  const reportsCountQuery = useDbQuery(currentQueries.countQuery);
   const reportsCount = reportsCountQuery.data?.[0]?.count as number;
 
   const hasError = reportsQuery.error || reportsCountQuery.error;
@@ -93,7 +66,20 @@ export const AllReports = () => {
 
   if (isLoading) return null;
 
-  return <ReportList reports={reports ?? []} setPage={setPage} count={reportsCount ?? 0} page={page} />;
+  if (document === "compte-rendus") {
+    return <ReportList reports={reports ?? []} setPage={setPage} count={reportsCount ?? 0} page={page} />;
+  } else return <StateReportList reports={reports ?? []} setPage={setPage} count={reportsCount ?? 0} page={page} />;
+};
+
+const useRightQueries = (page: number) => {
+  const user = useUser()!;
+  const document = routeApi.useSearch().document;
+
+  if (document === "compte-rendus") {
+    return getReportQueries("all", page, user);
+  }
+
+  return getStateReportQueries("all", page, user);
 };
 
 const NoReport = () => {
@@ -140,6 +126,93 @@ export const ReportList = ({
               <Stack key={columnIndex} flexDirection="column" width={{ xs: "100%", lg: "400px" }}>
                 {reports.map((report, index) => (
                   <ReportListItem
+                    onClick={onClick}
+                    key={report.id}
+                    report={report}
+                    isLast={
+                      isDesktop
+                        ? index === reports.length - 1
+                        : index === reports.length - 1 && columnIndex === columns.length - 1
+                    }
+                  />
+                ))}
+              </Stack>
+            );
+          })}
+          {columns.length === 1 ? <Stack width="400px" /> : null}
+        </Stack>
+      )}
+      <Center
+        flexDirection={{ xs: "column", lg: "row" }}
+        width="100%"
+        mt={{ xs: "48px", lg: "85px" }}
+        mb={{ xs: "48px", lg: "110px" }}
+      >
+        {hidePagination || error ? null : (
+          <>
+            <Pagination
+              count={count === 0 ? 0 : Math.ceil(count! / 20)}
+              getPageLinkProps={(nb) => ({
+                key: `page-${nb}`,
+                onClick: () => setPage!(nb - 1),
+              })}
+              defaultPage={page! + 1}
+            />
+            <Button
+              sx={{
+                ml: { xs: "0", lg: "80px" },
+                mt: { xs: "40px", lg: "0" },
+                mb: "16px",
+                "::after": { display: "none !important" },
+              }}
+              priority="secondary"
+              iconId="ri-chat-3-fill"
+              linkProps={{
+                target: "_blank",
+                to: "https://adtk8x51mbw.eu.typeform.com/to/ejUj012R",
+              }}
+            >
+              Je donne mon avis
+            </Button>
+          </>
+        )}
+      </Center>
+    </Stack>
+  );
+};
+
+export const StateReportList = ({
+  reports,
+  page,
+  setPage,
+  count,
+  hidePagination,
+  onClick,
+  hideEmpty,
+}: {
+  reports: StateReportWithUser[];
+  page?: number;
+  setPage?: (page: number) => void;
+  count?: number;
+  hidePagination?: boolean;
+  onClick?: () => void;
+  hideEmpty?: boolean;
+}) => {
+  const error = reports.length === 0 ? <NoReport /> : null;
+  const isDesktop = useIsDesktop();
+  const columns = reports.length < 6 ? [reports] : chunk(reports, Math.ceil(reports.length / 2));
+
+  return (
+    <Stack component="div" width="100%" mt={{ xs: "20px", lg: "30px" }}>
+      {!hideEmpty && error ? (
+        error
+      ) : (
+        <Stack gap={{ xs: 0, lg: "126px" }} flexDirection={{ xs: "column", lg: "row" }} justifyContent="center">
+          {columns.slice(0, 2).map((reports, columnIndex) => {
+            return (
+              <Stack key={columnIndex} flexDirection="column" width={{ xs: "100%", lg: "400px" }}>
+                {reports.map((report, index) => (
+                  <StateReportListItem
                     onClick={onClick}
                     key={report.id}
                     report={report}

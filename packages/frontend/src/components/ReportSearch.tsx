@@ -2,7 +2,7 @@ import { useState } from "react";
 import { db } from "../db/db";
 import { Spinner } from "./Spinner";
 import noResultsImage from "../assets/noResults.svg";
-import { ReportList } from "../features/ReportList";
+import { ReportList } from "../features/report/ReportList";
 import { useUser } from "../contexts/AuthContext";
 import { useDbQuery } from "../db/db";
 import { Box, Stack } from "@mui/material";

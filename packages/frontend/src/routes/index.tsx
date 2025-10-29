@@ -9,7 +9,7 @@ import { useState } from "react";
 import { v4 } from "uuid";
 import { useUser } from "../contexts/AuthContext";
 import { db } from "../db/db";
-import { AllReports, MyReports } from "../features/ReportList";
+import { AllReports, MyReports } from "../features/report/ReportList";
 import { Flex } from "#components/ui/Flex.tsx";
 import { Box, BoxProps, Typography } from "@mui/material";
 import { Center, Input, Tile } from "#components/MUIDsfr.tsx";
@@ -18,6 +18,8 @@ import { Tabs } from "#components/Tabs.tsx";
 import { Button } from "#components/MUIDsfr.tsx";
 import { fr } from "@codegouvfr/react-dsfr";
 import { HomeImageSvg } from "#components/HomeImageSvg.tsx";
+import { DocumentTypeSelector } from "#components/DocumentTypeSelector.tsx";
+import z from "zod";
 
 const Index = () => {
   const [search, setSearch] = useState("");
@@ -122,8 +124,6 @@ const Index = () => {
 };
 
 const MainContentTabs = () => {
-  const user = useUser()!;
-
   const options = [
     {
       id: "my",
@@ -132,7 +132,12 @@ const MainContentTabs = () => {
         position: "absolute" as const,
         left: { xs: "24px", lg: "calc((100vw - 400px * 2 - 126px) / 2)" },
       },
-      component: <DocumentSelector />,
+      component: (
+        <>
+          <DocumentTypeSelector />
+          <MyReports />
+        </>
+      ),
     },
     {
       id: "udap",
@@ -141,7 +146,12 @@ const MainContentTabs = () => {
         position: "absolute" as const,
         left: "16px",
       },
-      component: <AllReports />,
+      component: (
+        <>
+          <DocumentTypeSelector />
+          <AllReports />
+        </>
+      ),
     },
   ];
 
@@ -152,57 +162,13 @@ const MainContentTabs = () => {
   );
 };
 
-const DocumentSelector = () => {
-  const [selected, setSelected] = useState("constats");
-
-  const selectedProps = {
-    borderColor: fr.colors.decisions.border.active.blueFrance.default,
-    color: fr.colors.decisions.text.actionHigh.blueFrance.default,
-    marginBottom: "-1px",
-    marginTop: "-1px",
-    border: "1px solid",
-  };
-
-  return (
-    <Flex width="100%" px="16px">
-      <Flex
-        border="1px solid"
-        borderRadius="4px"
-        borderColor={fr.colors.decisions.border.default.grey.default}
-        mt="40px"
-        width={{ xs: "100%", lg: "auto" }}
-      >
-        <Box
-          py="8px"
-          width={{ xs: "100%", lg: "240px" }}
-          textAlign="center"
-          borderRadius="4px"
-          {...(selected === "constats" ? { ...selectedProps } : {})}
-          sx={{ cursor: "pointer" }}
-          onClick={() => setSelected("constats")}
-        >
-          constats
-        </Box>
-        <Box
-          py="8px"
-          width={{ xs: "100%", lg: "240px" }}
-          textAlign="center"
-          borderRadius="4px"
-          {...(selected === "compte-rendus" ? selectedProps : {})}
-          sx={{ cursor: "pointer" }}
-          onClick={() => setSelected("compte-rendus")}
-        >
-          compte-rendus
-        </Box>
-      </Flex>
-    </Flex>
-  );
-};
-
 export const Route = createFileRoute("/")({
   component: () => (
     <EnsureUser>
       <Index />
     </EnsureUser>
   ),
+  validateSearch: (search) => ({
+    document: z.enum(["constats", "compte-rendus"]).default("constats").parse(search.document),
+  }),
 });
