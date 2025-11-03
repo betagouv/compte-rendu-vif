@@ -303,6 +303,9 @@ importers:
       '@xstate/store':
         specifier: ^0.0.5
         version: 0.0.5(react@18.3.1)
+      autosuggest-highlight:
+        specifier: ^3.3.4
+        version: 3.3.4
       bowser:
         specifier: ^2.11.0
         version: 2.12.1
@@ -315,12 +318,18 @@ importers:
       date-fns:
         specifier: ^3.6.0
         version: 3.6.0
+      fuse.js:
+        specifier: ^7.1.0
+        version: 7.1.0
       idb-keyval:
         specifier: ^6.2.1
         version: 6.2.2
       install:
         specifier: ^0.13.0
         version: 0.13.0
+      js-levenshtein:
+        specifier: ^1.1.6
+        version: 1.1.6
       js-logger:
         specifier: ^1.6.1
         version: 1.6.1
@@ -397,9 +406,15 @@ importers:
       '@tanstack/router-vite-plugin':
         specifier: ^1.20.5
         version: 1.131.36(@tanstack/react-router@1.131.36(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(vite@5.4.20(@types/node@20.19.13)(lightningcss@1.23.0)(terser@5.44.0))
+      '@types/autosuggest-highlight':
+        specifier: ^3.2.3
+        version: 3.2.3
       '@types/css-tree':
         specifier: ^2.3.7
         version: 2.3.10
+      '@types/js-levenshtein':
+        specifier: ^1.1.3
+        version: 1.1.3
       '@types/node':
         specifier: ^20.11.28
         version: 20.19.13
@@ -3296,6 +3311,9 @@ packages:
       react:
         optional: true
 
+  '@types/autosuggest-highlight@3.2.3':
+    resolution: {integrity: sha512-8Mb21KWtpn6PvRQXjsKhrXIcxbSloGqNH50RntwGeJsGPW4xvNhfml+3kKulaKpO/7pgZfOmzsJz7VbepArlGQ==}
+
   '@types/babel__core@7.20.5':
     resolution: {integrity: sha512-qoQprZvz5wQFJwMDqeseRXWv3rqMvhgpbXFfVyWhbx9X47POIA6i/+dXefEmZKoAgOaTdaIgNSMqMIU61yRyzA==}
 
@@ -3340,6 +3358,9 @@ packages:
 
   '@types/js-cookie@2.2.7':
     resolution: {integrity: sha512-aLkWa0C0vO5b4Sr798E26QgOkss68Un0bLjs7u9qxzPT5CG+8DuNTffWES58YzJs3hrVAOs1wonycqEBqNJubA==}
+
+  '@types/js-levenshtein@1.1.3':
+    resolution: {integrity: sha512-jd+Q+sD20Qfu9e2aEXogiO3vpOC1PYJOUdyN9gvs4Qrvkg4wF43L5OhqrPeokdv8TL0/mXoYfpkcoGZMNN2pkQ==}
 
   '@types/json-schema@7.0.15':
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
@@ -3706,6 +3727,9 @@ packages:
   atomic-sleep@1.0.0:
     resolution: {integrity: sha512-kNOjDqAh7px0XWNI+4QbzoiR/nTkHAWNud2uvnJquD1/x5a7EQZMJT0AczqK0Qn67oY/TTQ1LbUKajZpp3I9tQ==}
     engines: {node: '>=8.0.0'}
+
+  autosuggest-highlight@3.3.4:
+    resolution: {integrity: sha512-j6RETBD2xYnrVcoV1S5R4t3WxOlWZKyDQjkwnggDPSjF5L4jV98ZltBpvPvbkM1HtoSe5o+bNrTHyjPbieGeYA==}
 
   available-typed-arrays@1.0.7:
     resolution: {integrity: sha512-wvUjBtSGN7+7SjNpq/9M2Tg350UZD3q62IFZLbRAR1bSMlCo1ZaeW+BJ+D090e4hIIZLBcTDWe4Mh4jvUDajzQ==}
@@ -4716,6 +4740,10 @@ packages:
   funtypes@4.2.0:
     resolution: {integrity: sha512-DvOtjiKvkeuXGV0O8LQh9quUP3bSOTEQPGv537Sao8kDq2rDbg48UsSJ7wlBLPzR2Mn0pV7cyAiq5pYG1oUyCQ==}
 
+  fuse.js@7.1.0:
+    resolution: {integrity: sha512-trLf4SzuuUxfusZADLINj+dE8clK1frKdmqiJNb1Es75fmI5oY6X2mxLVUciLLjxqw/xr72Dhy+lER6dGd02FQ==}
+    engines: {node: '>=10'}
+
   gauge@3.0.2:
     resolution: {integrity: sha512-+5J6MS/5XksCuXq++uFRsnUd7Ovu1XenbeuIuNRJxYWjgQbPuFhT14lAvsWfqfAmnwluf1OwMjz39HjfLPci0Q==}
     engines: {node: '>=10'}
@@ -5147,6 +5175,10 @@ packages:
 
   js-cookie@2.2.1:
     resolution: {integrity: sha512-HvdH2LzI/EAZcUwA8+0nKNtWHqS+ZmijLA30RwZA0bo7ToCckjK5MkGhjED9KoRcXO6BaGI3I9UIzSA1FKFPOQ==}
+
+  js-levenshtein@1.1.6:
+    resolution: {integrity: sha512-X2BB11YZtrRqY4EnQcLX5Rh373zbK4alC1FW7D7MBhL2gtcC17cTnr6DmfHZeS0s2rTHjUTMMHfG7gO8SSdw+g==}
+    engines: {node: '>=0.10.0'}
 
   js-logger@1.6.1:
     resolution: {integrity: sha512-yTgMCPXVjhmg28CuUH8CKjU+cIKL/G+zTu4Fn4lQxs8mRFH/03QTNvEFngcxfg/gRDiQAOoyCKmMTOm9ayOzXA==}
@@ -6359,6 +6391,9 @@ packages:
 
   remeda@2.31.0:
     resolution: {integrity: sha512-oj9kcVz06s85FHkaPlCcHKX0oCiQaQI4kenaTtkmikxnVGXB2t8dj0MiBJv4f+wREfN+6FI5PNmBju/WOeq1uA==}
+
+  remove-accents@0.4.4:
+    resolution: {integrity: sha512-EpFcOa/ISetVHEXqu+VwI96KZBmq+a8LJnGkaeFw45epGlxIZz5dhEEnNZMsQXgORu3qaMoLX4qJCzOik6ytAg==}
 
   require-from-string@2.0.2:
     resolution: {integrity: sha512-Xf0nWe6RseziFMu+Ap9biiUbmplq6S9/p+7w7YXP/JBHhrUDDUhwa+vANyubuqfZWTveU//DYVGsDG7RKL/vEw==}
@@ -10873,6 +10908,8 @@ snapshots:
     optionalDependencies:
       react: 18.3.1
 
+  '@types/autosuggest-highlight@3.2.3': {}
+
   '@types/babel__core@7.20.5':
     dependencies:
       '@babel/parser': 7.28.4
@@ -10934,6 +10971,8 @@ snapshots:
   '@types/http-errors@2.0.5': {}
 
   '@types/js-cookie@2.2.7': {}
+
+  '@types/js-levenshtein@1.1.3': {}
 
   '@types/json-schema@7.0.15': {}
 
@@ -11328,6 +11367,10 @@ snapshots:
   at-least-node@1.0.0: {}
 
   atomic-sleep@1.0.0: {}
+
+  autosuggest-highlight@3.3.4:
+    dependencies:
+      remove-accents: 0.4.4
 
   available-typed-arrays@1.0.7:
     dependencies:
@@ -12516,6 +12559,8 @@ snapshots:
 
   funtypes@4.2.0: {}
 
+  fuse.js@7.1.0: {}
+
   gauge@3.0.2:
     dependencies:
       aproba: 2.1.0
@@ -12958,6 +13003,8 @@ snapshots:
   joycon@3.1.1: {}
 
   js-cookie@2.2.1: {}
+
+  js-levenshtein@1.1.6: {}
 
   js-logger@1.6.1: {}
 
@@ -14114,6 +14161,8 @@ snapshots:
   remeda@2.31.0:
     dependencies:
       type-fest: 4.41.0
+
+  remove-accents@0.4.4: {}
 
   require-from-string@2.0.2: {}
 

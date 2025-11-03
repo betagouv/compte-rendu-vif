@@ -3,7 +3,7 @@ import { Pagination } from "@codegouvfr/react-dsfr/Pagination";
 import { Box, Stack } from "@mui/material";
 import { chunk } from "pastable";
 import { useState } from "react";
-import welcomeImage from "../assets/welcome.svg";
+import welcomeImage from "../../assets/welcome.svg?url";
 import { useUser } from "../../contexts/AuthContext";
 import { Report, StateReport } from "../../db/AppSchema";
 import { db, useDbQuery } from "../../db/db";
@@ -23,8 +23,8 @@ export const MyReports = () => {
   const document = routeApi.useSearch().document;
 
   const currentQueries = useRightQueries(page);
-
   const reportsQuery = useDbQuery(currentQueries.baseQuery);
+
   const reports = reportsQuery.data;
 
   const reportsCountQuery = useDbQuery(currentQueries.countQuery);
