@@ -169,6 +169,6 @@ export const Route = createFileRoute("/")({
     </EnsureUser>
   ),
   validateSearch: (search) => ({
-    document: z.enum(["constats", "compte-rendus"]).optional().default("constats").parse(search.document),
+    document: z.enum(["constats", "compte-rendus"]).optional().default("constats").parse(search?.document),
   }),
 });

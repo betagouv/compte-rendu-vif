@@ -1,23 +1,31 @@
-import { SimpleBanner } from "#components/Banner.tsx";
+import { SimpleBanner, useBannerBgColor } from "#components/Banner.tsx";
 import { Flex } from "#components/ui/Flex.tsx";
 import { fr } from "@codegouvfr/react-dsfr";
 import { Box, Typography } from "@mui/material";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, Navigate } from "@tanstack/react-router";
 import { ImmeubleAutocomplete } from "../features/ImmeubleAutocomplete";
-import { FormProvider } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { db, useDbQuery } from "../db/db";
 import { StateReport } from "../db/AppSchema";
+import { Spinner } from "#components/Spinner.tsx";
+import { Center } from "#components/MUIDsfr.tsx";
+import { StateReportForm } from "../features/state-report/StateReportForm";
+import z from "zod";
+import { stateReportStepSchema } from "../features/state-report/utils";
 
 export const Route = createFileRoute("/constat/$constatId")({
   component: RouteComponent,
+  validateSearch: (search: { step?: string }) => ({
+    step: stateReportStepSchema.optional().default("monument-historique").parse(search.step),
+  }),
 });
 
 function RouteComponent() {
   return (
     <Flex width="100%" height="100%" flexDirection="column" alignItems="center">
       <SimpleBanner width="100%" alignItems="flex-start" py="20px">
-        <Flex width={{ xs: "100%", lg: "926px" }} flexDirection="column">
-          <Link to="/" style={{ textDecoration: "underline" }}>
+        <Flex width={{ xs: "100%", lg: "926px" }} flexDirection="column" px="16px">
+          <Link to="/" style={{ textDecoration: "underline" }} search={{ document: "constats" }}>
             <Typography fontSize="12px" color={fr.colors.decisions.text.mention.grey.default}>
               Retour à l'accueil
             </Typography>
@@ -30,32 +38,36 @@ function RouteComponent() {
           <Typography mt="24px">
             Récupérez les informations d'un monument historique puis saisissez votre constat :
           </Typography>
-
-          <ImmeubleAutocomplete />
         </Flex>
       </SimpleBanner>
+      <Box width="100%">
+        <WithStateReport />
+      </Box>
       <Box width="926px"></Box>
     </Flex>
   );
 }
 
-const WithStateReport = ({ stateReport }: { stateReport: StateReport }) => {
-  return <Flex flexDirection="column">{<StateReportForm />}</Flex>;
-};
-
-const StateReportForm = () => {
+const WithStateReport = () => {
   const { constatId } = Route.useParams();
-
   const reportQuery = useDbQuery(db.selectFrom("state_report").where("id", "=", constatId).selectAll());
 
+  if (reportQuery.isLoading) {
+    return (
+      <Center mt="100px">
+        <Spinner />
+      </Center>
+    );
+  }
+  const report = reportQuery.data?.[0];
+
+  if (!report) {
+    return <Navigate to="/" search={{ document: "constats" }} />;
+  }
+
   return (
-    <Flex flexDirection="column">
-      <FormProvider {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          <SyncFormBanner form={form} baseObject={report} />
-          <Tabs control={[tab ?? "info", setTab]} options={options} />
-        </form>
-      </FormProvider>
+    <Flex flexDirection="column" width="100%">
+      <StateReportForm report={report} />
     </Flex>
   );
 };

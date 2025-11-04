@@ -2,22 +2,65 @@ import { Autocomplete, Box } from "@mui/material";
 import { db, useDbQuery } from "../db/db";
 import { useState } from "react";
 import { useStyles } from "tss-react";
-import Fuse, { FuseIndexOptions, FuseSearchOptions, IFuseOptions } from "fuse.js";
+import Fuse, { IFuseOptions } from "fuse.js";
 import { PopImmeuble } from "../db/AppSchema";
+import { useFormContext, useWatch } from "react-hook-form";
+import { StateReportFormType, useStateReportFormContext } from "./state-report/utils";
+import { Spinner } from "#components/Spinner.tsx";
+import { fr } from "@codegouvfr/react-dsfr";
+import Highlighter from "react-highlight-words";
 
-const fuseOptions: IFuseOptions<PopImmeuble> = {
-  keys: ["titre_editorial_de_la_notice", "commune_forme_editoriale"],
+type FilterablePopImmeubles = Pick<
+  PopImmeuble,
+  "reference" | "id" | "titre_editorial_de_la_notice" | "commune_forme_editoriale"
+>;
+const fuseOptions: IFuseOptions<FilterablePopImmeubles> = {
+  keys: ["titre_editorial_de_la_notice", "commune_forme_editoriale", "id"],
   shouldSort: true,
 };
 
+const mapping: Partial<Record<keyof PopImmeuble, keyof StateReportFormType>> = {
+  reference: "reference_pop",
+  id: "id",
+  denomination_de_l_edifice: "nature_edifice",
+  adresse_forme_editoriale: "adresse",
+  commune_forme_editoriale: "commune",
+  cadastre: "reference_cadastrale",
+  siecle_de_la_campagne_principale_de_construction: "periode_construction",
+  nature_de_la_protection: "nature_protection",
+  precision_de_la_protection: "parties_protegees",
+  description_de_l_edifice: "description",
+};
+
 export const ImmeubleAutocomplete = () => {
-  // const value = useWatch({ control: form.control, name: "serviceInstructeur" });
-  const [value, setValue] = useState<string | null>(null);
+  const form = useStateReportFormContext();
+  const [value] = useWatch({ control: form.control, name: ["reference_pop"] });
   const { cx } = useStyles();
 
-  const immeubleQuery = useDbQuery(db.selectFrom("pop_immeubles").selectAll());
-  const rawItems = immeubleQuery.data ?? [];
+  const immeubleQuery = useDbQuery(
+    db
+      .selectFrom("pop_immeubles")
+      .select(["reference", "id", "titre_editorial_de_la_notice", "commune_forme_editoriale"]),
+  );
+  const rawItems = immeubleQuery.data ?? [null];
   const searchEngine = new Fuse(rawItems, fuseOptions);
+
+  const setValue = async (item: FilterablePopImmeubles | null) => {
+    form.setValue("reference_pop", item ? item.id : null);
+
+    if (!item) return;
+    const immeubleDetails = await db
+      .selectFrom("pop_immeubles")
+      .selectAll()
+      .where("id", "=", item ? item.id : "")
+      .executeTakeFirst();
+    if (!immeubleDetails) return;
+
+    for (const [key, formField] of Object.entries(mapping)) {
+      const value = immeubleDetails[key as keyof PopImmeuble] || null;
+      form.setValue(formField as keyof StateReportFormType, value);
+    }
+  };
 
   return (
     <Autocomplete
@@ -27,29 +70,59 @@ export const ImmeubleAutocomplete = () => {
       getOptionLabel={(item) => item.titre_editorial_de_la_notice || ""}
       getOptionKey={(item) => item.reference!}
       value={value ? rawItems.find((item) => item.id == value) : null}
-      filterOptions={(x, state) => searchEngine.search(state.inputValue).map((result) => result.item)}
+      // TODO: use coordinates to sort results
+      filterOptions={(x, state) =>
+        state.inputValue ? searchEngine.search(state.inputValue).map((result) => result.item) : [...x.slice(0, 50)]
+      }
       onChange={(_e, item) => {
-        setValue(item ? item.id : null);
+        setValue(item);
       }}
-      renderOption={({ key, ...props }, option, state, ownerState) => (
-        <Box
-          component="li"
-          {...props}
-          key={key}
-          display="flex"
-          justifyContent="flex-start"
-          alignItems="flex-start !important"
-          flexDirection="column"
-          textAlign="left"
-        >
-          <Box component="span" fontSize="16px">
-            {option.titre_editorial_de_la_notice}
+      renderOption={({ key, ...props }, option, state, ownerState) =>
+        option === null ? (
+          <Box>Aucun résultat !</Box>
+        ) : (
+          <Box
+            component="li"
+            {...props}
+            key={key}
+            display="flex"
+            justifyContent="flex-start"
+            alignItems="flex-start !important"
+            flexDirection="column"
+            textAlign="left"
+            color={fr.colors.decisions.text.actionHigh.blueFrance.default}
+          >
+            <Box component="span" fontSize="16px">
+              <Highlighter
+                searchWords={state.inputValue.split(" ")}
+                autoEscape
+                textToHighlight={option.titre_editorial_de_la_notice ?? ""}
+                activeStyle={{}}
+                unhighlightStyle={{}}
+                highlightStyle={{
+                  fontWeight: "bold",
+                  backgroundColor: "transparent",
+                  color: fr.colors.decisions.text.actionHigh.blueFrance.default,
+                }}
+              />
+            </Box>
+            <Box component="span" fontSize="12px">
+              <Highlighter
+                searchWords={state.inputValue.split(" ")}
+                autoEscape
+                textToHighlight={option.commune_forme_editoriale ?? ""}
+                activeStyle={{}}
+                unhighlightStyle={{}}
+                highlightStyle={{
+                  fontWeight: "bold",
+                  backgroundColor: "transparent",
+                  color: fr.colors.decisions.text.actionHigh.blueFrance.default,
+                }}
+              />
+            </Box>
           </Box>
-          <Box component="span" fontSize="12px">
-            {option.commune_forme_editoriale}
-          </Box>
-        </Box>
-      )}
+        )
+      }
       renderInput={(params) => (
         <div className="fr-input-group">
           <label className="fr-label" htmlFor={params.id}>
@@ -60,7 +133,7 @@ export const ImmeubleAutocomplete = () => {
           </Box>
         </div>
       )}
-      noOptionsText="Aucun résultat"
+      noOptionsText={<Box>{immeubleQuery.isLoading ? <Spinner size={20} /> : "Aucun résultat"}</Box>}
     />
   );
 };

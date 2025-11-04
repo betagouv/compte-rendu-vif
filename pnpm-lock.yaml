@@ -306,9 +306,6 @@ importers:
       '@xstate/store':
         specifier: ^0.0.5
         version: 0.0.5(react@18.3.1)
-      autosuggest-highlight:
-        specifier: ^3.3.4
-        version: 3.3.4
       bowser:
         specifier: ^2.11.0
         version: 2.12.1
@@ -369,6 +366,9 @@ importers:
       react-error-boundary:
         specifier: ^4.0.13
         version: 4.1.2(react@18.3.1)
+      react-highlight-words:
+        specifier: ^0.21.0
+        version: 0.21.0(react@18.3.1)
       react-hook-form:
         specifier: ^7.51.1
         version: 7.62.0(react@18.3.1)
@@ -427,6 +427,9 @@ importers:
       '@types/react-dom':
         specifier: ^18.2.21
         version: 18.3.7(@types/react@18.3.24)
+      '@types/react-highlight-words':
+        specifier: ^0.20.0
+        version: 0.20.0
       '@types/react-pdf':
         specifier: ^7.0.0
         version: 7.0.0(@types/react@18.3.24)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -3268,6 +3271,9 @@ packages:
     peerDependencies:
       '@types/react': ^18.0.0
 
+  '@types/react-highlight-words@0.20.0':
+    resolution: {integrity: sha512-Qm512TiOakvtNzHJ2+TNVHnLn5cJ2wLQV0+LrhuispVth6dRf5b8ydjq3Kc0thpZ7bz4s6RnG6meboAXHWRK+Q==}
+
   '@types/react-pdf@7.0.0':
     resolution: {integrity: sha512-G0a+5UiKk3AvEauBP/Js7r9kGZNW3iBbS6kXkH0foGSaKWR6K3ElTe7Y4tlolc2VKbM9udmMxpkbxh/dtR2wXA==}
     deprecated: This is a stub types definition. react-pdf provides its own type definitions, so you do not need this installed.
@@ -3583,9 +3589,6 @@ packages:
   atomic-sleep@1.0.0:
     resolution: {integrity: sha512-kNOjDqAh7px0XWNI+4QbzoiR/nTkHAWNud2uvnJquD1/x5a7EQZMJT0AczqK0Qn67oY/TTQ1LbUKajZpp3I9tQ==}
     engines: {node: '>=8.0.0'}
-
-  autosuggest-highlight@3.3.4:
-    resolution: {integrity: sha512-j6RETBD2xYnrVcoV1S5R4t3WxOlWZKyDQjkwnggDPSjF5L4jV98ZltBpvPvbkM1HtoSe5o+bNrTHyjPbieGeYA==}
 
   available-typed-arrays@1.0.7:
     resolution: {integrity: sha512-wvUjBtSGN7+7SjNpq/9M2Tg350UZD3q62IFZLbRAR1bSMlCo1ZaeW+BJ+D090e4hIIZLBcTDWe4Mh4jvUDajzQ==}
@@ -4656,6 +4659,9 @@ packages:
     resolution: {integrity: sha512-F/1DnUGPopORZi0ni+CvrCgHQ5FyEAHRLSApuYWMmrbSwoN2Mn/7k+Gl38gJnR7yyDZk6WLXwiGod1JOWNDKGw==}
     hasBin: true
 
+  highlight-words-core@1.2.3:
+    resolution: {integrity: sha512-m1O9HW3/GNHxzSIXWw1wCNXXsgLlxrP0OI6+ycGUhiUHkikqW3OrwVHz+lxeNBe5yqLESdIcj8PowHQ2zLvUvQ==}
+
   hoist-non-react-statics@3.3.2:
     resolution: {integrity: sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==}
 
@@ -5309,6 +5315,9 @@ packages:
   media-typer@0.3.0:
     resolution: {integrity: sha512-dq+qelQ9akHpcOl/gUVRTxVIOkAJ1wR3QAvb4RsVjS8oVoFjDGTc679wJYmUmknUF5HwMLOgb5O+a3KxfWapPQ==}
     engines: {node: '>= 0.6'}
+
+  memoize-one@4.0.3:
+    resolution: {integrity: sha512-QmpUu4KqDmX0plH4u+tf0riMc1KHE1+lw95cMrLlXQAFOx/xnBtwhZ52XJxd9X2O6kwKBqX32kmhbhlobD0cuw==}
 
   meow@13.2.0:
     resolution: {integrity: sha512-pxQJQzB6djGPXh08dacEloMFopsOqGVRKFPYvPOt9XDZ1HasbgDZA74CJGreSU4G3Ak7EFJGoiH2auq+yXISgA==}
@@ -6020,6 +6029,11 @@ packages:
     peerDependencies:
       react: '>=16.13.1'
 
+  react-highlight-words@0.21.0:
+    resolution: {integrity: sha512-SdWEeU9fIINArEPO1rO5OxPyuhdEKZQhHzZZP1ie6UeXQf+CjycT1kWaB+9bwGcVbR0NowuHK3RqgqNg6bgBDQ==}
+    peerDependencies:
+      react: ^0.14.0 || ^15.0.0 || ^16.0.0-0 || ^17.0.0-0 || ^18.0.0-0 || ^19.0.0-0
+
   react-hook-form@7.62.0:
     resolution: {integrity: sha512-7KWFejc98xqG/F4bAxpL41NB3o1nnvQO1RWZT3TqRZYL8RryQETGfEdVnJN2fy1crCiBLLjkRBVK05j24FxJGA==}
     engines: {node: '>=18.0.0'}
@@ -6152,9 +6166,6 @@ packages:
 
   remeda@2.31.0:
     resolution: {integrity: sha512-oj9kcVz06s85FHkaPlCcHKX0oCiQaQI4kenaTtkmikxnVGXB2t8dj0MiBJv4f+wREfN+6FI5PNmBju/WOeq1uA==}
-
-  remove-accents@0.4.4:
-    resolution: {integrity: sha512-EpFcOa/ISetVHEXqu+VwI96KZBmq+a8LJnGkaeFw45epGlxIZz5dhEEnNZMsQXgORu3qaMoLX4qJCzOik6ytAg==}
 
   require-from-string@2.0.2:
     resolution: {integrity: sha512-Xf0nWe6RseziFMu+Ap9biiUbmplq6S9/p+7w7YXP/JBHhrUDDUhwa+vANyubuqfZWTveU//DYVGsDG7RKL/vEw==}
@@ -10697,6 +10708,10 @@ snapshots:
     dependencies:
       '@types/react': 18.3.24
 
+  '@types/react-highlight-words@0.20.0':
+    dependencies:
+      '@types/react': 18.3.24
+
   '@types/react-pdf@7.0.0(@types/react@18.3.24)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       react-pdf: 10.1.0(@types/react@18.3.24)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -11039,10 +11054,6 @@ snapshots:
   at-least-node@1.0.0: {}
 
   atomic-sleep@1.0.0: {}
-
-  autosuggest-highlight@3.3.4:
-    dependencies:
-      remove-accents: 0.4.4
 
   available-typed-arrays@1.0.7:
     dependencies:
@@ -12248,6 +12259,8 @@ snapshots:
 
   he@1.2.0: {}
 
+  highlight-words-core@1.2.3: {}
+
   hoist-non-react-statics@3.3.2:
     dependencies:
       react-is: 16.13.1
@@ -12853,6 +12866,8 @@ snapshots:
   media-engine@1.0.3: {}
 
   media-typer@0.3.0: {}
+
+  memoize-one@4.0.3: {}
 
   meow@13.2.0: {}
 
@@ -13480,6 +13495,12 @@ snapshots:
       '@babel/runtime': 7.28.4
       react: 18.3.1
 
+  react-highlight-words@0.21.0(react@18.3.1):
+    dependencies:
+      highlight-words-core: 1.2.3
+      memoize-one: 4.0.3
+      react: 18.3.1
+
   react-hook-form@7.62.0(react@18.3.1):
     dependencies:
       react: 18.3.1
@@ -13666,8 +13687,6 @@ snapshots:
   remeda@2.31.0:
     dependencies:
       type-fest: 4.41.0
-
-  remove-accents@0.4.4: {}
 
   require-from-string@2.0.2: {}
 

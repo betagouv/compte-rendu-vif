@@ -249,3 +249,33 @@ export type SuggestedEmail = Database["suggested_email"];
 export type UserSettings = Database["user_settings"];
 export type PopImmeuble = Database["pop_immeubles"];
 export type StateReport = Database["state_report"];
+
+import type { Database as BackendDatabase } from "../../../backend/src/db/db";
+
+type SharedTables = Extract<keyof Database, keyof BackendDatabase> & Extract<keyof BackendDatabase, keyof Database>;
+type CheckTables = {
+  [K in SharedTables]: {
+    [P in keyof Database[K]]: P extends keyof BackendDatabase[K] ? true : never;
+  };
+};
+
+type EveryColumnTrue<T> = T extends Record<string, true> ? true : never;
+type IsTableOk<T extends SharedTables> = EveryColumnTrue<CheckTables[T]>;
+
+const _checkTables: { [K in SharedTables]: IsTableOk<K> } = {
+  report: true,
+  udap: true,
+  user: true,
+  delegation: true,
+  pdf_snapshot: true,
+  service_instructeurs: true,
+  clause_v2: true,
+  pictures: true,
+  picture_lines: true,
+  transactions: true,
+  sent_email: true,
+  suggested_email: true,
+  user_settings: true,
+  pop_immeubles: true,
+  state_report: true,
+};

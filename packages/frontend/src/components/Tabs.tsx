@@ -61,7 +61,6 @@ export type TabsProps = {
 
 const TabPanel = (props: { children?: React.ReactNode; value: string; id: string }) => {
   const { children, value, id, ...rest } = props;
-  console.log(rest);
 
   return (
     <Box

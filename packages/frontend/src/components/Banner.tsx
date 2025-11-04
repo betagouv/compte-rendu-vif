@@ -27,6 +27,13 @@ export const SimpleBanner = (props: Omit<BoxProps, "ref">) => {
   return <Banner status={status} {...props} />;
 };
 
+export const useBannerBgColor = () => {
+  const status = useStatus();
+
+  const isOk = status.connected || status.connecting;
+  return isOk ? fr.colors.decisions.background.open.blueFrance.default : "#FFE9E6";
+};
+
 /*
  "yellow-waiting": { value: "#FEECC2" },
   "red-offline": { value: "#FFE9E6" },
