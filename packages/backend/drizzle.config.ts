@@ -1,5 +1,5 @@
-import type { Config } from "drizzle-kit";
-import { ENV } from "./src/envVars";
+import { defineConfig } from "drizzle-kit";
+import { ENV, isDev } from "./src/envVars";
 
 export const config = {
   port: ENV.POSTGRES_PORT,
@@ -10,10 +10,9 @@ export const config = {
 };
 
 export const usersDatabaseUrl = `postgres://${config.user}:${config.password}@${config.host}:${config.port}/${config.database}`;
-
-export default {
+export default defineConfig({
   schema: "./src/db/schema.ts",
-  out: "./drizzle",
-  driver: "pg",
-  dbCredentials: config,
-} satisfies Config;
+  out: "../../db",
+  dialect: "postgresql",
+  dbCredentials: { ...config, ssl: !isDev },
+});

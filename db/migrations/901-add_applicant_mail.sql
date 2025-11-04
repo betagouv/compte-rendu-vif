@@ -1,1 +1,0 @@
-ALTER TABLE "report" ADD COLUMN "applicantEmail" TEXT;

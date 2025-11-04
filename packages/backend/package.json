@@ -8,8 +8,8 @@
     "build": "tsup ./src/index.ts --publicDir --format esm",
     "start": "cross-env NODE_ENV=production node ./dist/index.js",
     "dev": "vite-node --watch ./src/index.ts",
-    "pull-types": "pnpm kysely-codegen --date-parser string --env-file ../../.env --out-file ./src/db-types.d.ts ",
-    "test": "vitest"
+    "test": "vitest",
+    "drizzle": "drizzle-kit"
   },
   "exports": {
     ".": "./src/router.ts"
@@ -23,17 +23,18 @@
     "@types/better-sqlite3": "^7.6.9",
     "@types/debug": "^4.1.12",
     "@types/jsonwebtoken": "^9.0.6",
+    "drizzle-kit": "^0.31.6",
     "@types/node": "^20.11.28",
     "@types/nodemailer": "^6.4.14",
     "@types/react": "^18.2.64",
     "@types/uuid": "^9.0.8",
     "cross-env": "^7.0.3",
-    "drizzle-kit": "^0.20.14",
     "kysely-codegen": "^0.17.0",
     "tsup": "^8.0.2",
     "typescript": "^5.2.2",
     "vite": "^5.1.6",
     "vite-node": "^1.4.0",
+    "drizzle-orm": "^0.44.7",
     "vitest": "^2.1.5"
   },
   "dependencies": {
@@ -54,9 +55,6 @@
     "debug": "^4.3.4",
     "dotenv": "^16.4.5",
     "dotenv-expand": "^11.0.6",
-    "drizzle-orm": "^0.30.4",
-    "drizzle-typebox": "^0.1.1",
-    "drizzle-zod": "^0.5.1",
     "fastify": "^4.26.2",
     "fastify-multer": "^2.0.3",
     "jose": "^5.9.6",
