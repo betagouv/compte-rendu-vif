@@ -1,6 +1,7 @@
 import Button, { type ButtonProps } from "@codegouvfr/react-dsfr/Button";
 import { useStyles } from "tss-react";
 
+// TODO: refactor using MUI (in MuiDsfr.tsx)
 export const FullWidthButton = ({ className, type, linkProps, ...props }: ButtonProps) => {
   const { cx, css } = useStyles();
 

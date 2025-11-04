@@ -4,6 +4,9 @@ import { fr } from "@codegouvfr/react-dsfr";
 import { Box, Typography } from "@mui/material";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ImmeubleAutocomplete } from "../features/ImmeubleAutocomplete";
+import { FormProvider } from "react-hook-form";
+import { db, useDbQuery } from "../db/db";
+import { StateReport } from "../db/AppSchema";
 
 export const Route = createFileRoute("/constat/$constatId")({
   component: RouteComponent,
@@ -35,3 +38,24 @@ function RouteComponent() {
     </Flex>
   );
 }
+
+const WithStateReport = ({ stateReport }: { stateReport: StateReport }) => {
+  return <Flex flexDirection="column">{<StateReportForm />}</Flex>;
+};
+
+const StateReportForm = () => {
+  const { constatId } = Route.useParams();
+
+  const reportQuery = useDbQuery(db.selectFrom("state_report").where("id", "=", constatId).selectAll());
+
+  return (
+    <Flex flexDirection="column">
+      <FormProvider {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <SyncFormBanner form={form} baseObject={report} />
+          <Tabs control={[tab ?? "info", setTab]} options={options} />
+        </form>
+      </FormProvider>
+    </Flex>
+  );
+};

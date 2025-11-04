@@ -64,3 +64,5 @@ trace-dir/*
 /playwright/.cache/
 
 keycloak-theme/*
+
+*.csv
