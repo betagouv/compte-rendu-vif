@@ -29,7 +29,7 @@ export const Tabs = ({ options, control }: TabsProps) => {
           ))}
         </Flex>
 
-        <Box flex="1" width={{ xs: "100%", lg: "926px" }} alignSelf="center">
+        <Box flex="1" width={{ xs: "100%", lg: "100%" }} alignSelf="center">
           {options.map((option) => (
             <TabPanel key={option.id} value={value} id={option.id}>
               {option.component}

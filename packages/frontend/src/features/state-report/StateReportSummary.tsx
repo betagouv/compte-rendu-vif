@@ -9,7 +9,7 @@ export const StateReportSummary = () => {
 
   return (
     <Accordion
-      label="Résumé du constat d'état"
+      label="Le monument historique"
       sx={{ ".fr-collapse--expanded": { paddingTop: "0", px: "16px" }, borderBottom: "1px solid" }}
     >
       <SummaryContent />

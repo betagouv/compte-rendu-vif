@@ -37,7 +37,7 @@ const UdapSelectionModal = () => {
   });
 
   return (
-    <Dialog open={true}>
+    <Dialog open={true} disablePortal>
       <Box p={4} width={400}>
         <DialogTitle>Selectionnez votre UDAP</DialogTitle>
         <Autocomplete

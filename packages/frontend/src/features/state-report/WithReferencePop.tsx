@@ -20,13 +20,13 @@ export const WithReferencePop = () => {
 
   return (
     <>
-      <Box>
+      <Box width="100%">
         {immeubleQuery.isLoading && <div>Chargement de l'immeuble...</div>}
         {immeubleQuery.error && (
           <div>Erreur lors du chargement de l'immeuble : {String(immeubleQuery.error.message)}</div>
         )}
         {immeubleQuery.data && (
-          <Flex width="100%" height="100%" flexDirection="column">
+          <Flex height="100%" width="100%" flexDirection={{ xs: "column", lg: "row" }} gap={{ xs: "0", lg: "24px" }}>
             <StateReportSummary />
             <Tabs
               options={[

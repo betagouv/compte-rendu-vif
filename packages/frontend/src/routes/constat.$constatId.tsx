@@ -24,7 +24,7 @@ function RouteComponent() {
   return (
     <Flex width="100%" height="100%" flexDirection="column" alignItems="center">
       <SimpleBanner width="100%" alignItems="flex-start" py="20px">
-        <Flex width={{ xs: "100%", lg: "926px" }} flexDirection="column" px="16px">
+        <Flex width={{ xs: "100%", lg: "1040px" }} flexDirection="column" px="16px">
           <Link to="/" style={{ textDecoration: "underline" }} search={{ document: "constats" }}>
             <Typography fontSize="12px" color={fr.colors.decisions.text.mention.grey.default}>
               Retour à l'accueil
@@ -43,7 +43,7 @@ function RouteComponent() {
       <Box width="100%">
         <WithStateReport />
       </Box>
-      <Box width="926px"></Box>
+      <Box width="1040px"></Box>
     </Flex>
   );
 }

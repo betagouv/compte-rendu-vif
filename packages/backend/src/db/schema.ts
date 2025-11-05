@@ -24,7 +24,7 @@ export const user = pgTable(
   (table) => [
     foreignKey({
       columns: [table.udapId],
-      foreignColumns: [udap.id],
+      foreignColumns: [service.id],
       name: "user_udap_id_fkey",
     }).onDelete("set null"),
     unique("user_email_key").on(table.email),
@@ -85,21 +85,23 @@ export const whitelist = pgTable("whitelist", {
   email: text().primaryKey().notNull(),
 });
 
-export const udap = pgTable("udap", {
+export const service = pgTable("service", {
   id: text().primaryKey().notNull(),
-  department: text().notNull(),
-  completeCoords: text(),
   visible: boolean(),
   name: text(),
+  email: text(),
+  marianneText: text("marianne_text"),
+  dracText: text("drac_text"),
+  serviceText: text("service_text"),
+  deptNumbers: text("dept_numbers"), // comma separated
+
+  // TODO: make sure those are useful
+  department: text().notNull(),
+  completeCoords: text(),
   address: text(),
   zipCode: text(),
   city: text(),
   phone: text(),
-  email: text(),
-  marianneText: text("marianne_text"),
-  dracText: text("drac_text"),
-  udapText: text("udap_text"),
-  deptNumber: text("dept_number"),
 });
 
 export const clauseV2 = pgTable("clause_v2", {
