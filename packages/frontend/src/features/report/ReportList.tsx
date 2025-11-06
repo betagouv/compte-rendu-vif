@@ -150,7 +150,7 @@ export const ReportList = ({
   const columns = reports.length < 6 ? [reports] : chunk(reports, Math.ceil(reports.length / 2));
 
   return (
-    <Stack component="div" width="100%" mt={{ xs: "20px", lg: "30px" }}>
+    <Stack component="div" width="100%" mt={{ xs: "20px", lg: "30px" }} px="16px">
       <Center mb="24px">
         <Box width="926px">
           <DocumentTypeSelector />
@@ -243,7 +243,7 @@ export const StateReportList = ({
   const isDesktop = useIsDesktop();
   const columns = reports.length < 6 ? [reports] : chunk(reports, Math.ceil(reports.length / 2));
   return (
-    <Stack component="div" width="100%" mt={{ xs: "20px", lg: "30px" }}>
+    <Stack component="div" width="100%" mt={{ xs: "20px", lg: "30px" }} px="16px">
       <Center mb="24px">
         <Box width="926px">
           <DocumentTypeSelector />

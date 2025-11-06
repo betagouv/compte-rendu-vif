@@ -8,15 +8,22 @@ import { Box, Typography } from "@mui/material";
 import { useBannerBgColor } from "#components/Banner.tsx";
 import { useSyncForm } from "#components/SyncForm.tsx";
 import { db } from "../../db/db";
+import { useFormWithFocus, useRefreshForm } from "../../routes/useFormWithFocus";
 
 export const StateReportForm = ({ report }: { report: StateReport }) => {
-  const form = useForm<StateReportFormType>({
+  const [form, getFocused] = useFormWithFocus<StateReportFormType>({
     defaultValues: { ...emptyStateReport, ...report },
   });
   const bgColor = useBannerBgColor();
   const onSubmit = (data: StateReportFormType) => {
     console.log(data);
   };
+
+  useRefreshForm({
+    form,
+    values: { ...emptyStateReport, ...report },
+    getFocused,
+  });
 
   return (
     <Flex flexDirection="column" alignItems={"center"} width="100%">
@@ -91,4 +98,21 @@ const emptyStateReport: StateReport = {
   created_at: null,
   disabled: null,
   titre_edifice: null,
+  date_visite: null,
+  nature_visite: null,
+  personnes_presentes: null,
+  redacted_by: null,
+  proprietaire: null,
+  proprietaire_email: null,
+  proprietaire_representant: null,
+  proprietaire_representant_email: null,
+  etat_general: null,
+  proportion_dans_cet_etat: null,
+  etat_commentaires: null,
+  plan_situation: null,
+  plan_edifice: null,
+  vue_generale_image_url: null,
+  preconisations: null,
+  preconisations_commentaires: null,
+  bilan_quinquennal: null,
 };

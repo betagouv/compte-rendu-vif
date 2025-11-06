@@ -27,7 +27,7 @@ export const StateReportListItem = ({
 
   const { css } = useStyles();
 
-  const title = report.reference_pop;
+  const title = report.titre_edifice;
   const whereText = report.commune ? `à ${report.commune}` : null;
 
   const isDraft = true;

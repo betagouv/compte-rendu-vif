@@ -2,42 +2,24 @@ import { EnsureUser } from "#components/EnsureUser";
 import { SyncFormBanner } from "#components/SyncForm";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef } from "react";
-import {
-  FormProvider,
-  useForm,
-  type FieldPath,
-  type FieldValues,
-  type RegisterOptions,
-  type UseFormProps,
-  type UseFormRegister,
-} from "react-hook-form";
+import { FormProvider, UseFormReturn } from "react-hook-form";
 import { InfoForm } from "../features/InfoForm";
 import { NotesForm } from "../features/NotesForm";
 import { DisabledContext } from "../features/DisabledContext";
 import { useQuery } from "@tanstack/react-query";
 import { useCanEditReport } from "../hooks/useCanEditReport";
 import { db, useDbQuery } from "../db/db";
-import { Report } from "../db/AppSchema";
+import { Report, StateReport } from "../db/AppSchema";
 import { Flex } from "#components/ui/Flex.tsx";
 import { Box } from "@mui/material";
 import Button from "@codegouvfr/react-dsfr/Button";
 import { Tabs } from "#components/Tabs.tsx";
 import { Center } from "#components/MUIDsfr.tsx";
 import { useStatus } from "@powersync/react";
+import { useFormWithFocus, useRefreshForm } from "./useFormWithFocus";
 
 const EditReport = () => {
   const { reportId } = Route.useParams();
-
-  // useQuery({
-  //   queryKey: ["report", reportId],
-  //   queryFn: () =>
-  //     electric.db.report.sync({
-  //       where: { id: reportId },
-  //       include: {
-  //         pictures: true,
-  //       },
-  //     }),
-  // });
 
   const reportQuery = useDbQuery(db.selectFrom("report").where("id", "=", reportId).selectAll());
 
@@ -46,40 +28,6 @@ const EditReport = () => {
   return <Flex flexDirection="column">{report ? <WithReport report={report} /> : null}</Flex>;
 };
 
-function useFormWithFocus<TFieldValues extends FieldValues = FieldValues>(props: UseFormProps<TFieldValues, any>) {
-  const form = useForm<TFieldValues>(props);
-  const focusedRef = useRef<string | null>(null);
-
-  const unsafeForm = form as any;
-
-  if (!unsafeForm.done) {
-    unsafeForm.oldRegister = form.register;
-    unsafeForm.done = true;
-  }
-
-  const register: UseFormRegister<TFieldValues> = <
-    TFieldName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
-  >(
-    name: TFieldName,
-    options?: RegisterOptions<TFieldValues, TFieldName>,
-  ) => {
-    const { onBlur, ...registered } = (form as any).oldRegister(name, options);
-    return {
-      ...registered,
-      onFocus: () => {
-        focusedRef.current = name;
-      },
-      onBlur: (e) => {
-        focusedRef.current = null;
-        return onBlur?.(e);
-      },
-    };
-  };
-
-  form.register = register;
-
-  return [form, () => focusedRef.current] as const;
-}
 const WithReport = ({ report }: { report: Report }) => {
   const { tab } = Route.useSearch();
   const setTab = (tab: string) => {
@@ -129,27 +77,7 @@ const WithReport = ({ report }: { report: Report }) => {
     },
   ];
 
-  const previousValuesRef = useRef<Report>(report);
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies:
-  useEffect(() => {
-    if (!report) return;
-    const previousValues = previousValuesRef.current;
-    const focused = getFocused();
-
-    for (const key in previousValues) {
-      if ((previousValues as any)[key] !== (report as any)[key]) {
-        const fieldState = form.getFieldState(key as any);
-        const hasFocus = key === focused;
-
-        if (!hasFocus || !fieldState.isDirty) {
-          form.setValue(key as any, (report as any)[key]);
-        }
-      }
-    }
-
-    previousValuesRef.current = report;
-  }, [report]);
+  useRefreshForm<Report>({ values: report, getFocused, form });
 
   const onSubmit = (_values: Report) => {
     navigate({ to: "/pdf/$reportId", params: { reportId: report.id }, search: { mode: "view" } });

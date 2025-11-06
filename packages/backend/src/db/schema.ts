@@ -480,6 +480,7 @@ export const stateReport = pgTable(
   "state_report",
   {
     id: text().primaryKey().notNull(),
+    // monument
     natureEdifice: text("nature_edifice"),
     redactedByName: text("redacted_by_name"),
     redactedById: text("redacted_by_id"),
@@ -495,6 +496,28 @@ export const stateReport = pgTable(
     description: text(),
     observations: text(),
     titre_edifice: text("titre_edifice"),
+    // contexte de la visite
+    natureVisite: text("nature_visite"),
+    bilanQuinquennal: text("bilan_quinquennal"),
+    dateVisite: timestamp("date_visite", { mode: "string" }),
+    redactedBy: text("redacted_by"),
+    personnes_presentes: text("personnes_presentes"),
+
+    proprietaire: text(),
+    proprietaireEmail: text("proprietaire_email"),
+    proprietaireRepresentant: text("proprietaire_representant"),
+    proprietaireRepresentantEmail: text("proprietaire_representant_email"),
+
+    // constat général
+    etatGeneral: text("etat_general"),
+    proportionDansCetEtat: text("proportion_dans_cet_etat"),
+    etatCommentaires: text("etat_commentaires"),
+    planSituation: text("plan_situation"),
+    planEdifice: text("plan_edifice"),
+    vueGenerale: text("vue_generale"),
+    preconisations: text(),
+    preconisations_commentaires: text("preconisations_commentaires"),
+
     serviceId: text("service_id").notNull(),
     createdBy: text("created_by").notNull(),
     createdAt: timestamp("created_at", { mode: "string" }).notNull(),

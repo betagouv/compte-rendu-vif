@@ -12,7 +12,13 @@ export const MonumentHistorique = () => {
   const value = useWatch({ control: form.control, name: "reference_pop" });
   return (
     <Flex flexDirection="column">
-      <Flex flexDirection="column" gap="16px" px={{ xs: "16px", lg: "64px" }} pt={{ xs: "0", lg: "32px" }}>
+      <Flex
+        flexDirection="column"
+        gap={{ xs: "8px", lg: "16px" }}
+        px={{ xs: "16px", lg: "64px" }}
+        pt={{ xs: "0", lg: "32px" }}
+        width="100%"
+      >
         <ContentBlock mt={{ xs: "16px", lg: "0" }}>
           <EditableField label="Nature de l'édifice" field="nature_edifice" />
           <EditableField label="Référence pop" field="reference_pop" />
@@ -23,10 +29,12 @@ export const MonumentHistorique = () => {
           <EditableField label="Commune historique" field="commune_historique" />
           <EditableField label="Référence cadastrale" field="reference_cadastrale" />
         </ContentBlock>
-        <EditableField label="Nature de la protection" field="nature_protection" />
-        <EditableField label="Période de construction" field="periode_construction" />
-        <EditableField label="Parties protégées" field="parties_protegees" />
-        <EditableField label="Description de l'édifice" field="description" />
+        <ContentBlock>
+          <EditableField label="Nature de la protection" field="nature_protection" />
+          <EditableField label="Période de construction" field="periode_construction" />
+          <EditableField label="Parties protégées" field="parties_protegees" />
+          <EditableField label="Description de l'édifice" field="description" />
+        </ContentBlock>
       </Flex>
       <Box position="relative" height="60px" width="100%" mt={{ xs: "16px", lg: "32px" }}>
         <Box
@@ -55,14 +63,15 @@ export const MonumentHistorique = () => {
   );
 };
 
-const ContentBlock = (props: PropsWithChildren<BoxProps>) => {
+export const ContentBlock = (props: PropsWithChildren<BoxProps>) => {
   return (
     <Flex
       flexDirection={{ xs: "column", lg: "row" }}
-      paddingBottom="16px"
-      borderBottom={{ xs: "none", lg: "1px solid" }}
+      borderBottom={{ xs: "1px solid", lg: "1px solid" }}
+      gap={{ xs: "8px", lg: "0" }}
+      pb="16px"
       borderColor={fr.colors.decisions.border.default.grey.default + " !important"}
-      sx={{ "> div": { width: "50%" }, "> div:nth-child(n+3)": { mt: "16px" } }}
+      sx={{ "> div": { width: { xs: "auto", lg: "50%" } }, "> div:nth-child(n+3)": { mt: { xs: "0", lg: "16px" } } }}
       flexWrap={{ lg: "wrap" }}
       {...props}
     >

@@ -23,7 +23,7 @@ export const StateReportSummary = () => {
     <Accordion
       label={<Flex>{currentStepString}</Flex>}
       sx={{
-        ".fr-collapse--expanded": { paddingTop: "0", px: { xs: "0", lg: "16px" } },
+        ".fr-collapse--expanded": { paddingTop: "0", px: { xs: "0", lg: "16px" }, pb: { xs: 0, lg: undefined } },
         borderBottom: "1px solid",
       }}
     >
@@ -69,11 +69,13 @@ const SummaryContent = () => {
           pl: "8px",
         },
         li: {
+          px: { xs: "16px", lg: "0" },
           listStyleType: "none",
           py: "12px",
           "&.active": { ...activeProps },
         },
         ul: {
+          px: { xs: "16px", lg: "0" },
           marginTop: "0",
           marginBottom: "0",
         },
@@ -81,7 +83,8 @@ const SummaryContent = () => {
           borderBottom: "none",
         },
       }}
-      m={{ xs: "0", lg: "16px" }}
+      pl="0"
+      mr={{ xs: "0", lg: "16px" }}
     >
       <Box component="li">Le monument historique</Box>
       <Box component="ul" pl="0">

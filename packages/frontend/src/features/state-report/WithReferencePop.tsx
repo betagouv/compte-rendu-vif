@@ -1,7 +1,7 @@
 import { useWatch } from "react-hook-form";
 import { db, useDbQuery } from "../../db/db";
-import { useStateReportFormContext } from "./utils";
-import { Box } from "@mui/material";
+import { StateReportStep, useStateReportFormContext } from "./utils";
+import { Box, Stack } from "@mui/material";
 import { Flex } from "#components/ui/Flex.tsx";
 import { StateReportSummary } from "./StateReportSummary";
 import { Tabs } from "#components/Tabs.tsx";
@@ -11,6 +11,7 @@ import { getRouteApi } from "@tanstack/react-router";
 import { Button, Center } from "#components/MUIDsfr.tsx";
 import { ContexteVisite } from "./steps/ContexteVisite";
 import { useIsDesktop } from "../../hooks/useIsDesktop";
+import { ReactNode } from "react";
 
 export const WithReferencePop = () => {
   const form = useStateReportFormContext();
@@ -76,24 +77,55 @@ const ContentSwitch = () => {
 const ButtonsSwitch = () => {
   const { step } = routeApi.useSearch();
   const navigate = routeApi.useNavigate();
-  return (
-    <Center mt={{ xs: "16px", lg: "24px" }} mb={{ xs: "16px", lg: "0" }}>
-      <Box
-        sx={{
-          display: step === "informations" ? "block" : "none",
+
+  const buttons: Record<StateReportStep, ReactNode> = {
+    informations: (
+      <Button
+        iconPosition="right"
+        iconId="ri-arrow-right-line"
+        size="large"
+        nativeButtonProps={{
+          onClick: () => navigate({ search: { step: "contexte-visite" } }),
         }}
       >
+        Context de la visite
+      </Button>
+    ),
+    "contexte-visite": (
+      <Stack gap="8px">
         <Button
-          iconPosition="right"
-          iconId="ri-arrow-right-fill"
+          iconPosition="left"
+          iconId="ri-arrow-left-line"
+          priority="secondary"
           size="large"
           nativeButtonProps={{
-            onClick: () => navigate({ search: { step: "contexte-visite" } }),
+            onClick: () => navigate({ search: { step: "informations" } }),
           }}
+          sx={{ width: "100%", justifyContent: "center" }}
         >
-          Context de la visite
+          Information du MH
         </Button>
-      </Box>
+        <Button
+          iconPosition="right"
+          iconId="ri-arrow-right-line"
+          size="large"
+          nativeButtonProps={{
+            onClick: () => navigate({ search: { step: "constat-general" } }),
+          }}
+          sx={{ width: "100%", justifyContent: "center" }}
+        >
+          Constat général
+        </Button>
+      </Stack>
+    ),
+    "constat-general": null,
+    "constat-detaille": null,
+    documents: null,
+  };
+
+  return (
+    <Center mt={{ xs: "16px", lg: "24px" }} mb={{ xs: "16px", lg: "0" }}>
+      {buttons[step]}
     </Center>
   );
 };
