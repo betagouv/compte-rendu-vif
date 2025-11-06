@@ -7,22 +7,37 @@ import { useNavigate } from "@tanstack/react-router";
 import { fr } from "@codegouvfr/react-dsfr";
 import { useIntersectionObserver } from "../hooks/useIntersectionObserver";
 import { useIsFormDisabled } from "../features/DisabledContext";
-import { Report } from "../db/AppSchema";
+import { Report, StateReport } from "../db/AppSchema";
 import { useAppStatus } from "../hooks/useAppStatus";
 import { Box, BoxProps, styled, Typography } from "@mui/material";
 import { Flex } from "./ui/Flex";
 import { Button, Center, Input } from "./MUIDsfr";
 
-export function SyncFormBanner({ form, baseObject }: { form: UseFormReturn<Report>; baseObject: Record<string, any> }) {
+export const useSyncForm = <T extends Report | StateReport>({
+  form,
+  baseObject,
+  disabled,
+  syncObject,
+}: {
+  form: UseFormReturn<T>;
+  baseObject: T;
+  disabled?: boolean;
+  syncObject: (id: string, diff: Partial<Report | StateReport>) => Promise<void>;
+}) => {
   const newObject = useWatch({ control: form.control });
-
-  const disabled = useIsFormDisabled();
-
   const diff = disabled ? {} : getDiff(newObject, baseObject);
-  const syncMutation = useMutation(() => syncObject(baseObject.id, diff));
+  const syncMutation = useMutation(async () => {
+    if (Object.keys(diff).length === 0) return;
+    await syncObject(baseObject.id, diff);
+  });
 
   useDebounce(() => syncMutation.mutate(), 500, [diff]);
 
+  return { newObject };
+};
+
+export function SyncFormBanner({ form, baseObject }: { form: UseFormReturn<Report>; baseObject: Report }) {
+  const { newObject } = useSyncForm({ form, baseObject, disabled: useIsFormDisabled(), syncObject });
   const navigate = useNavigate();
   const goBack = () => navigate({ to: "/", search: { document: "compte-rendus" } });
 
@@ -247,8 +262,6 @@ const messagesColor: Record<SyncFormStatus, string> = {
 export type SyncFormStatus = "offline" | "pending" | "saved" | "saving";
 
 async function syncObject(id: string, diff: Record<string, any>) {
-  if (!Object.keys(diff).length) return;
-
   console.log("saving", id, diff);
 
   await db.updateTable("report").where("id", "=", id).set(diff).execute();

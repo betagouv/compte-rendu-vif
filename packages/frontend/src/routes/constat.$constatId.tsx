@@ -23,7 +23,7 @@ export const Route = createFileRoute("/constat/$constatId")({
 function RouteComponent() {
   return (
     <Flex width="100%" height="100%" flexDirection="column" alignItems="center">
-      <SimpleBanner width="100%" alignItems="flex-start" py="20px">
+      <SimpleBanner width="100%" alignItems="flex-start" pt="20px">
         <Flex width={{ xs: "100%", lg: "1200px" }} flexDirection="column" px="16px">
           <Link to="/" style={{ textDecoration: "underline" }} search={{ document: "constats" }}>
             <Typography fontSize="12px" color={fr.colors.decisions.text.mention.grey.default}>
@@ -33,10 +33,6 @@ function RouteComponent() {
 
           <Typography fontSize="28px" variant="h2" mt="24px">
             Constat d'état
-          </Typography>
-
-          <Typography mt="24px">
-            Récupérez les informations d'un monument historique puis saisissez votre constat :
           </Typography>
         </Flex>
       </SimpleBanner>

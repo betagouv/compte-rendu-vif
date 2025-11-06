@@ -107,7 +107,6 @@ const useRightQueries = <Document extends AppDocument>({
   scope: "my" | "all";
 }) => {
   const user = useUser()!;
-  console.log("queried user", user);
   if (document === "compte-rendus") {
     const queries = getReportQueries(scope, page, user);
     return { baseQuery: useDbQuery(queries.baseQuery), countQuery: useDbQuery(queries.countQuery) };

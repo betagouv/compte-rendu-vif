@@ -176,4 +176,5 @@ ALTER TABLE "sent_email" ADD CONSTRAINT "sent_email_report_id_fkey" FOREIGN KEY 
 
 CREATE PUBLICATION powersync FOR TABLE "user", "delegation", "service_instructeurs", "clause_v2", "pdf_snapshot", "tmp_pictures", "picture_lines", "pictures", "transactions", "report", "sent_email", "suggested_email", "udap", "user_settings";
 
--- TODO: add in next migration ALTER PUBLICATION powersync ADD TABLE "state_report";
+-- TODO: add in next migration 
+-- ALTER PUBLICATION powersync ADD TABLE "state_report", "pop_immeubles", "user_dept";

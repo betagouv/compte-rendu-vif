@@ -2,32 +2,37 @@ import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import { StateReport } from "../../db/AppSchema";
 import { ImmeubleAutocomplete } from "../ImmeubleAutocomplete";
 import { Flex } from "#components/ui/Flex.tsx";
-import { StateReportFormType } from "./utils";
+import { StateReportFormType, useStateReportFormContext } from "./utils";
 import { WithReferencePop } from "./WithReferencePop";
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { useBannerBgColor } from "#components/Banner.tsx";
+import { useSyncForm } from "#components/SyncForm.tsx";
+import { db } from "../../db/db";
 
 export const StateReportForm = ({ report }: { report: StateReport }) => {
   const form = useForm<StateReportFormType>({
     defaultValues: { ...emptyStateReport, ...report },
   });
   const bgColor = useBannerBgColor();
-
   const onSubmit = (data: StateReportFormType) => {
     console.log(data);
   };
+
   return (
     <Flex flexDirection="column" alignItems={"center"} width="100%">
       <FormProvider {...form}>
+        <SyncForm report={report} />
         <Flex
-          justifyContent="center"
+          alignItems="center"
           bgcolor={bgColor}
+          flexDirection="column"
           component="form"
           pt="32px"
           pb="32px"
           width="100%"
           onSubmit={form.handleSubmit(onSubmit)}
         >
+          <EmptyImmeubleMessage />
           <Box width={{ xs: "100%", lg: "1200px" }} px="16px">
             <ImmeubleAutocomplete />
           </Box>
@@ -38,6 +43,33 @@ export const StateReportForm = ({ report }: { report: StateReport }) => {
       </FormProvider>
     </Flex>
   );
+};
+
+const EmptyImmeubleMessage = () => {
+  const form = useStateReportFormContext();
+
+  const referencePop = form.watch("reference_pop");
+  if (referencePop) return null;
+  return (
+    <Typography width={{ xs: "100%", lg: "1200px" }} px="16px" mb="32px">
+      Récupérez les informations d'un monument historique puis saisissez votre constat :
+    </Typography>
+  );
+};
+
+const SyncForm = ({ report }: { report: StateReport }) => {
+  const form = useFormContext<StateReportFormType>();
+
+  useSyncForm({
+    form,
+    baseObject: report,
+    syncObject: async (id, diff) => {
+      console.log("saving", id, diff);
+      await db.updateTable("state_report").where("id", "=", id).set(diff).execute();
+    },
+  });
+
+  return null;
 };
 
 const emptyStateReport: StateReport = {

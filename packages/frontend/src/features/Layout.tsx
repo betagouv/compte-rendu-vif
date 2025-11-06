@@ -11,7 +11,7 @@ import { useIsDesktop } from "../hooks/useIsDesktop";
 
 export const Layout = ({ children, noProvider }: PropsWithChildren & { noProvider?: boolean }) => {
   return (
-    <Box display="flex" position="relative" flexDirection={"column"} height="100vh">
+    <Box display="flex" position="relative" flexDirection={"column"} height="100vh" sx={{ overflowX: "hidden" }}>
       <AppHeader noProvider={noProvider} />
       <Box flex="1">{children}</Box>
       <AppFooter />

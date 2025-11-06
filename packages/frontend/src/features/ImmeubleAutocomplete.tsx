@@ -1,4 +1,4 @@
-import { Autocomplete, Box } from "@mui/material";
+import { Autocomplete, Box, Typography } from "@mui/material";
 import { db, useDbQuery } from "../db/db";
 import { useState } from "react";
 import { useStyles } from "tss-react";
@@ -9,6 +9,8 @@ import { StateReportFormType, useStateReportFormContext } from "./state-report/u
 import { Spinner } from "#components/Spinner.tsx";
 import { fr } from "@codegouvfr/react-dsfr";
 import Highlighter from "react-highlight-words";
+import { Flex } from "#components/ui/Flex.tsx";
+import { IconLink } from "#components/ui/IconLink.tsx";
 
 type FilterablePopImmeubles = Pick<
   PopImmeuble,
@@ -21,7 +23,6 @@ const fuseOptions: IFuseOptions<FilterablePopImmeubles> = {
 
 const mapping: Partial<Record<keyof PopImmeuble, keyof StateReportFormType>> = {
   reference: "reference_pop",
-  id: "id",
   denomination_de_l_edifice: "nature_edifice",
   adresse_forme_editoriale: "adresse",
   commune_forme_editoriale: "commune",
@@ -35,6 +36,8 @@ const mapping: Partial<Record<keyof PopImmeuble, keyof StateReportFormType>> = {
 };
 
 export const ImmeubleAutocomplete = () => {
+  const [isChanging, setIsChanging] = useState(false);
+
   const form = useStateReportFormContext();
   const [value] = useWatch({ control: form.control, name: ["reference_pop"] });
   const { cx } = useStyles();
@@ -49,7 +52,7 @@ export const ImmeubleAutocomplete = () => {
 
   const setValue = async (item: FilterablePopImmeubles | null) => {
     form.setValue("reference_pop", item ? item.id : null);
-
+    setIsChanging(false);
     if (!item) return;
     const immeubleDetails = await db
       .selectFrom("pop_immeubles")
@@ -63,80 +66,95 @@ export const ImmeubleAutocomplete = () => {
       form.setValue(formField as keyof StateReportFormType, value);
     }
   };
-  if (value) return <div>{form.watch("titre_edifice")}</div>;
+
+  const hasValue = !!value;
+
+  if (hasValue && !isChanging)
+    return (
+      <Flex flexDirection="column">
+        <Typography fontSize="20px">{form.watch("titre_edifice")}</Typography>
+        <Box mt="8px">
+          <IconLink icon="fr-icon-edit-fill" sx={{ fontSize: "14px" }} onClick={() => setIsChanging(true)}>
+            Changer de monument
+          </IconLink>
+        </Box>
+      </Flex>
+    );
 
   return (
-    <Autocomplete
-      disablePortal
-      clearOnBlur={false}
-      options={rawItems}
-      getOptionLabel={(item) => item.titre_editorial_de_la_notice || ""}
-      getOptionKey={(item) => item.reference!}
-      value={value ? rawItems.find((item) => item.id == value) : null}
-      // TODO: use coordinates to sort results
-      filterOptions={(x, state) =>
-        state.inputValue ? searchEngine.search(state.inputValue).map((result) => result.item) : [...x.slice(0, 50)]
-      }
-      onChange={(_e, item) => {
-        setValue(item);
-      }}
-      renderOption={({ key, ...props }, option, state, _ownerState) =>
-        option === null ? (
-          <Box>Aucun résultat !</Box>
-        ) : (
-          <Box
-            component="li"
-            {...props}
-            key={key}
-            display="flex"
-            justifyContent="flex-start"
-            alignItems="flex-start !important"
-            flexDirection="column"
-            textAlign="left"
-            color={fr.colors.decisions.text.actionHigh.blueFrance.default}
-          >
-            <Box component="span" fontSize="16px">
-              <Highlighter
-                searchWords={state.inputValue.split(" ")}
-                autoEscape
-                textToHighlight={option.titre_editorial_de_la_notice ?? ""}
-                activeStyle={{}}
-                unhighlightStyle={{}}
-                highlightStyle={{
-                  fontWeight: "bold",
-                  backgroundColor: "transparent",
-                  color: fr.colors.decisions.text.actionHigh.blueFrance.default,
-                }}
-              />
+    <>
+      <Autocomplete
+        disablePortal
+        clearOnBlur={false}
+        options={rawItems}
+        getOptionLabel={(item) => item.titre_editorial_de_la_notice || ""}
+        getOptionKey={(item) => item.reference!}
+        value={value ? rawItems.find((item) => item.id == value) : null}
+        // TODO: use coordinates to sort results
+        filterOptions={(x, state) =>
+          state.inputValue ? searchEngine.search(state.inputValue).map((result) => result.item) : [...x.slice(0, 50)]
+        }
+        onChange={(_e, item) => {
+          setValue(item);
+        }}
+        renderOption={({ key, ...props }, option, state, _ownerState) =>
+          option === null ? (
+            <Box>Aucun résultat !</Box>
+          ) : (
+            <Box
+              component="li"
+              {...props}
+              key={key}
+              display="flex"
+              justifyContent="flex-start"
+              alignItems="flex-start !important"
+              flexDirection="column"
+              textAlign="left"
+              color={fr.colors.decisions.text.actionHigh.blueFrance.default}
+            >
+              <Box component="span" fontSize="16px">
+                <Highlighter
+                  searchWords={state.inputValue.split(" ")}
+                  autoEscape
+                  textToHighlight={option.titre_editorial_de_la_notice ?? ""}
+                  activeStyle={{}}
+                  unhighlightStyle={{}}
+                  highlightStyle={{
+                    fontWeight: "bold",
+                    backgroundColor: "transparent",
+                    color: fr.colors.decisions.text.actionHigh.blueFrance.default,
+                  }}
+                />
+              </Box>
+              <Box component="span" fontSize="12px">
+                <Highlighter
+                  searchWords={state.inputValue.split(" ")}
+                  autoEscape
+                  textToHighlight={option.commune_forme_editoriale ?? ""}
+                  activeStyle={{}}
+                  unhighlightStyle={{}}
+                  highlightStyle={{
+                    fontWeight: "bold",
+                    backgroundColor: "transparent",
+                    color: fr.colors.decisions.text.actionHigh.blueFrance.default,
+                  }}
+                />
+              </Box>
             </Box>
-            <Box component="span" fontSize="12px">
-              <Highlighter
-                searchWords={state.inputValue.split(" ")}
-                autoEscape
-                textToHighlight={option.commune_forme_editoriale ?? ""}
-                activeStyle={{}}
-                unhighlightStyle={{}}
-                highlightStyle={{
-                  fontWeight: "bold",
-                  backgroundColor: "transparent",
-                  color: fr.colors.decisions.text.actionHigh.blueFrance.default,
-                }}
-              />
+          )
+        }
+        renderInput={(params) => (
+          <div className="fr-input-group">
+            <label className="fr-label" htmlFor={params.id}>
+              Nom ou référence du monument
+            </label>
+            <Box ref={params.InputProps.ref} mt="8px">
+              <input {...params.inputProps} className={cx(params.inputProps.className, "fr-input")} type={"text"} />
             </Box>
-          </Box>
-        )
-      }
-      renderInput={(params) => (
-        <div className="fr-input-group">
-          <label className="fr-label" htmlFor={params.id}>
-            Nom ou référence du monument
-          </label>
-          <Box ref={params.InputProps.ref} mt="8px">
-            <input {...params.inputProps} className={cx(params.inputProps.className, "fr-input")} type={"text"} />
-          </Box>
-        </div>
-      )}
-      noOptionsText={<Box>{immeubleQuery.isLoading ? <Spinner size={20} /> : "Aucun résultat"}</Box>}
-    />
+          </div>
+        )}
+        noOptionsText={<Box>{immeubleQuery.isLoading ? <Spinner size={20} /> : "Aucun résultat"}</Box>}
+      />
+    </>
   );
 };

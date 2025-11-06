@@ -1,10 +1,11 @@
 import { Flex } from "#components/ui/Flex.tsx";
-import { Box, styled, Typography } from "@mui/material";
+import { Box, LinkBaseProps, LinkProps, styled, Typography } from "@mui/material";
 import { StateReportFormType, useStateReportFormContext } from "../utils";
 import { useWatch } from "react-hook-form";
 import { fr } from "@codegouvfr/react-dsfr";
 import { Button } from "#components/MUIDsfr.tsx";
 import { PropsWithChildren } from "react";
+import { IconLink } from "#components/ui/IconLink.tsx";
 
 export const MonumentHistorique = () => {
   const form = useStateReportFormContext();
@@ -27,19 +28,28 @@ export const MonumentHistorique = () => {
         <EditableField label="Parties protégées" field="parties_protegees" />
         <EditableField label="Description de l'édifice" field="description" />
       </Flex>
-
-      <Box width="100%" bgcolor={fr.colors.decisions.background.contrast.info.default} px={{ sx: "16px" }} py="18px">
+      <Box position="relative" height="60px" width="100%">
         <Box
-          component="a"
-          ml="16px"
-          sx={{ borderBottom: "1px solid" }}
-          href={`https://pop.culture.gouv.fr/notice/merimee/${value}`}
-          target="_blank"
-          rel="noopener external"
-          title="Libellé lien - nouvelle fenêtre"
-          className="fr-link fr-icon-external-link-line fr-link--icon-left"
+          height="60px"
+          bgcolor={fr.colors.decisions.background.contrast.info.default}
+          px={{ sm: "16px", lg: "0" }}
+          py="18px"
+          position="absolute"
+          top="0"
+          left="0"
+          right="calc(-100vw + 100%)"
+          bottom="0"
         >
-          En savoir plus sur l'édifice
+          <IconLink
+            href={`https://pop.culture.gouv.fr/notice/merimee/${value}`}
+            title="En savoir plus sur l'édifice - Nouvelle fenêtre"
+            target="_blank"
+            rel="noopener external"
+            icon="fr-icon-external-link-line"
+            sx={{ ml: "16px" }}
+          >
+            En savoir plus sur l'édifice
+          </IconLink>
         </Box>
       </Box>
     </Flex>

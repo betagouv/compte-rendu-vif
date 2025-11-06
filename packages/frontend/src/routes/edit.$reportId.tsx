@@ -87,8 +87,6 @@ const WithReport = ({ report }: { report: Report }) => {
     document.getElementById("root")!.scrollTo(0, 0);
   };
 
-  console.log(useStatus());
-
   const [form, getFocused] = useFormWithFocus<Report>({
     defaultValues: report!,
     resetOptions: {},
