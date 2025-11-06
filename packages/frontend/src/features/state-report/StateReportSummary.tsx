@@ -4,15 +4,28 @@ import { Box } from "@mui/material";
 import { useIsDesktop } from "../../hooks/useIsDesktop";
 import { getRouteApi, useNavigate } from "@tanstack/react-router";
 import { StateReportStep } from "./utils";
+import { SideMenu } from "@codegouvfr/react-dsfr/SideMenu";
+import { Flex } from "#components/ui/Flex.tsx";
 
 export const StateReportSummary = () => {
   const isDesktop = useIsDesktop();
+  const { step } = routeApi.useSearch();
   if (isDesktop) return <SummaryContent />;
 
+  const currentStepString = {
+    informations: "Informations",
+    "contexte-visite": "Contexte de la visite",
+    "constat-general": "Constat général",
+    "constat-detaille": "Constat détaillé",
+    documents: "Documents",
+  }[step];
   return (
     <Accordion
-      label="Le monument historique"
-      sx={{ ".fr-collapse--expanded": { paddingTop: "0", px: "16px" }, borderBottom: "1px solid" }}
+      label={<Flex>{currentStepString}</Flex>}
+      sx={{
+        ".fr-collapse--expanded": { paddingTop: "0", px: { xs: "0", lg: "16px" } },
+        borderBottom: "1px solid",
+      }}
     >
       <SummaryContent />
     </Accordion>
@@ -22,10 +35,27 @@ export const StateReportSummary = () => {
 const routeApi = getRouteApi("/constat/$constatId");
 const SummaryContent = () => {
   const navigate = useNavigate();
-  const constatId = routeApi.useParams().constatId;
+  const { constatId } = routeApi.useParams();
+  const { step } = routeApi.useSearch();
+
   const navigateToStep = (step: StateReportStep) => {
     navigate({ to: "/constat/$constatId", params: { constatId }, search: { step } });
   };
+
+  const activeProps = {
+    color: fr.colors.decisions.text.actionHigh.blueFrance.default,
+    "&::before": {
+      content: "''",
+      position: "absolute",
+      top: "0.75rem",
+      bottom: "0.75rem",
+      left: 0,
+      width: "2px",
+      backgroundColor: fr.colors.decisions.border.actionHigh.blueFrance.default,
+    },
+  };
+
+  const isActive = (targetStep: StateReportStep) => step === targetStep;
   return (
     <Box
       component="ul"
@@ -34,39 +64,63 @@ const SummaryContent = () => {
         "> ul > li": {
           borderBottom: "1px solid",
           borderBottomColor: fr.colors.decisions.border.default.grey.default,
+          cursor: "pointer",
+          userSelect: "none",
+          pl: "8px",
         },
         li: {
           listStyleType: "none",
           py: "12px",
+          "&.active": { ...activeProps },
         },
         ul: {
           marginTop: "0",
           marginBottom: "0",
         },
+        "> ul:last-child > li:last-child": {
+          borderBottom: "none",
+        },
       }}
-      pl="0"
+      m={{ xs: "0", lg: "16px" }}
     >
       <Box component="li">Le monument historique</Box>
-      <Box component="ul" pl="8px">
-        <Box component="li" onClick={() => navigateToStep("informations")}>
+      <Box component="ul" pl="0">
+        <Box
+          position="relative"
+          component="li"
+          className={isActive("informations") ? "active" : ""}
+          onClick={() => navigateToStep("informations")}
+        >
           Informations
-        </Box>
-        <Box component="li" onClick={() => navigateToStep("documents")}>
-          Documents
         </Box>
       </Box>
 
       <Box component="li" mt="4px">
         Saisie du constat d'état
       </Box>
-      <Box component="ul" pl="8px">
-        <Box component="li" onClick={() => navigateToStep("contexte-visite")}>
+      <Box component="ul" pl="0">
+        <Box
+          position="relative"
+          component="li"
+          className={isActive("contexte-visite") ? "active" : ""}
+          onClick={() => navigateToStep("contexte-visite")}
+        >
           Contexte de la visite
         </Box>
-        <Box component="li" onClick={() => navigateToStep("constat-general")}>
+        <Box
+          position="relative"
+          component="li"
+          className={isActive("constat-general") ? "active" : ""}
+          onClick={() => navigateToStep("constat-general")}
+        >
           Constat général
         </Box>
-        <Box component="li" onClick={() => navigateToStep("constat-detaille")}>
+        <Box
+          position="relative"
+          component="li"
+          className={isActive("constat-detaille") ? "active" : ""}
+          onClick={() => navigateToStep("constat-detaille")}
+        >
           Constat détaillé
         </Box>
       </Box>

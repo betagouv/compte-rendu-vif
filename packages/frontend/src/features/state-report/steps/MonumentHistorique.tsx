@@ -1,5 +1,5 @@
 import { Flex } from "#components/ui/Flex.tsx";
-import { Box, LinkBaseProps, LinkProps, styled, Typography } from "@mui/material";
+import { Box, BoxProps, LinkBaseProps, LinkProps, styled, Typography } from "@mui/material";
 import { StateReportFormType, useStateReportFormContext } from "../utils";
 import { useWatch } from "react-hook-form";
 import { fr } from "@codegouvfr/react-dsfr";
@@ -12,8 +12,8 @@ export const MonumentHistorique = () => {
   const value = useWatch({ control: form.control, name: "reference_pop" });
   return (
     <Flex flexDirection="column">
-      <Flex flexDirection="column" p="16px" gap="16px">
-        <ContentBlock>
+      <Flex flexDirection="column" gap="16px" px={{ xs: "16px", lg: "64px" }} pt={{ xs: "0", lg: "32px" }}>
+        <ContentBlock mt={{ xs: "16px", lg: "0" }}>
           <EditableField label="Nature de l'édifice" field="nature_edifice" />
           <EditableField label="Référence pop" field="reference_pop" />
         </ContentBlock>
@@ -28,11 +28,10 @@ export const MonumentHistorique = () => {
         <EditableField label="Parties protégées" field="parties_protegees" />
         <EditableField label="Description de l'édifice" field="description" />
       </Flex>
-      <Box position="relative" height="60px" width="100%">
+      <Box position="relative" height="60px" width="100%" mt={{ xs: "16px", lg: "32px" }}>
         <Box
           height="60px"
           bgcolor={fr.colors.decisions.background.contrast.info.default}
-          px={{ sm: "16px", lg: "0" }}
           py="18px"
           position="absolute"
           top="0"
@@ -56,7 +55,7 @@ export const MonumentHistorique = () => {
   );
 };
 
-const ContentBlock = (props: PropsWithChildren) => {
+const ContentBlock = (props: PropsWithChildren<BoxProps>) => {
   return (
     <Flex
       flexDirection={{ xs: "column", lg: "row" }}
@@ -65,6 +64,7 @@ const ContentBlock = (props: PropsWithChildren) => {
       borderColor={fr.colors.decisions.border.default.grey.default + " !important"}
       sx={{ "> div": { width: "50%" }, "> div:nth-child(n+3)": { mt: "16px" } }}
       flexWrap={{ lg: "wrap" }}
+      {...props}
     >
       {props.children}
     </Flex>

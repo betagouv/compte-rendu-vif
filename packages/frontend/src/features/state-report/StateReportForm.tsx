@@ -37,7 +37,7 @@ export const StateReportForm = ({ report }: { report: StateReport }) => {
             <ImmeubleAutocomplete />
           </Box>
         </Flex>
-        <Box width={{ xs: "100%", lg: "1200px" }} px="16px">
+        <Box width={{ xs: "100%", lg: "1200px" }} px={{ xs: "0", lg: "16px" }}>
           <WithReferencePop />
         </Box>
       </FormProvider>
