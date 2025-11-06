@@ -14,6 +14,11 @@ export class UserService {
 
     await db.updateTable("user").set({ service_id: serviceId }).where("id", "=", userId).execute();
 
+    const deptNumber = service[0].dept_numbers?.split(",")[0];
+
+    await db.deleteFrom("user_dept").where("user_id", "=", userId).execute();
+    if (deptNumber) await db.insertInto("user_dept").values({ user_id: userId, dept_number: deptNumber }).execute();
+
     return { message: "Le service a été changé avec succès" };
   }
 }

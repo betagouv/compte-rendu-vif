@@ -5,18 +5,18 @@ import Download from "@codegouvfr/react-dsfr/Download";
 import { useUserSettings } from "../hooks/useUserSettings";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { db, useDbQuery } from "../db/db";
-import { useLiveUser, useUser } from "../contexts/AuthContext";
+import { useLiveUser, useSetService, useUser } from "../contexts/AuthContext";
 import { v4 } from "uuid";
 import { Spinner } from "#components/Spinner";
 import { EmailInput } from "../components/EmailInput";
 import { Delegation, User } from "../db/AppSchema";
 import { Chip } from "#components/Chip";
 import Alert from "@codegouvfr/react-dsfr/Alert";
-import { api } from "../api";
+import { api, AuthUser } from "../api";
 import JSZip from "jszip";
 import { downloadFile } from "../utils";
 import { datePresets, DateRangePicker, SuccessAlert } from "./service";
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { format } from "date-fns";
 import { getPDFInMailName } from "@cr-vif/pdf";
 import { Flex } from "#components/ui/Flex.tsx";
@@ -27,8 +27,9 @@ import { useStyles } from "tss-react";
 
 const AccountPage = () => {
   const [isSuccess, setIsSuccess] = useState(false);
-
-  const onSuccess = () => {
+  const setService = useSetService();
+  const onSuccess = (service: AuthUser["service"]) => {
+    setService(service);
     setIsSuccess(true);
     document.getElementById("root")?.scrollTo(0, 0);
   };
@@ -361,8 +362,8 @@ const DownloadCRs = () => {
   );
 };
 
-const ChangeService = ({ onSuccess }: { onSuccess: () => void }) => {
-  const user = useLiveUser()!;
+const ChangeService = ({ onSuccess }: { onSuccess: (service: AuthUser["service"]) => void }) => {
+  const user = useUser()!;
   const service = user.service;
 
   const [selectedServiceId, setSelectedServiceId] = useState<string | null>(null);
@@ -387,7 +388,7 @@ const ChangeService = ({ onSuccess }: { onSuccess: () => void }) => {
       body: { service_id },
     });
 
-    onSuccess?.();
+    onSuccess?.(service as AuthUser["service"]);
   });
 
   const { css } = useStyles();

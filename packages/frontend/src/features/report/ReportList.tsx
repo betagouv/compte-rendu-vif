@@ -4,7 +4,7 @@ import { Box, Stack } from "@mui/material";
 import { chunk } from "pastable";
 import { useState } from "react";
 import welcomeImage from "../../assets/welcome.svg?url";
-import { useUser } from "../../contexts/AuthContext";
+import { useLiveUser, useUser } from "../../contexts/AuthContext";
 import { Report, StateReport } from "../../db/AppSchema";
 import { db, useDbQuery } from "../../db/db";
 import { useIsDesktop } from "../../hooks/useIsDesktop";
@@ -13,6 +13,7 @@ import { getRouteApi } from "@tanstack/react-router";
 import { getReportQueries, getStateReportQueries } from "../useDocumentQueries";
 import { StateReportListItem } from "../state-report/StateReportListItem";
 import { AppDocument } from "../../utils";
+import { DocumentTypeSelector } from "#components/DocumentTypeSelector.tsx";
 
 export type ReportWithUser = Report & { createdByName: string | null };
 export type StateReportWithUser = StateReport & { createdByName: string | null };
@@ -64,7 +65,6 @@ export const AllReports = () => {
 
   const { baseQuery, countQuery } = useRightQueries({ page, document, scope: "all" });
   const reports = baseQuery.data;
-
   const reportsCount = countQuery.data?.[0]?.count as number;
 
   const hasError = baseQuery.error || countQuery.error;
@@ -107,7 +107,7 @@ const useRightQueries = <Document extends AppDocument>({
   scope: "my" | "all";
 }) => {
   const user = useUser()!;
-
+  console.log("queried user", user);
   if (document === "compte-rendus") {
     const queries = getReportQueries(scope, page, user);
     return { baseQuery: useDbQuery(queries.baseQuery), countQuery: useDbQuery(queries.countQuery) };
@@ -122,7 +122,7 @@ const NoReport = () => {
     <Center flexDirection="column" mt="66px" p="16px" color="text-title-blue-france" fontSize="26px">
       <Box lineHeight="36px">Bienvenue !</Box>
       <Box textAlign="center" lineHeight="36px">
-        Pour commencer, créez votre premier compte-rendu ci-dessus.
+        Pour commencer, créez votre premier document ci-dessus.
       </Box>
       <Box component="img" src={welcomeImage} alt="Bienvenue" mt="46px" />
     </Center>
@@ -152,29 +152,36 @@ export const ReportList = ({
 
   return (
     <Stack component="div" width="100%" mt={{ xs: "20px", lg: "30px" }}>
+      <Center mb="24px">
+        <Box width="926px">
+          <DocumentTypeSelector />
+        </Box>
+      </Center>
       {!hideEmpty && error ? (
         error
       ) : (
-        <Stack gap={{ xs: 0, lg: "126px" }} flexDirection={{ xs: "column", lg: "row" }} justifyContent="center">
-          {columns.slice(0, 2).map((reports, columnIndex) => {
-            return (
-              <Stack key={columnIndex} flexDirection="column" width={{ xs: "100%", lg: "400px" }}>
-                {reports.map((report, index) => (
-                  <ReportListItem
-                    onClick={onClick}
-                    key={report.id}
-                    report={report}
-                    isLast={
-                      isDesktop
-                        ? index === reports.length - 1
-                        : index === reports.length - 1 && columnIndex === columns.length - 1
-                    }
-                  />
-                ))}
-              </Stack>
-            );
-          })}
-          {columns.length === 1 ? <Stack width="400px" /> : null}
+        <Stack>
+          <Stack gap={{ xs: 0, lg: "126px" }} flexDirection={{ xs: "column", lg: "row" }} justifyContent="center">
+            {columns.slice(0, 2).map((reports, columnIndex) => {
+              return (
+                <Stack key={columnIndex} flexDirection="column" width={{ xs: "100%", lg: "400px" }}>
+                  {reports.map((report, index) => (
+                    <ReportListItem
+                      onClick={onClick}
+                      key={report.id}
+                      report={report}
+                      isLast={
+                        isDesktop
+                          ? index === reports.length - 1
+                          : index === reports.length - 1 && columnIndex === columns.length - 1
+                      }
+                    />
+                  ))}
+                </Stack>
+              );
+            })}
+            {columns.length === 1 ? <Stack width="400px" /> : null}
+          </Stack>
         </Stack>
       )}
       <Center
@@ -236,9 +243,13 @@ export const StateReportList = ({
   const error = reports.length === 0 ? <NoReport /> : null;
   const isDesktop = useIsDesktop();
   const columns = reports.length < 6 ? [reports] : chunk(reports, Math.ceil(reports.length / 2));
-
   return (
     <Stack component="div" width="100%" mt={{ xs: "20px", lg: "30px" }}>
+      <Center mb="24px">
+        <Box width="926px">
+          <DocumentTypeSelector />
+        </Box>
+      </Center>
       {!hideEmpty && error ? (
         error
       ) : (

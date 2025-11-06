@@ -135,11 +135,6 @@ const MainContentTabs = () => {
       },
       component: (
         <>
-          <Center>
-            <Box width="926px">
-              <DocumentTypeSelector />
-            </Box>
-          </Center>
           <MyReports />
         </>
       ),
@@ -153,12 +148,6 @@ const MainContentTabs = () => {
       },
       component: (
         <>
-          <Center>
-            <Box width="926px">
-              <DocumentTypeSelector />
-            </Box>
-          </Center>
-
           <AllReports />
         </>
       ),
@@ -178,7 +167,11 @@ export const Route = createFileRoute("/")({
       <Index />
     </EnsureUser>
   ),
-  validateSearch: (search) => ({
-    document: appDocumentEnum.optional().default("constats").parse(search?.document),
-  }),
+  validateSearch: (search) => {
+    const parsed = appDocumentEnum.safeParse(search?.document);
+
+    return {
+      document: parsed.success ? parsed.data : "constats",
+    };
+  },
 });

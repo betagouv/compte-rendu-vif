@@ -8,190 +8,190 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from "./routes/__root";
-import { Route as UdapRouteImport } from "./routes/service";
-import { Route as LoginRouteImport } from "./routes/login";
-import { Route as AuthCallbackRouteImport } from "./routes/auth-callback";
-import { Route as AccountRouteImport } from "./routes/account";
-import { Route as IndexRouteImport } from "./routes/index";
-import { Route as PdfReportIdRouteImport } from "./routes/pdf.$reportId";
-import { Route as EditReportIdRouteImport } from "./routes/edit.$reportId";
-import { Route as ConstatConstatIdRouteImport } from "./routes/constat.$constatId";
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as ServiceRouteImport } from './routes/service'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as AuthCallbackRouteImport } from './routes/auth-callback'
+import { Route as AccountRouteImport } from './routes/account'
+import { Route as IndexRouteImport } from './routes/index'
+import { Route as PdfReportIdRouteImport } from './routes/pdf.$reportId'
+import { Route as EditReportIdRouteImport } from './routes/edit.$reportId'
+import { Route as ConstatConstatIdRouteImport } from './routes/constat.$constatId'
 
-const UdapRoute = UdapRouteImport.update({
-  id: "/udap",
-  path: "/udap",
+const ServiceRoute = ServiceRouteImport.update({
+  id: '/service',
+  path: '/service',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const LoginRoute = LoginRouteImport.update({
-  id: "/login",
-  path: "/login",
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const AuthCallbackRoute = AuthCallbackRouteImport.update({
-  id: "/auth-callback",
-  path: "/auth-callback",
+  id: '/auth-callback',
+  path: '/auth-callback',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const AccountRoute = AccountRouteImport.update({
-  id: "/account",
-  path: "/account",
+  id: '/account',
+  path: '/account',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const IndexRoute = IndexRouteImport.update({
-  id: "/",
-  path: "/",
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const PdfReportIdRoute = PdfReportIdRouteImport.update({
-  id: "/pdf/$reportId",
-  path: "/pdf/$reportId",
+  id: '/pdf/$reportId',
+  path: '/pdf/$reportId',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const EditReportIdRoute = EditReportIdRouteImport.update({
-  id: "/edit/$reportId",
-  path: "/edit/$reportId",
+  id: '/edit/$reportId',
+  path: '/edit/$reportId',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const ConstatConstatIdRoute = ConstatConstatIdRouteImport.update({
-  id: "/constat/$constatId",
-  path: "/constat/$constatId",
+  id: '/constat/$constatId',
+  path: '/constat/$constatId',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 
 export interface FileRoutesByFullPath {
-  "/": typeof IndexRoute;
-  "/account": typeof AccountRoute;
-  "/auth-callback": typeof AuthCallbackRoute;
-  "/login": typeof LoginRoute;
-  "/udap": typeof UdapRoute;
-  "/constat/$constatId": typeof ConstatConstatIdRoute;
-  "/edit/$reportId": typeof EditReportIdRoute;
-  "/pdf/$reportId": typeof PdfReportIdRoute;
+  '/': typeof IndexRoute
+  '/account': typeof AccountRoute
+  '/auth-callback': typeof AuthCallbackRoute
+  '/login': typeof LoginRoute
+  '/service': typeof ServiceRoute
+  '/constat/$constatId': typeof ConstatConstatIdRoute
+  '/edit/$reportId': typeof EditReportIdRoute
+  '/pdf/$reportId': typeof PdfReportIdRoute
 }
 export interface FileRoutesByTo {
-  "/": typeof IndexRoute;
-  "/account": typeof AccountRoute;
-  "/auth-callback": typeof AuthCallbackRoute;
-  "/login": typeof LoginRoute;
-  "/udap": typeof UdapRoute;
-  "/constat/$constatId": typeof ConstatConstatIdRoute;
-  "/edit/$reportId": typeof EditReportIdRoute;
-  "/pdf/$reportId": typeof PdfReportIdRoute;
+  '/': typeof IndexRoute
+  '/account': typeof AccountRoute
+  '/auth-callback': typeof AuthCallbackRoute
+  '/login': typeof LoginRoute
+  '/service': typeof ServiceRoute
+  '/constat/$constatId': typeof ConstatConstatIdRoute
+  '/edit/$reportId': typeof EditReportIdRoute
+  '/pdf/$reportId': typeof PdfReportIdRoute
 }
 export interface FileRoutesById {
-  __root__: typeof rootRouteImport;
-  "/": typeof IndexRoute;
-  "/account": typeof AccountRoute;
-  "/auth-callback": typeof AuthCallbackRoute;
-  "/login": typeof LoginRoute;
-  "/udap": typeof UdapRoute;
-  "/constat/$constatId": typeof ConstatConstatIdRoute;
-  "/edit/$reportId": typeof EditReportIdRoute;
-  "/pdf/$reportId": typeof PdfReportIdRoute;
+  __root__: typeof rootRouteImport
+  '/': typeof IndexRoute
+  '/account': typeof AccountRoute
+  '/auth-callback': typeof AuthCallbackRoute
+  '/login': typeof LoginRoute
+  '/service': typeof ServiceRoute
+  '/constat/$constatId': typeof ConstatConstatIdRoute
+  '/edit/$reportId': typeof EditReportIdRoute
+  '/pdf/$reportId': typeof PdfReportIdRoute
 }
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath;
+  fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | "/"
-    | "/account"
-    | "/auth-callback"
-    | "/login"
-    | "/udap"
-    | "/constat/$constatId"
-    | "/edit/$reportId"
-    | "/pdf/$reportId";
-  fileRoutesByTo: FileRoutesByTo;
+    | '/'
+    | '/account'
+    | '/auth-callback'
+    | '/login'
+    | '/service'
+    | '/constat/$constatId'
+    | '/edit/$reportId'
+    | '/pdf/$reportId'
+  fileRoutesByTo: FileRoutesByTo
   to:
-    | "/"
-    | "/account"
-    | "/auth-callback"
-    | "/login"
-    | "/udap"
-    | "/constat/$constatId"
-    | "/edit/$reportId"
-    | "/pdf/$reportId";
+    | '/'
+    | '/account'
+    | '/auth-callback'
+    | '/login'
+    | '/service'
+    | '/constat/$constatId'
+    | '/edit/$reportId'
+    | '/pdf/$reportId'
   id:
-    | "__root__"
-    | "/"
-    | "/account"
-    | "/auth-callback"
-    | "/login"
-    | "/udap"
-    | "/constat/$constatId"
-    | "/edit/$reportId"
-    | "/pdf/$reportId";
-  fileRoutesById: FileRoutesById;
+    | '__root__'
+    | '/'
+    | '/account'
+    | '/auth-callback'
+    | '/login'
+    | '/service'
+    | '/constat/$constatId'
+    | '/edit/$reportId'
+    | '/pdf/$reportId'
+  fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute;
-  AccountRoute: typeof AccountRoute;
-  AuthCallbackRoute: typeof AuthCallbackRoute;
-  LoginRoute: typeof LoginRoute;
-  UdapRoute: typeof UdapRoute;
-  ConstatConstatIdRoute: typeof ConstatConstatIdRoute;
-  EditReportIdRoute: typeof EditReportIdRoute;
-  PdfReportIdRoute: typeof PdfReportIdRoute;
+  IndexRoute: typeof IndexRoute
+  AccountRoute: typeof AccountRoute
+  AuthCallbackRoute: typeof AuthCallbackRoute
+  LoginRoute: typeof LoginRoute
+  ServiceRoute: typeof ServiceRoute
+  ConstatConstatIdRoute: typeof ConstatConstatIdRoute
+  EditReportIdRoute: typeof EditReportIdRoute
+  PdfReportIdRoute: typeof PdfReportIdRoute
 }
 
-declare module "@tanstack/react-router" {
+declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    "/udap": {
-      id: "/udap";
-      path: "/udap";
-      fullPath: "/udap";
-      preLoaderRoute: typeof UdapRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/login": {
-      id: "/login";
-      path: "/login";
-      fullPath: "/login";
-      preLoaderRoute: typeof LoginRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/auth-callback": {
-      id: "/auth-callback";
-      path: "/auth-callback";
-      fullPath: "/auth-callback";
-      preLoaderRoute: typeof AuthCallbackRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/account": {
-      id: "/account";
-      path: "/account";
-      fullPath: "/account";
-      preLoaderRoute: typeof AccountRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/": {
-      id: "/";
-      path: "/";
-      fullPath: "/";
-      preLoaderRoute: typeof IndexRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/pdf/$reportId": {
-      id: "/pdf/$reportId";
-      path: "/pdf/$reportId";
-      fullPath: "/pdf/$reportId";
-      preLoaderRoute: typeof PdfReportIdRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/edit/$reportId": {
-      id: "/edit/$reportId";
-      path: "/edit/$reportId";
-      fullPath: "/edit/$reportId";
-      preLoaderRoute: typeof EditReportIdRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/constat/$constatId": {
-      id: "/constat/$constatId";
-      path: "/constat/$constatId";
-      fullPath: "/constat/$constatId";
-      preLoaderRoute: typeof ConstatConstatIdRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+    '/service': {
+      id: '/service'
+      path: '/service'
+      fullPath: '/service'
+      preLoaderRoute: typeof ServiceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth-callback': {
+      id: '/auth-callback'
+      path: '/auth-callback'
+      fullPath: '/auth-callback'
+      preLoaderRoute: typeof AuthCallbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/account': {
+      id: '/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof AccountRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pdf/$reportId': {
+      id: '/pdf/$reportId'
+      path: '/pdf/$reportId'
+      fullPath: '/pdf/$reportId'
+      preLoaderRoute: typeof PdfReportIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/edit/$reportId': {
+      id: '/edit/$reportId'
+      path: '/edit/$reportId'
+      fullPath: '/edit/$reportId'
+      preLoaderRoute: typeof EditReportIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/constat/$constatId': {
+      id: '/constat/$constatId'
+      path: '/constat/$constatId'
+      fullPath: '/constat/$constatId'
+      preLoaderRoute: typeof ConstatConstatIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -200,9 +200,11 @@ const rootRouteChildren: RootRouteChildren = {
   AccountRoute: AccountRoute,
   AuthCallbackRoute: AuthCallbackRoute,
   LoginRoute: LoginRoute,
-  UdapRoute: UdapRoute,
+  ServiceRoute: ServiceRoute,
   ConstatConstatIdRoute: ConstatConstatIdRoute,
   EditReportIdRoute: EditReportIdRoute,
   PdfReportIdRoute: PdfReportIdRoute,
-};
-export const routeTree = rootRouteImport._addFileChildren(rootRouteChildren)._addFileTypes<FileRouteTypes>();
+}
+export const routeTree = rootRouteImport
+  ._addFileChildren(rootRouteChildren)
+  ._addFileTypes<FileRouteTypes>()

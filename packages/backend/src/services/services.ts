@@ -1,4 +1,4 @@
-import { authenticate } from "../routes/authMiddleware";
+import { authenticate, AuthUser } from "../routes/authMiddleware";
 import { AuthService } from "./authService";
 import { StaticDataService } from "./staticDataService";
 import { SyncService } from "./syncService";
@@ -28,6 +28,6 @@ export const getServices = () => {
 declare module "fastify" {
   export interface FastifyRequest {
     services: ReturnType<typeof makeServices>;
-    user: Awaited<ReturnType<typeof authenticate>>;
+    user: AuthUser;
   }
 }

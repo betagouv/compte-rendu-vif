@@ -3,6 +3,7 @@ import fs from "fs";
 import { pipeline } from "stream/promises";
 import csv from "csv-parser";
 import { KyselyBatchWriter } from "./KyselyBatchWriter";
+import path from "path/win32";
 
 const debug = makeDebug("sync-pop");
 
@@ -104,4 +105,11 @@ export interface Result {
 export interface Coordonnees {
   lon: number;
   lat: number;
+}
+
+if (process.argv.includes("--standalone")) {
+  fetchPopImmeubles().then(() => {
+    debug("Done fetching POP immeubles");
+    process.exit(0);
+  });
 }

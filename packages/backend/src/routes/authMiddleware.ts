@@ -8,9 +8,11 @@ export const authenticate = async (request: FastifyRequest) => {
   const [_, token] = auth.split(" ");
   try {
     const user = await request.services.auth.getUserFromToken(token ?? "");
-    request.user = user;
-    return user;
+    request.user = user!;
+    return user!;
   } catch (e) {
     throw new AppError(403, "Unauthorized");
   }
 };
+
+export type AuthUser = Awaited<ReturnType<typeof authenticate>>;

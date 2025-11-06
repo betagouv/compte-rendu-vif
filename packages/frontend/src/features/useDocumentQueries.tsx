@@ -20,7 +20,7 @@ type ReportQueries = {
 export const getReportQueries = (
   scope: "my" | "all",
   page: number,
-  user: { id: string; service_id: string },
+  user: { id: string; service_id: string | null },
 ): ReportQueries => {
   const baseQuery = reportQueries.base.offset(page * 20).limit(20);
   const countQuery = reportQueries.count;
@@ -54,7 +54,7 @@ type StateReportQueries = {
 export const getStateReportQueries = (
   scope: "my" | "all",
   page: number,
-  user: { id: string; service_id: string },
+  user: { id: string; service_id: string | null },
 ): StateReportQueries => {
   const baseQuery = stateReportQueries.base.offset(page * 20).limit(20);
 

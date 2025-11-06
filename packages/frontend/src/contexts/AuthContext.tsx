@@ -118,7 +118,7 @@ export const useLiveUser = () => {
   );
   const liveService = liveServices.data[0];
 
-  if (!liveUser || !liveService) return user;
+  if (!liveUser || !liveService) return user!;
   return { ...liveUser, service: liveService };
 };
 
@@ -151,8 +151,14 @@ export const useRefreshUser = () => {
   return refreshUserMutation;
 };
 
-export const useRefreshService = () => {
-  return () => {};
+export const useSetService = () => {
+  const { setAuth } = useContext(AuthContext);
+
+  return (service: AuthUser["service"]) =>
+    setAuth((auth) => ({
+      ...auth,
+      user: { ...auth.user!, service_id: service.id, service: service },
+    }));
 };
 
 type AuthContextProps = {

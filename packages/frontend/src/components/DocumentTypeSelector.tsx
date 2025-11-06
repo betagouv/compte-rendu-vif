@@ -32,7 +32,6 @@ export const DocumentTypeSelector = () => {
         border="1px solid"
         borderRadius="4px"
         borderColor={fr.colors.decisions.border.default.grey.default}
-        mt="40px"
         width={{ xs: "100%", lg: "auto" }}
       >
         <Box
