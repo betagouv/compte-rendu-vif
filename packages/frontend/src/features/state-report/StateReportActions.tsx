@@ -19,63 +19,23 @@ import { styled } from "@mui/material";
 export const StateReportActions = forwardRef<HTMLDivElement, { report: StateReportWithUser }>(({ report }, ref) => {
   const user = useUser()!;
 
-  const canEdit = useCanEditReport(report);
-
-  const navigate = useNavigate();
-
-  const downloadPdfMutation = useMutation(async () => {
-    const buffer = await api.get("/api/pdf/report", { query: { reportId: report.id } });
-    const name = getPDFInMailName(report);
-    return downloadFile(`data:application/pdf;base64,${buffer}`, name);
-  });
-
-  const deleteMutation = useDeleteMutation();
   const duplicateMutation = useMutation(async () => {
-    const payload = omit(report, ["id", "createdAt", "pdf", "title", "createdByName"]);
+    const payload = omit(report, ["id", "createdByName", "created_at", "created_by", "disabled"]);
 
     return db
-      .insertInto("report")
+      .insertInto("state_report")
       .values({
         ...payload,
-        id: `report-${v4()}`,
-        title: `${report.title ?? "Sans titre"} - copie`,
-        createdAt: new Date().toISOString(),
-        redactedBy: user.name,
-        redactedById: user.id,
-        createdBy: user.id,
-        pdf: undefined,
+        id: v4(),
+        titre_edifice: `${report.titre_edifice ?? "Sans titre"} - copie`,
+        created_at: new Date().toISOString(),
+        created_by: user.id,
       })
       .execute();
   });
 
   return (
     <Flex ref={ref} bgcolor="#ECECFE" gap="0" flexDirection="column">
-      {canEdit ? (
-        <>
-          <ReportAction
-            iconId="ri-pencil-line"
-            label="Editer"
-            onClick={() => navigate({ to: "/edit/$reportId", params: { reportId: report.id } })}
-          />
-          <Divider height="1px" color="#DDD" />
-        </>
-      ) : null}
-      {canEdit ? (
-        <>
-          <ReportAction
-            iconId="ri-delete-bin-2-line"
-            label="Supprimer"
-            onClick={() => deleteMutation.mutate(report.id)}
-          />
-          <Divider height="1px" color="#DDD" />
-        </>
-      ) : null}
-      {report.pdf ? (
-        <>
-          <ReportAction iconId="ri-download-line" label="Télécharger" onClick={() => downloadPdfMutation.mutate()} />
-          <Divider height="1px" color="#DDD" />
-        </>
-      ) : null}
       <ReportAction iconId="ri-file-add-line" label="Dupliquer" onClick={() => duplicateMutation.mutate()} />
     </Flex>
   );

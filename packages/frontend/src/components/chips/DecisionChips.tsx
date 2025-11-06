@@ -11,8 +11,8 @@ export const DecisionChips = ({ disabled }: { disabled?: boolean }) => {
 
   const chipOptions = useChipOptions("decision");
   const options: ChipGroupOption[] = (chipOptions ?? []).map((chip) => ({
-    label: chip.value,
-    key: chip.value,
+    label: chip.value!,
+    key: chip.value!,
   }));
 
   return (

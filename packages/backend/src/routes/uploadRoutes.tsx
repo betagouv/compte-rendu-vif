@@ -37,7 +37,7 @@ export const uploadPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
         id,
         url,
         reportId,
-        createdAt: new Date(),
+        createdAt: new Date().toISOString(),
         finalUrl: url,
       })
       .execute();
@@ -83,9 +83,8 @@ export const uploadPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
     },
     async (request) => {
       const { pictureId } = request.params;
-      const { lines } = request.body;
 
-      return request.services.upload.handleNotifyPictureLines({ pictureId, lines });
+      return request.services.upload.handleNotifyPictureLines({ pictureId });
     },
   );
 };

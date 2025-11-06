@@ -19,7 +19,7 @@ export const ShareReport = ({ backButtonOnClick }: { backButtonOnClick: () => vo
   const user = useUser()!;
 
   const coworkersQuery = useDbQuery(
-    db.selectFrom("user").where("udap_id", "=", user.udap_id).where("id", "!=", user.id).selectAll(),
+    db.selectFrom("user").where("service_id", "=", user.service_id).where("id", "!=", user.id).selectAll(),
   );
 
   const delegationsQuery = useDbQuery(db.selectFrom("delegation").where("createdBy", "=", user.id).selectAll());

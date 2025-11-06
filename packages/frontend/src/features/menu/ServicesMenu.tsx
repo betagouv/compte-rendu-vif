@@ -19,7 +19,11 @@ type MenuMode = "view" | "add" | "edit";
 export const ServicesMenu = () => {
   const user = useUser()!;
   const services = useDbQuery(
-    db.selectFrom("service_instructeurs").where("udap_id", "=", user.udap_id).orderBy("short_name asc").selectAll(),
+    db
+      .selectFrom("service_instructeurs")
+      .where("service_id", "=", user.service_id)
+      .orderBy("short_name asc")
+      .selectAll(),
   );
 
   const [mode, setMode] = useState<MenuMode>("view");
@@ -29,7 +33,7 @@ export const ServicesMenu = () => {
   const createServiceMutation = useMutation(async (service: ServiceInstructeurs) => {
     await db
       .insertInto("service_instructeurs")
-      .values({ ...service, id: v4(), udap_id: user.udap_id })
+      .values({ ...service, id: v4(), service_id: user.service_id })
       .execute();
 
     setBannerProps({

@@ -190,7 +190,7 @@ export const ImageCanvas = ({
     setStartPan(null);
   };
 
-  const handleWheel = (e: any) => {};
+  const handleWheel = () => {};
 
   const handleUndo = () => {
     setLines(lines.slice(0, -1));
@@ -204,7 +204,7 @@ export const ImageCanvas = ({
     handleMouseMove(e);
   };
 
-  const handleTouchEnd = (e: any) => {
+  const handleTouchEnd = () => {
     // setLastDistance(null);
     handleMouseUp();
   };

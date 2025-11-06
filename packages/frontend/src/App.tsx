@@ -4,7 +4,7 @@ import { routeTree } from "./routeTree.gen";
 
 export const App = () => {
   const { auth } = useAuthContext();
-  return <RouterProvider router={router} context={auth} />;
+  return <RouterProvider router={router} />;
 };
 
 const router = createRouter({

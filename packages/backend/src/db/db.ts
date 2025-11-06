@@ -5,8 +5,6 @@ import { Kyselify } from "drizzle-orm/kysely";
 
 import * as tables from "./schema";
 
-import { drizzle } from "drizzle-orm/node-postgres";
-console.log(isDev);
 const pool = new pg.Pool({
   connectionString: ENV.DATABASE_URL,
   ssl: isDev ? false : { rejectUnauthorized: false },
@@ -26,7 +24,7 @@ export type Database = {
   delegation: Kyselify<typeof tables.delegation>;
   service_instructeurs: Kyselify<typeof tables.serviceInstructeurs>;
   whitelist: Kyselify<typeof tables.whitelist>;
-  udap: Kyselify<typeof tables.udap>;
+  service: Kyselify<typeof tables.service>;
   clause_v2: Kyselify<typeof tables.clauseV2>;
   report: Kyselify<typeof tables.report>;
   pdf_snapshot: Kyselify<typeof tables.pdfSnapshot>;

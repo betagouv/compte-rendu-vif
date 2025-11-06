@@ -2,15 +2,15 @@ import { Type, type FastifyPluginAsyncTypebox } from "@fastify/type-provider-typ
 import { Font, renderToBuffer } from "@react-pdf/renderer";
 import { initFonts, ReportPDFDocument } from "@cr-vif/pdf";
 import { authenticate } from "./authMiddleware";
-import { db } from "../db/db";
+import { Database, db } from "../db/db";
 import { sendReportMail } from "../features/mail";
 import { getPDFName } from "../services/uploadService";
-import { Udap } from "../../../frontend/src/db/AppSchema";
-import { Pictures, Report } from "../db-types";
+import { Service } from "../../../frontend/src/db/AppSchema";
 import path from "path";
 import { makeDebug } from "../features/debug";
 import { v4 } from "uuid";
 import React from "react";
+import { Selectable } from "kysely";
 
 const debug = makeDebug("pdf-plugin");
 
@@ -22,7 +22,7 @@ export const pdfPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
 
   fastify.post("/report", { schema: reportPdfTSchema }, async (request) => {
     const { reportId, htmlString } = request.body;
-    const { udap_id } = request.user!;
+    const { service_id } = request.user!;
 
     const pictures = await db
       .selectFrom("pictures")
@@ -31,10 +31,10 @@ export const pdfPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
       .selectAll()
       .execute();
 
-    const udapsQuery = await db.selectFrom("udap").where("id", "=", udap_id).selectAll().execute();
-    const udap = udapsQuery[0]! as Udap;
+    const servicesQuery = await db.selectFrom("service").where("id", "=", service_id).selectAll().execute();
+    const service = servicesQuery[0]! as Service;
 
-    const pdf = await generatePdf({ htmlString, udap, pictures: pictures as Pictures[] });
+    const pdf = await generatePdf({ htmlString, service, pictures: pictures });
 
     const name = getPDFName(reportId);
 
@@ -54,8 +54,7 @@ export const pdfPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
     if (!recipients.includes(userMail)) recipients.push(userMail);
 
     const reportsQuery = await db.selectFrom("report").where("id", "=", reportId).selectAll().execute();
-    const report = reportsQuery[0] as Omit<Report, "createdAt" | "meetDate"> & { createdAt: any; meetDate: any };
-
+    const report = reportsQuery[0] as Selectable<Database["report"]>;
     await sendReportMail({ recipients: recipients.join(","), pdfBuffer: pdf, report: report! });
 
     for (const recipient of recipients) {
@@ -63,12 +62,12 @@ export const pdfPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
 
       await db
         .insertInto("sent_email")
-        .values({ id, report_id: reportId, sent_to: recipient, sent_at: new Date(), udap_id })
+        .values({ id, report_id: reportId, sent_to: recipient, sent_at: new Date().toISOString(), service_id })
         .execute();
 
       await db
         .insertInto("suggested_email")
-        .values({ id, email: recipient, udap_id })
+        .values({ id, email: recipient, service_id })
         .execute()
         .catch(() => {});
     }
@@ -95,12 +94,12 @@ export const pdfPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
 
 const generatePdf = async ({
   htmlString,
-  udap,
+  service,
   pictures,
 }: {
   htmlString: string;
-  udap: Udap;
-  pictures: Pictures[];
+  service: Service;
+  pictures: Selectable<Database["pictures"]>[];
 }) => {
   const fontsPath = path.resolve(process.cwd(), "./public");
 
@@ -128,10 +127,10 @@ const generatePdf = async ({
 
   return renderToBuffer(
     <ReportPDFDocument
-      udap={udap as Udap}
+      service={service as Omit<Selectable<Database["service"]>, "visible"> & { visible: any }} // postgres boolean vs sqlite integer
       htmlString={htmlString}
       images={{ marianne: "./public/marianne.png", marianneFooter: "./public/marianne_footer.png" }}
-      pictures={pictures as (Omit<Pictures, "createdAt"> & { createdAt: any })[]}
+      pictures={pictures as Selectable<Database["pictures"]>[]}
     />,
   );
 };

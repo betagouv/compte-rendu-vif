@@ -1,14 +1,14 @@
-import type { FastifyPluginAsyncTypebox } from "@fastify/type-provider-typebox";
+import type { FastifyPluginAsyncTypebox, Static } from "@fastify/type-provider-typebox";
 import { Type } from "@sinclair/typebox";
 import { Nullable } from "../services/syncService";
 
 export const staticDataPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
-  fastify.get("/udaps", { schema: getUDAPsTSchema }, async (request) => {
-    return request.services.staticData.getUDAPs();
+  fastify.get("/services", { schema: getServiceTSchema }, async (request) => {
+    return request.services.staticData.getServices();
   });
 };
 
-export const udapTSchema = Type.Object({
+export const serviceTSchema = Type.Object({
   id: Type.String(),
   department: Type.String(),
   completeCoords: Nullable(Type.String()),
@@ -22,9 +22,9 @@ export const udapTSchema = Type.Object({
   marianne_text: Nullable(Type.String()),
   drac_text: Nullable(Type.String()),
   dept_number: Nullable(Type.String()),
-  udap_text: Nullable(Type.String()),
+  service_text: Nullable(Type.String()),
 });
 
-export const getUDAPsTSchema = {
-  response: { 200: Type.Array(udapTSchema) },
+export const getServiceTSchema = {
+  response: { 200: Type.Array(serviceTSchema) },
 };

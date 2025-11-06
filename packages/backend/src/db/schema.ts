@@ -2,7 +2,6 @@ import {
   pgTable,
   integer,
   text,
-  bigserial,
   timestamp,
   boolean,
   foreignKey,
@@ -11,21 +10,20 @@ import {
   index,
   primaryKey,
 } from "drizzle-orm/pg-core";
-import { sql } from "drizzle-orm";
 
 export const user = pgTable(
   "user",
   {
     id: text().primaryKey().notNull(),
     name: text().notNull(),
-    udapId: text("udap_id").notNull(),
+    serviceId: text("service_id").notNull(),
     email: varchar({ length: 255 }).notNull(),
   },
   (table) => [
     foreignKey({
-      columns: [table.udapId],
+      columns: [table.serviceId],
       foreignColumns: [service.id],
-      name: "user_udap_id_fkey",
+      name: "user_service_id_fkey",
     }).onDelete("set null"),
     unique("user_email_key").on(table.email),
   ],
@@ -78,7 +76,7 @@ export const serviceInstructeurs = pgTable("service_instructeurs", {
   shortName: text("short_name").notNull(),
   email: text(),
   tel: text(),
-  udapId: text("udap_id"),
+  serviceId: text("service_id"),
 });
 
 export const whitelist = pgTable("whitelist", {
@@ -109,7 +107,7 @@ export const clauseV2 = pgTable("clause_v2", {
   key: text().notNull(),
   value: text().notNull(),
   position: integer(),
-  udapId: text("udap_id"),
+  serviceId: text("service_id"),
   text: text().notNull(),
 });
 
@@ -134,7 +132,7 @@ export const report = pgTable(
     serviceInstructeur: text(),
     pdf: text(),
     disabled: boolean(),
-    udapId: text("udap_id"),
+    serviceId: text("service_id"),
     redactedById: text(),
     applicantEmail: text(),
     city: text(),
@@ -218,7 +216,7 @@ export const sentEmail = pgTable(
     reportId: text("report_id"),
     sentTo: text("sent_to").notNull(),
     sentAt: timestamp("sent_at", { mode: "string" }).notNull(),
-    udapId: text("udap_id").notNull(),
+    serviceId: text("service_id").notNull(),
   },
   (table) => [
     foreignKey({
@@ -234,7 +232,7 @@ export const suggestedEmail = pgTable(
   {
     id: text().primaryKey().notNull(),
     email: text().notNull(),
-    udapId: text("udap_id").notNull(),
+    serviceId: text("service_id").notNull(),
   },
   (table) => [unique("suggested_email_email_key").on(table.email)],
 );
@@ -243,7 +241,7 @@ export const userSettings = pgTable("user_settings", {
   id: text().primaryKey().notNull(),
   userId: text("user_id"),
   defaultEmails: text("default_emails"),
-  udapId: text("udap_id"),
+  serviceId: text("service_id"),
 });
 
 export const merimee = pgTable(
@@ -497,7 +495,7 @@ export const stateReport = pgTable(
     description: text(),
     observations: text(),
     titre_edifice: text("titre_edifice"),
-    udapId: text("udap_id").notNull(),
+    serviceId: text("service_id").notNull(),
     createdBy: text("created_by").notNull(),
     createdAt: timestamp("created_at", { mode: "string" }).notNull(),
     disabled: boolean(),

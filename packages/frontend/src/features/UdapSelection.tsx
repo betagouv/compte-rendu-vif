@@ -7,44 +7,47 @@ import { useStyles } from "tss-react";
 import { Button } from "#components/MUIDsfr.tsx";
 import { Flex } from "#components/ui/Flex.tsx";
 
-export const UdapSelection = ({ children }: PropsWithChildren) => {
+export const ServiceSelection = ({ children }: PropsWithChildren) => {
   const user = useLiveUser();
-  const shouldSelectUdap = user?.udap_id === "no-udap";
+  const shouldSelectService = user?.service_id === "no-service";
 
   return (
     <>
-      {shouldSelectUdap ? <UdapSelectionModal /> : null}
+      {shouldSelectService ? <ServiceSelectionModal /> : null}
       {children}
     </>
   );
 };
 
-const UdapSelectionModal = () => {
+const ServiceSelectionModal = () => {
   const { cx } = useStyles();
 
   const [value, setValue] = useState<string | null>(null);
 
-  const udapsQuery = useQuery({ queryKey: ["udaps"], queryFn: async () => unauthenticatedApi.get("/api/udaps") });
-  const udaps = udapsQuery.data ?? [];
+  const servicesQuery = useQuery({
+    queryKey: ["services"],
+    queryFn: async () => unauthenticatedApi.get("/api/services"),
+  });
+  const services = servicesQuery.data ?? [];
 
-  const selectUdapMutation = useMutation({
-    mutationFn: async (udap_id: string) => {
-      const targetUdap = udaps.find((u) => u.id === udap_id);
-      if (!targetUdap) throw new Error("Udap not found");
+  const selectServiceMutation = useMutation({
+    mutationFn: async (service_id: string) => {
+      const targetService = services.find((u) => u.id === service_id);
+      if (!targetService) throw new Error("Service not found");
 
-      await api.post("/api/change-udap", { body: { udap_id } });
+      await api.post("/api/change-service", { body: { service_id } });
     },
   });
 
   return (
     <Dialog open={true} disablePortal>
       <Box p={4} width={400}>
-        <DialogTitle>Selectionnez votre UDAP</DialogTitle>
+        <DialogTitle>Selectionnez votre service</DialogTitle>
         <Autocomplete
           disablePortal
-          options={udaps}
-          getOptionLabel={(item) => item.name || ""}
-          value={value ? udaps.find((item) => item.id == value) : null}
+          options={services}
+          getOptionLabel={(item) => (item.name as string) || ""}
+          value={value ? services.find((item) => item.id == value) : null}
           onChange={(_e, item) => {
             setValue(item?.id || null);
           }}
@@ -64,7 +67,7 @@ const UdapSelectionModal = () => {
         />
 
         <Flex justifyContent="flex-end" mt="16px">
-          <Button onClick={() => value && selectUdapMutation.mutate(value)} disabled={!value}>
+          <Button onClick={() => value && selectServiceMutation.mutate(value)} disabled={!value}>
             Valider
           </Button>
         </Flex>

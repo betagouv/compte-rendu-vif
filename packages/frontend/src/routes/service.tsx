@@ -13,13 +13,12 @@ import { endOfYear, startOfYear } from "date-fns";
 import { omit } from "pastable";
 import { useState } from "react";
 import { v4 } from "uuid";
-import { ClauseV2 } from "../../../backend/src/db-types";
-import { useRefreshUdap, useRefreshUser, useUser } from "../contexts/AuthContext";
-import { ServiceInstructeurs, Udap } from "../db/AppSchema";
+import { useRefreshService, useRefreshUser, useUser } from "../contexts/AuthContext";
+import { ServiceInstructeurs, Service, Clause_v2 } from "../db/AppSchema";
 import { db, useDbQuery } from "../db/db";
 import { AccordionIfMobile, BreadcrumbNav } from "./account";
 
-const UdapPage = () => {
+const ServicePage = () => {
   const [isSuccess, setIsSuccess] = useState(false);
 
   const onSuccess = () => {
@@ -37,9 +36,9 @@ const UdapPage = () => {
       mb="40px"
     >
       <Stack width={{ xs: "100%", lg: "auto" }}>
-        <BreadcrumbNav label="UDAP" />
+        <BreadcrumbNav label="Service" />
         <Typography variant="h1" display={{ lg: "none" }} mt="16px" mb="32px" px={{ xs: "16px" }}>
-          UDAP
+          Service
         </Typography>
         <AccordionIfMobile>
           <Summary
@@ -48,7 +47,7 @@ const UdapPage = () => {
               backgroundColor: "transparent !important",
             }}
             links={[
-              { linkProps: { href: "#udap-informations" }, text: "Informations UDAP" },
+              { linkProps: { href: "#service-informations" }, text: "Informations service" },
               { linkProps: { href: "#services-instructeurs" }, text: "Services instructeurs" },
               { linkProps: { href: "#clauses-departementales" }, text: "Clauses départementales" },
               { linkProps: { href: "#rapport-activite" }, text: "Rapport d'activité" },
@@ -66,10 +65,10 @@ const UdapPage = () => {
         textAlign="left"
       >
         <Typography variant="h1" display={{ xs: "none", lg: "block" }} mt="16px" mb="32px">
-          UDAP
+          Service
         </Typography>
         {isSuccess ? <SuccessAlert /> : null}
-        <UDAPForm onSuccess={onSuccess} />
+        <ServiceForm onSuccess={onSuccess} />
         <Divider my={{ xs: "48px", lg: "48px" }} color="background-action-low-blue-france-hover" />
         <ServicesList />
         <Divider my={{ xs: "48px", lg: "48px" }} color="background-action-low-blue-france-hover" />
@@ -99,7 +98,7 @@ const format = {
     const restText = splitted.slice(4).join(" ");
     return `${fourWords}\n${restText}`;
   },
-  udap_text: (text: string) => {
+  service_text: (text: string) => {
     const splitted = text.split(" ");
     const threeWords = splitted.slice(0, 3).join(" ");
     const restText = splitted.slice(3).join(" ");
@@ -107,28 +106,28 @@ const format = {
   },
 };
 
-const UDAPForm = ({ onSuccess }: { onSuccess: () => void }) => {
-  const udap = useUser()!.udap;
-  const [udapData, setUdapData] = useState({
-    ...udap,
-    marianne_text: replaceCarriageReturn(udap.marianne_text ?? ""),
-    drac_text: replaceCarriageReturn(udap.drac_text ?? ""),
-    udap_text: replaceCarriageReturn(udap.udap_text ?? ""),
+const ServiceForm = ({ onSuccess }: { onSuccess: () => void }) => {
+  const service = useUser()!.service;
+  const [serviceData, setServiceData] = useState({
+    ...service,
+    marianne_text: replaceCarriageReturn(service.marianne_text ?? ""),
+    drac_text: replaceCarriageReturn(service.drac_text ?? ""),
+    service_text: replaceCarriageReturn(service.service_text ?? ""),
   });
 
-  const refreshUdapMutation = useRefreshUser();
+  const refreshServiceMutation = useRefreshUser();
 
-  const saveUdapMutation = useMutation({
-    mutationFn: async (udapData: Partial<Udap>) => {
+  const saveServiceMutation = useMutation({
+    mutationFn: async (serviceData: Partial<Service>) => {
       const value = {
-        ...omit(udapData, ["id"]),
-        marianne_text: format.marianne_text(udapData.marianne_text ?? ""),
-        drac_text: format.drac_text(udapData.drac_text ?? ""),
-        udap_text: format.udap_text(udapData.udap_text ?? ""),
+        ...omit(serviceData, ["id"]),
+        marianne_text: format.marianne_text(serviceData.marianne_text ?? ""),
+        drac_text: format.drac_text(serviceData.drac_text ?? ""),
+        service_text: format.service_text(serviceData.service_text ?? ""),
       };
 
-      await db.updateTable("udap").set(value).where("id", "=", udap.id).execute();
-      await refreshUdapMutation.mutateAsync();
+      await db.updateTable("service").set(value).where("id", "=", service.id).execute();
+      await refreshServiceMutation.mutateAsync();
       onSuccess?.();
     },
   });
@@ -141,8 +140,8 @@ const UDAPForm = ({ onSuccess }: { onSuccess: () => void }) => {
         label="Intitulé marianne préfet"
         hintText="Ex : Préfet de la région Nouvelle-Aquitaine"
         nativeInputProps={{
-          value: udapData.marianne_text ?? "",
-          onChange: (e) => setUdapData({ ...udapData, marianne_text: e.target.value }),
+          value: serviceData.marianne_text ?? "",
+          onChange: (e) => setServiceData({ ...serviceData, marianne_text: e.target.value }),
         }}
       />
       <Input
@@ -150,8 +149,8 @@ const UDAPForm = ({ onSuccess }: { onSuccess: () => void }) => {
         label="Intitulé DRAC"
         hintText="Ex : Direction régionale des affaires culturelles de Nouvelle-Aquitaine"
         nativeInputProps={{
-          value: udapData.drac_text ?? "",
-          onChange: (e) => setUdapData({ ...udapData, drac_text: e.target.value }),
+          value: serviceData.drac_text ?? "",
+          onChange: (e) => setServiceData({ ...serviceData, drac_text: e.target.value }),
         }}
       />
       <Input
@@ -159,8 +158,8 @@ const UDAPForm = ({ onSuccess }: { onSuccess: () => void }) => {
         label="Intitulé UDAP"
         hintText="Ex : Unité départementale de l'architecture et du patrimoine des Deux-Sèvres"
         nativeInputProps={{
-          value: udapData.udap_text ?? "",
-          onChange: (e) => setUdapData({ ...udapData, udap_text: e.target.value }),
+          value: serviceData.service_text ?? "",
+          onChange: (e) => setServiceData({ ...serviceData, service_text: e.target.value }),
         }}
       />
 
@@ -169,16 +168,16 @@ const UDAPForm = ({ onSuccess }: { onSuccess: () => void }) => {
           sx={{ width: "100%" }}
           label="Téléphone UDAP"
           nativeInputProps={{
-            value: udapData.phone ?? "",
-            onChange: (e) => setUdapData({ ...udapData, phone: e.target.value }),
+            value: serviceData.phone ?? "",
+            onChange: (e) => setServiceData({ ...serviceData, phone: e.target.value }),
           }}
         />
         <Input
           sx={{ width: "100%" }}
           label="Courriel UDAP"
           nativeInputProps={{
-            value: udapData.email ?? "",
-            onChange: (e) => setUdapData({ ...udapData, email: e.target.value }),
+            value: serviceData.email ?? "",
+            onChange: (e) => setServiceData({ ...serviceData, email: e.target.value }),
           }}
         />
       </Flex>
@@ -192,7 +191,7 @@ const UDAPForm = ({ onSuccess }: { onSuccess: () => void }) => {
           iconPosition="left"
           type="button"
           onClick={() => {
-            saveUdapMutation.mutate(udapData);
+            saveServiceMutation.mutate(serviceData);
           }}
         >
           Enregistrer
@@ -205,7 +204,7 @@ const UDAPForm = ({ onSuccess }: { onSuccess: () => void }) => {
 const ServicesList = () => {
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState<Partial<ServiceInstructeurs> | null>(null);
-  const udap = useUser().udap;
+  const service = useUser()!.service;
 
   return (
     <Flex gap="16px" flexDirection="column" width="100%">
@@ -218,7 +217,7 @@ const ServicesList = () => {
             iconPosition="left"
             type="button"
             onClick={() => {
-              setSelected({ full_name: "", short_name: "", tel: "", email: "", udap_id: udap.id });
+              setSelected({ full_name: "", short_name: "", tel: "", email: "", service_id: service.id });
             }}
           >
             Ajouter
@@ -232,7 +231,7 @@ const ServicesList = () => {
         />
       </Flex>
       <ServicePicker search={search} selected={selected} setSelected={setSelected} />
-      <ServiceForm selected={selected} setSelected={setSelected} />
+      <ServiceInstructeurForm selected={selected} setSelected={setSelected} />
     </Flex>
   );
 };
@@ -308,7 +307,7 @@ export const useScrollToRef = () => {
   return scrollToRef;
 };
 
-const ServiceForm = ({
+const ServiceInstructeurForm = ({
   selected,
   setSelected,
 }: {
@@ -321,7 +320,7 @@ const ServiceForm = ({
 
   const createOrEditServiceMutation = useMutation({
     mutationFn: async (service: Partial<ServiceInstructeurs>) => {
-      if (!service.udap_id) throw new Error("udap_id is required");
+      if (!service.service_id) throw new Error("service_id is required");
       if (!service.short_name) throw new Error("short_name is required");
 
       if (service.id) {
@@ -431,11 +430,11 @@ const Clauses = () => {
 };
 
 const SingleClause = ({ clauseKey, title }: { clauseKey: string; title: string }) => {
-  const [selected, setSelected] = useState<Partial<ClauseV2> | null>(null);
-  const udap = useUser()!.udap;
+  const [selected, setSelected] = useState<Partial<Clause_v2> | null>(null);
+  const service = useUser()!.service;
 
   const clausesQuery = useDbQuery(
-    db.selectFrom("clause_v2").where("key", "=", clauseKey).where("udap_id", "in", ["ALL", udap.id]).selectAll(),
+    db.selectFrom("clause_v2").where("key", "=", clauseKey).where("service_id", "in", ["ALL", service.id]).selectAll(),
   );
 
   return (
@@ -447,7 +446,7 @@ const SingleClause = ({ clauseKey, title }: { clauseKey: string; title: string }
         iconPosition="left"
         type="button"
         onClick={() => {
-          setSelected({ key: clauseKey, text: "", udap_id: udap.id, value: "", position: 0 });
+          setSelected({ key: clauseKey, text: "", service_id: service.id, value: "", position: 0 });
         }}
       >
         Ajouter
@@ -462,7 +461,7 @@ const SingleClause = ({ clauseKey, title }: { clauseKey: string; title: string }
             .map((clause) => (
               <Chip
                 key={clause.id}
-                onCheckChange={() => setSelected(selected?.id === clause?.id ? null : (clause as ClauseV2))}
+                onCheckChange={() => setSelected(selected?.id === clause?.id ? null : (clause as Clause_v2))}
                 isChecked={selected?.id === clause.id}
               >
                 {clause.value}
@@ -480,8 +479,8 @@ const ClauseForm = ({
   selected,
   setSelected,
 }: {
-  selected: Partial<ClauseV2> | null;
-  setSelected: (item: Partial<ClauseV2> | null) => void;
+  selected: Partial<Clause_v2> | null;
+  setSelected: (item: Partial<Clause_v2> | null) => void;
 }) => {
   const scrollToRef = useScrollToRef();
   if (!selected) return null;
@@ -489,8 +488,8 @@ const ClauseForm = ({
   const isNew = !selected.id;
 
   const createOrEditClauseMutation = useMutation({
-    mutationFn: async (clause: Partial<ClauseV2>) => {
-      if (!clause.udap_id) throw new Error("udap_id is required");
+    mutationFn: async (clause: Partial<Clause_v2>) => {
+      if (!clause.service_id) throw new Error("service_id is required");
       if (!clause.key) throw new Error("key is required");
 
       if (clause.id) {
@@ -507,7 +506,7 @@ const ClauseForm = ({
   });
 
   const deleteClauseMutation = useMutation({
-    mutationFn: async (clause: Partial<ClauseV2>) => {
+    mutationFn: async (clause: Partial<Clause_v2>) => {
       if (!clause.id) throw new Error("id is required");
       await db.deleteFrom("clause_v2").where("id", "=", clause.id).execute();
       setSelected(null);
@@ -568,14 +567,14 @@ const ClauseForm = ({
 };
 
 const Activity = () => {
-  const user = useUser();
+  const user = useUser()!;
   const [startDate, setStartDate] = useState(datePresets[0].startDate);
   const [endDate, setEndDate] = useState(datePresets[0].endDate);
 
   const query = useDbQuery(
     db
       .selectFrom("report")
-      .where("udap_id", "=", user.udap.id)
+      .where("service_id", "=", user.service.id)
       .where("createdBy", "=", user.id)
       .where("createdAt", ">=", startDate.toISOString())
       .where("createdAt", "<=", endDate.toISOString())
@@ -586,7 +585,7 @@ const Activity = () => {
   const udapQuery = useDbQuery(
     db
       .selectFrom("report")
-      .where("udap_id", "=", user.udap.id)
+      .where("service_id", "=", user.service.id)
       .where("createdAt", ">=", startDate.toISOString())
       .where("createdAt", "<=", endDate.toISOString())
       .where("pdf", "is not", null)
@@ -718,22 +717,23 @@ const Title = ({ children, anchor }: { children: React.ReactNode; anchor?: strin
   );
 };
 
-export const Route = createFileRoute("/udap")({
+export const Route = createFileRoute("/service")({
   component: () => (
     <EnsureUser>
-      <UdapPage />
+      <ServicePage />
     </EnsureUser>
   ),
 });
 
 export const SuccessAlert = () => {
   return (
+    // @ts-ignore title is required by DSFR
     <Alert
       style={{ marginBottom: "32px" }}
       severity="success"
       closable={false}
       small={false}
       description={"Vos modifications ont bien été prises en compte."}
-    ></Alert>
+    />
   );
 };

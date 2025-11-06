@@ -4,7 +4,6 @@ import { onHmr, registerViteHmrServerRestart } from "./hmr";
 import { ENV } from "./envVars";
 import { generateOpenApi, initFastify } from "./router";
 import { makeDebug } from "./features/debug";
-import { initClauseV2 } from "./tmp";
 import { initFonts } from "@cr-vif/pdf";
 import { fetchPopImmeubles } from "./features/data/pop";
 

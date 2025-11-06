@@ -22,7 +22,7 @@ export class SyncService {
         tx_id: operation.tx_id,
         data: JSON.stringify(operation.data),
         op: operation.op,
-        created_at: new Date(),
+        created_at: new Date().toISOString(),
         user_id: userId,
       })
       .execute();

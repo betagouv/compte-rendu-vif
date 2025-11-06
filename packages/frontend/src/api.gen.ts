@@ -26,22 +26,22 @@ export namespace Endpoints {
       user: {
         id: string;
         name: string;
-        udap_id: string;
-        udap: {
+        service_id: string;
+        service: {
           id: string;
           department: string;
-          completeCoords?: string | Schemas.null | Array<string | Schemas.null> | undefined;
-          visible?: boolean | Schemas.null | Array<boolean | Schemas.null> | undefined;
-          name?: string | Schemas.null | Array<string | Schemas.null> | undefined;
-          address?: string | Schemas.null | Array<string | Schemas.null> | undefined;
-          zipCode?: string | Schemas.null | Array<string | Schemas.null> | undefined;
-          city?: string | Schemas.null | Array<string | Schemas.null> | undefined;
-          phone?: string | Schemas.null | Array<string | Schemas.null> | undefined;
-          email?: string | Schemas.null | Array<string | Schemas.null> | undefined;
-          marianne_text?: string | Schemas.null | Array<string | Schemas.null> | undefined;
-          drac_text?: string | Schemas.null | Array<string | Schemas.null> | undefined;
-          dept_number?: string | Schemas.null | Array<string | Schemas.null> | undefined;
-          udap_text?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+          completeCoords?: string | null | Array<string | null> | undefined;
+          visible?: boolean | null | Array<boolean | null> | undefined;
+          name?: string | null | Array<string | null> | undefined;
+          address?: string | null | Array<string | null> | undefined;
+          zipCode?: string | null | Array<string | null> | undefined;
+          city?: string | null | Array<string | null> | undefined;
+          phone?: string | null | Array<string | null> | undefined;
+          email?: string | null | Array<string | null> | undefined;
+          marianne_text?: string | null | Array<string | null> | undefined;
+          drac_text?: string | null | Array<string | null> | undefined;
+          dept_number?: string | null | Array<string | null> | undefined;
+          service_text?: string | null | Array<string | null> | undefined;
         };
       };
     };
@@ -63,33 +63,33 @@ export namespace Endpoints {
       id_token: string;
     };
   };
-  export type post_ApichangeUdap = {
+  export type post_ApichangeService = {
     method: "POST";
-    path: "/api/change-udap";
+    path: "/api/change-service";
     parameters: {
-      body: { udap_id: string };
+      body: { service_id: string };
     };
     response: { message: string };
   };
-  export type get_Apiudaps = {
+  export type get_Apiservices = {
     method: "GET";
-    path: "/api/udaps";
+    path: "/api/services";
     parameters: never;
     response: Array<{
       id: string;
       department: string;
-      completeCoords?: string | Schemas.null | Array<string | Schemas.null> | undefined;
-      visible?: boolean | Schemas.null | Array<boolean | Schemas.null> | undefined;
-      name?: string | Schemas.null | Array<string | Schemas.null> | undefined;
-      address?: string | Schemas.null | Array<string | Schemas.null> | undefined;
-      zipCode?: string | Schemas.null | Array<string | Schemas.null> | undefined;
-      city?: string | Schemas.null | Array<string | Schemas.null> | undefined;
-      phone?: string | Schemas.null | Array<string | Schemas.null> | undefined;
-      email?: string | Schemas.null | Array<string | Schemas.null> | undefined;
-      marianne_text?: string | Schemas.null | Array<string | Schemas.null> | undefined;
-      drac_text?: string | Schemas.null | Array<string | Schemas.null> | undefined;
-      dept_number?: string | Schemas.null | Array<string | Schemas.null> | undefined;
-      udap_text?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+      completeCoords?: string | null | Array<string | null> | undefined;
+      visible?: boolean | null | Array<boolean | null> | undefined;
+      name?: string | null | Array<string | null> | undefined;
+      address?: string | null | Array<string | null> | undefined;
+      zipCode?: string | null | Array<string | null> | undefined;
+      city?: string | null | Array<string | null> | undefined;
+      phone?: string | null | Array<string | null> | undefined;
+      email?: string | null | Array<string | null> | undefined;
+      marianne_text?: string | null | Array<string | null> | undefined;
+      drac_text?: string | null | Array<string | null> | undefined;
+      dept_number?: string | null | Array<string | null> | undefined;
+      service_text?: string | null | Array<string | null> | undefined;
     }>;
   };
   export type post_Apiuploadimage = {
@@ -138,7 +138,7 @@ export namespace Endpoints {
     parameters: {
       body: {
         op_id: number;
-        tx_id?: number | Schemas.null | Array<number | Schemas.null> | undefined;
+        tx_id?: number | null | Array<number | null> | undefined;
         id: string;
         type: string;
         op: string;
@@ -156,14 +156,14 @@ export type EndpointByMethod = {
   post: {
     "/api/authenticate": Endpoints.post_Apiauthenticate;
     "/api/refresh-token": Endpoints.post_ApirefreshToken;
-    "/api/change-udap": Endpoints.post_ApichangeUdap;
+    "/api/change-service": Endpoints.post_ApichangeService;
     "/api/upload/image": Endpoints.post_Apiuploadimage;
     "/api/upload/picture/{pictureId}/lines": Endpoints.post_ApiuploadpicturePictureIdlines;
     "/api/pdf/report": Endpoints.post_Apipdfreport;
     "/api/upload-data": Endpoints.post_ApiuploadData;
   };
   get: {
-    "/api/udaps": Endpoints.get_Apiudaps;
+    "/api/services": Endpoints.get_Apiservices;
     "/api/upload/picture": Endpoints.get_Apiuploadpicture;
     "/api/pdf/report": Endpoints.get_Apipdfreport;
   };
@@ -244,8 +244,8 @@ export class ApiClient {
   get<Path extends keyof GetEndpoints, TEndpoint extends GetEndpoints[Path]>(
     path: Path,
     ...params: MaybeOptionalArg<TEndpoint["parameters"]>
-  ): Promise<TEndpoint["response"]> {
-    return this.fetcher("get", this.baseUrl + path, params[0]);
+  ) {
+    return this.fetcher("get", this.baseUrl + path, params[0]) as Promise<TEndpoint["response"]>;
   }
   // </ApiClient.get>
 }

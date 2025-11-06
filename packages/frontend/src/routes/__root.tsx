@@ -3,7 +3,7 @@ import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
 import type { RouterOutputs } from "../api";
 import { Layout } from "../features/Layout";
 
-export const Route = createRootRouteWithContext<Partial<RouterOutputs<"/api/login">>>()({
+export const Route = createRootRouteWithContext<Partial<RouterOutputs<"/api/authenticate">>>()({
   beforeLoad: (ctx) => {
     document.title = getTitle(ctx.location.pathname);
   },

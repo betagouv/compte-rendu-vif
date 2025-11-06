@@ -9,7 +9,7 @@ export const useChipOptions = (key?: string) => {
 
   let query = db
     .selectFrom("clause_v2")
-    .where((eb) => eb.or([eb("udap_id", "=", "ALL"), eb("udap_id", "=", user.udap_id)]));
+    .where((eb) => eb.or([eb("service_id", "=", "ALL"), eb("service_id", "=", user.service_id)]));
 
   if (key) query = query.where("key", "=", key);
 
@@ -17,7 +17,7 @@ export const useChipOptions = (key?: string) => {
   const grouped = groupBy(chipsQuery.data ?? [], (item) => `${item.key}-${item.value}`);
 
   const chips = Object.values(grouped).map((value) => {
-    if (value.length > 1) return value.find((chip) => chip.udap_id !== "ALL") ?? value[0];
+    if (value.length > 1) return value.find((chip) => chip.service_id !== "ALL") ?? value[0];
     return value[0];
   });
 

@@ -21,7 +21,7 @@ export const ClauseMenu = () => {
     db
       .selectFrom("clause_v2")
       .where("key", "=", clauseData.clauseId)
-      .where("udap_id", "in", ["ALL", user.udap_id])
+      .where("service_id", "in", ["ALL", user.service_id])
       .selectAll(),
   );
 

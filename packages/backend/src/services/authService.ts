@@ -4,7 +4,7 @@ import { Static, Type } from "@sinclair/typebox";
 import jwt from "jsonwebtoken";
 import jwks from "jwks-rsa";
 import { db } from "../db/db";
-import { udapTSchema } from "../routes/staticDataRoutes";
+import { serviceTSchema } from "../routes/staticDataRoutes";
 
 const authFullUrl = `${ENV.VITE_AUTH_URL}/realms/${ENV.VITE_AUTH_REALM}`;
 
@@ -66,7 +66,7 @@ export class AuthService {
     const userPayload = {
       id: checked.sub!,
       name: checked.name ?? checked.preferred_username!,
-      udap_id: "no-udap",
+      service_id: "no-service",
       email: checked.email,
     };
 
@@ -74,20 +74,21 @@ export class AuthService {
     if (existingUser) return existingUser;
 
     const user = await db.insertInto("user").values(userPayload).returningAll().executeTakeFirstOrThrow();
-    return { ...(await populateUdap(user)), isFirstConnection: true };
+    const populatedUser = { ...(await populateService(user!)), isFirstConnection: true };
+    return populatedUser;
   }
 
   async getUserFromToken(token: string) {
     const checked = await this.checkToken(token);
     const user = await db.selectFrom("user").where("id", "=", checked.sub!).selectAll().executeTakeFirst();
     if (!user) return null;
-    return populateUdap(user);
+    return populateService(user);
   }
 }
 
-const populateUdap = async <T extends { udap_id: string }>(user: T) => {
-  const udap = await db.selectFrom("udap").where("id", "=", user.udap_id).selectAll().executeTakeFirst();
-  return { ...user, udap: udap! };
+const populateService = async <T extends { service_id: string }>(user: T) => {
+  const service = await db.selectFrom("service").where("id", "=", user.service_id).selectAll().executeTakeFirst();
+  return { ...user, service: service! };
 };
 
 const getClientAssertion = () => {
@@ -140,8 +141,8 @@ export const keycloakTokenResponseTSchema = Type.Object({
 export const userTSchema = Type.Object({
   id: Type.String(),
   name: Type.String(),
-  udap_id: Type.String(),
-  udap: udapTSchema,
+  service_id: Type.String(),
+  service: serviceTSchema,
 });
 
 export const authApi = ofetch.create({

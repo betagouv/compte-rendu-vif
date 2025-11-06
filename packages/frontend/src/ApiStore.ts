@@ -1,5 +1,5 @@
 import { createStore, get, set, del } from "idb-keyval";
-import { User } from "./api";
+import { AuthUser } from "./api";
 import { ENV } from "./envVars";
 
 export class ApiStore {
@@ -8,7 +8,7 @@ export class ApiStore {
   accessToken: string | null = null;
   expiresAt: string | null = null;
   refreshToken: string | null = null;
-  user: User | null = null;
+  user: AuthUser | null = null;
   store = createStore("auth", "access");
 
   constructor() {}

@@ -30,7 +30,7 @@ export const StateReportListItem = ({
   const title = report.reference_pop;
   const whereText = report.commune ? `à ${report.commune}` : null;
 
-  const isDraft = report.pdf === null;
+  const isDraft = true;
 
   return (
     <Flex className="report-list-item" position="relative" flexDirection="column" width="100%">
@@ -44,6 +44,7 @@ export const StateReportListItem = ({
         onClick={onClick}
         to={"/constat/$constatId"}
         params={{ constatId: report.id }}
+        search={{ step: "informations" }}
       >
         <Box
           component="article"

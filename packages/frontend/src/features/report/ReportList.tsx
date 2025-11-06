@@ -12,6 +12,7 @@ import { ReportListItem } from "./ReportListItem";
 import { getRouteApi } from "@tanstack/react-router";
 import { getReportQueries, getStateReportQueries } from "../useDocumentQueries";
 import { StateReportListItem } from "../state-report/StateReportListItem";
+import { AppDocument } from "../../utils";
 
 export type ReportWithUser = Report & { createdByName: string | null };
 export type StateReportWithUser = StateReport & { createdByName: string | null };
@@ -22,64 +23,98 @@ export const MyReports = () => {
   const [page, setPage] = useState(0);
   const document = routeApi.useSearch().document;
 
-  const currentQueries = useRightQueries(page);
-  const reportsQuery = useDbQuery(currentQueries.baseQuery);
+  const { baseQuery, countQuery } = useRightQueries({ page, document, scope: "my" });
+  const reports = baseQuery.data;
 
-  const reports = reportsQuery.data;
+  const reportsCount = countQuery.data?.[0]?.count as number;
 
-  const reportsCountQuery = useDbQuery(currentQueries.countQuery);
-  const reportsCount = reportsCountQuery.data?.[0]?.count as number;
-
-  const hasError = reportsQuery.error || reportsCountQuery.error;
-  const isLoading = reportsQuery.isLoading || reportsCountQuery.isLoading;
+  const hasError = baseQuery.error || countQuery.error;
+  const isLoading = baseQuery.isLoading || countQuery.isLoading;
 
   if (hasError) {
-    console.error(reportsQuery.error, reportsCountQuery.error);
+    console.error(baseQuery.error, countQuery.error);
     return <Center>Une erreur s'est produite</Center>;
   }
 
   if (isLoading) return null;
+
   if (document === "compte-rendus") {
-    return <ReportList reports={reports ?? []} setPage={setPage} count={reportsCount ?? 0} page={page} />;
-  } else return <StateReportList reports={reports ?? []} setPage={setPage} count={reportsCount ?? 0} page={page} />;
+    return (
+      <ReportList
+        reports={(reports ?? []) as ReportWithUser[]}
+        setPage={setPage}
+        count={reportsCount ?? 0}
+        page={page}
+      />
+    );
+  } else
+    return (
+      <StateReportList
+        reports={(reports ?? []) as StateReportWithUser[]}
+        setPage={setPage}
+        count={reportsCount ?? 0}
+        page={page}
+      />
+    );
 };
 
 export const AllReports = () => {
   const [page, setPage] = useState(0);
   const document = routeApi.useSearch().document;
 
-  const currentQueries = useRightQueries(page);
+  const { baseQuery, countQuery } = useRightQueries({ page, document, scope: "all" });
+  const reports = baseQuery.data;
 
-  const reportsQuery = useDbQuery(currentQueries.baseQuery);
-  const reports = reportsQuery.data;
+  const reportsCount = countQuery.data?.[0]?.count as number;
 
-  const reportsCountQuery = useDbQuery(currentQueries.countQuery);
-  const reportsCount = reportsCountQuery.data?.[0]?.count as number;
-
-  const hasError = reportsQuery.error || reportsCountQuery.error;
-  const isLoading = reportsQuery.isLoading || reportsCountQuery.isLoading;
+  const hasError = baseQuery.error || countQuery.error;
+  const isLoading = baseQuery.isLoading || countQuery.isLoading;
 
   if (hasError) {
-    console.error(reportsQuery.error, reportsCountQuery.error);
+    console.error(baseQuery.error, countQuery.error);
     return <Center>Une erreur s'est produite</Center>;
   }
 
   if (isLoading) return null;
 
   if (document === "compte-rendus") {
-    return <ReportList reports={reports ?? []} setPage={setPage} count={reportsCount ?? 0} page={page} />;
-  } else return <StateReportList reports={reports ?? []} setPage={setPage} count={reportsCount ?? 0} page={page} />;
+    return (
+      <ReportList
+        reports={(reports ?? []) as ReportWithUser[]}
+        setPage={setPage}
+        count={reportsCount ?? 0}
+        page={page}
+      />
+    );
+  } else
+    return (
+      <StateReportList
+        reports={(reports ?? []) as StateReportWithUser[]}
+        setPage={setPage}
+        count={reportsCount ?? 0}
+        page={page}
+      />
+    );
 };
 
-const useRightQueries = (page: number) => {
+const useRightQueries = <Document extends AppDocument>({
+  page,
+  document,
+  scope,
+}: {
+  page: number;
+  document: Document;
+  scope: "my" | "all";
+}) => {
   const user = useUser()!;
-  const document = routeApi.useSearch().document;
 
   if (document === "compte-rendus") {
-    return getReportQueries("all", page, user);
+    const queries = getReportQueries(scope, page, user);
+    return { baseQuery: useDbQuery(queries.baseQuery), countQuery: useDbQuery(queries.countQuery) };
   }
 
-  return getStateReportQueries("all", page, user);
+  const queries = getStateReportQueries(scope, page, user);
+  return { baseQuery: useDbQuery(queries.baseQuery), countQuery: useDbQuery(queries.countQuery) };
 };
 
 const NoReport = () => {

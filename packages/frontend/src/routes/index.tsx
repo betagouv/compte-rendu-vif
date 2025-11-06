@@ -20,6 +20,7 @@ import { fr } from "@codegouvfr/react-dsfr";
 import { HomeImageSvg } from "#components/HomeImageSvg.tsx";
 import { DocumentTypeSelector } from "#components/DocumentTypeSelector.tsx";
 import z from "zod";
+import { appDocumentEnum } from "../utils";
 
 const Index = () => {
   const [search, setSearch] = useState("");
@@ -40,7 +41,7 @@ const Index = () => {
           createdAt: new Date().toISOString(),
           meetDate: new Date().toISOString(),
           disabled: 0,
-          udap_id: user.udap_id,
+          service_id: user.service_id,
           redactedBy: user.name,
           redactedById: user.id,
         })
@@ -63,14 +64,14 @@ const Index = () => {
           created_by: user.id,
           created_at: new Date().toISOString(),
           disabled: 0,
-          udap_id: user.udap_id,
+          service_id: user.service_id,
         })
         .execute();
 
       return id;
     },
     onSuccess: (id) => {
-      id && navigate({ to: "/constat/$constatId", params: { constatId: id }, search: { step: "monument-historique" } });
+      id && navigate({ to: "/constat/$constatId", params: { constatId: id }, search: { step: "informations" } });
     },
   });
 
@@ -144,8 +145,8 @@ const MainContentTabs = () => {
       ),
     },
     {
-      id: "udap",
-      label: "UDAP",
+      id: "service",
+      label: "Service",
       props: {
         position: "absolute" as const,
         left: "16px",
@@ -178,6 +179,6 @@ export const Route = createFileRoute("/")({
     </EnsureUser>
   ),
   validateSearch: (search) => ({
-    document: z.enum(["constats", "compte-rendus"]).optional().default("constats").parse(search?.document),
+    document: appDocumentEnum.optional().default("constats").parse(search?.document),
   }),
 });

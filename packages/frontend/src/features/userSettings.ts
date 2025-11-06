@@ -10,10 +10,10 @@ export const getUserSettings = async (user: User) => {
 
   if (userSettings) return userSettings;
 
-  const udap = await db.selectFrom("udap").where("id", "=", user.udap_id).selectAll().executeTakeFirst();
+  const service = await db.selectFrom("service").where("id", "=", user.service_id).selectAll().executeTakeFirst();
 
   return {
     user_id: user.id,
-    default_emails: udap?.email ?? "",
+    default_emails: service?.email ?? "",
   };
 };

@@ -12,7 +12,8 @@
     "prebuild": "react-dsfr update-icons",
     "env:gen": "vite-node ./scripts/createEnvFile.ts",
     "version:gen": "vite-node ./scripts/setVersion.ts",
-    "dsfr": "copy-dsfr-to-public"
+    "dsfr": "copy-dsfr-to-public",
+    "check": "tsc --noEmit"
   },
   "dependencies": {
     "@codegouvfr/react-dsfr": "^1.26.0",

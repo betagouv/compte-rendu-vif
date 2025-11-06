@@ -1,8 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { unauthenticatedApi } from "../api";
+import { unauthenticatedApi, AuthUser } from "../api";
 import { useAuthContext } from "../contexts/AuthContext";
 import { get80PercentOfTokenLifespan } from "../ApiStore";
+import { Alert, Center } from "#components/MUIDsfr.tsx";
+import { Spinner } from "#components/Spinner.tsx";
 
 const AuthCallback = () => {
   const params = new URLSearchParams(window.location.search);
@@ -13,11 +15,10 @@ const AuthCallback = () => {
   const { setAuth } = useAuthContext();
 
   // authenticate and navigate when done
-  useQuery({
+  const authenticateQuery = useQuery({
     queryKey: ["authenticate", code],
+    retry: false,
     queryFn: async () => {
-      // remove params from url
-      window.history.replaceState({}, document.title, window.location.pathname);
       const data = await unauthenticatedApi.post("/api/authenticate", { body: { code } });
 
       const expiresAt = get80PercentOfTokenLifespan(Number(data.tokens.expires_in));
@@ -26,15 +27,24 @@ const AuthCallback = () => {
         accessToken: data.tokens.access_token,
         expiresAt: new Date(expiresAt).toISOString(),
         refreshToken: data.tokens.refresh_token,
-        user: data.user,
+        user: data.user as AuthUser,
       });
 
-      navigate({ to: "/" });
+      // remove params from url
+      window.history.replaceState({}, document.title, window.location.pathname);
+      navigate({ to: "/", search: { document: "constats" } });
     },
     enabled: !!code,
   });
 
-  return <div>Authentification en cours...</div>;
+  return (
+    <Center height="100%">
+      {authenticateQuery.isLoading ? <Spinner /> : null}
+      {authenticateQuery.isError ? (
+        <Alert severity="error" title="Une erreur s'est produite lors de l'authentification." />
+      ) : null}
+    </Center>
+  );
 };
 
 export const Route = createFileRoute("/auth-callback")({

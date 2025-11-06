@@ -6,6 +6,7 @@ import { db, useDbQuery } from "../db/db";
 import { menuActor } from "../features/menu/menuMachine";
 import { Center } from "#components/MUIDsfr.tsx";
 import { Spinner } from "#components/Spinner.tsx";
+import { Service } from "../db/AppSchema";
 
 const emptyAuth = {
   accessToken: null,
@@ -32,7 +33,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         accessToken: apiStore.accessToken,
         expiresAt: apiStore.expiresAt,
         refreshToken: apiStore.refreshToken,
-        user: apiStore.user,
+        user: apiStore.user as AuthUser,
       }));
 
       return apiStore;
@@ -109,22 +110,22 @@ export const useLiveUser = () => {
   );
   const liveUser = liveUsers.data[0];
 
-  const liveUdaps = useDbQuery(
+  const liveServices = useDbQuery(
     db
-      .selectFrom("udap")
+      .selectFrom("service")
       .selectAll()
-      .where("id", "=", liveUser?.udap_id ?? ""),
+      .where("id", "=", liveUser?.service_id ?? ""),
   );
-  const liveUdap = liveUdaps.data[0];
+  const liveService = liveServices.data[0];
 
-  if (!liveUser || !liveUdap) return user;
-  return { ...liveUser, udap: liveUdap };
+  if (!liveUser || !liveService) return user;
+  return { ...liveUser, service: liveService };
 };
 
-export const useUdap = () => {
+export const useService = () => {
   const user = useUser();
 
-  return user!.udap;
+  return user!.service;
 };
 
 export const useRefreshUser = () => {
@@ -136,8 +137,12 @@ export const useRefreshUser = () => {
       if (!user) return;
       const newUser = await db.selectFrom("user").selectAll().where("id", "=", user.id).executeTakeFirst();
       if (!newUser) return;
-      const newUdap = await db.selectFrom("udap").selectAll().where("id", "=", newUser.udap_id).executeTakeFirst();
-      if (newUdap) (newUser as any).udap = newUdap;
+      const newService = await db
+        .selectFrom("service")
+        .selectAll()
+        .where("id", "=", newUser.service_id)
+        .executeTakeFirst();
+      if (newService) (newUser as any).service = newService;
 
       setAuth({ ...auth, user: newUser as any });
     },
@@ -146,7 +151,7 @@ export const useRefreshUser = () => {
   return refreshUserMutation;
 };
 
-export const useRefreshUdap = () => {
+export const useRefreshService = () => {
   return () => {};
 };
 
@@ -155,9 +160,13 @@ type AuthContextProps = {
     accessToken: string | null;
     expiresAt: string | null;
     refreshToken: string | null;
-    user: RouterOutputs<"/api/authenticate">["user"] | null;
+    user: AuthUser | null;
   };
   setAuth: (
     dataOrCallback: AuthContextProps["auth"] | ((old: AuthContextProps["auth"]) => AuthContextProps["auth"]),
   ) => void;
+};
+
+type AuthUser = Omit<RouterOutputs<"/api/authenticate">["user"], "service"> & {
+  service: Service;
 };

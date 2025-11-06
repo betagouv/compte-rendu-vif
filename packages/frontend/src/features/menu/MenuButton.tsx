@@ -62,7 +62,7 @@ export const MenuButton = () => {
               }}
               size={!isXL ? "large" : "medium"}
               priority="tertiary no outline"
-              linkProps={{ to: "/udap" }}
+              linkProps={{ to: "/service" }}
               iconId="fr-icon-france-fill"
             >
               <Typography
@@ -70,7 +70,7 @@ export const MenuButton = () => {
                   display: { xs: "none", xl: "inline" },
                 }}
               >
-                UDAP
+                Service
               </Typography>
             </Button>
             <Button

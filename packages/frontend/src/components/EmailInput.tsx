@@ -62,7 +62,11 @@ export const EmailInput = ({
   const user = useUser()!;
 
   const deleteSuggestionMutation = useMutation(async (email: string) => {
-    await db.deleteFrom("suggested_email").where("email", "=", email).where("udap_id", "=", user.udap_id).execute();
+    await db
+      .deleteFrom("suggested_email")
+      .where("email", "=", email)
+      .where("service_id", "=", user.service_id)
+      .execute();
 
     send({
       type: "REMOVE",
@@ -169,7 +173,7 @@ export const EmailInput = ({
                   </Box>
                 ))}
                 <Box bgcolor="#ECECFE" width="100%" minHeight="46px" p="8px" color="#000091" textAlign="center">
-                  La suppression de contact s'appliquera à toute l'UDAP
+                  La suppression de contact s'appliquera à tout le service
                 </Box>
               </Box>
             )}

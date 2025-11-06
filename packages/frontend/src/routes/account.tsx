@@ -5,15 +5,7 @@ import Download from "@codegouvfr/react-dsfr/Download";
 import { useUserSettings } from "../hooks/useUserSettings";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { db, useDbQuery } from "../db/db";
-import {
-  AuthContext,
-  useAuthContext,
-  useLiveUser,
-  useRefreshUdap,
-  useRefreshUser,
-  useUdap,
-  useUser,
-} from "../contexts/AuthContext";
+import { useLiveUser, useUser } from "../contexts/AuthContext";
 import { v4 } from "uuid";
 import { Spinner } from "#components/Spinner";
 import { EmailInput } from "../components/EmailInput";
@@ -23,9 +15,9 @@ import Alert from "@codegouvfr/react-dsfr/Alert";
 import { api } from "../api";
 import JSZip from "jszip";
 import { downloadFile } from "../utils";
-import { datePresets, DateRangePicker, SuccessAlert } from "./udap";
-import { PropsWithChildren, ReactNode, useContext, useState } from "react";
-import { format, subDays } from "date-fns";
+import { datePresets, DateRangePicker, SuccessAlert } from "./service";
+import { ReactNode, useState } from "react";
+import { format } from "date-fns";
 import { getPDFInMailName } from "@cr-vif/pdf";
 import { Flex } from "#components/ui/Flex.tsx";
 import { Box, Stack, Typography } from "@mui/material";
@@ -66,7 +58,7 @@ const AccountPage = () => {
               { linkProps: { href: "#default-recipient" }, text: "Destinataire par défaut" },
               { linkProps: { href: "#share" }, text: "Droit d'édition partagé" },
               { linkProps: { href: "#download" }, text: "Télécharger mes CR" },
-              { linkProps: { href: "#change-udap" }, text: "Changer d'UDAP" },
+              { linkProps: { href: "#change-service" }, text: "Changer de service" },
             ]}
           />
         </AccordionIfMobile>
@@ -91,7 +83,7 @@ const AccountPage = () => {
         <Divider my={{ xs: "48px", lg: "80px" }} color="background-action-low-blue-france-hover" />
         <DownloadCRs />
         <Divider my={{ xs: "48px", lg: "80px" }} color="background-action-low-blue-france-hover" />
-        <ChangeUDAP onSuccess={onSuccess} />
+        <ChangeService onSuccess={onSuccess} />
       </Center>
     </Flex>
   );
@@ -178,7 +170,7 @@ const Share = () => {
   const user = useUser()!;
 
   const coworkersQuery = useDbQuery(
-    db.selectFrom("user").where("udap_id", "=", user.udap_id).where("id", "!=", user.id).selectAll(),
+    db.selectFrom("user").where("service_id", "=", user.service_id).where("id", "!=", user.id).selectAll(),
   );
 
   const delegationsQuery = useDbQuery(db.selectFrom("delegation").where("createdBy", "=", user.id).selectAll());
@@ -336,7 +328,7 @@ const DownloadCRs = () => {
     db
       .selectFrom("report")
       .where("createdBy", "=", user.id)
-      .where("udap_id", "=", user.udap_id)
+      .where("service_id", "=", user.service_id)
       .where("pdf", "is not", null)
       .where("disabled", "!=", 1)
       .where("createdAt", ">=", startDate.toISOString())
@@ -369,30 +361,30 @@ const DownloadCRs = () => {
   );
 };
 
-const ChangeUDAP = ({ onSuccess }: { onSuccess: () => void }) => {
+const ChangeService = ({ onSuccess }: { onSuccess: () => void }) => {
   const user = useLiveUser()!;
-  const udap = user.udap;
+  const service = user.service;
 
-  const [selectedUdapId, setSelectedUdapId] = useState<string | null>(null);
+  const [selectedServiceId, setSelectedServiceId] = useState<string | null>(null);
 
-  const udapsQuery = useQuery({
-    queryKey: ["udaps", udap.id],
+  const servicesQuery = useQuery({
+    queryKey: ["services", service.id],
     queryFn: async () => {
-      const response = await api.get("/api/udaps");
-      const filteredResponse = response.filter((u) => u.id !== udap.id);
+      const response = await api.get("/api/services");
+      const filteredResponse = response.filter((u) => u.id !== service.id);
       if (filteredResponse.length === 1) {
-        setSelectedUdapId(filteredResponse[0].id);
+        setSelectedServiceId(filteredResponse[0].id);
       }
       return filteredResponse;
     },
     onError: (error) => console.error(error),
   });
 
-  const changeUdapMutation = useMutation(async (udap_id: string) => {
-    const udap = udapsQuery.data?.find((u) => u.id === udap_id);
-    if (!udap) return;
-    await api.post("/api/change-udap", {
-      body: { udap_id },
+  const changeServiceMutation = useMutation(async (service_id: string) => {
+    const service = servicesQuery.data?.find((u) => u.id === service_id);
+    if (!service) return;
+    await api.post("/api/change-service", {
+      body: { service_id },
     });
 
     onSuccess?.();
@@ -402,7 +394,7 @@ const ChangeUDAP = ({ onSuccess }: { onSuccess: () => void }) => {
 
   return (
     <Flex gap="0px" flexDirection="column" width="100%">
-      <Title anchor="change-udap">4. Changer d'UDAP</Title>
+      <Title anchor="change-service">4. Changer de service</Title>
       {/* @ts-ignore */}
       <Alert
         style={{
@@ -414,9 +406,9 @@ const ChangeUDAP = ({ onSuccess }: { onSuccess: () => void }) => {
         severity="warning"
         description={
           <p>
-            À noter : si vous changez d’UDAP, vous n’aurez plus accès à vos CR actuels et vos paramètres seront ceux
-            ceux de votre nouvelle équipe. Cette action reste néanmoins réversible, vous pourrez changer à nouveau
-            d’UDAP et retrouver vos CR.
+            À noter : si vous changez de service, vous n’aurez plus accès à vos CR actuels et vos paramètres seront ceux
+            ceux de votre nouvelle équipe. Cette action reste néanmoins réversible, vous pourrez changer à nouveau de
+            service et retrouver vos CR.
             <br />
             <br />
             N’oubliez pas d’enregistrer pour mettre à jour vos paramètres.
@@ -429,28 +421,25 @@ const ChangeUDAP = ({ onSuccess }: { onSuccess: () => void }) => {
           classes={{
             nativeInputOrTextArea: css({ pr: "32px" }),
           }}
-          label="Mon UDAP"
+          label="Mon service"
           disabled
-          nativeInputProps={{ value: udap.name! }}
+          nativeInputProps={{ value: service.name! }}
         />
         <Select
-          label="Nouvelle UDAP"
+          label="Nouveau service"
           nativeSelectProps={{
             onChange: (e) => {
-              setSelectedUdapId(e.target.value);
+              setSelectedServiceId(e.target.value);
             },
-            value: selectedUdapId ?? undefined,
+            value: selectedServiceId ?? undefined,
           }}
-          // nativeSelectProps={form.register("udap_id", { required: "L'UDAP est requis" })}
-          // state={formErrors.udap_id ? "error" : undefined}
-          // stateRelatedMessage={formErrors.udap_id?.message}
         >
           <option value="" disabled hidden>
-            Sélectionnez une UDAP
+            Sélectionnez un service
           </option>
-          {udapsQuery.data?.map((udap) => (
-            <option key={udap.id} value={udap.id}>
-              {udap.name}
+          {servicesQuery.data?.map((service) => (
+            <option key={service.id} value={service.id}>
+              {service.name}
             </option>
           ))}
         </Select>
@@ -460,12 +449,12 @@ const ChangeUDAP = ({ onSuccess }: { onSuccess: () => void }) => {
         <Button
           iconId="ri-save-3-line"
           iconPosition="left"
-          disabled={!selectedUdapId}
+          disabled={!selectedServiceId}
           type="button"
           onClick={() => {
-            if (!selectedUdapId) return;
+            if (!selectedServiceId) return;
 
-            changeUdapMutation.mutate(selectedUdapId!);
+            changeServiceMutation.mutate(selectedServiceId!);
           }}
         >
           Enregistrer
@@ -474,6 +463,9 @@ const ChangeUDAP = ({ onSuccess }: { onSuccess: () => void }) => {
     </Flex>
   );
 };
+
+/*
+ */
 
 const getZipFilename = (startDate: Date, endDate: Date) => {
   const formatDate = (date: Date) => format(date, "ddMMyy");

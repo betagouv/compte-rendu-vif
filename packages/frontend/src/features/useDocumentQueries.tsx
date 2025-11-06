@@ -1,49 +1,71 @@
 import { db, useDbQuery } from "../db/db";
 
-export const getReportQueries = (scope: "my" | "all", page: number, user: { id: string; udap_id: string }) => {
-  const baseQuery = db
+const reportQueries = {
+  base: db
     .selectFrom("report")
     .where("disabled", "=", 0)
-    .limit(20)
-    .offset(page * 20)
     .orderBy("meetDate", "desc")
     .orderBy("createdAt", "desc")
     .leftJoin("user", "user.id", "report.createdBy")
     .selectAll(["report"])
-    .select(["user.name as createdByName"]);
+    .select(["user.name as createdByName"]),
+  count: db.selectFrom("report").where("disabled", "=", 0).select(db.fn.countAll().as("count")),
+};
 
-  const countQuery = db.selectFrom("report").where("disabled", "=", 0).select(db.fn.countAll().as("count"));
+type ReportQueries = {
+  baseQuery: typeof reportQueries.base;
+  countQuery: typeof reportQueries.count;
+};
+
+export const getReportQueries = (
+  scope: "my" | "all",
+  page: number,
+  user: { id: string; service_id: string },
+): ReportQueries => {
+  const baseQuery = reportQueries.base.offset(page * 20).limit(20);
+  const countQuery = reportQueries.count;
 
   if (scope === "my") {
     baseQuery.where((eb) => eb.or([eb("createdBy", "=", user.id), eb("redactedById", "=", user.id)]));
     countQuery.where((eb) => eb.or([eb("createdBy", "=", user.id), eb("redactedById", "=", user.id)]));
   } else {
-    baseQuery.where("report.udap_id", "=", user.udap_id);
-    countQuery.where("report.udap_id", "=", user.udap_id);
+    baseQuery.where("report.service_id", "=", user.service_id);
+    countQuery.where("report.service_id", "=", user.service_id);
   }
 
   return { baseQuery, countQuery };
 };
 
-export const getStateReportQueries = (scope: "my" | "all", page: number, user: { id: string; udap_id: string }) => {
-  const baseQuery = db
+const stateReportQueries = {
+  base: db
     .selectFrom("state_report")
     .where("disabled", "=", 0)
-    .limit(20)
-    .offset(page * 20)
     .orderBy("created_at", "desc")
     .leftJoin("user", "user.id", "state_report.created_by")
     .selectAll(["state_report"])
-    .select(["user.name as createdByName"]);
+    .select(["user.name as createdByName"]),
+  count: db.selectFrom("state_report").where("disabled", "=", 0).select(db.fn.countAll().as("count")),
+};
 
-  const countQuery = db.selectFrom("state_report").where("disabled", "=", 0).select(db.fn.countAll().as("count"));
+type StateReportQueries = {
+  baseQuery: typeof stateReportQueries.base;
+  countQuery: typeof stateReportQueries.count;
+};
+export const getStateReportQueries = (
+  scope: "my" | "all",
+  page: number,
+  user: { id: string; service_id: string },
+): StateReportQueries => {
+  const baseQuery = stateReportQueries.base.offset(page * 20).limit(20);
+
+  const countQuery = stateReportQueries.count;
 
   if (scope === "my") {
     baseQuery.where("created_by", "=", user.id);
     countQuery.where("created_by", "=", user.id);
   } else {
-    baseQuery.where("state_report.udap_id", "=", user.udap_id);
-    countQuery.where("state_report.udap_id", "=", user.udap_id);
+    baseQuery.where("state_report.service_id", "=", user.service_id);
+    countQuery.where("state_report.service_id", "=", user.service_id);
   }
 
   return { baseQuery, countQuery };

@@ -54,7 +54,7 @@ const emptyStateReport: StateReport = {
   parties_protegees: null,
   description: null,
   observations: null,
-  udap_id: null,
+  service_id: null,
   created_by: null,
   created_at: null,
   disabled: null,

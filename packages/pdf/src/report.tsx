@@ -2,7 +2,7 @@ import { Document, Font, Image, Page, StyleSheet, Text, View, ViewProps } from "
 import { Html } from "react-pdf-html";
 import React from "react";
 import { Buffer } from "buffer";
-import { Udap, Report, ServiceInstructeurs, Clause_v2, Pictures } from "../../frontend/src/db/AppSchema";
+import { Service, Report, ServiceInstructeurs, Clause_v2, Pictures } from "../../frontend/src/db/AppSchema";
 import { format } from "date-fns";
 
 export const initFonts = (folder: string = "") => {
@@ -82,7 +82,7 @@ const Pagination = () => {
     </View>
   );
 };
-export const getPDFInMailName = (report: Report) => {
+export const getPDFInMailName = (report: Omit<Report, "disabled">) => {
   const { city, applicantName, meetDate } = report;
 
   const baseDate = meetDate ? new Date(meetDate.toString()) : new Date();
@@ -93,7 +93,7 @@ export const getPDFInMailName = (report: Report) => {
   return name;
 };
 
-export const ReportPDFDocument = ({ udap, htmlString, images, pictures }: ReportPDFDocumentProps) => {
+export const ReportPDFDocument = ({ service, htmlString, images, pictures }: ReportPDFDocumentProps) => {
   return (
     <Document onRender={console.log}>
       <Page
@@ -220,7 +220,7 @@ export const ReportPDFDocument = ({ udap, htmlString, images, pictures }: Report
 
                 <div class="marianne-text">
                   <strong>
-                ${udap.marianne_text
+                ${service.marianne_text
                   ?.split("\n")
                   .map((s) => s.trim())
                   .join("<br/>")}
@@ -232,13 +232,13 @@ export const ReportPDFDocument = ({ udap, htmlString, images, pictures }: Report
 
               <div class="right-texts">
                 <div>
-                      ${udap.drac_text
+                      ${service.drac_text
                         ?.split("\n")
                         .map((s) => s.trim())
                         .join("<br/>")}
                 </div>
                 <div>
-                    ${udap.udap_text
+                    ${service.service_text
                       ?.split("\n")
                       .map((s) => s.trim())
                       .join("<br/>")}
@@ -327,7 +327,7 @@ const PicturesGrid = ({ pictures, marianneUrl }: { pictures: Pictures[]; mariann
 
 export type ReportPDFDocumentProps = {
   htmlString: string;
-  udap: Udap;
+  service: Service;
   images: Images;
   pictures?: Pictures[];
 };
@@ -342,7 +342,7 @@ export type ReportWithUser = Report & { user?: { email: string; name: string } }
 export const getReportHtmlString = (
   report: ReportWithUser,
   chipOptions: Clause_v2[],
-  udap: Udap,
+  service: Service,
   serviceInstructeur?: ServiceInstructeurs,
 ) => {
   const spaceType = chipOptions.find((chip) => chip.key === "type-espace" && chip.value === report.projectSpaceType);
@@ -432,7 +432,7 @@ export const getReportHtmlString = (
 
       <br/><br/>
       <span>
-        Nous contacter :<br/>${udap.name}, ${udap.email}, ${udap.phone ? formatPhoneNumber(udap.phone?.toString()) : ""}
+        Nous contacter :<br/>${service.name}, ${service.email}, ${service.phone ? formatPhoneNumber(service.phone?.toString()) : ""}
       </span>
     </p>`
         : ""

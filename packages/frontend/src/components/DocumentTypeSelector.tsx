@@ -1,6 +1,5 @@
 import { fr } from "@codegouvfr/react-dsfr";
 import { Box } from "@mui/material";
-import { useState } from "react";
 import { Flex } from "./ui/Flex";
 import { getRouteApi } from "@tanstack/react-router";
 

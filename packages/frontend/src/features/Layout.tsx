@@ -144,7 +144,7 @@ const AppHeader = ({ noProvider }: { noProvider?: boolean }) => {
               width="100%"
               margin="0"
             >
-              <Link style={{ textWrap: "nowrap" }} to="/" title="Compte rendu vif">
+              <Link style={{ textWrap: "nowrap" }} to="/" title="Compte rendu vif" search={{ document: "constats" }}>
                 <Box
                   className="fr-header__brand"
                   sx={{

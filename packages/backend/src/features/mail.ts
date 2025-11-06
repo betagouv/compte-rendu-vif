@@ -2,8 +2,9 @@ import { createTransport } from "nodemailer";
 import { ENV } from "../envVars";
 import { format } from "date-fns";
 import { sentry } from "./sentry";
-import { Report } from "../db-types";
 import { getPDFInMailName } from "@cr-vif/pdf";
+import { Database } from "../db/db";
+import { Selectable } from "kysely";
 
 const transporter = createTransport({
   host: ENV.EMAIL_HOST,
@@ -21,7 +22,7 @@ export const sendReportMail = ({
 }: {
   recipients: string;
   pdfBuffer: Buffer;
-  report: Report;
+  report: Selectable<Database["report"]>;
 }) => {
   sentry?.captureMessage("Sending report mail", { extra: { recipients, report } });
 

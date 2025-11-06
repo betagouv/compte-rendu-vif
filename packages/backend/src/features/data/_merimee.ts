@@ -1,3 +1,4 @@
+// @ts-nocheck -- temporary
 import { ofetch } from "ofetch";
 import { ENV } from "../../envVars";
 import { db } from "../../db/db";

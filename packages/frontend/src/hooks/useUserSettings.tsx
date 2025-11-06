@@ -5,16 +5,12 @@ export const useUserSettings = () => {
   const user = useUser()!;
 
   const userSettingsQuery = useDbQuery(
-    db
-      .selectFrom("user_settings")
-      .where("user_id", "=", user.id)
-      .where("udap_id", "=", user.udap_id)
-      .selectAll(),
+    db.selectFrom("user_settings").where("user_id", "=", user.id).where("service_id", "=", user.service_id).selectAll(),
   );
   const isLoading = userSettingsQuery.isLoading;
 
   const userSettings = userSettingsQuery.data?.[0] ?? {
-    default_emails: user.udap?.email || "",
+    default_emails: user.service?.email || "",
   };
 
   const existing = userSettingsQuery.data?.length > 0;

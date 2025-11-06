@@ -24,7 +24,7 @@ export function SyncFormBanner({ form, baseObject }: { form: UseFormReturn<Repor
   useDebounce(() => syncMutation.mutate(), 500, [diff]);
 
   const navigate = useNavigate();
-  const goBack = () => navigate({ to: "/" });
+  const goBack = () => navigate({ to: "/", search: { document: "compte-rendus" } });
 
   const { ref, isIntersecting } = useIntersectionObserver({
     threshold: 0.999999,

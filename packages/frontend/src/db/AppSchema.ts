@@ -18,16 +18,16 @@ const report = new Table({
   serviceInstructeur: column.text,
   pdf: column.text,
   disabled: column.integer,
-  udap_id: column.text,
+  service_id: column.text,
   redactedById: column.text,
   applicantEmail: column.text,
   city: column.text,
   zipCode: column.text,
 });
 
-const udap = new Table({
+const service = new Table({
   department: column.text,
-  dept_number: column.text,
+  dept_numbers: column.text,
   completeCoords: column.text,
   visible: column.integer,
   name: column.text,
@@ -38,12 +38,12 @@ const udap = new Table({
   email: column.text,
   marianne_text: column.text,
   drac_text: column.text,
-  udap_text: column.text,
+  service_text: column.text,
 });
 
 const user = new Table({
   name: column.text,
-  udap_id: column.text,
+  service_id: column.text,
 });
 
 const delegation = new Table({
@@ -63,14 +63,14 @@ const service_instructeurs = new Table({
   short_name: column.text,
   email: column.text,
   tel: column.text,
-  udap_id: column.text,
+  service_id: column.text,
 });
 
 const clause_v2 = new Table({
   key: column.text,
   value: column.text,
   position: column.integer,
-  udap_id: column.text,
+  service_id: column.text,
   text: column.text,
 });
 
@@ -107,13 +107,13 @@ const sent_email = new Table({
 
 const suggested_email = new Table({
   email: column.text,
-  udap_id: column.text,
+  service_id: column.text,
 });
 
 const user_settings = new Table({
   user_id: column.text,
   default_emails: column.text,
-  udap_id: column.text,
+  service_id: column.text,
 });
 
 const pop_immeubles = new Table({
@@ -210,7 +210,7 @@ const state_report = new Table({
   description: column.text,
   observations: column.text,
   titre_edifice: column.text,
-  udap_id: column.text,
+  service_id: column.text,
   created_by: column.text,
   created_at: column.text,
   disabled: column.integer,
@@ -218,7 +218,7 @@ const state_report = new Table({
 
 export const AppSchema = new Schema({
   report,
-  udap,
+  service,
   user,
   delegation,
   pdf_snapshot,
@@ -236,7 +236,7 @@ export const AppSchema = new Schema({
 
 export type Database = (typeof AppSchema)["types"];
 export type Report = Database["report"];
-export type Udap = Database["udap"];
+export type Service = Database["service"];
 export type User = Database["user"];
 export type Delegation = Database["delegation"];
 export type PdfSnapshot = Database["pdf_snapshot"];
@@ -265,7 +265,7 @@ type IsTableOk<T extends SharedTables> = EveryColumnTrue<CheckTables[T]>;
 
 const _checkTables: { [K in SharedTables]: IsTableOk<K> } = {
   report: true,
-  udap: true,
+  service: true,
   user: true,
   delegation: true,
   pdf_snapshot: true,

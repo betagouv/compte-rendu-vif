@@ -18,7 +18,7 @@ import sentImage from "../assets/sent.svg";
 import { EmailInput } from "../components/EmailInput";
 import { getDiff } from "../components/SyncForm";
 import { useUser } from "../contexts/AuthContext";
-import { Clause_v2, Pictures, Report, Udap } from "../db/AppSchema";
+import { Clause_v2, Pictures, Report, Service } from "../db/AppSchema";
 import { db, useDbQuery } from "../db/db";
 import { useChipOptions } from "../features/chips/useChipOptions";
 import { transformBold } from "../features/menu/ClauseMenu";
@@ -35,7 +35,7 @@ type Mode = "edit" | "view" | "send" | "sent";
 
 export const PDF = () => {
   const user = useUser()!;
-  const { udap } = user;
+  const { service } = user;
   const chipOptions = useChipOptions();
 
   const { reportId } = Route.useParams();
@@ -215,7 +215,11 @@ export const PDF = () => {
         <Box mt="16px" color="text-title-blue-france" textAlign="center" fontSize={{ xs: "18px", lg: "24px" }}>
           Votre compte-rendu a bien été envoyé !
         </Box>
-        <Button sx={{ mt: { xs: "24px", lg: "48px" } }} type="button" onClick={() => navigate({ to: "/" })}>
+        <Button
+          sx={{ mt: { xs: "24px", lg: "48px" } }}
+          type="button"
+          onClick={() => navigate({ to: "/", search: { document: "compte-rendus" } })}
+        >
           Accueil
         </Button>
       </Center>
@@ -273,7 +277,7 @@ export const PDF = () => {
                       getReportHtmlString(
                         report,
                         chipOptions as Clause_v2[],
-                        udap as Udap,
+                        service as Service,
                         serviceInstructeur ?? undefined,
                       )
                     }
@@ -556,11 +560,11 @@ export const WithReport = ({
     editor.commands.setContent(htmlString);
   }, [editor]);
 
-  const { udap } = useUser()!;
+  const { service } = useUser()!;
 
   const ViewDocument = (
     <View
-      udap={udap as Udap}
+      service={service as Service}
       htmlString={editor?.getHTML() ?? ""}
       images={{ marianne: "/marianne.png", marianneFooter: "/marianne_footer.png" }}
       pictures={report.pictures}

@@ -24,7 +24,12 @@ export const MenuActions = () => {
       onClick: () => navigateAndClose({ to: "/account" }),
       mobileOnly: true,
     },
-    { icon: "fr-icon-france-fill", text: "UDAP", onClick: () => navigateAndClose({ to: "/udap" }), mobileOnly: true },
+    {
+      icon: "fr-icon-france-fill",
+      text: "Service",
+      onClick: () => navigateAndClose({ to: "/service" }),
+      mobileOnly: true,
+    },
     { icon: "fr-icon-info-fill", text: "Aide", onClick: () => menuActor.send({ type: "GO_TO_HELP" }) },
     { icon: "fr-icon-logout-box-r-line", text: "Déconnexion", onClick: logout, dataTestId: "logout" },
   ];

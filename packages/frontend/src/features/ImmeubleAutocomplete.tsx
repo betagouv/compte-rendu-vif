@@ -80,7 +80,7 @@ export const ImmeubleAutocomplete = () => {
       onChange={(_e, item) => {
         setValue(item);
       }}
-      renderOption={({ key, ...props }, option, state, ownerState) =>
+      renderOption={({ key, ...props }, option, state, _ownerState) =>
         option === null ? (
           <Box>Aucun résultat !</Box>
         ) : (
