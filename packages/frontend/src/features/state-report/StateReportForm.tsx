@@ -28,11 +28,11 @@ export const StateReportForm = ({ report }: { report: StateReport }) => {
           width="100%"
           onSubmit={form.handleSubmit(onSubmit)}
         >
-          <Box width={{ xs: "100%", lg: "1040px" }} px="16px">
+          <Box width={{ xs: "100%", lg: "1200px" }} px="16px">
             <ImmeubleAutocomplete />
           </Box>
         </Flex>
-        <Box width={{ xs: "100%", lg: "1040px" }} px="16px" pb="32px">
+        <Box width={{ xs: "100%", lg: "1200px" }} px="16px">
           <WithReferencePop />
         </Box>
       </FormProvider>
@@ -58,4 +58,5 @@ const emptyStateReport: StateReport = {
   created_by: null,
   created_at: null,
   disabled: null,
+  titre_edifice: null,
 };

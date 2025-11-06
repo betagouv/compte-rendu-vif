@@ -28,7 +28,7 @@ export const DocumentTypeSelector = () => {
   };
 
   return (
-    <Flex width="100%" px="16px">
+    <Flex width="100%">
       <Flex
         border="1px solid"
         borderRadius="4px"

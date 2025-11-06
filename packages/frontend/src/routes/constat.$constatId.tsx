@@ -16,7 +16,7 @@ import { stateReportStepSchema } from "../features/state-report/utils";
 export const Route = createFileRoute("/constat/$constatId")({
   component: RouteComponent,
   validateSearch: (search: { step?: string }) => ({
-    step: stateReportStepSchema.optional().default("monument-historique").parse(search.step),
+    step: stateReportStepSchema.optional().default("informations").parse(search.step),
   }),
 });
 
@@ -24,7 +24,7 @@ function RouteComponent() {
   return (
     <Flex width="100%" height="100%" flexDirection="column" alignItems="center">
       <SimpleBanner width="100%" alignItems="flex-start" py="20px">
-        <Flex width={{ xs: "100%", lg: "1040px" }} flexDirection="column" px="16px">
+        <Flex width={{ xs: "100%", lg: "1200px" }} flexDirection="column" px="16px">
           <Link to="/" style={{ textDecoration: "underline" }} search={{ document: "constats" }}>
             <Typography fontSize="12px" color={fr.colors.decisions.text.mention.grey.default}>
               Retour à l'accueil
@@ -43,7 +43,7 @@ function RouteComponent() {
       <Box width="100%">
         <WithStateReport />
       </Box>
-      <Box width="1040px"></Box>
+      <Box width="1200px"></Box>
     </Flex>
   );
 }

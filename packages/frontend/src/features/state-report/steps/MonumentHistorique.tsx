@@ -1,9 +1,10 @@
 import { Flex } from "#components/ui/Flex.tsx";
-import { Box, Typography } from "@mui/material";
+import { Box, styled, Typography } from "@mui/material";
 import { StateReportFormType, useStateReportFormContext } from "../utils";
 import { useWatch } from "react-hook-form";
 import { fr } from "@codegouvfr/react-dsfr";
 import { Button } from "#components/MUIDsfr.tsx";
+import { PropsWithChildren } from "react";
 
 export const MonumentHistorique = () => {
   const form = useStateReportFormContext();
@@ -11,13 +12,18 @@ export const MonumentHistorique = () => {
   return (
     <Flex flexDirection="column">
       <Flex flexDirection="column" p="16px" gap="16px">
-        <EditableField label="Nature de l'édifice" field="nature_edifice" />
-        <EditableField label="Référence pop" field="reference_pop" />
-        <EditableField label="Adresse" field="adresse" />
-        <EditableField label="Commune" field="commune" />
-        <EditableField label="Référence cadastrale" field="reference_cadastrale" />
-        <EditableField label="Période de construction" field="periode_construction" />
+        <ContentBlock>
+          <EditableField label="Nature de l'édifice" field="nature_edifice" />
+          <EditableField label="Référence pop" field="reference_pop" />
+        </ContentBlock>
+        <ContentBlock>
+          <EditableField label="Adresse" field="adresse" />
+          <EditableField label="Commune" field="commune" />
+          <EditableField label="Commune historique" field="commune_historique" />
+          <EditableField label="Référence cadastrale" field="reference_cadastrale" />
+        </ContentBlock>
         <EditableField label="Nature de la protection" field="nature_protection" />
+        <EditableField label="Période de construction" field="periode_construction" />
         <EditableField label="Parties protégées" field="parties_protegees" />
         <EditableField label="Description de l'édifice" field="description" />
       </Flex>
@@ -40,6 +46,21 @@ export const MonumentHistorique = () => {
   );
 };
 
+const ContentBlock = (props: PropsWithChildren) => {
+  return (
+    <Flex
+      flexDirection={{ xs: "column", lg: "row" }}
+      paddingBottom="16px"
+      borderBottom={{ xs: "none", lg: "1px solid" }}
+      borderColor={fr.colors.decisions.border.default.grey.default + " !important"}
+      sx={{ "> div": { width: "50%" }, "> div:nth-child(n+3)": { mt: "16px" } }}
+      flexWrap={{ lg: "wrap" }}
+    >
+      {props.children}
+    </Flex>
+  );
+};
+
 const EditableField = ({ label, field }: { label: string; field: keyof StateReportFormType }) => {
   const isEditable = false;
 
@@ -51,7 +72,7 @@ const EditableField = ({ label, field }: { label: string; field: keyof StateRepo
       <Typography variant="subtitle1" fontWeight="bold">
         {label}
       </Typography>
-      <Typography mt="8px">{value ?? "Non renseigné"}</Typography>
+      <Typography mt="4px">{value ?? "Non renseigné"}</Typography>
     </Flex>
   );
 };

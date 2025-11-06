@@ -10,7 +10,6 @@ type Pretty<T> = {
 } & {};
 
 export const stateReportStepSchema = z.enum([
-  "monument-historique",
   "informations",
   "documents",
   "contexte-visite",

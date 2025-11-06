@@ -2,6 +2,8 @@ import { Accordion } from "#components/MUIDsfr.tsx";
 import { fr } from "@codegouvfr/react-dsfr";
 import { Box } from "@mui/material";
 import { useIsDesktop } from "../../hooks/useIsDesktop";
+import { getRouteApi, useNavigate } from "@tanstack/react-router";
+import { StateReportStep } from "./utils";
 
 export const StateReportSummary = () => {
   const isDesktop = useIsDesktop();
@@ -17,7 +19,13 @@ export const StateReportSummary = () => {
   );
 };
 
+const routeApi = getRouteApi("/constat/$constatId");
 const SummaryContent = () => {
+  const navigate = useNavigate();
+  const constatId = routeApi.useParams().constatId;
+  const navigateToStep = (step: StateReportStep) => {
+    navigate({ to: "/constat/$constatId", params: { constatId }, search: { step } });
+  };
   return (
     <Box
       component="ul"
@@ -40,17 +48,27 @@ const SummaryContent = () => {
     >
       <Box component="li">Le monument historique</Box>
       <Box component="ul" pl="8px">
-        <Box component="li">Informations</Box>
-        <Box component="li">Documents</Box>
+        <Box component="li" onClick={() => navigateToStep("informations")}>
+          Informations
+        </Box>
+        <Box component="li" onClick={() => navigateToStep("documents")}>
+          Documents
+        </Box>
       </Box>
 
       <Box component="li" mt="4px">
         Saisie du constat d'état
       </Box>
       <Box component="ul" pl="8px">
-        <Box component="li">Contexte de la visite</Box>
-        <Box component="li">Constat général</Box>
-        <Box component="li">Constat détaillé</Box>
+        <Box component="li" onClick={() => navigateToStep("contexte-visite")}>
+          Contexte de la visite
+        </Box>
+        <Box component="li" onClick={() => navigateToStep("constat-general")}>
+          Constat général
+        </Box>
+        <Box component="li" onClick={() => navigateToStep("constat-detaille")}>
+          Constat détaillé
+        </Box>
       </Box>
     </Box>
   );

@@ -55,7 +55,7 @@ const Index = () => {
 
   const createStateReportMutation = useMutation({
     mutationFn: async () => {
-      const id = "state_report-" + v4();
+      const id = v4();
       await db
         .insertInto("state_report")
         .values({
@@ -70,7 +70,7 @@ const Index = () => {
       return id;
     },
     onSuccess: (id) => {
-      id && navigate({ to: "/constat/$constatId", params: { constatId: id } });
+      id && navigate({ to: "/constat/$constatId", params: { constatId: id }, search: { step: "monument-historique" } });
     },
   });
 
@@ -134,7 +134,11 @@ const MainContentTabs = () => {
       },
       component: (
         <>
-          <DocumentTypeSelector />
+          <Center>
+            <Box width="926px">
+              <DocumentTypeSelector />
+            </Box>
+          </Center>
           <MyReports />
         </>
       ),
@@ -148,7 +152,12 @@ const MainContentTabs = () => {
       },
       component: (
         <>
-          <DocumentTypeSelector />
+          <Center>
+            <Box width="926px">
+              <DocumentTypeSelector />
+            </Box>
+          </Center>
+
           <AllReports />
         </>
       ),
@@ -156,7 +165,7 @@ const MainContentTabs = () => {
   ];
 
   return (
-    <Flex flex="1" flexDirection="column" pb={{ xs: "16px", lg: "0" }}>
+    <Flex flex="1" flexDirection="column" pb={{ xs: "16px", lg: "0" }} width="100%">
       <Tabs options={options} />
     </Flex>
   );

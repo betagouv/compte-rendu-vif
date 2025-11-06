@@ -496,6 +496,7 @@ export const stateReport = pgTable(
     partiesProtegees: text("parties_protegees"),
     description: text(),
     observations: text(),
+    titre_edifice: text("titre_edifice"),
     udapId: text("udap_id").notNull(),
     createdBy: text("created_by").notNull(),
     createdAt: timestamp("created_at", { mode: "string" }).notNull(),

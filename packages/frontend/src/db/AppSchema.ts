@@ -209,6 +209,7 @@ const state_report = new Table({
   parties_protegees: column.text,
   description: column.text,
   observations: column.text,
+  titre_edifice: column.text,
   udap_id: column.text,
   created_by: column.text,
   created_at: column.text,

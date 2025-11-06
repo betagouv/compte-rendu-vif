@@ -15,7 +15,6 @@ export const WithReferencePop = () => {
   const immeubleQuery = useDbQuery(db.selectFrom("pop_immeubles").selectAll().where("id", "=", referencePop));
 
   const hasReferencePop = !!referencePop;
-  console.log(referencePop, immeubleQuery.data);
   if (!hasReferencePop) return null;
 
   return (
@@ -27,23 +26,17 @@ export const WithReferencePop = () => {
         )}
         {immeubleQuery.data && (
           <Flex height="100%" width="100%" flexDirection={{ xs: "column", lg: "row" }} gap={{ xs: "0", lg: "24px" }}>
-            <StateReportSummary />
-            <Tabs
-              options={[
-                {
-                  component: <MonumentHistorique />,
-                  label: "Informations",
-                  id: "monument-historique",
-                  props: { color: fr.colors.decisions.text.actionHigh.blueFrance.default },
-                },
-                {
-                  component: <div>Documents</div>,
-                  label: "Documents",
-                  id: "documents",
-                  props: { color: fr.colors.decisions.text.actionHigh.blueFrance.default },
-                },
-              ]}
-            />
+            <Box minWidth="280px">
+              <StateReportSummary />
+            </Box>
+            <Box
+              borderLeft="1px solid"
+              borderColor={fr.colors.decisions.border.default.grey.default}
+              pr="24px"
+              flex="1"
+            >
+              <MonumentHistorique />
+            </Box>
           </Flex>
         )}
       </Box>

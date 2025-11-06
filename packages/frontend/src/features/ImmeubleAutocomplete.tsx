@@ -25,11 +25,13 @@ const mapping: Partial<Record<keyof PopImmeuble, keyof StateReportFormType>> = {
   denomination_de_l_edifice: "nature_edifice",
   adresse_forme_editoriale: "adresse",
   commune_forme_editoriale: "commune",
+  commune_forme_index: "commune_historique",
   cadastre: "reference_cadastrale",
   siecle_de_la_campagne_principale_de_construction: "periode_construction",
-  nature_de_la_protection: "nature_protection",
+  typologie_de_la_protection: "nature_protection",
   precision_de_la_protection: "parties_protegees",
   description_de_l_edifice: "description",
+  titre_editorial_de_la_notice: "titre_edifice",
 };
 
 export const ImmeubleAutocomplete = () => {
@@ -61,6 +63,7 @@ export const ImmeubleAutocomplete = () => {
       form.setValue(formField as keyof StateReportFormType, value);
     }
   };
+  if (value) return <div>{form.watch("titre_edifice")}</div>;
 
   return (
     <Autocomplete
