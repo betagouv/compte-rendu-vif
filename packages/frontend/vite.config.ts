@@ -67,7 +67,11 @@ export default defineConfig({
   },
   envDir: "../..",
   preview: {
-    allowedHosts: ["app.compte-rendu-vif.beta.gouv.fr", "compte-rendu-vif.incubateur.net"],
+    allowedHosts: [
+      "app.compte-rendu-vif.beta.gouv.fr",
+      "compte-rendu-vif.incubateur.net",
+      ".compte-rendu-vif.incubateur.net",
+    ],
   },
   build: {
     target: "esnext",
