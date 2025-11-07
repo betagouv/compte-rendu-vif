@@ -1,10 +1,13 @@
 import { makeDebug } from "../debug";
-import fs from "fs";
+import fs, { createWriteStream } from "fs";
 import { pipeline } from "stream/promises";
 import csv from "csv-parser";
 import { KyselyBatchWriter } from "./KyselyBatchWriter";
 import path from "path/win32";
 import { db } from "../../db/db";
+import { ENV } from "../../envVars";
+import { ofetch } from "ofetch";
+import { Readable } from "stream";
 
 const debug = makeDebug("sync-pop");
 
@@ -14,6 +17,10 @@ export const initPopImmeubles = async () => {
     debug("POP immeubles table is not empty, skipping import");
     return;
   }
+
+  await fetchPopCSV();
+
+  debug("Importing POP immeubles from CSV");
 
   await pipeline(
     fs.createReadStream("./data/liste-des-immeubles-proteges-au-titre-des-monuments-historiques.csv"),
@@ -25,6 +32,20 @@ export const initPopImmeubles = async () => {
   );
 };
 
+const immeublesCsvPath = "./data/liste-des-immeubles-proteges-au-titre-des-monuments-historiques.csv";
+
+export const fetchPopCSV = async () => {
+  debug("Downloading POP immeubles CSV");
+  const url = `${ENV.DATAGOUV_API}/liste-des-immeubles-proteges-au-titre-des-monuments-historiques/exports/csv?lang=fr&timezone=Europe%2FBerlin&use_labels=true&delimiter=%3B`;
+  const stream = await ofetch(url, { responseType: "stream" });
+
+  const nodeStream = Readable.fromWeb(stream as any);
+  const writer = createWriteStream(immeublesCsvPath);
+  nodeStream.pipe(writer);
+
+  await pipeline(nodeStream, writer);
+  debug("Done");
+};
 export interface PopImmeublesResult {
   total_count: number;
   results: Result[];

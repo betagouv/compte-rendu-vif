@@ -5,7 +5,7 @@ import { ENV } from "./envVars";
 import { generateOpenApi, initFastify } from "./router";
 import { makeDebug } from "./features/debug";
 import { initFonts } from "@cr-vif/pdf";
-import { initPopImmeubles } from "./features/data/pop";
+import { fetchPopCSV, initPopImmeubles } from "./features/data/pop";
 
 const debug = makeDebug("index");
 
