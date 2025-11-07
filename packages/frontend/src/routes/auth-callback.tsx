@@ -3,7 +3,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { unauthenticatedApi, AuthUser } from "../api";
 import { useAuthContext } from "../contexts/AuthContext";
 import { get80PercentOfTokenLifespan } from "../ApiStore";
-import { Alert, Center } from "#components/MUIDsfr.tsx";
+import { Alert, Button, Center } from "#components/MUIDsfr.tsx";
 import { Spinner } from "#components/Spinner.tsx";
 
 const AuthCallback = () => {
@@ -18,6 +18,7 @@ const AuthCallback = () => {
   const authenticateQuery = useQuery({
     queryKey: ["authenticate", code],
     retry: false,
+    refetchOnWindowFocus: false,
     queryFn: async () => {
       const data = await unauthenticatedApi.post("/api/authenticate", { body: { code } });
 
@@ -38,10 +39,13 @@ const AuthCallback = () => {
   });
 
   return (
-    <Center height="100%">
+    <Center height="100%" flexDirection="column">
       {authenticateQuery.isLoading ? <Spinner /> : null}
       {authenticateQuery.isError ? (
-        <Alert severity="error" title="Une erreur s'est produite lors de l'authentification." />
+        <Center flexDirection="column">
+          <Alert severity="error" title="Une erreur s'est produite lors de l'authentification." />
+          <Button sx={{ mt: "16px" }}>Réessayer</Button>
+        </Center>
       ) : null}
     </Center>
   );
