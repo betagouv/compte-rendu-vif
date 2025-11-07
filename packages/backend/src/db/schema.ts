@@ -498,6 +498,7 @@ export const stateReport = pgTable(
     titre_edifice: text("titre_edifice"),
     // contexte de la visite
     natureVisite: text("nature_visite"),
+    visite_partielle_details: text("visite_partielle_details"),
     bilanQuinquennal: text("bilan_quinquennal"),
     dateVisite: timestamp("date_visite", { mode: "string" }),
     redactedBy: text("redacted_by"),
@@ -528,6 +529,26 @@ export const stateReport = pgTable(
       columns: [table.createdBy],
       foreignColumns: [user.id],
       name: "state_report_created_by_fkey",
+    }),
+  ],
+);
+
+export const visitedSection = pgTable(
+  "visited_section",
+  {
+    id: text().primaryKey().notNull(),
+    stateReportId: text("state_report_id").notNull(),
+    section: text(),
+    etatGeneral: text("etat_general"),
+    proportionDansCetEtat: text("proportion_dans_cet_etat"),
+    commentaires: text(),
+    service_id: text("service_id").notNull(),
+  },
+  (table) => [
+    foreignKey({
+      columns: [table.stateReportId],
+      foreignColumns: [stateReport.id],
+      name: "visited_section_state_report_id_fkey",
     }),
   ],
 );

@@ -36,6 +36,7 @@ sync_rules:
           - SELECT * FROM sent_email WHERE service_id = bucket.service_id
           - SELECT * FROM suggested_email WHERE service_id = bucket.service_id
           - SELECT * FROM state_report WHERE service_id = bucket.service_id
+          - SELECT * FROM visited_section WHERE service_id = bucket.service_id
 
 
       dept_bucket:

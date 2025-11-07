@@ -212,6 +212,7 @@ const state_report = new Table({
   titre_edifice: column.text,
 
   nature_visite: column.text,
+  visite_partielle_details: column.text,
   date_visite: column.text,
   personnes_presentes: column.text,
   redacted_by: column.text,
@@ -235,6 +236,15 @@ const state_report = new Table({
   disabled: column.integer,
 });
 
+const visited_section = new Table({
+  state_report_id: column.text,
+  section: column.text,
+  etat_general: column.text,
+  proportion_dans_cet_etat: column.text,
+  commentaires: column.text,
+  service_id: column.text,
+});
+
 export const AppSchema = new Schema({
   report,
   service,
@@ -251,6 +261,7 @@ export const AppSchema = new Schema({
   user_settings,
   pop_immeubles,
   state_report,
+  visited_section,
 });
 
 export type Database = (typeof AppSchema)["types"];
@@ -269,6 +280,7 @@ export type SuggestedEmail = Database["suggested_email"];
 export type UserSettings = Database["user_settings"];
 export type PopImmeuble = Database["pop_immeubles"];
 export type StateReport = Database["state_report"];
+export type VisitedSection = Database["visited_section"];
 
 import type { Database as BackendDatabase } from "../../../backend/src/db/db";
 
@@ -298,4 +310,5 @@ const _checkTables: { [K in SharedTables]: IsTableOk<K> } = {
   user_settings: true,
   pop_immeubles: true,
   state_report: true,
+  visited_section: true,
 };

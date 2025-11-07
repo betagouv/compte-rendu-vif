@@ -12,6 +12,8 @@ import { Button, Center } from "#components/MUIDsfr.tsx";
 import { ContexteVisite } from "./steps/ContexteVisite";
 import { useIsDesktop } from "../../hooks/useIsDesktop";
 import { ReactNode } from "react";
+import { ConstatGeneral } from "./steps/ConstatGeneral";
+import { ConstatDetaille } from "./steps/ConstatDetaille";
 
 export const WithReferencePop = () => {
   const form = useStateReportFormContext();
@@ -25,7 +27,6 @@ export const WithReferencePop = () => {
   return (
     <>
       <Box width="100%">
-        {immeubleQuery.isLoading && <div>Chargement de l'immeuble...</div>}
         {immeubleQuery.error && (
           <div>Erreur lors du chargement de l'immeuble : {String(immeubleQuery.error.message)}</div>
         )}
@@ -54,24 +55,16 @@ const routeApi = getRouteApi("/constat/$constatId");
 
 const ContentSwitch = () => {
   const { step } = routeApi.useSearch();
-  return (
-    <>
-      <Box
-        sx={{
-          display: step === "informations" ? "block" : "none",
-        }}
-      >
-        <MonumentHistorique />
-      </Box>
-      <Box
-        sx={{
-          display: step === "contexte-visite" ? "block" : "none",
-        }}
-      >
-        <ContexteVisite />
-      </Box>
-    </>
-  );
+
+  const content: Record<StateReportStep, ReactNode> = {
+    informations: <MonumentHistorique />,
+    "contexte-visite": <ContexteVisite />,
+    "constat-general": <ConstatGeneral />,
+    "constat-detaille": <ConstatDetaille />,
+    documents: null,
+  };
+
+  return <>{content[step]}</>;
 };
 
 const ButtonsSwitch = () => {
@@ -88,7 +81,7 @@ const ButtonsSwitch = () => {
           onClick: () => navigate({ search: { step: "contexte-visite" } }),
         }}
       >
-        Context de la visite
+        Contexte de la visite
       </Button>
     ),
     "contexte-visite": (
@@ -118,7 +111,33 @@ const ButtonsSwitch = () => {
         </Button>
       </Stack>
     ),
-    "constat-general": null,
+    "constat-general": (
+      <Stack gap="8px">
+        <Button
+          iconPosition="left"
+          iconId="ri-arrow-left-line"
+          priority="secondary"
+          size="large"
+          nativeButtonProps={{
+            onClick: () => navigate({ search: { step: "contexte-visite" } }),
+          }}
+          sx={{ width: "100%", justifyContent: "center" }}
+        >
+          Contexte de la visite
+        </Button>
+        <Button
+          iconPosition="right"
+          iconId="ri-arrow-right-line"
+          size="large"
+          nativeButtonProps={{
+            onClick: () => navigate({ search: { step: "constat-detaille" } }),
+          }}
+          sx={{ width: "100%", justifyContent: "center" }}
+        >
+          Constat détaillé
+        </Button>
+      </Stack>
+    ),
     "constat-detaille": null,
     documents: null,
   };

@@ -10,6 +10,7 @@ import {
   sentEmail,
   stateReport,
   userDept,
+  visitedSection,
 } from "./schema";
 
 export const userRelations = relations(user, ({ one, many }) => ({
@@ -84,11 +85,12 @@ export const sentEmailRelations = relations(sentEmail, ({ one }) => ({
   }),
 }));
 
-export const stateReportRelations = relations(stateReport, ({ one }) => ({
+export const stateReportRelations = relations(stateReport, ({ one, many }) => ({
   user: one(user, {
     fields: [stateReport.createdBy],
     references: [user.id],
   }),
+  visitedSections: many(visitedSection),
 }));
 
 export const userDeptRelations = relations(userDept, ({ one }) => ({

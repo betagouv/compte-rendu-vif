@@ -65,6 +65,8 @@ const Index = () => {
           created_at: new Date().toISOString(),
           disabled: 0,
           service_id: user.service_id,
+          redacted_by: user.name,
+          date_visite: new Date().toISOString(),
         })
         .execute();
 

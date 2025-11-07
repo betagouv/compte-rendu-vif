@@ -40,4 +40,5 @@ export type Database = {
   state_report: Kyselify<typeof tables.stateReport>;
   user_dept: Kyselify<typeof tables.userDept>;
   merimee_to_memoire: Kyselify<typeof tables.merimeeToMemoire>;
+  visited_section: Kyselify<typeof tables.visitedSection>;
 };
