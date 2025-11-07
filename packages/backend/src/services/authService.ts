@@ -1,5 +1,5 @@
 import { FetchError, ofetch } from "ofetch";
-import { ENV } from "../envVars";
+import { ENV, isDev } from "../envVars";
 import { Static, Type } from "@sinclair/typebox";
 import jwt from "jsonwebtoken";
 import jwks from "jwks-rsa";
@@ -117,6 +117,7 @@ export class AuthService {
   }
 
   async createUser(userData: Static<typeof createUserTSchema.body>) {
+    await assertEmailInWhitelist(userData.email);
     try {
       await adminAuthApi("/users", {
         method: "POST",
@@ -232,3 +233,14 @@ export const userTSchema = Type.Object({
 export const authApi = ofetch.create({
   baseURL: authFullUrl,
 });
+
+const assertEmailInWhitelist = async (email: string) => {
+  if (isDev) return;
+
+  const whitelistResults = await db.selectFrom("whitelist").where("email", "=", email).selectAll().execute();
+  const whitelist = whitelistResults[0];
+
+  if (!whitelist) {
+    throw new AppError(403, "Votre courriel n'est pas autorisée à accéder à cette application");
+  }
+};
