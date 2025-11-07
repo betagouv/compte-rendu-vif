@@ -1,16 +1,12 @@
-import { SimpleBanner, useBannerBgColor } from "#components/Banner.tsx";
+import { SimpleBanner } from "#components/Banner.tsx";
+import { Center } from "#components/MUIDsfr.tsx";
+import { Spinner } from "#components/Spinner.tsx";
 import { Flex } from "#components/ui/Flex.tsx";
 import { fr } from "@codegouvfr/react-dsfr";
 import { Box, Typography } from "@mui/material";
 import { createFileRoute, Link, Navigate } from "@tanstack/react-router";
-import { ImmeubleAutocomplete } from "../features/ImmeubleAutocomplete";
-import { FormProvider, useForm } from "react-hook-form";
 import { db, useDbQuery } from "../db/db";
-import { StateReport } from "../db/AppSchema";
-import { Spinner } from "#components/Spinner.tsx";
-import { Center } from "#components/MUIDsfr.tsx";
 import { StateReportForm } from "../features/state-report/StateReportForm";
-import z from "zod";
 import { stateReportStepSchema } from "../features/state-report/utils";
 
 export const Route = createFileRoute("/constat/$constatId")({

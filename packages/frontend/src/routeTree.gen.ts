@@ -17,6 +17,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as PdfReportIdRouteImport } from './routes/pdf.$reportId'
 import { Route as EditReportIdRouteImport } from './routes/edit.$reportId'
 import { Route as ConstatConstatIdRouteImport } from './routes/constat.$constatId'
+import { Route as ConstatConstatIdPdfRouteImport } from './routes/constat.$constatId.pdf'
 
 const ServiceRoute = ServiceRouteImport.update({
   id: '/service',
@@ -58,6 +59,11 @@ const ConstatConstatIdRoute = ConstatConstatIdRouteImport.update({
   path: '/constat/$constatId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ConstatConstatIdPdfRoute = ConstatConstatIdPdfRouteImport.update({
+  id: '/pdf',
+  path: '/pdf',
+  getParentRoute: () => ConstatConstatIdRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -65,9 +71,10 @@ export interface FileRoutesByFullPath {
   '/auth-callback': typeof AuthCallbackRoute
   '/login': typeof LoginRoute
   '/service': typeof ServiceRoute
-  '/constat/$constatId': typeof ConstatConstatIdRoute
+  '/constat/$constatId': typeof ConstatConstatIdRouteWithChildren
   '/edit/$reportId': typeof EditReportIdRoute
   '/pdf/$reportId': typeof PdfReportIdRoute
+  '/constat/$constatId/pdf': typeof ConstatConstatIdPdfRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -75,9 +82,10 @@ export interface FileRoutesByTo {
   '/auth-callback': typeof AuthCallbackRoute
   '/login': typeof LoginRoute
   '/service': typeof ServiceRoute
-  '/constat/$constatId': typeof ConstatConstatIdRoute
+  '/constat/$constatId': typeof ConstatConstatIdRouteWithChildren
   '/edit/$reportId': typeof EditReportIdRoute
   '/pdf/$reportId': typeof PdfReportIdRoute
+  '/constat/$constatId/pdf': typeof ConstatConstatIdPdfRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -86,9 +94,10 @@ export interface FileRoutesById {
   '/auth-callback': typeof AuthCallbackRoute
   '/login': typeof LoginRoute
   '/service': typeof ServiceRoute
-  '/constat/$constatId': typeof ConstatConstatIdRoute
+  '/constat/$constatId': typeof ConstatConstatIdRouteWithChildren
   '/edit/$reportId': typeof EditReportIdRoute
   '/pdf/$reportId': typeof PdfReportIdRoute
+  '/constat/$constatId/pdf': typeof ConstatConstatIdPdfRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -101,6 +110,7 @@ export interface FileRouteTypes {
     | '/constat/$constatId'
     | '/edit/$reportId'
     | '/pdf/$reportId'
+    | '/constat/$constatId/pdf'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -111,6 +121,7 @@ export interface FileRouteTypes {
     | '/constat/$constatId'
     | '/edit/$reportId'
     | '/pdf/$reportId'
+    | '/constat/$constatId/pdf'
   id:
     | '__root__'
     | '/'
@@ -121,6 +132,7 @@ export interface FileRouteTypes {
     | '/constat/$constatId'
     | '/edit/$reportId'
     | '/pdf/$reportId'
+    | '/constat/$constatId/pdf'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -129,7 +141,7 @@ export interface RootRouteChildren {
   AuthCallbackRoute: typeof AuthCallbackRoute
   LoginRoute: typeof LoginRoute
   ServiceRoute: typeof ServiceRoute
-  ConstatConstatIdRoute: typeof ConstatConstatIdRoute
+  ConstatConstatIdRoute: typeof ConstatConstatIdRouteWithChildren
   EditReportIdRoute: typeof EditReportIdRoute
   PdfReportIdRoute: typeof PdfReportIdRoute
 }
@@ -192,8 +204,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ConstatConstatIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/constat/$constatId/pdf': {
+      id: '/constat/$constatId/pdf'
+      path: '/pdf'
+      fullPath: '/constat/$constatId/pdf'
+      preLoaderRoute: typeof ConstatConstatIdPdfRouteImport
+      parentRoute: typeof ConstatConstatIdRoute
+    }
   }
 }
+
+interface ConstatConstatIdRouteChildren {
+  ConstatConstatIdPdfRoute: typeof ConstatConstatIdPdfRoute
+}
+
+const ConstatConstatIdRouteChildren: ConstatConstatIdRouteChildren = {
+  ConstatConstatIdPdfRoute: ConstatConstatIdPdfRoute,
+}
+
+const ConstatConstatIdRouteWithChildren =
+  ConstatConstatIdRoute._addFileChildren(ConstatConstatIdRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -201,7 +231,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthCallbackRoute: AuthCallbackRoute,
   LoginRoute: LoginRoute,
   ServiceRoute: ServiceRoute,
-  ConstatConstatIdRoute: ConstatConstatIdRoute,
+  ConstatConstatIdRoute: ConstatConstatIdRouteWithChildren,
   EditReportIdRoute: EditReportIdRoute,
   PdfReportIdRoute: PdfReportIdRoute,
 }

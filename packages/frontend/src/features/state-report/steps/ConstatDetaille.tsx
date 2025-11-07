@@ -13,6 +13,7 @@ import { EtatGeneralRadioButtons } from "./ConstatGeneral";
 import { RadioButtons } from "@codegouvfr/react-dsfr/RadioButtons";
 import useDebounce from "react-use/lib/useDebounce";
 import { getDiff } from "#components/SyncForm.tsx";
+import { FullWidthButton } from "#components/FullWidthButton.tsx";
 
 const routeApi = getRouteApi("/constat/$constatId");
 export const ConstatDetaille = () => {
@@ -140,24 +141,33 @@ const SectionModal = ({
       sx={{
         ".MuiPaper-root": {
           overflowY: "visible",
-          maxHeight: { xs: "unset", lg: undefined },
-          maxWidth: { xs: "unset", lg: undefined },
-          width: { xs: "100%", lg: undefined },
-          height: { xs: "100%", lg: undefined },
+          maxHeight: { xs: "unset", lg: "calc(100% - 64px)" },
+          maxWidth: { xs: "unset", lg: "576px" },
+          width: { xs: "100%", lg: "926px" },
+          height: { xs: "100%", lg: "unset" },
           margin: { xs: "0", lg: undefined },
         },
       }}
     >
-      <Box p={"16px"}>
-        <ModalCloseButton onClose={onClose} />
-
-        <DialogTitle>{selectedSection?.section}</DialogTitle>
-
-        {selectedSection ? <SectionForm visitedSection={selectedSection} /> : null}
-
-        <Flex justifyContent="flex-end" mt="16px">
-          <Button onClick={() => {}}>Valider</Button>
+      <Box p={{ xs: "16px" }}>
+        <Flex>
+          <DialogTitle
+            flex="1"
+            sx={{
+              paddingLeft: "16px",
+            }}
+          >
+            {selectedSection?.section}
+          </DialogTitle>
+          <ModalCloseButton onClose={onClose} />
         </Flex>
+
+        {selectedSection ? (
+          <Stack gap="16px" px={{ xs: "0", lg: "16px" }}>
+            <SectionForm visitedSection={selectedSection} />
+            <FullWidthButton onClick={() => onClose()}>Enregistrer</FullWidthButton>
+          </Stack>
+        ) : null}
       </Box>
     </Dialog>
   );

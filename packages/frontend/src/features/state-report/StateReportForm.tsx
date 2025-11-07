@@ -8,7 +8,7 @@ import { Box, Typography } from "@mui/material";
 import { useBannerBgColor } from "#components/Banner.tsx";
 import { useSyncForm } from "#components/SyncForm.tsx";
 import { db } from "../../db/db";
-import { useFormWithFocus, useRefreshForm } from "../../routes/useFormWithFocus";
+import { useFormWithFocus, useRefreshForm } from "../../hooks/useFormWithFocus";
 
 export const StateReportForm = ({ report }: { report: StateReport }) => {
   const [form, getFocused] = useFormWithFocus<StateReportFormType>({
@@ -115,4 +115,5 @@ const emptyStateReport: StateReport = {
   preconisations: null,
   preconisations_commentaires: null,
   bilan_quinquennal: null,
+  visite_partielle_details: null,
 };

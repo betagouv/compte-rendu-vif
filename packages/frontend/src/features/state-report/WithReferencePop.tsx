@@ -138,7 +138,33 @@ const ButtonsSwitch = () => {
         </Button>
       </Stack>
     ),
-    "constat-detaille": null,
+    "constat-detaille": (
+      <Stack gap="8px">
+        <Button
+          iconPosition="left"
+          iconId="ri-arrow-left-line"
+          priority="secondary"
+          size="large"
+          nativeButtonProps={{
+            onClick: () => navigate({ search: { step: "constat-general" } }),
+          }}
+          sx={{ width: "100%", justifyContent: "center" }}
+        >
+          Constat général
+        </Button>
+        <Button
+          iconPosition="left"
+          iconId="fr-icon-article-fill"
+          size="large"
+          nativeButtonProps={{
+            onClick: () => navigate({ search: { step: "constat-detaille" } }),
+          }}
+          sx={{ width: "100%", justifyContent: "center" }}
+        >
+          Créer le constat
+        </Button>
+      </Stack>
+    ),
     documents: null,
   };
 

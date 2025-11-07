@@ -16,7 +16,7 @@ import Button from "@codegouvfr/react-dsfr/Button";
 import { Tabs } from "#components/Tabs.tsx";
 import { Center } from "#components/MUIDsfr.tsx";
 import { useStatus } from "@powersync/react";
-import { useFormWithFocus, useRefreshForm } from "./useFormWithFocus";
+import { useFormWithFocus, useRefreshForm } from "../hooks/useFormWithFocus";
 
 const EditReport = () => {
   const { reportId } = Route.useParams();
