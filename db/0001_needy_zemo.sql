@@ -304,7 +304,6 @@ CREATE INDEX "merimee_dpt" ON "merimee" USING btree ("DPT" text_ops);--> stateme
 CREATE INDEX "merimee_insee" ON "merimee" USING btree ("INSEE" text_ops);--> statement-breakpoint
 CREATE INDEX "merimee_producteur" ON "merimee" USING btree ("PRODUCTEUR" text_ops);--> statement-breakpoint
 CREATE INDEX "merimee_to_memoire_ref_merimee" ON "merimee_to_memoire" USING btree ("REF_MERIMEE" text_ops);--> statement-breakpoint
-CREATE INDEX "pop_immeubles_departement" ON "pop_immeubles" USING btree ("departement_format_numerique" text_ops);--> statement-breakpoint
 ALTER TABLE "user" ADD CONSTRAINT "user_service_id_fkey" FOREIGN KEY ("service_id") REFERENCES "public"."service"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "user" ADD CONSTRAINT "user_email_key" UNIQUE("email");
 

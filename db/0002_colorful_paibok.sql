@@ -1,0 +1,1 @@
+DROP INDEX "pop_immeubles_departement";

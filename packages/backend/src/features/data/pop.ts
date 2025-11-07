@@ -36,7 +36,7 @@ const immeublesCsvPath = "./data/liste-des-immeubles-proteges-au-titre-des-monum
 
 export const fetchPopCSV = async () => {
   debug("Downloading POP immeubles CSV");
-  const url = `${ENV.DATAGOUV_API}/liste-des-immeubles-proteges-au-titre-des-monuments-historiques/exports/csv?lang=fr&timezone=Europe%2FBerlin&use_labels=true&delimiter=%3B`;
+  const url = `${ENV.DATAGOUV_API}/liste-des-immeubles-proteges-au-titre-des-monuments-historiques/exports/csv?delimiter=%3B`;
   const stream = await ofetch(url, { responseType: "stream" });
 
   const nodeStream = Readable.fromWeb(stream as any);

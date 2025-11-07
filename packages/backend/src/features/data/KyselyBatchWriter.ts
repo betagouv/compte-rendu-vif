@@ -1,6 +1,7 @@
 import { Writable } from "stream";
 import { db } from "../../db/db";
 import { makeDebug } from "../debug";
+import { pick } from "pastable";
 
 const debug = makeDebug("batch-writer");
 
@@ -37,9 +38,14 @@ export class KyselyBatchWriter<RowType> extends Writable {
   async flush() {
     if (this.batch.length === 0) return;
 
+    const tableColumns =
+      (await db.introspection.getTables().then((table) => table.find((t) => t.name === this.tableName)))?.columns.map(
+        (c) => c.name,
+      ) || [];
+
     await db
       .insertInto(this.tableName as any)
-      .values(this.batch)
+      .values(this.batch.map((row) => pick(row, tableColumns as any)))
       .onConflict((oc) => oc.doNothing())
       .execute();
 
