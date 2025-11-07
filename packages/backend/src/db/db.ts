@@ -7,7 +7,7 @@ import * as tables from "./schema";
 
 const pool = new pg.Pool({
   connectionString: ENV.DATABASE_URL,
-  ssl: isDev ? false : { rejectUnauthorized: false },
+  ssl: false,
 });
 
 const dialect = new PostgresDialect({

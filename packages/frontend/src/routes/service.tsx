@@ -13,7 +13,7 @@ import { endOfYear, startOfYear } from "date-fns";
 import { omit } from "pastable";
 import { useState } from "react";
 import { v4 } from "uuid";
-import { useRefreshService, useRefreshUser, useUser } from "../contexts/AuthContext";
+import { useRefreshUser, useUser } from "../contexts/AuthContext";
 import { ServiceInstructeurs, Service, Clause_v2 } from "../db/AppSchema";
 import { db, useDbQuery } from "../db/db";
 import { AccordionIfMobile, BreadcrumbNav } from "./account";
