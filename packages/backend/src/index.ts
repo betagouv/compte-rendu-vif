@@ -5,14 +5,14 @@ import { ENV } from "./envVars";
 import { generateOpenApi, initFastify } from "./router";
 import { makeDebug } from "./features/debug";
 import { initFonts } from "@cr-vif/pdf";
-import { fetchPopImmeubles } from "./features/data/pop";
+import { initPopImmeubles } from "./features/data/pop";
 
 const debug = makeDebug("index");
 
 const start = async () => {
   await registerViteHmrServerRestart();
 
-  // await fetchPopImmeubles();
+  await initPopImmeubles();
   // await initClauseV2();
   debug("Starting fastify server in", ENV.NODE_ENV, "mode");
 

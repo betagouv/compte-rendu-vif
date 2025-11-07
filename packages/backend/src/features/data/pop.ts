@@ -4,10 +4,17 @@ import { pipeline } from "stream/promises";
 import csv from "csv-parser";
 import { KyselyBatchWriter } from "./KyselyBatchWriter";
 import path from "path/win32";
+import { db } from "../../db/db";
 
 const debug = makeDebug("sync-pop");
 
-export const fetchPopImmeubles = async () => {
+export const initPopImmeubles = async () => {
+  const isTableEmpty = (await db.selectFrom("pop_immeubles").selectAll().limit(1).execute()).length === 0;
+  if (!isTableEmpty) {
+    debug("POP immeubles table is not empty, skipping import");
+    return;
+  }
+
   await pipeline(
     fs.createReadStream("./data/liste-des-immeubles-proteges-au-titre-des-monuments-historiques.csv"),
     csv({
@@ -108,7 +115,7 @@ export interface Coordonnees {
 }
 
 if (process.argv.includes("--standalone")) {
-  fetchPopImmeubles().then(() => {
+  initPopImmeubles().then(() => {
     debug("Done fetching POP immeubles");
     process.exit(0);
   });
