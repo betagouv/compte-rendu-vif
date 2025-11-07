@@ -1,10 +1,14 @@
-import { ofetch } from "ofetch";
+import { FetchError, ofetch } from "ofetch";
 import { ENV } from "../envVars";
 import { Static, Type } from "@sinclair/typebox";
 import jwt from "jsonwebtoken";
 import jwks from "jwks-rsa";
 import { db } from "../db/db";
 import { serviceTSchema } from "../routes/staticDataRoutes";
+import { createUserTSchema, loginTSchema } from "../routes/authRoutes";
+import { adminAuthApi, getKeycloakAdminTokens } from "../features/auth/keycloak";
+import { AppError } from "../features/errors";
+import { getServices } from "./services";
 
 const authFullUrl = `${ENV.VITE_AUTH_URL}/realms/${ENV.VITE_AUTH_REALM}`;
 
@@ -84,6 +88,84 @@ export class AuthService {
     if (!user) return null;
     return populateService(user);
   }
+
+  async loginUser(userData: Static<typeof loginTSchema.body>) {
+    const keycloakTokens = await authApi<Static<typeof keycloakTokenResponseTSchema>>(
+      "/protocol/openid-connect/token",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+          grant_type: "password",
+          client_id: ENV.AUTH_ADMIN_CLIENT_ID,
+          client_secret: ENV.AUTH_ADMIN_CLIENT_SECRET,
+          username: userData.email,
+          password: userData.password,
+        }).toString(),
+      },
+    );
+
+    const user = await db.selectFrom("user").where("email", "=", userData.email).selectAll().executeTakeFirst();
+    return {
+      accessToken: keycloakTokens.access_token,
+      refreshToken: keycloakTokens.refresh_token,
+      expiresAt: get80PercentOfTokenLifespan(Number(keycloakTokens.expires_in)).toString(),
+      user: await populateService(user!),
+    };
+  }
+
+  async createUser(userData: Static<typeof createUserTSchema.body>) {
+    try {
+      await adminAuthApi("/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: {
+          username: userData.name,
+          email: userData.email,
+          firstName: userData.name,
+          enabled: true,
+          credentials: [
+            {
+              type: "password",
+              value: userData.password,
+              temporary: false,
+            },
+          ],
+        },
+      });
+
+      const keycloakUser = await adminAuthApi<Array<{ id: string }>>("/users", {
+        method: "GET",
+        query: {
+          email: userData.email,
+        },
+      }).then((users) => users[0]);
+
+      const user = await db
+        .insertInto("user")
+        .values({
+          id: keycloakUser!.id,
+          name: userData.name,
+          service_id: userData.service_id,
+          email: userData.email,
+        })
+        .returningAll()
+        .executeTakeFirstOrThrow();
+
+      await getServices().user.changeService(user.id, user.service_id);
+
+      return this.loginUser({ email: userData.email, password: userData.password });
+    } catch (error) {
+      if (error instanceof FetchError) {
+        throw new AppError(error.status || 500, `Authentication error: ${error.data?.errorMessage || error.message}`);
+      }
+      throw error;
+    }
+  }
 }
 
 const populateService = async <T extends { service_id: string }>(user: T) => {
@@ -116,6 +198,8 @@ const getKey = async (header: jwt.JwtHeader) => {
     });
   });
 };
+
+export const get80PercentOfTokenLifespan = (expiresIn: number) => Date.now() + expiresIn * 0.8 * 1000;
 
 type AuthenticateProps = {
   code: string;

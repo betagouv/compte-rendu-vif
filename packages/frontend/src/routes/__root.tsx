@@ -27,11 +27,11 @@ const getTitle = (pathname: string) => {
     return "PDF | CR VIF";
   }
 
-  if (pathname.startsWith("/login")) {
+  if (pathname.startsWith("/connection")) {
     return "Connexion | CR VIF";
   }
 
-  if (pathname.startsWith("/signup")) {
+  if (pathname.startsWith("/inscription")) {
     return "Inscription | CR VIF";
   }
 

@@ -21,7 +21,7 @@ export const serviceTSchema = Type.Object({
   email: Nullable(Type.String()),
   marianne_text: Nullable(Type.String()),
   drac_text: Nullable(Type.String()),
-  dept_number: Nullable(Type.String()),
+  dept_numbers: Nullable(Type.String()),
   service_text: Nullable(Type.String()),
 });
 

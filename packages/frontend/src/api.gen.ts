@@ -30,18 +30,18 @@ export namespace Endpoints {
         service: {
           id: string;
           department: string;
-          completeCoords?: string | null | Array<string | null> | undefined;
-          visible?: boolean | null | Array<boolean | null> | undefined;
-          name?: string | null | Array<string | null> | undefined;
-          address?: string | null | Array<string | null> | undefined;
-          zipCode?: string | null | Array<string | null> | undefined;
-          city?: string | null | Array<string | null> | undefined;
-          phone?: string | null | Array<string | null> | undefined;
-          email?: string | null | Array<string | null> | undefined;
-          marianne_text?: string | null | Array<string | null> | undefined;
-          drac_text?: string | null | Array<string | null> | undefined;
-          dept_number?: string | null | Array<string | null> | undefined;
-          service_text?: string | null | Array<string | null> | undefined;
+          completeCoords?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+          visible?: boolean | Schemas.null | Array<boolean | Schemas.null> | undefined;
+          name?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+          address?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+          zipCode?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+          city?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+          phone?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+          email?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+          marianne_text?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+          drac_text?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+          dept_numbers?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+          service_text?: string | Schemas.null | Array<string | Schemas.null> | undefined;
         };
       };
     };
@@ -63,6 +63,72 @@ export namespace Endpoints {
       id_token: string;
     };
   };
+  export type post_ApicreateUser = {
+    method: "POST";
+    path: "/api/create-user";
+    parameters: {
+      body: { password: string; name: string; email: string; job: string; service_id: string };
+    };
+    response: {
+      user: {
+        id: string;
+        name: string;
+        service_id: string;
+        service: {
+          id: string;
+          department: string;
+          completeCoords?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+          visible?: boolean | Schemas.null | Array<boolean | Schemas.null> | undefined;
+          name?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+          address?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+          zipCode?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+          city?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+          phone?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+          email?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+          marianne_text?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+          drac_text?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+          dept_numbers?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+          service_text?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+        };
+      };
+      accessToken: string;
+      refreshToken: string;
+      expiresAt: string;
+    };
+  };
+  export type post_ApiloginUser = {
+    method: "POST";
+    path: "/api/login-user";
+    parameters: {
+      body: { email: string; password: string };
+    };
+    response: {
+      user: {
+        id: string;
+        name: string;
+        service_id: string;
+        service: {
+          id: string;
+          department: string;
+          completeCoords?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+          visible?: boolean | Schemas.null | Array<boolean | Schemas.null> | undefined;
+          name?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+          address?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+          zipCode?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+          city?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+          phone?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+          email?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+          marianne_text?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+          drac_text?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+          dept_numbers?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+          service_text?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+        };
+      };
+      accessToken: string;
+      refreshToken: string;
+      expiresAt: string;
+    };
+  };
   export type post_ApichangeService = {
     method: "POST";
     path: "/api/change-service";
@@ -78,18 +144,18 @@ export namespace Endpoints {
     response: Array<{
       id: string;
       department: string;
-      completeCoords?: string | null | Array<string | null> | undefined;
-      visible?: boolean | null | Array<boolean | null> | undefined;
-      name?: string | null | Array<string | null> | undefined;
-      address?: string | null | Array<string | null> | undefined;
-      zipCode?: string | null | Array<string | null> | undefined;
-      city?: string | null | Array<string | null> | undefined;
-      phone?: string | null | Array<string | null> | undefined;
-      email?: string | null | Array<string | null> | undefined;
-      marianne_text?: string | null | Array<string | null> | undefined;
-      drac_text?: string | null | Array<string | null> | undefined;
-      dept_number?: string | null | Array<string | null> | undefined;
-      service_text?: string | null | Array<string | null> | undefined;
+      completeCoords?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+      visible?: boolean | Schemas.null | Array<boolean | Schemas.null> | undefined;
+      name?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+      address?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+      zipCode?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+      city?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+      phone?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+      email?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+      marianne_text?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+      drac_text?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+      dept_numbers?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+      service_text?: string | Schemas.null | Array<string | Schemas.null> | undefined;
     }>;
   };
   export type post_Apiuploadimage = {
@@ -138,7 +204,7 @@ export namespace Endpoints {
     parameters: {
       body: {
         op_id: number;
-        tx_id?: number | null | Array<number | null> | undefined;
+        tx_id?: number | Schemas.null | Array<number | Schemas.null> | undefined;
         id: string;
         type: string;
         op: string;
@@ -156,6 +222,8 @@ export type EndpointByMethod = {
   post: {
     "/api/authenticate": Endpoints.post_Apiauthenticate;
     "/api/refresh-token": Endpoints.post_ApirefreshToken;
+    "/api/create-user": Endpoints.post_ApicreateUser;
+    "/api/login-user": Endpoints.post_ApiloginUser;
     "/api/change-service": Endpoints.post_ApichangeService;
     "/api/upload/image": Endpoints.post_Apiuploadimage;
     "/api/upload/picture/{pictureId}/lines": Endpoints.post_ApiuploadpicturePictureIdlines;
@@ -244,8 +312,8 @@ export class ApiClient {
   get<Path extends keyof GetEndpoints, TEndpoint extends GetEndpoints[Path]>(
     path: Path,
     ...params: MaybeOptionalArg<TEndpoint["parameters"]>
-  ) {
-    return this.fetcher("get", this.baseUrl + path, params[0]) as Promise<TEndpoint["response"]>;
+  ): Promise<TEndpoint["response"]> {
+    return this.fetcher("get", this.baseUrl + path, params[0]);
   }
   // </ApiClient.get>
 }

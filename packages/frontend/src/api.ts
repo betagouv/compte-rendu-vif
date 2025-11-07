@@ -3,7 +3,8 @@ import { type GetEndpoints, type PostEndpoints, createApiClient } from "./api.ge
 import { ENV } from "./envVars";
 
 import { getTokenOrRefresh } from "./db/Connector";
-import { Service } from "./db/AppSchema";
+import { Database, Service } from "./db/AppSchema";
+import { Prettify } from "pastable";
 
 export const createApiClientWithUrl = (url: string, options: { ignoreToken?: boolean } = {}) => {
   return createApiClient(async (method, url, parameters) => {
@@ -29,9 +30,7 @@ export const unauthenticatedApi = createApiClientWithUrl(ENV.VITE_BACKEND_URL, {
 export type RouterInputs<T extends keyof AllEndpoints> = AllEndpoints[T]["parameters"];
 export type RouterOutputs<T extends keyof AllEndpoints> = AllEndpoints[T]["response"];
 
-export type AuthUser = Omit<RouterOutputs<"/api/authenticate">["user"], "service"> & {
-  service: Service;
-};
+export type AuthUser = Prettify<RouterOutputs<"/api/authenticate">["user"]>;
 type AllEndpoints = GetEndpoints & PostEndpoints;
 
 export const getErrorMessage = (error: any) => {

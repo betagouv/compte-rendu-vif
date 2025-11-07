@@ -1,9 +1,9 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { LoginForm } from "#components/LoginForm";
 import { RedirectIfUser } from "#components/RedirectIfUser";
 import { Center } from "#components/MUIDsfr.tsx";
 import { Flex } from "#components/ui/Flex.tsx";
 import { Typography } from "@mui/material";
+import { LoginForm } from "../features/auth/LoginForm";
 
 const LoginPage = () => {
   return (
@@ -18,7 +18,7 @@ const LoginPage = () => {
   );
 };
 
-export const Route = createFileRoute("/login")({
+export const Route = createFileRoute("/connection")({
   component: () => {
     return (
       <RedirectIfUser>

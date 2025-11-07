@@ -10,7 +10,8 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ServiceRouteImport } from './routes/service'
-import { Route as LoginRouteImport } from './routes/login'
+import { Route as InscriptionRouteImport } from './routes/inscription'
+import { Route as ConnectionRouteImport } from './routes/connection'
 import { Route as AuthCallbackRouteImport } from './routes/auth-callback'
 import { Route as AccountRouteImport } from './routes/account'
 import { Route as IndexRouteImport } from './routes/index'
@@ -24,9 +25,14 @@ const ServiceRoute = ServiceRouteImport.update({
   path: '/service',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
+const InscriptionRoute = InscriptionRouteImport.update({
+  id: '/inscription',
+  path: '/inscription',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ConnectionRoute = ConnectionRouteImport.update({
+  id: '/connection',
+  path: '/connection',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthCallbackRoute = AuthCallbackRouteImport.update({
@@ -69,7 +75,8 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/account': typeof AccountRoute
   '/auth-callback': typeof AuthCallbackRoute
-  '/login': typeof LoginRoute
+  '/connection': typeof ConnectionRoute
+  '/inscription': typeof InscriptionRoute
   '/service': typeof ServiceRoute
   '/constat/$constatId': typeof ConstatConstatIdRouteWithChildren
   '/edit/$reportId': typeof EditReportIdRoute
@@ -80,7 +87,8 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/account': typeof AccountRoute
   '/auth-callback': typeof AuthCallbackRoute
-  '/login': typeof LoginRoute
+  '/connection': typeof ConnectionRoute
+  '/inscription': typeof InscriptionRoute
   '/service': typeof ServiceRoute
   '/constat/$constatId': typeof ConstatConstatIdRouteWithChildren
   '/edit/$reportId': typeof EditReportIdRoute
@@ -92,7 +100,8 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/account': typeof AccountRoute
   '/auth-callback': typeof AuthCallbackRoute
-  '/login': typeof LoginRoute
+  '/connection': typeof ConnectionRoute
+  '/inscription': typeof InscriptionRoute
   '/service': typeof ServiceRoute
   '/constat/$constatId': typeof ConstatConstatIdRouteWithChildren
   '/edit/$reportId': typeof EditReportIdRoute
@@ -105,7 +114,8 @@ export interface FileRouteTypes {
     | '/'
     | '/account'
     | '/auth-callback'
-    | '/login'
+    | '/connection'
+    | '/inscription'
     | '/service'
     | '/constat/$constatId'
     | '/edit/$reportId'
@@ -116,7 +126,8 @@ export interface FileRouteTypes {
     | '/'
     | '/account'
     | '/auth-callback'
-    | '/login'
+    | '/connection'
+    | '/inscription'
     | '/service'
     | '/constat/$constatId'
     | '/edit/$reportId'
@@ -127,7 +138,8 @@ export interface FileRouteTypes {
     | '/'
     | '/account'
     | '/auth-callback'
-    | '/login'
+    | '/connection'
+    | '/inscription'
     | '/service'
     | '/constat/$constatId'
     | '/edit/$reportId'
@@ -139,7 +151,8 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AccountRoute: typeof AccountRoute
   AuthCallbackRoute: typeof AuthCallbackRoute
-  LoginRoute: typeof LoginRoute
+  ConnectionRoute: typeof ConnectionRoute
+  InscriptionRoute: typeof InscriptionRoute
   ServiceRoute: typeof ServiceRoute
   ConstatConstatIdRoute: typeof ConstatConstatIdRouteWithChildren
   EditReportIdRoute: typeof EditReportIdRoute
@@ -155,11 +168,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ServiceRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
+    '/inscription': {
+      id: '/inscription'
+      path: '/inscription'
+      fullPath: '/inscription'
+      preLoaderRoute: typeof InscriptionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/connection': {
+      id: '/connection'
+      path: '/connection'
+      fullPath: '/connection'
+      preLoaderRoute: typeof ConnectionRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth-callback': {
@@ -229,7 +249,8 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AccountRoute: AccountRoute,
   AuthCallbackRoute: AuthCallbackRoute,
-  LoginRoute: LoginRoute,
+  ConnectionRoute: ConnectionRoute,
+  InscriptionRoute: InscriptionRoute,
   ServiceRoute: ServiceRoute,
   ConstatConstatIdRoute: ConstatConstatIdRouteWithChildren,
   EditReportIdRoute: EditReportIdRoute,

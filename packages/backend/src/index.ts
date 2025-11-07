@@ -12,6 +12,8 @@ const debug = makeDebug("index");
 
 const start = async () => {
   await registerViteHmrServerRestart();
+  // await loginWithKeycloak();
+  // return;
   await initEmptyService();
   await initPopImmeubles();
   debug("Starting fastify server in", ENV.NODE_ENV, "mode");
