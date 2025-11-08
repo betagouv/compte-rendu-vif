@@ -65,6 +65,7 @@ export const PDF = () => {
       const picturesQuery = await db
         .selectFrom("report_attachment")
         .where("report_id", "=", reportId)
+        .where("is_deprecated", "=", 0)
         .orderBy("created_at", "asc")
         .selectAll()
         .execute();
@@ -80,8 +81,6 @@ export const PDF = () => {
   });
 
   const report = reportQuery.data;
-
-  console.log(report);
 
   const snapshotQuery = useQuery({
     queryKey: ["report-snapshot", reportId],

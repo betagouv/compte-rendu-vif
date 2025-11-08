@@ -131,6 +131,7 @@ export const report = pgTable(
     createdAt: timestamp({ mode: "string" }).notNull(),
     serviceInstructeur: text(),
     pdf: text(),
+    attachmentId: text("attachment_id"),
     disabled: boolean(),
     serviceId: text("service_id"),
     redactedById: text(),

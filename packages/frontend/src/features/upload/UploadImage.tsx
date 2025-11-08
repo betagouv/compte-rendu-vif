@@ -144,11 +144,12 @@ const ReportPictures = ({
     db
       .selectFrom("report_attachment")
       .where("is_deprecated", "=", 0)
+      .where("attachment_id", "like", "%.jpg")
       .where("report_id", "=", reportId)
       .selectAll()
       .orderBy("created_at", "asc"),
   );
-  console.log(picturesQuery.data);
+
   const pictures = picturesQuery.data ?? [];
 
   if (!pictures?.length) return null;

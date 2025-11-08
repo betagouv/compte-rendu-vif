@@ -13,7 +13,6 @@ import { db } from "../../db/db";
 import { getPDFInMailName } from "@cr-vif/pdf";
 import { Flex } from "#components/ui/Flex.tsx";
 import { Divider } from "#components/ui/Divider.tsx";
-import { useStyles } from "tss-react";
 import { styled } from "@mui/material";
 
 export const ReportActions = forwardRef<HTMLDivElement, { report: ReportWithUser }>(({ report }, ref) => {
@@ -24,9 +23,12 @@ export const ReportActions = forwardRef<HTMLDivElement, { report: ReportWithUser
   const navigate = useNavigate();
 
   const downloadPdfMutation = useMutation(async () => {
-    const buffer = await api.get("/api/pdf/report", { query: { reportId: report.id } });
+    const buffer = (await api.get("/api/upload/attachment", {
+      query: { filePath: report.attachment_id! },
+    } as any)) as Blob;
+
     const name = getPDFInMailName(report);
-    return downloadFile(`data:application/pdf;base64,${buffer}`, name);
+    return downloadFile(window.URL.createObjectURL(buffer), name);
   });
 
   const deleteMutation = useDeleteMutation();
@@ -47,6 +49,8 @@ export const ReportActions = forwardRef<HTMLDivElement, { report: ReportWithUser
       })
       .execute();
   });
+
+  const canDownload = report.pdf !== null || report.attachment_id !== null;
 
   return (
     <Flex ref={ref} bgcolor="#ECECFE" gap="0" flexDirection="column">
@@ -70,7 +74,7 @@ export const ReportActions = forwardRef<HTMLDivElement, { report: ReportWithUser
           <Divider height="1px" color="#DDD" />
         </>
       ) : null}
-      {report.pdf ? (
+      {canDownload ? (
         <>
           <ReportAction iconId="ri-download-line" label="Télécharger" onClick={() => downloadPdfMutation.mutate()} />
           <Divider height="1px" color="#DDD" />

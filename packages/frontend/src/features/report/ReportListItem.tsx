@@ -33,7 +33,7 @@ export const ReportListItem = ({
     !whereText && !forText,
   );
 
-  const isDraft = report.pdf === null;
+  const isDraft = report.pdf === null && report.attachment_id === null;
 
   return (
     <Flex className="report-list-item" position="relative" flexDirection="column" width="100%">
@@ -74,7 +74,7 @@ export const ReportListItem = ({
             {byText}
           </Box>
           <Box mt="8px">
-            <ReportBadge status={report.pdf ? "published" : "draft"} />
+            <ReportBadge status={isDraft ? "draft" : "published"} />
           </Box>
         </Box>
       </Link>

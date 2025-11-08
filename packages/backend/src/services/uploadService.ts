@@ -92,7 +92,7 @@ export class UploadService {
     const lines = JSON.parse(linesQuery?.[0]?.lines || "[]");
 
     if (!picture) throw new AppError(404, "Picture not found");
-    const pictureUrl = await generatePresignedUrl(bucketUrl, addAttachmentPrefix(pictureId));
+    const pictureUrl = await generatePresignedUrl(addAttachmentPrefix(pictureId));
 
     const buffer = await applyLinesToPicture({ pictureUrl: pictureUrl, lines });
 
@@ -131,23 +131,23 @@ export class UploadService {
     return url;
   }
 }
-async function generatePresignedUrl(bucket: string, key: string) {
+
+export async function generatePresignedUrl(key: string) {
   const command = new GetObjectCommand({
-    Bucket: bucket,
+    Bucket: bucketUrl,
     Key: key,
   });
 
-  const presignedUrl = await getSignedUrl(client, command, {
+  const presignedUrl = await getSignedUrl(client as any, command as any, {
     expiresIn: 3600,
   });
 
   const url = new URL(presignedUrl);
   const pathParts = url.pathname.split("/");
 
-  // Encode each part except the bucket name (first part after /)
   const encodedPath = pathParts
     .map((part, index) => {
-      if (index === 0 || index === 1) return part; // Keep empty string and bucket name
+      if (index === 0 || index === 1) return part;
       return encodeURIComponent(part);
     })
     .join("/");
