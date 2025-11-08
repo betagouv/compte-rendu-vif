@@ -74,7 +74,7 @@
     "react-pdf-html": "^2.0.4",
     "react-use": "^17.5.0",
     "tss-react": "^4.9.19",
-    "uuid": "^9.0.1",
+    "uuid": "^13.0.0",
     "vite-plugin-wasm": "^3.3.0",
     "wa-sqlite": "github:rhashimoto/wa-sqlite",
     "web-locks-polyfill": "^0.0.13",

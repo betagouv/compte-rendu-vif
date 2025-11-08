@@ -248,6 +248,7 @@ const visited_section = new Table({
 const report_attachment = new Table({
   report_id: column.text,
   attachment_id: column.text,
+  is_deprecated: column.integer,
   service_id: column.text,
   created_at: column.text,
 });
@@ -255,6 +256,8 @@ const report_attachment = new Table({
 const state_report_attachment = new Table({
   state_report_id: column.text,
   attachment_id: column.text,
+  is_deprecated: column.integer,
+  label: column.text,
   service_id: column.text,
   created_at: column.text,
 });

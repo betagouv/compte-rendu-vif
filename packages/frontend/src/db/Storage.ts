@@ -9,11 +9,11 @@ export class AttachmentStorage implements StorageAdapter {
   async uploadFile(filePath: string, data: ArrayBuffer): Promise<void> {
     const formData = new FormData();
     formData.append("file", new Blob([data]), filePath);
-    await api.post("/api/upload/attachment", { body: formData } as any);
+    await api.post("/api/upload/attachment", { body: formData, query: { filePath } } as any);
   }
 
   async downloadFile(filePath: string): Promise<Blob> {
-    const data = (await api.get("/api/upload/attachment", { query: { filename: filePath } } as any)) as ArrayBuffer;
+    const data = (await api.get("/api/upload/attachment", { query: { filePath: filePath } } as any)) as ArrayBuffer;
 
     return new Blob([data]);
   }

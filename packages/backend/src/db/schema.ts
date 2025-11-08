@@ -149,6 +149,7 @@ export const report = pgTable(
 
 export const reportAttachment = pgTable("report_attachment", {
   id: text().primaryKey().notNull(),
+  isDeprecated: boolean("is_deprecated"),
   attachmentId: text("attachment_id").notNull(),
   reportId: text("report_id").notNull(),
   createdAt: timestamp("created_at", { mode: "string" }),
@@ -157,9 +158,11 @@ export const reportAttachment = pgTable("report_attachment", {
 
 export const stateReportAttachment = pgTable("state_report_attachment", {
   id: text().primaryKey().notNull(),
+  isDeprecated: boolean("is_deprecated"),
   attachmentId: text("attachment_id").notNull(),
   stateReportId: text("state_report_id").notNull(),
   createdAt: timestamp("created_at", { mode: "string" }),
+  label: text(),
   service_id: text("service_id"),
 });
 

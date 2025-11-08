@@ -1,4 +1,4 @@
-import { createCanvas, loadImage } from "canvas";
+import { createCanvas, loadImage, createImageData } from "canvas";
 
 export const applyLinesToPicture = async ({
   pictureUrl,
@@ -8,6 +8,7 @@ export const applyLinesToPicture = async ({
   lines: Array<{ points: { x: number; y: number }[]; color: string }>;
 }) => {
   try {
+    console.log(pictureUrl);
     const image = await loadImage(pictureUrl);
 
     const canvas = createCanvas(image.width, image.height);

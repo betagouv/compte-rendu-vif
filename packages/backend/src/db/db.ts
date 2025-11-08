@@ -27,10 +27,9 @@ export type Database = {
   service: Kyselify<typeof tables.service>;
   clause_v2: Kyselify<typeof tables.clauseV2>;
   report: Kyselify<typeof tables.report>;
+  report_attachment: Kyselify<typeof tables.reportAttachment>;
   pdf_snapshot: Kyselify<typeof tables.pdfSnapshot>;
-  tmp_pictures: Kyselify<typeof tables.tmpPictures>;
   picture_lines: Kyselify<typeof tables.pictureLines>;
-  pictures: Kyselify<typeof tables.pictures>;
   transactions: Kyselify<typeof tables.transactions>;
   sent_email: Kyselify<typeof tables.sentEmail>;
   suggested_email: Kyselify<typeof tables.suggestedEmail>;
@@ -38,6 +37,7 @@ export type Database = {
   merimee: Kyselify<typeof tables.merimee>;
   pop_immeubles: Kyselify<typeof tables.popImmeubles>;
   state_report: Kyselify<typeof tables.stateReport>;
+  state_report_attachment: Kyselify<typeof tables.stateReportAttachment>;
   user_dept: Kyselify<typeof tables.userDept>;
   merimee_to_memoire: Kyselify<typeof tables.merimeeToMemoire>;
   visited_section: Kyselify<typeof tables.visitedSection>;

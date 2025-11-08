@@ -1,5 +1,5 @@
 import { useState, useRef, ChangeEvent, useEffect } from "react";
-import { v4 } from "uuid";
+import { v4, v7 } from "uuid";
 import { deleteImageFromIdb, getPicturesStore, getUploadStatusStore } from "../idb";
 import { InputGroup } from "#components/InputGroup.tsx";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -47,7 +47,7 @@ export const UploadImage = ({ reportId }: { reportId: string }) => {
 
   const uploadImageMutation = useMutation(async (files: File[]) => {
     for (const file of files) {
-      const picId = v4();
+      const picId = `${reportId}/images/${v7()}.jpg`;
       ref.current!.value = "";
       const buffer = await processImage(file);
 
@@ -65,6 +65,7 @@ export const UploadImage = ({ reportId }: { reportId: string }) => {
           report_id: reportId,
           service_id: user!.service_id,
           created_at: new Date().toISOString(),
+          is_deprecated: 0,
         })
         .execute();
     }
@@ -140,9 +141,14 @@ const ReportPictures = ({
   const reportId = form.getValues().id;
 
   const picturesQuery = useDbQuery(
-    db.selectFrom("report_attachment").where("report_id", "=", reportId).selectAll().orderBy("created_at", "asc"),
+    db
+      .selectFrom("report_attachment")
+      .where("is_deprecated", "=", 0)
+      .where("report_id", "=", reportId)
+      .selectAll()
+      .orderBy("created_at", "asc"),
   );
-
+  console.log(picturesQuery.data);
   const pictures = picturesQuery.data ?? [];
 
   if (!pictures?.length) return null;
