@@ -10,12 +10,14 @@ import Button from "@codegouvfr/react-dsfr/Button";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { ImageCanvas, Line } from "./DrawingCanvas";
 import { api } from "../../api";
-import { db, useDbQuery } from "../../db/db";
-import { Pictures, Report } from "../../db/AppSchema";
+import { attachmentQueue, attachmentStorage, db, getAttachmentUrl, useDbQuery } from "../../db/db";
+import { Pictures, Report, ReportAttachment } from "../../db/AppSchema";
 import imageCompression from "browser-image-compression";
 import { Box, Grid, Stack, Typography } from "@mui/material";
 import { Flex } from "#components/ui/Flex.tsx";
 import { Center } from "#components/MUIDsfr.tsx";
+import { useLiveUser } from "../../contexts/AuthContext";
+import { AttachmentState } from "@powersync/attachments";
 
 const modal = createModal({
   id: "edit-picture",
@@ -23,8 +25,8 @@ const modal = createModal({
 });
 
 export const UploadImage = ({ reportId }: { reportId: string }) => {
-  const [statusMap, setStatusMap] = useState<Record<string, string>>({});
   const [selectedPicture, setSelectedPicture] = useState<{ id: string; url: string } | null>(null);
+  const user = useLiveUser();
 
   const linesQuery = useQuery({
     queryKey: ["lines", selectedPicture?.id],
@@ -49,10 +51,22 @@ export const UploadImage = ({ reportId }: { reportId: string }) => {
       ref.current!.value = "";
       const buffer = await processImage(file);
 
-      await set(picId, buffer, getPicturesStore());
-      await db.insertInto("pictures").values({ id: picId, reportId, createdAt: new Date().toISOString() }).execute();
+      await attachmentQueue.saveReportAttachment({
+        attachmentId: picId,
+        buffer,
+        mediaType: "image/jpeg",
+      });
 
-      setStatusMap((prev) => ({ ...prev, [picId]: "uploading" }));
+      await db
+        .insertInto("report_attachment")
+        .values({
+          id: picId,
+          attachment_id: picId,
+          report_id: reportId,
+          service_id: user!.service_id,
+          created_at: new Date().toISOString(),
+        })
+        .execute();
     }
   });
 
@@ -62,18 +76,6 @@ export const UploadImage = ({ reportId }: { reportId: string }) => {
 
     await uploadImageMutation.mutateAsync(Array.from(files));
   };
-
-  useEffect(() => {
-    const listener = (event: MessageEvent) => {
-      if (event.data.type === "status") {
-        setStatusMap((prev) => ({ ...prev, [event.data.id]: event.data.status }));
-      }
-    };
-
-    broadcastChannel.addEventListener("message", listener);
-
-    return () => broadcastChannel.removeEventListener("message", listener);
-  }, []);
 
   return (
     <>
@@ -123,18 +125,14 @@ export const UploadImage = ({ reportId }: { reportId: string }) => {
         Ajouter photo
       </Button>
       <input ref={ref as any} type="file" accept="image/*" onChange={onChange} multiple style={{ display: "none" }} />
-      <ReportPictures setSelectedPicture={setSelectedPicture} statusMap={statusMap} />
+      <ReportPictures setSelectedPicture={setSelectedPicture} />
     </>
   );
 };
 
-const broadcastChannel = new BroadcastChannel("sw-messages");
-
 const ReportPictures = ({
-  statusMap,
   setSelectedPicture,
 }: {
-  statusMap: Record<string, string>;
   setSelectedPicture: (props: { id: string; url: string }) => void;
 }) => {
   const form = useFormContext<Report>();
@@ -142,7 +140,7 @@ const ReportPictures = ({
   const reportId = form.getValues().id;
 
   const picturesQuery = useDbQuery(
-    db.selectFrom("pictures").where("reportId", "=", reportId).orderBy("createdAt asc").selectAll(),
+    db.selectFrom("report_attachment").where("report_id", "=", reportId).selectAll().orderBy("created_at", "asc"),
   );
 
   const pictures = picturesQuery.data ?? [];
@@ -152,18 +150,20 @@ const ReportPictures = ({
   return (
     <Flex flexDirection="column" width="100%" my="40px">
       <InputGroup>
-        <Grid gap="16px" gridTemplateColumns={{ xs: "repeat(2, 1fr)", md: "repeat(3, 1fr)", lg: "repeat(4, 1fr)" }}>
+        <Grid
+          display="grid"
+          gap="16px"
+          gridTemplateColumns={{ xs: "repeat(2, 1fr)", md: "repeat(3, 1fr)", lg: "repeat(4, 1fr)" }}
+        >
           {pictures?.map((picture, index) => (
             <PictureThumbnail
               setSelectedPicture={setSelectedPicture}
               key={picture.id}
-              picture={picture as any}
+              picture={picture}
               index={index}
-              status={statusMap[picture.id]}
             />
           ))}
         </Grid>
-        {/* </Flex> */}
       </InputGroup>
     </Flex>
   );
@@ -172,49 +172,38 @@ const ReportPictures = ({
 const PictureThumbnail = ({
   picture,
   index,
-  status,
   setSelectedPicture,
 }: {
-  picture: Pictures;
+  picture: ReportAttachment;
   index: number;
-  status?: string;
   setSelectedPicture: (props: { id: string; url: string }) => void;
 }) => {
   const deletePictureMutation = useMutation(async () => {
-    await deleteImageFromIdb(picture.id);
-    await db.deleteFrom("pictures").where("id", "=", picture.id).execute();
+    await attachmentStorage.deleteFile(picture.id);
+    await db.deleteFrom("report_attachment").where("id", "=", picture.id).execute();
 
     return "ok";
   });
 
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-
+  const idbStatusQuery = useDbQuery(db.selectFrom("attachments").where("id", "=", picture.id).select("state"));
+  const status = idbStatusQuery.data?.[0]?.state;
   const bgUrlQuery = useQuery({
-    queryKey: ["picture", picture.id, picture.url],
+    queryKey: ["picture", picture.id, status],
     queryFn: async () => {
-      const buffer = await get(picture.id, getPicturesStore());
-      if (!buffer) return picture.url;
-      const blob = new Blob([buffer], { type: "image/png" });
-
-      return URL.createObjectURL(blob);
+      const buffer = await getAttachmentUrl(picture.id);
+      return buffer;
     },
     refetchOnWindowFocus: false,
+    enabled: status === AttachmentState.SYNCED || status === AttachmentState.QUEUED_UPLOAD,
   });
+
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const pictureLines = useDbQuery(db.selectFrom("picture_lines").where("pictureId", "=", picture.id).selectAll());
 
-  const idbStatusQuery = useQuery({
-    queryKey: ["picture-status", picture.id],
-    queryFn: async () => {
-      const status = await get(picture.id, getUploadStatusStore());
-      return status ?? null;
-    },
-    enabled: !status,
-  });
-
   useEffect(() => {
     drawCanvas();
-  }, [bgUrlQuery.data, pictureLines.data]);
+  }, [pictureLines.data, bgUrlQuery.data]);
 
   const drawCanvas = () => {
     if (!canvasRef.current) return;
@@ -225,8 +214,7 @@ const PictureThumbnail = ({
     const ctx = canvas.getContext("2d")!;
 
     const image = new Image();
-    image.src = bgUrlQuery.data;
-
+    image.src = bgUrlQuery.data!;
     const dpr = window.devicePixelRatio || 1;
     canvas.width = 180 * dpr;
     canvas.height = 130 * dpr;
@@ -269,10 +257,7 @@ const PictureThumbnail = ({
     };
   };
 
-  const finalStatus = status ?? idbStatusQuery.data ?? "success";
-
-  const bgUrl = bgUrlQuery.data;
-
+  const finalStatus = idbStatusQuery.data?.[0]?.state ?? AttachmentState.QUEUED_UPLOAD;
   return (
     <Stack minWidth="150px" maxWidth="180px">
       <ReportStatus status={finalStatus as any} />
@@ -281,7 +266,7 @@ const PictureThumbnail = ({
         <Flex bgcolor="white" alignItems="center" border="1px solid #DFDFDF" height="40px">
           <Box
             onClick={() => {
-              setSelectedPicture({ id: picture.id, url: bgUrl! });
+              setSelectedPicture({ id: picture.id, url: bgUrlQuery.data! });
               modal.open();
             }}
             borderRight="1px solid #DFDFDF"
@@ -304,7 +289,7 @@ const PictureThumbnail = ({
   );
 };
 
-const ReportStatus = ({ status }: { status: "uploading" | "success" | "error" }) => {
+const ReportStatus = ({ status }: { status: AttachmentState }) => {
   const { color, bgColor, label, icon } = statusData[status];
 
   return (
@@ -334,10 +319,27 @@ const ReportStatus = ({ status }: { status: "uploading" | "success" | "error" })
   );
 };
 
-const statusData = {
-  uploading: { label: "En cours", bgColor: "#FEE7FC", color: "#855080", icon: "fr-icon-refresh-line" },
-  success: { label: "Ok", bgColor: "#B8FEC9", color: "#18753C", icon: "fr-icon-success-line" },
-  error: { label: "Erreur", bgColor: "#FEC9C9", color: "#853C3C", icon: "fr-icon-warning-line" },
+const statusData: Record<AttachmentState, any> = {
+  [AttachmentState.QUEUED_UPLOAD]: {
+    label: "En cours",
+    bgColor: "#FEE7FC",
+    color: "#855080",
+    icon: "fr-icon-refresh-line",
+  },
+  [AttachmentState.SYNCED]: { label: "Ok", bgColor: "#B8FEC9", color: "#18753C", icon: "fr-icon-success-line" },
+  [AttachmentState.ARCHIVED]: { label: "Erreur", bgColor: "#FEC9C9", color: "#853C3C", icon: "fr-icon-warning-line" },
+  [AttachmentState.QUEUED_SYNC]: {
+    label: "En cours",
+    bgColor: "#FEE7FC",
+    color: "#855080",
+    icon: "fr-icon-refresh-line",
+  },
+  [AttachmentState.QUEUED_DOWNLOAD]: {
+    label: "En cours",
+    bgColor: "#FEE7FC",
+    color: "#855080",
+    icon: "fr-icon-refresh-line",
+  },
 };
 
 const processImage = async (file: File) => {

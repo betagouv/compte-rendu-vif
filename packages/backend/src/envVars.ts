@@ -15,7 +15,6 @@ const envSchema = z.object({
   DATABASE_URL: z.string(),
   DATAGOUV_API: z.string(),
   TOKEN_LIFETIME: z.string().default("60m"),
-  KEYCLOAK_CLIENT_SECRET: z.string(),
   JWT_SECRET: z.string(),
   JWT_REFRESH_SECRET: z.string(),
   NODE_ENV: z.string().default("development"),
@@ -40,6 +39,7 @@ const envSchema = z.object({
   VITE_AUTH_REALM: z.string(),
   AUTH_ADMIN_CLIENT_ID: z.string(),
   AUTH_ADMIN_CLIENT_SECRET: z.string(),
+  AUTH_CLIENT_SECRET: z.string(),
 });
 
 export const ENV = envSchema.parse(process.env);

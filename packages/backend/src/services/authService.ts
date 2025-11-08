@@ -9,7 +9,9 @@ import { createUserTSchema, loginTSchema } from "../routes/authRoutes";
 import { adminAuthApi, getKeycloakAdminTokens } from "../features/auth/keycloak";
 import { AppError } from "../features/errors";
 import { getServices } from "./services";
-
+import { AuthUser } from "../routes/authMiddleware";
+import { makeDebug } from "../features/debug";
+const debug = makeDebug("auth-service");
 const authFullUrl = `${ENV.VITE_AUTH_URL}/realms/${ENV.VITE_AUTH_REALM}`;
 
 const jwksClient = jwks({
@@ -43,25 +45,40 @@ export class AuthService {
 
   async checkToken(token: string) {
     const decoded = jwt.decode(token, { complete: true });
-
     const key = await getKey(decoded!.header);
-    return jwt.verify(token, key, { algorithms: ["RS256"] }) as Promise<jwt.JwtPayload & ExtraTokenInfo>;
+    return jwt.verify(token, key, {
+      algorithms: ["RS256"],
+      issuer: `${ENV.VITE_AUTH_URL}/realms/${ENV.VITE_AUTH_REALM}`,
+      audience: "account",
+    }) as Promise<jwt.JwtPayload & ExtraTokenInfo>;
   }
 
-  refreshToken(refreshToken: string) {
-    return authApi<Static<typeof keycloakTokenResponseTSchema>>("/protocol/openid-connect/token", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
+  async refreshToken(refreshToken: string) {
+    const keycloakTokens = await authApi<Static<typeof keycloakTokenResponseTSchema>>(
+      "/protocol/openid-connect/token",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+          grant_type: "refresh_token",
+          client_id: ENV.VITE_AUTH_CLIENT_ID,
+          refresh_token: refreshToken,
+          client_assertion_type: "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
+          client_assertion: getClientAssertion(),
+        }).toString(),
       },
-      body: new URLSearchParams({
-        grant_type: "refresh_token",
-        client_id: ENV.VITE_AUTH_CLIENT_ID,
-        refresh_token: refreshToken,
-        client_assertion_type: "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
-        client_assertion: getClientAssertion(),
-      }).toString(),
-    });
+    );
+
+    const user = await this.getUserFromToken(keycloakTokens.access_token);
+
+    return {
+      accessToken: keycloakTokens.access_token,
+      refreshToken: keycloakTokens.refresh_token,
+      expiresAt: get80PercentOfTokenLifespan(Number(keycloakTokens.expires_in)).toString(),
+      user: user!,
+    };
   }
 
   async getOrCreateUserFromToken(token: string) {
@@ -90,34 +107,45 @@ export class AuthService {
   }
 
   async loginUser(userData: Static<typeof loginTSchema.body>) {
-    const keycloakTokens = await authApi<Static<typeof keycloakTokenResponseTSchema>>(
-      "/protocol/openid-connect/token",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
+    debug("logging in user", userData.email);
+    try {
+      const keycloakTokens = await authApi<Static<typeof keycloakTokenResponseTSchema>>(
+        "/protocol/openid-connect/token",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: new URLSearchParams({
+            grant_type: "password",
+            client_id: ENV.VITE_AUTH_CLIENT_ID,
+            client_secret: ENV.AUTH_CLIENT_SECRET,
+            username: userData.email,
+            password: userData.password,
+            client_assertion_type: "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
+            client_assertion: getClientAssertion(),
+          }).toString(),
         },
-        body: new URLSearchParams({
-          grant_type: "password",
-          client_id: ENV.AUTH_ADMIN_CLIENT_ID,
-          client_secret: ENV.AUTH_ADMIN_CLIENT_SECRET,
-          username: userData.email,
-          password: userData.password,
-        }).toString(),
-      },
-    );
+      );
 
-    const user = await db.selectFrom("user").where("email", "=", userData.email).selectAll().executeTakeFirst();
-    return {
-      accessToken: keycloakTokens.access_token,
-      refreshToken: keycloakTokens.refresh_token,
-      expiresAt: get80PercentOfTokenLifespan(Number(keycloakTokens.expires_in)).toString(),
-      user: await populateService(user!),
-    };
+      const user = await db.selectFrom("user").where("email", "=", userData.email).selectAll().executeTakeFirst();
+      return {
+        accessToken: keycloakTokens.access_token,
+        refreshToken: keycloakTokens.refresh_token,
+        expiresAt: get80PercentOfTokenLifespan(Number(keycloakTokens.expires_in)).toString(),
+        user: await populateService(user!),
+      };
+    } catch (error) {
+      if (error instanceof FetchError) {
+        console.log(error.message, error.cause, error.data);
+      }
+      throw error;
+    }
   }
 
   async createUser(userData: Static<typeof createUserTSchema.body>) {
     await assertEmailInWhitelist(userData.email);
+    debug("creating user", userData.email);
     try {
       await adminAuthApi("/users", {
         method: "POST",
@@ -138,6 +166,7 @@ export class AuthService {
           ],
         },
       });
+      debug("user created in keycloak, creating in local db", userData.email);
 
       const keycloakUser = await adminAuthApi<Array<{ id: string }>>("/users", {
         method: "GET",
@@ -145,7 +174,7 @@ export class AuthService {
           email: userData.email,
         },
       }).then((users) => users[0]);
-
+      debug("fetched keycloak user", keycloakUser);
       const user = await db
         .insertInto("user")
         .values({
@@ -156,12 +185,13 @@ export class AuthService {
         })
         .returningAll()
         .executeTakeFirstOrThrow();
-
+      debug("user created in local db", user);
       await getServices().user.changeService(user.id, user.service_id);
-
+      debug("user service changed", user.id, user.service_id);
       return this.loginUser({ email: userData.email, password: userData.password });
     } catch (error) {
       if (error instanceof FetchError) {
+        console.log(error.response);
         throw new AppError(error.status || 500, `Authentication error: ${error.data?.errorMessage || error.message}`);
       }
       throw error;
@@ -183,7 +213,7 @@ const getClientAssertion = () => {
       exp: Math.floor(Date.now() / 1000) + 30,
       jti: crypto.randomUUID(),
     },
-    ENV.KEYCLOAK_CLIENT_SECRET,
+    ENV.AUTH_CLIENT_SECRET,
     { algorithm: "HS256" },
   );
 };

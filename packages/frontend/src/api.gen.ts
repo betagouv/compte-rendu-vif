@@ -53,14 +53,30 @@ export namespace Endpoints {
       body: { refreshToken: string };
     };
     response: {
-      access_token: string;
-      expires_in: string;
-      refresh_token: string;
-      refresh_expires_in: string;
-      token_type: string;
-      session_state: string;
-      scope: string;
-      id_token: string;
+      user: {
+        id: string;
+        name: string;
+        service_id: string;
+        service: {
+          id: string;
+          department: string;
+          completeCoords?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+          visible?: boolean | Schemas.null | Array<boolean | Schemas.null> | undefined;
+          name?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+          address?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+          zipCode?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+          city?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+          phone?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+          email?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+          marianne_text?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+          drac_text?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+          dept_numbers?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+          service_text?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+        };
+      };
+      accessToken: string;
+      refreshToken: string;
+      expiresAt: string;
     };
   };
   export type post_ApicreateUser = {
@@ -129,6 +145,12 @@ export namespace Endpoints {
       expiresAt: string;
     };
   };
+  export type post_ApiresetPassword = {
+    method: "POST";
+    path: "/api/reset-password";
+    parameters: never;
+    response: unknown;
+  };
   export type post_ApichangeService = {
     method: "POST";
     path: "/api/change-service";
@@ -157,6 +179,18 @@ export namespace Endpoints {
       dept_numbers?: string | Schemas.null | Array<string | Schemas.null> | undefined;
       service_text?: string | Schemas.null | Array<string | Schemas.null> | undefined;
     }>;
+  };
+  export type post_Apiuploadattachment = {
+    method: "POST";
+    path: "/api/upload/attachment";
+    parameters: never;
+    response: unknown;
+  };
+  export type get_Apiuploadattachment = {
+    method: "GET";
+    path: "/api/upload/attachment";
+    parameters: never;
+    response: unknown;
   };
   export type post_Apiuploadimage = {
     method: "POST";
@@ -224,7 +258,9 @@ export type EndpointByMethod = {
     "/api/refresh-token": Endpoints.post_ApirefreshToken;
     "/api/create-user": Endpoints.post_ApicreateUser;
     "/api/login-user": Endpoints.post_ApiloginUser;
+    "/api/reset-password": Endpoints.post_ApiresetPassword;
     "/api/change-service": Endpoints.post_ApichangeService;
+    "/api/upload/attachment": Endpoints.post_Apiuploadattachment;
     "/api/upload/image": Endpoints.post_Apiuploadimage;
     "/api/upload/picture/{pictureId}/lines": Endpoints.post_ApiuploadpicturePictureIdlines;
     "/api/pdf/report": Endpoints.post_Apipdfreport;
@@ -232,6 +268,7 @@ export type EndpointByMethod = {
   };
   get: {
     "/api/services": Endpoints.get_Apiservices;
+    "/api/upload/attachment": Endpoints.get_Apiuploadattachment;
     "/api/upload/picture": Endpoints.get_Apiuploadpicture;
     "/api/pdf/report": Endpoints.get_Apipdfreport;
   };

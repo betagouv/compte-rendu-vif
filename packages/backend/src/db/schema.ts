@@ -147,6 +147,22 @@ export const report = pgTable(
   ],
 );
 
+export const reportAttachment = pgTable("report_attachment", {
+  id: text().primaryKey().notNull(),
+  attachmentId: text("attachment_id").notNull(),
+  reportId: text("report_id").notNull(),
+  createdAt: timestamp("created_at", { mode: "string" }),
+  service_id: text("service_id"),
+});
+
+export const stateReportAttachment = pgTable("state_report_attachment", {
+  id: text().primaryKey().notNull(),
+  attachmentId: text("attachment_id").notNull(),
+  stateReportId: text("state_report_id").notNull(),
+  createdAt: timestamp("created_at", { mode: "string" }),
+  service_id: text("service_id"),
+});
+
 export const pdfSnapshot = pgTable("pdf_snapshot", {
   id: text().primaryKey().notNull(),
   reportId: text("report_id"),
@@ -155,22 +171,7 @@ export const pdfSnapshot = pgTable("pdf_snapshot", {
   userId: text("user_id"),
 });
 
-export const tmpPictures = pgTable(
-  "tmp_pictures",
-  {
-    id: text().primaryKey().notNull(),
-    reportId: text(),
-    createdAt: timestamp({ mode: "string" }),
-  },
-  (table) => [
-    foreignKey({
-      columns: [table.reportId],
-      foreignColumns: [report.id],
-      name: "tmp_pictures_reportId_fkey",
-    }).onDelete("cascade"),
-  ],
-);
-
+// TODO pictures lines
 export const pictureLines = pgTable("picture_lines", {
   id: text().primaryKey().notNull(),
   pictureId: text(),

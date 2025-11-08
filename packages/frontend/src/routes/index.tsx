@@ -8,7 +8,7 @@ import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { v4 } from "uuid";
 import { useUser } from "../contexts/AuthContext";
-import { db } from "../db/db";
+import { db, useDbQuery } from "../db/db";
 import { AllReports, MyReports } from "../features/report/ReportList";
 import { Flex } from "#components/ui/Flex.tsx";
 import { Box, BoxProps, Typography } from "@mui/material";
@@ -25,9 +25,6 @@ import { appDocumentEnum } from "../utils";
 const Index = () => {
   const [search, setSearch] = useState("");
   const user = useUser()!;
-
-  const { css } = useStyles();
-
   const navigate = useNavigate();
 
   const createReportMutation = useMutation({

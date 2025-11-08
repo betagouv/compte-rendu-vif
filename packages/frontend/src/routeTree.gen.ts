@@ -12,7 +12,6 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as ServiceRouteImport } from './routes/service'
 import { Route as InscriptionRouteImport } from './routes/inscription'
 import { Route as ConnectionRouteImport } from './routes/connection'
-import { Route as AuthCallbackRouteImport } from './routes/auth-callback'
 import { Route as AccountRouteImport } from './routes/account'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PdfReportIdRouteImport } from './routes/pdf.$reportId'
@@ -33,11 +32,6 @@ const InscriptionRoute = InscriptionRouteImport.update({
 const ConnectionRoute = ConnectionRouteImport.update({
   id: '/connection',
   path: '/connection',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthCallbackRoute = AuthCallbackRouteImport.update({
-  id: '/auth-callback',
-  path: '/auth-callback',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AccountRoute = AccountRouteImport.update({
@@ -74,7 +68,6 @@ const ConstatConstatIdPdfRoute = ConstatConstatIdPdfRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/account': typeof AccountRoute
-  '/auth-callback': typeof AuthCallbackRoute
   '/connection': typeof ConnectionRoute
   '/inscription': typeof InscriptionRoute
   '/service': typeof ServiceRoute
@@ -86,7 +79,6 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/account': typeof AccountRoute
-  '/auth-callback': typeof AuthCallbackRoute
   '/connection': typeof ConnectionRoute
   '/inscription': typeof InscriptionRoute
   '/service': typeof ServiceRoute
@@ -99,7 +91,6 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/account': typeof AccountRoute
-  '/auth-callback': typeof AuthCallbackRoute
   '/connection': typeof ConnectionRoute
   '/inscription': typeof InscriptionRoute
   '/service': typeof ServiceRoute
@@ -113,7 +104,6 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/account'
-    | '/auth-callback'
     | '/connection'
     | '/inscription'
     | '/service'
@@ -125,7 +115,6 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/account'
-    | '/auth-callback'
     | '/connection'
     | '/inscription'
     | '/service'
@@ -137,7 +126,6 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/account'
-    | '/auth-callback'
     | '/connection'
     | '/inscription'
     | '/service'
@@ -150,7 +138,6 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AccountRoute: typeof AccountRoute
-  AuthCallbackRoute: typeof AuthCallbackRoute
   ConnectionRoute: typeof ConnectionRoute
   InscriptionRoute: typeof InscriptionRoute
   ServiceRoute: typeof ServiceRoute
@@ -180,13 +167,6 @@ declare module '@tanstack/react-router' {
       path: '/connection'
       fullPath: '/connection'
       preLoaderRoute: typeof ConnectionRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/auth-callback': {
-      id: '/auth-callback'
-      path: '/auth-callback'
-      fullPath: '/auth-callback'
-      preLoaderRoute: typeof AuthCallbackRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/account': {
@@ -248,7 +228,6 @@ const ConstatConstatIdRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AccountRoute: AccountRoute,
-  AuthCallbackRoute: AuthCallbackRoute,
   ConnectionRoute: ConnectionRoute,
   InscriptionRoute: InscriptionRoute,
   ServiceRoute: ServiceRoute,

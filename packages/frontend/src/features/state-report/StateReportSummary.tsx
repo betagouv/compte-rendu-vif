@@ -44,7 +44,7 @@ const SummaryContent = () => {
 
   const activeProps = {
     color: fr.colors.decisions.text.actionHigh.blueFrance.default,
-    "&::before": {
+    "::before": {
       content: "''",
       position: "absolute",
       top: "0.75rem",

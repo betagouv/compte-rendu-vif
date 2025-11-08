@@ -6,6 +6,10 @@ import { pipeline } from "node:stream";
 import { getPictureName } from "../services/uploadService";
 import { db } from "../db/db";
 import { makeDebug } from "../features/debug";
+import { authenticate } from "./authMiddleware";
+import fs from "fs/promises";
+import path from "node:path";
+import { NoSuchKey } from "@aws-sdk/client-s3";
 
 const debug = makeDebug("upload");
 const pump = util.promisify(pipeline);
@@ -16,10 +20,37 @@ export const uploadPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
       fileSize: 15 * 1024 * 1024, // 15 mo,
     },
   });
+  fastify.addHook("preHandler", authenticate);
+
+  fastify.post("/attachment", async (request, reply) => {
+    const file = await request.file();
+    if (!file) throw new AppError(400, "No file provided");
+
+    request.services.upload.uploadAttachment({
+      filePath: file.filename,
+      buffer: await file.toBuffer(),
+    });
+
+    debug(`File ${file} saved to attachments folder`);
+    reply.send({ message: "File uploaded successfully" });
+  });
+
+  fastify.get("/attachment", async (request, reply) => {
+    const { filename } = request.query as any;
+    if (!filename) throw new AppError(400, "No filename provided");
+    try {
+      const fileBuffer = await request.services.upload.getAttachment({ filePath: filename });
+
+      reply.send(fileBuffer);
+    } catch (error) {
+      if (error instanceof NoSuchKey) {
+        throw new AppError(404, "Attachment not found");
+      }
+    }
+  });
 
   fastify.post("/image", async (request, reply) => {
     const file = await request.file();
-    console.log(request.query);
     const { reportId, id } = request.query || ({} as any);
 
     if (!file) throw new AppError(400, "No file provided");

@@ -62,5 +62,5 @@ export const refreshTokenTSchema = {
   body: Type.Object({
     refreshToken: Type.String(),
   }),
-  response: { 200: keycloakTokenResponseTSchema },
+  response: { 200: authTSchema },
 };

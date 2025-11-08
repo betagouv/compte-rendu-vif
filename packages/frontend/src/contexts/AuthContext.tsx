@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { createContext, useContext, useEffect, useState, type PropsWithChildren } from "react";
-import { type RouterOutputs } from "../api";
+import { AuthUser, type RouterOutputs } from "../api";
 import { apiStore } from "../ApiStore";
 import { db, useDbQuery } from "../db/db";
 import { menuActor } from "../features/menu/menuMachine";
@@ -33,7 +33,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         accessToken: apiStore.accessToken,
         expiresAt: apiStore.expiresAt,
         refreshToken: apiStore.refreshToken,
-        user: apiStore.user as AuthUser,
+        user: apiStore.user,
       }));
 
       return apiStore;
@@ -58,8 +58,8 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     apiStore.accessToken = values.accessToken;
     apiStore.expiresAt = values.expiresAt;
     apiStore.refreshToken = values.refreshToken;
-    apiStore.user = values.user;
-    apiStore.save();
+    apiStore.user = values.user as AuthUser;
+    apiStore.save().then(() => console.log("auth saved to storage", new Date(Number(apiStore.expiresAt!))));
   };
 
   const value = {
@@ -173,6 +173,6 @@ type AuthContextProps = {
   ) => void;
 };
 
-type AuthUser = Omit<RouterOutputs<"/api/authenticate">["user"], "service"> & {
-  service: Service;
-};
+// type AuthUser = Omit<RouterOutputs<"/api/authenticate">["user"], "service"> & {
+//   service: Service;
+// };

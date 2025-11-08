@@ -245,6 +245,20 @@ const visited_section = new Table({
   service_id: column.text,
 });
 
+const report_attachment = new Table({
+  report_id: column.text,
+  attachment_id: column.text,
+  service_id: column.text,
+  created_at: column.text,
+});
+
+const state_report_attachment = new Table({
+  state_report_id: column.text,
+  attachment_id: column.text,
+  service_id: column.text,
+  created_at: column.text,
+});
+
 export const AppSchema = new Schema({
   report,
   service,
@@ -262,6 +276,11 @@ export const AppSchema = new Schema({
   pop_immeubles,
   state_report,
   visited_section,
+  report_attachment,
+  state_report_attachment,
+  attachments: new AttachmentTable({
+    name: "attachments",
+  }),
 });
 
 export type Database = (typeof AppSchema)["types"];
@@ -281,8 +300,11 @@ export type UserSettings = Database["user_settings"];
 export type PopImmeuble = Database["pop_immeubles"];
 export type StateReport = Database["state_report"];
 export type VisitedSection = Database["visited_section"];
+export type ReportAttachment = Database["report_attachment"];
+export type StateReportAttachment = Database["state_report_attachment"];
 
 import type { Database as BackendDatabase } from "../../../backend/src/db/db";
+import { AttachmentTable } from "@powersync/attachments";
 
 type SharedTables = Extract<keyof Database, keyof BackendDatabase> & Extract<keyof BackendDatabase, keyof Database>;
 type CheckTables = {

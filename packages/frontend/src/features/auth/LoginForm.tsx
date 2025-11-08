@@ -19,8 +19,6 @@ export const LoginForm = () => {
 
   const mutation = useMutation((body: LoginFormProps) => unauthenticatedApi.post("/api/login-user", { body }));
 
-  const [shouldShowPopup] = useState(localStorage.getItem("crvif/update-popup"));
-
   const navigate = useNavigate();
 
   const login = async (values: LoginFormProps) => {
@@ -45,13 +43,7 @@ export const LoginForm = () => {
             title={<Typography fontWeight="regular">{getErrorMessage(mutationError)}</Typography>}
           />
         ) : null}
-        {shouldShowPopup && !mutationError ? (
-          <Alert
-            sx={{ mb: "1.5rem" }}
-            severity="info"
-            title="Vous avez été déconnecté suite à une mise à jour de l'application."
-          />
-        ) : null}
+
         <InputGroup state={mutationError ? "error" : undefined}>
           <Input
             label="Courriel"

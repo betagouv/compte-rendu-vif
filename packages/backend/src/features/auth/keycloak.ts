@@ -10,10 +10,6 @@ export const adminAuthApi = ofetch.create({
   },
 });
 
-export const loginWithKeycloak = async () => {
-  console.log(await getKeycloakAdminTokens());
-};
-
 export const getKeycloakAdminTokens = async () => {
   const tokenResponse = await authApi<KeycloakTokens>(`/protocol/openid-connect/token`, {
     method: "POST",

@@ -2,7 +2,14 @@ import { Document, Font, Image, Page, StyleSheet, Text, View, ViewProps } from "
 import { Html } from "react-pdf-html";
 import React from "react";
 import { Buffer } from "buffer";
-import { Service, Report, ServiceInstructeurs, Clause_v2, Pictures } from "../../frontend/src/db/AppSchema";
+import {
+  Service,
+  Report,
+  ServiceInstructeurs,
+  Clause_v2,
+  Pictures,
+  ReportAttachment,
+} from "../../frontend/src/db/AppSchema";
 import { format } from "date-fns";
 
 export const initFonts = (folder: string = "") => {
@@ -262,7 +269,7 @@ export const ReportPDFDocument = ({ service, htmlString, images, pictures }: Rep
 
 const picturesPerPage = 1;
 
-const PicturesGrid = ({ pictures, marianneUrl }: { pictures: Pictures[]; marianneUrl: string }) => {
+const PicturesGrid = ({ pictures, marianneUrl }: { pictures: PdfImage[]; marianneUrl: string }) => {
   const pages = Math.ceil(pictures.length / picturesPerPage);
   return (
     <>
@@ -308,7 +315,7 @@ const PicturesGrid = ({ pictures, marianneUrl }: { pictures: Pictures[]; mariann
               >
                 <View style={{ width: "100%", marginBottom: 5 }}>
                   <Image
-                    src={image.finalUrl ?? image.url!}
+                    src={image.url!}
                     style={{ width: "100%", objectFit: "scale-down", objectPosition: "left", maxHeight: "80vh" }}
                   />
                 </View>
@@ -325,11 +332,16 @@ const PicturesGrid = ({ pictures, marianneUrl }: { pictures: Pictures[]; mariann
   );
 };
 
+export type PdfImage = {
+  url: string;
+  label?: string;
+};
+
 export type ReportPDFDocumentProps = {
   htmlString: string;
   service: Service;
   images: Images;
-  pictures?: Pictures[];
+  pictures?: PdfImage[];
 };
 
 type Images = {

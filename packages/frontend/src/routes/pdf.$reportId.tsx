@@ -3,7 +3,7 @@ import { Banner } from "../components/Banner";
 import { EnsureUser } from "../components/EnsureUser";
 import { Spinner } from "../components/Spinner";
 import { fr } from "@codegouvfr/react-dsfr";
-import { ReportPDFDocument, ReportPDFDocumentProps, getReportHtmlString } from "@cr-vif/pdf";
+import { PdfImage, ReportPDFDocument, ReportPDFDocumentProps, getReportHtmlString } from "@cr-vif/pdf";
 import { usePdf } from "@mikecousins/react-pdf";
 import { pdf } from "@react-pdf/renderer";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -19,7 +19,7 @@ import { EmailInput } from "../components/EmailInput";
 import { getDiff } from "../components/SyncForm";
 import { useUser } from "../contexts/AuthContext";
 import { Clause_v2, Pictures, Report, Service } from "../db/AppSchema";
-import { db, useDbQuery } from "../db/db";
+import { attachmentStorage, db, getAttachmentUrl, useDbQuery } from "../db/db";
 import { useChipOptions } from "../features/chips/useChipOptions";
 import { transformBold } from "../features/menu/ClauseMenu";
 import { TextEditor } from "../features/text-editor/TextEditor";
@@ -63,13 +63,17 @@ export const PDF = () => {
     queryFn: async () => {
       const reportQuery = await db.selectFrom("report").where("id", "=", reportId).selectAll().execute();
       const picturesQuery = await db
-        .selectFrom("pictures")
-        .where("reportId", "=", reportId)
-        .orderBy("createdAt asc")
+        .selectFrom("report_attachment")
+        .where("report_id", "=", reportId)
+        .orderBy("created_at", "asc")
         .selectAll()
         .execute();
+
+      const pictures = await Promise.all(
+        picturesQuery.map((pic) => getAttachmentUrl(pic.attachment_id!).then((url) => ({ ...pic, url }))),
+      );
+
       const report = reportQuery?.[0];
-      const pictures = picturesQuery ?? [];
 
       return { ...report, pictures };
     },
@@ -549,11 +553,10 @@ export const WithReport = ({
 }: {
   initialHtmlString: string;
   mode: Mode;
-  report: Report & { pictures: Pictures[] };
+  report: Report & { pictures: PdfImage[] };
 }) => {
   const { editor } = useContext(TextEditorContext);
   const [htmlString] = useState(initialHtmlString);
-  console.log("lol");
   useEffect(() => {
     if (!editor) return;
 

@@ -62,6 +62,7 @@ trace-dir/*
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+packages/backend/data/attachments/*
 
 keycloak-theme/*
 

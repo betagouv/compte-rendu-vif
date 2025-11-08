@@ -76,7 +76,7 @@ export function SyncFormBanner({ form, baseObject }: { form: UseFormReturn<Repor
             flex={isCollapsed ? "1 0 auto" : undefined}
             fontSize="16px"
             {...{
-              "&::before": {
+              "::before": {
                 width: "16px !important",
                 height: "16px !important",
                 mb: "4px !important",
@@ -166,7 +166,6 @@ export function SyncFormBanner({ form, baseObject }: { form: UseFormReturn<Repor
             alignItems: isCollapsed ? "center" : undefined,
             height: { xs: isCollapsed ? "56px" : "unset", lg: "unset" },
             width: "100%",
-            maxW: { xs: "unset", sm: "800px" },
             px: "15px",
           }}
         >
@@ -178,7 +177,7 @@ export function SyncFormBanner({ form, baseObject }: { form: UseFormReturn<Repor
                   ml: "-10px",
                   color: "black",
                   _hover: { bgColor: "transparent" },
-                  "&::before": {
+                  "::before": {
                     width: "24px !important",
                   },
                 }}
@@ -233,7 +232,7 @@ export const Status = ({
         aria-hidden={true}
         height="24px"
         {...{
-          "&::before": {
+          "::before": {
             width: "16px !important",
             height: "16px !important",
             verticalAlign: "middle",

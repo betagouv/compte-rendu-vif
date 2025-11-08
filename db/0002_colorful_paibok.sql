@@ -1,1 +1,1 @@
-DROP INDEX "pop_immeubles_departement";
+DROP INDEX IF EXISTS "pop_immeubles_departement";

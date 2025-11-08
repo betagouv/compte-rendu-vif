@@ -9,7 +9,7 @@ import { db } from "../db/db";
 const client = new S3Client({ endpoint: ENV.AWS_ENDPOINT, region: ENV.AWS_REGION });
 const debug = makeDebug("upload");
 
-const imageClient = new S3({
+const attachmentClient = new S3({
   credentials: {
     accessKeyId: ENV.MINIO_ACCESS_KEY_ID,
     secretAccessKey: ENV.MINIO_SECRET_KEY,
@@ -19,8 +19,31 @@ const imageClient = new S3({
 });
 
 export const upload = async () => {};
+const bucketUrl = `${ENV.MINIO_URL}/${ENV.MINIO_BUCKET}`;
+
+const addAttachmentPrefix = (filePath: string) => "attachment/" + filePath;
 
 export class UploadService {
+  async uploadAttachment({ buffer, filePath }: { buffer: Buffer; filePath: string }) {
+    debug("Uploading attachment to S3", filePath);
+    const command = new PutObjectCommand({
+      Bucket: bucketUrl,
+      Body: buffer,
+      Key: addAttachmentPrefix(filePath),
+    });
+    await attachmentClient.send(command);
+  }
+
+  async getAttachment({ filePath }: { filePath: string }) {
+    const name = addAttachmentPrefix(filePath);
+    const command = new GetObjectCommand({ Bucket: bucketUrl, Key: name });
+    const response = await attachmentClient.send(command);
+
+    const buffer = await response.Body?.transformToByteArray();
+    if (!buffer) throw new AppError(404, "Attachment not found");
+    return Buffer.from(buffer);
+  }
+
   async addPDFToReport({
     reportId,
     buffer,
@@ -50,9 +73,7 @@ export class UploadService {
   async addPictureToReport({ reportId, buffer, name }: { reportId: string; buffer: Buffer; name: string }) {
     debug("Uploading picture to S3", reportId);
 
-    const bucketUrl = `${ENV.MINIO_URL}/${ENV.MINIO_BUCKET}`;
-
-    await imageClient.putObject({
+    await attachmentClient.putObject({
       Bucket: bucketUrl,
       Key: name,
       Body: buffer,
@@ -113,13 +134,14 @@ export class UploadService {
     const bucketUrl = `${ENV.MINIO_URL}/${ENV.MINIO_BUCKET}`;
 
     debug("Uploading picture to S3", pictureId);
-    await imageClient.putObject({
-      Bucket: bucketUrl,
-      Key: name,
-      Body: buffer,
-      ACL: "public-read",
-      ContentType: "image/png",
-    });
+    await this.uploadAttachment({ buffer, filePath: name });
+    // await imageClient.putObject({
+    //   Bucket: bucketUrl,
+    //   Key: name,
+    //   Body: buffer,
+    //   ACL: "public-read",
+    //   ContentType: "image/png",
+    // });
 
     debug("Picture uploaded", pictureId);
 
