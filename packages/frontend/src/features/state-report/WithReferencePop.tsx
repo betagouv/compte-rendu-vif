@@ -26,7 +26,7 @@ export const WithReferencePop = () => {
 
   return (
     <>
-      <Box width="100%">
+      <Box width="100%" height="100%">
         {immeubleQuery.error && (
           <div>Erreur lors du chargement de l'immeuble : {String(immeubleQuery.error.message)}</div>
         )}

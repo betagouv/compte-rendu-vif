@@ -35,7 +35,6 @@ export const internalUser = pgTable(
     id: text().primaryKey().notNull(),
     email: text().notNull(),
     role: text().notNull(),
-    password: text().notNull(),
     temporaryLink: text(),
     temporaryLinkExpiresAt: text(),
     userId: text().notNull(),

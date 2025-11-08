@@ -26,7 +26,7 @@ export const StateReportForm = ({ report }: { report: StateReport }) => {
   });
 
   return (
-    <Flex flexDirection="column" alignItems={"center"} width="100%">
+    <Flex flexDirection="column" alignItems={"center"} width="100%" height="100%">
       <FormProvider {...form}>
         <SyncForm report={report} />
         <Flex
@@ -44,7 +44,7 @@ export const StateReportForm = ({ report }: { report: StateReport }) => {
             <ImmeubleAutocomplete />
           </Box>
         </Flex>
-        <Box width={{ xs: "100%", lg: "1200px" }} px={{ xs: "0", lg: "16px" }}>
+        <Box width={{ xs: "100%", lg: "1200px" }} px={{ xs: "0", lg: "16px" }} height="100%">
           <WithReferencePop />
         </Box>
       </FormProvider>

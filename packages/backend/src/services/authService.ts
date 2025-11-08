@@ -174,18 +174,36 @@ export class AuthService {
           email: userData.email,
         },
       }).then((users) => users[0]);
+
       debug("fetched keycloak user", keycloakUser);
-      const user = await db
-        .insertInto("user")
-        .values({
-          id: keycloakUser!.id,
-          name: userData.name,
-          service_id: userData.service_id,
-          email: userData.email,
-        })
-        .returningAll()
-        .executeTakeFirstOrThrow();
+
+      const user = await db.transaction().execute(async (tx) => {
+        const u = await tx
+          .insertInto("user")
+          .values({
+            id: keycloakUser!.id,
+            name: userData.name,
+            service_id: userData.service_id,
+            email: userData.email,
+          })
+          .returningAll()
+          .executeTakeFirstOrThrow();
+
+        await tx
+          .insertInto("internal_user")
+          .values({
+            id: keycloakUser!.id,
+            userId: keycloakUser!.id,
+            email: userData.email,
+            role: "user",
+          })
+          .execute();
+
+        return u;
+      });
+
       debug("user created in local db", user);
+
       await getServices().user.changeService(user.id, user.service_id);
       debug("user service changed", user.id, user.service_id);
       return this.loginUser({ email: userData.email, password: userData.password });

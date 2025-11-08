@@ -17,10 +17,6 @@ export const authPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
   fastify.post("/login-user", { schema: loginTSchema }, async (request) => {
     return request.services.auth.loginUser(request.body);
   });
-
-  fastify.post("/reset-password", async (request) => {
-    // TODO: implement password reset
-  });
 };
 
 export const authTSchema = Type.Object({

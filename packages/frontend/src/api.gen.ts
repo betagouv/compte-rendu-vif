@@ -145,17 +145,27 @@ export namespace Endpoints {
       expiresAt: string;
     };
   };
-  export type post_ApiresetPassword = {
-    method: "POST";
-    path: "/api/reset-password";
-    parameters: never;
-    response: unknown;
-  };
   export type post_ApichangeService = {
     method: "POST";
     path: "/api/change-service";
     parameters: {
       body: { service_id: string };
+    };
+    response: { message: string };
+  };
+  export type post_ApisendResetPassword = {
+    method: "POST";
+    path: "/api/send-reset-password";
+    parameters: {
+      body: { email: string };
+    };
+    response: { message: string };
+  };
+  export type post_ApiresetPassword = {
+    method: "POST";
+    path: "/api/reset-password";
+    parameters: {
+      body: { temporaryLink: string; newPassword: string };
     };
     response: { message: string };
   };
@@ -191,20 +201,6 @@ export namespace Endpoints {
     path: "/api/upload/attachment";
     parameters: never;
     response: unknown;
-  };
-  export type post_Apiuploadimage = {
-    method: "POST";
-    path: "/api/upload/image";
-    parameters: never;
-    response: unknown;
-  };
-  export type get_Apiuploadpicture = {
-    method: "GET";
-    path: "/api/upload/picture";
-    parameters: {
-      query: { reportId: string; pictureId: string };
-    };
-    response: Partial<{}>;
   };
   export type post_ApiuploadpicturePictureIdlines = {
     method: "POST";
@@ -258,10 +254,10 @@ export type EndpointByMethod = {
     "/api/refresh-token": Endpoints.post_ApirefreshToken;
     "/api/create-user": Endpoints.post_ApicreateUser;
     "/api/login-user": Endpoints.post_ApiloginUser;
-    "/api/reset-password": Endpoints.post_ApiresetPassword;
     "/api/change-service": Endpoints.post_ApichangeService;
+    "/api/send-reset-password": Endpoints.post_ApisendResetPassword;
+    "/api/reset-password": Endpoints.post_ApiresetPassword;
     "/api/upload/attachment": Endpoints.post_Apiuploadattachment;
-    "/api/upload/image": Endpoints.post_Apiuploadimage;
     "/api/upload/picture/{pictureId}/lines": Endpoints.post_ApiuploadpicturePictureIdlines;
     "/api/pdf/report": Endpoints.post_Apipdfreport;
     "/api/upload-data": Endpoints.post_ApiuploadData;
@@ -269,7 +265,6 @@ export type EndpointByMethod = {
   get: {
     "/api/services": Endpoints.get_Apiservices;
     "/api/upload/attachment": Endpoints.get_Apiuploadattachment;
-    "/api/upload/picture": Endpoints.get_Apiuploadpicture;
     "/api/pdf/report": Endpoints.get_Apipdfreport;
   };
 };

@@ -8,16 +8,21 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
+import { createFileRoute } from '@tanstack/react-router'
+
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ServiceRouteImport } from './routes/service'
 import { Route as InscriptionRouteImport } from './routes/inscription'
 import { Route as ConnectionRouteImport } from './routes/connection'
 import { Route as AccountRouteImport } from './routes/account'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ResetPasswordLinkRouteImport } from './routes/reset-password.$link'
 import { Route as PdfReportIdRouteImport } from './routes/pdf.$reportId'
 import { Route as EditReportIdRouteImport } from './routes/edit.$reportId'
 import { Route as ConstatConstatIdRouteImport } from './routes/constat.$constatId'
 import { Route as ConstatConstatIdPdfRouteImport } from './routes/constat.$constatId.pdf'
+
+const ResetPasswordIndexLazyRouteImport = createFileRoute('/reset-password/')()
 
 const ServiceRoute = ServiceRouteImport.update({
   id: '/service',
@@ -42,6 +47,18 @@ const AccountRoute = AccountRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordIndexLazyRoute = ResetPasswordIndexLazyRouteImport.update({
+  id: '/reset-password/',
+  path: '/reset-password/',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() =>
+  import('./routes/reset-password.index.lazy').then((d) => d.Route),
+)
+const ResetPasswordLinkRoute = ResetPasswordLinkRouteImport.update({
+  id: '/reset-password/$link',
+  path: '/reset-password/$link',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PdfReportIdRoute = PdfReportIdRouteImport.update({
@@ -74,6 +91,8 @@ export interface FileRoutesByFullPath {
   '/constat/$constatId': typeof ConstatConstatIdRouteWithChildren
   '/edit/$reportId': typeof EditReportIdRoute
   '/pdf/$reportId': typeof PdfReportIdRoute
+  '/reset-password/$link': typeof ResetPasswordLinkRoute
+  '/reset-password': typeof ResetPasswordIndexLazyRoute
   '/constat/$constatId/pdf': typeof ConstatConstatIdPdfRoute
 }
 export interface FileRoutesByTo {
@@ -85,6 +104,8 @@ export interface FileRoutesByTo {
   '/constat/$constatId': typeof ConstatConstatIdRouteWithChildren
   '/edit/$reportId': typeof EditReportIdRoute
   '/pdf/$reportId': typeof PdfReportIdRoute
+  '/reset-password/$link': typeof ResetPasswordLinkRoute
+  '/reset-password': typeof ResetPasswordIndexLazyRoute
   '/constat/$constatId/pdf': typeof ConstatConstatIdPdfRoute
 }
 export interface FileRoutesById {
@@ -97,6 +118,8 @@ export interface FileRoutesById {
   '/constat/$constatId': typeof ConstatConstatIdRouteWithChildren
   '/edit/$reportId': typeof EditReportIdRoute
   '/pdf/$reportId': typeof PdfReportIdRoute
+  '/reset-password/$link': typeof ResetPasswordLinkRoute
+  '/reset-password/': typeof ResetPasswordIndexLazyRoute
   '/constat/$constatId/pdf': typeof ConstatConstatIdPdfRoute
 }
 export interface FileRouteTypes {
@@ -110,6 +133,8 @@ export interface FileRouteTypes {
     | '/constat/$constatId'
     | '/edit/$reportId'
     | '/pdf/$reportId'
+    | '/reset-password/$link'
+    | '/reset-password'
     | '/constat/$constatId/pdf'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -121,6 +146,8 @@ export interface FileRouteTypes {
     | '/constat/$constatId'
     | '/edit/$reportId'
     | '/pdf/$reportId'
+    | '/reset-password/$link'
+    | '/reset-password'
     | '/constat/$constatId/pdf'
   id:
     | '__root__'
@@ -132,6 +159,8 @@ export interface FileRouteTypes {
     | '/constat/$constatId'
     | '/edit/$reportId'
     | '/pdf/$reportId'
+    | '/reset-password/$link'
+    | '/reset-password/'
     | '/constat/$constatId/pdf'
   fileRoutesById: FileRoutesById
 }
@@ -144,6 +173,8 @@ export interface RootRouteChildren {
   ConstatConstatIdRoute: typeof ConstatConstatIdRouteWithChildren
   EditReportIdRoute: typeof EditReportIdRoute
   PdfReportIdRoute: typeof PdfReportIdRoute
+  ResetPasswordLinkRoute: typeof ResetPasswordLinkRoute
+  ResetPasswordIndexLazyRoute: typeof ResetPasswordIndexLazyRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -181,6 +212,20 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password/': {
+      id: '/reset-password/'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordIndexLazyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password/$link': {
+      id: '/reset-password/$link'
+      path: '/reset-password/$link'
+      fullPath: '/reset-password/$link'
+      preLoaderRoute: typeof ResetPasswordLinkRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/pdf/$reportId': {
@@ -234,6 +279,8 @@ const rootRouteChildren: RootRouteChildren = {
   ConstatConstatIdRoute: ConstatConstatIdRouteWithChildren,
   EditReportIdRoute: EditReportIdRoute,
   PdfReportIdRoute: PdfReportIdRoute,
+  ResetPasswordLinkRoute: ResetPasswordLinkRoute,
+  ResetPasswordIndexLazyRoute: ResetPasswordIndexLazyRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

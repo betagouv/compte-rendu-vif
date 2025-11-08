@@ -11,13 +11,14 @@ export const MonumentHistorique = () => {
   const form = useStateReportFormContext();
   const value = useWatch({ control: form.control, name: "reference_pop" });
   return (
-    <Flex flexDirection="column">
+    <Flex flexDirection="column" height="100%">
       <Flex
         flexDirection="column"
         gap={{ xs: "8px", lg: "16px" }}
         px={{ xs: "16px", lg: "64px" }}
         pt={{ xs: "0", lg: "32px" }}
         width="100%"
+        flex="1"
       >
         <ContentBlock mt={{ xs: "16px", lg: "0" }}>
           <EditableField label="Nature de l'édifice" field="nature_edifice" />

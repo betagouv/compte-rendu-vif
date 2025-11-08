@@ -117,7 +117,7 @@ const BilanQuinquennalRadioButtons = () => {
     },
   }));
 
-  if (nature === "complète") {
+  if (nature !== "Partielle (préciser)") {
     return null;
   }
 

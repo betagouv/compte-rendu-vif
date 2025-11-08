@@ -32,10 +32,9 @@ function RouteComponent() {
           </Typography>
         </Flex>
       </SimpleBanner>
-      <Box width="100%">
+      <Box width="100%" flex="1">
         <WithStateReport />
       </Box>
-      <Box width="1200px"></Box>
     </Flex>
   );
 }
@@ -46,7 +45,7 @@ const WithStateReport = () => {
 
   if (reportQuery.isLoading) {
     return (
-      <Center mt="100px">
+      <Center mt="100px" height="100%">
         <Spinner />
       </Center>
     );
@@ -58,7 +57,7 @@ const WithStateReport = () => {
   }
 
   return (
-    <Flex flexDirection="column" width="100%">
+    <Flex flexDirection="column" width="100%" height="100%">
       <StateReportForm report={report} />
     </Flex>
   );
