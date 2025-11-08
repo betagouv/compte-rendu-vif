@@ -83,9 +83,11 @@ const pictures = new Table({
 });
 
 const picture_lines = new Table({
-  pictureId: column.text,
+  attachmentId: column.text,
   lines: column.text,
   createdAt: column.text,
+  table: column.text,
+  service_id: column.text,
 });
 
 const transactions = new Table({
@@ -226,7 +228,7 @@ const state_report = new Table({
   etat_commentaires: column.text,
   plan_situation: column.text,
   plan_edifice: column.text,
-  vue_generale_image_url: column.text,
+  vue_generale: column.text,
   preconisations: column.text,
   preconisations_commentaires: column.text,
 
@@ -328,7 +330,8 @@ const _checkTables: { [K in SharedTables]: IsTableOk<K> } = {
   pdf_snapshot: true,
   service_instructeurs: true,
   clause_v2: true,
-  pictures: true,
+  report_attachment: true,
+  state_report_attachment: true,
   picture_lines: true,
   transactions: true,
   sent_email: true,

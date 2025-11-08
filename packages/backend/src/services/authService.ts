@@ -122,6 +122,7 @@ export class AuthService {
             client_secret: ENV.AUTH_CLIENT_SECRET,
             username: userData.email,
             password: userData.password,
+            scope: "offline_access",
             client_assertion_type: "urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
             client_assertion: getClientAssertion(),
           }).toString(),

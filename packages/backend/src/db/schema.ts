@@ -174,12 +174,13 @@ export const pdfSnapshot = pgTable("pdf_snapshot", {
   userId: text("user_id"),
 });
 
-// TODO pictures lines
 export const pictureLines = pgTable("picture_lines", {
   id: text().primaryKey().notNull(),
-  pictureId: text(),
+  attachmentId: text("attachmentId").notNull(),
   lines: text().notNull(),
   createdAt: timestamp({ mode: "string" }),
+  table: text().notNull(),
+  serviceId: text("service_id"),
 });
 
 export const pictures = pgTable(
@@ -547,6 +548,15 @@ export const visitedSection = pgTable(
     }),
   ],
 );
+
+export const visitedSectionAttachment = pgTable("visited_section_attachment", {
+  id: text().primaryKey().notNull(),
+  isDeprecated: boolean("is_deprecated"),
+  attachmentId: text("attachment_id").notNull(),
+  visitedSectionId: text("visited_section_id").notNull(),
+  createdAt: timestamp("created_at", { mode: "string" }),
+  service_id: text("service_id"),
+});
 
 export const userDept = pgTable(
   "user_dept",

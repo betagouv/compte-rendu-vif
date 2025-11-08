@@ -111,7 +111,7 @@ const emptyStateReport: StateReport = {
   etat_commentaires: null,
   plan_situation: null,
   plan_edifice: null,
-  vue_generale_image_url: null,
+  vue_generale: null,
   preconisations: null,
   preconisations_commentaires: null,
   bilan_quinquennal: null,

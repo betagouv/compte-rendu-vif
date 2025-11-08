@@ -4,9 +4,11 @@ import { makeDebug } from "../features/debug";
 import { AppError } from "../features/errors";
 import { S3 } from "@aws-sdk/client-s3";
 import { applyLinesToPicture } from "../features/image";
-import { db } from "../db/db";
+import { Database, db } from "../db/db";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import path from "path";
+import { Prettify } from "pastable";
+import { Transaction } from "kysely";
 
 const debug = makeDebug("upload");
 
@@ -66,9 +68,16 @@ export class UploadService {
   }
 
   async getReportPDF({ reportId }: { reportId: string }) {
-    const name = getPDFName(reportId);
+    const attachment = await db
+      .selectFrom("report_attachment")
+      .where("report_id", "=", reportId)
+      .where("attachment_id", "like", "%.pdf")
+      .selectAll()
+      .executeTakeFirst();
+    console.log(attachment);
+    if (!attachment) throw new AppError(404, "PDF not found");
 
-    const command = new GetObjectCommand({ Bucket: bucketUrl, Key: name });
+    const command = new GetObjectCommand({ Bucket: bucketUrl, Key: addAttachmentPrefix(attachment.attachment_id) });
     const response = await client.send(command);
 
     const buffer = await response.Body?.transformToByteArray();
@@ -79,19 +88,19 @@ export class UploadService {
 
   async handleNotifyPictureLines({
     pictureId,
+    serviceId,
+    onNewImage,
     // lines,
   }: {
     pictureId: string;
+    serviceId: string;
+    onNewImage?: OnNewImage;
     // lines: Array<{ points: { x: number; y: number }[]; color: string }>;
   }) {
     debug("Handling picture lines", pictureId);
-    const pictureQuery = await db.selectFrom("report_attachment").where("id", "=", pictureId).selectAll().execute();
-    const picture = pictureQuery?.[0];
-
-    const linesQuery = await db.selectFrom("picture_lines").where("pictureId", "=", pictureId).selectAll().execute();
+    const linesQuery = await db.selectFrom("picture_lines").where("attachmentId", "=", pictureId).selectAll().execute();
     const lines = JSON.parse(linesQuery?.[0]?.lines || "[]");
 
-    if (!picture) throw new AppError(404, "Picture not found");
     const pictureUrl = await generatePresignedUrl(addAttachmentPrefix(pictureId));
 
     const buffer = await applyLinesToPicture({ pictureUrl: pictureUrl, lines });
@@ -105,18 +114,15 @@ export class UploadService {
     const url = path.join(`https://${bucketUrl}`, name);
 
     await db.transaction().execute(async (tx) => {
-      await tx.updateTable("report_attachment").set({ is_deprecated: true }).where("id", "=", pictureId).execute();
-      await tx
-        .insertInto("report_attachment")
-        .values({
-          id: name,
-          attachment_id: name,
-          is_deprecated: false,
-          report_id: picture.report_id,
-          created_at: new Date().toISOString(),
-          service_id: picture.service_id,
-        })
-        .execute();
+      if (onNewImage) {
+        await onNewImage(tx, {
+          originalName: pictureId,
+          newName: name,
+          url,
+          attachmentId: pictureId,
+          serviceId: serviceId,
+        });
+      }
       await tx
         .deleteFrom("picture_lines")
         .where(
@@ -131,6 +137,16 @@ export class UploadService {
     return url;
   }
 }
+export type OnNewImage = (
+  tx: Transaction<Database>,
+  {
+    originalName,
+    newName,
+    url,
+    attachmentId,
+    serviceId,
+  }: { originalName: string; newName: string; url: string; attachmentId: string; serviceId: string },
+) => Promise<void> | void;
 
 export async function generatePresignedUrl(key: string) {
   const command = new GetObjectCommand({
@@ -158,5 +174,8 @@ export async function generatePresignedUrl(key: string) {
 }
 
 export const getPDFName = (reportId: string) => `${reportId}/compte_rendu.pdf`;
-export const getPictureName = (pictureId: string, snapshot?: number) =>
-  `${pictureId.split(".").slice(0, -1).join(".")}${snapshot ? `_${snapshot}` : ""}.jpg`;
+export const getPictureName = (pictureId: string, snapshot?: number) => {
+  const hasSnapshot = pictureId.includes("_");
+  const cleanName = hasSnapshot ? pictureId.split("_")[0] : pictureId.split(".")[0];
+  return `${cleanName}${snapshot ? `_${snapshot}` : ""}.jpg`;
+};

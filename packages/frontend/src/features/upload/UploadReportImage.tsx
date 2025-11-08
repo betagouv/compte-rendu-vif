@@ -1,12 +1,10 @@
-import { useState, useRef, ChangeEvent, useEffect } from "react";
+import { useState, useRef, ChangeEvent, useEffect, RefObject } from "react";
 import { v4, v7 } from "uuid";
 import { deleteImageFromIdb, getPicturesStore, getUploadStatusStore } from "../idb";
 import { InputGroup } from "#components/InputGroup.tsx";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { del, get, set } from "idb-keyval";
 import { useFormContext } from "react-hook-form";
-import Badge from "@codegouvfr/react-dsfr/Badge";
-import Button from "@codegouvfr/react-dsfr/Button";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { ImageCanvas, Line } from "./DrawingCanvas";
 import { api } from "../../api";
@@ -15,43 +13,22 @@ import { Pictures, Report, ReportAttachment } from "../../db/AppSchema";
 import imageCompression from "browser-image-compression";
 import { Box, Grid, Stack, Typography } from "@mui/material";
 import { Flex } from "#components/ui/Flex.tsx";
-import { Center } from "#components/MUIDsfr.tsx";
+import { Badge, Button, Center } from "#components/MUIDsfr.tsx";
 import { useLiveUser } from "../../contexts/AuthContext";
 import { AttachmentState } from "@powersync/attachments";
+import { UploadImageButton, UploadImageWithEditModal } from "./UploadImageButton";
+import { fr } from "@codegouvfr/react-dsfr";
 
-const modal = createModal({
-  id: "edit-picture",
-  isOpenedByDefault: false,
-});
-
-export const UploadImage = ({ reportId }: { reportId: string }) => {
+export const UploadReportImage = ({ reportId }: { reportId: string }) => {
   const [selectedPicture, setSelectedPicture] = useState<{ id: string; url: string } | null>(null);
   const user = useLiveUser();
 
-  const linesQuery = useQuery({
-    queryKey: ["lines", selectedPicture?.id],
-    queryFn: async () => {
-      const linesQuery = await db
-        .selectFrom("picture_lines")
-        .where("pictureId", "=", selectedPicture!.id)
-        .selectAll()
-        .execute();
-
-      return JSON.parse(linesQuery?.[0]?.lines ?? "[]");
-    },
-    enabled: !!selectedPicture,
-  });
-
-  const ref = useRef<HTMLInputElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  const uploadImageMutation = useMutation(async (files: File[]) => {
+  const uploadImageMutation = useMutation(async ({ files }: { files: File[] }) => {
     for (const file of files) {
       const picId = `${reportId}/images/${v7()}.jpg`;
-      ref.current!.value = "";
       const buffer = await processImage(file);
 
-      await attachmentQueue.saveReportAttachment({
+      await attachmentQueue.saveAttachment({
         attachmentId: picId,
         buffer,
         mediaType: "image/jpeg",
@@ -71,75 +48,6 @@ export const UploadImage = ({ reportId }: { reportId: string }) => {
     }
   });
 
-  const onChange = async (e: ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files) return;
-
-    await uploadImageMutation.mutateAsync(Array.from(files));
-  };
-
-  return (
-    <>
-      <Box
-        display={selectedPicture ? "initial" : "none"}
-        zIndex="1000"
-        position="fixed"
-        top="0"
-        left="0"
-        right="0"
-        bottom="0"
-        width="100vw"
-        height="100vh"
-      >
-        <Box bgcolor="rgba(0, 0, 0, 0.5)" position="fixed" top="0" left="0" right="0" bottom="0"></Box>
-        <Center width="100%" height="100%">
-          <Box
-            ref={containerRef}
-            bgcolor="white"
-            position="relative"
-            width={{ xs: "100%", lg: "634px" }}
-            height={{ xs: "100vh", lg: "792px" }}
-            maxHeight={{ xs: "100vh", lg: "100vh" }}
-          >
-            {selectedPicture ? (
-              <ImageCanvas
-                closeModal={() => setSelectedPicture(null)}
-                pictureId={selectedPicture.id}
-                url={selectedPicture.url}
-                containerRef={containerRef}
-                lines={linesQuery.data}
-              />
-            ) : null}
-          </Box>
-        </Center>
-      </Box>
-      <Button
-        type="button"
-        iconId="ri-add-line"
-        // disabled={!canUploadImage}
-        priority="secondary"
-        nativeButtonProps={{
-          type: "button",
-          onClick: () => ref.current?.click(),
-        }}
-      >
-        Ajouter photo
-      </Button>
-      <input ref={ref as any} type="file" accept="image/*" onChange={onChange} multiple style={{ display: "none" }} />
-      <ReportPictures setSelectedPicture={setSelectedPicture} />
-    </>
-  );
-};
-
-const ReportPictures = ({
-  setSelectedPicture,
-}: {
-  setSelectedPicture: (props: { id: string; url: string }) => void;
-}) => {
-  const form = useFormContext<Report>();
-
-  const reportId = form.getValues().id;
-
   const picturesQuery = useDbQuery(
     db
       .selectFrom("report_attachment")
@@ -152,6 +60,34 @@ const ReportPictures = ({
 
   const pictures = picturesQuery.data ?? [];
 
+  const deletePictureMutation = useMutation(async ({ id }: { id: string }) => {
+    await attachmentStorage.deleteFile(id);
+    await db.deleteFrom("report_attachment").where("id", "=", id).execute();
+  });
+
+  return (
+    <>
+      <UploadImageWithEditModal
+        multiple
+        addImage={uploadImageMutation.mutateAsync}
+        selectedImage={selectedPicture}
+        onClose={() => setSelectedPicture(null)}
+        imageTable="report_attachment"
+      />
+      <ReportPictures pictures={pictures} onEdit={setSelectedPicture} onDelete={deletePictureMutation.mutate} />
+    </>
+  );
+};
+
+const ReportPictures = ({
+  onEdit,
+  onDelete,
+  pictures,
+}: {
+  onEdit: (props: { id: string; url: string }) => void;
+  onDelete: (props: { id: string }) => void;
+  pictures: ReportAttachment[];
+}) => {
   if (!pictures?.length) return null;
 
   return (
@@ -164,10 +100,11 @@ const ReportPictures = ({
         >
           {pictures?.map((picture, index) => (
             <PictureThumbnail
-              setSelectedPicture={setSelectedPicture}
               key={picture.id}
+              onEdit={onEdit}
+              onDelete={onDelete}
               picture={picture}
-              index={index}
+              label={`N° ${index + 1}`}
             />
           ))}
         </Grid>
@@ -176,22 +113,17 @@ const ReportPictures = ({
   );
 };
 
-const PictureThumbnail = ({
+export const PictureThumbnail = ({
   picture,
-  index,
-  setSelectedPicture,
+  label,
+  onEdit,
+  onDelete,
 }: {
-  picture: ReportAttachment;
-  index: number;
-  setSelectedPicture: (props: { id: string; url: string }) => void;
+  picture: { id: string };
+  label: string;
+  onEdit: (props: { id: string; url: string }) => void;
+  onDelete: (props: { id: string }) => void;
 }) => {
-  const deletePictureMutation = useMutation(async () => {
-    await attachmentStorage.deleteFile(picture.id);
-    await db.deleteFrom("report_attachment").where("id", "=", picture.id).execute();
-
-    return "ok";
-  });
-
   const idbStatusQuery = useDbQuery(db.selectFrom("attachments").where("id", "=", picture.id).select("state"));
   const status = idbStatusQuery.data?.[0]?.state;
   const bgUrlQuery = useQuery({
@@ -206,7 +138,7 @@ const PictureThumbnail = ({
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  const pictureLines = useDbQuery(db.selectFrom("picture_lines").where("pictureId", "=", picture.id).selectAll());
+  const pictureLines = useDbQuery(db.selectFrom("picture_lines").where("attachmentId", "=", picture.id).selectAll());
 
   useEffect(() => {
     drawCanvas();
@@ -266,27 +198,66 @@ const PictureThumbnail = ({
 
   const finalStatus = idbStatusQuery.data?.[0]?.state ?? AttachmentState.QUEUED_UPLOAD;
   return (
-    <Stack minWidth="150px" maxWidth="180px">
+    <Stack minWidth="150px" maxWidth="250px" gap="4px">
       <ReportStatus status={finalStatus as any} />
-      <Flex flexDirection="column" justifyContent="flex-end" height="170px">
+      <Flex flexDirection="column" justifyContent="flex-end" width="100%">
         <Box ref={canvasRef} component="canvas" flex="1"></Box>
-        <Flex bgcolor="white" alignItems="center" border="1px solid #DFDFDF" height="40px">
+        <Flex
+          bgcolor="white"
+          alignItems="center"
+          border="1px solid"
+          borderColor={fr.colors.decisions.border.default.grey.default}
+          height="40px"
+        >
           <Box
             onClick={() => {
-              setSelectedPicture({ id: picture.id, url: bgUrlQuery.data! });
-              modal.open();
+              onEdit({ id: picture.id, url: bgUrlQuery.data! });
             }}
-            borderRight="1px solid #DFDFDF"
+            borderRight="1px solid"
+            borderColor={fr.colors.decisions.border.default.grey.default}
           >
-            <Button type="button" iconId="ri-pencil-fill" priority="tertiary no outline">
+            <Button
+              type="button"
+              iconId="ri-pencil-fill"
+              priority="tertiary no outline"
+              sx={{
+                "::before": {
+                  marginRight: "0 !important",
+                  width: "24px",
+                  height: "24px",
+                },
+              }}
+            >
               {null}
             </Button>
           </Box>
-          <Box flex="1" pl="5px">
-            N° {index + 1}
+          <Box flex="1" px="12px">
+            <Typography
+              mt="4px"
+              fontSize="14px"
+              fontWeight="500"
+              color={fr.colors.decisions.text.actionHigh.blueFrance.default}
+              noWrap
+            >
+              {label}
+            </Typography>
           </Box>
-          <Box onClick={() => deletePictureMutation.mutate()} borderLeft="1px solid #DFDFDF">
-            <Button type="button" iconId="ri-close-circle-fill" priority="tertiary no outline">
+          <Box borderLeft="1px solid" borderColor={fr.colors.decisions.border.default.grey.default}>
+            <Button
+              type="button"
+              iconId="fr-icon-delete-bin-fill"
+              priority="tertiary no outline"
+              sx={{
+                "::before": {
+                  marginRight: "0 !important",
+                  width: "24px",
+                  height: "24px",
+                },
+              }}
+              nativeButtonProps={{
+                onClick: () => onDelete({ id: picture.id }),
+              }}
+            >
               {null}
             </Button>
           </Box>
@@ -349,7 +320,7 @@ const statusData: Record<AttachmentState, any> = {
   },
 };
 
-const processImage = async (file: File) => {
+export const processImage = async (file: File) => {
   try {
     const options = {
       maxSizeMB: 1,

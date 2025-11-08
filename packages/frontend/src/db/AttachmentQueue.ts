@@ -34,7 +34,7 @@ export class AttachmentQueue extends AbstractAttachmentQueue {
     return filePath;
   }
 
-  async saveReportAttachment({
+  async saveAttachment({
     attachmentId,
     buffer,
     mediaType = "image/jpeg",

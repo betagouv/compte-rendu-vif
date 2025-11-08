@@ -315,8 +315,9 @@ const DownloadCRs = () => {
     const zip = new JSZip();
 
     for (const report of reports) {
+      // TODO: use local attachments since they are already downloaded
       const pdf = await api.get("/api/pdf/report", { query: { reportId: report.id } });
-      zip.file(`${report.name}.pdf`, pdf as string, { base64: true });
+      zip.file(report.name, pdf as string, { base64: true });
     }
 
     const content = await zip.generateAsync({ type: "blob" });
@@ -330,7 +331,7 @@ const DownloadCRs = () => {
       .selectFrom("report")
       .where("createdBy", "=", user.id)
       .where("service_id", "=", user.service_id)
-      .where("pdf", "is not", null)
+      .where((eb) => eb.or([eb("pdf", "is not", null), eb("attachment_id", "is not", null)]))
       .where("disabled", "!=", 1)
       .where("createdAt", ">=", startDate.toISOString())
       .where("createdAt", "<=", endDate.toISOString())

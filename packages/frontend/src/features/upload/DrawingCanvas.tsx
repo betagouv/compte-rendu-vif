@@ -1,10 +1,11 @@
 import { fr } from "@codegouvfr/react-dsfr";
 import React, { useState, useRef, useEffect } from "react";
-import { v4 } from "uuid";
+import { v4, v7 } from "uuid";
 import { db } from "../../db/db";
 import { Box, Stack } from "@mui/material";
 import { Flex } from "#components/ui/Flex.tsx";
 import { Button } from "#components/MUIDsfr.tsx";
+import { useUser } from "../../contexts/AuthContext";
 
 type DrawEvent = React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>;
 export type Line = { points: Array<{ x: number; y: number }>; color: string };
@@ -13,14 +14,18 @@ export const ImageCanvas = ({
   pictureId,
   lines: dbLines,
   containerRef,
+  imageTable,
   closeModal,
 }: {
   url: string;
   containerRef: any;
   pictureId: string;
   lines: Array<Line>;
+  imageTable?: string;
+
   closeModal: () => void;
 }) => {
+  const user = useUser()!;
   const [tool, setTool] = useState("draw");
   const [lines, setLines] = useState<Array<{ points: Array<{ x: number; y: number }>; color: string }>>([]);
   const [scale, setScale] = useState(1);
@@ -212,7 +217,7 @@ export const ImageCanvas = ({
   const handleSave = async () => {
     const existingLinesQuery = await db
       .selectFrom("picture_lines")
-      .where("pictureId", "=", pictureId)
+      .where("attachmentId", "=", pictureId)
       .selectAll()
       .execute();
     const existingLines = existingLinesQuery?.[0];
@@ -221,12 +226,20 @@ export const ImageCanvas = ({
       await db
         .updateTable("picture_lines")
         .where("id", "=", existingLines.id)
-        .set({ lines: JSON.stringify(lines), pictureId })
+        .set({ lines: JSON.stringify(lines) })
         .execute();
     } else {
       await db
         .insertInto("picture_lines")
-        .values({ id: v4(), pictureId, lines: JSON.stringify(lines) })
+        .values({
+          id: v7(),
+          attachmentId: pictureId,
+          lines: JSON.stringify(lines),
+
+          createdAt: new Date().toISOString(),
+          service_id: user.service_id,
+          table: imageTable,
+        })
         .execute();
     }
     closeModal();

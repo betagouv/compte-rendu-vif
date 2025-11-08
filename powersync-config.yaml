@@ -24,7 +24,6 @@ sync_rules:
         data:
           - SELECT * FROM clause_v2 WHERE service_id = 'ALL'
           - SELECT * FROM pictures
-          - SELECT * FROM picture_lines
 
       service_bucket:
         priority: 1
@@ -41,6 +40,7 @@ sync_rules:
           - SELECT * FROM visited_section WHERE service_id = bucket.service_id
           - SELECT * FROM report_attachment WHERE service_id = bucket.service_id
           - SELECT * FROM state_report_attachment WHERE service_id = bucket.service_id
+          - SELECT * FROM picture_lines WHERE service_id = bucket.service_id
 
 
       dept_bucket:

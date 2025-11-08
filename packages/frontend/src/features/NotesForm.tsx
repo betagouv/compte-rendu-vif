@@ -7,7 +7,7 @@ import { useFormContext } from "react-hook-form";
 import { Report } from "../db/AppSchema";
 import { SpeechRecorder } from "./audio-record/SpeechRecorder";
 import { useIsFormDisabled } from "./DisabledContext";
-import { UploadImage } from "./upload/UploadImage";
+import { UploadReportImage } from "./upload/UploadReportImage";
 import { Flex } from "#components/ui/Flex.tsx";
 import { Divider } from "#components/ui/Divider.tsx";
 import { Stack } from "@mui/material";
@@ -26,7 +26,7 @@ export const NotesForm = () => {
         <PrecisionsTextArea />
       </InputGroupWithTitle>
 
-      <UploadImage reportId={form.getValues().id} />
+      <UploadReportImage reportId={form.getValues().id} />
 
       <Divider mt="36px" mb="52px" />
 
