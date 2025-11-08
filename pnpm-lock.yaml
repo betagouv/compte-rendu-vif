@@ -244,11 +244,11 @@ importers:
         specifier: ^1.0.0
         version: 1.3.0(@powersync/common@1.38.0)
       '@powersync/react':
-        specifier: ^1.5.1
-        version: 1.7.3(@powersync/common@1.38.0)(react@18.3.1)
+        specifier: ^1.8.1
+        version: 1.8.1(@powersync/common@1.38.0)(react@18.3.1)
       '@powersync/web':
-        specifier: ^1.10.2
-        version: 1.26.1(@journeyapps/wa-sqlite@1.3.1)(@powersync/common@1.38.0)
+        specifier: ^1.28.0
+        version: 1.28.0(@journeyapps/wa-sqlite@1.3.1)(@powersync/common@1.38.0)
       '@rawwee/react-pdf-html':
         specifier: ^1.0.2
         version: 1.2.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -2075,6 +2075,7 @@ packages:
       pdfjs-dist: 4.2.67
       react: ^18.2.0
       react-dom: ^18.2.0
+    bundledDependencies: []
 
   '@mui/core-downloads-tracker@5.18.0':
     resolution: {integrity: sha512-jbhwoQ1AY200PSSOrNXmrFCaSDSJWP7qk6urkTmIirvRXDROkqe+QwcLlUiw/PrREwsIF/vm3/dAXvjlMHF0RA==}
@@ -2254,18 +2255,18 @@ packages:
     peerDependencies:
       '@powersync/common': ^1.36.0
 
-  '@powersync/react@1.7.3':
-    resolution: {integrity: sha512-VuGq/ZgNfwx0FFnqf3vopUbcXJnvujVBvifT/8qF745a1Ex0z2h128sd70a+gGD5AL3QFiWfvFguJk/dJLc1Pw==}
+  '@powersync/react@1.8.1':
+    resolution: {integrity: sha512-ITrHeXahrsqe1IA6WRoaIGIVYg5gZpDiSNZqjO6jvXoS2hTTYhCShNfn5t38lor9mpooISBjxTFHLy/k7Nh5yQ==}
     peerDependencies:
-      '@powersync/common': ^1.38.0
+      '@powersync/common': ^1.40.0
       react: '*'
 
-  '@powersync/web@1.26.1':
-    resolution: {integrity: sha512-MkIjIk/Lsc2QlR6yWonqER/OaYlN+GEzOD1NNXJMPTL7Rbs+eSkvhDjGqmpGYGextoXm3La3qTZR367d3cf9iw==}
+  '@powersync/web@1.28.0':
+    resolution: {integrity: sha512-0cwCNJBz0l9gn165wJIcpc0zaDrEf4CkFbPVR3qKFayLhaf1/HvbvOHD/bLtL2q5TZ8FdvubiK4ad2+Y0k09jA==}
     hasBin: true
     peerDependencies:
-      '@journeyapps/wa-sqlite': ^1.3.1
-      '@powersync/common': ^1.38.0
+      '@journeyapps/wa-sqlite': ^1.3.2
+      '@powersync/common': ^1.41.0
 
   '@rawwee/react-pdf-html@1.2.1':
     resolution: {integrity: sha512-u9BohIh+tkbCWxAZ0KUMCX8s45QnBMewt8BSSYhanwybgG9Broy0Vc6+0TYu+Vw3KobQvACh2S6e8LFJtz8VQw==}
@@ -9311,12 +9312,12 @@ snapshots:
       '@powersync/common': 1.38.0
       kysely: 0.28.5
 
-  '@powersync/react@1.7.3(@powersync/common@1.38.0)(react@18.3.1)':
+  '@powersync/react@1.8.1(@powersync/common@1.38.0)(react@18.3.1)':
     dependencies:
       '@powersync/common': 1.38.0
       react: 18.3.1
 
-  '@powersync/web@1.26.1(@journeyapps/wa-sqlite@1.3.1)(@powersync/common@1.38.0)':
+  '@powersync/web@1.28.0(@journeyapps/wa-sqlite@1.3.1)(@powersync/common@1.38.0)':
     dependencies:
       '@journeyapps/wa-sqlite': 1.3.1
       '@powersync/common': 1.38.0

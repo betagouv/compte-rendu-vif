@@ -20,12 +20,14 @@ sync_rules:
   content: |
     bucket_definitions:
       global_bucket:
+        priority: 1
         data:
           - SELECT * FROM clause_v2 WHERE service_id = 'ALL'
           - SELECT * FROM pictures
           - SELECT * FROM picture_lines
 
       service_bucket:
+        priority: 1
         parameters: SELECT service_id FROM "user" WHERE id = request.user_id()
         data: 
           - SELECT * FROM report WHERE service_id = bucket.service_id
@@ -42,11 +44,13 @@ sync_rules:
 
 
       dept_bucket:
+        priority: 3
         parameters: SELECT dept_number FROM "user_dept" WHERE user_id = request.user_id()
         data:
           - SELECT * FROM pop_immeubles WHERE departement_format_numerique = bucket.dept_number
       
       user_bucket:
+        priority: 2
         parameters: SELECT request.user_id() as user_id
         data:
           - SELECT * FROM delegation WHERE "createdBy" = bucket.user_id OR "delegatedTo" = bucket.user_id
