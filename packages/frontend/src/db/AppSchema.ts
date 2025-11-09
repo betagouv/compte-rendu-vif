@@ -351,4 +351,5 @@ const _checkTables: { [K in SharedTables]: IsTableOk<K> } = {
   pop_immeubles: true,
   state_report: true,
   visited_section: true,
+  visited_section_attachment: true,
 };
