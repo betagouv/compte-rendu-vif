@@ -554,6 +554,7 @@ export const visitedSectionAttachment = pgTable("visited_section_attachment", {
   isDeprecated: boolean("is_deprecated"),
   attachmentId: text("attachment_id").notNull(),
   visitedSectionId: text("visited_section_id").notNull(),
+  label: text(),
   createdAt: timestamp("created_at", { mode: "string" }),
   service_id: text("service_id"),
 });

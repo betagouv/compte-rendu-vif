@@ -214,6 +214,39 @@ const onNewImageMap: Record<string, OnNewImage> = {
       .where("id", "=", originalName)
       .execute();
   },
+  visited_section_attachment: async (tx, { originalName, newName, url, attachmentId, serviceId }) => {
+    const attachment = await tx
+      .selectFrom("visited_section_attachment")
+      .where("id", "=", attachmentId)
+      .selectAll()
+      .execute();
+
+    console.log("attachment", attachment);
+    const visitedSectionId = attachment?.[0]?.visited_section_id;
+    if (!visitedSectionId) {
+      debug("No attachment found for picture", originalName);
+      return;
+    }
+
+    await tx
+      .insertInto("visited_section_attachment")
+      .values({
+        id: newName,
+        attachment_id: newName,
+        is_deprecated: false,
+        visited_section_id: visitedSectionId,
+        created_at: new Date().toISOString(),
+        service_id: serviceId,
+        label: attachment[0]?.label,
+      })
+      .execute();
+
+    await tx
+      .updateTable("visited_section_attachment")
+      .set({ is_deprecated: true })
+      .where("id", "=", originalName)
+      .execute();
+  },
 };
 
 // await tx

@@ -1,19 +1,20 @@
-import { Box, Dialog, DialogTitle, Stack, Typography } from "@mui/material";
-import { db, useDbQuery } from "../../../db/db";
-import { getRouteApi } from "@tanstack/react-router";
-import { Badge, Button, Input, Tile } from "#components/MUIDsfr.tsx";
-import { VisitedSection } from "../../../db/AppSchema";
-import { Flex } from "#components/ui/Flex.tsx";
-import { ModalCloseButton } from "../../menu/MenuTitle";
-import { useEffect, useState } from "react";
-import { useMutation } from "@tanstack/react-query";
-import { useUser } from "../../../contexts/AuthContext";
-import { v4 } from "uuid";
-import { EtatGeneralRadioButtons } from "./ConstatGeneral";
-import { RadioButtons } from "@codegouvfr/react-dsfr/RadioButtons";
-import useDebounce from "react-use/lib/useDebounce";
-import { getDiff } from "#components/SyncForm.tsx";
 import { FullWidthButton } from "#components/FullWidthButton.tsx";
+import { Badge, Input, Tile } from "#components/MUIDsfr.tsx";
+import { getDiff } from "#components/SyncForm.tsx";
+import { Flex } from "#components/ui/Flex.tsx";
+import { RadioButtons } from "@codegouvfr/react-dsfr/RadioButtons";
+import { Box, Dialog, DialogTitle, Grid, Stack, Typography } from "@mui/material";
+import { useMutation } from "@tanstack/react-query";
+import { getRouteApi } from "@tanstack/react-router";
+import { useState } from "react";
+import useDebounce from "react-use/lib/useDebounce";
+import { v4, v7 } from "uuid";
+import { useLiveUser, useUser } from "../../../contexts/AuthContext";
+import { VisitedSection } from "../../../db/AppSchema";
+import { attachmentQueue, db, useDbQuery } from "../../../db/db";
+import { ModalCloseButton } from "../../menu/MenuTitle";
+import { UploadImageWithEditModal } from "../../upload/UploadImageButton";
+import { PictureThumbnail, processImage } from "../../upload/UploadReportImage";
 
 const routeApi = getRouteApi("/constat/$constatId");
 export const ConstatDetaille = () => {
@@ -208,6 +209,9 @@ const SectionForm = ({ visitedSection }: { visitedSection: VisitedSection }) => 
         section={values}
         onChange={(label) => setValues({ ...values, proportion_dans_cet_etat: label })}
       />
+
+      <SectionImageUpload section={visitedSection} />
+
       <Input
         textArea
         label="Commentaires"
@@ -218,6 +222,84 @@ const SectionForm = ({ visitedSection }: { visitedSection: VisitedSection }) => 
         }}
       />
     </Stack>
+  );
+};
+
+const SectionImageUpload = ({ section }: { section: VisitedSection }) => {
+  const [selectedImage, setSelectedImage] = useState<{ id: string; url: string } | null>(null);
+  const { constatId } = routeApi.useParams();
+  const user = useLiveUser()!;
+
+  const sectionAttachmentQuery = useDbQuery(
+    db
+      .selectFrom("visited_section_attachment")
+      .selectAll()
+      .where("visited_section_id", "=", section.id)
+      .where("is_deprecated", "=", 0)
+      .orderBy("created_at", "asc"),
+  );
+
+  console.log(sectionAttachmentQuery.data);
+
+  const sectionAttachments = sectionAttachmentQuery.data || [];
+
+  const addMutation = useMutation(async ({ files }: { files: File[] }) => {
+    for (const file of files) {
+      const attachmentId = `${constatId}/images/${v7()}.jpg`;
+      const buffer = await processImage(file);
+
+      await attachmentQueue.saveAttachment({
+        attachmentId: attachmentId,
+        buffer,
+        mediaType: "image/jpeg",
+      });
+
+      await db
+        .insertInto("visited_section_attachment")
+        .values({
+          id: attachmentId,
+          attachment_id: attachmentId,
+          visited_section_id: section.id,
+          created_at: new Date().toISOString(),
+          service_id: user.service_id,
+          is_deprecated: 0,
+        })
+        .execute();
+    }
+  });
+
+  const onClose = () => setSelectedImage(null);
+  const onEdit = (image: { id: string; url: string }) => setSelectedImage(image);
+  const onDelete = async ({ id }: { id: string }) => {
+    await db.updateTable("visited_section_attachment").set({ is_deprecated: 1 }).where("id", "=", id).execute();
+  };
+
+  return (
+    <Box width="100%">
+      <UploadImageWithEditModal
+        hideButton={false}
+        multiple
+        addImage={addMutation.mutateAsync}
+        selectedImage={selectedImage}
+        onClose={onClose}
+        imageTable="visited_section_attachment"
+      />
+      <Grid
+        display="grid"
+        gap="16px"
+        gridTemplateColumns={{ xs: "repeat(2, 1fr)", md: "repeat(3, 1fr)", lg: "repeat(4, 1fr)" }}
+      >
+        {sectionAttachments.map((attachment) => (
+          <PictureThumbnail
+            key={attachment.id}
+            picture={{ id: attachment.attachment_id! }}
+            onEdit={onEdit}
+            label=""
+            onDelete={(props: { id: string }) => onDelete({ id: props.id })}
+          />
+        ))}
+      </Grid>
+    </Box>
   );
 };
 

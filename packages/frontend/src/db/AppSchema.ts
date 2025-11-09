@@ -248,6 +248,15 @@ const visited_section = new Table({
   service_id: column.text,
 });
 
+const visited_section_attachment = new Table({
+  visited_section_id: column.text,
+  attachment_id: column.text,
+  is_deprecated: column.integer,
+  label: column.text,
+  created_at: column.text,
+  service_id: column.text,
+});
+
 const report_attachment = new Table({
   report_id: column.text,
   attachment_id: column.text,
@@ -282,6 +291,7 @@ export const AppSchema = new Schema({
   pop_immeubles,
   state_report,
   visited_section,
+  visited_section_attachment,
   report_attachment,
   state_report_attachment,
   attachments: new AttachmentTable({
@@ -306,6 +316,7 @@ export type UserSettings = Database["user_settings"];
 export type PopImmeuble = Database["pop_immeubles"];
 export type StateReport = Database["state_report"];
 export type VisitedSection = Database["visited_section"];
+export type VisitedSectionAttachment = Database["visited_section_attachment"];
 export type ReportAttachment = Database["report_attachment"];
 export type StateReportAttachment = Database["state_report_attachment"];
 

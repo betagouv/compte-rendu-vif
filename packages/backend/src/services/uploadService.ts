@@ -101,6 +101,8 @@ export class UploadService {
     const linesQuery = await db.selectFrom("picture_lines").where("attachmentId", "=", pictureId).selectAll().execute();
     const lines = JSON.parse(linesQuery?.[0]?.lines || "[]");
 
+    console.log(linesQuery?.[0]);
+
     const pictureUrl = await generatePresignedUrl(addAttachmentPrefix(pictureId));
 
     const buffer = await applyLinesToPicture({ pictureUrl: pictureUrl, lines });
