@@ -3,7 +3,7 @@ import { Flex } from "#components/ui/Flex.tsx";
 import { Box, BoxProps, Stack, Typography } from "@mui/material";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { createContext, ReactNode, useContext } from "react";
-import { StateReport, VisitedSection, VisitedSectionAttachment } from "../db/AppSchema";
+import { StateReport, StateReportAttachment, VisitedSection, VisitedSectionAttachment } from "../db/AppSchema";
 import { attachmentStorage, db, getAttachmentUrl, useDbQuery } from "../db/db";
 import { useQuery } from "@tanstack/react-query";
 import { ConstatPdfContext, useConstatPdfContext } from "../features/state-report/pdf/ConstatPdfContext";
@@ -29,7 +29,47 @@ const ConstatPdf = () => {
   const { constatId } = Route.useParams();
   const { mode } = Route.useSearch();
 
-  const stateReportQuery = useDbQuery(
+  const stateReportQuery = useQuery({
+    queryKey: ["state-report-with-user-and-attachments", constatId],
+    queryFn: async () => {
+      const stateReportQuery = await db
+        .selectFrom("state_report")
+        .leftJoin("user", "user.id", "state_report.created_by")
+        .selectAll(["state_report"])
+        .select(["user.name as createdByName"])
+        .where("state_report.id", "=", constatId)
+        .limit(1)
+        .execute();
+
+      if (stateReportQuery.length === 0) {
+        return null;
+      }
+
+      const attachmentQuery = await db
+        .selectFrom("state_report_attachment")
+        .selectAll()
+        .where("state_report_id", "=", constatId)
+        .execute();
+
+      const attachmentsWithFiles: (StateReportAttachment & { file: string | null })[] = await Promise.all(
+        attachmentQuery.map(async (attachment) => {
+          const file = await getAttachmentUrl(attachment.id);
+          return {
+            ...attachment,
+            file,
+          };
+        }),
+      );
+
+      return {
+        ...stateReportQuery[0],
+        attachments: attachmentsWithFiles,
+      };
+    },
+    refetchOnWindowFocus: false,
+  });
+
+  useDbQuery(
     db
       .selectFrom("state_report")
       .leftJoin("user", "user.id", "state_report.created_by")
@@ -82,7 +122,7 @@ const ConstatPdf = () => {
 
   const contextValue = {
     isLoading: stateReportQuery.isLoading || sectionsQuery.isLoading,
-    stateReport: stateReportQuery.data?.[0],
+    stateReport: stateReportQuery.data,
     sections: sectionsQuery.data,
   };
 

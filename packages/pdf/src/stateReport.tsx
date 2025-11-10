@@ -187,16 +187,23 @@ export const StateReportPDFDocument = ({ service, htmlString, images, pictures }
 
 import { format } from "date-fns";
 import { uppercaseFirstLetterIf } from "../../frontend/src/utils";
-import { SectionWithAttachments } from "../../frontend/src/features/state-report/pdf/ConstatPdfContext";
+import {
+  SectionWithAttachments,
+  StateReportWithUserAndAttachments,
+} from "../../frontend/src/features/state-report/pdf/ConstatPdfContext";
 
 export const getStateReportHtmlString = ({
   stateReport,
   visitedSections,
 }: {
-  stateReport: StateReportWithUser;
+  stateReport: StateReportWithUserAndAttachments;
   visitedSections: SectionWithAttachments[];
 }) => {
   const isPartielle = stateReport.nature_visite?.toLocaleLowerCase().includes("partielle");
+
+  const planSituationAttachment = stateReport.attachments.find((att) => stateReport.plan_situation === att.id);
+  const planEdificeAttachment = stateReport.attachments.find((att) => stateReport.plan_edifice === att.id);
+  const vueGenerale = stateReport.attachments.find((att) => stateReport.vue_generale === att.id);
 
   return minifyHtml(`
     <div id="title-section">
@@ -232,7 +239,49 @@ export const getStateReportHtmlString = ({
         Parties protégées : ${stateReport.parties_protegees || "N/A"}
       </div>
 
+      <div id="plans">
+        <div style="display: flex; flex-direction: row; flex-wrap: wrap; gap: 16px; margin-top: 8px;">
+          ${
+            planSituationAttachment
+              ? `<unbreakable class="attachment" style="flex:1;">
+                  <h2>Plan de situation</h2>
+                  <div class="attachment-image">  
+                    <img src="${planSituationAttachment.file}" style="width: 250px" />
+                  </div>
+                  <div class="attachment-label">${planSituationAttachment?.label || "Photo"}</div>
+                </unbreakable>`
+              : ""
+          }
 
+            ${
+              planEdificeAttachment
+                ? `<unbreakable class="attachment" style="flex:1;">
+                    <h2>Plan de l'édifice</h2>
+                    <div class="attachment-image">  
+                      <img src="${planEdificeAttachment.file}" style="width: 250px" />
+                    </div>
+                    <div class="attachment-label">${planEdificeAttachment?.label || "Photo"}</div>
+                  </unbreakable>`
+                : ""
+            }
+
+            ${
+              vueGenerale
+                ? `<unbreakable class="attachment" style="flex:1;">
+                    <h2>Vue générale</h2>
+                    <div class="attachment-image">  
+                      <img src="${vueGenerale.file}" style="width: 250px" />
+                    </div>
+                    <div class="attachment-label">${vueGenerale?.label || "Photo"}</div>
+                  </unbreakable>`
+                : ""
+            }
+
+            
+        </div>
+
+
+      </div>
 
 
       <div id="etat-general">
