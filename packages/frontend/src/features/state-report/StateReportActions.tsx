@@ -19,6 +19,9 @@ import { styled } from "@mui/material";
 export const StateReportActions = forwardRef<HTMLDivElement, { report: StateReportWithUser }>(({ report }, ref) => {
   const user = useUser()!;
 
+  const hasAccess = report.created_by === user.id;
+  const deleteMutation = useDeleteMutation();
+
   const duplicateMutation = useMutation(async () => {
     const payload = omit(report, ["id", "createdByName", "created_at", "created_by", "disabled"]);
 
@@ -37,6 +40,16 @@ export const StateReportActions = forwardRef<HTMLDivElement, { report: StateRepo
   return (
     <Flex ref={ref} bgcolor="#ECECFE" gap="0" flexDirection="column">
       <ReportAction iconId="ri-file-add-line" label="Dupliquer" onClick={() => duplicateMutation.mutate()} />
+      {hasAccess ? (
+        <>
+          <Divider height="1px" color="#DDD" />
+          <ReportAction
+            label="Supprimer"
+            onClick={() => deleteMutation.mutate(report.id)}
+            iconId="ri-delete-bin-2-line"
+          />
+        </>
+      ) : null}
     </Flex>
   );
 });
@@ -66,5 +79,5 @@ const ReportActionButton = styled(Button)(({ theme }) => ({
 
 const useDeleteMutation = () =>
   useMutation(async (id: string) => {
-    await db.updateTable("report").set({ disabled: 1 }).where("id", "=", id).execute();
+    await db.updateTable("state_report").set({ disabled: 1 }).where("id", "=", id).execute();
   });

@@ -71,6 +71,8 @@ const ButtonsSwitch = () => {
   const { step } = routeApi.useSearch();
   const navigate = routeApi.useNavigate();
 
+  const { constatId } = routeApi.useParams();
+
   const buttons: Record<StateReportStep, ReactNode> = {
     informations: (
       <Button
@@ -157,7 +159,13 @@ const ButtonsSwitch = () => {
           iconId="fr-icon-article-fill"
           size="large"
           nativeButtonProps={{
-            onClick: () => navigate({ search: { step: "constat-detaille" } }),
+            onClick: () =>
+              navigate({
+                to: "/constat/$constatId/pdf",
+                params: {
+                  constatId,
+                },
+              }),
           }}
           sx={{ width: "100%", justifyContent: "center" }}
         >

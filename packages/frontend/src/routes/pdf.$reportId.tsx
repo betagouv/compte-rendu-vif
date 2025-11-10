@@ -128,7 +128,6 @@ export const PDF = () => {
 
   const serviceInstructeur = serviceInstructeurQuery.data?.[0];
   const isServiceInstructeurLoaded = report?.serviceInstructeur ? !!serviceInstructeur : true;
-  console.log(report && snapshotQuery.isSuccess && chipOptions?.length && isServiceInstructeurLoaded);
   const htmlString = snapshotQuery.data;
 
   const saveSnapshotMutation = useMutation(
@@ -615,7 +614,7 @@ const View = (props: ReportPDFDocumentProps) => {
   );
 };
 
-const PdfCanvas = ({ blob }: { blob: Blob }) => {
+export const PdfCanvas = ({ blob }: { blob: Blob }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const file = useMemo(() => URL.createObjectURL(blob), [blob]);
   const { pdfDocument } = usePdf({

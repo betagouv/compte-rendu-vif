@@ -20,7 +20,7 @@ import { Route as ResetPasswordLinkRouteImport } from './routes/reset-password.$
 import { Route as PdfReportIdRouteImport } from './routes/pdf.$reportId'
 import { Route as EditReportIdRouteImport } from './routes/edit.$reportId'
 import { Route as ConstatConstatIdRouteImport } from './routes/constat.$constatId'
-import { Route as ConstatConstatIdPdfRouteImport } from './routes/constat.$constatId.pdf'
+import { Route as ConstatConstatIdPdfRouteImport } from './routes/constat_.$constatId.pdf'
 
 const ResetPasswordIndexLazyRouteImport = createFileRoute('/reset-password/')()
 
@@ -77,9 +77,9 @@ const ConstatConstatIdRoute = ConstatConstatIdRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const ConstatConstatIdPdfRoute = ConstatConstatIdPdfRouteImport.update({
-  id: '/pdf',
-  path: '/pdf',
-  getParentRoute: () => ConstatConstatIdRoute,
+  id: '/constat_/$constatId/pdf',
+  path: '/constat/$constatId/pdf',
+  getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -88,7 +88,7 @@ export interface FileRoutesByFullPath {
   '/connection': typeof ConnectionRoute
   '/inscription': typeof InscriptionRoute
   '/service': typeof ServiceRoute
-  '/constat/$constatId': typeof ConstatConstatIdRouteWithChildren
+  '/constat/$constatId': typeof ConstatConstatIdRoute
   '/edit/$reportId': typeof EditReportIdRoute
   '/pdf/$reportId': typeof PdfReportIdRoute
   '/reset-password/$link': typeof ResetPasswordLinkRoute
@@ -101,7 +101,7 @@ export interface FileRoutesByTo {
   '/connection': typeof ConnectionRoute
   '/inscription': typeof InscriptionRoute
   '/service': typeof ServiceRoute
-  '/constat/$constatId': typeof ConstatConstatIdRouteWithChildren
+  '/constat/$constatId': typeof ConstatConstatIdRoute
   '/edit/$reportId': typeof EditReportIdRoute
   '/pdf/$reportId': typeof PdfReportIdRoute
   '/reset-password/$link': typeof ResetPasswordLinkRoute
@@ -115,12 +115,12 @@ export interface FileRoutesById {
   '/connection': typeof ConnectionRoute
   '/inscription': typeof InscriptionRoute
   '/service': typeof ServiceRoute
-  '/constat/$constatId': typeof ConstatConstatIdRouteWithChildren
+  '/constat/$constatId': typeof ConstatConstatIdRoute
   '/edit/$reportId': typeof EditReportIdRoute
   '/pdf/$reportId': typeof PdfReportIdRoute
   '/reset-password/$link': typeof ResetPasswordLinkRoute
   '/reset-password/': typeof ResetPasswordIndexLazyRoute
-  '/constat/$constatId/pdf': typeof ConstatConstatIdPdfRoute
+  '/constat_/$constatId/pdf': typeof ConstatConstatIdPdfRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -161,7 +161,7 @@ export interface FileRouteTypes {
     | '/pdf/$reportId'
     | '/reset-password/$link'
     | '/reset-password/'
-    | '/constat/$constatId/pdf'
+    | '/constat_/$constatId/pdf'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -170,11 +170,12 @@ export interface RootRouteChildren {
   ConnectionRoute: typeof ConnectionRoute
   InscriptionRoute: typeof InscriptionRoute
   ServiceRoute: typeof ServiceRoute
-  ConstatConstatIdRoute: typeof ConstatConstatIdRouteWithChildren
+  ConstatConstatIdRoute: typeof ConstatConstatIdRoute
   EditReportIdRoute: typeof EditReportIdRoute
   PdfReportIdRoute: typeof PdfReportIdRoute
   ResetPasswordLinkRoute: typeof ResetPasswordLinkRoute
   ResetPasswordIndexLazyRoute: typeof ResetPasswordIndexLazyRoute
+  ConstatConstatIdPdfRoute: typeof ConstatConstatIdPdfRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -249,26 +250,15 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ConstatConstatIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/constat/$constatId/pdf': {
-      id: '/constat/$constatId/pdf'
-      path: '/pdf'
+    '/constat_/$constatId/pdf': {
+      id: '/constat_/$constatId/pdf'
+      path: '/constat/$constatId/pdf'
       fullPath: '/constat/$constatId/pdf'
       preLoaderRoute: typeof ConstatConstatIdPdfRouteImport
-      parentRoute: typeof ConstatConstatIdRoute
+      parentRoute: typeof rootRouteImport
     }
   }
 }
-
-interface ConstatConstatIdRouteChildren {
-  ConstatConstatIdPdfRoute: typeof ConstatConstatIdPdfRoute
-}
-
-const ConstatConstatIdRouteChildren: ConstatConstatIdRouteChildren = {
-  ConstatConstatIdPdfRoute: ConstatConstatIdPdfRoute,
-}
-
-const ConstatConstatIdRouteWithChildren =
-  ConstatConstatIdRoute._addFileChildren(ConstatConstatIdRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -276,11 +266,12 @@ const rootRouteChildren: RootRouteChildren = {
   ConnectionRoute: ConnectionRoute,
   InscriptionRoute: InscriptionRoute,
   ServiceRoute: ServiceRoute,
-  ConstatConstatIdRoute: ConstatConstatIdRouteWithChildren,
+  ConstatConstatIdRoute: ConstatConstatIdRoute,
   EditReportIdRoute: EditReportIdRoute,
   PdfReportIdRoute: PdfReportIdRoute,
   ResetPasswordLinkRoute: ResetPasswordLinkRoute,
   ResetPasswordIndexLazyRoute: ResetPasswordIndexLazyRoute,
+  ConstatConstatIdPdfRoute: ConstatConstatIdPdfRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

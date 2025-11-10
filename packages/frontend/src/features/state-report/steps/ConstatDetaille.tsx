@@ -15,6 +15,7 @@ import { attachmentQueue, db, useDbQuery } from "../../../db/db";
 import { ModalCloseButton } from "../../menu/MenuTitle";
 import { UploadImageWithEditModal } from "../../upload/UploadImageButton";
 import { PictureThumbnail, processImage } from "../../upload/UploadReportImage";
+import { defaultSections } from "@cr-vif/pdf/constat";
 
 const routeApi = getRouteApi("/constat/$constatId");
 export const ConstatDetaille = () => {
@@ -71,7 +72,7 @@ const SectionsList = ({ visitedSections }: { visitedSections: VisitedSection[] }
       <SectionModal selectedSection={selectedSection} onClose={() => setSelectedSectionId(null)} />
       {defaultSections.map((section) => {
         const visited = visitedSections?.find((vs) => vs.section === section);
-        const isVisited = visited && !!visited.etat_general;
+        const isVisited = !!visited;
         return (
           <SectionItem
             key={section}
@@ -118,16 +119,6 @@ const SectionItem = ({
     />
   );
 };
-
-const defaultSections = [
-  "Fondations, sols, sous-sols",
-  "Maçonnerie, structure",
-  "Parements, enduits",
-  "Menuiserie, métallerie, vitraux",
-  "Cloisonnement, revêtements, décors, objets, mobiliers",
-  "Équipements, sécurité, accessibilité",
-  "Environnements, abords, voirie et réseaux",
-];
 
 const SectionModal = ({
   selectedSection,
@@ -238,8 +229,6 @@ const SectionImageUpload = ({ section }: { section: VisitedSection }) => {
       .where("is_deprecated", "=", 0)
       .orderBy("created_at", "asc"),
   );
-
-  console.log(sectionAttachmentQuery.data);
 
   const sectionAttachments = sectionAttachmentQuery.data || [];
 

@@ -1,94 +1,9 @@
-import { Document, Font, Image, Page, StyleSheet, Text, View, ViewProps } from "@react-pdf/renderer";
-import { Html } from "react-pdf-html";
-import React from "react";
-import { Buffer } from "buffer";
-import {
-  Service,
-  Report,
-  ServiceInstructeurs,
-  Clause_v2,
-  Pictures,
-  ReportAttachment,
-} from "../../frontend/src/db/AppSchema";
+import { Document, Image, Page, Text, View } from "@react-pdf/renderer";
 import { format } from "date-fns";
+import { Html } from "react-pdf-html";
+import { Clause_v2, Report, Service, ServiceInstructeurs } from "../../frontend/src/db/AppSchema";
+import { MarianneHeader, minifyHtml, Pagination } from "./utils";
 
-export const initFonts = (folder: string = "") => {
-  Font.register({
-    family: "Marianne",
-    fonts: [
-      {
-        src: `${folder}/fonts/Marianne-Regular.ttf`,
-        fontStyle: "normal",
-        fontWeight: "normal",
-      },
-      { src: `${folder}/fonts/Marianne-Bold.ttf`, fontStyle: "normal", fontWeight: "bold" },
-      {
-        src: `${folder}/fonts/Marianne-RegularItalic.ttf`,
-        fontStyle: "italic",
-        fontWeight: "normal",
-      },
-      {
-        src: `${folder}/fonts/Marianne-BoldItalic.ttf`,
-        fontStyle: "italic",
-        fontWeight: "bold",
-      },
-    ],
-  });
-};
-
-Font.registerHyphenationCallback((word) => {
-  return [word];
-});
-
-const MarianneHeader = ({
-  marianneUrl,
-  styles,
-}: {
-  marianneUrl: string;
-  styles?: ({ pageNumber }: { pageNumber: number }) => ViewProps["style"];
-}) => {
-  return (
-    <View
-      fixed
-      render={({ pageNumber }) => (
-        <View
-          style={{
-            position: "absolute",
-            top: -36,
-            left: 40,
-            height: 13,
-            width: 34,
-            ...styles?.({ pageNumber }),
-          }}
-          fixed
-        >
-          <Image
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "contain",
-            }}
-            src={marianneUrl}
-          />
-        </View>
-      )}
-    />
-  );
-};
-
-const Pagination = () => {
-  return (
-    <View fixed style={{ position: "absolute", bottom: 40, right: 40, fontSize: 10 }}>
-      <Text
-        render={({ pageNumber, totalPages }) => (
-          <Text>
-            {pageNumber}/{totalPages}
-          </Text>
-        )}
-      />
-    </View>
-  );
-};
 export const getPDFInMailName = (report: Omit<Report, "disabled">) => {
   const { city, applicantName, meetDate } = report;
 
@@ -487,7 +402,3 @@ const getMultipleChips = (chipOptions: Clause_v2[], key: string, values: string)
     })
     .filter(Boolean);
 };
-
-function minifyHtml(htmlString: string) {
-  return htmlString.split("\n").join("").split("  ").join("");
-}
