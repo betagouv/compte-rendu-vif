@@ -1,8 +1,14 @@
-import { Document, Image, Page, Text, View } from "@react-pdf/renderer";
+import { Document, Image, Link, Page, Text, View } from "@react-pdf/renderer";
 import { Clause_v2, Report, Service, ServiceInstructeurs, StateReport } from "../../frontend/src/db/AppSchema";
 import { MarianneHeader, initFonts, minifyHtml } from "./utils";
 import { Html } from "react-pdf-html";
 import { StateReportWithUser } from "../../frontend/src/features/report/ReportList";
+
+import { format } from "date-fns";
+import {
+  SectionWithAttachments,
+  StateReportWithUserAndAttachments,
+} from "../../frontend/src/features/state-report/pdf/ConstatPdfContext";
 
 export const StateReportPDFDocument = ({ service, htmlString, images, pictures }: StateReportPDFDocumentProps) => {
   return (
@@ -21,6 +27,7 @@ export const StateReportPDFDocument = ({ service, htmlString, images, pictures }
           collapse
           renderers={{
             unbreakable: ({ children }) => <View wrap={false}>{children}</View>,
+            divider: () => <View style={{ borderTop: "1px solid #EDEDED", marginBottom: 4, marginTop: 16 }} />,
           }}
           style={{
             fontSize: "10px",
@@ -39,6 +46,10 @@ export const StateReportPDFDocument = ({ service, htmlString, images, pictures }
 
               strong {
                 font-weight: bold;
+              }
+
+              u {
+                text-underline-offset: 8px !important;
               }
 
               em {
@@ -180,17 +191,39 @@ export const StateReportPDFDocument = ({ service, htmlString, images, pictures }
             
           </body>
         </html>`}</Html>
+        <View
+          style={{
+            paddingLeft: 32,
+            paddingRight: 32,
+            fontSize: "8px",
+          }}
+        >
+          <Text style={{ fontSize: "8px" }}>
+            Ce constat d'état est effectué dans le cadre du contrôle scientifique et technique défini au livre VI, titre
+            II, chapitre Ier du Code du patrimoine (partie législative et réglementaire et notamment l'article R621-63),
+            et dans la circulaire du 1er décembre 2009 relative au contrôle scientifique et technique des services de
+            l'État sur la conservation des monuments historiques classés ou inscrits. Les termes utilisés se fondent sur
+            le glossaire des termes relatifs aux interventions sur les monuments historiques (déduit de la norme EN
+            15898).
+          </Text>
+
+          <Link
+            style={{}}
+            src="https://www.culture.gouv.fr/Thematiques/monuments-sites/Interventions-demarches/Travaux-sur-un-objet-un-immeuble-un-espace/Intervenir-sur-un-immeuble-inscrit"
+          >
+            <Text style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", flexGrow: 1, flexBasis: 0 }}>
+              {link?.match(/\w+|\W+/g)?.map((seg, i) => (
+                <Text key={i}>{seg}</Text>
+              ))}
+            </Text>
+          </Link>
+        </View>
       </Page>
     </Document>
   );
 };
-
-import { format } from "date-fns";
-import { uppercaseFirstLetterIf } from "../../frontend/src/utils";
-import {
-  SectionWithAttachments,
-  StateReportWithUserAndAttachments,
-} from "../../frontend/src/features/state-report/pdf/ConstatPdfContext";
+const link =
+  "https://www.culture.gouv.fr/Thematiques/monuments-sites/Interventions-demarches/Travaux-sur-un-objet-un-immeuble-un-espace/Intervenir-sur-un-immeuble-inscrit";
 
 export const getStateReportHtmlString = ({
   stateReport,
@@ -218,26 +251,27 @@ export const getStateReportHtmlString = ({
           Constat dressé par <b>${stateReport.createdByName}</b> suite à la visite  ${isPartielle ? "partielle" : ""}
           ${stateReport.date_visite ? ` du ${format(new Date(stateReport.date_visite!), "dd/MM/yyyy")}.` : ""}.
         </span>
-        <br/>
-        <br/>
         
-        <span>
-          ${isPartielle ? "Partie visitées : " + (stateReport.visite_partielle_details || "") + "." : "Visite complète de l'édifice."}
-        </span>
       </div>
 
       <div id="details">
         <span>
-          Référence cadastrale : ${stateReport.reference_cadastrale || "N/A"}.<br/>
-          Propriétaire : ${stateReport.proprietaire ? `${stateReport.proprietaire} (${stateReport.proprietaire_email})` : "N/A"}.<br/>
+          
+          <b>Partie visitées</b> : ${isPartielle ? stateReport.visite_partielle_details || "" : "Visite complète de l'édifice."}<br/>
+          <b>Adresse</b> : ${stateReport.adresse || "N/A"}.<br/>
+          <b>Référence cadastrale</b> : ${stateReport.reference_cadastrale || "N/A"}.<br/>
+          <b/>Propriétaire</b> : ${stateReport.proprietaire ? `${stateReport.proprietaire} (${stateReport.proprietaire_email})` : "N/A"}.<br/>
           ${stateReport.proprietaire_representant ? `Représentant : ${stateReport.proprietaire_representant ? `${stateReport.proprietaire_representant} (${stateReport.proprietaire_representant_email})` : "N/A"}.` : ""}
         </span>
       </div>
 
       <div id="protection">
-        ${uppercaseFirstLetter(stateReport.nature_protection || "N/A")}<br/>
+        <h2>Protection de l'édifice</h2>
+        ${uppercaseFirstLetter(stateReport.nature_protection || "N/A")}<br/><br/>
         Parties protégées : ${stateReport.parties_protegees || "N/A"}
       </div>
+
+      <divider />
 
       <div id="plans">
         <div style="display: flex; flex-direction: row; flex-wrap: wrap; gap: 16px; margin-top: 8px;">
@@ -283,7 +317,7 @@ export const getStateReportHtmlString = ({
 
       </div>
 
-
+            <divider />
       <div id="etat-general">
         <h2>État général</h2>
         <div>Le monument est jugé ${etatGeneralMap[stateReport.etat_general as keyof typeof etatGeneralMap] || "N/A"} pour ${stateReport.proportion_dans_cet_etat} des parties protégées de l'édifice</div>
@@ -307,6 +341,8 @@ export const getStateReportHtmlString = ({
         </ul>
       </div>
 
+      <divider />
+
       <div id="constat-detaille">
         <h2>Constat détaillé</h2>
         ${visitedSections
@@ -314,7 +350,7 @@ export const getStateReportHtmlString = ({
             (section) => `
             <div class="section-detail">
               <li>
-                <b>${section.section}</b> : ${section.proportion_dans_cet_etat} des parties protégées sont jugées ${etatGeneralMap[section.etat_general as keyof typeof etatGeneralMap] || "N/A"}.
+                <b>${section.section} :</b><br/> ${section.proportion_dans_cet_etat} des parties protégées sont jugées ${etatGeneralMap[section.etat_general as keyof typeof etatGeneralMap] || "N/A"}.
               </li>
 
               <br/>
@@ -343,25 +379,43 @@ export const getStateReportHtmlString = ({
           .join("")}
       </div>
 
+      <divider />
+
       <div id="preconisations">
         <h2>Préconisations générales</h2>
-        <div>
+        <b>
           Suite à la visite, il est préconisé d'entreprendre ${preconisationsMap[stateReport.preconisations as keyof typeof preconisationsMap] || "N/A"}.
-        <div>
+        </b>
         <br/>
         <div>
-          Commentaires: ${stateReport.preconisations_commentaires || "Aucun"}.
+          <u>Commentaires :</u> ${stateReport.preconisations_commentaires || "Aucun"}.
         </div>
       </div>
 
       <br/><br/><br/><br/><br/>
 
-      <div id="date">
-          Document créé le ${format(new Date(), "dd/MM/yyyy")}.
-      </div>
+      <b id="date">
+        Document créé le ${new Date().toLocaleDateString("fr-FR", {
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+        })}.
+      </b>
+
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+
     </div>
   `);
 };
+
+const footerText = `Ce constat d'état est effectué dans le cadre du contrôle scientifique et technique défini au livre VI, titre II, chapitre Ier du Code du patrimoine (partie législative et réglementaire et notamment l'article R621-63), et dans la circulaire du 1er décembre 2009 relative au contrôle scientifique et technique des services de l'État sur la conservation des monuments historiques classés ou inscrits. Les termes utilisés se fondent sur le glossaire des termes relatifs aux interventions sur les monuments historiques (déduit de la norme EN 15898).
+<br/><br/>
+Pour toute information complémentaire, vous pouvez vous référer à :
+<a href="https://www.culture.gouv.fr/Thematiques/monuments-sites/Interventions-demarches/Travaux-sur-un-objet-un-immeuble-un-espace/Intervenir-sur-un-immeuble-inscrit">https://www.culture.gouv.fr/Thematiques/monuments-sites/Interventions-demarches/Travaux-sur-un-objet-un-immeuble-un-espace/Intervenir-sur-un-immeuble-inscrit</a>`;
 
 const etatGeneralMap = {
   Bon: "en bon état",

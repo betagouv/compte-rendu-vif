@@ -51,7 +51,7 @@ const ConstatPdf = () => {
         .where("state_report_id", "=", constatId)
         .execute();
 
-      const attachmentsWithFiles: (StateReportAttachment & { file: string | null })[] = await Promise.all(
+      const attachmentsWithFiles = await Promise.all(
         attachmentQuery.map(async (attachment) => {
           const file = await getAttachmentUrl(attachment.id);
           return {
