@@ -3,6 +3,7 @@ import { Clause_v2, Report, Service, ServiceInstructeurs, StateReport } from "..
 import { MarianneHeader, Pagination, initFonts, minifyHtml } from "./utils";
 import { Html } from "react-pdf-html";
 import { StateReportWithUser } from "../../frontend/src/features/report/ReportList";
+import React from "react";
 
 import { format } from "date-fns";
 import {

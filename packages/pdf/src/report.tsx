@@ -3,6 +3,7 @@ import { format } from "date-fns";
 import { Html } from "react-pdf-html";
 import { Clause_v2, Report, Service, ServiceInstructeurs } from "../../frontend/src/db/AppSchema";
 import { MarianneHeader, minifyHtml, Pagination } from "./utils";
+import React from "react";
 
 export const getPDFInMailName = (report: Omit<Report, "disabled">) => {
   const { city, applicantName, meetDate } = report;
