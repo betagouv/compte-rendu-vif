@@ -14,7 +14,7 @@ import React from "react";
 import { Selectable } from "kysely";
 import { getServices } from "../services/services";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { JSDOM } from "jsdom";
+import { parseHTML } from "linkedom";
 
 const debug = makeDebug("pdf-plugin");
 
@@ -327,7 +327,7 @@ function replaceImageUrls(
   htmlString: string,
   customUrlFunction: (attachmentId: string, currentUrl: string, img: HTMLImageElement) => string,
 ) {
-  const dom = new JSDOM(htmlString);
+  const dom = parseHTML(htmlString);
   const doc = dom.window.document;
 
   const images = doc.querySelectorAll("img[data-attachment-id]");
