@@ -229,7 +229,7 @@ export const getStateReportHtmlString = ({
 
   return minifyHtml(`
     <p>  
-      <span style="font-size: 20pt">Constat d'état du monument historique</span><br/>
+      <span style="font-size: 20pt">Constat d'état du monument historique</span><br/><br/>
       <span style="font-size: 20pt"><b>${stateReport.titre_edifice}</b></span><br/><br/>
     </p>
     <p>
