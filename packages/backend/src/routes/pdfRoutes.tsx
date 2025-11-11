@@ -108,6 +108,8 @@ export const pdfPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
   fastify.post("/state-report", { schema: stateReportPdfTSchema }, async (request) => {
     const user = request.user!;
     const { stateReportId: stateReportId, htmlString } = request.body;
+    debug(`Generating PDF for state report ${stateReportId} by user ${user.id}`);
+    debug(`HTML string length: ${htmlString.length}`);
     const stateReportQuery = await db
       .selectFrom("state_report")
       .leftJoin("user", "user.id", "state_report.created_by")
@@ -286,7 +288,6 @@ const generateStateReportPdf = async ({
   attachmentsUrlMap: { id: string; url: string }[];
 }) => {
   const fontsPath = path.resolve(process.cwd(), "./public");
-
   Font.register({
     family: "Marianne",
     fonts: [
@@ -308,16 +309,19 @@ const generateStateReportPdf = async ({
       },
     ],
   });
+
+  const mappedHtmlString = replaceImageUrls(htmlString, (attachmentId, currentUrl, img) => {
+    const newUrl = attachmentsUrlMap.find((att) => att.id === attachmentId)?.url;
+    if (newUrl) {
+      return newUrl;
+    }
+    return currentUrl;
+  });
+
   return renderToBuffer(
     <StateReportPDFDocument
       service={service}
-      htmlString={replaceImageUrls(htmlString, (attachmentId, currentUrl, img) => {
-        const newUrl = attachmentsUrlMap.find((att) => att.id === attachmentId)?.url;
-        if (newUrl) {
-          return newUrl;
-        }
-        return currentUrl;
-      })}
+      htmlString={mappedHtmlString}
       images={{ marianne: "./public/marianne.png", marianneFooter: "./public/marianne_footer.png" }}
     />,
   );
@@ -327,8 +331,10 @@ function replaceImageUrls(
   htmlString: string,
   customUrlFunction: (attachmentId: string, currentUrl: string, img: HTMLImageElement) => string,
 ) {
-  const dom = parseHTML(htmlString);
-  const doc = dom.window.document;
+  const wrappedHtml = `<!DOCTYPE html><html><body>${htmlString}</body></html>`;
+
+  const { document } = parseHTML(wrappedHtml);
+  const doc = document;
 
   const images = doc.querySelectorAll("img[data-attachment-id]");
 
@@ -342,7 +348,6 @@ function replaceImageUrls(
       img.setAttribute("src", newUrl);
     }
   });
-
   return doc.body.innerHTML;
 }
 

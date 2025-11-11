@@ -6,7 +6,7 @@ import { StateReportWithUser } from "../../frontend/src/features/report/ReportLi
 import React from "react";
 
 import { format } from "date-fns";
-import {
+import type {
   SectionWithAttachments,
   StateReportWithUserAndAttachments,
 } from "../../frontend/src/features/state-report/pdf/ConstatPdfContext";
