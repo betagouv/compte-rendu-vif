@@ -7,19 +7,17 @@ import { Spinner } from "#components/Spinner.tsx";
 import { PdfCanvas } from "../../../routes/pdf.$reportId";
 import { useUser } from "../../../contexts/AuthContext";
 export const ViewConstatPdf = () => {
-  const { sections, stateReport, isLoading } = useConstatPdfContext()!;
+  const { localHtmlString } = useConstatPdfContext()!;
   const user = useUser()!;
+  console.log(localHtmlString);
+  // const htmlString =
+  //   stateReport && sections ? getStateReportHtmlString({ stateReport, visitedSections: sections }) : "";
 
-  console.log("stateReport", stateReport);
-
-  const htmlString =
-    stateReport && sections ? getStateReportHtmlString({ stateReport, visitedSections: sections }) : "";
-  console.log("htmlString", htmlString);
   return (
     <Center>
       <Center width="800px" flexDirection="column">
         <View
-          htmlString={htmlString}
+          htmlString={localHtmlString!}
           images={{ marianne: "/marianne.png", marianneFooter: "/marianne_footer.png" }}
           service={user.service as any}
         />

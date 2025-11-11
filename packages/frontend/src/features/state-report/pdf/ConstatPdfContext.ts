@@ -6,6 +6,8 @@ type ConstatPdfContextType = {
   stateReport?: StateReportWithUserAndAttachments | null;
   sections?: SectionWithAttachments[];
   isLoading: boolean;
+  localHtmlString: string | null;
+  setLocalHtmlString: (htmlString: string) => void;
 };
 
 export type SectionWithAttachments = VisitedSection & {
@@ -19,5 +21,8 @@ export type StateReportWithUserAndAttachments = StateReportWithUser & {
 export const ConstatPdfContext = createContext<ConstatPdfContextType | undefined>({
   isLoading: false,
   stateReport: undefined,
+  sections: undefined,
+  localHtmlString: null,
+  setLocalHtmlString: () => {},
 });
 export const useConstatPdfContext = () => useContext(ConstatPdfContext);

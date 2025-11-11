@@ -11,6 +11,8 @@ import {
 } from "../../frontend/src/features/state-report/pdf/ConstatPdfContext";
 
 export const StateReportPDFDocument = ({ service, htmlString, images, pictures }: StateReportPDFDocumentProps) => {
+  console.log(htmlString.includes("data-unbreakable"));
+  console.log(transformHtml(htmlString));
   return (
     <Document onRender={console.log}>
       <Page
@@ -20,14 +22,23 @@ export const StateReportPDFDocument = ({ service, htmlString, images, pictures }
           paddingBottom: 56,
           paddingTop: 72,
         }}
-        wrap
+        wrap={true}
       >
         <MarianneHeader marianneUrl={images.marianne} />
         <Html
+          stylesheet={stateReportExtraCss}
           collapse
           renderers={{
-            unbreakable: ({ children }) => <View wrap={false}>{children}</View>,
-            divider: () => <View style={{ borderTop: "1px solid #EDEDED", marginBottom: 4, marginTop: 16 }} />,
+            unbreakable: ({ children, ...props }) => (
+              <View {...props} wrap={true}>
+                {children}
+              </View>
+            ),
+            tr: ({ children, ...props }) => (
+              <View {...props} wrap={false}>
+                {children}
+              </View>
+            ),
           }}
           style={{
             fontSize: "10px",
@@ -128,30 +139,6 @@ export const StateReportPDFDocument = ({ service, htmlString, images, pictures }
                 border-top: 1px solid #EDEDED;
               }
 
-              #title-section .title-row:first-child {
-                font-weight: normal;
-                margin-bottom: 0;
-              }
-
-              #title-section .title-row:last-child {
-                font-weight: bold;
-                margin-top: 4px;
-              }
-
-              #intro {
-                margin-bottom: 16px;
-              }
-
-              #details {
-                margin-bottom: 16px;
-              }
-
-              .section-attachments {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 4%;
-                margin-top: 8px;
-              }
 
             </style>
             <div class="header">
@@ -186,7 +173,7 @@ export const StateReportPDFDocument = ({ service, htmlString, images, pictures }
             </div>
             <hr/>
             <div class="content">
-              ${htmlString}
+              ${transformHtml(htmlString)}
             </div>
             
           </body>
@@ -222,8 +209,24 @@ export const StateReportPDFDocument = ({ service, htmlString, images, pictures }
     </Document>
   );
 };
+const transformHtml = (htmlString: string) => {
+  return htmlString.replace(
+    /<(div)([^>]*?)\s+data-unbreakable([^>]*)>([\s\S]*?)<\/\1>/g,
+    "<unbreakable><$1$2$3>$4</$1></unbreakable>",
+  );
+};
 const link =
   "https://www.culture.gouv.fr/Thematiques/monuments-sites/Interventions-demarches/Travaux-sur-un-objet-un-immeuble-un-espace/Intervenir-sur-un-immeuble-inscrit";
+
+// #title-section .title-row:first-child {
+//   font-weight: normal;
+//   margin-bottom: 0;
+// }
+
+// #title-section .title-row:last-child {
+//   font-weight: bold;
+//   margin-top: 4px;
+// }
 
 export const getStateReportHtmlString = ({
   stateReport,
@@ -239,89 +242,38 @@ export const getStateReportHtmlString = ({
   const vueGenerale = stateReport.attachments.find((att) => stateReport.vue_generale === att.id);
 
   return minifyHtml(`
-    <div id="title-section">
-      <h1 class="title-row">Constat d'état du monument historique</h1>
-      <h1 class="title-row">${stateReport.titre_edifice}</h1>
-    </div>
+    <p>  
+      <span style="font-size: 20pt">Constat d'état du monument historique</span><br/>
+      <span style="font-size: 20pt"><b>${stateReport.titre_edifice}</b></span><br/><br/>
+    </p>
+    <p>
+      Constat dressé par <b>${stateReport.createdByName}</b> suite à la visite  ${isPartielle ? "partielle" : ""}
+      ${stateReport.date_visite ? ` du ${format(new Date(stateReport.date_visite!), "dd/MM/yyyy")}.` : ""}.
 
+      <br/>
+      <br/>
 
-    <div id="content-section">
-      <div id="intro">
-        <span>
-          Constat dressé par <b>${stateReport.createdByName}</b> suite à la visite  ${isPartielle ? "partielle" : ""}
-          ${stateReport.date_visite ? ` du ${format(new Date(stateReport.date_visite!), "dd/MM/yyyy")}.` : ""}.
-        </span>
-        
-      </div>
+      <b>Partie visitées</b> : ${isPartielle ? stateReport.visite_partielle_details || "" : "Visite complète de l'édifice"}<br/>
+      <b>Adresse</b> : ${stateReport.adresse || "N/A"}<br/>
+      <b>Référence cadastrale</b> : ${stateReport.reference_cadastrale || "N/A"}<br/>
+      <b>Propriétaire</b> : ${stateReport.proprietaire ? `${stateReport.proprietaire} (${stateReport.proprietaire_email})` : "N/A"}<br/>
+      ${stateReport.proprietaire_representant ? `Représentant : ${stateReport.proprietaire_representant ? `${stateReport.proprietaire_representant} (${stateReport.proprietaire_representant_email})` : "N/A"}` : ""}
+    </p>
 
-      <div id="details">
-        <span>
-          
-          <b>Partie visitées</b> : ${isPartielle ? stateReport.visite_partielle_details || "" : "Visite complète de l'édifice."}<br/>
-          <b>Adresse</b> : ${stateReport.adresse || "N/A"}.<br/>
-          <b>Référence cadastrale</b> : ${stateReport.reference_cadastrale || "N/A"}.<br/>
-          <b/>Propriétaire</b> : ${stateReport.proprietaire ? `${stateReport.proprietaire} (${stateReport.proprietaire_email})` : "N/A"}.<br/>
-          ${stateReport.proprietaire_representant ? `Représentant : ${stateReport.proprietaire_representant ? `${stateReport.proprietaire_representant} (${stateReport.proprietaire_representant_email})` : "N/A"}.` : ""}
-        </span>
-      </div>
+    <p><span style="font-size: 16pt"><b>Protection de l'édifice</b></span></p>    
+      ${uppercaseFirstLetter(stateReport.nature_protection || "N/A")}<br/><br/>Parties protégées : ${stateReport.parties_protegees || "N/A"}
 
-      <div id="protection">
-        <h2>Protection de l'édifice</h2>
-        ${uppercaseFirstLetter(stateReport.nature_protection || "N/A")}<br/><br/>
-        Parties protégées : ${stateReport.parties_protegees || "N/A"}
-      </div>
+      <hr />
 
-      <divider />
+      ${generateImagesTable([
+        planSituationAttachment ? { ...planSituationAttachment, title: "Plan de situation" } : undefined,
+        planEdificeAttachment ? { ...planEdificeAttachment, title: "Plan de l'édifice" } : undefined,
+        vueGenerale ? { ...vueGenerale, title: "Vue générale de l'édifice" } : undefined,
+      ])}
 
-      <div id="plans">
-        <div style="display: flex; flex-direction: row; flex-wrap: wrap; gap: 16px; margin-top: 8px;">
-          ${
-            planSituationAttachment
-              ? `<unbreakable class="attachment" style="flex:1;">
-                  <h2>Plan de situation</h2>
-                  <div class="attachment-image">  
-                    <img src="${planSituationAttachment.file}" style="width: 250px" />
-                  </div>
-                  <div class="attachment-label">${planSituationAttachment?.label || "Photo"}</div>
-                </unbreakable>`
-              : ""
-          }
-
-            ${
-              planEdificeAttachment
-                ? `<unbreakable class="attachment" style="flex:1;">
-                    <h2>Plan de l'édifice</h2>
-                    <div class="attachment-image">  
-                      <img src="${planEdificeAttachment.file}" style="width: 250px" />
-                    </div>
-                    <div class="attachment-label">${planEdificeAttachment?.label || "Photo"}</div>
-                  </unbreakable>`
-                : ""
-            }
-
-            ${
-              vueGenerale
-                ? `<unbreakable class="attachment" style="flex:1;">
-                    <h2>Vue générale</h2>
-                    <div class="attachment-image">  
-                      <img src="${vueGenerale.file}" style="width: 250px" />
-                    </div>
-                    <div class="attachment-label">${vueGenerale?.label || "Photo"}</div>
-                  </unbreakable>`
-                : ""
-            }
-
-            
-        </div>
-
-
-      </div>
-
-            <divider />
-      <div id="etat-general">
-        <h2>État général</h2>
-        <div>Le monument est jugé ${etatGeneralMap[stateReport.etat_general as keyof typeof etatGeneralMap] || "N/A"} pour ${stateReport.proportion_dans_cet_etat} des parties protégées de l'édifice</div>
-
+            <hr />
+        <p><span style="font-size: 16pt"><b>État général</b></span></p>
+        <span>Le monument est jugé ${etatGeneralMap[stateReport.etat_general as keyof typeof etatGeneralMap] || "N/A"} pour ${stateReport.proportion_dans_cet_etat} des parties protégées de l'édifice</span>
         <ul>
           ${defaultSections
             ?.map((section) => {
@@ -339,47 +291,33 @@ export const getStateReportHtmlString = ({
             })
             .join("")}
         </ul>
-      </div>
 
-      <divider />
+      <hr />
 
-      <div id="constat-detaille">
-        <h2>Constat détaillé</h2>
+        <p><span style="font-size: 16pt"><b>Constat détaillé</b></span></p>
         ${visitedSections
           ?.map(
             (section) => `
-            <div class="section-detail">
-              <li>
-                <b>${section.section} :</b><br/> ${section.proportion_dans_cet_etat} des parties protégées sont jugées ${etatGeneralMap[section.etat_general as keyof typeof etatGeneralMap] || "N/A"}.
-              </li>
-
+              <ul>
+                <li>
+                  <b>${section.section} :</b><br/> ${section.proportion_dans_cet_etat} des parties protégées sont jugées ${etatGeneralMap[section.etat_general as keyof typeof etatGeneralMap] || "N/A"}.
+                </li>
+              </ul>
               <br/>
-
-              <div class="section-commentaires">
                 <b>Commentaires :</b> ${section.commentaires ? `${section.commentaires}` : "Aucun"}
-              </div>
 
-              <div class="section-attachments">
-                ${section.attachments
-                  .map(
-                    (attachment) => `
-                    <unbreakable class="attachment" style="flex:1;">
-                      <div class="attachment-image">  
-                        <img src="${attachment.file}" style="width: 250px" />
-                      </div>
-                      <div class="attachment-label">${attachment.label || "Photo"}</div>
-                    </unbreakable>
-                  `,
-                  )
-                  .join("")}
-              </div>
-            </div>
+              ${generateImagesTable(
+                section.attachments.map((attachment) => ({
+                  title: "",
+                  file: attachment.file!,
+                  label: attachment.label,
+                })),
+              )}
           `,
           )
           .join("")}
-      </div>
 
-      <divider />
+      <hr />
 
       <div id="preconisations">
         <h2>Préconisations générales</h2>
@@ -402,13 +340,6 @@ export const getStateReportHtmlString = ({
         })}.
       </b>
 
-      <br/>
-      <br/>
-      <br/>
-      <br/>
-      <br/>
-
-    </div>
   `);
 };
 
@@ -444,6 +375,105 @@ const preconisationsMap = {
 
 const uppercaseFirstLetter = (str: string) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
+};
+
+const generateImagesTable = (images: ({ file: string; label?: string | null; title?: string } | undefined)[]) => {
+  const rows = [];
+  for (let i = 0; i < images.length; i += 2) {
+    const firstImage = images[i];
+    const secondImage = images[i + 1];
+
+    rows.push(`<div class="column-block">
+      ${generateImageCell(firstImage)}
+      ${generateImageCell(secondImage)}
+    </div><div></div>
+    `);
+  }
+  return `${rows.join("")}`;
+};
+
+const generateImageCell = (image: { file: string; label?: string | null; title?: string } | undefined) => {
+  if (!image) return '<div class="column"></div>';
+  return `<div class="column" >
+      ${
+        image.title
+          ? `<p>
+          <span style="font-size: 16pt"><strong>${image.title}</strong></span>
+          </p>`
+          : "<p></p>"
+      }
+      <img src="${image.file}" style="width: 100%; min-height: 200px; margin-bottom: 30px;" />
+      <div style="position:relative">
+        <div style="position:absolute; bottom:0; left:0; right:0; top:-30px;text-align:center; font-size:8pt; color:gray;">
+        ${image.label ? `<span>${image.label}</span>` : ""}
+
+        </div>
+      </div>
+  </div>`;
+};
+
+export const stateReportExtraCss = {
+  ".column-block": {
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    gap: "24px",
+  },
+
+  ".column": {
+    width: "48%",
+  },
+
+  ".ProseMirror-focused .column": {
+    border: "1px gray dashed",
+    borderRadius: "8px",
+  },
+  "li > p": {
+    margin: 0,
+  },
+  table: {
+    borderCollapse: "collapse",
+    tableLayout: "fixed",
+    width: "100%",
+    margin: "12px 0",
+    overflow: "hidden",
+  },
+  "table td, table th": {
+    minWidth: "1em",
+    verticalAlign: "top",
+    boxSizing: "border-box",
+    position: "relative",
+  },
+  "table th": {
+    fontWeight: "bold",
+    textAlign: "left",
+    backgroundColor: "#f1f3f5",
+  },
+  "table .selectedCell:after": {
+    zIndex: "2",
+    position: "absolute",
+    content: '""',
+    left: "0",
+    right: "0",
+    top: "0",
+    bottom: "0",
+    background: "rgba(200, 200, 255, 0.4)",
+    pointerEvents: "none",
+  },
+  // add margin right to columns except last one
+  "tr td": {
+    paddingRight: "16px",
+  },
+  "tr td:last-child": {
+    paddingRight: "0",
+  },
+  "table tr": {
+    marginBottom: "16px",
+  },
+  "table tr:last-child": {
+    marginBottom: "0px",
+  },
+  "table img": {},
 };
 
 export type StateReportPDFDocumentProps = {

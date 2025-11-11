@@ -58,7 +58,79 @@ export const TextEditorToolbar = () => {
       >
         {null}
       </ToolbarButton>
+      <button onClick={() => editor.chain().focus().setColumns(2).run()}>📊 Insert 2-Column Table</button>
 
+      {/* Font Size Dropdown */}
+      <select
+        onChange={(e) => {
+          const size = e.target.value;
+          if (size) {
+            editor.chain().focus().setFontSize(size).run();
+          } else {
+            editor.chain().focus().unsetFontSize().run();
+          }
+        }}
+        value={editor.getAttributes("textStyle").fontSize || ""}
+        style={{ height: "32px", marginLeft: "8px" }}
+      >
+        <option value="">Default</option>
+        <option value="10pt">10pt</option>
+        <option value="14pt">14pt</option>
+        <option value="16pt">16pt</option>
+        <option value="18pt">18pt</option>
+        <option value="20pt">20pt</option>
+        <option value="24pt">24pt</option>
+        <option value="28pt">28pt</option>
+        <option value="32pt">32pt</option>
+      </select>
+
+      {/* Bullet List */}
+      <ToolbarButton
+        isActive={editor.isActive("bulletList")}
+        size="medium"
+        priority="tertiary no outline"
+        iconId="fr-icon-list-unordered"
+        type="button"
+        nativeButtonProps={{
+          onPointerDown: (event) => event.preventDefault(),
+          onClick: () => editor.chain().focus().toggleBulletList().run(),
+        }}
+      >
+        {null}
+      </ToolbarButton>
+
+      {/* Ordered List */}
+      <ToolbarButton
+        isActive={editor.isActive("orderedList")}
+        size="medium"
+        priority="tertiary no outline"
+        iconId="fr-icon-list-ordered"
+        type="button"
+        nativeButtonProps={{
+          onPointerDown: (event) => event.preventDefault(),
+          onClick: () => editor.chain().focus().toggleOrderedList().run(),
+        }}
+      >
+        {null}
+      </ToolbarButton>
+      {/* Image Insertion */}
+      <ToolbarButton
+        size="medium"
+        priority="tertiary no outline"
+        iconId="fr-icon-image-line"
+        type="button"
+        nativeButtonProps={{
+          onPointerDown: (event) => event.preventDefault(),
+          onClick: () => {
+            const url = prompt("Enter image URL:");
+            if (url) {
+              editor.chain().focus().setImage({ src: url }).run();
+            }
+          },
+        }}
+      >
+        {null}
+      </ToolbarButton>
       <ColorInput />
     </>
   );

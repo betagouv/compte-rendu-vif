@@ -2,12 +2,17 @@ import { SimpleBanner } from "#components/Banner.tsx";
 import { Flex } from "#components/ui/Flex.tsx";
 import { Box, BoxProps, Stack, Typography } from "@mui/material";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { createContext, ReactNode, useContext } from "react";
+import { createContext, ReactNode, useContext, useEffect, useRef, useState } from "react";
 import { StateReport, StateReportAttachment, VisitedSection, VisitedSectionAttachment } from "../db/AppSchema";
 import { attachmentStorage, db, getAttachmentUrl, useDbQuery } from "../db/db";
 import { useQuery } from "@tanstack/react-query";
 import { ConstatPdfContext, useConstatPdfContext } from "../features/state-report/pdf/ConstatPdfContext";
 import { ViewConstatPdf } from "../features/state-report/pdf/ConstatPdf.view";
+import { Button } from "#components/MUIDsfr.tsx";
+import { TextEditorContext, TextEditorContextProvider } from "../features/text-editor/TextEditorContext";
+import { EditConstatPdf } from "../features/state-report/pdf/ConstatPdf.edit";
+import { TextEditorToolbar } from "../features/text-editor/TextEditorToolbar";
+import { getStateReportHtmlString } from "@cr-vif/pdf/constat";
 
 export const Route = createFileRoute("/constat_/$constatId/pdf")({
   component: RouteComponent,
@@ -118,18 +123,35 @@ const ConstatPdf = () => {
     refetchOnWindowFocus: false,
   });
 
-  console.log("sectionsQuery.data", sectionsQuery.data);
+  const sections = sectionsQuery.data;
+  const stateReport = stateReportQuery.data;
+
+  const isSetRef = useRef(false);
+  const [localHtmlString, setLocalHtmlString] = useState<null | string>(null);
+
+  useEffect(() => {
+    if (isSetRef.current) return;
+    if (!sections || !stateReport) return;
+
+    const htmlString = getStateReportHtmlString({ stateReport: stateReport, visitedSections: sections });
+    setLocalHtmlString(htmlString);
+    isSetRef.current = true;
+  }, [sections, stateReport]);
 
   const contextValue = {
     isLoading: stateReportQuery.isLoading || sectionsQuery.isLoading,
-    stateReport: stateReportQuery.data,
-    sections: sectionsQuery.data,
+    stateReport: stateReport,
+    sections: sections,
+    localHtmlString,
+    setLocalHtmlString,
   };
 
   return (
     <Stack>
       <ConstatPdfContext.Provider value={contextValue}>
-        <BannerAndContent mode={mode} />
+        <TextEditorContextProvider>
+          <BannerAndContent mode={mode} />
+        </TextEditorContextProvider>
       </ConstatPdfContext.Provider>
     </Stack>
   );
@@ -138,50 +160,100 @@ const ConstatPdf = () => {
 type PageMode = "view" | "edit" | "send" | "sent";
 
 const BannerAndContent = ({ mode }: { mode: PageMode }) => {
-  const { bannerProps, component } = contentMap[mode];
+  const { bannerProps, Component } = contentMap[mode];
   return (
     <>
       <Banner {...bannerProps} />
-      {component()}
+      <Component />
     </>
   );
 };
 
-const contentMap: Record<PageMode, { bannerProps: BannerProps; component: () => ReactNode }> = {
+const contentMap: Record<PageMode, { bannerProps: BannerProps; Component: () => ReactNode }> = {
   view: {
     bannerProps: {
       content: () => "Prévisualisation du constat",
-      buttons: () => <Box>buttons</Box>,
+      buttons: () => {
+        const navigate = useNavigate();
+        const { constatId } = Route.useParams();
+        return (
+          <Flex>
+            <Button
+              priority="secondary"
+              sx={{ bgcolor: "white" }}
+              type="button"
+              iconId="ri-pencil-line"
+              nativeButtonProps={{
+                onClick: () =>
+                  navigate({ to: "/constat/$constatId/pdf", params: { constatId }, search: { mode: "edit" } }),
+              }}
+            >
+              Modifier
+            </Button>
+          </Flex>
+        );
+      },
     },
-    component: ViewConstatPdf,
+    Component: ViewConstatPdf,
   },
   edit: {
     bannerProps: {
-      content: () => "Édition du constat",
-      buttons: () => <Box>buttons</Box>,
+      content: () => "Modification du constat",
+      buttons: () => {
+        const { setLocalHtmlString } = useConstatPdfContext()!;
+        const { editor } = useContext(TextEditorContext);
+        const navigate = useNavigate();
+        const { constatId } = Route.useParams();
+
+        const onClick = () => {
+          if (!editor) return;
+          const htmlString = editor.getHTML();
+          console.log(editor.getJSON());
+          setLocalHtmlString(htmlString);
+          console.log(htmlString);
+          navigate({ to: "/constat/$constatId/pdf", params: { constatId }, search: { mode: "view" } });
+        };
+
+        return (
+          <Flex gap="8px">
+            <TextEditorToolbar />
+            <Button
+              type="button"
+              sx={{
+                display: { xs: "none", lg: "inline-flex" },
+              }}
+              iconId="ri-save-line"
+              size="medium"
+              onClick={onClick}
+            >
+              Enregistrer
+            </Button>
+          </Flex>
+        );
+      },
     },
-    component: () => <Box>content</Box>,
+    Component: EditConstatPdf,
   },
   send: {
     bannerProps: {
       content: () => "Envoi du constat",
       buttons: () => <Box>buttons</Box>,
     },
-    component: () => <Box>content</Box>,
+    Component: () => <Box>content</Box>,
   },
   sent: {
     bannerProps: {
       content: () => "Constat envoyé",
       buttons: () => <Box>buttons</Box>,
     },
-    component: () => <Box>content</Box>,
+    Component: () => <Box>content</Box>,
   },
 };
 
 type BannerProps = { content: () => ReactNode; buttons: () => ReactNode };
 const Banner = ({ content, buttons }: BannerProps) => {
   return (
-    <SimpleBanner height="80px">
+    <SimpleBanner height="80px" position="sticky" top="0" zIndex="appBar">
       <Flex
         alignItems="center"
         maxWidth="1200px"
