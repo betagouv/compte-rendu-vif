@@ -7,7 +7,7 @@ import { Editor, mergeAttributes, Node, NodeViewWrapper, ReactNodeViewRenderer, 
 import StarterKit from "@tiptap/starter-kit";
 import { PropsWithChildren, createContext } from "react";
 import Image from "@tiptap/extension-image";
-import { Box } from "@mui/material";
+import { Box, BoxProps } from "@mui/material";
 import FontSize from "@tiptap/extension-font-size";
 
 import { Table } from "@tiptap/extension-table";
@@ -22,7 +22,7 @@ export const TextEditorContext = createContext<{ editor: Editor | null }>({
   editor: null,
 });
 
-export const TextEditorContextProvider = ({ children }: PropsWithChildren) => {
+export const TextEditorContextProvider = ({ children, ...props }: PropsWithChildren<BoxProps>) => {
   const editor = useEditor({
     autofocus: false,
     editable: true,
@@ -54,7 +54,7 @@ export const TextEditorContextProvider = ({ children }: PropsWithChildren) => {
         types: ["textStyle"],
       }),
       HardBreak.extend({}),
-      CustomDiv,
+      CustomHTML,
       //   addKeyboardShortcuts() {
       //     return {
       //       // Enter: () => this.editor.commands.(),
@@ -81,6 +81,7 @@ export const TextEditorContextProvider = ({ children }: PropsWithChildren) => {
   return (
     <TextEditorContext.Provider value={{ editor }}>
       <Box
+        {...props}
         className="text-editor-container"
         sx={{
           p: {
@@ -95,39 +96,50 @@ export const TextEditorContextProvider = ({ children }: PropsWithChildren) => {
     </TextEditorContext.Provider>
   );
 };
+export const CustomHTML = Node.create({
+  name: "customHTML",
 
-const CustomDiv = Node.create({
-  name: "customDiv",
   group: "block",
-  content: "block+",
+
+  atom: true,
+
+  addAttributes() {
+    return {
+      html: {
+        default: "",
+        parseHTML: (element) => element.outerHTML,
+      },
+    };
+  },
 
   parseHTML() {
-    console.log("parsing!!");
     return [
       {
-        tag: "tr[data-unbreakable]",
+        tag: "div.column-block",
+        getAttrs: (element) => {
+          return {
+            html: element.outerHTML,
+          };
+        },
       },
     ];
   },
 
-  renderHTML({ HTMLAttributes }) {
-    return ["tr", HTMLAttributes, 0];
+  renderHTML({ node }) {
+    const wrapper = document.createElement("div");
+    wrapper.innerHTML = node.attrs.html;
+    return wrapper.firstChild!;
   },
 
-  addAttributes() {
-    return {
-      "data-unbreakable": {
-        default: null,
-        parseHTML: (element) => element.getAttribute("data-unbreakable"),
-        renderHTML: (attributes) => {
-          if (!attributes["data-unbreakable"]) {
-            return {};
-          }
-          return {
-            "data-unbreakable": attributes["data-unbreakable"],
-          };
-        },
-      },
+  addNodeView() {
+    return ({ node }) => {
+      const dom = document.createElement("div");
+      dom.innerHTML = node.attrs.html;
+
+      return {
+        dom: dom.firstChild!,
+        contentDOM: null,
+      };
     };
   },
 });

@@ -108,6 +108,13 @@ const sent_email = new Table({
   sent_at: column.text,
 });
 
+const state_report_sent_email = new Table({
+  id: column.text,
+  state_report_id: column.text,
+  sent_to: column.text,
+  sent_at: column.text,
+});
+
 const suggested_email = new Table({
   email: column.text,
   service_id: column.text,
@@ -232,6 +239,8 @@ const state_report = new Table({
   preconisations: column.text,
   preconisations_commentaires: column.text,
 
+  attachement_id: column.text,
+
   bilan_quinquennal: column.text,
   service_id: column.text,
   created_by: column.text,
@@ -294,6 +303,7 @@ export const AppSchema = new Schema({
   visited_section_attachment,
   report_attachment,
   state_report_attachment,
+  state_report_sent_email,
   attachments: new AttachmentTable({
     name: "attachments",
   }),
@@ -319,6 +329,7 @@ export type VisitedSection = Database["visited_section"];
 export type VisitedSectionAttachment = Database["visited_section_attachment"];
 export type ReportAttachment = Database["report_attachment"];
 export type StateReportAttachment = Database["state_report_attachment"];
+export type StateReportSentEmail = Database["state_report_sent_email"];
 
 import type { Database as BackendDatabase } from "../../../backend/src/db/db";
 import { AttachmentTable } from "@powersync/attachments";
@@ -352,4 +363,5 @@ const _checkTables: { [K in SharedTables]: IsTableOk<K> } = {
   state_report: true,
   visited_section: true,
   visited_section_attachment: true,
+  state_report_sent_email: true,
 };

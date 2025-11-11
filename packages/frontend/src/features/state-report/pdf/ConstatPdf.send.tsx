@@ -6,13 +6,9 @@ import { Center } from "#components/MUIDsfr.tsx";
 import { Spinner } from "#components/Spinner.tsx";
 import { PdfCanvas } from "../../../routes/pdf.$reportId";
 import { useUser } from "../../../contexts/AuthContext";
-export const ViewConstatPdf = () => {
+export const SendConstatPdf = () => {
   const { localHtmlString } = useConstatPdfContext()!;
   const user = useUser()!;
-  console.log(localHtmlString);
-  // const htmlString =
-  //   stateReport && sections ? getStateReportHtmlString({ stateReport, visitedSections: sections }) : "";
-
   return (
     <Center>
       <Center width="800px" flexDirection="column">
@@ -36,8 +32,6 @@ const View = (props: StateReportPDFDocumentProps) => {
     refetchOnWindowFocus: false,
     enabled: !!props.htmlString,
   });
-
-  console.log(query.error);
 
   if (query.isLoading)
     return (

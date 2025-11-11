@@ -1,6 +1,6 @@
-import { Document, Image, Link, Page, Text, View } from "@react-pdf/renderer";
+import { Document, Link, Page, Text, View } from "@react-pdf/renderer";
 import { Clause_v2, Report, Service, ServiceInstructeurs, StateReport } from "../../frontend/src/db/AppSchema";
-import { MarianneHeader, initFonts, minifyHtml } from "./utils";
+import { MarianneHeader, Pagination, initFonts, minifyHtml } from "./utils";
 import { Html } from "react-pdf-html";
 import { StateReportWithUser } from "../../frontend/src/features/report/ReportList";
 
@@ -10,9 +10,7 @@ import {
   StateReportWithUserAndAttachments,
 } from "../../frontend/src/features/state-report/pdf/ConstatPdfContext";
 
-export const StateReportPDFDocument = ({ service, htmlString, images, pictures }: StateReportPDFDocumentProps) => {
-  console.log(htmlString.includes("data-unbreakable"));
-  console.log(transformHtml(htmlString));
+export const StateReportPDFDocument = ({ service, htmlString, images }: StateReportPDFDocumentProps) => {
   return (
     <Document onRender={console.log}>
       <Page
@@ -44,6 +42,7 @@ export const StateReportPDFDocument = ({ service, htmlString, images, pictures }
             fontSize: "10px",
             paddingLeft: "32px",
             paddingRight: "32px",
+            lineHeight: "1.5",
             whiteSpace: "pre-line",
           }}
         >{`
@@ -118,19 +117,19 @@ export const StateReportPDFDocument = ({ service, htmlString, images, pictures }
               }
 
               .right-texts {
-                text-align: left;
+                text-align: right;
                 margin-top: 13px;
                 display: flex;
-                align-items: flex-start;
+                align-items: flex-end;
                 flex-direction: column;
                 justify-content: flex-start;
-                font-size: 14px;
-                margin-right: 50px;
-                max-width: 250px;
+                font-size: 12px;
+                
               }
 
               .right-texts > div:first-child {
                 font-weight: bold;
+                margin-bottom: 8px;
               }
 
                 
@@ -173,15 +172,17 @@ export const StateReportPDFDocument = ({ service, htmlString, images, pictures }
             </div>
             <hr/>
             <div class="content">
-              ${transformHtml(htmlString)}
+              ${htmlString}
             </div>
             
           </body>
         </html>`}</Html>
+        <Pagination />
         <View
           style={{
-            paddingLeft: 32,
-            paddingRight: 32,
+            marginTop: "32px",
+            paddingLeft: 40,
+            paddingRight: 40,
             fontSize: "8px",
           }}
         >
@@ -209,24 +210,8 @@ export const StateReportPDFDocument = ({ service, htmlString, images, pictures }
     </Document>
   );
 };
-const transformHtml = (htmlString: string) => {
-  return htmlString.replace(
-    /<(div)([^>]*?)\s+data-unbreakable([^>]*)>([\s\S]*?)<\/\1>/g,
-    "<unbreakable><$1$2$3>$4</$1></unbreakable>",
-  );
-};
 const link =
   "https://www.culture.gouv.fr/Thematiques/monuments-sites/Interventions-demarches/Travaux-sur-un-objet-un-immeuble-un-espace/Intervenir-sur-un-immeuble-inscrit";
-
-// #title-section .title-row:first-child {
-//   font-weight: normal;
-//   margin-bottom: 0;
-// }
-
-// #title-section .title-row:last-child {
-//   font-weight: bold;
-//   margin-top: 4px;
-// }
 
 export const getStateReportHtmlString = ({
   stateReport,
@@ -266,9 +251,30 @@ export const getStateReportHtmlString = ({
       <hr />
 
       ${generateImagesTable([
-        planSituationAttachment ? { ...planSituationAttachment, title: "Plan de situation" } : undefined,
-        planEdificeAttachment ? { ...planEdificeAttachment, title: "Plan de l'édifice" } : undefined,
-        vueGenerale ? { ...vueGenerale, title: "Vue générale de l'édifice" } : undefined,
+        planSituationAttachment
+          ? {
+              title: "Plan de situation",
+              url: planSituationAttachment.file!,
+              attachmentId: planSituationAttachment.id,
+              label: planSituationAttachment.label ?? undefined,
+            }
+          : undefined,
+        planEdificeAttachment
+          ? {
+              title: "Plan de l'édifice",
+              url: planEdificeAttachment.file!,
+              attachmentId: planEdificeAttachment.id,
+              label: planEdificeAttachment.label ?? undefined,
+            }
+          : undefined,
+        vueGenerale
+          ? {
+              title: "Vue générale de l'édifice",
+              url: vueGenerale.file!,
+              attachmentId: vueGenerale.id,
+              label: vueGenerale.label ?? undefined,
+            }
+          : undefined,
       ])}
 
             <hr />
@@ -309,8 +315,9 @@ export const getStateReportHtmlString = ({
               ${generateImagesTable(
                 section.attachments.map((attachment) => ({
                   title: "",
-                  file: attachment.file!,
-                  label: attachment.label,
+                  url: attachment.file!,
+                  label: attachment.label ?? undefined,
+                  attachmentId: attachment.id,
                 })),
               )}
           `,
@@ -377,7 +384,9 @@ const uppercaseFirstLetter = (str: string) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
 
-const generateImagesTable = (images: ({ file: string; label?: string | null; title?: string } | undefined)[]) => {
+type Image = { url: string; label?: string; title?: string; attachmentId: string };
+
+const generateImagesTable = (images: (Image | undefined)[]) => {
   const rows = [];
   for (let i = 0; i < images.length; i += 2) {
     const firstImage = images[i];
@@ -392,7 +401,7 @@ const generateImagesTable = (images: ({ file: string; label?: string | null; tit
   return `${rows.join("")}`;
 };
 
-const generateImageCell = (image: { file: string; label?: string | null; title?: string } | undefined) => {
+const generateImageCell = (image: Image | undefined) => {
   if (!image) return '<div class="column"></div>';
   return `<div class="column" >
       ${
@@ -402,7 +411,7 @@ const generateImageCell = (image: { file: string; label?: string | null; title?:
           </p>`
           : "<p></p>"
       }
-      <img src="${image.file}" style="width: 100%; min-height: 200px; margin-bottom: 30px;" />
+      <img src="${image.url}" data-attachment-id="${image.attachmentId}" style="width: 100%; min-height: 200px; margin-bottom: 30px;" />
       <div style="position:relative">
         <div style="position:absolute; bottom:0; left:0; right:0; top:-30px;text-align:center; font-size:8pt; color:gray;">
         ${image.label ? `<span>${image.label}</span>` : ""}
@@ -415,6 +424,7 @@ const generateImageCell = (image: { file: string; label?: string | null; title?:
 export const stateReportExtraCss = {
   ".column-block": {
     width: "100%",
+    display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
     gap: "24px",
@@ -480,7 +490,7 @@ export type StateReportPDFDocumentProps = {
   htmlString: string;
   service: Service;
   images: Images;
-  pictures?: PdfImage[];
+  attachmentsUrlMap?: Record<string, string>;
 };
 
 export type PdfImage = {

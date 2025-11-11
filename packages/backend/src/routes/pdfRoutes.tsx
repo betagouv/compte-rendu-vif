@@ -1,9 +1,10 @@
 import { Type, type FastifyPluginAsyncTypebox } from "@fastify/type-provider-typebox";
 import { Font, renderToBuffer } from "@react-pdf/renderer";
-import { initFonts, ReportPDFDocument } from "@cr-vif/pdf";
+import { ReportPDFDocument } from "@cr-vif/pdf";
+import { StateReportPDFDocument } from "@cr-vif/pdf/constat";
 import { authenticate } from "./authMiddleware";
 import { Database, db } from "../db/db";
-import { sendReportMail } from "../features/mail";
+import { sendReportMail, sendStateReportMail } from "../features/mail";
 import { generatePresignedUrl, getPDFName } from "../services/uploadService";
 import { Service } from "../../../frontend/src/db/AppSchema";
 import path from "path";
@@ -12,6 +13,8 @@ import { v4 } from "uuid";
 import React from "react";
 import { Selectable } from "kysely";
 import { getServices } from "../services/services";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { JSDOM } from "jsdom";
 
 const debug = makeDebug("pdf-plugin");
 
@@ -101,6 +104,127 @@ export const pdfPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
       return buffer.toString("base64");
     },
   );
+
+  fastify.post("/state-report", { schema: stateReportPdfTSchema }, async (request) => {
+    const user = request.user!;
+    const { stateReportId: stateReportId, htmlString } = request.body;
+    const stateReportQuery = await db
+      .selectFrom("state_report")
+      .leftJoin("user", "user.id", "state_report.created_by")
+      .selectAll(["state_report"])
+      .select(["user.name as createdByName"])
+      .where("state_report.id", "=", stateReportId)
+      .limit(1)
+      .execute();
+
+    if (stateReportQuery.length === 0) {
+      return "State report not found";
+    }
+
+    const attachmentQuery = await db
+      .selectFrom("state_report_attachment")
+      .selectAll()
+      .where("state_report_id", "=", stateReportId)
+      .execute();
+
+    const attachmentsWithUrl = await Promise.all(
+      attachmentQuery.map(async (attachment) => {
+        const url = await generatePresignedUrl("attachment/" + attachment.id);
+        return {
+          ...attachment,
+          url,
+        };
+      }),
+    );
+
+    const visitedSections = await db
+      .selectFrom("visited_section")
+      .selectAll()
+      .where("state_report_id", "=", stateReportId)
+      .execute();
+
+    const visitedSectionAttachments = await db
+      .selectFrom("visited_section_attachment")
+      .selectAll()
+      .where(
+        "visited_section_id",
+        "in",
+        visitedSections.map((vs) => vs.id),
+      )
+      .execute();
+
+    const attachments = await Promise.all(
+      visitedSectionAttachments.map(async (attachment) => {
+        // const buffer = await getServices().upload.getAttachment({ filePath: attachment.id });
+        const url = await generatePresignedUrl("attachment/" + attachment.id);
+        return {
+          ...attachment,
+          url,
+        };
+      }),
+    );
+
+    const attachmentsUrlMap = [...attachmentsWithUrl, ...attachments].map((attachment) => ({
+      id: attachment.id,
+      url: attachment.url,
+    }));
+
+    const service = request.user!.service as Service;
+    const pdf = await generateStateReportPdf({ htmlString, service, attachmentsUrlMap });
+
+    const name = stateReportId + "/constat_d_etat_" + Math.round(Date.now() / 1000) + ".pdf";
+    await request.services.upload.uploadAttachment({ buffer: pdf, filePath: name });
+
+    await db.transaction().execute(async (tx) => {
+      await tx
+        .insertInto("state_report_attachment")
+        .values({
+          id: name,
+          attachment_id: name,
+          is_deprecated: false,
+          state_report_id: stateReportId,
+          created_at: new Date().toISOString(),
+          service_id: request.user!.service_id,
+        })
+        .execute();
+
+      await tx.updateTable("state_report").set({ attachment_id: name }).where("id", "=", stateReportId).execute();
+    });
+
+    const userMail = request.user!.email;
+    const recipients = request.body.recipients
+      .replaceAll(";", ",")
+      .split(",")
+      .map((r) => r.trim());
+    if (!recipients.includes(userMail)) recipients.push(userMail);
+
+    const stateReport = stateReportQuery[0]! as Selectable<Database["state_report"]>;
+    await sendStateReportMail({ recipients: recipients.join(","), pdfBuffer: pdf, stateReport: stateReport! });
+
+    for (const recipient of recipients) {
+      const id = v4();
+
+      await db
+        .insertInto("state_report_sent_email")
+        .values({
+          id,
+          state_report_id: stateReportId,
+          sent_to: recipient,
+          sent_at: new Date().toISOString(),
+          service_id: user.service_id,
+        })
+        .execute();
+
+      await db
+        .insertInto("suggested_email")
+        .values({ id, email: recipient, service_id: user.service_id })
+        .execute()
+        .catch(() => {});
+    }
+
+    const url = await generatePresignedUrl("attachment/" + name);
+    return url;
+  });
 };
 
 const generateReportPdf = async ({
@@ -142,8 +266,6 @@ const generateReportPdf = async ({
     })),
   );
 
-  console.log(pdfImages);
-
   return renderToBuffer(
     <ReportPDFDocument
       service={service as Omit<Selectable<Database["service"]>, "visible"> & { visible: any }} // postgres boolean vs sqlite integer
@@ -154,10 +276,89 @@ const generateReportPdf = async ({
   );
 };
 
+const generateStateReportPdf = async ({
+  htmlString,
+  service,
+  attachmentsUrlMap,
+}: {
+  htmlString: string;
+  service: Service;
+  attachmentsUrlMap: { id: string; url: string }[];
+}) => {
+  const fontsPath = path.resolve(process.cwd(), "./public");
+
+  Font.register({
+    family: "Marianne",
+    fonts: [
+      {
+        src: path.join(fontsPath, `fonts/Marianne-Regular.ttf`),
+        fontStyle: "normal",
+        fontWeight: "normal",
+      },
+      { src: path.join(fontsPath, `/fonts/Marianne-Bold.ttf`), fontStyle: "normal", fontWeight: "bold" },
+      {
+        src: path.join(fontsPath, `/fonts/Marianne-RegularItalic.ttf`),
+        fontStyle: "italic",
+        fontWeight: "normal",
+      },
+      {
+        src: path.join(fontsPath, `/fonts/Marianne-BoldItalic.ttf`),
+        fontStyle: "italic",
+        fontWeight: "bold",
+      },
+    ],
+  });
+  return renderToBuffer(
+    <StateReportPDFDocument
+      service={service}
+      htmlString={replaceImageUrls(htmlString, (attachmentId, currentUrl, img) => {
+        const newUrl = attachmentsUrlMap.find((att) => att.id === attachmentId)?.url;
+        if (newUrl) {
+          return newUrl;
+        }
+        return currentUrl;
+      })}
+      images={{ marianne: "./public/marianne.png", marianneFooter: "./public/marianne_footer.png" }}
+    />,
+  );
+};
+
+function replaceImageUrls(
+  htmlString: string,
+  customUrlFunction: (attachmentId: string, currentUrl: string, img: HTMLImageElement) => string,
+) {
+  const dom = new JSDOM(htmlString);
+  const doc = dom.window.document;
+
+  const images = doc.querySelectorAll("img[data-attachment-id]");
+
+  images.forEach((img) => {
+    const attachmentId = img.getAttribute("data-attachment-id");
+    const currentSrc = img.getAttribute("src");
+
+    const newUrl = customUrlFunction(attachmentId!, currentSrc!, img as HTMLImageElement);
+
+    if (newUrl) {
+      img.setAttribute("src", newUrl);
+    }
+  });
+
+  return doc.body.innerHTML;
+}
+
 export const reportPdfTSchema = {
   body: Type.Object({
     htmlString: Type.String(),
     reportId: Type.String(),
+    recipients: Type.String(),
+  }),
+  response: { 200: Type.String() },
+};
+
+export const stateReportPdfTSchema = {
+  body: Type.Object({
+    htmlString: Type.String(),
+    stateReportId: Type.String(),
     recipients: Type.String(),
   }),
   response: { 200: Type.String() },

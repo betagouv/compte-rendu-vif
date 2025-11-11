@@ -116,4 +116,5 @@ const emptyStateReport: StateReport = {
   preconisations_commentaires: null,
   bilan_quinquennal: null,
   visite_partielle_details: null,
+  attachement_id: null,
 };

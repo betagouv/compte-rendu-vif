@@ -42,7 +42,7 @@ function RouteComponent() {
 const WithStateReport = () => {
   const { constatId } = Route.useParams();
   const reportQuery = useDbQuery(db.selectFrom("state_report").where("id", "=", constatId).selectAll());
-
+  console.log(reportQuery.data);
   if (reportQuery.isLoading) {
     return (
       <Center mt="100px" height="100%">

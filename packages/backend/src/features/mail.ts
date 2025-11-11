@@ -15,6 +15,39 @@ const transporter = createTransport({
   },
 });
 
+export const sendStateReportMail = ({
+  recipients,
+  pdfBuffer,
+  stateReport,
+}: {
+  recipients: string;
+  pdfBuffer: Buffer;
+  stateReport: Selectable<Database["state_report"]>;
+}) => {
+  sentry?.captureMessage("Sending state report mail", { extra: { recipients, stateReport } });
+
+  return transporter.sendMail({
+    from: ENV.EMAIL_EMITTER,
+    to: recipients,
+    subject: "Constat d'état " + (stateReport?.titre_edifice ? ` : ${stateReport.titre_edifice}` : ""),
+    text: `Bonjour,
+Vous trouverez ci-joint le constat d'état suite à la visite du ${new Date(
+      stateReport?.date_visite ?? "",
+    ).toLocaleDateString("fr-FR", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    })}.
+Cordialement`,
+    attachments: [
+      {
+        filename: getStateReportMailName(stateReport),
+        content: pdfBuffer,
+      },
+    ],
+  });
+};
+
 export const sendReportMail = ({
   recipients,
   pdfBuffer,
@@ -52,3 +85,19 @@ export const sendPasswordResetMail = ({ email, temporaryLink }: { email: string;
     text: `Voici le lien de réinitialisation de votre mot de passe : ${ENV.FRONTEND_URL}/reset-password/${temporaryLink}`,
   });
 };
+
+const getStateReportMailName = (stateReport: Selectable<Database["state_report"]>) => {
+  return `constat-d-etat-${cleanString(stateReport.titre_edifice || "")}.pdf`;
+};
+
+function cleanString(str: string): string {
+  return str
+    .normalize("NFD") // Decompose accented characters
+    .replace(/[\u0300-\u036f]/g, "") // Remove accent marks
+    .toLowerCase() // Convert to lowercase
+    .trim() // Remove leading/trailing spaces
+    .replace(/\s+/g, "-") // Replace spaces with hyphens
+    .replace(/[^\w-]/g, "") // Remove special characters (keep letters, numbers, hyphens)
+    .replace(/-+/g, "-") // Replace multiple hyphens with single hyphen
+    .replace(/^-+|-+$/g, ""); // Remove leading/trailing hyphens
+}

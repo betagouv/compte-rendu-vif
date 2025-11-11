@@ -84,7 +84,7 @@ export const EmailInput = ({
           sx={{
             mb: "1.5rem",
             "& > input": {
-              pr: single ? "0" : "90px",
+              pr: single ? "0" : "100px",
             },
           }}
           label={label}

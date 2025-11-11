@@ -232,6 +232,24 @@ export const sentEmail = pgTable(
   ],
 );
 
+export const stateReportSentEmail = pgTable(
+  "state_report_sent_email",
+  {
+    id: text().primaryKey().notNull(),
+    stateReportId: text("state_report_id"),
+    sentTo: text("sent_to").notNull(),
+    sentAt: timestamp("sent_at", { mode: "string" }).notNull(),
+    serviceId: text("service_id").notNull(),
+  },
+  (table) => [
+    foreignKey({
+      columns: [table.stateReportId],
+      foreignColumns: [stateReport.id],
+      name: "state_report_sent_email_state_report_id_fkey",
+    }),
+  ],
+);
+
 export const suggestedEmail = pgTable(
   "suggested_email",
   {
@@ -514,6 +532,8 @@ export const stateReport = pgTable(
     vueGenerale: text("vue_generale"),
     preconisations: text(),
     preconisations_commentaires: text("preconisations_commentaires"),
+
+    attachmentId: text("attachment_id"),
 
     serviceId: text("service_id").notNull(),
     createdBy: text("created_by").notNull(),

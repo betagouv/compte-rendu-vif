@@ -1,6 +1,6 @@
 import { SimpleBanner } from "#components/Banner.tsx";
 import { Flex } from "#components/ui/Flex.tsx";
-import { Box, BoxProps, Stack, Typography } from "@mui/material";
+import { Box, BoxProps, Stack, styled, Typography } from "@mui/material";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { createContext, ReactNode, useContext, useEffect, useRef, useState } from "react";
 import { StateReport, StateReportAttachment, VisitedSection, VisitedSectionAttachment } from "../db/AppSchema";
@@ -13,6 +13,9 @@ import { TextEditorContext, TextEditorContextProvider } from "../features/text-e
 import { EditConstatPdf } from "../features/state-report/pdf/ConstatPdf.edit";
 import { TextEditorToolbar } from "../features/text-editor/TextEditorToolbar";
 import { getStateReportHtmlString } from "@cr-vif/pdf/constat";
+import { SendConstatPdf } from "../features/state-report/pdf/ConstatPdf.send";
+import { EmailInput } from "#components/EmailInput.tsx";
+import { SentConstatPdf } from "../features/state-report/pdf/ConstatPdf.sent";
 
 export const Route = createFileRoute("/constat_/$constatId/pdf")({
   component: RouteComponent,
@@ -25,6 +28,7 @@ export const Route = createFileRoute("/constat_/$constatId/pdf")({
     } as { mode: PageMode };
   },
 });
+const noop = () => null;
 
 function RouteComponent() {
   return <ConstatPdf />;
@@ -33,6 +37,7 @@ function RouteComponent() {
 const ConstatPdf = () => {
   const { constatId } = Route.useParams();
   const { mode } = Route.useSearch();
+  const [recipients, setRecipients] = useState<string[]>([]);
 
   const stateReportQuery = useQuery({
     queryKey: ["state-report-with-user-and-attachments", constatId],
@@ -73,18 +78,6 @@ const ConstatPdf = () => {
     },
     refetchOnWindowFocus: false,
   });
-
-  useDbQuery(
-    db
-      .selectFrom("state_report")
-      .leftJoin("user", "user.id", "state_report.created_by")
-      .selectAll(["state_report"])
-      .select(["user.name as createdByName"])
-      .where("state_report.id", "=", constatId)
-      .limit(1),
-    [constatId],
-    { runQueryOnce: true },
-  );
 
   const sectionsQuery = useQuery({
     queryKey: ["visited-sections", constatId],
@@ -144,12 +137,14 @@ const ConstatPdf = () => {
     sections: sections,
     localHtmlString,
     setLocalHtmlString,
+    recipients,
+    setRecipients,
   };
 
   return (
-    <Stack>
+    <Stack height="100%">
       <ConstatPdfContext.Provider value={contextValue}>
-        <TextEditorContextProvider>
+        <TextEditorContextProvider height="100%">
           <BannerAndContent mode={mode} />
         </TextEditorContextProvider>
       </ConstatPdfContext.Provider>
@@ -177,7 +172,7 @@ const contentMap: Record<PageMode, { bannerProps: BannerProps; Component: () => 
         const navigate = useNavigate();
         const { constatId } = Route.useParams();
         return (
-          <Flex>
+          <Flex gap="8px">
             <Button
               priority="secondary"
               sx={{ bgcolor: "white" }}
@@ -189,6 +184,18 @@ const contentMap: Record<PageMode, { bannerProps: BannerProps; Component: () => 
               }}
             >
               Modifier
+            </Button>
+            <Button
+              type="button"
+              onClick={() =>
+                navigate({
+                  to: "/constat/$constatId/pdf",
+                  params: { constatId },
+                  search: { mode: "send" },
+                })
+              }
+            >
+              Continuer
             </Button>
           </Flex>
         );
@@ -208,7 +215,6 @@ const contentMap: Record<PageMode, { bannerProps: BannerProps; Component: () => 
         const onClick = () => {
           if (!editor) return;
           const htmlString = editor.getHTML();
-          console.log(editor.getJSON());
           setLocalHtmlString(htmlString);
           console.log(htmlString);
           navigate({ to: "/constat/$constatId/pdf", params: { constatId }, search: { mode: "view" } });
@@ -236,24 +242,64 @@ const contentMap: Record<PageMode, { bannerProps: BannerProps; Component: () => 
   },
   send: {
     bannerProps: {
-      content: () => "Envoi du constat",
-      buttons: () => <Box>buttons</Box>,
+      content: () => {
+        const { recipients, setRecipients } = useConstatPdfContext()!;
+        const navigate = useNavigate();
+        const { constatId } = Route.useParams();
+        return (
+          <Flex
+            flexDirection={{ xs: "column", lg: "row" }}
+            width="100%"
+            alignItems={{ xs: "center", lg: "flex-start" }}
+            gap="16px"
+            py={{ xs: "8px", lg: "24px" }}
+          >
+            <Typography pt={{ xs: 0, lg: "8px" }} mr="16px" fontWeight="bold" alignSelf="flex-start">
+              Courriels
+            </Typography>
+            <Box flex="1" width="100%" pr="16px" ml={{ xs: "-48px", lg: "0" }}>
+              <EmailInput value={recipients} onValueChange={setRecipients} />
+            </Box>
+
+            <Box mr="100px" ml="8px">
+              <Button
+                type="button"
+                iconId="ri-send-plane-fill"
+                onClick={() =>
+                  navigate({
+                    to: "/constat/$constatId/pdf",
+                    params: { constatId },
+                    search: { mode: "sent" },
+                  })
+                }
+              >
+                Envoyer
+              </Button>
+            </Box>
+          </Flex>
+        );
+      },
+      buttons: () => null,
+      alignTop: true,
     },
-    Component: () => <Box>content</Box>,
+    Component: SendConstatPdf,
   },
   sent: {
     bannerProps: {
-      content: () => "Constat envoyé",
-      buttons: () => <Box>buttons</Box>,
+      content: noop,
+      buttons: noop,
     },
-    Component: () => <Box>content</Box>,
+    Component: SentConstatPdf,
   },
 };
 
-type BannerProps = { content: () => ReactNode; buttons: () => ReactNode };
-const Banner = ({ content, buttons }: BannerProps) => {
+type BannerProps = { content: () => ReactNode; buttons: () => ReactNode; alignTop?: boolean };
+const Banner = ({ content, buttons, alignTop }: BannerProps) => {
+  if (content === noop && buttons === noop) {
+    return null;
+  }
   return (
-    <SimpleBanner height="80px" position="sticky" top="0" zIndex="appBar">
+    <SimpleBanner minHeight="80px" position="sticky" top="0" zIndex="appBar" py={{ xs: "8px", lg: "0" }}>
       <Flex
         alignItems="center"
         maxWidth="1200px"
@@ -261,8 +307,10 @@ const Banner = ({ content, buttons }: BannerProps) => {
         flexDirection={{ xs: "column", lg: "row" }}
         gap={{ xs: "8px", lg: "0" }}
       >
-        <Flex justifyContent="flex-start" width="100%" pl="8px">
-          <GoBackButton />
+        <Flex justifyContent="flex-start" alignItems={alignTop ? "flex-start" : "center"} width="100%" pl="8px">
+          <Box mt={alignTop ? { xs: "6px", lg: "22px" } : "0"} pl={alignTop ? { xs: "16px", lg: "0" } : "0"}>
+            <GoBackButton />
+          </Box>
           <Box ml={{ xs: "8px", lg: "50px" }} flex="1" fontWeight="bold">
             {content()}
           </Box>
