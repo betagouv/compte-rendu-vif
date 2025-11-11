@@ -42,6 +42,8 @@ export const SentConstatPdf = () => {
     hasSentRef.current = true;
   }, [localHtmlString, recipients]);
 
+  console.log(savePdfMutation);
+
   return (
     <Center height="100%">
       {savePdfMutation.isPending ? <Spinner /> : null}

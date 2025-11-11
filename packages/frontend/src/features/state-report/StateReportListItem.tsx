@@ -30,7 +30,7 @@ export const StateReportListItem = ({
   const title = report.titre_edifice;
   const whereText = report.commune ? `à ${report.commune}` : null;
 
-  const isDraft = true;
+  const isDraft = !report.attachment_id;
 
   return (
     <Flex className="report-list-item" position="relative" flexDirection="column" width="100%">
@@ -72,7 +72,7 @@ export const StateReportListItem = ({
             {whereText}
           </Box>
           <Box mt="8px">
-            <ReportBadge status={"draft"} />
+            <ReportBadge status={isDraft ? "draft" : "published"} />
           </Box>
         </Box>
       </Link>

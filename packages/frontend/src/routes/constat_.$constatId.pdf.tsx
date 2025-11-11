@@ -298,6 +298,9 @@ const Banner = ({ content, buttons, alignTop }: BannerProps) => {
   if (content === noop && buttons === noop) {
     return null;
   }
+
+  const Content = content;
+  const Buttons = buttons;
   return (
     <SimpleBanner minHeight="80px" position="sticky" top="0" zIndex="appBar" py={{ xs: "8px", lg: "0" }}>
       <Flex
@@ -312,10 +315,12 @@ const Banner = ({ content, buttons, alignTop }: BannerProps) => {
             <GoBackButton />
           </Box>
           <Box ml={{ xs: "8px", lg: "50px" }} flex="1" fontWeight="bold">
-            {content()}
+            <Content />
           </Box>
         </Flex>
-        <Box>{buttons()}</Box>
+        <Box>
+          <Buttons />
+        </Box>
       </Flex>
     </SimpleBanner>
   );

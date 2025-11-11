@@ -239,7 +239,7 @@ const state_report = new Table({
   preconisations: column.text,
   preconisations_commentaires: column.text,
 
-  attachement_id: column.text,
+  attachment_id: column.text,
 
   bilan_quinquennal: column.text,
   service_id: column.text,
