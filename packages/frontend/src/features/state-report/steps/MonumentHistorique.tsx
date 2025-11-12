@@ -10,6 +10,8 @@ import { IconLink } from "#components/ui/IconLink.tsx";
 export const MonumentHistorique = () => {
   const form = useStateReportFormContext();
   const value = useWatch({ control: form.control, name: "reference_pop" });
+
+  console.log(`https://pop.culture.gouv.fr/notice/merimee/${value}`);
   return (
     <Flex flexDirection="column" height="100%">
       <Flex
@@ -48,16 +50,20 @@ export const MonumentHistorique = () => {
           right="calc(-100vw + 100%)"
           bottom="0"
         >
-          <IconLink
+          <a
             href={`https://pop.culture.gouv.fr/notice/merimee/${value}`}
             title="En savoir plus sur l'édifice - Nouvelle fenêtre"
             target="_blank"
             rel="noopener external"
-            icon="fr-icon-external-link-line"
-            sx={{ ml: "16px" }}
+            style={{
+              marginLeft: "16px",
+              color: fr.colors.decisions.text.actionHigh.blueFrance.default,
+              textDecoration: "underline",
+              textUnderlineOffset: "5px",
+            }}
           >
             En savoir plus sur l'édifice
-          </IconLink>
+          </a>
         </Box>
       </Box>
     </Flex>
