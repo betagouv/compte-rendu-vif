@@ -21,6 +21,8 @@ export const WithReferencePop = () => {
   const referencePop = useWatch({ control: form.control, name: "reference_pop" });
   const immeubleQuery = useDbQuery(db.selectFrom("pop_immeubles").selectAll().where("id", "=", referencePop));
 
+  const { step } = routeApi.useSearch();
+
   const hasReferencePop = !!referencePop;
   if (!hasReferencePop) return null;
 
@@ -42,7 +44,7 @@ export const WithReferencePop = () => {
               flex="1"
             >
               <ContentSwitch />
-              {isDesktop ? null : <ButtonsSwitch />}
+              {isDesktop || step === "informations" ? null : <ButtonsSwitch />}
             </Box>
           </Flex>
         )}
@@ -67,7 +69,7 @@ const ContentSwitch = () => {
   return <>{content[step]}</>;
 };
 
-const ButtonsSwitch = () => {
+export const ButtonsSwitch = () => {
   const { step } = routeApi.useSearch();
   const navigate = routeApi.useNavigate();
 
@@ -79,6 +81,12 @@ const ButtonsSwitch = () => {
         iconPosition="right"
         iconId="ri-arrow-right-line"
         size="large"
+        sx={{
+          width: "100%",
+          mx: "16px",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
         nativeButtonProps={{
           onClick: () => navigate({ search: { step: "contexte-visite" } }),
         }}
@@ -87,7 +95,7 @@ const ButtonsSwitch = () => {
       </Button>
     ),
     "contexte-visite": (
-      <Stack gap="8px">
+      <Stack gap="8px" width="100%" mx="16px">
         <Button
           iconPosition="left"
           iconId="ri-arrow-left-line"
@@ -96,7 +104,11 @@ const ButtonsSwitch = () => {
           nativeButtonProps={{
             onClick: () => navigate({ search: { step: "informations" } }),
           }}
-          sx={{ width: "100%", justifyContent: "center" }}
+          sx={{
+            width: "100%",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
         >
           Information du MH
         </Button>
@@ -107,14 +119,18 @@ const ButtonsSwitch = () => {
           nativeButtonProps={{
             onClick: () => navigate({ search: { step: "constat-general" } }),
           }}
-          sx={{ width: "100%", justifyContent: "center" }}
+          sx={{
+            width: "100%",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
         >
           Constat général
         </Button>
       </Stack>
     ),
     "constat-general": (
-      <Stack gap="8px">
+      <Stack gap="8px" width="100%" mx="16px">
         <Button
           iconPosition="left"
           iconId="ri-arrow-left-line"
@@ -123,7 +139,11 @@ const ButtonsSwitch = () => {
           nativeButtonProps={{
             onClick: () => navigate({ search: { step: "contexte-visite" } }),
           }}
-          sx={{ width: "100%", justifyContent: "center" }}
+          sx={{
+            width: "100%",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
         >
           Contexte de la visite
         </Button>
@@ -134,14 +154,18 @@ const ButtonsSwitch = () => {
           nativeButtonProps={{
             onClick: () => navigate({ search: { step: "constat-detaille" } }),
           }}
-          sx={{ width: "100%", justifyContent: "center" }}
+          sx={{
+            width: "100%",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
         >
           Constat détaillé
         </Button>
       </Stack>
     ),
     "constat-detaille": (
-      <Stack gap="8px">
+      <Stack gap="8px" width="100%" mx="16px">
         <Button
           iconPosition="left"
           iconId="ri-arrow-left-line"
@@ -150,7 +174,11 @@ const ButtonsSwitch = () => {
           nativeButtonProps={{
             onClick: () => navigate({ search: { step: "constat-general" } }),
           }}
-          sx={{ width: "100%", justifyContent: "center" }}
+          sx={{
+            width: "100%",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
         >
           Constat général
         </Button>
@@ -165,9 +193,14 @@ const ButtonsSwitch = () => {
                 params: {
                   constatId,
                 },
+                search: { mode: "view" },
               }),
           }}
-          sx={{ width: "100%", justifyContent: "center" }}
+          sx={{
+            width: "100%",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
         >
           Créer le constat
         </Button>

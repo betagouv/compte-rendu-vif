@@ -198,7 +198,7 @@ export const PictureThumbnail = ({
 
   const finalStatus = idbStatusQuery.data?.[0]?.state ?? AttachmentState.QUEUED_UPLOAD;
   return (
-    <Stack minWidth="150px" maxWidth="250px" gap="4px">
+    <Stack minWidth="150px" maxWidth={{ xs: "unset", lg: "250px" }} width={{ xs: "100%", lg: "unset" }} gap="4px">
       <ReportStatus status={finalStatus as any} />
       <Flex flexDirection="column" justifyContent="flex-end" width="100%">
         <Box ref={canvasRef} component="canvas" flex="1"></Box>

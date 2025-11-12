@@ -6,12 +6,14 @@ import { fr } from "@codegouvfr/react-dsfr";
 import { Button } from "#components/MUIDsfr.tsx";
 import { PropsWithChildren } from "react";
 import { IconLink } from "#components/ui/IconLink.tsx";
+import { ButtonsSwitch } from "../WithReferencePop";
+import { useIsDesktop } from "../../../hooks/useIsDesktop";
 
 export const MonumentHistorique = () => {
   const form = useStateReportFormContext();
   const value = useWatch({ control: form.control, name: "reference_pop" });
+  const isDesktop = useIsDesktop();
 
-  console.log(`https://pop.culture.gouv.fr/notice/merimee/${value}`);
   return (
     <Flex flexDirection="column" height="100%">
       <Flex
@@ -39,6 +41,8 @@ export const MonumentHistorique = () => {
           <EditableField label="Description de l'édifice" field="description" />
         </ContentBlock>
       </Flex>
+      {isDesktop ? null : <ButtonsSwitch />}
+
       <Box position="relative" height="60px" width="100%" mt={{ xs: "16px", lg: "32px" }}>
         <Box
           height="60px"
@@ -50,20 +54,21 @@ export const MonumentHistorique = () => {
           right="calc(-100vw + 100%)"
           bottom="0"
         >
-          <a
+          <Box
+            component="a"
             href={`https://pop.culture.gouv.fr/notice/merimee/${value}`}
             title="En savoir plus sur l'édifice - Nouvelle fenêtre"
             target="_blank"
             rel="noopener external"
-            style={{
-              marginLeft: "16px",
+            sx={{
+              marginLeft: { lg: "64px", xs: "16px" },
               color: fr.colors.decisions.text.actionHigh.blueFrance.default,
               textDecoration: "underline",
               textUnderlineOffset: "5px",
             }}
           >
             En savoir plus sur l'édifice
-          </a>
+          </Box>
         </Box>
       </Box>
     </Flex>

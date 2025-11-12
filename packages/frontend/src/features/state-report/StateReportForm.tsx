@@ -30,10 +30,10 @@ export const StateReportForm = ({ report }: { report: StateReport }) => {
       <FormProvider {...form}>
         <SyncForm report={report} />
         <Flex
+          component="form"
           alignItems="center"
           bgcolor={bgColor}
           flexDirection="column"
-          component="form"
           pt="32px"
           pb="32px"
           width="100%"

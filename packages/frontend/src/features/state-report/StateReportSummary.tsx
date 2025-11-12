@@ -12,16 +12,21 @@ export const StateReportSummary = () => {
   const { step } = routeApi.useSearch();
   if (isDesktop) return <SummaryContent />;
 
-  const currentStepString = {
-    informations: "Informations",
-    "contexte-visite": "Contexte de la visite",
-    "constat-general": "Constat général",
-    "constat-detaille": "Constat détaillé",
-    documents: "Documents",
-  }[step];
+  const currentStepString = stepsLabel[step];
+
   return (
     <Accordion
-      label={<Flex>{currentStepString}</Flex>}
+      label={
+        <Flex
+          alignItems="center"
+          className="fr-icon fr-icon-menu-2-fill fr-icon--sm"
+          sx={{
+            "::before": { mr: "8px" },
+          }}
+        >
+          {currentStepString}
+        </Flex>
+      }
       sx={{
         ".fr-collapse--expanded": { paddingTop: "0", px: { xs: "0", lg: "16px" }, pb: { xs: 0, lg: undefined } },
         borderBottom: "1px solid",
@@ -30,6 +35,14 @@ export const StateReportSummary = () => {
       <SummaryContent />
     </Accordion>
   );
+};
+
+const stepsLabel = {
+  informations: "Informations",
+  "contexte-visite": "Contexte de la visite",
+  "constat-general": "Constat général",
+  "constat-detaille": "Constat détaillé",
+  documents: "Documents",
 };
 
 const routeApi = getRouteApi("/constat/$constatId");

@@ -64,7 +64,7 @@ const EtatGeneralImages = () => {
   };
 
   return (
-    <Flex width="100%">
+    <Flex width="100%" flexWrap="wrap" gap={{ xs: "16px", lg: "0" }}>
       <Box flex="1">
         <Typography>Plan de situation</Typography>
 
@@ -93,8 +93,8 @@ const EtatGeneralImages = () => {
           onClose={onClose}
         />
       </Box>
-      <Box flex="1" mx="16px">
-        <Typography>Vues générals de l'édifice</Typography>
+      <Box flex="1" mx={{ xs: "0", lg: "16px" }}>
+        <Typography>Vues générales de l'édifice</Typography>
 
         <SingleUploadImageWithPreview
           constatId={constatId}

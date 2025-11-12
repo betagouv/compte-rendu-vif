@@ -10,7 +10,7 @@ const LoginPage = () => {
     <Center mt="20px" mb="80px">
       <Flex flexDirection="column" width="484px" p="16px">
         <Typography variant="h4" mb="1.5rem">
-          Connexion à Compte-rendu VIF
+          Connexion à Patrimoine embarqué
         </Typography>
         <LoginForm />
       </Flex>

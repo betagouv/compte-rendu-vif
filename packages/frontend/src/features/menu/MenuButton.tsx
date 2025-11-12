@@ -140,22 +140,6 @@ export const MenuButton = () => {
           </Flex>
         ) : (
           <Center zIndex="1150" position="absolute" top="0" right="24px" height="100%">
-            {isHome ? (
-              <Button
-                sx={{
-                  display: { lg: "none" },
-                  "::before": { width: "24px", height: "24px" },
-                }}
-                iconId="fr-icon-search-line"
-                priority="tertiary no outline"
-                nativeButtonProps={{
-                  onClick: () => setIsSearchOpen(true),
-                  type: "button",
-                }}
-              >
-                {null}
-              </Button>
-            ) : null}
             <Button
               sx={{
                 "::before": { width: "24px", height: "24px" },

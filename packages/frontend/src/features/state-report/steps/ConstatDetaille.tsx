@@ -132,7 +132,7 @@ const SectionModal = ({
       open={selectedSection !== null}
       sx={{
         ".MuiPaper-root": {
-          overflowY: "visible",
+          overflowY: "auto",
           maxHeight: { xs: "unset", lg: "calc(100% - 64px)" },
           maxWidth: { xs: "unset", lg: "576px" },
           width: { xs: "100%", lg: "926px" },

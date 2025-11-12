@@ -149,7 +149,12 @@ export const ImmeubleAutocomplete = () => {
               Nom ou référence du monument
             </label>
             <Box ref={params.InputProps.ref} mt="8px">
-              <input {...params.inputProps} className={cx(params.inputProps.className, "fr-input")} type={"text"} />
+              <input
+                {...params.inputProps}
+                className={cx(params.inputProps.className, "fr-input")}
+                style={{ backgroundColor: "white" }}
+                type={"text"}
+              />
             </Box>
           </div>
         )}

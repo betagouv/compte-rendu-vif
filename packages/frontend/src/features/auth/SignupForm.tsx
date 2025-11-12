@@ -127,7 +127,7 @@ export const SignupForm = () => {
 
       <h5>Vous avez déjà un compte ?</h5>
 
-      <FullWidthButton priority="secondary" linkProps={{ to: "/connection" }}>
+      <FullWidthButton priority="secondary" linkProps={{ to: "/connection" }} style={{ marginBottom: "32px" }}>
         Se connecter
       </FullWidthButton>
     </Flex>
