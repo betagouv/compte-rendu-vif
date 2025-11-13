@@ -6,16 +6,21 @@ import { getRouteApi, useNavigate } from "@tanstack/react-router";
 import { StateReportStep } from "./utils";
 import { SideMenu } from "@codegouvfr/react-dsfr/SideMenu";
 import { Flex } from "#components/ui/Flex.tsx";
+import { useState } from "react";
 
 export const StateReportSummary = () => {
   const isDesktop = useIsDesktop();
   const { step } = routeApi.useSearch();
+  const [expanded, setExpanded] = useState<boolean>(false);
+
   if (isDesktop) return <SummaryContent />;
 
   const currentStepString = stepsLabel[step];
 
   return (
     <Accordion
+      expanded={expanded}
+      onExpandedChange={(newExpanded) => setExpanded(newExpanded)}
       label={
         <Flex
           alignItems="center"
@@ -32,7 +37,7 @@ export const StateReportSummary = () => {
         borderBottom: "1px solid",
       }}
     >
-      <SummaryContent />
+      <SummaryContent onClick={() => setExpanded(false)} />
     </Accordion>
   );
 };
@@ -46,13 +51,14 @@ const stepsLabel = {
 };
 
 const routeApi = getRouteApi("/constat/$constatId");
-const SummaryContent = () => {
+const SummaryContent = ({ onClick }: { onClick?: () => void }) => {
   const navigate = useNavigate();
   const { constatId } = routeApi.useParams();
   const { step } = routeApi.useSearch();
 
   const navigateToStep = (step: StateReportStep) => {
     navigate({ to: "/constat/$constatId", params: { constatId }, search: { step } });
+    onClick?.();
   };
 
   const activeProps = {
