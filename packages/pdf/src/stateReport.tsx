@@ -329,6 +329,7 @@ export const getStateReportHtmlString = ({
 
       <div id="preconisations">
         <h2>Préconisations générales</h2>
+         -- TODO: à revoir (phrase d'intro générique + liste des préconisations cochées avec commentaires entre parenthèses
         <b>
           Suite à la visite, il est préconisé d'entreprendre ${preconisationsMap[stateReport.preconisations as keyof typeof preconisationsMap] || "N/A"}.
         </b>

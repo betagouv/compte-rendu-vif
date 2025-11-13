@@ -37,7 +37,7 @@ const mapping: Partial<Record<keyof PopImmeuble, keyof StateReportFormType>> = {
 
 export const ImmeubleAutocomplete = () => {
   const [isChanging, setIsChanging] = useState(false);
-
+  const [inputValue, setInputValue] = useState("");
   const form = useStateReportFormContext();
   const [value] = useWatch({ control: form.control, name: ["reference_pop"] });
   const { cx } = useStyles();
@@ -82,20 +82,35 @@ export const ImmeubleAutocomplete = () => {
     );
 
   return (
-    <>
+    <Box
+      sx={{
+        ".immeubles-autocomplete-no-options": {
+          padding: "0 !important",
+        },
+      }}
+    >
       <Autocomplete
-        disablePortal
+        classes={{
+          popper: "immeubles-autocomplete-popper",
+          noOptions: "immeubles-autocomplete-no-options",
+        }}
+        open
         clearOnBlur={false}
+        disablePortal
         options={rawItems}
         getOptionLabel={(item) => item.titre_editorial_de_la_notice || ""}
         getOptionKey={(item) => item.reference!}
         value={value ? rawItems.find((item) => item.id == value) : null}
         // TODO: use coordinates to sort results
         filterOptions={(x, state) =>
-          state.inputValue ? searchEngine.search(state.inputValue).map((result) => result.item) : [...x.slice(0, 50)]
+          state.inputValue ? searchEngine.search(state.inputValue).map((result) => result.item) : []
         }
         onChange={(_e, item) => {
           setValue(item);
+        }}
+        inputValue={inputValue}
+        onInputChange={(_e, newInputValue) => {
+          setInputValue(newInputValue);
         }}
         renderOption={({ key, ...props }, option, state, _ownerState) =>
           option === null ? (
@@ -158,8 +173,10 @@ export const ImmeubleAutocomplete = () => {
             </Box>
           </div>
         )}
-        noOptionsText={<Box>{immeubleQuery.isLoading ? <Spinner size={20} /> : "Aucun résultat"}</Box>}
+        noOptionsText={
+          !value && inputValue ? <Box>{immeubleQuery.isLoading ? <Spinner size={20} /> : "Aucun résultat"}</Box> : null
+        }
       />
-    </>
+    </Box>
   );
 };

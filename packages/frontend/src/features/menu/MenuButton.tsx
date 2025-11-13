@@ -16,24 +16,18 @@ import { menuActor, MenuStates } from "./menuMachine";
 import { ModalCloseButton } from "./MenuTitle";
 
 export const MenuButton = () => {
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const logout = useLogout();
   const menu = useSelector(menuActor, (state) => state.value);
   const isDesktop = useIsDesktop();
   const isXL = useIsXL();
 
-  const isPopoverOpen = menu === "main" && isDesktop;
-
   const location = useLocation();
-  const isHome = location.pathname === "/";
 
   return (
     <>
       <Flex alignItems={{ xs: "unset", lg: "center" }} height="100%">
         {isDesktop ? (
           <Flex alignItems="center">
-            {/* <Status className={css({ display: "flex", alignItems: "center", fontSize: "10px" })} /> */}
-
             <Button
               sx={{
                 ml: "16px",
@@ -157,7 +151,6 @@ export const MenuButton = () => {
           </Center>
         )}
       </Flex>
-      <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
     </>
   );
 };
