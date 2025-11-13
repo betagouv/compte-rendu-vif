@@ -4,10 +4,14 @@ import { StateReportFormType, useStateReportFormContext } from "../utils";
 import { useWatch } from "react-hook-form";
 import { fr } from "@codegouvfr/react-dsfr";
 import { Button } from "#components/MUIDsfr.tsx";
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, useState } from "react";
 import { IconLink } from "#components/ui/IconLink.tsx";
 import { ButtonsSwitch } from "../WithReferencePop";
 import { useIsDesktop } from "../../../hooks/useIsDesktop";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "../../../api";
+import { db, useDbQuery } from "../../../db/db";
+import { PopObjet } from "../../../db/AppSchema";
 
 export const MonumentHistorique = () => {
   const form = useStateReportFormContext();
@@ -41,6 +45,13 @@ export const MonumentHistorique = () => {
           <EditableField label="Description de l'édifice" field="description" />
         </ContentBlock>
       </Flex>
+
+      <Box mt="24px" px={{ xs: "16px", lg: "64px" }}>
+        <Typography variant="subtitle1" fontWeight="bold" mb="16px">
+          Objets mobiliers conservés
+        </Typography>
+        <MonumentObjets />
+      </Box>
       {isDesktop ? null : <ButtonsSwitch />}
 
       <Box position="relative" height="60px" width="100%" mt={{ xs: "16px", lg: "32px" }}>
@@ -71,6 +82,83 @@ export const MonumentHistorique = () => {
           </Box>
         </Box>
       </Box>
+    </Flex>
+  );
+};
+
+const MonumentObjets = () => {
+  const form = useStateReportFormContext();
+  const monumentReference = useWatch({ control: form.control, name: "reference_pop" });
+  const [nbToShow, setNbToShow] = useState(2);
+
+  const objetsQuery = useQuery({
+    queryKey: ["pop-objets", monumentReference, nbToShow],
+    queryFn: async () => {
+      if (!monumentReference) return [];
+      const objetsResponse = await db
+        .selectFrom("pop_objets")
+        .selectAll()
+        .where("reference_a_une_notice_merimee_mh", "like", "%" + monumentReference)
+        .limit(nbToShow)
+        .execute();
+
+      return objetsResponse;
+    },
+    enabled: !!monumentReference,
+  });
+
+  const objets = objetsQuery.data ?? [];
+  if (!objets?.length) return null;
+  return (
+    <Flex width="100%" gap="16px" flexDirection={{ xs: "column", lg: "row" }}>
+      {objets.map((obj) => (
+        <MonumentObjetItem key={obj.id} popObjet={obj} />
+      ))}
+    </Flex>
+  );
+};
+
+const MonumentObjetItem = ({ popObjet }: { popObjet: PopObjet }) => {
+  return (
+    <Flex
+      component="a"
+      // @ts-ignore mui error
+      href={`https://pop.culture.gouv.fr/notice/palissy/${popObjet.reference}`}
+      target="_blank"
+      rel="noopener external"
+      flexDirection="column"
+      flex="1"
+      border="1px solid"
+      borderColor={fr.colors.decisions.border.default.grey.default}
+      gap="8px"
+      sx={{
+        "::after": {
+          display: "none",
+        },
+      }}
+    >
+      <Box
+        component="img"
+        height="216px"
+        src={"/objet-sans-image.png"}
+        sx={{
+          objectFit: "cover",
+        }}
+      />
+      <Flex flexDirection="column" justifyContent="space-between" px="16px" gap={"8px"} py="16px" height="100%">
+        <Typography fontSize="20px" color={fr.colors.decisions.text.actionHigh.blueFrance.default} fontWeight="bold">
+          {popObjet.titre_editorial}
+        </Typography>
+        <Flex alignItems="center" justifyContent="space-between">
+          <Typography fontSize="12px" color={fr.colors.decisions.text.mention.grey.default}>
+            {popObjet.reference}
+          </Typography>
+          <Box
+            color={fr.colors.decisions.text.actionHigh.blueFrance.default}
+            className="fr-icon fr-icon-arrow-right-line"
+          />
+        </Flex>
+      </Flex>
     </Flex>
   );
 };

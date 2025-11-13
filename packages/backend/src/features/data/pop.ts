@@ -18,29 +18,57 @@ export const initPopImmeubles = async () => {
     return;
   }
 
-  await fetchPopCSV();
+  await fetchPopCSV(immeublesCsvPath);
 
   debug("Importing POP immeubles from CSV");
 
   await pipeline(
-    fs.createReadStream("./data/liste-des-immeubles-proteges-au-titre-des-monuments-historiques.csv"),
+    fs.createReadStream(immeublesCsvPath.dest),
     csv({
       separator: ";",
       mapHeaders: ({ header }) => header.trim().toLowerCase(),
     }),
-    new KyselyBatchWriter<Result>("pop_immeubles", 500, "reference"),
+    new KyselyBatchWriter<ImmeubleResult>("pop_immeubles", 500, "reference"),
   );
 };
 
-const immeublesCsvPath = "./data/liste-des-immeubles-proteges-au-titre-des-monuments-historiques.csv";
+export const initPopObjets = async () => {
+  const isTableEmpty = (await db.selectFrom("pop_objets").selectAll().limit(1).execute()).length === 0;
+  if (!isTableEmpty) {
+    debug("POP objets table is not empty, skipping import");
+    return;
+  }
 
-export const fetchPopCSV = async () => {
+  await fetchPopCSV(objetsCsvPath);
+
+  debug("Importing POP objets from CSV");
+
+  await pipeline(
+    fs.createReadStream(objetsCsvPath.dest),
+    csv({
+      separator: ";",
+      mapHeaders: ({ header }) => header.trim().toLowerCase(),
+    }),
+    new KyselyBatchWriter<ImmeubleResult>("pop_objets", 500, "reference"),
+  );
+};
+
+const immeublesCsvPath = {
+  origin: `${ENV.DATAGOUV_API}/liste-des-immeubles-proteges-au-titre-des-monuments-historiques/exports/csv?delimiter=%3B`,
+  dest: "./data/liste-des-immeubles-proteges-au-titre-des-monuments-historiques.csv",
+};
+const objetsCsvPath = {
+  origin: `${ENV.DATAGOUV_API}/liste-des-objets-mobiliers-propriete-publique-classes-au-titre-des-monuments/exports/csv?delimiter=%3B`,
+  dest: "./data/liste-des-objets-mobiliers-propriete-publique-classes-au-titre-des-monuments.csv",
+};
+
+export const fetchPopCSV = async ({ origin, dest }: { origin: string; dest: string }) => {
   debug("Downloading POP immeubles CSV");
-  const url = `${ENV.DATAGOUV_API}/liste-des-immeubles-proteges-au-titre-des-monuments-historiques/exports/csv?delimiter=%3B`;
+  const url = origin;
   const stream = await ofetch(url, { responseType: "stream" });
 
   const nodeStream = Readable.fromWeb(stream as any);
-  const writer = createWriteStream(immeublesCsvPath);
+  const writer = createWriteStream(dest);
   nodeStream.pipe(writer);
 
   await pipeline(nodeStream, writer);
@@ -48,10 +76,10 @@ export const fetchPopCSV = async () => {
 };
 export interface PopImmeublesResult {
   total_count: number;
-  results: Result[];
+  results: ImmeubleResult[];
 }
 
-export interface Result {
+export interface ImmeubleResult {
   reference: string;
   destination_actuelle_de_l_edifice?: any;
   adresse_forme_index: string;
