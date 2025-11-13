@@ -494,6 +494,7 @@ export const popObjets = pgTable("pop_objets", {
   typologie_du_dossier: text("typologie_du_dossier"),
   code_insee_commune_actuelle: text("code_insee_commune_actuelle"),
   edifice_actuel: text("edifice_actuel"),
+  lastImageCheckAt: timestamp("last_image_check_at", { mode: "string" }),
 });
 
 export const popImmeubles = pgTable("pop_immeubles", {
@@ -574,6 +575,7 @@ export const popImmeubles = pgTable("pop_immeubles", {
   communeFormeEditoriale: text("commune_forme_editoriale"),
   coordonneesAuFormatWgs84: text("coordonnees_au_format_wgs84"),
   id: text(),
+  lastImageCheckAt: timestamp("last_image_check_at", { mode: "string" }),
 });
 
 export const stateReport = pgTable(
@@ -696,3 +698,12 @@ export const merimeeToMemoire = pgTable(
     primaryKey({ columns: [table.refMemoire, table.refMerimee], name: "merimee_to_memoire_pkey" }),
   ],
 );
+
+export const popImages = pgTable("pop_images", {
+  id: text().primaryKey().notNull(),
+  reference: text(),
+  url: text(),
+  label: text(),
+  copyright: text(),
+  dept_number: text("dept_number"),
+});

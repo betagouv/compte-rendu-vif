@@ -368,6 +368,14 @@ const state_report_attachment = new Table({
   created_at: column.text,
 });
 
+const pop_images = new Table({
+  id: column.text,
+  reference: column.text,
+  url: column.text,
+  label: column.text,
+  copyright: column.text,
+});
+
 export const AppSchema = new Schema({
   report,
   service,
@@ -390,6 +398,7 @@ export const AppSchema = new Schema({
   state_report_attachment,
   state_report_sent_email,
   pop_objets,
+  pop_images,
   attachments: new AttachmentTable({
     name: "attachments",
   }),
@@ -417,6 +426,7 @@ export type ReportAttachment = Database["report_attachment"];
 export type StateReportAttachment = Database["state_report_attachment"];
 export type StateReportSentEmail = Database["state_report_sent_email"];
 export type PopObjet = Database["pop_objets"];
+export type PopImage = Database["pop_images"];
 
 import type { Database as BackendDatabase } from "../../../backend/src/db/db";
 import { AttachmentTable } from "@powersync/attachments";
@@ -452,4 +462,5 @@ const _checkTables: { [K in SharedTables]: IsTableOk<K> } = {
   visited_section_attachment: true,
   state_report_sent_email: true,
   pop_objets: true,
+  pop_images: true,
 };
