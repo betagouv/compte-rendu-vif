@@ -11,6 +11,10 @@ import type {
   StateReportWithUserAndAttachments,
 } from "../../frontend/src/features/state-report/pdf/ConstatPdfContext";
 
+export const StateReportPdfContent = () => {
+  return;
+};
+
 export const StateReportPDFDocument = ({ service, htmlString, images }: StateReportPDFDocumentProps) => {
   return (
     <Document onRender={console.log}>
@@ -221,6 +225,7 @@ export const getStateReportHtmlString = ({
   stateReport: StateReportWithUserAndAttachments;
   visitedSections: SectionWithAttachments[];
 }) => {
+  console.log({ stateReport, visitedSections });
   const isPartielle = stateReport.nature_visite?.toLocaleLowerCase().includes("partielle");
 
   const planSituationAttachment = stateReport.attachments.find((att) => stateReport.plan_situation === att.id);

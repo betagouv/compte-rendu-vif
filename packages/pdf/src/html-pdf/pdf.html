@@ -1,0 +1,223 @@
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PDF Test</title>
+    <script src="https://unpkg.com/pagedjs/dist/paged.polyfill.js"></script>
+
+    <style>
+      @font-face {
+        font-family: "Marianne";
+        src: url("../../frontend/public/fonts/Marianne-Regular.ttf") format("truetype");
+        font-style: normal;
+        font-weight: normal;
+      }
+
+      @font-face {
+        font-family: "Marianne";
+        src: url("../../frontend/public/fonts/Marianne-Bold.ttf") format("truetype");
+        font-style: normal;
+        font-weight: bold;
+      }
+
+      @font-face {
+        font-family: "Marianne";
+        src: url("../../frontend/public/fonts/Marianne-RegularItalic.ttf") format("truetype");
+        font-style: italic;
+        font-weight: normal;
+      }
+
+      @font-face {
+        font-family: "Marianne";
+        src: url("../../frontend/public/fonts/Marianne-BoldItalic.ttf") format("truetype");
+        font-style: italic;
+        font-weight: bold;
+      }
+
+      .meeting-date {
+        font-size: 20px;
+        color: red;
+      }
+
+      html {
+        max-width: 100vw;
+        font-family: "Marianne", sans-serif;
+        font-size: 12pt;
+      }
+
+      .pagedjs_page {
+        box-shadow: none !important;
+        margin-bottom: 10 !important;
+      }
+
+      @page {
+        size: A4;
+        margin: 20mm;
+        background: white;
+        border: 1px solid black !important;
+
+        @bottom-right {
+          content: "Page " counter(page) " sur " counter(pages);
+          font-size: 10pt;
+          top: -50px;
+          color: #666;
+          align-self: flex-start;
+        }
+      }
+
+      .pagedjs_page_content::before {
+        content: "''";
+        display: block;
+        background-image: url("../../frontend/public/marianne.png");
+        background-size: contain; /* or cover, or exact dimensions */
+        background-repeat: no-repeat;
+        left: 20mm;
+        max-width: 37px;
+        width: 37px;
+        height: 16.67px;
+        max-height: 16.67px;
+      }
+
+      .marianne-text {
+        text-transform: uppercase;
+        line-height: 1.1;
+      }
+
+      @media print {
+        @page {
+          border: none;
+        }
+      }
+
+      /* // 16.69 */
+    </style>
+  </head>
+  <body>
+    <header style="margin-bottom:54px">
+
+      <div style="display: flex; justify-content: space-between">
+        <div style="display: flex; flex-direction: column; max-width: 150px">
+          <strong class="marianne-text" style="font-size: 14px">Préfet<br />de la région<br />pays de la Loire</strong>
+          <img src="../../frontend/public/marianne_footer.png" style="width: 35px" alt="Liberté, Égalité, Fraternité" />
+        </div>
+        <div style="max-width: 322px; text-align: right">
+          <div style="font-weight: bold; font-size: 20px; line-height: 1.3">
+            Direction régionale des affaires culturelles des Pays de la Loire
+          </div>
+          <div style="font-size: 16.739px; margin-top: 12px"></div>
+          Unité départementale de l'architecture et du patrimoine de Nouvelle Aquita
+        </div>
+      </div>
+    </div>
+  </header>
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore
+      magna aliqua.
+    </p>
+    <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+    <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+    <p>
+      Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+    </p>
+
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore
+      magna aliqua.
+    </p>
+    <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+    <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+    <p>
+      Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+    </p>
+
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore
+      magna aliqua.
+    </p>
+    <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+    <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+    <p>
+      Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+    </p>
+
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore
+      magna aliqua.
+    </p>
+    <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+    <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+    <p>
+      Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+    </p>
+
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore
+      magna aliqua.
+    </p>
+    <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+    <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+    <p>
+      Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+    </p>
+
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore
+      magna aliqua.
+    </p>
+    <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+    <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+    <p>
+      Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+    </p>
+
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore
+      magna aliqua.
+    </p>
+    <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+    <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+    <p>
+      Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+    </p>
+
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore
+      magna aliqua.
+    </p>
+    <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+    <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+    <p>
+      Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+    </p>
+
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore
+      magna aliqua.
+    </p>
+    <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+    <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+    <p>
+      Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+    </p>
+
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore
+      magna aliqua.
+    </p>
+    <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+    <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+    <p>
+      Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+    </p>
+
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore
+      magna aliqua.
+    </p>
+    <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+    <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+    <p>
+      Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+    </p>
+  </body>
+</html>

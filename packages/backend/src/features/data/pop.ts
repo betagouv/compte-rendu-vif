@@ -87,32 +87,32 @@ export const initPopImages = async () => {
   } while (missingCount > 0);
 
   // objets
-  missingCount = 0;
-  do {
-    const currentMissingCount = await missingObjetCountQuery.executeTakeFirstOrThrow();
-    missingCount = parseInt(currentMissingCount.count);
-    debug(`${missingCount} POP objet images remaining, fetching next ${batchSize}`);
+  // missingCount = 0;
+  // do {
+  //   const currentMissingCount = await missingObjetCountQuery.executeTakeFirstOrThrow();
+  //   missingCount = parseInt(currentMissingCount.count);
+  //   debug(`${missingCount} POP objet images remaining, fetching next ${batchSize}`);
 
-    const batch = await firstMissingObjetBatchQuery.execute();
-    const imagesToFetch = batch.map((objet) => ({
-      reference: objet.reference,
-      db: "palissy" as const,
-      dept_number: objet.departement_format_numerique!,
-    }));
-    await fetchBatchPopImages({ images: imagesToFetch });
+  //   const batch = await firstMissingObjetBatchQuery.execute();
+  //   const imagesToFetch = batch.map((objet) => ({
+  //     reference: objet.reference,
+  //     db: "palissy" as const,
+  //     dept_number: objet.departement_format_numerique!,
+  //   }));
+  //   await fetchBatchPopImages({ images: imagesToFetch });
 
-    await db.transaction().execute(async (trx) => {
-      const now = new Date().toISOString();
-      for (const objet of batch) {
-        await trx.updateTable("pop_objets").set({ last_image_check_at: now }).where("id", "=", objet.id).execute();
-      }
-    });
+  //   await db.transaction().execute(async (trx) => {
+  //     const now = new Date().toISOString();
+  //     for (const objet of batch) {
+  //       await trx.updateTable("pop_objets").set({ last_image_check_at: now }).where("id", "=", objet.id).execute();
+  //     }
+  //   });
 
-    debug(`Fetched batch of ${imagesToFetch.length} POP objet images`);
-  } while (missingCount > 0);
+  //   debug(`Fetched batch of ${imagesToFetch.length} POP objet images`);
+  // } while (missingCount > 0);
 };
 
-const delay = 50;
+const delay = 300;
 const batchSize = 10;
 
 const today = new Date();

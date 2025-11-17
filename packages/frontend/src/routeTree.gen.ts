@@ -11,6 +11,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TestRouteImport } from './routes/test'
 import { Route as ServiceRouteImport } from './routes/service'
 import { Route as InscriptionRouteImport } from './routes/inscription'
 import { Route as ConnectionRouteImport } from './routes/connection'
@@ -24,6 +25,11 @@ import { Route as ConstatConstatIdPdfRouteImport } from './routes/constat_.$cons
 
 const ResetPasswordIndexLazyRouteImport = createFileRoute('/reset-password/')()
 
+const TestRoute = TestRouteImport.update({
+  id: '/test',
+  path: '/test',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ServiceRoute = ServiceRouteImport.update({
   id: '/service',
   path: '/service',
@@ -88,6 +94,7 @@ export interface FileRoutesByFullPath {
   '/connection': typeof ConnectionRoute
   '/inscription': typeof InscriptionRoute
   '/service': typeof ServiceRoute
+  '/test': typeof TestRoute
   '/constat/$constatId': typeof ConstatConstatIdRoute
   '/edit/$reportId': typeof EditReportIdRoute
   '/pdf/$reportId': typeof PdfReportIdRoute
@@ -101,6 +108,7 @@ export interface FileRoutesByTo {
   '/connection': typeof ConnectionRoute
   '/inscription': typeof InscriptionRoute
   '/service': typeof ServiceRoute
+  '/test': typeof TestRoute
   '/constat/$constatId': typeof ConstatConstatIdRoute
   '/edit/$reportId': typeof EditReportIdRoute
   '/pdf/$reportId': typeof PdfReportIdRoute
@@ -115,6 +123,7 @@ export interface FileRoutesById {
   '/connection': typeof ConnectionRoute
   '/inscription': typeof InscriptionRoute
   '/service': typeof ServiceRoute
+  '/test': typeof TestRoute
   '/constat/$constatId': typeof ConstatConstatIdRoute
   '/edit/$reportId': typeof EditReportIdRoute
   '/pdf/$reportId': typeof PdfReportIdRoute
@@ -130,6 +139,7 @@ export interface FileRouteTypes {
     | '/connection'
     | '/inscription'
     | '/service'
+    | '/test'
     | '/constat/$constatId'
     | '/edit/$reportId'
     | '/pdf/$reportId'
@@ -143,6 +153,7 @@ export interface FileRouteTypes {
     | '/connection'
     | '/inscription'
     | '/service'
+    | '/test'
     | '/constat/$constatId'
     | '/edit/$reportId'
     | '/pdf/$reportId'
@@ -156,6 +167,7 @@ export interface FileRouteTypes {
     | '/connection'
     | '/inscription'
     | '/service'
+    | '/test'
     | '/constat/$constatId'
     | '/edit/$reportId'
     | '/pdf/$reportId'
@@ -170,6 +182,7 @@ export interface RootRouteChildren {
   ConnectionRoute: typeof ConnectionRoute
   InscriptionRoute: typeof InscriptionRoute
   ServiceRoute: typeof ServiceRoute
+  TestRoute: typeof TestRoute
   ConstatConstatIdRoute: typeof ConstatConstatIdRoute
   EditReportIdRoute: typeof EditReportIdRoute
   PdfReportIdRoute: typeof PdfReportIdRoute
@@ -180,6 +193,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/test': {
+      id: '/test'
+      path: '/test'
+      fullPath: '/test'
+      preLoaderRoute: typeof TestRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/service': {
       id: '/service'
       path: '/service'
@@ -266,6 +286,7 @@ const rootRouteChildren: RootRouteChildren = {
   ConnectionRoute: ConnectionRoute,
   InscriptionRoute: InscriptionRoute,
   ServiceRoute: ServiceRoute,
+  TestRoute: TestRoute,
   ConstatConstatIdRoute: ConstatConstatIdRoute,
   EditReportIdRoute: EditReportIdRoute,
   PdfReportIdRoute: PdfReportIdRoute,

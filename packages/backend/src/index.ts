@@ -6,6 +6,7 @@ import { generateOpenApi, initFastify } from "./router";
 import { makeDebug } from "./features/debug";
 import { fetchPopCSV, initPopImages, initPopImmeubles, initPopObjets } from "./features/data/pop";
 import { db } from "./db/db";
+import { generateStateReportPdfV2 } from "./features/pdf-v2/pdf-v2";
 
 const debug = makeDebug("index");
 
@@ -13,20 +14,21 @@ const start = async () => {
   await registerViteHmrServerRestart();
   // await loginWithKeycloak();
   // return;
-  await initEmptyService();
-  await initPopImmeubles();
-  await initPopObjets();
-  await initPopImages();
-  debug("Starting fastify server in", ENV.NODE_ENV, "mode");
+  await generateStateReportPdfV2();
+  // await initEmptyService();
+  // await initPopImmeubles();
+  // await initPopObjets();
+  // // await initPopImages();
+  // debug("Starting fastify server in", ENV.NODE_ENV, "mode");
 
-  const fastifyInstance = await initFastify();
-  await fastifyInstance.listen({ port: ENV.PORT, host: "0.0.0.0" });
+  // const fastifyInstance = await initFastify();
+  // await fastifyInstance.listen({ port: ENV.PORT, host: "0.0.0.0" });
 
-  debug(`Server listening on ${ENV.PORT}`);
+  // debug(`Server listening on ${ENV.PORT}`);
 
-  onHmr(async () => {
-    await fastifyInstance.close();
-  });
+  // onHmr(async () => {
+  //   await fastifyInstance.close();
+  // });
 };
 
 const initEmptyService = async () => {
