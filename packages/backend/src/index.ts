@@ -11,12 +11,10 @@ const debug = makeDebug("index");
 
 const start = async () => {
   await registerViteHmrServerRestart();
-  // await loginWithKeycloak();
-  // return;
   await initEmptyService();
   await initPopImmeubles();
   await initPopObjets();
-  await initPopImages();
+  // await initPopImages();
   debug("Starting fastify server in", ENV.NODE_ENV, "mode");
 
   const fastifyInstance = await initFastify();

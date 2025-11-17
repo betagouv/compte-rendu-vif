@@ -142,17 +142,19 @@ const SectionModal = ({
       }}
     >
       <Box p={{ xs: "16px" }}>
-        <Flex>
-          <DialogTitle
-            flex="1"
-            sx={{
-              paddingLeft: "16px",
-            }}
-          >
-            {selectedSection?.section}
-          </DialogTitle>
-          <ModalCloseButton onClose={onClose} />
-        </Flex>
+        <ModalCloseButton onClose={onClose} />
+
+        <DialogTitle
+          flex="1"
+          sx={{
+            paddingLeft: { xs: "0", lg: "16px" },
+          }}
+          textOverflow="ellipsis"
+          overflow="hidden"
+          whiteSpace="nowrap"
+        >
+          {selectedSection?.section}
+        </DialogTitle>
 
         {selectedSection ? (
           <Stack gap="16px" px={{ xs: "0", lg: "16px" }}>

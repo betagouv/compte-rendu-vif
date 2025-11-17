@@ -1,4 +1,5 @@
 import Button from "@codegouvfr/react-dsfr/Button";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useState, useRef, useEffect } from "react";
 
 const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
@@ -16,6 +17,19 @@ export const SpeechRecorder = ({
   onStop: () => void;
   disabled?: boolean;
 }) => {
+  const permissionMutation = useMutation({
+    mutationFn: async () => {
+      let status = await checkMicrophonePermission();
+      if (status !== "granted") {
+        const granted = await requestMicrophoneAccess();
+        if (granted) {
+          status = await checkMicrophonePermission();
+        }
+      }
+      return status;
+    },
+  });
+
   const [isRecording, setIsRecording] = useState(false);
   const [error, setError] = useState("");
   const recognitionRef = useRef<any>(null);
@@ -80,7 +94,7 @@ export const SpeechRecorder = ({
   const toggleRecording = async () => {
     try {
       if (!isRecording) {
-        await navigator.mediaDevices.getUserMedia({ audio: true });
+        await permissionMutation.mutateAsync();
         recognitionRef.current.start();
         setIsRecording(true);
         setError("");
@@ -118,3 +132,23 @@ export const SpeechRecorder = ({
     </Button>
   );
 };
+
+async function checkMicrophonePermission() {
+  try {
+    const result = await navigator.permissions.query({ name: "microphone" });
+    return result.state;
+  } catch (error) {
+    return "unsupported";
+  }
+}
+
+async function requestMicrophoneAccess() {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    stream.getTracks().forEach((track) => track.stop());
+    return true;
+  } catch (error) {
+    console.error("Microphone access denied:", error);
+    return false;
+  }
+}

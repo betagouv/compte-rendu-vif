@@ -58,10 +58,10 @@ const AppFooter = () => {
                 <a
                   className="fr-footer__content-link"
                   target="_blank"
-                  href="https://service-public.fr"
-                  title="service-public.fr - ouvre une nouvelle fenêtre"
+                  href="https://service-public.gouv.fr"
+                  title="service-public.gouv.fr - ouvre une nouvelle fenêtre"
                 >
-                  service-public.fr
+                  service-public.gouv.fr
                 </a>
               </li>
               <li className="fr-footer__content-item">
@@ -80,7 +80,7 @@ const AppFooter = () => {
         <div className="fr-footer__bottom">
           <ul className="fr-footer__bottom-list">
             <li className="fr-footer__bottom-item">
-              <span className="fr-footer__bottom-link">Accessibilité: partiellement conforme</span>
+              <span className="fr-footer__bottom-link">Accessibilité: non conforme</span>
             </li>
           </ul>
 
