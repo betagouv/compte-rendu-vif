@@ -22,6 +22,12 @@ export class KyselyBatchWriter<RowType> extends Writable {
     encoding: BufferEncoding,
     callback: ((error: Error | null | undefined) => void) | undefined,
   ) {
+    if (!row[this.primaryKeyColumn]) {
+      debug(`Skipping row without primary key (${String(this.primaryKeyColumn)})`);
+      callback?.(null);
+      return;
+    }
+
     this.batch.push({ ...row, id: row[this.primaryKeyColumn] });
 
     if (this.batch.length >= this.batchSize) {

@@ -9,6 +9,7 @@ import { ENV } from "../../envVars";
 import { FetchError, ofetch } from "ofetch";
 import { Readable } from "stream";
 import { v7 } from "uuid";
+import { parseHTML, Element } from "linkedom";
 
 const debug = makeDebug("sync-pop");
 
@@ -31,7 +32,34 @@ export const initPopImmeubles = async () => {
     }),
     new KyselyBatchWriter<ImmeubleResult>("pop_immeubles", 500, "reference"),
   );
+
+  await fs.promises.unlink(path.resolve(immeublesCsvPath.dest));
 };
+
+// export const initPopDatasette = async () => {
+//   const isTableEmpty = (await db.selectFrom("merimee_to_memoire").selectAll().limit(1).execute()).length === 0;
+//   if (!isTableEmpty) {
+//     debug("POP datasette table is not empty, skipping import");
+//     return;
+//   }
+
+//   const datasetteCsvPath = {
+//     origin: `${ENV.COLLECTIF_OBJETS_DATASETTE_URL}/data/merimee_to_memoire.csv?_dl=on&_stream=on&_size=max`,
+//     dest: "./data/merimee_to_memoire.csv",
+//   };
+
+//   // await fetchPopDatasetteCSV(datasetteCsvPath);
+
+//   debug("Importing POP datasette from CSV");
+
+//   await pipeline(
+//     fs.createReadStream(datasetteCsvPath.dest),
+//     csv({
+//       mapHeaders: ({ header }) => header.trim().toLowerCase(),
+//     }),
+//     new KyselyBatchWriter("merimee_to_memoire", 500, "rowid"),
+//   );
+// };
 
 export const initPopObjets = async () => {
   const isTableEmpty = (await db.selectFrom("pop_objets").selectAll().limit(1).execute()).length === 0;
@@ -52,9 +80,9 @@ export const initPopObjets = async () => {
     }),
     new KyselyBatchWriter<ImmeubleResult>("pop_objets", 500, "reference"),
   );
-};
 
-import { parseHTML, Element } from "linkedom";
+  await fs.promises.unlink(path.resolve(objetsCsvPath.dest));
+};
 
 export const initPopImages = async () => {
   let missingCount = 0;
@@ -112,11 +140,11 @@ export const initPopImages = async () => {
   } while (missingCount > 0);
 };
 
-const delay = 50;
-const batchSize = 10;
+const delay = 100;
+const batchSize = 50;
 
 const today = new Date();
-const todayUTC = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate(), 0, 0, 0, 0));
+const todayUTC = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate() - 1, 0, 0, 0, 0));
 
 const missingImmeubleCountQuery = db
   .selectFrom("pop_immeubles")
@@ -249,6 +277,19 @@ export const fetchPopCSV = async ({ origin, dest }: { origin: string; dest: stri
   await pipeline(nodeStream, writer);
   debug("Done");
 };
+
+export const fetchPopDatasetteCSV = async ({ origin, dest }: { origin: string; dest: string }) => {
+  debug("Downloading POP datasette CSV");
+  const stream = await ofetch(origin, { responseType: "stream" });
+  const nodeStream = Readable.fromWeb(stream as any);
+
+  const writer = createWriteStream(dest);
+  nodeStream.pipe(writer);
+
+  await pipeline(nodeStream, writer);
+  debug("Done");
+};
+// https://collectif-objets-datasette.fly.dev
 
 export const fetchNoticePop = async ({ reference, db }: { reference: string; db: "merimee" | "palissy" }) => {
   const html = await ofetch("https://pop.culture.gouv.fr/notice/" + db + "/" + reference);

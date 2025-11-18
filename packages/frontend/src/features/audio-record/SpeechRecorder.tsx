@@ -1,4 +1,5 @@
 import Button from "@codegouvfr/react-dsfr/Button";
+import { Stack } from "@mui/material";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useState, useRef, useEffect } from "react";
 
@@ -20,13 +21,21 @@ export const SpeechRecorder = ({
   const permissionMutation = useMutation({
     mutationFn: async () => {
       let status = await checkMicrophonePermission();
+      console.log("checked status", status);
       if (status !== "granted") {
         const granted = await requestMicrophoneAccess();
+        console.log("requested access", granted);
         if (granted) {
           status = await checkMicrophonePermission();
+          console.log("re-checked status", status);
         }
       }
-      return status;
+
+      console.log("final status", status);
+
+      if (status === "granted") return status;
+
+      throw new Error("Microphone permission denied");
     },
   });
 

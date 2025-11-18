@@ -683,22 +683,6 @@ export const userDept = pgTable(
   ],
 );
 
-export const merimeeToMemoire = pgTable(
-  "merimee_to_memoire",
-  {
-    rowid: integer(),
-    copy: text("COPY"),
-    name: text("NAME"),
-    refMemoire: text("REF_MEMOIRE").notNull(),
-    refMerimee: text("REF_MERIMEE").notNull(),
-    url: text("URL"),
-  },
-  (table) => [
-    index("merimee_to_memoire_ref_merimee").using("btree", table.refMerimee.asc().nullsLast().op("text_ops")),
-    primaryKey({ columns: [table.refMemoire, table.refMerimee], name: "merimee_to_memoire_pkey" }),
-  ],
-);
-
 export const popImages = pgTable("pop_images", {
   id: text().primaryKey().notNull(),
   reference: text(),

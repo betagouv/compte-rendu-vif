@@ -15,7 +15,8 @@ import { Report } from "../db/AppSchema";
 import { db, useDbQuery } from "../db/db";
 import { useIsFormDisabled } from "./DisabledContext";
 import { ServiceInstructeurSelect } from "./ServiceInstructeurSelect";
-import { SpeechRecorder } from "./audio-record/SpeechRecorder";
+import { SpeechRecorder, useSpeechToText } from "./audio-record/SpeechRecorder";
+import { useSpeechToTextV2 } from "./audio-record/SpeechRecorder.hook";
 
 export const InfoForm = () => {
   const form = useFormContext<Report>();
@@ -200,46 +201,48 @@ export const InfoForm = () => {
 };
 
 const DescriptionInput = () => {
-  const [isRecording, setIsRecording] = useState(false);
   const isFormDisabled = useIsFormDisabled();
   const form = useFormContext<Report>();
 
-  const [interimText, setInterimText] = useState("");
-  const valueRef = useRef("");
+  const value = useWatch({ control: form.control, name: "projectDescription" });
+  const setValue = (val: string) => form.setValue("projectDescription", val);
 
-  const isRecordingProps = {
-    value: valueRef.current + " " + interimText,
-  };
+  const { isRecording, transcript, toggle } = useSpeechToTextV2({
+    onEnd: (text) => {
+      setValue(form.getValues("projectDescription") + " " + text);
+    },
+  });
 
   const isIdleProps = form.register("projectDescription");
+  const isListeningProps = {
+    ...isIdleProps,
+    value: value + " " + transcript,
+    onChange: () => {},
+  };
+
+  const textAreaProps = isRecording ? isListeningProps : isIdleProps;
 
   return (
     <Input
       sx={{ mt: "24px", "& > textarea": { mt: "0 !important" } }}
-      disabled={isFormDisabled}
+      disabled={(isFormDisabled || isRecording) ?? false}
       label={
         <Flex justifyContent="space-between" width="100%">
           <span>Description</span>
-          <SpeechRecorder
+
+          <Button
             disabled={isFormDisabled}
-            onStart={() => {
-              setIsRecording(true);
-              valueRef.current = form.watch("projectDescription") ?? "";
-            }}
-            onStop={() => setIsRecording(false)}
-            onInterimText={(text) => {
-              setInterimText(text);
-            }}
-            onFinalText={(text) => {
-              form.setValue("projectDescription", valueRef.current + " " + text);
-              valueRef.current = valueRef.current + " " + text;
-              setInterimText("");
-            }}
-          />
+            type="button"
+            priority={isRecording ? "primary" : "tertiary"}
+            iconId="ri-mic-fill"
+            onClick={() => toggle()}
+          >
+            {isRecording ? <>En cours</> : <>Dicter</>}
+          </Button>
         </Flex>
       }
       textArea
-      nativeTextAreaProps={{ ...(isRecording ? isRecordingProps : isIdleProps), rows: 5 }}
+      nativeTextAreaProps={{ ...textAreaProps, rows: 5 }}
     />
   );
 };

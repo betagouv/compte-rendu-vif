@@ -3,7 +3,7 @@ import { DecisionChips } from "#components/chips/DecisionChips";
 import { FurtherInfoChips } from "#components/chips/FurtherInfoChips";
 import { InputGroupWithTitle } from "#components/InputGroup";
 import { useRef, useState } from "react";
-import { useFormContext } from "react-hook-form";
+import { useFormContext, useWatch } from "react-hook-form";
 import { Report } from "../db/AppSchema";
 import { SpeechRecorder } from "./audio-record/SpeechRecorder";
 import { useIsFormDisabled } from "./DisabledContext";
@@ -13,6 +13,7 @@ import { Divider } from "#components/ui/Divider.tsx";
 import { Stack } from "@mui/material";
 import { Button, Center, Input } from "#components/MUIDsfr.tsx";
 import { useStyles } from "tss-react";
+import { useSpeechToTextV2 } from "./audio-record/SpeechRecorder.hook";
 
 export const NotesForm = () => {
   const form = useFormContext<Report>();
@@ -45,47 +46,48 @@ export const NotesForm = () => {
 };
 
 const PrecisionsTextArea = () => {
-  const [isRecording, setIsRecording] = useState(false);
-  const isFormDisabled = useIsFormDisabled();
   const form = useFormContext<Report>();
+  const isFormDisabled = useIsFormDisabled();
 
-  const [interimText, setInterimText] = useState("");
-  const valueRef = useRef("");
+  const value = useWatch({ control: form.control, name: "precisions" });
+  const setValue = (val: string) => form.setValue("precisions", val);
 
-  const isRecordingProps = {
-    value: valueRef.current + " " + interimText,
-  };
+  const { isRecording, transcript, toggle } = useSpeechToTextV2({
+    onEnd: (text) => {
+      setValue(form.getValues("precisions") + " " + text);
+    },
+  });
 
   const isIdleProps = form.register("precisions");
+  const isListeningProps = {
+    ...isIdleProps,
+    value: value + " " + transcript,
+    onChange: () => {},
+  };
 
+  const textAreaProps = isRecording ? isListeningProps : isIdleProps;
   return (
     <Input
       sx={{ mt: "24px", "& > textarea": { mt: "0 !important" } }}
-      disabled={isFormDisabled}
+      disabled={isFormDisabled || isRecording}
       label={
         <Flex justifyContent="space-between" width="100%">
           <span>Commentaire</span>
-          <SpeechRecorder
+
+          <Button
             disabled={isFormDisabled}
-            onStart={() => {
-              setIsRecording(true);
-              valueRef.current = form.watch("precisions") ?? "";
-            }}
-            onStop={() => setIsRecording(false)}
-            onInterimText={(text) => {
-              setInterimText(text);
-            }}
-            onFinalText={(text) => {
-              form.setValue("precisions", valueRef.current + " " + text);
-              valueRef.current = valueRef.current + " " + text;
-              setInterimText("");
-            }}
-          />
+            type="button"
+            priority={isRecording ? "primary" : "tertiary"}
+            iconId="ri-mic-fill"
+            onClick={() => toggle()}
+          >
+            {isRecording ? <>En cours</> : <>Dicter</>}
+          </Button>
         </Flex>
       }
       textArea
       nativeTextAreaProps={{
-        ...(isRecording ? isRecordingProps : isIdleProps),
+        ...textAreaProps,
         id: "precisions",
         rows: 5,
       }}

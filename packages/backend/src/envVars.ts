@@ -40,6 +40,7 @@ const envSchema = z.object({
   AUTH_ADMIN_CLIENT_ID: z.string(),
   AUTH_ADMIN_CLIENT_SECRET: z.string(),
   AUTH_CLIENT_SECRET: z.string(),
+  // COLLECTIF_OBJETS_DATASETTE_URL: z.string(),
 });
 
 export const ENV = envSchema.parse(process.env);

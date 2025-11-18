@@ -3,7 +3,7 @@ import { StateReportFormType, useStateReportFormContext } from "../utils";
 import { UseFormReturn, useWatch } from "react-hook-form";
 import RadioButtons from "@codegouvfr/react-dsfr/RadioButtons";
 import Checkbox from "@codegouvfr/react-dsfr/Checkbox";
-import { Input } from "#components/MUIDsfr.tsx";
+import { Button, Input } from "#components/MUIDsfr.tsx";
 import { Divider } from "#components/ui/Divider.tsx";
 import { useMutation } from "@tanstack/react-query";
 import { getRouteApi } from "@tanstack/react-router";
@@ -15,6 +15,7 @@ import { UploadImageWithEditModal } from "../../upload/UploadImageButton";
 import { Flex } from "#components/ui/Flex.tsx";
 import { StateReport } from "../../../db/AppSchema";
 import { useState } from "react";
+import { useSpeechToTextV2 } from "../../audio-record/SpeechRecorder.hook";
 
 const routeApi = getRouteApi("/constat/$constatId");
 
@@ -25,21 +26,60 @@ export const ConstatGeneral = () => {
     <Stack px="16px" pt="16px" mb="16px">
       <EtatGeneralRadioButtons />
       <ProportionsRadioButtons />
-      <Input textArea label="Commentaires" nativeTextAreaProps={{ rows: 6, ...form.register("etat_commentaires") }} />
-
+      {/* <Input textArea label="Commentaires" nativeTextAreaProps={{ rows: 6, ...form.register("etat_commentaires") }} /> */}
+      <StateReportTextAreaWithSpeechToText label="Commentaire" name="etat_commentaires" />
       <Divider mb="16px" />
       <EtatGeneralImages />
       <Divider my="16px" />
       <Preconisations />
-      <Input
-        textArea
-        label="Commentaires"
-        nativeTextAreaProps={{ rows: 6, ...form.register("preconisations_commentaires") }}
-      />
+      <StateReportTextAreaWithSpeechToText label="Commentaire" name="preconisations_commentaires" />
     </Stack>
   );
 };
 
+const StateReportTextAreaWithSpeechToText = ({ label, name }: { label: string; name: keyof StateReportFormType }) => {
+  const form = useStateReportFormContext();
+  const value = useWatch({ control: form.control, name: name });
+  const setValue = (val: string) => form.setValue(name, val);
+
+  const { isRecording, transcript, toggle } = useSpeechToTextV2({
+    onEnd: (text) => {
+      const currentValue = form.getValues(name) || "";
+      setValue(currentValue + " " + text);
+    },
+  });
+
+  const isIdleProps = form.register(name);
+  const isListeningProps = {
+    ...isIdleProps,
+    value: value + " " + transcript,
+    onChange: () => {},
+  };
+
+  const textAreaProps = isRecording ? isListeningProps : isIdleProps;
+  return (
+    <Flex flexDirection="column">
+      <Input
+        sx={{ mb: "16px !important", "& > textarea": { mt: "0 !important" } }}
+        disabled={isRecording}
+        label={label}
+        textArea
+        nativeTextAreaProps={{
+          ...textAreaProps,
+          rows: 5,
+        }}
+      />
+      <Button
+        type="button"
+        priority={isRecording ? "primary" : "tertiary"}
+        iconId="ri-mic-fill"
+        onClick={() => toggle()}
+      >
+        {isRecording ? <>En cours</> : <>Dicter</>}
+      </Button>
+    </Flex>
+  );
+};
 const EtatGeneralImages = () => {
   const form = useStateReportFormContext();
   const { constatId } = routeApi.useParams();

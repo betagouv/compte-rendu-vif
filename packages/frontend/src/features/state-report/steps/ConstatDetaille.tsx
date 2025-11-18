@@ -1,5 +1,5 @@
 import { FullWidthButton } from "#components/FullWidthButton.tsx";
-import { Badge, Input, Tile } from "#components/MUIDsfr.tsx";
+import { Badge, Button, Input, Tile } from "#components/MUIDsfr.tsx";
 import { getDiff } from "#components/SyncForm.tsx";
 import { Flex } from "#components/ui/Flex.tsx";
 import { RadioButtons } from "@codegouvfr/react-dsfr/RadioButtons";
@@ -16,6 +16,7 @@ import { ModalCloseButton } from "../../menu/MenuTitle";
 import { UploadImageWithEditModal } from "../../upload/UploadImageButton";
 import { PictureThumbnail, processImage } from "../../upload/UploadReportImage";
 import { defaultSections } from "@cr-vif/pdf/constat";
+import { useSpeechToTextV2 } from "../../audio-record/SpeechRecorder.hook";
 
 const routeApi = getRouteApi("/constat/$constatId");
 export const ConstatDetaille = () => {
@@ -170,6 +171,13 @@ const SectionModal = ({
 const SectionForm = ({ visitedSection }: { visitedSection: VisitedSection }) => {
   const [values, setValues] = useState(visitedSection);
 
+  const { isRecording, transcript, toggle } = useSpeechToTextV2({
+    onEnd: (text) => {
+      const currentValue = values.commentaires || "";
+      setValues({ ...values, commentaires: currentValue + " " + text });
+    },
+  });
+
   const syncMutation = useMutation({
     mutationFn: async () => {
       if (Object.keys(diff).length === 0) {
@@ -192,6 +200,20 @@ const SectionForm = ({ visitedSection }: { visitedSection: VisitedSection }) => 
   const diff = getDiff(visitedSection, values);
   useDebounce(() => syncMutation.mutate(), 500, [diff]);
 
+  const isIdleProps = {
+    value: values.commentaires || "",
+    onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      setValues({ ...values, commentaires: e.target.value });
+    },
+  };
+  const isListeningProps = {
+    ...isIdleProps,
+    value: values.commentaires + " " + transcript,
+    onChange: () => {},
+  };
+
+  const textAreaProps = isRecording ? isListeningProps : isIdleProps;
+
   return (
     <Stack>
       <SectionEtatGeneralRadioButtons
@@ -205,15 +227,26 @@ const SectionForm = ({ visitedSection }: { visitedSection: VisitedSection }) => 
 
       <SectionImageUpload section={visitedSection} />
 
-      <Input
-        textArea
-        label="Commentaires"
-        nativeTextAreaProps={{
-          rows: 6,
-          value: values.commentaires ?? "",
-          onChange: (e) => setValues({ ...values, commentaires: e.target.value }),
-        }}
-      />
+      <Flex flexDirection="column" mt="24px">
+        <Input
+          sx={{ mb: "16px !important" }}
+          textArea
+          disabled={isRecording}
+          label="Commentaires"
+          nativeTextAreaProps={{
+            rows: 6,
+            ...textAreaProps,
+          }}
+        />
+        <Button
+          type="button"
+          priority={isRecording ? "primary" : "tertiary"}
+          iconId="ri-mic-fill"
+          onClick={() => toggle()}
+        >
+          {isRecording ? <>En cours</> : <>Dicter</>}
+        </Button>
+      </Flex>
     </Stack>
   );
 };
