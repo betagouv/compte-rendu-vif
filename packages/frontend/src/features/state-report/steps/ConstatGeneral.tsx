@@ -39,7 +39,7 @@ export const ConstatGeneral = () => {
 
 const StateReportTextAreaWithSpeechToText = ({ label, name }: { label: string; name: keyof StateReportFormType }) => {
   const form = useStateReportFormContext();
-  const value = useWatch({ control: form.control, name: name });
+  const value = useWatch({ control: form.control, name: name }) ?? "";
   const setValue = (val: string) => form.setValue(name, val);
 
   const { isRecording, transcript, toggle } = useSpeechToTextV2({
