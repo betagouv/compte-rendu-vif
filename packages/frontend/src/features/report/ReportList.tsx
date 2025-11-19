@@ -199,7 +199,7 @@ export const ReportList = ({
               })}
               defaultPage={page! + 1}
             />
-            <Button
+            {/* <Button
               sx={{
                 ml: { xs: "0", lg: "80px" },
                 mt: { xs: "40px", lg: "0" },
@@ -214,7 +214,7 @@ export const ReportList = ({
               }}
             >
               Je donne mon avis
-            </Button>
+            </Button> */}
           </>
         )}
       </Center>
@@ -290,7 +290,7 @@ export const StateReportList = ({
               })}
               defaultPage={page! + 1}
             />
-            <Button
+            {/* <Button
               sx={{
                 ml: { xs: "0", lg: "80px" },
                 mt: { xs: "40px", lg: "0" },
@@ -305,7 +305,7 @@ export const StateReportList = ({
               }}
             >
               Je donne mon avis
-            </Button>
+            </Button> */}
           </>
         )}
       </Center>
