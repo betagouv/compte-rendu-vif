@@ -31,7 +31,7 @@ const AccountPage = () => {
   const onSuccess = (service: AuthUser["service"]) => {
     setService(service);
     setIsSuccess(true);
-    document.getElementById("root")?.scrollTo(0, 0);
+    document.getElementsByClassName("MuiBox-root")?.[0]?.scrollTo(0, 0);
   };
 
   return (

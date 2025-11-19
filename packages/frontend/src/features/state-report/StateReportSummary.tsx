@@ -59,6 +59,7 @@ const SummaryContent = ({ onClick }: { onClick?: () => void }) => {
   const navigateToStep = (step: StateReportStep) => {
     navigate({ to: "/constat/$constatId", params: { constatId }, search: { step } });
     onClick?.();
+    document.getElementsByClassName("MuiBox-root")?.[0]?.scrollTo(0, 0);
   };
 
   const activeProps = {
