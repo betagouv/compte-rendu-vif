@@ -171,7 +171,7 @@ export const StateReportPDFDocument = ({ service, htmlString, images }: StateRep
                 </div>
               </div>
             </div>
-            <hr/>
+
             <div class="content">
               ${htmlString}
             </div>
