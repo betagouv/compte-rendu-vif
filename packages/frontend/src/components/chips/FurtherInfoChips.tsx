@@ -1,16 +1,16 @@
 import { useFormContext, useWatch } from "react-hook-form";
 import { ChipGroup, type ChipGroupOption } from "../Chip";
-import { FlexProps } from "#styled-system/jsx";
 import { useChipOptions } from "../../features/chips/useChipOptions";
 import { Report } from "../../db/AppSchema";
+import { BoxProps } from "@mui/material";
 
-export const FurtherInfoChips = (props: FlexProps & { disabled?: boolean }) => {
+export const FurtherInfoChips = (props: BoxProps & { disabled?: boolean }) => {
   const form = useFormContext<Report>();
 
   const selected = useWatch({ control: form.control, name: "furtherInformation" })?.split(",") ?? [];
 
   const chipOptions = useChipOptions("bonnes-pratiques");
-  const options: ChipGroupOption[] = (chipOptions ?? []).map((chip) => ({
+  const options = (chipOptions ?? []).map((chip) => ({
     label: chip.value,
     key: chip.value,
   }));
@@ -18,7 +18,7 @@ export const FurtherInfoChips = (props: FlexProps & { disabled?: boolean }) => {
   return (
     <ChipGroup
       isMulti
-      options={options}
+      options={options as ChipGroupOption[]}
       value={selected}
       {...props}
       onChange={(values) => form.setValue("furtherInformation", values.join(","))}

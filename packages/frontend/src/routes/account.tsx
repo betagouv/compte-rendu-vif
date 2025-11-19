@@ -1,9 +1,7 @@
 import { EnsureUser } from "#components/EnsureUser.tsx";
 import { createFileRoute } from "@tanstack/react-router";
-import { Center, Divider, Flex, Stack, styled } from "#styled-system/jsx";
 import Summary from "@codegouvfr/react-dsfr/Summary";
 import Download from "@codegouvfr/react-dsfr/Download";
-import { css } from "#styled-system/css";
 import { useUserSettings } from "../hooks/useUserSettings";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { db, useDbQuery } from "../db/db";
@@ -12,7 +10,6 @@ import { v4 } from "uuid";
 import { Spinner } from "#components/Spinner";
 import { EmailInput } from "../components/EmailInput";
 import { Delegation, User } from "../db/AppSchema";
-import ToggleSwitch from "@codegouvfr/react-dsfr/ToggleSwitch";
 import { Chip } from "#components/Chip";
 import Alert from "@codegouvfr/react-dsfr/Alert";
 import { api } from "../api";
@@ -21,12 +18,12 @@ import { downloadFile } from "../utils";
 import { datePresets, DateRangePicker, SuccessAlert } from "./udap";
 import { PropsWithChildren, ReactNode, useContext, useState } from "react";
 import { format, subDays } from "date-fns";
-import Input from "@codegouvfr/react-dsfr/Input";
-import Select from "@codegouvfr/react-dsfr/Select";
-import Button from "@codegouvfr/react-dsfr/Button";
-import Breadcrumb from "@codegouvfr/react-dsfr/Breadcrumb";
-import { Accordion } from "@codegouvfr/react-dsfr/Accordion";
 import { getPDFInMailName } from "@cr-vif/pdf";
+import { Flex } from "#components/ui/Flex.tsx";
+import { Box, Stack, Typography } from "@mui/material";
+import { Divider } from "#components/ui/Divider.tsx";
+import { Accordion, Button, Center, Input, Select } from "#components/MUIDsfr.tsx";
+import { useStyles } from "tss-react";
 
 const AccountPage = () => {
   const [isSuccess, setIsSuccess] = useState(false);
@@ -38,24 +35,25 @@ const AccountPage = () => {
 
   return (
     <Flex
-      gap={{ base: "0", lg: "80px" }}
-      flexDir={{ base: "column", lg: "row" }}
+      gap={{ xs: "0", lg: "80px" }}
+      flexDirection={{ xs: "column", lg: "row" }}
       justifyContent="center"
-      alignItems={{ lg: "flex-start", base: "center" }}
-      w="100%"
+      alignItems={{ lg: "flex-start", xs: "center" }}
+      width="100%"
       mb="40px"
     >
-      <Stack w={{ base: "100%", lg: "auto" }}>
+      <Stack width={{ xs: "100%", lg: "auto" }}>
         <BreadcrumbNav label="Mon compte" />
-        <styled.h1 hideFrom="lg" mt="16px" mb="32px" px={{ base: "16px" }}>
+        <Typography variant="h1" display={{ lg: "none" }} mt="16px" mb="32px" px={{ xs: "16px" }}>
           Mon compte
-        </styled.h1>
+        </Typography>
         <AccordionIfMobile>
           <Summary
-            className={css({
-              px: "16px",
-              bgColor: "transparent !important",
-            })}
+            style={{
+              paddingLeft: "16px",
+              paddingRight: "16px",
+              backgroundColor: "transparent",
+            }}
             links={[
               { linkProps: { href: "#default-recipient" }, text: "Destinataire par défaut" },
               { linkProps: { href: "#share" }, text: "Droit d'édition partagé" },
@@ -65,26 +63,26 @@ const AccountPage = () => {
           />
         </AccordionIfMobile>
       </Stack>
-      <Divider hideFrom="lg" w="90%" ml="5%" color="background-action-low-blue-france-hover" />
+      <Divider display={{ lg: "none" }} width="90%" ml="5%" color="background-action-low-blue-france-hover" />
       <Center
         flex="1"
-        flexDir="column"
+        flexDirection="column"
         alignItems="flex-start"
-        maxW="900px"
+        maxWidth="900px"
         mt="32px"
-        px={{ base: "16px", lg: "0" }}
+        px={{ xs: "16px", lg: "0" }}
         textAlign="left"
       >
-        <styled.h1 hideBelow="lg" mt="16px" mb="32px">
+        <Typography variant="h1" display={{ xs: "none", lg: "block" }} mt="16px" mb="32px">
           Mon compte
-        </styled.h1>
+        </Typography>
         {isSuccess ? <SuccessAlert /> : null}
         <DefaultRecipient />
-        <Divider my={{ base: "48px", lg: "80px" }} color="background-action-low-blue-france-hover" />
+        <Divider my={{ xs: "48px", lg: "80px" }} color="background-action-low-blue-france-hover" />
         <Share />
-        <Divider my={{ base: "48px", lg: "80px" }} color="background-action-low-blue-france-hover" />
+        <Divider my={{ xs: "48px", lg: "80px" }} color="background-action-low-blue-france-hover" />
         <DownloadCRs />
-        <Divider my={{ base: "48px", lg: "80px" }} color="background-action-low-blue-france-hover" />
+        <Divider my={{ xs: "48px", lg: "80px" }} color="background-action-low-blue-france-hover" />
         <ChangeUDAP onSuccess={onSuccess} />
       </Center>
     </Flex>
@@ -95,20 +93,27 @@ export const AccordionIfMobile = ({ children }: { children: NonNullable<ReactNod
   return (
     <>
       <Accordion
-        className={css({
-          hideFrom: "lg",
+        sx={{
+          display: { lg: "none" },
           mx: "16px",
           "& .fr-summary__title": { display: "none" },
           "& .fr-summary": { pt: "0" },
-        })}
+        }}
         label="Sommaire"
       >
         {children}
       </Accordion>
 
-      <styled.div hideBelow="lg" mb="32px" px={{ base: "16px", lg: "0" }} {...{ "& .fr-summary": { p: 0, m: 0 } }}>
+      <Box
+        sx={{
+          "& .fr-summary": { p: 0, m: 0 },
+        }}
+        display={{ xs: "none", lg: "block" }}
+        mb="32px"
+        px={{ xs: "16px", lg: "0" }}
+      >
         {children}
-      </styled.div>
+      </Box>
     </>
   );
 };
@@ -143,9 +148,9 @@ const DefaultRecipient = () => {
   });
 
   return (
-    <Flex gap="0px" flexDir="column" w="100%">
+    <Flex gap="0px" flexDirection="column" width="100%">
       <Title anchor="default-recipient">1. Destinataire par défaut</Title>
-      <styled.div>
+      <Box>
         {isUserSettingsLoading ? (
           <Spinner size={100} />
         ) : (
@@ -156,7 +161,7 @@ const DefaultRecipient = () => {
             onValueChange={(e) => saveEmailsMutation.mutate(e)}
           />
         )}
-      </styled.div>
+      </Box>
     </Flex>
   );
 };
@@ -184,18 +189,18 @@ const Share = () => {
   const delegatedToMe = delegatedToMeQuery.data ?? [];
 
   return (
-    <Flex gap="0px" flexDir="column" w="100%">
+    <Flex gap="0px" flexDirection="column" width="100%">
       <Title anchor="share">2. Droit d'édition partagé</Title>
       {coworkers.length ? (
-        <styled.div>
-          <styled.div mb="16px">Ces personnes peuvent créer, modifier et supprimer vos CR : </styled.div>
+        <Box>
+          <Box mb="16px">Ces personnes peuvent créer, modifier et supprimer vos CR : </Box>
           <ManageDelegations coworkers={coworkers} delegations={delegations} />
           {delegatedToMe.length ? (
             // @ts-ignore alert needs a title ?
             <Alert
-              className={css({
-                mt: "16px",
-              })}
+              style={{
+                marginTop: "16px",
+              }}
               small={false}
               closable={false}
               severity="info"
@@ -205,9 +210,11 @@ const Share = () => {
               }
             />
           ) : null}
-        </styled.div>
+        </Box>
       ) : (
+        // @ts-ignore alert needs a title ?
         <Alert
+          small={false}
           severity="info"
           description={
             "Aucun autre utilisateur de votre UDAP n'est enregistré sur Compte rendu VIF. Vous ne pouvez donc pas autoriser d'autres personnes à créer, modifier et supprimer vos CR."
@@ -221,7 +228,7 @@ const Share = () => {
 export const BreadcrumbNav = ({ label }: { label: string }) => {
   return (
     <>
-      <styled.nav w="100%" mt="32px" mb={{ base: "0", lg: "32px" }} px={{ base: "16px", lg: "8px" }}>
+      <Box component="nav" width="100%" mt="32px" mb={{ xs: "0", lg: "32px" }} px={{ xs: "16px", lg: "8px" }}>
         <ol className="fr-breadcrumb__list">
           <li>
             <a href="/" className="fr-breadcrumb__link">
@@ -234,7 +241,7 @@ export const BreadcrumbNav = ({ label }: { label: string }) => {
             </a>
           </li>
         </ol>
-      </styled.nav>
+      </Box>
 
       {/* <Accordion className={css({ hideFrom: "lg", mx: "16px" })} label="Sommaire">
         <styled.nav mb="0 !important" pl="calc(2rem + 8px)">
@@ -275,9 +282,9 @@ const ManageDelegations = ({ coworkers, delegations }: { coworkers: User[]; dele
         const delegation = delegations.find((del) => del.delegatedTo === coworker.id);
         return (
           <Chip
-            className={css({
+            style={{
               whiteSpace: "nowrap",
-            })}
+            }}
             key={coworker.id}
             onCheckChange={(e) =>
               e
@@ -332,14 +339,14 @@ const DownloadCRs = () => {
   const reports = crs.data?.map((cr) => ({ id: cr.id, name: getPDFInMailName(cr) })) ?? [];
 
   return (
-    <Flex gap="0px" flexDir="column" w="100%">
+    <Flex gap="0px" flexDirection="column" width="100%">
       <Title anchor="download">3. Télécharger mes CR</Title>
       <DateRangePicker startDate={startDate} endDate={endDate} setStartDate={setStartDate} setEndDate={setEndDate} />
-      <styled.div mb="16px">
+      <Box mb="16px">
         Pour une expérience optimale, nous vous invitons à <b>privilégier le mode Wi-Fi</b> pour le téléchargement de
         vos comptes-rendus dont le poids peut être important.
-      </styled.div>
-      <styled.div px="24px" pt="18px" pb="4px" bgColor="background-alt-blue-france">
+      </Box>
+      <Box bgcolor="background-alt-blue-france" px="24px" pt="18px" pb="4px">
         {reports.length ? (
           <Download
             label={getZipFilename(startDate, endDate)}
@@ -347,14 +354,14 @@ const DownloadCRs = () => {
             linkProps={{ onClick: () => downloadMutation.mutate(reports) }}
           />
         ) : (
-          <styled.div pb="14px">Aucun CR disponible sur la période sélectionnée.</styled.div>
+          <Box pb="14px">Aucun CR disponible sur la période sélectionnée.</Box>
         )}
-      </styled.div>
+      </Box>
     </Flex>
   );
 };
 
-const ChangeUDAP = ({ onSuccess }) => {
+const ChangeUDAP = ({ onSuccess }: { onSuccess: () => void }) => {
   const user = useUser()!;
 
   const udap = user.udap;
@@ -386,15 +393,17 @@ const ChangeUDAP = ({ onSuccess }) => {
     onSuccess?.();
   });
 
+  const { css } = useStyles();
+
   return (
-    <Flex gap="0px" flexDir="column" w="100%">
+    <Flex gap="0px" flexDirection="column" width="100%">
       <Title anchor="change-udap">4. Changer d'UDAP</Title>
       {/* @ts-ignore */}
       <Alert
-        className={css({
-          mt: "16px",
-          mb: "16px",
-        })}
+        style={{
+          marginTop: "16px",
+          marginBottom: "16px",
+        }}
         small={false}
         closable={false}
         severity="warning"
@@ -410,7 +419,7 @@ const ChangeUDAP = ({ onSuccess }) => {
         }
       />
 
-      <Flex gap={{ base: 0, lg: "16px" }} flexDir={{ base: "column", lg: "row" }} w="100%">
+      <Flex gap={{ xs: 0, lg: "16px" }} flexDirection={{ xs: "column", lg: "row" }} width="100%">
         <Input
           classes={{
             nativeInputOrTextArea: css({ pr: "32px" }),
@@ -442,7 +451,7 @@ const ChangeUDAP = ({ onSuccess }) => {
         </Select>
       </Flex>
 
-      <Flex justifyContent="flex-end" w="100%" mt="24px">
+      <Flex justifyContent="flex-end" width="100%" mt="24px">
         <Button
           iconId="ri-save-3-line"
           iconPosition="left"
@@ -450,7 +459,6 @@ const ChangeUDAP = ({ onSuccess }) => {
           type="button"
           onClick={() => {
             if (!selectedUdapId) return;
-            console.log(selectedUdapId);
 
             changeUdapMutation.mutate(selectedUdapId!);
           }}
@@ -473,9 +481,9 @@ const getZipFilename = (startDate: Date, endDate: Date) => {
 
 const Title = ({ children, anchor }: { children: React.ReactNode; anchor?: string }) => {
   return (
-    <styled.h3 id={anchor} mb="24px" fontSize="26px">
+    <Typography variant="h3" id={anchor} mb="24px" fontSize="26px">
       {children}
-    </styled.h3>
+    </Typography>
   );
 };
 

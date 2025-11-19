@@ -1,24 +1,22 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { Center, Divider, Flex, Stack, styled } from "#styled-system/jsx";
-import Input from "@codegouvfr/react-dsfr/Input";
-import Summary from "@codegouvfr/react-dsfr/Summary";
-import { css } from "#styled-system/css";
-import Button from "@codegouvfr/react-dsfr/Button";
-import { useMemo, useState } from "react";
-import { db, useDbQuery } from "../db/db";
-import { Spinner } from "#components/Spinner";
-import { ServiceInstructeurs } from "../db/AppSchema";
 import { Chip, ControlledChip } from "#components/Chip";
-import { useRefreshUdap, useUser } from "../contexts/AuthContext";
 import { EnsureUser } from "#components/EnsureUser";
+import { Button, Center, Input } from "#components/MUIDsfr.tsx";
+import { Spinner } from "#components/Spinner";
+import { Divider } from "#components/ui/Divider.tsx";
+import { Flex } from "#components/ui/Flex.tsx";
+import Alert from "@codegouvfr/react-dsfr/Alert";
+import Summary from "@codegouvfr/react-dsfr/Summary";
+import { Box, Stack, Typography } from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
+import { createFileRoute } from "@tanstack/react-router";
+import { endOfYear, startOfYear } from "date-fns";
+import { omit } from "pastable";
+import { useState } from "react";
 import { v4 } from "uuid";
 import { ClauseV2 } from "../../../backend/src/db-types";
-import { addDays, endOfYear, startOfYear } from "date-fns";
-import { Udap } from "../db/AppSchema";
-import { omit } from "pastable";
-import Alert from "@codegouvfr/react-dsfr/Alert";
-import Breadcrumb from "@codegouvfr/react-dsfr/Breadcrumb";
+import { useRefreshUdap, useUser } from "../contexts/AuthContext";
+import { ServiceInstructeurs, Udap } from "../db/AppSchema";
+import { db, useDbQuery } from "../db/db";
 import { AccordionIfMobile, BreadcrumbNav } from "./account";
 
 const UdapPage = () => {
@@ -31,24 +29,24 @@ const UdapPage = () => {
 
   return (
     <Flex
-      gap={{ base: "0", lg: "40px" }}
-      flexDir={{ base: "column", lg: "row" }}
+      gap={{ xs: "0", lg: "40px" }}
+      flexDirection={{ xs: "column", lg: "row" }}
       justifyContent={"center"}
-      alignItems={{ lg: "flex-start", base: "center" }}
-      w="100%"
+      alignItems={{ lg: "flex-start", xs: "center" }}
+      width="100%"
       mb="40px"
     >
-      <Stack w={{ base: "100%", lg: "auto" }}>
+      <Stack width={{ xs: "100%", lg: "auto" }}>
         <BreadcrumbNav label="UDAP" />
-        <styled.h1 hideFrom="lg" mt="16px" mb="32px" px={{ base: "16px" }}>
+        <Typography variant="h1" display={{ lg: "none" }} mt="16px" mb="32px" px={{ xs: "16px" }}>
           UDAP
-        </styled.h1>
+        </Typography>
         <AccordionIfMobile>
           <Summary
-            className={css({
-              pt: "0",
-              bgColor: "transparent !important",
-            })}
+            style={{
+              paddingTop: "0",
+              backgroundColor: "transparent !important",
+            }}
             links={[
               { linkProps: { href: "#udap-informations" }, text: "Informations UDAP" },
               { linkProps: { href: "#services-instructeurs" }, text: "Services instructeurs" },
@@ -58,25 +56,25 @@ const UdapPage = () => {
           />
         </AccordionIfMobile>
       </Stack>
-      <Divider hideFrom="lg" w="90%" ml="5%" color="background-action-low-blue-france-hover" />
+      <Divider display={{ lg: "none" }} width="90%" ml="5%" color="background-action-low-blue-france-hover" />
       <Center
-        flexDir="column"
+        flexDirection="column"
         alignItems="flex-start"
-        maxW="900px"
+        maxWidth="900px"
         mt="32px"
-        px={{ base: "16px", lg: "0" }}
+        px={{ xs: "16px", lg: "0" }}
         textAlign="left"
       >
-        <styled.h1 hideBelow="lg" mt="16px" mb="32px">
+        <Typography variant="h1" display={{ xs: "none", lg: "block" }} mt="16px" mb="32px">
           UDAP
-        </styled.h1>
+        </Typography>
         {isSuccess ? <SuccessAlert /> : null}
         <UDAPForm onSuccess={onSuccess} />
-        <Divider my={{ base: "48px", lg: "48px" }} color="background-action-low-blue-france-hover" />
+        <Divider my={{ xs: "48px", lg: "48px" }} color="background-action-low-blue-france-hover" />
         <ServicesList />
-        <Divider my={{ base: "48px", lg: "48px" }} color="background-action-low-blue-france-hover" />
+        <Divider my={{ xs: "48px", lg: "48px" }} color="background-action-low-blue-france-hover" />
         <Clauses />
-        <Divider my={{ base: "48px", lg: "48px" }} color="background-action-low-blue-france-hover" />
+        <Divider my={{ xs: "48px", lg: "48px" }} color="background-action-low-blue-france-hover" />
         <Activity />
       </Center>
     </Flex>
@@ -109,7 +107,7 @@ const format = {
   },
 };
 
-const UDAPForm = ({ onSuccess }) => {
+const UDAPForm = ({ onSuccess }: { onSuccess: () => void }) => {
   const udap = useUser().udap;
   const [udapData, setUdapData] = useState({
     ...udap,
@@ -136,10 +134,10 @@ const UDAPForm = ({ onSuccess }) => {
   });
 
   return (
-    <Flex gap="0px" flexDir="column" w="100%">
+    <Flex gap="0px" flexDirection="column" width="100%">
       <Title anchor="udap-informations">1. Informations UDAP</Title>
       <Input
-        className={css({ w: "100%", mt: "16px" })}
+        sx={{ width: "100%", mt: "16px" }}
         label="Intitulé marianne préfet"
         hintText="Ex : Préfet de la région Nouvelle-Aquitaine"
         nativeInputProps={{
@@ -148,7 +146,7 @@ const UDAPForm = ({ onSuccess }) => {
         }}
       />
       <Input
-        className={css({ w: "100%" })}
+        sx={{ width: "100%" }}
         label="Intitulé DRAC"
         hintText="Ex : Direction régionale des affaires culturelles de Nouvelle-Aquitaine"
         nativeInputProps={{
@@ -157,7 +155,7 @@ const UDAPForm = ({ onSuccess }) => {
         }}
       />
       <Input
-        className={css({ w: "100%" })}
+        sx={{ width: "100%" }}
         label="Intitulé UDAP"
         hintText="Ex : Unité départementale de l'architecture et du patrimoine des Deux-Sèvres"
         nativeInputProps={{
@@ -166,9 +164,9 @@ const UDAPForm = ({ onSuccess }) => {
         }}
       />
 
-      <Flex gap={{ base: 0, lg: "24px" }} flexDir={{ base: "column", lg: "row" }} w="100%">
+      <Flex gap={{ xs: 0, lg: "24px" }} flexDirection={{ xs: "column", lg: "row" }} width="100%">
         <Input
-          className={css({ w: "100%" })}
+          sx={{ width: "100%" }}
           label="Téléphone UDAP"
           nativeInputProps={{
             value: udapData.phone ?? "",
@@ -176,7 +174,7 @@ const UDAPForm = ({ onSuccess }) => {
           }}
         />
         <Input
-          className={css({ w: "100%" })}
+          sx={{ width: "100%" }}
           label="Courriel UDAP"
           nativeInputProps={{
             value: udapData.email ?? "",
@@ -188,7 +186,7 @@ const UDAPForm = ({ onSuccess }) => {
       {/* TODO: set this */}
       {/* <Input className={css({ w: "100%" })} label="Lien où déposer l'avant projet" hintText="Figurera dans le CR" /> */}
 
-      <Flex gap="16px" justifyContent="flex-end" w="100%" mt="24px">
+      <Flex gap="16px" justifyContent="flex-end" width="100%" mt="24px">
         <Button
           iconId="ri-save-3-line"
           iconPosition="left"
@@ -210,7 +208,7 @@ const ServicesList = () => {
   const udap = useUser().udap;
 
   return (
-    <Flex gap="16px" flexDir="column" w="100%">
+    <Flex gap="16px" flexDirection="column" width="100%">
       <Title anchor="services-instructeurs">2. Services instructeurs</Title>
       <Flex gap="16px" alignItems="center">
         <div>
@@ -227,7 +225,7 @@ const ServicesList = () => {
           </Button>
         </div>
         <Input
-          className={css({ mb: "8px" })}
+          sx={{ mb: "8px" }}
           nativeInputProps={{ placeholder: "Rechercher", value: search, onChange: (e) => setSearch(e.target.value) }}
           iconId="ri-search-line"
           label={null}
@@ -270,20 +268,20 @@ const ServicePicker = ({
   );
 
   return (
-    <Flex gap="24px" flexDir="column" w="100%">
+    <Flex gap="24px" flexDirection="column" width="100%">
       {Object.entries(byFirstLetter)
         .sort(([a], [b]) => a.localeCompare(b))
         .map(([letter, items]) => (
           <Flex key={letter} gap="8px">
-            <styled.div w="34px" minW="34px" mt="2px" color="text-action-high-blue-france" fontSize="24px">
+            <Box width="34px" minWidth="34px" mt="2px" color="text-action-high-blue-france" fontSize="24px">
               {letter}
-            </styled.div>
+            </Box>
             <Flex gap="8px" flexWrap="wrap">
               {items.map((item) => (
                 <Chip
-                  className={css({
+                  style={{
                     whiteSpace: "nowrap",
-                  })}
+                  }}
                   key={item.id}
                   onCheckChange={() => setSelected(selected === item ? null : item)}
                   isChecked={selected?.id === item.id}
@@ -348,9 +346,9 @@ const ServiceForm = ({
   });
 
   return (
-    <Flex ref={scrollToRef} gap="16px" flexDir="column" w="100%">
+    <Flex ref={scrollToRef} gap="16px" flexDirection="column" width="100%">
       <Input
-        className={css({ w: "100%" })}
+        sx={{ width: "100%" }}
         label="Intitulé service instructeur"
         nativeInputProps={{
           value: selected.full_name ?? "",
@@ -358,9 +356,9 @@ const ServiceForm = ({
         }}
       />
 
-      <Flex gap="24px" w="100%">
+      <Flex gap="24px" width="100%">
         <Input
-          className={css({ w: "100%" })}
+          sx={{ width: "100%" }}
           label="Abréviation"
           nativeInputProps={{
             value: selected.short_name ?? "",
@@ -368,7 +366,7 @@ const ServiceForm = ({
           }}
         />
         <Input
-          className={css({ w: "100%" })}
+          sx={{ width: "100%" }}
           label="Téléphone"
           nativeInputProps={{
             value: selected.tel ?? "",
@@ -377,7 +375,7 @@ const ServiceForm = ({
         />
       </Flex>
       <Input
-        className={css({ w: "100%" })}
+        sx={{ w: "100%" }}
         label="Courriel"
         nativeInputProps={{
           value: selected.email ?? "",
@@ -385,13 +383,13 @@ const ServiceForm = ({
         }}
       />
 
-      <Flex gap="16px" justifyContent="flex-end" w="100%">
+      <Flex gap="16px" justifyContent="flex-end" width="100%">
         {!isNew ? (
           <Button
-            className={css({
+            sx={{
               color: "background-flat-error",
               boxShadow: "inset 0 0 0 1px var(--colors-background-flat-error)",
-            })}
+            }}
             priority="secondary"
             type="button"
             onClick={() => deleteServiceMutation.mutate(selected)}
@@ -416,15 +414,15 @@ const ServiceForm = ({
 
 const Clauses = () => {
   return (
-    <Flex gap="16px" flexDir="column" w="100%">
+    <Flex gap="16px" flexDirection="column" width="100%">
       <Title anchor="clauses-departementales">3. Clauses départementales</Title>
       <div>Pensez à faire des contenus courts et explicites pour vos lecteurs.</div>
 
       <SingleClause clauseKey="contacts-utiles" title="Contacts utiles" />
       <Divider
-        w={{ base: "100%", lg: "calc(100% - 104px)" }}
-        my={{ base: "20px", lg: "40px" }}
-        ml={{ base: "0", lg: "102px" }}
+        width={{ xs: "100%", lg: "calc(100% - 104px)" }}
+        my={{ xs: "20px", lg: "40px" }}
+        ml={{ xs: "0", lg: "102px" }}
         color="background-action-low-blue-france-hover"
       />
       <SingleClause clauseKey="bonnes-pratiques" title="Bonnes pratiques" />
@@ -441,8 +439,8 @@ const SingleClause = ({ clauseKey, title }: { clauseKey: string; title: string }
   );
 
   return (
-    <Flex gap="16px" flexDir="column" ml={{ base: 0, lg: "102px" }}>
-      <styled.div fontSize="20px">{title}</styled.div>
+    <Flex gap="16px" flexDirection="column" ml={{ xs: 0, lg: "102px" }}>
+      <Box fontSize="20px">{title}</Box>
       <Button
         priority="secondary"
         iconId="ri-add-line"
@@ -517,9 +515,9 @@ const ClauseForm = ({
   });
 
   return (
-    <Flex ref={scrollToRef} gap="16px" flexDir="column" w="100%">
+    <Flex ref={scrollToRef} gap="16px" flexDirection="column" width="100%">
       <Input
-        className={css({ w: "100%" })}
+        sx={{ width: "100%" }}
         label="Intitulé clause"
         nativeInputProps={{
           value: selected.value ?? "",
@@ -527,9 +525,9 @@ const ClauseForm = ({
         }}
       />
 
-      <Flex gap="24px" w="100%">
+      <Flex gap="24px" width="100%">
         <Input
-          className={css({ w: "100%" })}
+          sx={{ width: "100%" }}
           label="Texte"
           nativeTextAreaProps={{
             rows: 5,
@@ -540,13 +538,13 @@ const ClauseForm = ({
         />
       </Flex>
 
-      <Flex gap="16px" justifyContent="flex-end" w="100%">
+      <Flex gap="16px" justifyContent="flex-end" width="100%">
         {!isNew ? (
           <Button
-            className={css({
+            sx={{
               color: "background-flat-error",
               boxShadow: "inset 0 0 0 1px var(--colors-background-flat-error)",
-            })}
+            }}
             priority="secondary"
             type="button"
             onClick={() => deleteClauseMutation.mutate(selected)}
@@ -596,35 +594,35 @@ const Activity = () => {
   );
 
   return (
-    <Flex gap="16px" flexDir="column" w="100%">
+    <Flex gap="16px" flexDirection="column" width="100%">
       <Title anchor="rapport-activite">4. Rapport d'activité</Title>
 
       <DateRangePicker startDate={startDate} setStartDate={setStartDate} endDate={endDate} setEndDate={setEndDate} />
 
-      <Flex gap="8px" flexDir={{ base: "column", lg: "row" }} w="100%">
+      <Flex gap="8px" flexDirection={{ xs: "column", lg: "row" }} width="100%">
         <Center
-          flexDir="column"
+          bgcolor="green-emeraude-975-75"
+          flexDirection="column"
           alignItems="center"
           borderRadius="5px"
-          w="100%"
-          h="215px"
+          width="100%"
+          height="215px"
           textAlign="center"
-          bg="green-emeraude-975-75"
         >
           <div>CR envoyés par {user.name} :</div>
-          <div>{query.isLoading ? <Spinner /> : <div>{query.data?.[0]?.count}</div>}</div>
+          <div>{query.isLoading ? <Spinner /> : <div>{query.data?.[0]?.count as any}</div>}</div>
         </Center>
         <Center
-          flexDir="column"
+          bgcolor="green-emeraude-975-75"
+          flexDirection="column"
           alignItems="center"
           borderRadius="5px"
-          w="100%"
-          h="215px"
+          width="100%"
+          height="215px"
           textAlign="center"
-          bg="green-emeraude-975-75"
         >
           <div>CR envoyés par l'UDAP :</div>
-          <div>{query.isLoading ? <Spinner /> : <div>{udapQuery.data?.[0]?.count}</div>}</div>
+          <div>{query.isLoading ? <Spinner /> : <div>{udapQuery.data?.[0]?.count as any}</div>}</div>
         </Center>
       </Flex>
     </Flex>
@@ -665,7 +663,7 @@ export const DateRangePicker = ({
   };
 
   return (
-    <Flex gap={{ base: 0, lg: "16px" }} flexDir={{ base: "column", lg: "row" }}>
+    <Flex gap={{ xs: 0, lg: "16px" }} flexDirection={{ xs: "column", lg: "row" }}>
       <Input
         label="Date de début"
         nativeInputProps={{
@@ -693,9 +691,9 @@ export const DateRangePicker = ({
         }}
       />
 
-      <Flex gap="8px" flexDir="row" alignItems="flex-end">
+      <Flex gap="8px" flexDirection="row" alignItems="flex-end">
         {datePresets.map((preset) => (
-          <styled.div key={preset.label} mb="1.5rem">
+          <Box key={preset.label} mb="1.5rem">
             <ControlledChip
               onClick={() => {
                 setStartDate(preset.startDate);
@@ -705,7 +703,7 @@ export const DateRangePicker = ({
             >
               {preset.label}
             </ControlledChip>
-          </styled.div>
+          </Box>
         ))}
       </Flex>
     </Flex>
@@ -714,9 +712,9 @@ export const DateRangePicker = ({
 
 const Title = ({ children, anchor }: { children: React.ReactNode; anchor?: string }) => {
   return (
-    <styled.h3 id={anchor} mb="0" fontSize="26px">
+    <Typography variant="h3" id={anchor} mb="0" fontSize="26px">
       {children}
-    </styled.h3>
+    </Typography>
   );
 };
 
@@ -731,7 +729,7 @@ export const Route = createFileRoute("/udap")({
 export const SuccessAlert = () => {
   return (
     <Alert
-      className={css({ mb: "32px" })}
+      style={{ marginBottom: "32px" }}
       severity="success"
       closable={false}
       small={false}

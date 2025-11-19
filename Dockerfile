@@ -13,7 +13,7 @@ pixman-dev \
 pangomm-dev \
 libjpeg-turbo-dev \
 freetype-dev 
-RUN npm i -g pnpm@8.4
+RUN npm i -g pnpm@10.12.4
 
 ################################
 #      DEPS INSTALLATION       #
@@ -30,10 +30,6 @@ COPY packages/pdf/package.json ./packages/pdf/
 COPY packages/frontend/package.json ./packages/frontend/
 COPY packages/frontend/public ./packages/frontend/public
 COPY packages/frontend/scripts ./packages/frontend/scripts
-COPY packages/frontend/index.dist.css ./packages/frontend/index.dist.css
-COPY packages/frontend/panda.config.ts ./packages/frontend/
-COPY packages/frontend/postcss.config.cjs ./packages/frontend/
-COPY packages/frontend/theme/ ./packages/frontend/theme/
 COPY packages/frontend/vite.config.ts ./packages/frontend/
 
 RUN pnpm install --frozen-lockfile
@@ -63,7 +59,6 @@ FROM with-deps AS frontend
 COPY packages/frontend/ ./packages/frontend/
 COPY packages/pdf/ ./packages/pdf/
 COPY --from=with-deps /usr/src/app/packages/frontend/node_modules ./packages/frontend/node_modules
-COPY --from=with-deps /usr/src/app/packages/frontend/styled-system ./packages/frontend/styled-system
 
 RUN pnpm frontend build
 CMD ["pnpm", "frontend", "preview"]

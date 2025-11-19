@@ -44,7 +44,6 @@
     "@fastify/swagger": "^8.14.0",
     "@fastify/swagger-ui": "^3.0.0",
     "@fastify/type-provider-typebox": "^4.1.0",
-    "@prisma/client": "^4.8.1",
     "@react-pdf/renderer": "^3.4.2",
     "@sentry/node": "^7.70.0",
     "@sinclair/typebox": "^0.32.20",

@@ -10,3 +10,4 @@ const setVersion = () => {
 };
 
 setVersion();
+process.exit(0);

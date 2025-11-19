@@ -1,13 +1,13 @@
-import { Center, Flex, styled } from "#styled-system/jsx";
 import Input from "@codegouvfr/react-dsfr/Input";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import { FullWidthButton } from "#components/FullWidthButton";
 import { useMutation } from "@tanstack/react-query";
 import { api, getErrorMessage } from "../api";
-import Alert from "@codegouvfr/react-dsfr/Alert";
-import { css } from "#styled-system/css";
 import { MutationAlert } from "#components/MutationAlert.js";
+import { Center } from "#components/MUIDsfr.tsx";
+import { Flex } from "#components/ui/Flex.tsx";
+import { Typography } from "@mui/material";
 
 const ResetPasswordPage = () => {
   const form = useForm<ResetPasswordFormProps>();
@@ -16,8 +16,8 @@ const ResetPasswordPage = () => {
 
   return (
     <Center mt="20px" mb="80px">
-      <Flex flexDirection="column" w="484px" p="16px">
-        <styled.h4>Récupération de mot de passe pour Compte-rendu VIF</styled.h4>
+      <Flex flexDirection="column" width="484px" p="16px">
+        <Typography variant="h4">Récupération de mot de passe pour Compte-rendu VIF</Typography>
         <p>
           Veuillez saisir l’adresse courriel associée à votre compte. Nous vous enverrons un lien pour réinitialiser
           votre mot de passe.

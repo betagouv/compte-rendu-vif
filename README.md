@@ -99,5 +99,3 @@ Le RPC se génère grâce à la commande `pnpm client:generate`, qui
 
 - `clearDb.sh` clears local postgres db
 - `frontend/createEnvFile.ts` used in prod to inject env vars starting with VITE\_ at runtime
-- `frontend/generatePandaDS.ts` used in dev to generate [PandaCSS](https://panda-css.com/docs/theming/tokens) tokens
-  from [DSFR](https://github.com/GouvernementFR/dsfr)

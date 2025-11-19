@@ -1,21 +1,21 @@
 import { useState, useRef, ChangeEvent, useEffect } from "react";
 import { v4 } from "uuid";
 import { deleteImageFromIdb, getPicturesStore, getUploadStatusStore } from "../idb";
-import { Box, Center, Flex, Grid, Stack, styled } from "#styled-system/jsx";
 import { InputGroup } from "#components/InputGroup.tsx";
-import { cx } from "#styled-system/css";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { del, get, set } from "idb-keyval";
 import { useFormContext } from "react-hook-form";
 import Badge from "@codegouvfr/react-dsfr/Badge";
 import Button from "@codegouvfr/react-dsfr/Button";
-import { css } from "#styled-system/css";
 import { createModal } from "@codegouvfr/react-dsfr/Modal";
 import { ImageCanvas, Line } from "./DrawingCanvas";
 import { api } from "../../api";
 import { db, useDbQuery } from "../../db/db";
 import { Pictures, Report } from "../../db/AppSchema";
 import imageCompression from "browser-image-compression";
+import { Box, Grid, Stack, Typography } from "@mui/material";
+import { Flex } from "#components/ui/Flex.tsx";
+import { Center } from "#components/MUIDsfr.tsx";
 
 const modal = createModal({
   id: "edit-picture",
@@ -66,7 +66,6 @@ export const UploadImage = ({ reportId }: { reportId: string }) => {
   useEffect(() => {
     const listener = (event: MessageEvent) => {
       if (event.data.type === "status") {
-        console.log("status", event.data.id, event.data.status);
         setStatusMap((prev) => ({ ...prev, [event.data.id]: event.data.status }));
       }
     };
@@ -78,28 +77,26 @@ export const UploadImage = ({ reportId }: { reportId: string }) => {
 
   return (
     <>
-      <styled.div
+      <Box
         display={selectedPicture ? "initial" : "none"}
         zIndex="1000"
-        pos="fixed"
+        position="fixed"
         top="0"
         left="0"
         right="0"
         bottom="0"
-        w="100vw"
-        h="100vh"
-        // w={{ base: "100%", lg: "634px" }}
-        // h={{ base: "100vh", lg: "792px" }}
+        width="100vw"
+        height="100vh"
       >
-        <styled.div pos="fixed" top="0" left="0" right="0" bottom="0" bgColor="rgba(0, 0, 0, 0.5)"></styled.div>
-        <Center w="100%" h="100%">
-          <styled.div
+        <Box bgcolor="rgba(0, 0, 0, 0.5)" position="fixed" top="0" left="0" right="0" bottom="0"></Box>
+        <Center width="100%" height="100%">
+          <Box
             ref={containerRef}
+            bgcolor="white"
             position="relative"
-            w={{ base: "100%", lg: "634px" }}
-            h={{ base: "100vh", lg: "792px" }}
-            maxH={{ base: "100vh", lg: "100vh" }}
-            bgColor="white"
+            width={{ xs: "100%", lg: "634px" }}
+            height={{ xs: "100vh", lg: "792px" }}
+            maxHeight={{ xs: "100vh", lg: "100vh" }}
           >
             {selectedPicture ? (
               <ImageCanvas
@@ -110,9 +107,9 @@ export const UploadImage = ({ reportId }: { reportId: string }) => {
                 lines={linesQuery.data}
               />
             ) : null}
-          </styled.div>
+          </Box>
         </Center>
-      </styled.div>
+      </Box>
       <Button
         type="button"
         iconId="ri-add-line"
@@ -125,12 +122,7 @@ export const UploadImage = ({ reportId }: { reportId: string }) => {
       >
         Ajouter photo
       </Button>
-      {/* {!canUploadImage ? (
-        <styled.div mt="16px" color="gray">
-          Le téléversement d'image est désactivé temporairement, mais il revient optimisé bientôt.
-        </styled.div>
-      ) : null} */}
-      <styled.input ref={ref as any} type="file" accept="image/*" onChange={onChange} multiple display="none" />
+      <input ref={ref as any} type="file" accept="image/*" onChange={onChange} multiple style={{ display: "none" }} />
       <ReportPictures setSelectedPicture={setSelectedPicture} statusMap={statusMap} />
     </>
   );
@@ -153,26 +145,14 @@ const ReportPictures = ({
     db.selectFrom("pictures").where("reportId", "=", reportId).orderBy("createdAt asc").selectAll(),
   );
 
-  // const tmpPicturesQuery = useLiveQuery(
-  //   db.tmp_pictures.liveMany({ where: { reportId }, orderBy: { createdAt: "desc" } }),
-  // );
-
-  // const picturesQuery = useLiveQuery(
-  //   db.pictures.liveMany({
-  //     where: { reportId },
-  //     orderBy: { createdAt: "desc" },
-  //   }),
-  // );
-
   const pictures = picturesQuery.data ?? [];
 
   if (!pictures?.length) return null;
 
   return (
-    <Flex direction="column" w="100%" my="40px">
+    <Flex flexDirection="column" width="100%" my="40px">
       <InputGroup>
-        {/* <Flex gap="16px" direction="column"> */}
-        <Grid gap="16px" gridTemplateColumns={{ base: "repeat(2, 1fr)", md: "repeat(3, 1fr)", lg: "repeat(4, 1fr)" }}>
+        <Grid gap="16px" gridTemplateColumns={{ xs: "repeat(2, 1fr)", md: "repeat(3, 1fr)", lg: "repeat(4, 1fr)" }}>
           {pictures?.map((picture, index) => (
             <PictureThumbnail
               setSelectedPicture={setSelectedPicture}
@@ -212,7 +192,6 @@ const PictureThumbnail = ({
   const bgUrlQuery = useQuery({
     queryKey: ["picture", picture.id, picture.url],
     queryFn: async () => {
-      // if (picture.url) return picture.finalUrl ?? picture.url;
       const buffer = await get(picture.id, getPicturesStore());
       if (!buffer) return picture.url;
       const blob = new Blob([buffer], { type: "image/png" });
@@ -223,8 +202,6 @@ const PictureThumbnail = ({
   });
 
   const pictureLines = useDbQuery(db.selectFrom("picture_lines").where("pictureId", "=", picture.id).selectAll());
-
-  // const pictureLines = useLiveQuery(db.picture_lines.liveMany({ where: { pictureId: picture.id } }));
 
   const idbStatusQuery = useQuery({
     queryKey: ["picture-status", picture.id],
@@ -297,20 +274,11 @@ const PictureThumbnail = ({
   const bgUrl = bgUrlQuery.data;
 
   return (
-    <Stack minW="150px" maxW="180px">
-      {/* <Badge severity={finalStatus === "uploading" ? }></Badge> */}
+    <Stack minWidth="150px" maxWidth="180px">
       <ReportStatus status={finalStatus as any} />
-      <Flex
-        // style={bgUrl ? { backgroundImage: `url(${bgUrl})` } : { backgroundColor: "gray" }}
-        flexDir="column"
-        justifyContent="flex-end"
-        h="170px"
-        // bgPosition="center calc(50% - 20px)"
-        // bgRepeat="no-repeat"
-        // backgroundSize="cover"
-      >
-        <styled.canvas ref={canvasRef} flex="1"></styled.canvas>
-        <Flex alignItems="center" border="1px solid #DFDFDF" h="40px" bgColor="white">
+      <Flex flexDirection="column" justifyContent="flex-end" height="170px">
+        <Box ref={canvasRef} component="canvas" flex="1"></Box>
+        <Flex bgcolor="white" alignItems="center" border="1px solid #DFDFDF" height="40px">
           <Box
             onClick={() => {
               setSelectedPicture({ id: picture.id, url: bgUrl! });
@@ -318,15 +286,17 @@ const PictureThumbnail = ({
             }}
             borderRight="1px solid #DFDFDF"
           >
-            <Button type="button" iconId="ri-pencil-fill" priority="tertiary no outline" />
+            <Button type="button" iconId="ri-pencil-fill" priority="tertiary no outline">
+              {null}
+            </Button>
           </Box>
           <Box flex="1" pl="5px">
             N° {index + 1}
           </Box>
           <Box onClick={() => deletePictureMutation.mutate()} borderLeft="1px solid #DFDFDF">
-            <Button type="button" iconId="ri-close-circle-fill" priority="tertiary no outline" />
-            {/* {finalStatus ? <span>{finalStatus}</span> : null} */}
-            {/* <styled.i className={fr.cx("fr-icon--md", "fr-icon-close-circle-fill")} /> */}
+            <Button type="button" iconId="ri-close-circle-fill" priority="tertiary no outline">
+              {null}
+            </Button>
           </Box>
         </Flex>
       </Flex>
@@ -339,24 +309,27 @@ const ReportStatus = ({ status }: { status: "uploading" | "success" | "error" })
 
   return (
     <Badge
-      className={css({ display: "flex", alignItems: "center" })}
       severity={"info"}
       noIcon
       small
       style={{
         backgroundColor: bgColor,
         color,
-        // backgroundColor: colors[status][1],
-        // color: colors[status][0],
+        display: "flex",
+        alignItems: "center",
       }}
     >
-      <styled.span
-        className={cx(
-          icon,
-          css({ "&::before": { w: "12px !important", h: "12px !important", verticalAlign: "middle !important" } }),
-        )}
+      <Typography
+        className={icon}
+        sx={{
+          "::before": {
+            width: "12px !important",
+            height: "12px !important",
+            verticalAlign: "middle !important",
+          },
+        }}
       />
-      <styled.span ml="4px">{label}</styled.span>
+      <Typography ml="4px">{label}</Typography>
     </Badge>
   );
 };

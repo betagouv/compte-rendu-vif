@@ -15,6 +15,8 @@ export const createEnvFile = async () => {
 
   await fs.writeFile("./dist/env.js", contentJs);
   await fs.writeFile("./dist/swEnv.js", swContentJS);
+
+  process.exit(0);
 };
 
 createEnvFile();
