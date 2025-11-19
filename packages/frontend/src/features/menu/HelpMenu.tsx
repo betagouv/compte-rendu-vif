@@ -67,7 +67,7 @@ export const HelpMenu = () => {
             <Typography
               component="span"
               onClick={() => {
-                navigator.clipboard.writeText("contact@compte-rendu-vif.beta.gouv.fr");
+                navigator.clipboard.writeText("contact@patrimoine-embarque.beta.gouv.fr");
                 setShowClipboardSuccess(true);
               }}
               sx={{
@@ -76,7 +76,7 @@ export const HelpMenu = () => {
               }}
               color="text-active-blue-france"
             >
-              contact@compte-rendu-vif.beta.gouv.fr
+              contact@patrimoine-embarque.beta.gouv.fr
             </Typography>
             .
           </Box>
