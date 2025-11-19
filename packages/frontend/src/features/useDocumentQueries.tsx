@@ -56,16 +56,16 @@ export const getStateReportQueries = (
   page: number,
   user: { id: string; service_id: string | null },
 ): StateReportQueries => {
-  const baseQuery = stateReportQueries.base.offset(page * 20).limit(20);
+  let baseQuery = stateReportQueries.base.offset(page * 20).limit(20);
 
-  const countQuery = stateReportQueries.count;
+  let countQuery = stateReportQueries.count;
 
   if (scope === "my") {
-    baseQuery.where("created_by", "=", user.id);
-    countQuery.where("created_by", "=", user.id);
+    baseQuery = baseQuery.where("created_by", "=", user.id);
+    countQuery = countQuery.where("created_by", "=", user.id);
   } else {
-    baseQuery.where("state_report.service_id", "=", user.service_id);
-    countQuery.where("state_report.service_id", "=", user.service_id);
+    baseQuery = baseQuery.where("state_report.service_id", "=", user.service_id);
+    countQuery = countQuery.where("state_report.service_id", "=", user.service_id);
   }
 
   return { baseQuery, countQuery };
