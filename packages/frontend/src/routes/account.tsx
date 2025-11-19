@@ -144,7 +144,7 @@ const DefaultRecipient = () => {
 
     return db
       .insertInto("user_settings")
-      .values({ id: v4(), user_id: user.id, default_emails: emails.join(",") })
+      .values({ id: v4(), user_id: user.id, default_emails: emails.join(","), service_id: user.service_id })
       .execute();
   });
 
