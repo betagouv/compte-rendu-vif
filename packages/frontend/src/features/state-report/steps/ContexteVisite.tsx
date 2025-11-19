@@ -28,7 +28,7 @@ export const ContexteVisite = () => {
       }}
     >
       <Typography variant="h6" mb="32px" display={{ xs: "none", lg: "block" }}>
-        Constat général
+        Contexte de la visite
       </Typography>
       <NatureVisiteRadioButtons />
       <BilanQuinquennalRadioButtons />

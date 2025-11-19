@@ -368,6 +368,7 @@ export const defaultSections = [
   "Fondations, sols, sous-sols",
   "Maçonnerie, structure",
   "Parements, enduits",
+  "Couverture, charpente",
   "Menuiserie, métallerie, vitraux",
   "Cloisonnement, revêtements, décors, objets, mobiliers",
   "Équipements, sécurité, accessibilité",

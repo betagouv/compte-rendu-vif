@@ -26,7 +26,10 @@ export const ConstatDetaille = () => {
   );
 
   return (
-    <Stack px="16px" pt="16px" mb="16px">
+    <Stack mb={{ xs: "40px", lg: "80px" }} px="16px" pl={{ xs: "16px", lg: "64px" }} pt={{ xs: "16px", lg: "44px" }}>
+      <Typography variant="h6" mb="32px" display={{ xs: "none", lg: "block" }}>
+        Constat détaillé
+      </Typography>
       <Typography fontSize="14px" mb="16px">
         Renseignez vos observations pour chaque partie visitée. À défaut, chacune sera notée comme non-visitée.
       </Typography>
@@ -69,7 +72,7 @@ const SectionsList = ({ visitedSections }: { visitedSections: VisitedSection[] }
   const selectedSection = visitedSections?.find((vs) => vs.id === selectedSectionId) || null;
 
   return (
-    <Stack gap="8px">
+    <Stack gap="8px" flexWrap="wrap" flexDirection="row">
       <SectionModal selectedSection={selectedSection} onClose={() => setSelectedSectionId(null)} />
       {defaultSections.map((section) => {
         const visited = visitedSections?.find((vs) => vs.section === section);
@@ -107,7 +110,7 @@ const SectionItem = ({
               Renseigné
             </Badge>
           ) : null}
-          <Box>{section}</Box>
+          <Box fontSize="16px">{section}</Box>
         </Flex>
       }
       buttonProps={{
@@ -115,6 +118,7 @@ const SectionItem = ({
       }}
       noIcon
       sx={{
+        width: { xs: "100%", lg: "48%" },
         py: isVisited ? "16px" : undefined,
       }}
     />

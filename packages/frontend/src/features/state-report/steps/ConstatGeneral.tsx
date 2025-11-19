@@ -34,11 +34,10 @@ export const ConstatGeneral = () => {
       </Typography>
       <EtatGeneralRadioButtons />
       <ProportionsRadioButtons />
-      {/* <Input textArea label="Commentaires" nativeTextAreaProps={{ rows: 6, ...form.register("etat_commentaires") }} /> */}
       <StateReportTextAreaWithSpeechToText label="Commentaire" name="etat_commentaires" mb="40px" />
-      <Divider mb="16px" />
+      <Divider mb={{ xs: "24px", lg: "32px" }} />
       <EtatGeneralImages />
-      <Divider my="16px" />
+      <Divider my={{ xs: "24px", lg: "32px" }} />
       <Preconisations />
       <StateReportTextAreaWithSpeechToText label="Commentaire" name="preconisations_commentaires" />
     </Stack>
