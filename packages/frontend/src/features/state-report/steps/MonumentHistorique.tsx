@@ -47,9 +47,6 @@ export const MonumentHistorique = () => {
       </Flex>
 
       <Box mt="24px" px={{ xs: "16px", lg: "64px" }}>
-        <Typography variant="subtitle1" fontWeight="bold" mb="16px">
-          Objets mobiliers conservés
-        </Typography>
         <MonumentObjets />
       </Box>
       {isDesktop ? null : <ButtonsSwitch />}
@@ -110,11 +107,16 @@ const MonumentObjets = () => {
   const objets = objetsQuery.data ?? [];
   if (!objets?.length) return null;
   return (
-    <Flex width="100%" gap="16px" flexDirection={{ xs: "column", lg: "row" }}>
-      {objets.map((obj) => (
-        <MonumentObjetItem key={obj.id} popObjet={obj} />
-      ))}
-    </Flex>
+    <>
+      <Typography variant="subtitle1" fontWeight="bold" mb="16px">
+        Objets mobiliers conservés
+      </Typography>
+      <Flex width="100%" gap="16px" flexDirection={{ xs: "column", lg: "row" }}>
+        {objets.map((obj) => (
+          <MonumentObjetItem key={obj.id} popObjet={obj} />
+        ))}
+      </Flex>
+    </>
   );
 };
 

@@ -1,4 +1,4 @@
-import { Autocomplete, Box, Typography } from "@mui/material";
+import { Autocomplete, Box, Dialog, DialogTitle, Typography } from "@mui/material";
 import { db, useDbQuery } from "../db/db";
 import { useState } from "react";
 import { useStyles } from "tss-react";
@@ -11,6 +11,8 @@ import { fr } from "@codegouvfr/react-dsfr";
 import Highlighter from "react-highlight-words";
 import { Flex } from "#components/ui/Flex.tsx";
 import { IconLink } from "#components/ui/IconLink.tsx";
+import { ModalCloseButton } from "./menu/MenuTitle";
+import { Button } from "#components/MUIDsfr.tsx";
 
 type FilterablePopImmeubles = Pick<
   PopImmeuble,
@@ -37,6 +39,7 @@ const mapping: Partial<Record<keyof PopImmeuble, keyof StateReportFormType>> = {
 
 export const ImmeubleAutocomplete = () => {
   const [isChanging, setIsChanging] = useState(false);
+  const [isWarningOpen, setIsWarningOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const form = useStateReportFormContext();
   const [value] = useWatch({ control: form.control, name: ["reference_pop"] });
@@ -69,12 +72,52 @@ export const ImmeubleAutocomplete = () => {
 
   const hasValue = !!value;
 
+  const handleChanging = (changing: boolean) => {
+    setIsChanging(changing);
+    if (changing) {
+      setIsWarningOpen(false);
+      for (const formField of Object.values(mapping)) {
+        form.setValue(formField as keyof StateReportFormType, null);
+      }
+    }
+  };
+
   if (hasValue && !isChanging)
     return (
       <Flex flexDirection="column">
+        {isWarningOpen ? (
+          <Dialog
+            open
+            onClose={() => setIsWarningOpen(false)}
+            sx={{
+              ".MuiPaper-root": {
+                maxWidth: { xs: "100%", sm: "800px" },
+              },
+            }}
+          >
+            <Box p="16px" width="800px">
+              <ModalCloseButton onClose={() => setIsWarningOpen(false)} />
+              <DialogTitle>Changer de monument</DialogTitle>
+              <Box p="24px">
+                <Typography mb="16px">
+                  Attention, les informations concernant le monument historique seront supprimées de votre constat.
+                  <br />
+                  <br />
+                  La saisie du constat d'état sera conservée.
+                </Typography>
+              </Box>
+              <Flex justifyContent="flex-end" gap="16px" px="24px" pb="16px">
+                <Button priority="secondary" onClick={() => setIsWarningOpen(false)}>
+                  Annuler
+                </Button>
+                <Button onClick={() => handleChanging(true)}>Continuer</Button>
+              </Flex>
+            </Box>
+          </Dialog>
+        ) : null}
         <Typography fontSize="20px">{form.watch("titre_edifice")}</Typography>
         <Box mt="8px">
-          <IconLink icon="fr-icon-edit-fill" sx={{ fontSize: "14px" }} onClick={() => setIsChanging(true)}>
+          <IconLink icon="fr-icon-edit-fill" sx={{ fontSize: "14px" }} onClick={() => setIsWarningOpen(true)}>
             Changer de monument
           </IconLink>
         </Box>
