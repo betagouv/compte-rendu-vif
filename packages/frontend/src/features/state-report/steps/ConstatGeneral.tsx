@@ -1,4 +1,4 @@
-import { Box, Stack, Typography } from "@mui/material";
+import { Box, BoxProps, Stack, Typography } from "@mui/material";
 import { StateReportFormType, useStateReportFormContext } from "../utils";
 import { UseFormReturn, useWatch } from "react-hook-form";
 import RadioButtons from "@codegouvfr/react-dsfr/RadioButtons";
@@ -16,6 +16,8 @@ import { Flex } from "#components/ui/Flex.tsx";
 import { StateReport } from "../../../db/AppSchema";
 import { useState } from "react";
 import { useSpeechToTextV2 } from "../../audio-record/SpeechRecorder.hook";
+import { useIsDesktop } from "../../../hooks/useIsDesktop";
+import { fr } from "@codegouvfr/react-dsfr";
 
 const routeApi = getRouteApi("/constat/$constatId");
 
@@ -23,11 +25,17 @@ export const ConstatGeneral = () => {
   const form = useStateReportFormContext();
 
   return (
-    <Stack px="16px" pt="16px" mb="16px">
+    <Stack px="16px" pl={{ xs: "16px", lg: "64px" }} pt={{ xs: "16px", lg: "44px" }} mb="16px">
+      <Typography variant="h6" mb="32px" display={{ xs: "none", lg: "block" }}>
+        Constat général
+      </Typography>
+      <Typography variant="caption" color={fr.colors.decisions.text.mention.grey.default} mb="24px">
+        Les champs avec le symbole * sont obligatoires
+      </Typography>
       <EtatGeneralRadioButtons />
       <ProportionsRadioButtons />
       {/* <Input textArea label="Commentaires" nativeTextAreaProps={{ rows: 6, ...form.register("etat_commentaires") }} /> */}
-      <StateReportTextAreaWithSpeechToText label="Commentaire" name="etat_commentaires" />
+      <StateReportTextAreaWithSpeechToText label="Commentaire" name="etat_commentaires" mb="40px" />
       <Divider mb="16px" />
       <EtatGeneralImages />
       <Divider my="16px" />
@@ -37,7 +45,11 @@ export const ConstatGeneral = () => {
   );
 };
 
-const StateReportTextAreaWithSpeechToText = ({ label, name }: { label: string; name: keyof StateReportFormType }) => {
+const StateReportTextAreaWithSpeechToText = ({
+  label,
+  name,
+  ...props
+}: { label: string; name: keyof StateReportFormType } & BoxProps) => {
   const form = useStateReportFormContext();
   const value = useWatch({ control: form.control, name: name }) ?? "";
   const setValue = (val: string) => form.setValue(name, val);
@@ -58,7 +70,7 @@ const StateReportTextAreaWithSpeechToText = ({ label, name }: { label: string; n
 
   const textAreaProps = isRecording ? isListeningProps : isIdleProps;
   return (
-    <Flex flexDirection="column">
+    <Flex flexDirection="column" {...props}>
       <Input
         sx={{ mb: "16px !important", "& > textarea": { mt: "0 !important" } }}
         disabled={isRecording}
@@ -104,7 +116,7 @@ const EtatGeneralImages = () => {
   };
 
   return (
-    <Flex width="100%" flexWrap="wrap" gap={{ xs: "16px", lg: "0" }}>
+    <Flex width="100%" flexWrap="wrap" gap={{ xs: "20px", lg: "16px" }} flexDirection={{ xs: "column", lg: "row" }}>
       <Box flex="1">
         <Typography>Plan de situation</Typography>
 
@@ -133,7 +145,7 @@ const EtatGeneralImages = () => {
           onClose={onClose}
         />
       </Box>
-      <Box flex="1" mx={{ xs: "0", lg: "16px" }}>
+      <Box flex="1">
         <Typography>Vues générales de l'édifice</Typography>
 
         <SingleUploadImageWithPreview
@@ -183,7 +195,15 @@ const SingleUploadImageWithPreview = ({
   });
 
   return (
-    <Box width="100%">
+    <Box
+      width="100%"
+      sx={{
+        button: {
+          width: { xs: "100% !important", lg: "fit-content" },
+          justifyContent: { xs: "center !important", lg: "unset" },
+        },
+      }}
+    >
       <UploadImageWithEditModal
         hideButton={!!value}
         addImage={addMutation.mutateAsync}
@@ -245,6 +265,9 @@ const useUpdateImageMutation = ({
 
 export const EtatGeneralRadioButtons = () => {
   const form = useStateReportFormContext();
+
+  const isDesktop = useIsDesktop();
+
   const value = useWatch({ control: form.control, name: "etat_general" });
   const options = ["Bon", "Moyen", "Mauvais", "Péril"].map((label) => ({
     label,
@@ -254,12 +277,14 @@ export const EtatGeneralRadioButtons = () => {
     },
   }));
 
-  return <RadioButtons legend="État général" options={options} />;
+  return <RadioButtons orientation={isDesktop ? "horizontal" : "vertical"} legend="État général" options={options} />;
 };
 
 const ProportionsRadioButtons = () => {
   const form = useStateReportFormContext();
   const value = useWatch({ control: form.control, name: "proportion_dans_cet_etat" });
+
+  const isDesktop = useIsDesktop();
 
   const options = ["50%", "60%", "70%", "80%", "90%", "100%"].map((label) => ({
     label,
@@ -269,7 +294,13 @@ const ProportionsRadioButtons = () => {
     },
   }));
 
-  return <RadioButtons legend="Proportion dans cet état" options={options} />;
+  return (
+    <RadioButtons
+      orientation={isDesktop ? "horizontal" : "vertical"}
+      legend="Proportion dans cet état"
+      options={options}
+    />
+  );
 };
 
 const Preconisations = () => {

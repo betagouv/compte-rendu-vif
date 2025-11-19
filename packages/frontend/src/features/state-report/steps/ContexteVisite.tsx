@@ -1,4 +1,4 @@
-import { Stack } from "@mui/material";
+import { Stack, Typography } from "@mui/material";
 import { useStateReportFormContext } from "../utils";
 import { Input } from "#components/MUIDsfr.tsx";
 import { InputGroup } from "#components/InputGroup.tsx";
@@ -10,15 +10,30 @@ import { Divider } from "#components/ui/Divider.tsx";
 import { useEffect, useRef } from "react";
 import { format, parse } from "date-fns";
 import { Flex } from "#components/ui/Flex.tsx";
+import { useIsDesktop } from "../../../hooks/useIsDesktop";
 
 export const ContexteVisite = () => {
   const form = useStateReportFormContext();
 
   return (
-    <Stack px="16px" pt="16px" mb="16px">
+    <Stack
+      px="16px"
+      pl={{ xs: "16px", lg: "64px" }}
+      pt={{ xs: "16px", lg: "44px" }}
+      mb="40px"
+      sx={{
+        input: {
+          maxWidth: "588px",
+        },
+      }}
+    >
+      <Typography variant="h6" mb="32px" display={{ xs: "none", lg: "block" }}>
+        Constat général
+      </Typography>
       <NatureVisiteRadioButtons />
       <BilanQuinquennalRadioButtons />
       <Divider mb="16px" />
+
       <DateInput form={form} name="date_visite" label="Date de la visite" />
       <Input
         label="Rédacteur du constat"
@@ -27,30 +42,38 @@ export const ContexteVisite = () => {
         }}
       />
       <Divider mb="16px" />
-      <Input
-        label="Propriétaire"
-        nativeInputProps={{
-          ...form.register("proprietaire"),
-        }}
-      />
-      <Input
-        label="Courriel du propriétaire"
-        nativeInputProps={{
-          ...form.register("proprietaire_email"),
-        }}
-      />
-      <Input
-        label="Représentant"
-        nativeInputProps={{
-          ...form.register("proprietaire_representant"),
-        }}
-      />
-      <Input
-        label="Courriel du représentant"
-        nativeInputProps={{
-          ...form.register("proprietaire_representant_email"),
-        }}
-      />
+      <Flex flexDirection={{ xs: "column", lg: "row" }} gap={{ xs: "0", lg: "16px" }}>
+        <Input
+          sx={{ width: "100%" }}
+          label="Propriétaire"
+          nativeInputProps={{
+            ...form.register("proprietaire"),
+          }}
+        />
+        <Input
+          sx={{ width: "100%" }}
+          label="Courriel du propriétaire"
+          nativeInputProps={{
+            ...form.register("proprietaire_email"),
+          }}
+        />
+      </Flex>
+      <Flex flexDirection={{ xs: "column", lg: "row" }} gap={{ xs: "0", lg: "16px" }} mt={{ xs: "16px", lg: "0" }}>
+        <Input
+          sx={{ width: "100%" }}
+          label="Représentant"
+          nativeInputProps={{
+            ...form.register("proprietaire_representant"),
+          }}
+        />
+        <Input
+          sx={{ width: "100%" }}
+          label="Courriel du représentant"
+          nativeInputProps={{
+            ...form.register("proprietaire_representant_email"),
+          }}
+        />
+      </Flex>
     </Stack>
   );
 };
@@ -83,7 +106,7 @@ const DateInput = ({ form, name, label }: { form: UseFormReturn<any>; name: stri
 
 const NatureVisiteRadioButtons = () => {
   const form = useStateReportFormContext();
-
+  const isDesktop = useIsDesktop();
   const value = useWatch({ control: form.control, name: "nature_visite" });
 
   const options = ["Complète", "Partielle (préciser)"].map((label) => ({
@@ -96,7 +119,12 @@ const NatureVisiteRadioButtons = () => {
 
   return (
     <Stack gap={0} mb="16px">
-      <RadioButtons legend="Nature de la visite" options={options} style={{ marginBottom: 0 }} />
+      <RadioButtons
+        orientation={isDesktop ? "horizontal" : "vertical"}
+        legend="Nature de la visite"
+        options={options}
+        style={{ marginBottom: 0 }}
+      />
       {value === "partielle (préciser)" ? (
         <Input label={null} nativeInputProps={{ ...form.register("visite_partielle_details") }} />
       ) : null}
