@@ -239,7 +239,7 @@ export const getStateReportHtmlString = ({
       <br/>
       <br/>
 
-      <b>Partie visitées</b> : ${isPartielle ? stateReport.visite_partielle_details || "" : "Visite complète de l'édifice"}<br/>
+      <b>Parties visitées</b> : ${isPartielle ? stateReport.visite_partielle_details || "" : "Visite complète de l'édifice"}<br/>
       <b>Adresse</b> : ${stateReport.adresse || "N/A"}<br/>
       <b>Référence cadastrale</b> : ${stateReport.reference_cadastrale || "N/A"}<br/>
       <b>Propriétaire</b> : ${stateReport.proprietaire ? `${stateReport.proprietaire} (${stateReport.proprietaire_email})` : "N/A"}<br/>
@@ -329,7 +329,6 @@ export const getStateReportHtmlString = ({
 
       <div id="preconisations">
         <h2>Préconisations générales</h2>
-         -- TODO: à revoir (phrase d'intro générique + liste des préconisations cochées avec commentaires entre parenthèses
         <b>
           Suite à la visite, il est préconisé d'entreprendre ${preconisationsMap[stateReport.preconisations as keyof typeof preconisationsMap] || "N/A"}.
         </b>
