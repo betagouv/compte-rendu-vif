@@ -15,6 +15,7 @@ import { sentry } from "./features/sentry";
 import { syncPlugin } from "./routes/syncRoutes";
 import { authPlugin } from "./routes/authRoutes";
 import { isDev } from "./envVars";
+import { stateReportPlugin } from "./routes/stateReportRoutes";
 
 const debug = makeDebug("fastify");
 
@@ -64,6 +65,7 @@ export const initFastify = async () => {
       await instance.register(staticDataPlugin);
       await instance.register(uploadPlugin, { prefix: "/upload" });
       await instance.register(pdfPlugin, { prefix: "/pdf" });
+      await instance.register(stateReportPlugin, { prefix: "/state-report" });
       await instance.register(syncPlugin);
     },
     { prefix: "/api" },

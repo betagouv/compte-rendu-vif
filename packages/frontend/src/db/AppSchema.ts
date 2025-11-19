@@ -374,6 +374,7 @@ const pop_images = new Table({
   url: column.text,
   label: column.text,
   copyright: column.text,
+  dept_number: column.text,
 });
 
 export const AppSchema = new Schema({

@@ -236,6 +236,21 @@ export namespace Endpoints {
     };
     response: string;
   };
+  export type get_ApistateReportobjetsImages = {
+    method: "GET";
+    path: "/api/state-report/objets-images";
+    parameters: {
+      query: { references: Array<string> };
+    };
+    response: Array<{
+      id: string;
+      reference?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+      url?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+      dept_number?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+      label?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+      copyright?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+    }>;
+  };
   export type post_ApiuploadData = {
     method: "POST";
     path: "/api/upload-data";
@@ -275,6 +290,7 @@ export type EndpointByMethod = {
     "/api/services": Endpoints.get_Apiservices;
     "/api/upload/attachment": Endpoints.get_Apiuploadattachment;
     "/api/pdf/report": Endpoints.get_Apipdfreport;
+    "/api/state-report/objets-images": Endpoints.get_ApistateReportobjetsImages;
   };
 };
 

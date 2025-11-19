@@ -11,7 +11,7 @@ import { useIsDesktop } from "../../../hooks/useIsDesktop";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "../../../api";
 import { db, useDbQuery } from "../../../db/db";
-import { PopObjet } from "../../../db/AppSchema";
+import { PopImage, PopObjet } from "../../../db/AppSchema";
 
 export const MonumentHistorique = () => {
   const form = useStateReportFormContext();
@@ -91,7 +91,7 @@ const MonumentObjets = () => {
   const objetsQuery = useQuery({
     queryKey: ["pop-objets", monumentReference, nbToShow],
     queryFn: async () => {
-      if (!monumentReference) return [];
+      if (!monumentReference) return { objets: [], images: [] };
       const objetsResponse = await db
         .selectFrom("pop_objets")
         .selectAll()
@@ -99,13 +99,28 @@ const MonumentObjets = () => {
         .limit(nbToShow)
         .execute();
 
-      return objetsResponse;
+      return { objets: objetsResponse };
     },
     enabled: !!monumentReference,
   });
 
-  const objets = objetsQuery.data ?? [];
+  const imagesQuery = useQuery({
+    queryKey: ["pop-images-for-objets", objetsQuery.data?.objets.map((o) => o.reference)],
+    queryFn: async () => {
+      const references = objetsQuery.data!.objets.map((o) => o.reference);
+      const images = await api.get("/api/state-report/objets-images", {
+        query: { references: references.join(",") as any },
+      });
+      return { images: images as PopImage[] };
+    },
+    refetchOnWindowFocus: false,
+    enabled: !!objetsQuery.data?.objets.length,
+  });
+
+  const { objets } = objetsQuery.data ?? { objets: [] };
+  const { images } = imagesQuery.data ?? { images: [] };
   if (!objets?.length) return null;
+
   return (
     <>
       <Typography variant="subtitle1" fontWeight="bold" mb="16px">
@@ -113,14 +128,18 @@ const MonumentObjets = () => {
       </Typography>
       <Flex width="100%" gap="16px" flexDirection={{ xs: "column", lg: "row" }}>
         {objets.map((obj) => (
-          <MonumentObjetItem key={obj.id} popObjet={obj} />
+          <MonumentObjetItem
+            key={obj.id}
+            popObjet={obj}
+            images={images.filter((img) => img.reference === obj.reference)}
+          />
         ))}
       </Flex>
     </>
   );
 };
 
-const MonumentObjetItem = ({ popObjet }: { popObjet: PopObjet }) => {
+const MonumentObjetItem = ({ popObjet, images }: { popObjet: PopObjet; images: PopImage[] }) => {
   return (
     <Flex
       component="a"
@@ -142,7 +161,7 @@ const MonumentObjetItem = ({ popObjet }: { popObjet: PopObjet }) => {
       <Box
         component="img"
         height="216px"
-        src={"/objet-sans-image.png"}
+        src={images?.[0]?.url ? images[0].url : "/objet-sans-image.png"}
         sx={{
           objectFit: "cover",
         }}
