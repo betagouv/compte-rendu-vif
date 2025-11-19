@@ -99,3 +99,9 @@ a {
     transform: rotate(360deg);
   }
 }
+
+.mandatory-field::before {
+  content: "*";
+  margin-right: 2px;
+  color: red;
+}

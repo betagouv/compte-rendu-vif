@@ -50,6 +50,10 @@ const stepsLabel = {
   documents: "Documents",
 };
 
+export const scrollToTop = () => {
+  document.getElementsByClassName("MuiBox-root")?.[0]?.scrollTo(0, 0);
+};
+
 const routeApi = getRouteApi("/constat/$constatId");
 const SummaryContent = ({ onClick }: { onClick?: () => void }) => {
   const navigate = useNavigate();
@@ -59,7 +63,7 @@ const SummaryContent = ({ onClick }: { onClick?: () => void }) => {
   const navigateToStep = (step: StateReportStep) => {
     navigate({ to: "/constat/$constatId", params: { constatId }, search: { step } });
     onClick?.();
-    document.getElementsByClassName("MuiBox-root")?.[0]?.scrollTo(0, 0);
+    scrollToTop();
   };
 
   const activeProps = {

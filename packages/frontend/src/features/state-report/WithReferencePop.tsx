@@ -3,7 +3,7 @@ import { db, useDbQuery } from "../../db/db";
 import { StateReportStep, useStateReportFormContext } from "./utils";
 import { Box, Stack } from "@mui/material";
 import { Flex } from "#components/ui/Flex.tsx";
-import { StateReportSummary } from "./StateReportSummary";
+import { scrollToTop, StateReportSummary } from "./StateReportSummary";
 import { Tabs } from "#components/Tabs.tsx";
 import { MonumentHistorique } from "./steps/MonumentHistorique";
 import { fr } from "@codegouvfr/react-dsfr";
@@ -72,6 +72,10 @@ const ContentSwitch = () => {
 export const ButtonsSwitch = () => {
   const { step } = routeApi.useSearch();
   const navigate = routeApi.useNavigate();
+  const navigateToStep = (step: StateReportStep) => {
+    navigate({ search: { step } });
+    scrollToTop();
+  };
 
   const { constatId } = routeApi.useParams();
 
@@ -88,7 +92,7 @@ export const ButtonsSwitch = () => {
           justifyContent: "center",
         }}
         nativeButtonProps={{
-          onClick: () => navigate({ search: { step: "contexte-visite" } }),
+          onClick: () => navigateToStep("contexte-visite"),
         }}
       >
         Contexte de la visite
@@ -102,7 +106,7 @@ export const ButtonsSwitch = () => {
           priority="secondary"
           size="large"
           nativeButtonProps={{
-            onClick: () => navigate({ search: { step: "informations" } }),
+            onClick: () => navigateToStep("informations"),
           }}
           sx={{
             width: "100%",
@@ -117,7 +121,7 @@ export const ButtonsSwitch = () => {
           iconId="ri-arrow-right-line"
           size="large"
           nativeButtonProps={{
-            onClick: () => navigate({ search: { step: "constat-general" } }),
+            onClick: () => navigateToStep("constat-general"),
           }}
           sx={{
             width: "100%",
@@ -137,7 +141,7 @@ export const ButtonsSwitch = () => {
           priority="secondary"
           size="large"
           nativeButtonProps={{
-            onClick: () => navigate({ search: { step: "contexte-visite" } }),
+            onClick: () => navigateToStep("contexte-visite"),
           }}
           sx={{
             width: "100%",
@@ -152,7 +156,7 @@ export const ButtonsSwitch = () => {
           iconId="ri-arrow-right-line"
           size="large"
           nativeButtonProps={{
-            onClick: () => navigate({ search: { step: "constat-detaille" } }),
+            onClick: () => navigateToStep("constat-detaille"),
           }}
           sx={{
             width: "100%",
@@ -172,7 +176,7 @@ export const ButtonsSwitch = () => {
           priority="secondary"
           size="large"
           nativeButtonProps={{
-            onClick: () => navigate({ search: { step: "constat-general" } }),
+            onClick: () => navigateToStep("constat-general"),
           }}
           sx={{
             width: "100%",

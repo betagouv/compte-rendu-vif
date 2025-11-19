@@ -1,4 +1,4 @@
-import { Stack, Typography } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import { useStateReportFormContext } from "../utils";
 import { Input } from "#components/MUIDsfr.tsx";
 import { InputGroup } from "#components/InputGroup.tsx";
@@ -7,10 +7,11 @@ import { UseFormReturn, useWatch } from "react-hook-form";
 import { Checkbox } from "@codegouvfr/react-dsfr/Checkbox";
 import { ContentBlock } from "./MonumentHistorique";
 import { Divider } from "#components/ui/Divider.tsx";
-import { useEffect, useRef } from "react";
+import { ReactNode, useEffect, useRef } from "react";
 import { format, parse } from "date-fns";
 import { Flex } from "#components/ui/Flex.tsx";
 import { useIsDesktop } from "../../../hooks/useIsDesktop";
+import { MandatoryFieldReminder } from "./ConstatGeneral";
 
 export const ContexteVisite = () => {
   const form = useStateReportFormContext();
@@ -30,13 +31,14 @@ export const ContexteVisite = () => {
       <Typography variant="h6" mb="32px" display={{ xs: "none", lg: "block" }}>
         Contexte de la visite
       </Typography>
+      <MandatoryFieldReminder />
       <NatureVisiteRadioButtons />
       <BilanQuinquennalRadioButtons />
       <Divider mb="16px" />
 
-      <DateInput form={form} name="date_visite" label="Date de la visite" />
+      <DateInput form={form} name="date_visite" label={<Box className="mandatory-field">Date de la visite</Box>} />
       <Input
-        label="Rédacteur du constat"
+        label={<Box className="mandatory-field">Rédacteur du constat</Box>}
         nativeInputProps={{
           ...form.register("redacted_by"),
         }}
@@ -45,14 +47,14 @@ export const ContexteVisite = () => {
       <Flex flexDirection={{ xs: "column", lg: "row" }} gap={{ xs: "0", lg: "16px" }}>
         <Input
           sx={{ width: "100%" }}
-          label="Propriétaire"
+          label={<Box className="mandatory-field">Propriétaire</Box>}
           nativeInputProps={{
             ...form.register("proprietaire"),
           }}
         />
         <Input
           sx={{ width: "100%" }}
-          label="Courriel du propriétaire"
+          label={<Box className="mandatory-field">Courriel du propriétaire</Box>}
           nativeInputProps={{
             ...form.register("proprietaire_email"),
           }}
@@ -78,7 +80,7 @@ export const ContexteVisite = () => {
   );
 };
 
-const DateInput = ({ form, name, label }: { form: UseFormReturn<any>; name: string; label: string }) => {
+const DateInput = ({ form, name, label }: { form: UseFormReturn<any>; name: string; label: ReactNode }) => {
   const rawValue = useWatch({ control: form.control, name });
   const dateString = rawValue ? format(new Date(rawValue), "yyyy-MM-dd") : null;
   const currentValueRef = useRef(dateString);
@@ -121,7 +123,7 @@ const NatureVisiteRadioButtons = () => {
     <Stack gap={0} mb="16px">
       <RadioButtons
         orientation={isDesktop ? "horizontal" : "vertical"}
-        legend="Nature de la visite"
+        legend={<Box className="mandatory-field">Nature de la visite</Box>}
         options={options}
         style={{ marginBottom: 0 }}
       />

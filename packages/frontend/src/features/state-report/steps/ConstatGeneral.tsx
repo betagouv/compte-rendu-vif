@@ -29,9 +29,7 @@ export const ConstatGeneral = () => {
       <Typography variant="h6" mb="32px" display={{ xs: "none", lg: "block" }}>
         Constat général
       </Typography>
-      <Typography variant="caption" color={fr.colors.decisions.text.mention.grey.default} mb="24px">
-        Les champs avec le symbole * sont obligatoires
-      </Typography>
+      <MandatoryFieldReminder />
       <EtatGeneralRadioButtons />
       <ProportionsRadioButtons />
       <StateReportTextAreaWithSpeechToText label="Commentaire" name="etat_commentaires" mb="40px" />
@@ -41,6 +39,14 @@ export const ConstatGeneral = () => {
       <Preconisations />
       <StateReportTextAreaWithSpeechToText label="Commentaire" name="preconisations_commentaires" />
     </Stack>
+  );
+};
+
+export const MandatoryFieldReminder = () => {
+  return (
+    <Typography variant="caption" color={fr.colors.decisions.text.mention.grey.default} mb="24px">
+      Les champs avec le symbole * sont obligatoires
+    </Typography>
   );
 };
 
@@ -73,7 +79,7 @@ const StateReportTextAreaWithSpeechToText = ({
       <Input
         sx={{ mb: "16px !important", "& > textarea": { mt: "0 !important" } }}
         disabled={isRecording}
-        label={label}
+        label={<Box mb="8px">{label}</Box>}
         textArea
         nativeTextAreaProps={{
           ...textAreaProps,
@@ -117,7 +123,7 @@ const EtatGeneralImages = () => {
   return (
     <Flex width="100%" flexWrap="wrap" gap={{ xs: "20px", lg: "16px" }} flexDirection={{ xs: "column", lg: "row" }}>
       <Box flex="1">
-        <Typography>Plan de situation</Typography>
+        <Typography mb="8px">Plan de situation</Typography>
 
         <SingleUploadImageWithPreview
           constatId={constatId}
@@ -131,7 +137,7 @@ const EtatGeneralImages = () => {
         />
       </Box>
       <Box flex="1">
-        <Typography>Plan de l'édifice</Typography>
+        <Typography mb="8px">Plan de l'édifice</Typography>
 
         <SingleUploadImageWithPreview
           constatId={constatId}
@@ -145,7 +151,7 @@ const EtatGeneralImages = () => {
         />
       </Box>
       <Box flex="1">
-        <Typography>Vues générales de l'édifice</Typography>
+        <Typography mb="8px">Vues générales de l'édifice</Typography>
 
         <SingleUploadImageWithPreview
           constatId={constatId}
@@ -276,7 +282,13 @@ export const EtatGeneralRadioButtons = () => {
     },
   }));
 
-  return <RadioButtons orientation={isDesktop ? "horizontal" : "vertical"} legend="État général" options={options} />;
+  return (
+    <RadioButtons
+      orientation={isDesktop ? "horizontal" : "vertical"}
+      legend={<Box className="mandatory-field">État général de l'édifice</Box>}
+      options={options}
+    />
+  );
 };
 
 const ProportionsRadioButtons = () => {
@@ -296,7 +308,7 @@ const ProportionsRadioButtons = () => {
   return (
     <RadioButtons
       orientation={isDesktop ? "horizontal" : "vertical"}
-      legend="Proportion dans cet état"
+      legend={<Box className="mandatory-field">Proportion dans cet état</Box>}
       options={options}
     />
   );
@@ -329,7 +341,7 @@ const Preconisations = () => {
   }));
   return (
     <Stack>
-      <Checkbox legend={"Préconisations"} options={options} />
+      <Checkbox legend={"Préconisation(s)"} options={options} />
     </Stack>
   );
 };
