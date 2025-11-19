@@ -76,11 +76,11 @@ const SectionsList = ({ visitedSections }: { visitedSections: VisitedSection[] }
       <SectionModal selectedSection={selectedSection} onClose={() => setSelectedSectionId(null)} />
       {defaultSections.map((section) => {
         const visited = visitedSections?.find((vs) => vs.section === section);
-        const isVisited = !!visited;
+        const isVisited = visited && (visited.etat_general || visited.commentaires || visited.proportion_dans_cet_etat);
         return (
           <SectionItem
             key={section}
-            isVisited={isVisited}
+            isVisited={!!isVisited}
             section={section}
             onClick={() => {
               selectSectionMutation.mutate(section);
