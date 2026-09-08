@@ -347,6 +347,23 @@ export namespace Endpoints {
       copyright?: string | Schemas.null | Array<string | Schemas.null> | undefined;
     }>;
   };
+  export type get_ApistateReportprevious = {
+    method: "GET";
+    path: "/api/state-report/previous";
+    parameters: {
+      query: { referencePop: string };
+    };
+    response: Array<{
+      id: string;
+      created_at?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+      nature_visite?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+      redacted_by?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+      titre_edifice?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+      pdf_size?: number | Schemas.null | Array<number | Schemas.null> | undefined;
+      service_id?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+      service_name?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+    }>;
+  };
   export type get_ApiconstatValidationToken = {
     method: "GET";
     path: "/api/constat-validation/{token}";
@@ -396,7 +413,7 @@ export namespace Endpoints {
         data?: unknown | undefined;
       };
     };
-    response: Partial<{}>;
+    response: unknown;
   };
   export type get_Apiadminme = {
     method: "GET";
@@ -630,6 +647,7 @@ export type EndpointByMethod = {
     "/api/pdf/report": Endpoints.get_Apipdfreport;
     "/api/pdf/state-report": Endpoints.get_ApipdfstateReport;
     "/api/state-report/objets-images": Endpoints.get_ApistateReportobjetsImages;
+    "/api/state-report/previous": Endpoints.get_ApistateReportprevious;
     "/api/constat-validation/{token}": Endpoints.get_ApiconstatValidationToken;
     "/api/constat-validation/{token}/pdf": Endpoints.get_ApiconstatValidationTokenpdf;
     "/api/admin/me": Endpoints.get_Apiadminme;

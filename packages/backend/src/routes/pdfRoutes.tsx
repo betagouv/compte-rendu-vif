@@ -162,6 +162,18 @@ export const pdfPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
         throw new Error("State report or attachment not found");
       }
 
+      // A constat from another service can only be downloaded if it belongs to the same
+      // historic monument as one of the caller's service departments.
+      if (stateReport.service_id !== request.user!.service_id) {
+        const canAccess =
+          !!stateReport.reference_pop &&
+          (await request.services.stateReport.canServiceAccessMonument(
+            stateReport.reference_pop,
+            request.user!.service?.dept_numbers,
+          ));
+        if (!canAccess) throw new AppError(403, "Accès non autorisé à ce constat");
+      }
+
       const buffer = await request.services.upload.getAttachment({ filePath: stateReport.attachment_id });
 
       return buffer.toString("base64");
