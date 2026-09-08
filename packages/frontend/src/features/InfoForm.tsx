@@ -9,6 +9,7 @@ import { Flex } from "#components/ui/Flex.tsx";
 import { Box, Stack } from "@mui/material";
 import { format, parse } from "date-fns";
 import { useRef, useState } from "react";
+import { CadastreMapModal } from "./CadastreMapModal";
 import { useFormContext, useWatch } from "react-hook-form";
 import { useUser } from "../contexts/AuthContext";
 import { Report } from "../db/AppSchema";
@@ -92,6 +93,8 @@ export const InfoForm = () => {
 
   const applicantEmail = useWatch({ control: form.control, name: "applicantEmail" });
 
+  const [isCadastreMapOpen, setIsCadastreMapOpen] = useState(false);
+
   return (
     <Flex flexDirection="column" width="100%" maxWidth="800px" padding="16px" mt={{ lg: "24px", xs: "16px" }}>
       <InputGroupWithTitle title="Le rendez-vous">
@@ -167,12 +170,24 @@ export const InfoForm = () => {
           />
         </Flex>
         <Flex gap={{ xs: "0", lg: "16px" }} flexDirection={{ xs: "column", lg: "row" }}>
-          <Input
-            sx={{ flex: { xs: "none", lg: 1 }, mb: "24px" }}
-            disabled={isFormDisabled}
-            label="Référence cadastrale"
-            nativeInputProps={{ ...form.register("projectCadastralRef"), placeholder: "Seulement la principale" }}
-          />
+          <Box sx={{ flex: { xs: "none", lg: 1 }, mb: "24px" }}>
+            <Input
+              disabled={isFormDisabled}
+              label="Référence cadastrale"
+              nativeInputProps={{ ...form.register("projectCadastralRef"), placeholder: "Seulement la principale" }}
+            />
+            <Button
+              type="button"
+              priority="tertiary"
+              iconId="fr-icon-road-map-fill"
+              disabled={isFormDisabled}
+              onClick={() => setIsCadastreMapOpen(true)}
+              sx={{ mt: "-8px" }}
+            >
+              Sélectionner sur une carte
+            </Button>
+          </Box>
+          {isCadastreMapOpen ? <CadastreMapModal onClose={() => setIsCadastreMapOpen(false)} /> : null}
           <Box
             sx={{
               flex: {
