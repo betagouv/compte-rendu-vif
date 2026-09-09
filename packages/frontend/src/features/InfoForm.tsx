@@ -9,6 +9,7 @@ import { Flex } from "#components/ui/Flex.tsx";
 import { Box, Stack } from "@mui/material";
 import { format, parse } from "date-fns";
 import { useRef, useState } from "react";
+import { IconLink } from "#components/ui/IconLink.tsx";
 import { CadastreMapModal } from "./CadastreMapModal";
 import { useFormContext, useWatch } from "react-hook-form";
 import { useUser } from "../contexts/AuthContext";
@@ -176,16 +177,18 @@ export const InfoForm = () => {
               label="Référence cadastrale"
               nativeInputProps={{ ...form.register("projectCadastralRef"), placeholder: "Seulement la principale" }}
             />
-            <Button
-              type="button"
-              priority="tertiary"
-              iconId="fr-icon-road-map-fill"
+            <IconLink
+              icon="fr-icon-road-map-fill"
               disabled={isFormDisabled}
-              onClick={() => setIsCadastreMapOpen(true)}
               sx={{ mt: "-8px" }}
+              onClick={(e) => {
+                e.preventDefault();
+                if (isFormDisabled) return;
+                setIsCadastreMapOpen(true);
+              }}
             >
-              Sélectionner sur une carte
-            </Button>
+              Sélectionner cadastre sur la carte
+            </IconLink>
           </Box>
           {isCadastreMapOpen ? <CadastreMapModal onClose={() => setIsCadastreMapOpen(false)} /> : null}
           <Box
