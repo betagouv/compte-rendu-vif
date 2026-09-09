@@ -224,10 +224,7 @@ const LoggedInHeader = () => {
           ".fr-btns-group": {
             userSelect: "none !important",
           },
-          ".fr-header__service": {
-            padding: { xs: "0 !important", lg: "unset" },
-            margin: { xs: "0 !important", lg: "unset" },
-          },
+          ".fr-header__service": {},
         }}
         brandTop={
           <>
@@ -248,8 +245,11 @@ const LoggedInHeader = () => {
                 <StatusBadge />
               </Box>
             </Flex>
-          ) : null
+          ) : (
+            "Patrinotes"
+          )
         }
+        serviceTagline={"Les outils du patrimoine en mobilité"}
         quickAccessItems={[
           {
             iconId: "fr-icon-account-circle-fill",
