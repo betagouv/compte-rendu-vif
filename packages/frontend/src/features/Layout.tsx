@@ -1,5 +1,6 @@
 import { Flex } from "#components/ui/Flex.tsx";
 import { fr } from "@codegouvfr/react-dsfr";
+import { SkipLinks } from "@codegouvfr/react-dsfr/SkipLinks";
 import Badge from "@codegouvfr/react-dsfr/Badge";
 import { Typography } from "@mui/material";
 import Box from "@mui/material/Box/Box";
@@ -21,8 +22,16 @@ export const Layout = ({ children }: PropsWithChildren) => {
 
   return (
     <Box display="flex" position="relative" flexDirection={"column"} height="100vh" sx={{ overflowX: "hidden" }}>
+      <SkipLinks
+        links={[
+          { label: "Contenu", anchor: "#content" },
+          { label: "Pied de page", anchor: "#fr-footer" },
+        ]}
+      />
       <AppHeader noProvider={noProvider} />
-      <Box flex={shouldFooterTakeFullheight ? undefined : "1"}>{children}</Box>
+      <Box component="main" id="content" flex={shouldFooterTakeFullheight ? undefined : "1"}>
+        {children}
+      </Box>
       <AppFooter />
     </Box>
   );
@@ -215,10 +224,7 @@ const LoggedInHeader = () => {
           ".fr-btns-group": {
             userSelect: "none !important",
           },
-          ".fr-header__service": {
-            padding: { xs: "0 !important", lg: "unset" },
-            margin: { xs: "0 !important", lg: "unset" },
-          },
+          ".fr-header__service": {},
         }}
         brandTop={
           <>
@@ -239,8 +245,11 @@ const LoggedInHeader = () => {
                 <StatusBadge />
               </Box>
             </Flex>
-          ) : null
+          ) : (
+            "Patrinotes"
+          )
         }
+        serviceTagline={"Les outils du patrimoine en mobilité"}
         quickAccessItems={[
           {
             iconId: "fr-icon-account-circle-fill",
