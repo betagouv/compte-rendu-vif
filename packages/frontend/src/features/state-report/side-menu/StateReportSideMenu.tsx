@@ -12,37 +12,25 @@ import { createStore } from "@xstate/store";
 import { StateReportMenuStates, useSideMenu } from "./StateReportSideMenu.store";
 import { ENV } from "../../../envVars";
 
+// Must stay inside the state report FormProvider: the drawer contents use the form context
 export const StateReportSideMenu = () => {
   const [sideMenu, setSideMenu] = useSideMenu();
-  const onClose = () => setSideMenu("closed");
+  return <MenuModal menu={sideMenu} onClose={() => setSideMenu("closed")} />;
+};
 
-  const form = useStateReportFormContext();
-
-  const referencePop = form.watch("reference_pop");
-  if (!referencePop) return null;
+// No form dependency: only toggles the side menu store, so it can be rendered anywhere
+export const StateReportAlertButton = () => {
+  const [, setSideMenu] = useSideMenu();
 
   return (
-    <>
-      <MenuModal menu={sideMenu} onClose={onClose} />
-      <Stack mt={{ xs: "16px", lg: "0" }} gap="12px" flexDirection={{ xs: "row", lg: "column" }}>
-        <Button
-          priority="secondary"
-          onClick={() => setSideMenu("alerts")}
-          sx={{ width: { xs: "100%", lg: "254px" }, justifyContent: "center" }}
-          iconId="ri-alarm-warning-fill"
-        >
-          Signaler une alerte...
-        </Button>
-        {/* <Button
-          priority="secondary"
-          onClick={() => setSideMenu("notes")}
-          sx={{ width: { xs: "100%", lg: "254px" }, justifyContent: "center" }}
-          iconId="ri-draft-fill"
-        >
-          Notes
-        </Button> */}
-      </Stack>
-    </>
+    <Button
+      priority="secondary"
+      onClick={() => setSideMenu("alerts")}
+      sx={{ width: { xs: "100%", lg: "254px" }, justifyContent: "center" }}
+      iconId="ri-alarm-warning-fill"
+    >
+      Signaler une alerte...
+    </Button>
   );
 };
 

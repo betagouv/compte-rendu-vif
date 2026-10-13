@@ -12,6 +12,8 @@ import { stateReportStepSchema } from "../features/state-report/utils";
 import z from "zod";
 import { useSyncStream } from "@powersync/react/lib/hooks/streams";
 import { BackHomeButton } from "#components/BackHomeButton.tsx";
+import { StateReport } from "../db/AppSchema";
+import { StateReportAlertButton } from "../features/state-report/side-menu/StateReportSideMenu";
 
 export const Route = createFileRoute("/constat/$constatId")({
   component: RouteComponent,
@@ -22,25 +24,38 @@ export const Route = createFileRoute("/constat/$constatId")({
 });
 
 function RouteComponent() {
+  const { constatId } = Route.useParams();
+  const reportQuery = useDbQuery(db.selectFrom("state_report").where("id", "=", constatId).selectAll());
+  const report = reportQuery.data?.[0];
+
   return (
     <Flex width="100%" height="100%" flexDirection="column" alignItems="center">
       <SimpleBanner width="100%" alignItems="flex-start" pt="20px">
         <Flex width={{ xs: "100%", lg: "1200px" }} maxWidth="100%" flexDirection="column" px="16px">
           <BackHomeButton />
 
-          <Typography fontSize="20px !important" fontWeight="normal" component="h1" mt="24px" mb="0 !important">
-            Constat d'état
-          </Typography>
+          <Flex
+            mt="24px"
+            gap="16px"
+            justifyContent="space-between"
+            alignItems={{ xs: "flex-start", lg: "center" }}
+            flexDirection={{ xs: "column", lg: "row" }}
+          >
+            <Typography fontSize="20px !important" fontWeight="normal" component="h1" mb="0 !important">
+              Constat d'état
+            </Typography>
+            {report?.reference_pop ? <StateReportAlertButton /> : null}
+          </Flex>
         </Flex>
       </SimpleBanner>
       <Box width="100%" flex="1">
-        <WithStateReport />
+        <WithStateReport report={report} isLoading={reportQuery.isLoading} />
       </Box>
     </Flex>
   );
 }
 
-const WithStateReport = () => {
+const WithStateReport = ({ report, isLoading }: { report: StateReport | undefined; isLoading: boolean }) => {
   const { constatId } = Route.useParams();
   const stream = useSyncStream({ name: "state_report_attachments_stream", parameters: { state_report_id: constatId } });
 
@@ -52,9 +67,7 @@ const WithStateReport = () => {
     }
   }, [stream?.subscription.hasSynced, constatId]);
 
-  const reportQuery = useDbQuery(db.selectFrom("state_report").where("id", "=", constatId).selectAll());
-
-  if (reportQuery.isLoading) {
+  if (isLoading) {
     return (
       <Center flexDirection="column">
         <Box bgcolor={fr.colors.decisions.background.open.blueFrance.default} height="60px" width="100%"></Box>
@@ -64,7 +77,6 @@ const WithStateReport = () => {
       </Center>
     );
   }
-  const report = reportQuery.data?.[0];
 
   if (!report) {
     return <Navigate to="/" />;
