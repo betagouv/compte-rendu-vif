@@ -58,7 +58,7 @@ export const ConstatDetaille = () => {
 
       <EditDisabled mb="0" />
 
-      <Typography fontSize="12px" mb="32px" mt={{ xs: "0", lg: "0px" }}>
+      <Typography fontSize="14px" mb="32px" mt={{ xs: "0", lg: "0px" }}>
         Renseignez vos observations pour chaque partie visitée. À défaut, chacune sera notée comme non-visitée.
       </Typography>
 
@@ -368,7 +368,7 @@ const SectionForm = ({
         <DictationTextArea
           sx={{ mb: "24px !important" }}
           label="Commentaires"
-          hintText="Cause(s) probable(s) des désordres, incidences sur d’autres éléments…"
+          hintText="Description, incidences sur d'autres éléments…"
           disabled={isDisabled || isRecording}
           isRecording={isRecording}
           onToggleRecording={toggle}

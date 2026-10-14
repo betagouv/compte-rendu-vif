@@ -543,6 +543,7 @@ const EditBanner = ({
               <Box width="100%" ml={{ xs: 0, lg: "16px" }} mr="16px" mt="16px" mb="16px">
                 <EmailInput
                   value={recipients.split(",")}
+                  nativeInputProps={{ style: { backgroundColor: "white" } }}
                   onValueChange={(value) => form.setValue("recipients", value.join(","))}
                 />
               </Box>

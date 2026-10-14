@@ -575,6 +575,7 @@ const SendBannerContent = () => {
             </Flex>
           }
           value={recipients}
+          nativeInputProps={{ style: { backgroundColor: "white" } }}
           onValueChange={setRecipients}
         />
         <ValidationToggle />
