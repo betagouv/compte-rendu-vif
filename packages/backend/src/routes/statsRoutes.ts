@@ -2,7 +2,7 @@ import { type FastifyPluginAsyncTypebox, Type } from "@fastify/type-provider-typ
 import { db } from "../db/db";
 import { sql } from "kysely";
 import { authenticateAdmin } from "./adminMiddleware";
-import { getJobCategory } from "../features/jobCategories";
+import { getJobCategory, JOB_CATEGORIES } from "../features/jobCategories";
 
 const regionCodes: Record<string, string> = {
   "Île-de-France": "IDF",
@@ -782,7 +782,7 @@ export const statsPlugin: FastifyPluginAsyncTypebox = async (fastify) => {
         counts.set(category, (counts.get(category) ?? 0) + Number(r.count));
       }
 
-      return Array.from(counts, ([job, count]) => ({ job, count })).sort((a, b) => b.count - a.count);
+      return JOB_CATEGORIES.map((job) => ({ job, count: counts.get(job) ?? 0 })).filter(({ count }) => count > 0);
     },
   );
 };

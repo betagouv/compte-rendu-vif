@@ -188,7 +188,10 @@ const Profile = () => {
   );
 };
 
-export const JobSelect = ({ job, onChange }: { job: string; onChange: (job: string) => void }) => {
+export const JobSelect = ({ job: rawJob, onChange }: { job: string; onChange: (job: string) => void }) => {
+  // Legacy option, renamed without migrating the users who picked it
+  const job = rawJob === "Conservateur" ? "Conservateur régional des monuments historiques" : rawJob;
+
   const getIsCustom = (job: string) => {
     return job && !jobOptions.includes(job);
   };
@@ -242,7 +245,7 @@ export const JobSelect = ({ job, onChange }: { job: string; onChange: (job: stri
 
 const jobOptions = [
   "Agent en charge du CST",
-  "Conservateur",
+  "Conservateur régional des monuments historiques",
   "Architecte des bâtiments de France",
   "Ingénieur des services culturels",
   "Conservateur des antiquités et objets d'art",

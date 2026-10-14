@@ -1,25 +1,27 @@
 export const EMPTY_JOB_CATEGORY = "Non renseigné";
 export const OTHER_JOB_CATEGORY = "Autre";
 
+// Same options and order as the job selector (packages/frontend/src/routes/compte.tsx)
+export const JOB_CATEGORIES = [
+  "Agent en charge du CST",
+  "Conservateur régional des monuments historiques",
+  "Architecte des bâtiments de France",
+  "Ingénieur des services culturels",
+  "Conservateur des antiquités et objets d'art",
+  "Technicien",
+  OTHER_JOB_CATEGORY,
+] as const;
+
+type JobCategory = (typeof JOB_CATEGORIES)[number];
+
 // Order matters: the first matching rule wins
-const rules: { category: string; pattern: RegExp }[] = [
-  { category: "Numérique / Innovation", pattern: /numeri|developpeu|designer|eligis/ },
-  { category: "Administration centrale", pattern: /sdmhsp|bureau de l'expertise|partenariat/ },
-  { category: "Inspection des patrimoines", pattern: /inspect/ },
-  { category: "Direction régionale (DRAC)", pattern: /\bdrac\b/ },
-  { category: "Suivi financier / administratif des travaux", pattern: /suivi financier/ },
-  { category: "Ingénieur des services culturels et du patrimoine", pattern: /\biscp\b|ingenieu/ },
-  { category: "Architecte des Bâtiments de France", pattern: /\babf\b|\barchitecte\b|^adjointe? udap/ },
-  { category: "Technicien des services culturels et des BdF", pattern: /tscbf|\btbf\b|technicien/ },
-  { category: "Assistant urbanisme / ADS", pattern: /assistant.*(instruct|\bads\b|urbanisme)/ },
-  { category: "Instructeur", pattern: /instruct/ },
-  { category: "CRMH", pattern: /conservat(eur|rice)/ },
-  { category: "CRMH", pattern: /\bcrmh\b/ },
-  { category: "Protection des monuments historiques", pattern: /protection/ },
-  { category: "Conservation-restauration / travaux MH", pattern: /restauration|\bcst\b/ },
-  { category: "Chargé de mission patrimoine", pattern: /mission/ },
-  { category: "Secrétaire", pattern: /secreta(ire|riat)|^sa$/ },
-  { category: "Assistant administratif", pattern: /administrati|assistant|gestionnaire/ },
+const rules: { category: JobCategory; pattern: RegExp }[] = [
+  { category: "Agent en charge du CST", pattern: /\bcst\b/ },
+  { category: "Conservateur des antiquités et objets d'art", pattern: /antiquit|objets d'art|\bcaoa\b/ },
+  { category: "Conservateur régional des monuments historiques", pattern: /conservat(eur|rice)|\bcrmh\b/ },
+  { category: "Ingénieur des services culturels", pattern: /\biscp\b|ingenieu/ },
+  { category: "Technicien", pattern: /tscbf|\btbf\b|technicien/ },
+  { category: "Architecte des bâtiments de France", pattern: /\babf\b|\barchitecte\b/ },
 ];
 
 const normalize = (value: string) =>
