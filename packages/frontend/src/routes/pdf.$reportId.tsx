@@ -540,7 +540,7 @@ const EditBanner = ({
             </Flex>
 
             {isSend ? (
-              <Box width="100%" ml={{ xs: 0, lg: "16px" }} mr="16px" mt="16px" mb="16px">
+              <Box width="100%" ml={{ xs: 0, lg: "16px" }} mr="16px" mt={{ xs: "16px", lg: "24px" }} mb="16px">
                 <EmailInput
                   value={recipients.split(",")}
                   nativeInputProps={{ style: { backgroundColor: "white" } }}

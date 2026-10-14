@@ -565,9 +565,9 @@ const SendBannerContent = () => {
       </Flex>
       <Flex width="100%" maxWidth="944px" flexDirection={{ xs: "column", lg: "column" }}>
         <EmailInput
-          sx={{ width: "100%" }}
+          sx={{ width: "100%", "& .fr-input": { backgroundColor: "white !important" } }}
           label={
-            <Flex mt={{ xs: "8px", lg: "0" }} mb={{ xs: 0, lg: "16px" }}>
+            <Flex mt={{ xs: "8px", lg: "0" }} mb={{ xs: 0, lg: "8px" }}>
               <Box mr="8px" display={{ xs: "block", lg: "none" }}>
                 <GoBackButton />
               </Box>
@@ -586,7 +586,7 @@ const SendBannerContent = () => {
           iconId="ri-send-plane-fill"
           disabled={isPending || isDisabled || hasNoRecipients}
           sx={{
-            mt: { xs: "0", lg: "40px" },
+            mt: { xs: "0", lg: "32px" },
 
             display: { xs: "flex" },
             alignItems: { xs: "center" },
