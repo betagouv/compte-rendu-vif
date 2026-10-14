@@ -157,7 +157,7 @@ export const adminPlugin: FastifyPluginAsyncTypebox = async (fastify) => {
 
       const existing = await db.selectFrom("whitelist").where("email", "=", email).selectAll().executeTakeFirst();
       if (existing) {
-        throw new AppError(409, "Cet email est déjà dans la whitelist");
+        throw new AppError(409, "Cet email est déjà dans la liste d'utilisateurs autorisés");
       }
 
       await db.insertInto("whitelist").values({ email }).execute();
@@ -182,12 +182,12 @@ export const adminPlugin: FastifyPluginAsyncTypebox = async (fastify) => {
 
       const existing = await db.selectFrom("whitelist").where("email", "=", email).selectAll().executeTakeFirst();
       if (!existing) {
-        throw new AppError(404, "Email non trouvé dans la whitelist");
+        throw new AppError(404, "Email non trouvé dans la liste d'utilisateurs autorisés");
       }
 
       await db.deleteFrom("whitelist").where("email", "=", email).execute();
 
-      return { message: "Email supprimé de la whitelist" };
+      return { message: "Email supprimé de la liste d'utilisateurs autorisés" };
     },
   );
 
