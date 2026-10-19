@@ -44,7 +44,11 @@ function RouteComponent() {
             <Typography fontSize="20px !important" fontWeight="normal" component="h1" mb="0 !important">
               Constat d'état
             </Typography>
-            {report?.reference_pop ? <StateReportAlertButton /> : null}
+            {report?.reference_pop ? (
+              <Box display={{ xs: "none", lg: "block" }}>
+                <StateReportAlertButton />
+              </Box>
+            ) : null}
           </Flex>
         </Flex>
       </SimpleBanner>

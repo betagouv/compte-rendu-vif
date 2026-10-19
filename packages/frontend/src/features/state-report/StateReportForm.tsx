@@ -9,7 +9,7 @@ import { useBannerBgColor } from "#components/Banner.tsx";
 import { useSyncForm } from "#components/SyncForm.tsx";
 import { db, useDbQuery } from "../../db/db";
 import { useFormWithFocus, useRefreshForm } from "../../hooks/useFormWithFocus";
-import { StateReportSideMenu } from "./side-menu/StateReportSideMenu";
+import { StateReportAlertButton, StateReportSideMenu } from "./side-menu/StateReportSideMenu";
 
 export const StateReportForm = ({ report }: { report: StateReport }) => {
   const [form, getFocused] = useFormWithFocus<StateReportFormType>({
@@ -49,6 +49,7 @@ export const StateReportForm = ({ report }: { report: StateReport }) => {
                 flexDirection={{ xs: "column", lg: "row" }}
               >
                 <ImmeubleAutocomplete />
+                <MobileAlertButton />
                 <StateReportSideMenu />
               </Flex>
             </Flex>
@@ -57,6 +58,19 @@ export const StateReportForm = ({ report }: { report: StateReport }) => {
         <WithReferencePop />
       </FormProvider>
     </Flex>
+  );
+};
+
+// On desktop the alert button is rendered in the page header (see constat.$constatId.tsx)
+const MobileAlertButton = () => {
+  const form = useStateReportFormContext();
+
+  const referencePop = form.watch("reference_pop");
+  if (!referencePop) return null;
+  return (
+    <Box display={{ xs: "block", lg: "none" }} mt="16px">
+      <StateReportAlertButton />
+    </Box>
   );
 };
 
