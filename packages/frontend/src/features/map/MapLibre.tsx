@@ -127,8 +127,10 @@ type Props = {
   initialCoordinates: string | null;
   initialReferenceCadastrale: string | null;
   singleCadastreSelection?: boolean;
-  initialMode?: "move" | "pin" | "cadastre";
+  initialMode?: MapMode;
 };
+
+type MapMode = "move" | "pin" | "cadastre";
 
 export const MapLibre = ({
   popMH,
@@ -143,7 +145,7 @@ export const MapLibre = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const markerRef = useRef<maplibregl.Marker | null>(null);
-  const [mode, setMode] = useState<"move" | "pin" | "cadastre">(initialMode);
+  const [mode, setMode] = useState<MapMode>(initialMode);
   const [background, setBackground] = useState<Background>("vector");
   const [isLayerPopoverOpen, setIsLayerPopoverOpen] = useState(false);
   const layerButtonRef = useRef<HTMLButtonElement>(null);
