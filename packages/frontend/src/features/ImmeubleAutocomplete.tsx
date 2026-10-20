@@ -322,7 +322,12 @@ export const ImmeubleAutocomplete = () => {
                 title="Choisir sur la carte"
                 aria-label="Choisir sur la carte"
                 disabled={isDisabled}
-                onClick={() => setIsMapModalOpen(true)}
+                onClick={(e) => {
+                  // The Autocomplete root focuses its input on any click inside it, which runs
+                  // onFocus above and scrolls the page to the field (very visible on mobile).
+                  e.stopPropagation();
+                  setIsMapModalOpen(true);
+                }}
                 sx={{
                   flexShrink: 0,
                   width: "40px",
