@@ -45,6 +45,7 @@ const envSchema = z.object({
   MINIO_ACCESS_KEY_ID: z.string(),
   MINIO_SECRET_KEY: z.string(),
   MINIO_URL: z.string(),
+  MINIO_PUBLIC_URL: z.string().optional(),
   MINIO_BUCKET: z.string(),
   SENTRY_DSN: z.string().optional(),
   VITE_AUTH_CLIENT_ID: z.string(),
