@@ -95,7 +95,8 @@ const ContentSwitch = () => {
       isFirstRender.current = false;
       return;
     }
-    containerRef.current?.focus();
+    // preventScroll: navigating between steps already scrolls the page back to the top.
+    containerRef.current?.focus({ preventScroll: true });
   }, [step]);
 
   return (
