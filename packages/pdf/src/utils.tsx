@@ -146,3 +146,25 @@ export type SectionWithAttachments = VisitedSection & {
 export const uppercaseFirstLetter = (str: string) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
+
+// --- Unités patrimoniales (MH complexes) ---
+
+/** "Monument | UP" for a constat on an unité patrimoniale, the monument title otherwise. */
+export const getStateReportTitle = (stateReport: { titre_edifice?: string | null; up_intitule?: string | null }) =>
+  [stateReport.titre_edifice, stateReport.up_intitule].filter(Boolean).join(" | ");
+
+const upProtectionLabels: Record<string, string> = {
+  classement: "Classé",
+  inscription: "Inscrit",
+  "classement partiel": "Classé partiellement",
+  "inscription partielle": "Inscrit partiellement",
+  "classement et inscription": "Classé et inscrit",
+};
+
+/** Dataspace protection values ("classement", "inscription"…) as displayed labels ("Classé", "Inscrit"…). */
+export const formatUpProtection = (protection?: string | null) => {
+  if (!protection) return null;
+  return upProtectionLabels[protection.toLowerCase()] ?? uppercaseFirstLetter(protection);
+};
+
+export const formatUpNiveau = (niveau?: string | null) => (niveau ? uppercaseFirstLetter(niveau) : null);

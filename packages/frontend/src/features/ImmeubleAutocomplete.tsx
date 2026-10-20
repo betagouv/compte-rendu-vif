@@ -1,4 +1,4 @@
-import { Autocomplete, Box, Dialog, DialogTitle, IconButton, Typography } from "@mui/material";
+import { Autocomplete, Box, CircularProgress, Dialog, DialogTitle, IconButton, Typography } from "@mui/material";
 import { db, useDbQuery } from "../db/db";
 import { useMemo, useState } from "react";
 import { useStyles } from "tss-react";
@@ -15,6 +15,20 @@ import { IconLink } from "#components/ui/IconLink.tsx";
 import { ModalCloseButton } from "./menu/MenuTitle";
 import { Alert, Button, Center } from "#components/MUIDsfr.tsx";
 import { MonumentMapModal } from "./map/MonumentMapModal";
+import { useQueryClient } from "@tanstack/react-query";
+import { UpSelectionModal } from "./up/UpSelectionModal";
+import {
+  applyUpSelection,
+  fetchMonumentUpTree,
+  getUpRoot,
+  parseUpChemin,
+  upQueryKeys,
+  upStaleTime,
+  useMonumentUpTree,
+  type UpTree,
+  type UpSelection,
+} from "./up/upApi";
+import { useIsOnline } from "../hooks/useIsOnline";
 
 type FilterablePopImmeubles = Pick<
   PopImmeuble,
@@ -68,8 +82,22 @@ export const ImmeubleAutocomplete = () => {
 
   const popSynced = useSyncStream({ name: "pop_stream" })?.subscription.hasSynced;
 
-  const setValue = async (item: FilterablePopImmeubles | null) => {
-    if (isDisabled) return;
+  const queryClient = useQueryClient();
+  const isOnline = useIsOnline();
+  // monument picked in the search, waiting for the user to choose one of its unités patrimoniales
+  const [pendingUpChoice, setPendingUpChoice] = useState<{ item: FilterablePopImmeubles; tree: UpTree } | null>(null);
+  const [isChangingUp, setIsChangingUp] = useState(false);
+  const [isLoadingUps, setIsLoadingUps] = useState(false);
+  const [upWarning, setUpWarning] = useState<string | null>(null);
+
+  const [upId, upIntitule, upChemin] = useWatch({
+    control: form.control,
+    name: ["up_id", "up_intitule", "up_chemin"],
+  });
+  const monumentUpTreeQuery = useMonumentUpTree(referencePop, isOnline && !!referencePop);
+  const monumentHasUps = !!monumentUpTreeQuery.data || !!upId;
+
+  const applyMonument = async (item: FilterablePopImmeubles | null) => {
     form.setValue("disabled", 0);
     form.setValue("reference_pop", item ? item.id : null);
 
@@ -92,6 +120,44 @@ export const ImmeubleAutocomplete = () => {
     }
   };
 
+  const setValue = async (item: FilterablePopImmeubles | null) => {
+    if (isDisabled) return;
+    setUpWarning(null);
+    applyUpSelection(form, null);
+
+    if (!item || item.id === "CUSTOM") return applyMonument(item);
+
+    // MH complexe: ask which unité patrimoniale the constat is about
+    setAreSuggestionsShown(false);
+    (document.activeElement as HTMLElement | null)?.blur();
+    setIsLoadingUps(true);
+    try {
+      const tree = navigator.onLine
+        ? await queryClient.fetchQuery({
+            queryKey: upQueryKeys.monument(item.id),
+            queryFn: () => fetchMonumentUpTree(item.id),
+            staleTime: upStaleTime,
+          })
+        : null;
+      if (!navigator.onLine) setUpWarning(UP_OFFLINE_WARNING);
+      if (tree) return setPendingUpChoice({ item, tree });
+    } catch (e) {
+      console.error(e);
+      setUpWarning(UP_ERROR_WARNING);
+    } finally {
+      setIsLoadingUps(false);
+    }
+
+    return applyMonument(item);
+  };
+
+  const onUpChoice = async (selection: UpSelection) => {
+    const pending = pendingUpChoice;
+    setPendingUpChoice(null);
+    if (pending) await applyMonument(pending.item);
+    applyUpSelection(form, selection);
+  };
+
   const hasValue = !!referencePop;
 
   const handleChanging = (changing: boolean) => {
@@ -101,9 +167,11 @@ export const ImmeubleAutocomplete = () => {
 
     if (changing) {
       setIsWarningOpen(false);
+      setUpWarning(null);
       for (const formField of Object.values(immeubleMapping)) {
         form.setValue(formField as keyof StateReportFormType, null);
       }
+      applyUpSelection(form, null);
       setInputValue("");
     }
   };
@@ -124,9 +192,46 @@ export const ImmeubleAutocomplete = () => {
     return rawItems.find((item) => item?.id == referencePop) || null;
   }, [inputValue, rawItems]);
 
+  const upModals = (
+    <>
+      {pendingUpChoice ? (
+        <UpSelectionModal
+          open
+          monumentTitle={pendingUpChoice.item.titre_editorial_de_la_notice ?? getUpRoot(pendingUpChoice.tree).intitule}
+          tree={pendingUpChoice.tree}
+          onCancel={() => setPendingUpChoice(null)}
+          onConfirm={onUpChoice}
+        />
+      ) : null}
+      {isChangingUp && monumentUpTreeQuery.data ? (
+        <UpSelectionModal
+          open
+          title="Changer d’unité patrimoniale"
+          confirmLabel="Valider"
+          showIntro={false}
+          currentUpLabel={
+            upId
+              ? [...parseUpChemin(upChemin).map((c) => c.intitule), upIntitule].filter(Boolean).join(" › ")
+              : "Ensemble du monument"
+          }
+          monumentTitle={titreEdifice ?? getUpRoot(monumentUpTreeQuery.data).intitule}
+          tree={monumentUpTreeQuery.data}
+          initialUpId={upId ?? null}
+          onCancel={() => setIsChangingUp(false)}
+          onConfirm={(selection) => {
+            setIsChangingUp(false);
+            setUpWarning(null);
+            applyUpSelection(form, selection);
+          }}
+        />
+      ) : null}
+    </>
+  );
+
   if (hasValue && !isChanging && !isCustom)
     return (
       <Flex flexDirection="column" flex="1">
+        {upModals}
         {isWarningOpen ? (
           <Dialog
             open
@@ -139,26 +244,68 @@ export const ImmeubleAutocomplete = () => {
           >
             <Box p="16px" width={"100%"}>
               <ModalCloseButton onClose={() => setIsWarningOpen(false)} />
-              <DialogTitle>Changer de monument</DialogTitle>
+              <DialogTitle>{monumentHasUps ? "Changer de monument ou d’UP" : "Changer de monument"}</DialogTitle>
               <Box p="24px">
-                <Typography mb="16px">
-                  Attention, les informations concernant le monument historique seront supprimées de votre constat.
-                  <br />
-                  <br />
-                  La saisie du constat d'état sera conservée.
-                </Typography>
+                {monumentHasUps ? (
+                  <Typography mb="16px">
+                    Vous pouvez choisir une autre unité patrimoniale de ce monument : la saisie du constat d'état sera
+                    conservée.
+                    <br />
+                    <br />
+                    Si vous changez de monument, les informations concernant le monument historique seront supprimées de
+                    votre constat. La saisie du constat d'état sera conservée.
+                  </Typography>
+                ) : (
+                  <Typography mb="16px">
+                    Attention, les informations concernant le monument historique seront supprimées de votre constat.
+                    <br />
+                    <br />
+                    La saisie du constat d'état sera conservée.
+                  </Typography>
+                )}
+                {monumentHasUps && !monumentUpTreeQuery.data ? (
+                  <Alert
+                    severity="warning"
+                    small
+                    description={
+                      monumentUpTreeQuery.isLoading
+                        ? "Récupération des unités patrimoniales…"
+                        : "Les unités patrimoniales ne sont pas disponibles hors ligne."
+                    }
+                  />
+                ) : null}
               </Box>
-              <Flex justifyContent="flex-end" gap="16px" px="24px" pb="16px">
+              <Flex
+                justifyContent="flex-end"
+                gap="16px"
+                px="24px"
+                pb="16px"
+                flexDirection={{ xs: "column-reverse", sm: "row" }}
+              >
                 <Button priority="secondary" onClick={() => setIsWarningOpen(false)}>
                   Annuler
                 </Button>
-                <Button onClick={() => handleChanging(true)}>Continuer</Button>
+                {monumentHasUps ? (
+                  <Button
+                    priority="secondary"
+                    disabled={!monumentUpTreeQuery.data}
+                    onClick={() => {
+                      setIsWarningOpen(false);
+                      setIsChangingUp(true);
+                    }}
+                  >
+                    Changer d’UP
+                  </Button>
+                ) : null}
+                <Button onClick={() => handleChanging(true)}>
+                  {monumentHasUps ? "Changer de monument" : "Continuer"}
+                </Button>
               </Flex>
             </Box>
           </Dialog>
         ) : null}
         <Typography fontSize="20px" component="h2" fontWeight="bold">
-          {form.watch("titre_edifice")}
+          {[titreEdifice, upIntitule].filter(Boolean).join(" | ")}
         </Typography>
         <Box mt="8px">
           <IconLink
@@ -167,9 +314,10 @@ export const ImmeubleAutocomplete = () => {
             sx={{ fontSize: "14px" }}
             onClick={() => (isDisabled ? null : setIsWarningOpen(true))}
           >
-            Changer de monument
+            {monumentHasUps ? "Changer de monument ou d’UP" : "Changer de monument"}
           </IconLink>
         </Box>
+        {upWarning ? <Alert severity="info" small sx={{ mt: "16px" }} description={upWarning} /> : null}
       </Flex>
     );
 
@@ -184,6 +332,7 @@ export const ImmeubleAutocomplete = () => {
         },
       }}
     >
+      {upModals}
       <Autocomplete
         classes={{
           popper: "immeubles-autocomplete-popper",
@@ -349,6 +498,13 @@ export const ImmeubleAutocomplete = () => {
         }
       />
 
+      {isLoadingUps ? (
+        <Flex alignItems="center" gap="8px" mt="16px">
+          <CircularProgress size={16} />
+          <Typography fontSize="14px">Recherche des unités patrimoniales…</Typography>
+        </Flex>
+      ) : null}
+
       {shouldShowUnlinkedButton ? (
         <Flex alignItems="center" gap="16px" mt="32px" flexDirection={{ xs: "column", lg: "row" }}>
           <Button
@@ -384,6 +540,11 @@ export const ImmeubleAutocomplete = () => {
     </Box>
   );
 };
+
+const UP_OFFLINE_WARNING =
+  "Hors ligne, les éventuelles unités patrimoniales de ce monument ne peuvent pas être récupérées : le constat porte sur l’ensemble du monument. Vous pourrez préciser l’UP plus tard avec « Changer de monument ou d’UP ».";
+const UP_ERROR_WARNING =
+  "Les unités patrimoniales de ce monument n’ont pas pu être récupérées : le constat porte sur l’ensemble du monument. Vous pourrez préciser l’UP plus tard avec « Changer de monument ou d’UP ».";
 
 const getSecondaryText = (option: FilterablePopImmeubles) => {
   if (!option.adresse_forme_index) return option.commune_forme_editoriale || "";

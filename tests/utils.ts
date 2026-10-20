@@ -35,6 +35,14 @@ export const mockPopImmeuble = {
   description_de_l_edifice: "Monument historique de test",
 } satisfies Insertable<Database["pop_immeubles"]>;
 
+/** MH complexe: its unités patrimoniales come from the backend UP mock (features/up/fixtures/up-mock.json). */
+export const mockPopImmeubleComplexe = {
+  ...mockPopImmeuble,
+  reference: "TEST00002",
+  id: "TEST00002",
+  titre_editorial_de_la_notice: "Château complexe de Test",
+} satisfies Insertable<Database["pop_immeubles"]>;
+
 export const mockServices: Insertable<Database["service"]>[] = [
   {
     name: "Service 1",

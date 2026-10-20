@@ -1,5 +1,10 @@
 import { format } from "date-fns";
-import { uppercaseFirstLetter, type StateReportWithUserAndAttachments } from "../utils";
+import {
+  formatUpNiveau,
+  formatUpProtection,
+  uppercaseFirstLetter,
+  type StateReportWithUserAndAttachments,
+} from "../utils";
 import React from "react";
 import { Multiline } from "./state-report.details";
 
@@ -13,12 +18,44 @@ export const MainTitle = ({ stateReport }: { stateReport: StateReportWithUserAnd
           <span style={{ fontSize: "20pt" }}>
             <b>{stateReport.titre_edifice}</b>
           </span>
+          {stateReport.up_intitule ? (
+            <span style={{ fontSize: "16pt" }}>
+              <br />
+              <b>{stateReport.up_intitule}</b>
+            </span>
+          ) : null}
           <div style={{ fontSize: "10pt", fontWeight: "normal", marginTop: "8px" }}>
             Référence POP : {stateReport.reference_pop || "Non renseignée"}
+            {stateReport.up_monument_identifiant
+              ? ` — Identifiant agrégé : ${stateReport.up_monument_identifiant}`
+              : ""}
           </div>
+          <UpSummary stateReport={stateReport} />
         </>
       ) : null}
     </h1>
+  );
+};
+
+/** Unité patrimoniale of a "MH complexe" constat (nothing for a constat on the whole monument). */
+const UpSummary = ({ stateReport }: { stateReport: StateReportWithUserAndAttachments }) => {
+  if (!stateReport.up_id) return null;
+  let parents: string[] = [];
+  try {
+    parents = JSON.parse(stateReport.up_chemin || "[]").map((c: { intitule: string }) => c.intitule);
+  } catch {}
+
+  const details = [
+    stateReport.up_identifiant ? `Identifiant agrégé : ${stateReport.up_identifiant}` : null,
+    formatUpNiveau(stateReport.up_niveau),
+    formatUpProtection(stateReport.up_protection),
+  ].filter(Boolean);
+
+  return (
+    <div style={{ fontSize: "10pt", fontWeight: "normal", marginTop: "4px" }}>
+      Unité patrimoniale : {[...parents, stateReport.up_intitule].filter(Boolean).join(" › ")}
+      {details.length ? ` (${details.join(", ")})` : ""}
+    </div>
   );
 };
 

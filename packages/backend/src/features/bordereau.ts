@@ -1,6 +1,6 @@
 import { Selectable } from "kysely";
 import { Database } from "../db/db";
-import { deserializePreconisations } from "@patrinotes/pdf/constat";
+import { deserializePreconisations, getStateReportTitle } from "@patrinotes/pdf/constat";
 import { wrapWithDsfrMail } from "./mail/dsfrMailWrapper";
 
 export const createBordereauMailContent = ({
@@ -13,7 +13,9 @@ export const createBordereauMailContent = ({
   pdfUrl: string;
 }) => {
   const preconisations = deserializePreconisations(stateReport.preconisations || "");
-  const title = stateReport.titre_edifice ? `Constat d'état : ${stateReport.titre_edifice}` : "Constat d'état";
+  const title = getStateReportTitle(stateReport)
+    ? `Constat d'état : ${getStateReportTitle(stateReport)}`
+    : "Constat d'état";
   const inner = `<p>Madame, Monsieur,</p>
 <p>Veuillez trouver le rapport établi à la suite de la visite de votre monument historique réalisée le ${
     stateReport.date_visite

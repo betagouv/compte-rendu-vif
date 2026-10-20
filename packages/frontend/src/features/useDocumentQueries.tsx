@@ -130,6 +130,7 @@ export const getSearchStateReportQueries = (
   const searchConditions = (eb: any) =>
     eb.or([
       normalizedLike("titre_edifice", normalized),
+      normalizedLike("up_intitule", normalized),
       normalizedLike("redacted_by", normalized),
       normalizedLike("commune", normalized),
       normalizedLike("commune_historique", normalized),

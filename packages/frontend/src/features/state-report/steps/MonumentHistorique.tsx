@@ -18,6 +18,7 @@ import { Spinner } from "#components/Spinner.tsx";
 import { MHAddressAutocomplete } from "../MHAddressAutocomplete";
 import { Accordion } from "#components/MUIDsfr.tsx";
 import { PlanDeSituationModal } from "./PlanDeSituationModal";
+import { MonumentUpInfos, useIsMonumentComplexe } from "../../up/MonumentUpInfos";
 // import { PlanDeSituationModal } from "./PlanDeSituationModal";
 
 const routeApi = getRouteApi("/constat/$constatId");
@@ -34,9 +35,11 @@ export const MonumentHistorique = () => {
 
   const isDisabled = useIsStateReportDisabled();
   const adresse = useWatch({ control: form.control, name: "adresse" });
+  const upId = useWatch({ control: form.control, name: "up_id" });
   const [isPlanModalOpen, setIsPlanModalOpen] = useState(false);
 
   const isEditing = mode === "edit" || isCustom;
+  const isComplexe = useIsMonumentComplexe() && !isCustom;
   return (
     <Flex
       flexDirection="column"
@@ -73,6 +76,12 @@ export const MonumentHistorique = () => {
         >
           Informations
         </Typography>
+        {isComplexe ? (
+          <>
+            <MonumentUpInfos />
+            <Divider my={isEditing ? "24px" : { xs: "16px", lg: "8px" }} />
+          </>
+        ) : null}
         <Flex flexDirection={{ xs: "column", lg: "row" }} width="100%" gap={isEditing ? { xs: 0, lg: "16px" } : "16px"}>
           <Box flex="1">
             <EditableField
@@ -83,7 +92,7 @@ export const MonumentHistorique = () => {
             />
           </Box>
           <Box flex="1" mt={{ xs: isEditing ? "16px" : "0", lg: "0" }}>
-            {!isCustom ? (
+            {!isCustom && !isComplexe ? (
               <EditableField
                 label="Référence Mérimée"
                 field="reference_pop"
@@ -213,7 +222,7 @@ export const MonumentHistorique = () => {
             />
           ) : null}
         </Flex>
-        {referencePop ? <PreviousConstats referencePop={referencePop} /> : null}
+        {referencePop ? <PreviousConstats referencePop={referencePop} upId={upId ?? null} /> : null}
         {!isCustom ? <Divider my={isEditing ? "24px" : { xs: "16px", lg: "8px" }} /> : null}
         {!isCustom ? <Box>{isEditing ? <MonumentObjetsEdition /> : <MonumentObjets />}</Box> : null}
         {isEditing && !isCustom ? (
@@ -262,19 +271,21 @@ export const MonumentHistorique = () => {
   );
 };
 
-const PreviousConstats = ({ referencePop }: { referencePop: string }) => {
+/**
+ * Sent constats of the same monument. For a constat on an unité patrimoniale, only those of that UP;
+ * for the whole monument, all of them (each one labelled with its UP).
+ */
+const PreviousConstats = ({ referencePop, upId }: { referencePop: string; upId: string | null }) => {
   const { constatId } = routeApi.useParams();
-  const constatsQuery = useDbQuery(
-    db
-      .selectFrom("state_report")
-      .selectAll()
-      .where("reference_pop", "like", "%" + referencePop.trim())
-      .where("id", "<>", constatId ?? "")
-      .where("disabled", "<>", 1)
-      .where("attachment_id", "is not", null)
-      .orderBy("created_at", "desc"),
-    [referencePop],
-  );
+  let query = db
+    .selectFrom("state_report")
+    .selectAll()
+    .where("reference_pop", "like", "%" + referencePop.trim())
+    .where("id", "<>", constatId ?? "")
+    .where("disabled", "<>", 1)
+    .where("attachment_id", "is not", null);
+  if (upId) query = query.where("up_id", "=", upId);
+  const constatsQuery = useDbQuery(query.orderBy("created_at", "desc"), [referencePop, upId]);
 
   const constats = constatsQuery.data ?? [];
 
@@ -315,6 +326,7 @@ const PreviousConstatsList = ({ constats }: { constats: StateReport[] }) => {
           >
             {new Date(constat.created_at!).toLocaleDateString("fr-FR")} - visite{" "}
             {constat.nature_visite === "complète" ? "complète" : "partielle"}
+            {constat.up_intitule ? ` - ${constat.up_intitule}` : ""}
           </Typography>
           <Typography mt="2px" color={fr.colors.decisions.text.actionHigh.blueFrance.default}>
             Par {constat.redacted_by}

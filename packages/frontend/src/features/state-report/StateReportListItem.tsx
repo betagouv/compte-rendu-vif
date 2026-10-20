@@ -1,3 +1,4 @@
+import { getStateReportTitle } from "@patrinotes/pdf/utils";
 import { Box, Popover, Typography } from "@mui/material";
 import { ReportWithUser, StateReportWithUser } from "../report/ReportList";
 import { fr } from "@codegouvfr/react-dsfr";
@@ -24,7 +25,7 @@ export const StateReportListItem = ({ report, isLast }: { report: StateReportWit
 
   const { css } = useStyles();
 
-  const title = report.titre_edifice;
+  const title = getStateReportTitle(report) || null;
   const whereText = report.commune ? `à ${report.commune}` : null;
   const byText = report.redacted_by ? `par ${report.redacted_by}` : null;
 

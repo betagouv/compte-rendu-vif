@@ -350,7 +350,7 @@ export const pdfPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
         s3Key: "attachment/" + pdfPath,
         createdBy: user.id,
         sentTo: userSettingsResult.validation_email,
-        name: getStateReportMailName({ titre_edifice: stateReportQuery.titre_edifice }),
+        name: getStateReportMailName(stateReportQuery),
       });
       return url;
     }
@@ -359,7 +359,7 @@ export const pdfPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
       s3Key: "attachment/" + pdfPath,
       createdBy: user.id,
       sentTo: recipients.join(","),
-      name: getStateReportMailName({ titre_edifice: stateReportQuery.titre_edifice }),
+      name: getStateReportMailName(stateReportQuery),
     });
     await sendStateReportMail({
       recipients: recipients.join(","),
@@ -406,7 +406,7 @@ export const pdfPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
       s3Key: "attachment/" + pdfPath,
       createdBy: user.id,
       sentTo: recipients.join(","),
-      name: getStateReportMailName({ titre_edifice: stateReportQuery.titre_edifice }),
+      name: getStateReportMailName(stateReportQuery),
     });
     return url;
   });

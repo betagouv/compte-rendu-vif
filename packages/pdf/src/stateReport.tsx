@@ -23,6 +23,7 @@ import {
   getIsAlertVisited,
   getIsSectionVisited,
   processHtml,
+  getStateReportTitle,
 } from "./utils";
 import { MarianneHeader } from "./components/MarianneHeader";
 import { Pagination } from "./components/Pagination";
@@ -446,8 +447,11 @@ type Images = {
   marianneFooter: string;
 };
 
-export const getStateReportMailName = ({ titre_edifice }: { titre_edifice?: string | null }) => {
-  return `constat-d-etat${titre_edifice ? `-${cleanString(titre_edifice || "")}` : ""}_${format(new Date(), "ddMMyyyy")}.pdf`;
+export { getStateReportTitle, formatUpNiveau, formatUpProtection } from "./utils";
+
+export const getStateReportMailName = (stateReport: { titre_edifice?: string | null; up_intitule?: string | null }) => {
+  const title = getStateReportTitle(stateReport);
+  return `constat-d-etat${title ? `-${cleanString(title)}` : ""}_${format(new Date(), "ddMMyyyy")}.pdf`;
 };
 
 function cleanString(str: string): string {

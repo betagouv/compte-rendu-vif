@@ -651,6 +651,18 @@ export const stateReport = pgTable(
     description: text(),
     observations: text(),
     titre_edifice: text("titre_edifice"),
+    // unité patrimoniale (MH complexe) : null = ensemble du monument
+    upId: text("up_id"),
+    upIdentifiant: text("up_identifiant"),
+    upIntitule: text("up_intitule"),
+    upIntituleComplet: text("up_intitule_complet"),
+    upNiveau: text("up_niveau"),
+    upProtection: text("up_protection"),
+    upTypeImmeuble: text("up_type_immeuble"),
+    upMonumentIdentifiant: text("up_monument_identifiant"), // identifiant agrégé de l'UP racine (monument)
+    upChemin: text("up_chemin"), // JSON [{ id, intitule }] de la racine (exclue) jusqu'à l'UP
+    // constats de plusieurs UP réunis dans un même rapport
+    rapportId: text("rapport_id"),
     // contexte de la visite
     natureVisite: text("nature_visite"),
     visite_partielle_details: text("visite_partielle_details"),
@@ -746,6 +758,13 @@ export const userDept = pgTable(
     primaryKey({ columns: [table.userId, table.deptNumber], name: "user_dept_pkey" }),
   ],
 );
+
+/** Backend-only cache of dataspace "unités patrimoniales" API responses (not synced to clients). */
+export const upCache = pgTable("up_cache", {
+  key: text().primaryKey().notNull(), // "ref:<reference merimee>" or "id:<_id>"
+  payload: text(), // JSON of the raw API document(s); null = not found
+  fetchedAt: timestamp("fetched_at", { mode: "string", withTimezone: true }).notNull(),
+});
 
 export const popImages = pgTable("pop_images", {
   id: text().primaryKey().notNull(),

@@ -280,8 +280,11 @@ const ViewButtons = () => {
   const isDisabled = useIsSendConstatFormDisabled();
   const form = useSendConstatFormContext();
 
-  const titreEdifice = useWatch({ control: form.control, name: "stateReport.titre_edifice" });
-  const pdfName = getStateReportMailName({ titre_edifice: titreEdifice ?? undefined });
+  const [titreEdifice, upIntitule] = useWatch({
+    control: form.control,
+    name: ["stateReport.titre_edifice", "stateReport.up_intitule"],
+  });
+  const pdfName = getStateReportMailName({ titre_edifice: titreEdifice, up_intitule: upIntitule });
 
   const pdfBlob = useWatch({ control: form.control, name: "pdfBlob" });
   const pdfSize = useWatch({ control: form.control, name: "pdfSize" });

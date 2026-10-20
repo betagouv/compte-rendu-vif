@@ -5,7 +5,7 @@ import { sentry } from "./sentry";
 import { getPDFInMailName } from "@patrinotes/pdf";
 import { Database } from "../db/db";
 import { Selectable } from "kysely";
-import { MinimalAlert } from "@patrinotes/pdf/constat";
+import { getStateReportTitle, MinimalAlert } from "@patrinotes/pdf/constat";
 import { createBordereauMailContent } from "./bordereau";
 import { getAlertMailSubject, createAlertEmailContent } from "./mail/alertMail";
 import { wrapWithDsfrMail } from "./mail/dsfrMailWrapper";
@@ -38,7 +38,9 @@ export const sendStateReportMail = async ({
   return transporter.sendMail({
     from: ENV.EMAIL_EMITTER,
     to: recipients,
-    subject: "Constat d'état " + (stateReport?.titre_edifice ? ` : ${stateReport.titre_edifice}` : ""),
+    subject:
+      "Constat d'état " +
+      (stateReport && getStateReportTitle(stateReport) ? ` : ${getStateReportTitle(stateReport)}` : ""),
     html,
     attachments,
   });
@@ -121,7 +123,7 @@ export const sendValidationRequestMail = ({
   creatorName: string;
 }) => {
   const link = `${ENV.FRONTEND_URL}/constat-validation/${validationToken}`;
-  const title = stateReport.titre_edifice ? ` : ${stateReport.titre_edifice}` : "";
+  const title = getStateReportTitle(stateReport) ? ` : ${getStateReportTitle(stateReport)}` : "";
 
   const { html: validationReqHtml, attachments: validationReqAttachments } = wrapWithDsfrMail({
     title: `Validation requise — Constat d'état${title}`,
@@ -154,7 +156,7 @@ export const sendValidationResultMail = ({
   comment?: string | null;
   validatorEmail: string;
 }) => {
-  const title = stateReport.titre_edifice ? ` : ${stateReport.titre_edifice}` : "";
+  const title = getStateReportTitle(stateReport) ? ` : ${getStateReportTitle(stateReport)}` : "";
   const decision = accepted ? "accepté" : "refusé";
 
   const stateReportLink = `${ENV.FRONTEND_URL}/constat/${stateReport.id}`;
@@ -187,12 +189,12 @@ export const sendAlertEmail = async ({
   user: AuthUser;
 }) => {
   sentry?.captureMessage("Sending alert mail", {
-    extra: { to, alertType: alert.alert, monumentName: stateReport.titre_edifice || "" },
+    extra: { to, alertType: alert.alert, monumentName: getStateReportTitle(stateReport) },
   });
 
   try {
     const { html, attachments } = await createAlertEmailContent({ stateReport, alert, user });
-    const subject = getAlertMailSubject(alert.alert!, stateReport.titre_edifice || "");
+    const subject = getAlertMailSubject(alert.alert!, getStateReportTitle(stateReport));
 
     return await transporter.sendMail({
       from: ENV.EMAIL_EMITTER,
@@ -203,7 +205,7 @@ export const sendAlertEmail = async ({
     });
   } catch (error) {
     sentry?.captureException(error, {
-      extra: { to, alertType: alert.alert, monumentName: stateReport.titre_edifice || "" },
+      extra: { to, alertType: alert.alert, monumentName: getStateReportTitle(stateReport) },
     });
     throw error;
   }
