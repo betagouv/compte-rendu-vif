@@ -3,7 +3,7 @@ import fs, { createWriteStream } from "fs";
 import { pipeline } from "stream/promises";
 import csv from "csv-parser";
 import { KyselyBatchWriter } from "./KyselyBatchWriter";
-import path from "path/win32";
+import path from "path";
 import { db } from "../../db/db";
 import { ENV } from "../../envVars";
 import { FetchError, ofetch } from "ofetch";
@@ -251,11 +251,11 @@ const getImageFromElement = (el: Element) => {
 };
 
 const immeublesCsvPath = {
-  origin: `https://object.data.gouv.fr/ministere-culture/POP/merimee.csv`,
+  origin: `https://ministere-culture.s3.sbg.io.cloud.ovh.net/POP/merimee.csv`,
   dest: "./data/merimee.csv",
 };
 const objetsCsvPath = {
-  origin: `https://object.data.gouv.fr/ministere-culture/POP/palissy.csv`,
+  origin: `https://ministere-culture.s3.sbg.io.cloud.ovh.net/POP/palissy.csv`,
   dest: "./data/palissy.csv",
 };
 
