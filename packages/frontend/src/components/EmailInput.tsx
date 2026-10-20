@@ -111,6 +111,7 @@ export const EmailInput = ({
           autoComplete="off"
           data-lpignore="true"
           data-form-type="other"
+          style={{ ...params.inputProps.style, ...nativeInputProps?.style }}
           className={cx(nativeInputProps?.className, params.inputProps.className, "fr-input")}
         />
       </Box>

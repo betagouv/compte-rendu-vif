@@ -19,7 +19,7 @@ export const constatPdfQueries = {
           .selectFrom("state_report")
           .leftJoin("user", "user.id", "state_report.created_by")
           .selectAll(["state_report"])
-          .select(["user.name as createdByName"])
+          .select(["user.name as createdByName", "user.job as createdByJob"])
           .where("state_report.id", "=", constatId)
           .limit(1)
           .execute();

@@ -15,6 +15,7 @@ import { IconLink } from "#components/ui/IconLink.tsx";
 import { ModalCloseButton } from "./menu/MenuTitle";
 import { Alert, Button, Center } from "#components/MUIDsfr.tsx";
 import { MonumentMapModal } from "./map/MonumentMapModal";
+import { scrollToTop } from "./state-report/StateReportSummary";
 
 type FilterablePopImmeubles = Pick<
   PopImmeuble,
@@ -78,6 +79,11 @@ export const ImmeubleAutocomplete = () => {
 
     if (!item) return;
     if (item.id === "CUSTOM") return;
+
+    // Once a monument is picked (search field or map), bring the user back to the top of the form;
+    // wait a frame so the layout has switched to the selected-monument view first.
+    requestAnimationFrame(() => scrollToTop());
+
     const immeubleDetails = await db
       .selectFrom("pop_immeubles")
       .selectAll()
@@ -322,7 +328,12 @@ export const ImmeubleAutocomplete = () => {
                 title="Choisir sur la carte"
                 aria-label="Choisir sur la carte"
                 disabled={isDisabled}
-                onClick={() => setIsMapModalOpen(true)}
+                onClick={(e) => {
+                  // The Autocomplete root focuses its input on any click inside it, which runs
+                  // onFocus above and scrolls the page to the field (very visible on mobile).
+                  e.stopPropagation();
+                  setIsMapModalOpen(true);
+                }}
                 sx={{
                   flexShrink: 0,
                   width: "40px",

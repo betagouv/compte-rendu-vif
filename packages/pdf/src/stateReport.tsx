@@ -283,12 +283,10 @@ export const getStateReportHtmlString = ({
   stateReport,
   visitedSections: sections,
   alerts,
-  user,
 }: {
   stateReport: StateReportWithUserAndAttachments;
   visitedSections: SectionWithAttachments[];
   alerts?: MinimalAlert[];
-  user: { name: string; job: string };
 }) => {
   const stateReportVersion = stateReport.version || 1;
 
@@ -306,7 +304,7 @@ export const getStateReportHtmlString = ({
     <div style={{ fontSize: "10px" }}>
       <MainTitle stateReport={stateReport} />
       <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
-        <StateReportInfos stateReport={stateReport} user={user} />
+        <StateReportInfos stateReport={stateReport} />
         <hr />
         <StateReportProtection stateReport={stateReport} />
         <PlanSituation stateReport={stateReport} />

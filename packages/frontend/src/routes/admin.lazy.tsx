@@ -64,7 +64,7 @@ const WhitelistPanel = () => {
         ["Email", "Date de création"],
         rows.map((r) => [r.email, r.createdAt ? new Date(r.createdAt).toLocaleString() : ""]),
       );
-      downloadCsv("whitelist.csv", csv);
+      downloadCsv("utilisateurs-autorises.csv", csv);
     },
   });
 
@@ -193,7 +193,7 @@ const WhitelistPanel = () => {
           <Spinner />
         </Center>
       ) : tableData.length === 0 ? (
-        <Alert severity="info" title={search ? "Aucun email trouvé." : "Aucun email dans la whitelist."} />
+        <Alert severity="info" title={search ? "Aucun email trouvé." : "Aucun email dans la liste d'utilisateurs autorisés."} />
       ) : (
         <Table
           id="whitelist-table"
@@ -418,7 +418,7 @@ const AdminPage = () => {
         options={[
           {
             id: "whitelist",
-            label: "Whitelist",
+            label: "Liste d'utilisateurs autorisés",
             props: {},
             component: <WhitelistPanel />,
           },

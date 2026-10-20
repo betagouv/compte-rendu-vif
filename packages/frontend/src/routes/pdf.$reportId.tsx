@@ -464,11 +464,13 @@ const EditBanner = ({
       <Banner
         status="saved"
         zIndex={3}
-        position={{ xs: "sticky", lg: "sticky" }}
+        // En mode envoi, le bandeau mobile empile titre, destinataires et bouton :
+        // il doit prendre sa hauteur naturelle et ne pas rester collé en haut de l'écran.
+        position={{ xs: isSend ? "relative" : "sticky", lg: "sticky" }}
         top={{ xs: "-1px", lg: "-1px" }}
         flexDirection="column"
         maxWidth={{ xs: "100vw", lg: "unset" }}
-        height={{ xs: "56px", lg: "unset" }}
+        height={{ xs: isSend ? "auto" : "56px", lg: "unset" }}
       >
         <Flex flexDirection="row" justifyContent={"center"} width="100%">
           <Flex
@@ -540,20 +542,10 @@ const EditBanner = ({
             </Flex>
 
             {isSend ? (
-              <Box
-                width="100%"
-                ml={{ xs: 0, lg: "16px" }}
-                mr="16px"
-                mt="16px"
-                mb="16px"
-                sx={{
-                  input: {
-                    bgcolor: "white",
-                  },
-                }}
-              >
+              <Box width="100%" ml={{ xs: 0, lg: "16px" }} mr="16px" mt={{ xs: "16px", lg: "24px" }} mb="16px">
                 <EmailInput
                   value={recipients.split(",")}
+                  nativeInputProps={{ style: { backgroundColor: "white" } }}
                   onValueChange={(value) => form.setValue("recipients", value.join(","))}
                 />
               </Box>
@@ -563,7 +555,8 @@ const EditBanner = ({
               gap="8px"
               alignItems="center"
               alignSelf={{ xs: "center", lg: "flex-start" }}
-              my={{ xs: 0, lg: isSend ? "24px" : "20px" }}
+              mt={{ xs: 0, lg: isSend ? "24px" : "20px" }}
+              mb={{ xs: isSend ? "16px" : 0, lg: isSend ? "24px" : "20px" }}
             >
               {buttons}
             </Flex>
