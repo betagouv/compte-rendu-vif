@@ -508,6 +508,7 @@ const SectionImageUpload = ({ section, isDisabled }: { section: VisitedSection; 
           iconId="ri-map-pin-line"
           onClick={() => setIsMapOpen(true)}
           disabled={isDisabled}
+          sx={{ whiteSpace: "nowrap", flexShrink: 0 }}
         >
           Localiser sur la carte
         </Button>
