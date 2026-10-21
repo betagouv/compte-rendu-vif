@@ -481,7 +481,8 @@ export const ImageCanvas = ({
                       position: "relative",
                       zIndex: isActive ? 1 : 0,
                       "&:hover": {
-                        bgcolor: isActive ? "#000091" : "#f0f0f0",
+                        // !important: DSFR's global button:hover rule outranks sx specificity
+                        bgcolor: isActive ? "#EAEAEA !important" : "#f0f0f0 !important",
                       },
                     }}
                   >

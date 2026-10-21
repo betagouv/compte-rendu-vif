@@ -1,10 +1,10 @@
-import { Button, Input } from "#components/MUIDsfr.tsx";
-import { Flex } from "#components/ui/Flex.tsx";
+import { Button } from "#components/MUIDsfr.tsx";
 import { Box, Drawer, Stack, Typography } from "@mui/material";
 import { getRouteApi } from "@tanstack/react-router";
 import { ReactNode, useState } from "react";
 import { UseFormReturn, useWatch } from "react-hook-form";
 import { useSpeechToTextV2 } from "../../audio-record/SpeechRecorder.hook";
+import { DictationTextArea } from "../../audio-record/DictationTextArea";
 import { MenuTitle } from "../../menu/MenuTitle";
 import { useIsStateReportDisabled, useStateReportFormContext } from "../utils";
 import { StateReportAlertsMenu } from "../alerts/StateReportAlertsMenu";
@@ -12,37 +12,25 @@ import { createStore } from "@xstate/store";
 import { StateReportMenuStates, useSideMenu } from "./StateReportSideMenu.store";
 import { ENV } from "../../../envVars";
 
+// Must stay inside the state report FormProvider: the drawer contents use the form context
 export const StateReportSideMenu = () => {
   const [sideMenu, setSideMenu] = useSideMenu();
-  const onClose = () => setSideMenu("closed");
+  return <MenuModal menu={sideMenu} onClose={() => setSideMenu("closed")} />;
+};
 
-  const form = useStateReportFormContext();
-
-  const referencePop = form.watch("reference_pop");
-  if (!referencePop) return null;
+// No form dependency: only toggles the side menu store, so it can be rendered anywhere
+export const StateReportAlertButton = () => {
+  const [, setSideMenu] = useSideMenu();
 
   return (
-    <>
-      <MenuModal menu={sideMenu} onClose={onClose} />
-      <Stack mt={{ xs: "16px", lg: "0" }} gap="12px" flexDirection={{ xs: "row", lg: "column" }}>
-        <Button
-          priority="secondary"
-          onClick={() => setSideMenu("alerts")}
-          sx={{ width: { xs: "100%", lg: "254px" }, justifyContent: "center" }}
-          iconId="ri-alarm-warning-fill"
-        >
-          Signaler une alerte...
-        </Button>
-        {/* <Button
-          priority="secondary"
-          onClick={() => setSideMenu("notes")}
-          sx={{ width: { xs: "100%", lg: "254px" }, justifyContent: "center" }}
-          iconId="ri-draft-fill"
-        >
-          Notes
-        </Button> */}
-      </Stack>
-    </>
+    <Button
+      priority="secondary"
+      onClick={() => setSideMenu("alerts")}
+      sx={{ width: { xs: "100%", lg: "254px" }, justifyContent: "center" }}
+      iconId="ri-alarm-warning-fill"
+    >
+      Signaler une alerte...
+    </Button>
   );
 };
 
@@ -116,29 +104,20 @@ const StateReportNotesMenu = ({ onClose }: StateReportAlertModalContentProps) =>
               ".fr-tile__content": { paddingBottom: "0 !important" },
             }}
           >
-            <Input
-              sx={{ width: "100%" }}
-              textArea
-              label=""
+            <DictationTextArea
+              sx={{ width: "100%", mb: "8px !important" }}
+              label="Notes"
+              hideLabel
+              disabled={(isFormDisabled || isRecording) ?? false}
+              isRecording={isRecording}
+              onToggleRecording={toggle}
+              isDictationDisabled={isFormDisabled}
               nativeTextAreaProps={{
                 ...textAreaProps,
                 rows: 10,
               }}
-              disabled={(isFormDisabled || isRecording) ?? false}
             />
-
-            <Flex justifyContent="space-between" alignItems="center" mt="-8px" width="100%">
-              <Button
-                disabled={isFormDisabled}
-                type="button"
-                priority={isRecording ? "primary" : "tertiary"}
-                iconId="ri-mic-fill"
-                onClick={() => toggle()}
-              >
-                {isRecording ? <>En cours</> : <>Dicter</>}
-              </Button>
-              <Typography fontSize="12px">Sauvegarde automatique.</Typography>
-            </Flex>
+            <Typography fontSize="12px">Sauvegarde automatique.</Typography>
           </Stack>
         </>
       )}

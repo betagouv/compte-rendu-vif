@@ -286,12 +286,10 @@ export const getStateReportHtmlString = ({
   stateReport,
   visitedSections: sections,
   alerts,
-  user,
 }: {
   stateReport: StateReportWithUserAndAttachments;
   visitedSections: SectionWithAttachments[];
   alerts?: MinimalAlert[];
-  user: { name: string; job: string };
 }) => {
   const stateReportVersion = stateReport.version || 1;
 
@@ -312,7 +310,6 @@ export const getStateReportHtmlString = ({
         stateReport={stateReport}
         visitedSections={visitedSections}
         alerts={filteredAlerts}
-        user={user}
         version={stateReportVersion}
       />
       <DocumentDate />
@@ -324,17 +321,15 @@ const StateReportBody = ({
   stateReport,
   visitedSections,
   alerts,
-  user,
   version,
 }: {
   stateReport: StateReportWithUserAndAttachments;
   visitedSections: SectionWithAttachments[];
   alerts: MinimalAlert[];
-  user: { name: string; job: string };
   version: number;
 }) => (
   <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
-    <StateReportInfos stateReport={stateReport} user={user} />
+    <StateReportInfos stateReport={stateReport} />
     <hr />
     <StateReportProtection stateReport={stateReport} />
     <PlanSituation stateReport={stateReport} />
@@ -373,14 +368,12 @@ export type GroupedStateReportPart = {
  */
 export const getGroupedStateReportHtmlString = ({
   parts,
-  user,
 }: {
   parts: GroupedStateReportPart[];
-  user: { name: string; job: string };
 }) => {
   if (parts.length === 1) {
     const [part] = parts;
-    return getStateReportHtmlString({ ...part!, user });
+    return getStateReportHtmlString(part!);
   }
 
   const monument = parts[0]!.stateReport;
@@ -420,7 +413,6 @@ export const getGroupedStateReportHtmlString = ({
             stateReport={stateReport}
             visitedSections={visitedSections.filter(getIsSectionVisited)}
             alerts={(alerts || []).filter((alert) => alert.show_in_report).filter(getIsAlertVisited)}
-            user={user}
             version={stateReport.version || 1}
           />
         </React.Fragment>

@@ -63,11 +63,14 @@ export const UploadImageButton = ({ addImage, multiple, isDisabled }: UploadImag
         alignItems={{ xs: "start", md: "center" }}
         flexDirection={{ xs: "column", md: "row" }}
         gap={{ xs: "8px", md: "12px" }}
+        flex="1 1 auto"
+        minWidth={0}
       >
         <Button
           type="button"
           iconId="fr-icon-image-add-fill"
           priority="secondary"
+          sx={{ whiteSpace: "nowrap", flexShrink: 0 }}
           nativeButtonProps={{
             type: "button",
             onClick: () => {
@@ -82,7 +85,7 @@ export const UploadImageButton = ({ addImage, multiple, isDisabled }: UploadImag
         >
           Ajouter photo
         </Button>
-        <Typography color={fr.colors.decisions.text.mention.grey.default} fontSize="12px">
+        <Typography color={fr.colors.decisions.text.mention.grey.default} fontSize="12px" minWidth={0}>
           Taille maximale : 5 Mo. Formats supportés : jpg, png.{multiple ? " Plusieurs fichiers possibles" : ""}
         </Typography>
       </Flex>

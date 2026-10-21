@@ -59,13 +59,11 @@ const UpSummary = ({ stateReport }: { stateReport: StateReportWithUserAndAttachm
   );
 };
 
-export const StateReportInfos = ({
-  stateReport,
-  user,
-}: {
-  stateReport: StateReportWithUserAndAttachments;
-  user: { name: string; job: string };
-}) => {
+export const StateReportInfos = ({ stateReport }: { stateReport: StateReportWithUserAndAttachments }) => {
+  const authorName = stateReport.redacted_by || stateReport.createdByName || "";
+  // the creator's job only applies if they are the one credited as author
+  const authorJob = authorName === stateReport.createdByName ? stateReport.createdByJob : null;
+
   const isPartielle = stateReport.nature_visite?.toLocaleLowerCase().includes("partielle");
 
   const personnesPresentes = stateReport.personnes_presentes
@@ -87,8 +85,8 @@ export const StateReportInfos = ({
       <div>
         Constat dressé par{" "}
         <b>
-          {user.name}
-          {user.job ? ` (${user.job})` : ""}
+          {authorName}
+          {authorJob ? ` (${authorJob})` : ""}
         </b>{" "}
         suite à la visite {isPartielle ? "partielle " : ""}
         {stateReport.date_visite ? `du ${format(new Date(stateReport.date_visite!), "dd/MM/yyyy")}` : ""}
