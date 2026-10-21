@@ -21,6 +21,7 @@ import { Spinner } from "#components/Spinner.tsx";
 import { MHAddressAutocomplete } from "../MHAddressAutocomplete";
 import { Accordion } from "#components/MUIDsfr.tsx";
 import { PlanDeSituationModal } from "./PlanDeSituationModal";
+import { MonumentUpInfos, useIsMonumentComplexe } from "../../up/MonumentUpInfos";
 // import { PlanDeSituationModal } from "./PlanDeSituationModal";
 
 const routeApi = getRouteApi("/constat/$constatId");
@@ -37,9 +38,11 @@ export const MonumentHistorique = () => {
 
   const isDisabled = useIsStateReportDisabled();
   const adresse = useWatch({ control: form.control, name: "adresse" });
+  const upId = useWatch({ control: form.control, name: "up_id" });
   const [isPlanModalOpen, setIsPlanModalOpen] = useState(false);
 
   const isEditing = mode === "edit" || isCustom;
+  const isComplexe = useIsMonumentComplexe() && !isCustom;
   return (
     <Flex
       flexDirection="column"
@@ -76,6 +79,12 @@ export const MonumentHistorique = () => {
         >
           Informations
         </Typography>
+        {isComplexe ? (
+          <>
+            <MonumentUpInfos />
+            <Divider my={isEditing ? "24px" : { xs: "16px", lg: "8px" }} />
+          </>
+        ) : null}
         <Flex flexDirection={{ xs: "column", lg: "row" }} width="100%" gap={isEditing ? { xs: 0, lg: "16px" } : "16px"}>
           <Box flex="1">
             <EditableField
@@ -86,7 +95,7 @@ export const MonumentHistorique = () => {
             />
           </Box>
           <Box flex="1" mt={{ xs: isEditing ? "16px" : "0", lg: "0" }}>
-            {!isCustom ? (
+            {!isCustom && !isComplexe ? (
               <EditableField
                 label="Référence Mérimée"
                 field="reference_pop"
@@ -216,7 +225,7 @@ export const MonumentHistorique = () => {
             />
           ) : null}
         </Flex>
-        {referencePop ? <PreviousConstats referencePop={referencePop} /> : null}
+        {referencePop ? <PreviousConstats referencePop={referencePop} upId={upId ?? null} /> : null}
         {!isCustom ? <Divider my={isEditing ? "24px" : { xs: "16px", lg: "8px" }} /> : null}
         {!isCustom ? <Box>{isEditing ? <MonumentObjetsEdition /> : <MonumentObjets />}</Box> : null}
         {isEditing && !isCustom ? (
@@ -273,26 +282,29 @@ type PreviousConstatRow = {
   titre_edifice: string | null;
   pdf_size: number | null;
   service_name: string | null;
+  up_intitule: string | null;
   isLocal: boolean;
 };
 
-const PreviousConstats = ({ referencePop }: { referencePop: string }) => {
+/**
+ * Sent constats of the same monument. For a constat on an unité patrimoniale, only those of that UP;
+ * for the whole monument, all of them (each one labelled with its UP).
+ */
+const PreviousConstats = ({ referencePop, upId }: { referencePop: string; upId: string | null }) => {
   const { constatId } = routeApi.useParams();
   const isOnline = useIsOnline();
 
   // Constats already synced to this device (own service). Source of truth when offline,
   // and used to decide whether a constat can be opened in-app or must be downloaded.
-  const localQuery = useDbQuery(
-    db
-      .selectFrom("state_report")
-      .selectAll()
-      .where("reference_pop", "like", "%" + referencePop.trim())
-      .where("id", "<>", constatId ?? "")
-      .where("disabled", "<>", 1)
-      .where("attachment_id", "is not", null)
-      .orderBy("created_at", "desc"),
-    [referencePop],
-  );
+  let localDbQuery = db
+    .selectFrom("state_report")
+    .selectAll()
+    .where("reference_pop", "like", "%" + referencePop.trim())
+    .where("id", "<>", constatId ?? "")
+    .where("disabled", "<>", 1)
+    .where("attachment_id", "is not", null);
+  if (upId) localDbQuery = localDbQuery.where("up_id", "=", upId);
+  const localQuery = useDbQuery(localDbQuery.orderBy("created_at", "desc"), [referencePop, upId]);
 
   // Constats made on the same historic monument by any service sharing its department.
   const remoteQuery = useQuery({
@@ -306,7 +318,7 @@ const PreviousConstats = ({ referencePop }: { referencePop: string }) => {
 
   const local = (localQuery.data ?? []).filter((c) => c.id !== constatId);
   const localById = new Map(local.map((c) => [c.id, c]));
-  const remote = (remoteQuery.data ?? []).filter((c) => c.id !== constatId);
+  const remote = (remoteQuery.data ?? []).filter((c) => c.id !== constatId && (!upId || c.up_id === upId));
   const remoteIds = new Set(remote.map((c) => c.id));
 
   const rows: PreviousConstatRow[] = [
@@ -318,6 +330,7 @@ const PreviousConstats = ({ referencePop }: { referencePop: string }) => {
       titre_edifice: c.titre_edifice,
       pdf_size: c.pdf_size,
       service_name: c.service_name,
+      up_intitule: c.up_intitule,
       isLocal: localById.has(c.id),
     })),
     // keep local constats the backend didn't return (offline, or department mismatch)
@@ -331,6 +344,7 @@ const PreviousConstats = ({ referencePop }: { referencePop: string }) => {
         titre_edifice: c.titre_edifice,
         pdf_size: c.pdf_size,
         service_name: null,
+        up_intitule: c.up_intitule,
         isLocal: true,
       })),
   ].sort((a, b) => (b.created_at ?? "").localeCompare(a.created_at ?? ""));
@@ -372,7 +386,7 @@ const PreviousConstatsList = ({ constats }: { constats: PreviousConstatRow[] }) 
       {constats.map((constat, index) => {
         const label = `${new Date(constat.created_at!).toLocaleDateString("fr-FR")} - visite ${
           constat.nature_visite === "complète" ? "complète" : "partielle"
-        }`;
+        }${constat.up_intitule ? ` - ${constat.up_intitule}` : ""}`;
         const isDownloading = downloadMutation.isPending && downloadMutation.variables?.id === constat.id;
 
         return (

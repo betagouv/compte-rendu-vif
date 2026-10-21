@@ -229,6 +229,18 @@ const state_report = new Table({
   observations: column.text,
   titre_edifice: column.text,
 
+  // unité patrimoniale (MH complexe) : up_id null = ensemble du monument
+  up_id: column.text,
+  up_identifiant: column.text,
+  up_intitule: column.text,
+  up_intitule_complet: column.text,
+  up_niveau: column.text,
+  up_protection: column.text,
+  up_type_immeuble: column.text,
+  up_monument_identifiant: column.text,
+  up_chemin: column.text, // JSON [{ id, intitule }]
+  rapport_id: column.text,
+
   nature_visite: column.text,
   visite_partielle_details: column.text,
   visite_details: column.text,

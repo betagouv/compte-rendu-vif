@@ -45,6 +45,7 @@ const envSchema = z.object({
   MINIO_ACCESS_KEY_ID: z.string(),
   MINIO_SECRET_KEY: z.string(),
   MINIO_URL: z.string(),
+  MINIO_PUBLIC_URL: z.string().optional(),
   MINIO_BUCKET: z.string(),
   SENTRY_DSN: z.string().optional(),
   VITE_AUTH_CLIENT_ID: z.string(),
@@ -58,6 +59,17 @@ const envSchema = z.object({
   FORCE_REFETCH_POP: anythingAsBoolean.default(false),
 
   ASSETS_DIR: z.string().optional(),
+
+  // Unités patrimoniales (dataspace API, only reachable from the production network)
+  UP_API_MODE: z.enum(["mock", "live"]).default("mock"),
+  UP_API_URL: z.string().default("https://api-ext.stg.cloud.culture.fr/dataspace/patrinote/up"),
+  UP_API_KEY: z.string().optional(),
+  UP_CACHE_TTL_HOURS: stringOrNumberAsNumber.default(24),
 });
 
-export const ENV = envSchema.parse(process.env);
+export const ENV = envSchema
+  .refine((env) => env.UP_API_MODE !== "live" || !!env.UP_API_KEY, {
+    message: "UP_API_KEY is required when UP_API_MODE=live",
+    path: ["UP_API_KEY"],
+  })
+  .parse(process.env);

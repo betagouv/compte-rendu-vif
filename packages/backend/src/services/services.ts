@@ -3,6 +3,7 @@ import { AuthService } from "./authService";
 import { StateReportService } from "./stateReportService";
 import { StaticDataService } from "./staticDataService";
 import { SyncService } from "./syncService";
+import { UpService } from "./upService";
 import { UploadService } from "./uploadService";
 import { UserService } from "./userService";
 
@@ -17,6 +18,7 @@ const makeServices = () => ({
   sync: new SyncService(),
   auth: new AuthService(),
   stateReport: new StateReportService(),
+  up: new UpService(),
 });
 
 export const getServices = () => {

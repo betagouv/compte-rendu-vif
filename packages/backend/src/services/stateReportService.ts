@@ -56,6 +56,8 @@ export class StateReportService {
         "state_report.titre_edifice",
         "state_report.pdf_size",
         "state_report.service_id",
+        "state_report.up_id",
+        "state_report.up_intitule",
         "service.name as service_name",
       ])
       .orderBy("state_report.created_at", "desc")

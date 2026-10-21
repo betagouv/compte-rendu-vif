@@ -1,0 +1,330 @@
+[
+  {
+    "_id": "409540",
+    "UPI_REFERENCE_MERIMEE": "PA00097503",
+    "UPA_INTITULE_COMPLET": "Château d'Amboise",
+    "UPA_IDENTIFIANT": "IHTMJ8",
+    "NIVEAU": "ensemble d'immeubles",
+    "TYPEPROTECTION": "classement",
+    "TYPEIMMEUBLE": "immeuble",
+    "CATEGORIEARCHITECTURALE": "architecture domestique",
+    "adresses": [
+      {
+        "rue": "montée Emir Abd el Kader",
+        "departement": "Indre-et-Loire",
+        "commune": "Amboise",
+        "departement_code": "37",
+        "commune_code_insee": "37003"
+      }
+    ],
+    "coord": [{ "latitude": 47.4134704107439, "longitude": 0.987362366901368 }],
+    "proprietaires": [
+      { "proprietaire": 1, "proprietaire_actuel": 1, "type": "association", "nom": "FONDATION SAINT LOUIS" }
+    ],
+    "enfants": [
+      { "epa_id": "493366", "protection": "classement", "appellation": "Aile Charles VIII", "type": "immeuble" },
+      { "epa_id": "493371", "protection": "classement", "appellation": "Enceinte", "type": "immeuble" },
+      { "epa_id": "493373", "protection": "classement", "appellation": "Sols et terrasses", "type": "parc et jardin" },
+      { "epa_id": "493360", "protection": "classement", "appellation": "Chapelle Saint-Hubert", "type": "immeuble" },
+      { "epa_id": "493369", "protection": "classement", "appellation": "Aile Louis XII", "type": "immeuble" }
+    ],
+    "DATE_CREATION": "2002-09-16T12:00:00.000+00:00",
+    "DATE_MODIFICATION": "2010-10-18T02:52:23.000+00:00",
+    "EPA_INTITULE": "Château d'Amboise"
+  },
+  {
+    "_id": "493360",
+    "UPA_INTITULE_COMPLET": "Château d'Amboise | Chapelle Saint-Hubert",
+    "UPA_IDENTIFIANT": "IEEIQK",
+    "NIVEAU": "immeuble",
+    "TYPEPROTECTION": "classement",
+    "TYPEIMMEUBLE": "immeuble",
+    "CATEGORIEARCHITECTURALE": "architecture religieuse",
+    "adresses": [
+      {
+        "rue": "montée Emir Abd el Kader",
+        "departement": "Indre-et-Loire",
+        "commune": "Amboise",
+        "departement_code": "37",
+        "commune_code_insee": "37003"
+      }
+    ],
+    "DATE_CREATION": "2010-09-01T12:46:20.000+00:00",
+    "DATE_MODIFICATION": "2025-02-21T07:48:59.000+00:00",
+    "EPA_INTITULE": "Chapelle Saint-Hubert"
+  },
+  {
+    "_id": "493366",
+    "UPA_INTITULE_COMPLET": "Château d'Amboise | Aile Charles VIII",
+    "UPA_IDENTIFIANT": "IWDAZY",
+    "NIVEAU": "immeuble",
+    "TYPEPROTECTION": "classement",
+    "TYPEIMMEUBLE": "immeuble",
+    "adresses": [
+      {
+        "rue": "montée Emir Abd el Kader",
+        "departement": "Indre-et-Loire",
+        "commune": "Amboise",
+        "departement_code": "37",
+        "commune_code_insee": "37003"
+      }
+    ],
+    "enfants": [
+      { "epa_id": "493382", "protection": "classement", "appellation": "Pavillon de Penthi\\u00E8vre", "type": "immeuble" },
+      { "epa_id": "493381", "protection": "classement", "appellation": "Logis ouest dit \\\"des Tambourineurs\\\"", "type": "immeuble" },
+      { "epa_id": "493380", "protection": "classement", "appellation": "Logis  est", "type": "immeuble" }
+    ],
+    "DATE_CREATION": "2010-09-01T12:54:04.000+00:00",
+    "DATE_MODIFICATION": "2010-09-24T02:41:41.000+00:00",
+    "EPA_INTITULE": "Aile Charles VIII"
+  },
+  {
+    "_id": "493369",
+    "UPA_INTITULE_COMPLET": "Château d'Amboise | Aile Louis XII",
+    "UPA_IDENTIFIANT": "IFC7N5",
+    "NIVEAU": "immeuble",
+    "TYPEPROTECTION": "classement",
+    "TYPEIMMEUBLE": "immeuble",
+    "autreAppellations": ["Aile de l'Echansonnerie", "Aile François Ier"],
+    "adresses": [
+      {
+        "rue": "montée Emir Abd el Kader",
+        "departement": "Indre-et-Loire",
+        "commune": "Amboise",
+        "departement_code": "37",
+        "commune_code_insee": "37003"
+      }
+    ],
+    "DATE_CREATION": "2010-09-01T12:57:26.000+00:00",
+    "DATE_MODIFICATION": "2010-09-24T02:43:19.000+00:00",
+    "EPA_INTITULE": "Aile Louis XII"
+  },
+  {
+    "_id": "493371",
+    "UPA_INTITULE_COMPLET": "Château d'Amboise | Enceinte",
+    "UPA_IDENTIFIANT": "IJ2VBM",
+    "NIVEAU": "immeuble",
+    "TYPEPROTECTION": "classement",
+    "TYPEIMMEUBLE": "immeuble",
+    "UPI_LIEU_DIT": "Château d'Amboise",
+    "adresses": [
+      {
+        "rue": "montée Emir Abd el Kader",
+        "departement": "Indre-et-Loire",
+        "commune": "Amboise",
+        "departement_code": "37",
+        "commune_code_insee": "37003"
+      }
+    ],
+    "enfants": [
+      { "epa_id": "493376", "protection": "classement", "appellation": "Tour des Minimes", "type": "immeuble" },
+      { "epa_id": "493379", "protection": "classement", "appellation": "Murs et autres ouvrages d\\u00E9fensifs", "type": "immeuble" },
+      { "epa_id": "493378", "protection": "classement", "appellation": "Tour Gar\\u00E7onnet", "type": "immeuble" },
+      { "epa_id": "493377", "protection": "classement", "appellation": "Tour Heurtault", "type": "immeuble" },
+      { "epa_id": "493374", "protection": "classement", "appellation": "Porte des Lions", "type": "immeuble" },
+      { "epa_id": "493375", "protection": "classement", "appellation": "Porte de la Ville et sa rampe d'acc\\u00E8s vo\\u00FBt\\u00E9e", "type": "immeuble" }
+    ],
+    "DATE_CREATION": "2010-09-01T12:58:28.000+00:00",
+    "DATE_MODIFICATION": "2010-09-24T02:45:03.000+00:00",
+    "EPA_INTITULE": "Enceinte"
+  },
+  {
+    "_id": "493373",
+    "UPA_INTITULE_COMPLET": "Château d'Amboise | Sols et terrasses",
+    "UPA_IDENTIFIANT": "IB8IWO",
+    "NIVEAU": "immeuble",
+    "TYPEPROTECTION": "classement",
+    "TYPEIMMEUBLE": "parc et jardin",
+    "adresses": [
+      {
+        "rue": "montée Emir Abd el Kader",
+        "departement": "Indre-et-Loire",
+        "commune": "Amboise",
+        "departement_code": "37",
+        "commune_code_insee": "37003"
+      }
+    ],
+    "DATE_CREATION": "2010-09-01T01:29:44.000+00:00",
+    "DATE_MODIFICATION": "2010-09-24T02:45:50.000+00:00",
+    "EPA_INTITULE": "Sols et terrasses"
+  },
+  {
+    "_id": "493374",
+    "UPA_INTITULE_COMPLET": "Château d'Amboise | Enceinte | Porte des Lions",
+    "UPA_IDENTIFIANT": "I0APP5",
+    "NIVEAU": "partie d'immeuble",
+    "TYPEPROTECTION": "classement",
+    "TYPEIMMEUBLE": "immeuble",
+    "EPA_INTITULE": "Porte des Lions"
+  },
+  {
+    "_id": "493375",
+    "UPA_INTITULE_COMPLET": "Château d'Amboise | Enceinte | Porte de la Ville et sa rampe d'accès voûtée",
+    "UPA_IDENTIFIANT": "ICTAJT",
+    "NIVEAU": "partie d'immeuble",
+    "TYPEPROTECTION": "classement",
+    "TYPEIMMEUBLE": "immeuble",
+    "autreAppellations": ["Porte du Parc"],
+    "EPA_INTITULE": "Porte de la Ville et sa rampe d'accès voûtée"
+  },
+  {
+    "_id": "493376",
+    "UPA_INTITULE_COMPLET": "Château d'Amboise | Enceinte | Tour des Minimes",
+    "UPA_IDENTIFIANT": "ISSS14",
+    "NIVEAU": "partie d'immeuble",
+    "TYPEPROTECTION": "classement",
+    "TYPEIMMEUBLE": "immeuble",
+    "autreAppellations": ["Tour des Cavaliers", "Tour du Petit Fort"],
+    "EPA_INTITULE": "Tour des Minimes"
+  },
+  {
+    "_id": "493377",
+    "UPA_INTITULE_COMPLET": "Château d'Amboise | Enceinte | Tour Heurtault",
+    "UPA_IDENTIFIANT": "ILXCV9",
+    "NIVEAU": "partie d'immeuble",
+    "TYPEPROTECTION": "classement",
+    "TYPEIMMEUBLE": "immeuble",
+    "autreAppellations": ["Tour des Fours", "Tour près la Porte Heurtault"],
+    "EPA_INTITULE": "Tour Heurtault"
+  },
+  {
+    "_id": "493378",
+    "UPA_INTITULE_COMPLET": "Château d'Amboise | Enceinte | Tour Garçonnet",
+    "UPA_IDENTIFIANT": "ICKHEY",
+    "NIVEAU": "partie d'immeuble",
+    "TYPEPROTECTION": "classement",
+    "TYPEIMMEUBLE": "immeuble",
+    "autreAppellations": ["Tour du Belvédère", "Tour rasée"],
+    "EPA_INTITULE": "Tour Garçonnet"
+  },
+  {
+    "_id": "493379",
+    "UPA_INTITULE_COMPLET": "Château d'Amboise | Enceinte | Murs et autres ouvrages défensifs",
+    "UPA_IDENTIFIANT": "I6CWZR",
+    "NIVEAU": "partie d'immeuble",
+    "TYPEPROTECTION": "classement",
+    "TYPEIMMEUBLE": "immeuble",
+    "EPA_INTITULE": "Murs et autres ouvrages défensifs"
+  },
+  {
+    "_id": "493380",
+    "UPA_INTITULE_COMPLET": "Château d'Amboise | Aile Charles VIII | Logis  est",
+    "UPA_IDENTIFIANT": "I4CHDV",
+    "NIVEAU": "partie d'immeuble",
+    "TYPEPROTECTION": "classement",
+    "TYPEIMMEUBLE": "immeuble",
+    "EPA_INTITULE": "Logis  est"
+  },
+  {
+    "_id": "493381",
+    "UPA_INTITULE_COMPLET": "Château d'Amboise | Aile Charles VIII | Logis ouest dit \"des Tambourineurs\"",
+    "UPA_IDENTIFIANT": "ILKSH8",
+    "NIVEAU": "partie d'immeuble",
+    "TYPEPROTECTION": "classement",
+    "TYPEIMMEUBLE": "immeuble",
+    "EPA_INTITULE": "Logis ouest dit \"des Tambourineurs\""
+  },
+  {
+    "_id": "493382",
+    "UPA_INTITULE_COMPLET": "Château d'Amboise | Aile Charles VIII | Pavillon de Penthièvre",
+    "UPA_IDENTIFIANT": "ICVO3N",
+    "NIVEAU": "partie d'immeuble",
+    "TYPEPROTECTION": "classement",
+    "TYPEIMMEUBLE": "immeuble",
+    "autreAppellations": ["Tour carrée nord-ouest", "Pavillon du roi Charles"],
+    "EPA_INTITULE": "Pavillon de Penthièvre"
+  },
+  {
+    "_id": "139069",
+    "UPI_REFERENCE_MERIMEE": "PA00079952",
+    "UPA_INTITULE_COMPLET": "Basilique Saint-Denis",
+    "UPA_IDENTIFIANT": "IS7FVX",
+    "NIVEAU": "immeuble",
+    "TYPEPROTECTION": "classement partiel",
+    "TYPEIMMEUBLE": "immeuble",
+    "CATEGORIEARCHITECTURALE": "architecture religieuse",
+    "adresses": [
+      {
+        "rue": "1 rue de la Légion d'Honneur",
+        "numero": "1",
+        "departement": "Seine-Saint-Denis",
+        "commune": "Saint-Denis",
+        "departement_code": "93",
+        "commune_code_insee": "93066"
+      }
+    ],
+    "coord": [{ "latitude": 48.9355042918189, "longitude": 2.36006564550444 }],
+    "enfants": [
+      { "epa_id": "468701", "protection": "classement", "appellation": "\\u00C9glise abbatiale (ancienne)", "type": "immeuble" },
+      { "epa_id": "466481", "protection": "classement", "appellation": "Jardin ", "type": "parc et jardin" }
+    ],
+    "DATE_CREATION": "1994-02-02T12:00:00.000+00:00",
+    "DATE_MODIFICATION": "2010-08-05T11:33:46.000+00:00",
+    "EPA_INTITULE": "Basilique Saint-Denis"
+  },
+  {
+    "_id": "mock-test-1",
+    "UPI_REFERENCE_MERIMEE": "TEST00002",
+    "UPA_INTITULE_COMPLET": "Château complexe de Test",
+    "UPA_IDENTIFIANT": "ITEST1",
+    "NIVEAU": "ensemble d'immeubles",
+    "TYPEPROTECTION": "classement",
+    "TYPEIMMEUBLE": "immeuble",
+    "adresses": [{ "rue": "1 rue du Test", "commune": "Paris", "departement_code": "75", "commune_code_insee": "75056" }],
+    "enfants": [
+      { "epa_id": "mock-test-2", "protection": "classement", "appellation": "Corps de logis", "type": "immeuble" },
+      { "epa_id": "mock-test-3", "protection": "inscription", "appellation": "Chapelle", "type": "immeuble" },
+      { "epa_id": "mock-test-4", "protection": "inscription", "appellation": "Jardin", "type": "parc et jardin" }
+    ],
+    "EPA_INTITULE": "Château complexe de Test"
+  },
+  {
+    "_id": "mock-test-2",
+    "UPA_INTITULE_COMPLET": "Château complexe de Test | Corps de logis",
+    "UPA_IDENTIFIANT": "ITEST2",
+    "NIVEAU": "immeuble",
+    "TYPEPROTECTION": "classement",
+    "TYPEIMMEUBLE": "immeuble",
+    "enfants": [
+      { "epa_id": "mock-test-5", "protection": "classement", "appellation": "Aile nord", "type": "immeuble" },
+      { "epa_id": "mock-test-6", "protection": "classement", "appellation": "Aile sud", "type": "immeuble" }
+    ],
+    "EPA_INTITULE": "Corps de logis"
+  },
+  {
+    "_id": "mock-test-3",
+    "UPA_INTITULE_COMPLET": "Château complexe de Test | Chapelle",
+    "UPA_IDENTIFIANT": "ITEST3",
+    "NIVEAU": "immeuble",
+    "TYPEPROTECTION": "inscription",
+    "TYPEIMMEUBLE": "immeuble",
+    "EPA_INTITULE": "Chapelle"
+  },
+  {
+    "_id": "mock-test-4",
+    "UPA_INTITULE_COMPLET": "Château complexe de Test | Jardin",
+    "UPA_IDENTIFIANT": "ITEST4",
+    "NIVEAU": "immeuble",
+    "TYPEPROTECTION": "inscription",
+    "TYPEIMMEUBLE": "parc et jardin",
+    "EPA_INTITULE": "Jardin"
+  },
+  {
+    "_id": "mock-test-5",
+    "UPA_INTITULE_COMPLET": "Château complexe de Test | Corps de logis | Aile nord",
+    "UPA_IDENTIFIANT": "ITEST5",
+    "NIVEAU": "partie d'immeuble",
+    "TYPEPROTECTION": "classement",
+    "TYPEIMMEUBLE": "immeuble",
+    "EPA_INTITULE": "Aile nord"
+  },
+  {
+    "_id": "mock-test-6",
+    "UPA_INTITULE_COMPLET": "Château complexe de Test | Corps de logis | Aile sud",
+    "UPA_IDENTIFIANT": "ITEST6",
+    "NIVEAU": "partie d'immeuble",
+    "TYPEPROTECTION": "classement",
+    "TYPEIMMEUBLE": "immeuble",
+    "EPA_INTITULE": "Aile sud"
+  }
+]

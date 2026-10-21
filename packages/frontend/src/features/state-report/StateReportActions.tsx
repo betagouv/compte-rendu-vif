@@ -59,6 +59,7 @@ export const StateReportActions = forwardRef<HTMLDivElement, { report: StateRepo
         "attachment_id",
         "createdByName",
         "validation_status",
+        "rapport_id",
       ]);
 
       const visitedSections = await db

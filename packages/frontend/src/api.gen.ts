@@ -321,6 +321,7 @@ export namespace Endpoints {
         pdfPath: string;
         pdfSize?: number | undefined;
         stateReportId: string;
+        stateReportIds?: Array<string> | undefined;
         recipients: string;
         alerts?:
           | Array<{
@@ -378,7 +379,101 @@ export namespace Endpoints {
       pdf_size?: number | Schemas.null | Array<number | Schemas.null> | undefined;
       service_id?: string | Schemas.null | Array<string | Schemas.null> | undefined;
       service_name?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+      up_id?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+      up_intitule?: string | Schemas.null | Array<string | Schemas.null> | undefined;
     }>;
+  };
+  export type get_Apiupmonument = {
+    method: "GET";
+    path: "/api/up/monument";
+    parameters: {
+      query: { reference: string };
+    };
+    response: {
+      tree:
+        | {
+            rootId: string;
+            ups: Array<{
+              id: string;
+              identifiant?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+              intitule: string;
+              intituleComplet?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+              referenceMerimee?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+              niveau?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+              protection?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+              typeImmeuble?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+              autresAppellations: Array<string>;
+              adresse?:
+                | Partial<{
+                    rue: string | Schemas.null | Array<string | Schemas.null>;
+                    commune: string | Schemas.null | Array<string | Schemas.null>;
+                    communeCodeInsee: string | Schemas.null | Array<string | Schemas.null>;
+                    departementCode: string | Schemas.null | Array<string | Schemas.null>;
+                  }>
+                | Schemas.null
+                | Array<
+                    | Partial<{
+                        rue: string | Schemas.null | Array<string | Schemas.null>;
+                        commune: string | Schemas.null | Array<string | Schemas.null>;
+                        communeCodeInsee: string | Schemas.null | Array<string | Schemas.null>;
+                        departementCode: string | Schemas.null | Array<string | Schemas.null>;
+                      }>
+                    | Schemas.null
+                  >
+                | undefined;
+              coordonnees?:
+                | { latitude: number; longitude: number }
+                | Schemas.null
+                | Array<{ latitude: number; longitude: number } | Schemas.null>
+                | undefined;
+              enfantsIds: Array<string>;
+              complete: boolean;
+            }>;
+          }
+        | Schemas.null
+        | Array<
+            | {
+                rootId: string;
+                ups: Array<{
+                  id: string;
+                  identifiant?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+                  intitule: string;
+                  intituleComplet?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+                  referenceMerimee?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+                  niveau?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+                  protection?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+                  typeImmeuble?: string | Schemas.null | Array<string | Schemas.null> | undefined;
+                  autresAppellations: Array<string>;
+                  adresse?:
+                    | Partial<{
+                        rue: string | Schemas.null | Array<string | Schemas.null>;
+                        commune: string | Schemas.null | Array<string | Schemas.null>;
+                        communeCodeInsee: string | Schemas.null | Array<string | Schemas.null>;
+                        departementCode: string | Schemas.null | Array<string | Schemas.null>;
+                      }>
+                    | Schemas.null
+                    | Array<
+                        | Partial<{
+                            rue: string | Schemas.null | Array<string | Schemas.null>;
+                            commune: string | Schemas.null | Array<string | Schemas.null>;
+                            communeCodeInsee: string | Schemas.null | Array<string | Schemas.null>;
+                            departementCode: string | Schemas.null | Array<string | Schemas.null>;
+                          }>
+                        | Schemas.null
+                      >
+                    | undefined;
+                  coordonnees?:
+                    | { latitude: number; longitude: number }
+                    | Schemas.null
+                    | Array<{ latitude: number; longitude: number } | Schemas.null>
+                    | undefined;
+                  enfantsIds: Array<string>;
+                  complete: boolean;
+                }>;
+              }
+            | Schemas.null
+          >;
+    };
   };
   export type get_ApiconstatValidationToken = {
     method: "GET";
@@ -696,6 +791,7 @@ export type EndpointByMethod = {
     "/api/pdf/state-report": Endpoints.get_ApipdfstateReport;
     "/api/state-report/objets-images": Endpoints.get_ApistateReportobjetsImages;
     "/api/state-report/previous": Endpoints.get_ApistateReportprevious;
+    "/api/up/monument": Endpoints.get_Apiupmonument;
     "/api/constat-validation/{token}": Endpoints.get_ApiconstatValidationToken;
     "/api/constat-validation/{token}/pdf": Endpoints.get_ApiconstatValidationTokenpdf;
     "/api/admin/me": Endpoints.get_Apiadminme;

@@ -1,6 +1,6 @@
 import { Selectable } from "kysely";
 import { Database } from "../../db/db";
-import { MinimalAlert } from "@patrinotes/pdf/constat";
+import { getStateReportTitle, MinimalAlert } from "@patrinotes/pdf/constat";
 import { wrapWithDsfrMail } from "./dsfrMailWrapper";
 import {
   ABORDS_DE_L_EDIFICE_SECTION,
@@ -62,7 +62,7 @@ export const createAlertEmailContent = async ({
 
   const innerHtml = `
     <p>Madame, Monsieur,</p>
-    <p>Dans le cadre d’un constat d’état réalisé sur le monument historique <b>${stateReport.titre_edifice ? uppercaseFirstLetter(stateReport.titre_edifice) : ""}</b>${stateReport.commune ? `, situé à ${stateReport.commune}` : ``},
+    <p>Dans le cadre d’un constat d’état réalisé sur le monument historique <b>${getStateReportTitle(stateReport) ? uppercaseFirstLetter(getStateReportTitle(stateReport)) : ""}</b>${stateReport.commune ? `, situé à ${stateReport.commune}` : ``},
   ${getProblemDescription({ alert, user })} l’agent ${getServicePronom(user.service.name!)}, en charge du contrôle scientifique et technique, ${user.name} :</p>
 
   ${alert.commentaires ? `<p>${alert.commentaires}</p>` : ""}
@@ -82,7 +82,7 @@ export const createAlertEmailContent = async ({
   `;
 
   const { html, attachments: dsfrAttachments } = wrapWithDsfrMail({
-    title: `Alerte ${alert.alert}${stateReport.titre_edifice ? ` — ${stateReport.titre_edifice}` : ""}`,
+    title: `Alerte ${alert.alert}${getStateReportTitle(stateReport) ? ` — ${getStateReportTitle(stateReport)}` : ""}`,
     content: innerHtml,
   });
 

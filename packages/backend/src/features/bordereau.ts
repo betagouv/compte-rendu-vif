@@ -1,46 +1,86 @@
 import { Selectable } from "kysely";
 import { Database } from "../db/db";
-import { deserializePreconisations } from "@patrinotes/pdf/constat";
+import { deserializePreconisations, getStateReportTitle, getStateReportUpLabel } from "@patrinotes/pdf/constat";
 import { wrapWithDsfrMail } from "./mail/dsfrMailWrapper";
+
+const escapeHtml = (value: unknown) =>
+  String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/\"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+
+const formatVisitDate = (date: string | null) =>
+  date ? new Date(date).toLocaleDateString("fr-FR", { year: "numeric", month: "long", day: "numeric" }) : "";
+
+const formatPreconisations = (raw: string | null) =>
+  deserializePreconisations(raw || "")
+    .map(
+      ({ preconisation, commentaire }) =>
+        `- ${escapeHtml(preconisation)}${commentaire ? ` : ${escapeHtml(commentaire)}` : ""}<br />`,
+    )
+    .join("");
 
 export const createBordereauMailContent = ({
   stateReport,
+  groupedReports,
   user,
   pdfUrl,
 }: {
   stateReport: Selectable<Database["state_report"]>;
+  /** rapport groupé: every constat of the PDF, one per part of the monument */
+  groupedReports?: Selectable<Database["state_report"]>[];
   user: Selectable<Database["user"]>;
   pdfUrl: string;
 }) => {
+  const isGrouped = !!groupedReports && groupedReports.length > 1;
   const preconisations = deserializePreconisations(stateReport.preconisations || "");
-  const title = stateReport.titre_edifice ? `Constat d'état : ${stateReport.titre_edifice}` : "Constat d'état";
-  const inner = `<p>Madame, Monsieur,</p>
-<p>Veuillez trouver le rapport établi à la suite de la visite de votre monument historique réalisée le ${
-    stateReport.date_visite
-      ? new Date(stateReport.date_visite).toLocaleDateString("fr-FR", {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        })
-      : ""
-  } en cliquant sur le lien suivant : <a href="${pdfUrl}">Télécharger le constat d'état</a> (lien valable 1 mois).
-</p>
+  const title = isGrouped
+    ? `Constat d'état : ${stateReport.titre_edifice ?? ""}`
+    : getStateReportTitle(stateReport)
+      ? `Constat d'état : ${getStateReportTitle(stateReport)}`
+      : "Constat d'état";
 
+  const visitDates = Array.from(
+    new Set((isGrouped ? groupedReports : [stateReport]).map((r) => formatVisitDate(r.date_visite)).filter(Boolean)),
+  );
+
+  const intro = isGrouped
+    ? `<p>Veuillez trouver le rapport établi à la suite de la visite de votre monument historique ${
+        visitDates.length ? `réalisée le${visitDates.length > 1 ? "s" : ""} ${visitDates.join(", ")} ` : ""
+      }en cliquant sur le lien suivant : <a href="${escapeHtml(pdfUrl)}">Télécharger le constat d'état</a> (lien valable 1 mois).
+Il réunit les constats des parties suivantes du monument :</p>
+<p>${groupedReports.map((r) => `- ${escapeHtml(getStateReportUpLabel(r))}<br />`).join("")}</p>
+`
+    : `<p>Veuillez trouver le rapport établi à la suite de la visite de votre monument historique réalisée le ${formatVisitDate(
+        stateReport.date_visite,
+      )} en cliquant sur le lien suivant : <a href="${escapeHtml(pdfUrl)}">Télécharger le constat d'état</a> (lien valable 1 mois).
+</p>
+`;
+
+  const groupedPreconisations = isGrouped
+    ? groupedReports
+        .filter((r) => deserializePreconisations(r.preconisations || "").length)
+        .map((r) => `<p><b>${escapeHtml(getStateReportUpLabel(r))}</b><br />${formatPreconisations(r.preconisations)}</p>`)
+        .join("")
+    : "";
+
+  const inner = `<p>Madame, Monsieur,</p>
+${intro}
 <p>Le constat réalisé lors de cette visite, accompagné de la couverture photographique établie à cette occasion, n'est que visuel. Il rend compte de l'état apparent du bien protégé, sans mise en œuvre d'aucune technologie. Cette visite s’inscrit dans le cadre de la vérification périodique de l’état des monuments historiques et des conditions de leur conservation de façon que leur pérennité soit assurée, en application du contrôle scientifique et technique des services chargés des monuments historiques.
 Outre l’établissement de l’état de conservation, cette visite permet d’identifier et de prévenir les risques. Les données sont enregistrées dans les applications du ministère de la Culture afin de réaliser les synthèses territoriales et la comparaison dans le temps et de mettre à jour les données existantes et, le cas échéant, la protection juridique.</p>
 
 ${
-  preconisations?.length
-    ? `<p>Le constat joint permet de préconiser les interventions suivantes :</p>
-
-<p>
-${preconisations
-  .map(({ preconisation, commentaire }) => {
-    return `- ${preconisation}${commentaire ? ` : ${commentaire}` : ""}<br />`;
-  })
-  .join("")}
-</p>`
-    : ""
+  isGrouped
+    ? groupedPreconisations
+      ? `<p>Le constat joint permet de préconiser les interventions suivantes :</p>${groupedPreconisations}`
+      : ""
+    : preconisations.length
+      ? `<p>Le constat joint permet de préconiser les interventions suivantes :</p><p>${formatPreconisations(
+          stateReport.preconisations,
+        )}</p>`
+      : ""
 }
 
 <p>
@@ -53,7 +93,7 @@ Par ailleurs, il est rappelé que tous les travaux qui affecteraient l’aspect 
 dans les abords de votre monument historique sont soumis à autorisation préalable au titre de l’article L621-32 du code du patrimoine.
 </p>
 <p>Vous remerciant pour votre accueil, et me tenant à votre disposition pour tout complément,</p>
-<b>${user.name}, ${user.email}</b>
+<b>${escapeHtml(user.name)}, ${escapeHtml(user.email)}</b>
 
 <br/><br/>
 <div style='font-size: 12px;'>

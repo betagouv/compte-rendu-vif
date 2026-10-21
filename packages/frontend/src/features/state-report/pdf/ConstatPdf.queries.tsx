@@ -232,7 +232,14 @@ export const constatPdfMutations = {
   send: ({ constatId, service }: { constatId: string; service: Service }) =>
     mutationOptions({
       mutationKey: ["send-constat-pdf", constatId],
-      mutationFn: async ({ alerts, selectedAlertIds, htmlString, recipients, needValidation }: SendConstatForm) => {
+      mutationFn: async ({
+        alerts,
+        selectedAlertIds,
+        htmlString,
+        recipients,
+        needValidation,
+        stateReportIds,
+      }: SendConstatForm) => {
         const alertsToSend = alerts.filter((a) => selectedAlertIds.includes(a.id));
         const { uploadUrl, pdfPath } = await api.post("/api/pdf/state-report/upload-url", {
           body: { stateReportId: constatId },
@@ -256,6 +263,8 @@ export const constatPdfMutations = {
             pdfSize: blob.size,
             alerts: alertsToSend,
             needValidation,
+            // rapport groupé: the other constats of the rapport are sent in the same PDF
+            stateReportIds: stateReportIds?.length ? stateReportIds : undefined,
           },
         });
       },

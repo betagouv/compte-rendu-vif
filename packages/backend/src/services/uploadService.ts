@@ -8,23 +8,32 @@ import { sentry } from "../features/sentry";
 
 const debug = makeDebug("upload");
 
-const client = new S3Client({
-  endpoint: ENV.MINIO_URL,
-  region: "us-east-1",
-  credentials: { accessKeyId: ENV.MINIO_ACCESS_KEY_ID, secretAccessKey: ENV.MINIO_SECRET_KEY },
-  bucketEndpoint: true,
-  forcePathStyle: true,
-});
+const makeS3Client = (endpoint: string) =>
+  new S3Client({
+    endpoint,
+    region: "us-east-1",
+    credentials: { accessKeyId: ENV.MINIO_ACCESS_KEY_ID, secretAccessKey: ENV.MINIO_SECRET_KEY },
+    bucketEndpoint: true,
+    forcePathStyle: true,
+  });
+
+const client = makeS3Client(ENV.MINIO_URL);
+
+// Presigned URLs are opened by browsers, which may reach the storage through another URL than the backend
+// (e.g. behind a reverse proxy): MINIO_PUBLIC_URL, when set, is the endpoint used to sign them.
+const publicEndpoint = ENV.MINIO_PUBLIC_URL ?? ENV.MINIO_URL;
+const presignClient = ENV.MINIO_PUBLIC_URL ? makeS3Client(ENV.MINIO_PUBLIC_URL) : client;
 
 export const upload = async () => {};
 const bucketUrl = `${ENV.MINIO_URL}/${ENV.MINIO_BUCKET}`;
+const publicBucketUrl = `${publicEndpoint}/${ENV.MINIO_BUCKET}`;
 const addAttachmentPrefix = (filePath: string) => "attachment/" + filePath;
 
 export class UploadService {
   async getPresignedUploadUrl({ filePath, contentType }: { filePath: string; contentType?: string }) {
     const key = addAttachmentPrefix(filePath);
-    const command = new PutObjectCommand({ Bucket: bucketUrl, Key: key, ContentType: contentType });
-    return getSignedUrl(client as any, command as any, { expiresIn: 3600 });
+    const command = new PutObjectCommand({ Bucket: publicBucketUrl, Key: key, ContentType: contentType });
+    return getSignedUrl(presignClient as any, command as any, { expiresIn: 3600 });
   }
 
   async uploadAttachment({ buffer, filePath }: { buffer: Buffer; filePath: string }) {
@@ -123,12 +132,12 @@ export async function getObjectByKey(key: string): Promise<{ buffer: Buffer; con
 
 export async function generatePresignedUrl(key: string, expiresIn = 3600, filename?: string) {
   const command = new GetObjectCommand({
-    Bucket: bucketUrl,
+    Bucket: publicBucketUrl,
     Key: key,
     ...(filename && { ResponseContentDisposition: `inline; filename="${filename}"` }),
   });
 
-  const presignedUrl = await getSignedUrl(client as any, command as any, {
+  const presignedUrl = await getSignedUrl(presignClient as any, command as any, {
     expiresIn,
   });
 

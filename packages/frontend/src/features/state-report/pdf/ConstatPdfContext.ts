@@ -36,4 +36,13 @@ export type SendConstatForm = {
   pdfBlob: Blob | null;
   pdfSize: number | null;
   needValidation?: boolean;
+  /** constats sent in this PDF: the current one, or every pending constat of its rapport groupé */
+  stateReportIds: string[];
+  /** parts of the rapport groupé, in chapter order (one item for a simple constat) */
+  rapportParts: RapportPart[];
 };
+
+export type RapportPart = Pick<
+  StateReport,
+  "id" | "titre_edifice" | "up_intitule" | "up_chemin" | "created_by"
+> & { missingFields: string[] };

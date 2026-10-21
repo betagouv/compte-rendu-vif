@@ -260,6 +260,13 @@
       "when": 1789999451472,
       "tag": "0036_military_rick_jones",
       "breakpoints": true
+    },
+    {
+      "idx": 37,
+      "version": "7",
+      "when": 1792487882931,
+      "tag": "0037_up_unites_patrimoniales",
+      "breakpoints": true
     }
   ]
 }

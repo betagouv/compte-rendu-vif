@@ -3,6 +3,8 @@ import { attachmentLocalStorage, attachmentRemoteStorage, db, useDbQuery } from 
 import {
   StateReportFormType,
   StateReportStep,
+  getStateReportMissingFields,
+  stateReportFieldLabels,
   useIsStateReportDisabled,
   useStateReportFormContext,
   useStateReportVersion,
@@ -32,6 +34,12 @@ import { AttachmentState } from "@powersync/web";
 import { useUnsyncedAttachments } from "./hooks/useUnsyncedAttachments";
 import { useIsUploadingImages } from "../upload/pendingUploadsStore";
 import { constatPdfQueries } from "./pdf/ConstatPdf.queries";
+import { FinaliserConstatModal } from "../up/FinaliserConstatModal";
+import { hasUpLeftForRapport } from "../up/rapportGroupe.utils";
+import { useMonumentUpTree } from "../up/upApi";
+import { getRapportUpIds, rapportMembersQuery } from "../up/rapportGroupe";
+import { useIsOnline } from "../../hooks/useIsOnline";
+import { flushStateReportForm } from "./utils";
 
 export const WithReferencePop = () => {
   const form = useStateReportFormContext();
@@ -228,21 +236,6 @@ export const ButtonsSwitch = ({ isCustom }: { isCustom?: boolean }) => {
   );
 };
 
-const formValuesCheckerV1: Partial<Record<keyof StateReportFormType, (val: any) => boolean>> = {
-  nature_visite: (val) => !!val,
-  date_visite: (val) => !!val,
-  redacted_by: (val) => !!val,
-  proprietaire: (val) => !!val,
-  etat_general: (val) => !!val,
-  proportion_dans_cet_etat: (val) => val !== null && val !== undefined,
-};
-const formValuesCheckerV2: Partial<Record<keyof StateReportFormType, (val: any) => boolean>> = {
-  nature_visite: (val) => !!val,
-  date_visite: (val) => !!val,
-  redacted_by: (val) => !!val,
-  proprietaire: (val) => !!val,
-  etat_general: (val) => !!val,
-};
 
 const formErrorsNavigate: Partial<
   Record<keyof StateReportFormType, (args: { navigate: ReturnType<typeof routeApi.useNavigate> }) => void>
@@ -265,6 +258,7 @@ const CreateButton = () => {
   const [alertErrors, setAlertErrors] = useAlertErrors();
 
   const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
+  const [isFinaliserModalOpen, setIsFinaliserModalOpen] = useState(false);
 
   const { constatId } = routeApi.useParams();
   const navigate = routeApi.useNavigate();
@@ -279,7 +273,14 @@ const CreateButton = () => {
   const pendingDownloads = unsyncedAttachments.filter((a) => a.state === AttachmentState.QUEUED_DOWNLOAD);
   const isUploadingImages = useIsUploadingImages(constatId);
 
-  const proceedToFinalize = () => {
+  // MH complexe: « Finaliser » offers to go on with another UP of the monument (rapport groupé)
+  const referencePop = useWatch({ control: form.control, name: "reference_pop" });
+  const isOnline = useIsOnline();
+  const upTreeQuery = useMonumentUpTree(referencePop, isOnline && !isDisabled);
+
+  const proceedToFinalize = async () => {
+    // the PDF reads the local database: save what the autosave (debounced) may not have written yet
+    await flushStateReportForm(form.getValues()).catch(console.error);
     navigate({
       to: "/constat/$constatId/pdf",
       params: { constatId },
@@ -287,13 +288,9 @@ const CreateButton = () => {
     });
   };
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     const values = form.getValues();
-    const missingFields = Object.entries(version === 1 ? formValuesCheckerV1 : formValuesCheckerV2)
-      .filter(([key, checker]) => {
-        return !checker(values[key as keyof StateReportFormType]);
-      })
-      .map(([key]) => key);
+    const missingFields = getStateReportMissingFields({ ...values, version });
 
     const alertErrors = alertsQuery.data
       ?.map((alert) => {
@@ -313,6 +310,17 @@ const CreateButton = () => {
       return;
     }
 
+    if (!isDisabled && upTreeQuery.data) {
+      const current = form.getValues();
+      const members = current.rapport_id
+        ? await rapportMembersQuery(current.rapport_id).execute()
+        : [];
+      if (hasUpLeftForRapport(upTreeQuery.data, getRapportUpIds([...members, current]))) {
+        setIsFinaliserModalOpen(true);
+        return;
+      }
+    }
+
     proceedToFinalize();
   };
 
@@ -326,6 +334,18 @@ const CreateButton = () => {
   return (
     <>
       {isErrorModalOpen ? <FormErrorModal formErrors={formErrors} onClose={() => setIsErrorModalOpen(false)} /> : null}
+      {isFinaliserModalOpen && upTreeQuery.data ? (
+        <FinaliserConstatModal
+          stateReport={form.getValues()}
+          tree={upTreeQuery.data}
+          onClose={() => setIsFinaliserModalOpen(false)}
+          onSkip={() => {
+            setIsFinaliserModalOpen(false);
+            proceedToFinalize();
+          }}
+          onRapportId={(rapportId) => form.setValue("rapport_id", rapportId)}
+        />
+      ) : null}
       <Box position="relative">
         <RightButton customIcon="fr-icon-article-fill" disabled={isMissingImages} onClick={() => onSubmit()}>
           {isDisabled ? "Voir le constat" : "Finaliser le constat"}
@@ -351,15 +371,6 @@ const CreateButton = () => {
 
 const contextFields = ["proprietaire", "proprietaire_email", "redacted_by", "date_visite", "nature_visite"];
 const generalFields = ["etat_general", "proportion_dans_cet_etat"];
-const labelsByField: Record<string, string> = {
-  proprietaire: "Propriétaire",
-  proprietaire_email: "Courriel du propriétaire",
-  redacted_by: "Rédacteur du constat",
-  date_visite: "Date de la visite",
-  nature_visite: "Nature de la visite",
-  etat_general: "État général",
-  proportion_dans_cet_etat: "Proportion dans cet état",
-};
 
 const FormErrorModal = ({
   formErrors,
@@ -444,7 +455,7 @@ const FormErrorModal = ({
                         sx={{ cursor: "pointer", textDecoration: "underline", "::before": { color: "red" } }}
                         className="fr-link fr-link--icon-left fr-icon-error-fill"
                       >
-                        {labelsByField[field]}
+                        {stateReportFieldLabels[field]}
                       </Typography>
                     </li>
                   ))}
@@ -464,7 +475,7 @@ const FormErrorModal = ({
                         sx={{ cursor: "pointer", textDecoration: "underline", "::before": { color: "red" } }}
                         className="fr-link fr-link--icon-left fr-icon-error-fill"
                       >
-                        {labelsByField[field]}
+                        {stateReportFieldLabels[field]}
                       </Typography>
                     </li>
                   ))}

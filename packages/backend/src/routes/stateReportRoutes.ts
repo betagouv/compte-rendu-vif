@@ -34,6 +34,8 @@ const previousConstatTSchema = Type.Object({
   pdf_size: Nullable(Type.Number()),
   service_id: Nullable(Type.String()),
   service_name: Nullable(Type.String()),
+  up_id: Nullable(Type.String()),
+  up_intitule: Nullable(Type.String()),
 });
 
 export const previousConstatsSchema = {

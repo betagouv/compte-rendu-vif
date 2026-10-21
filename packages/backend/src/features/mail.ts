@@ -5,7 +5,7 @@ import { sentry } from "./sentry";
 import { getPDFInMailName } from "@patrinotes/pdf";
 import { Database } from "../db/db";
 import { Selectable } from "kysely";
-import { MinimalAlert } from "@patrinotes/pdf/constat";
+import { getStateReportTitle, MinimalAlert } from "@patrinotes/pdf/constat";
 import { createBordereauMailContent } from "./bordereau";
 import { getAlertMailSubject, createAlertEmailContent } from "./mail/alertMail";
 import { wrapWithDsfrMail } from "./mail/dsfrMailWrapper";
@@ -20,25 +20,40 @@ const transporter = createTransport({
   },
 });
 
+/** Title of a constat in emails; a rapport groupé is named after its monument and its number of parts. */
+export const getMailStateReportTitle = (
+  stateReport: Selectable<Database["state_report"]>,
+  groupedReports?: Selectable<Database["state_report"]>[],
+) => {
+  if (groupedReports && groupedReports.length > 1) {
+    return `${stateReport.titre_edifice ?? ""} (${groupedReports.length} parties du monument)`.trim();
+  }
+  return getStateReportTitle(stateReport);
+};
+
 export const sendStateReportMail = async ({
   recipients,
   pdfUrl,
   stateReport,
+  groupedReports,
   user,
 }: {
   recipients: string;
   pdfUrl: string;
   stateReport: Selectable<Database["state_report"]>;
+  /** rapport groupé: every constat of the PDF */
+  groupedReports?: Selectable<Database["state_report"]>[];
   user: Selectable<Database["user"]>;
 }) => {
   sentry?.captureMessage("Sending state report mail", { extra: { recipients, stateReport } });
 
-  const { html, attachments } = createBordereauMailContent({ stateReport, user, pdfUrl });
+  const { html, attachments } = createBordereauMailContent({ stateReport, groupedReports, user, pdfUrl });
+  const title = getMailStateReportTitle(stateReport, groupedReports);
 
   return transporter.sendMail({
     from: ENV.EMAIL_EMITTER,
     to: recipients,
-    subject: "Constat d'état " + (stateReport?.titre_edifice ? ` : ${stateReport.titre_edifice}` : ""),
+    subject: "Constat d'état " + (title ? ` : ${title}` : ""),
     html,
     attachments,
   });
@@ -112,16 +127,19 @@ export const sendPasswordResetMail = ({ email, temporaryLink }: { email: string;
 export const sendValidationRequestMail = ({
   validatorEmail,
   stateReport,
+  groupedReports,
   validationToken,
   creatorName,
 }: {
   validatorEmail: string;
   stateReport: Selectable<Database["state_report"]>;
+  groupedReports?: Selectable<Database["state_report"]>[];
   validationToken: string;
   creatorName: string;
 }) => {
   const link = `${ENV.FRONTEND_URL}/constat-validation/${validationToken}`;
-  const title = stateReport.titre_edifice ? ` : ${stateReport.titre_edifice}` : "";
+  const mailTitle = getMailStateReportTitle(stateReport, groupedReports);
+  const title = mailTitle ? ` : ${mailTitle}` : "";
 
   const { html: validationReqHtml, attachments: validationReqAttachments } = wrapWithDsfrMail({
     title: `Validation requise — Constat d'état${title}`,
@@ -144,17 +162,20 @@ export const sendValidationRequestMail = ({
 export const sendValidationResultMail = ({
   creatorEmail,
   stateReport,
+  groupedReports,
   accepted,
   comment,
   validatorEmail,
 }: {
   creatorEmail: string;
   stateReport: Selectable<Database["state_report"]>;
+  groupedReports?: Selectable<Database["state_report"]>[];
   accepted: boolean;
   comment?: string | null;
   validatorEmail: string;
 }) => {
-  const title = stateReport.titre_edifice ? ` : ${stateReport.titre_edifice}` : "";
+  const mailTitle = getMailStateReportTitle(stateReport, groupedReports);
+  const title = mailTitle ? ` : ${mailTitle}` : "";
   const decision = accepted ? "accepté" : "refusé";
 
   const stateReportLink = `${ENV.FRONTEND_URL}/constat/${stateReport.id}`;
@@ -187,12 +208,12 @@ export const sendAlertEmail = async ({
   user: AuthUser;
 }) => {
   sentry?.captureMessage("Sending alert mail", {
-    extra: { to, alertType: alert.alert, monumentName: stateReport.titre_edifice || "" },
+    extra: { to, alertType: alert.alert, monumentName: getStateReportTitle(stateReport) },
   });
 
   try {
     const { html, attachments } = await createAlertEmailContent({ stateReport, alert, user });
-    const subject = getAlertMailSubject(alert.alert!, stateReport.titre_edifice || "");
+    const subject = getAlertMailSubject(alert.alert!, getStateReportTitle(stateReport));
 
     return await transporter.sendMail({
       from: ENV.EMAIL_EMITTER,
@@ -203,7 +224,7 @@ export const sendAlertEmail = async ({
     });
   } catch (error) {
     sentry?.captureException(error, {
-      extra: { to, alertType: alert.alert, monumentName: stateReport.titre_edifice || "" },
+      extra: { to, alertType: alert.alert, monumentName: getStateReportTitle(stateReport) },
     });
     throw error;
   }
