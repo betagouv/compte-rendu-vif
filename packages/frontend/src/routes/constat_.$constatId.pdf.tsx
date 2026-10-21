@@ -2,7 +2,7 @@ import { SimpleBanner } from "#components/Banner.tsx";
 import { Flex } from "#components/ui/Flex.tsx";
 import { Box, BoxProps, Dialog, Stack, styled, Typography } from "@mui/material";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { createContext, ReactNode, useContext, useEffect, useId, useRef, useState } from "react";
+import { createContext, ReactNode, useContext, useEffect, useId, useMemo, useRef, useState } from "react";
 import {
   StateReport,
   StateReportAlert,
@@ -11,18 +11,22 @@ import {
   VisitedSectionAttachment,
 } from "../db/AppSchema";
 import { attachmentLocalStorage, attachmentQueue, db, getAttachmentUrl, useDbQuery } from "../db/db";
-import { useMutation, useQuery, UseMutationResult, useMutationState } from "@tanstack/react-query";
+import { useMutation, useQueries, useQuery, UseMutationResult, useMutationState } from "@tanstack/react-query";
 import {
   SendConstatForm,
   useIsSendConstatFormDisabled,
   useSendConstatFormContext,
 } from "../features/state-report/pdf/ConstatPdfContext";
 import { ViewConstatPdf } from "../features/state-report/pdf/ConstatPdf.view";
-import { Button, Center } from "#components/MUIDsfr.tsx";
+import { Alert, Button, Center } from "#components/MUIDsfr.tsx";
 import { TextEditorContext, TextEditorContextProvider } from "../features/text-editor/TextEditorContext";
 import { EditConstatPdf } from "../features/state-report/pdf/ConstatPdf.edit";
 import { TextEditorToolbar } from "../features/text-editor/TextEditorToolbar";
-import { getStateReportHtmlString, getStateReportMailName } from "@patrinotes/pdf/constat";
+import {
+  getGroupedStateReportHtmlString,
+  getGroupedStateReportMailName,
+  getStateReportUpLabel,
+} from "@patrinotes/pdf/constat";
 import { SendConstatPdf } from "../features/state-report/pdf/ConstatPdf.send";
 import { EmailInput } from "#components/EmailInput.tsx";
 import { SentConstatPdf } from "../features/state-report/pdf/ConstatPdf.sent";
@@ -36,7 +40,13 @@ import { Spinner } from "#components/Spinner.tsx";
 import { useRecipients } from "../features/state-report/pdf/ConstatPdf.hook";
 import { last } from "pastable";
 import { checkAlertErrors } from "../features/state-report/alerts/StateReportAlert.utils";
-import { getIsStateReportDisabled, useIsStateReportDisabled } from "../features/state-report/utils";
+import {
+  getIsStateReportDisabled,
+  getStateReportMissingFields,
+  stateReportFieldLabels,
+  useIsStateReportDisabled,
+} from "../features/state-report/utils";
+import { getRapportPartIds, useRapportAttachmentStreams, useRapportMembers } from "../features/up/rapportGroupe";
 import { useUserSettings } from "../hooks/useUserSettings";
 import { useLiveService, useUser } from "../contexts/AuthContext";
 import { getIsAlertVisited } from "@patrinotes/pdf/utils";
@@ -98,6 +108,8 @@ const ConstatPdf = () => {
       checkErrors: () => {},
       isStateReportDisabled: false,
       pdfBlob: null,
+      stateReportIds: [constatId],
+      rapportParts: [],
     },
   });
 
@@ -136,26 +148,73 @@ const ConstatPdf = () => {
   };
 
   const stateReportQuery = useQuery(constatPdfQueries.stateReport({ constatId }));
-  const sectionsQuery = useQuery(constatPdfQueries.sections({ constatId }));
-  const alertsQuery = useQuery(constatPdfQueries.alerts({ constatId }));
-
   const stateReport = stateReportQuery.data;
-  const sections = sectionsQuery.data;
-  const alerts = alertsQuery.data;
+
+  // rapport groupé (MH complexe): every pending constat of the rapport goes in the same PDF, one chapter each
+  const rapportMembers = useRapportMembers(stateReport?.rapport_id);
+  const partIds = useMemo(
+    () => (stateReport ? getRapportPartIds(stateReport, rapportMembers) : [constatId]),
+    [stateReport, rapportMembers, constatId],
+  );
+  const otherPartIds = partIds.filter((id) => id !== constatId);
+  const areOtherPartsSynced = useRapportAttachmentStreams(otherPartIds);
+
+  const partQueries = useQueries({
+    queries: partIds.flatMap((id) => {
+      const enabled = id === constatId || areOtherPartsSynced;
+      return [
+        { ...constatPdfQueries.stateReport({ constatId: id }), enabled },
+        { ...constatPdfQueries.sections({ constatId: id }), enabled },
+        { ...constatPdfQueries.alerts({ constatId: id }), enabled },
+      ];
+    }),
+  });
+  const arePartsLoaded = !!stateReport && areOtherPartsSynced && partQueries.every((q) => q.isSuccess);
+  const parts = useMemo(() => {
+    if (!arePartsLoaded) return null;
+    return partIds.map((_id, index) => ({
+      stateReport: partQueries[index * 3]!.data as NonNullable<typeof stateReport>,
+      visitedSections: partQueries[index * 3 + 1]!.data as any[],
+      alerts: partQueries[index * 3 + 2]!.data as any[],
+    }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [arePartsLoaded, partIds.join(",")]);
+
+  const alerts = useMemo(() => parts?.flatMap((part) => part.alerts), [parts]);
 
   // sync recipients with state report owner emails
   // and needValidation with userSettings
   useEffect(() => {
-    if (!stateReport) return;
-    form.setValue("stateReport", stateReport);
+    if (!stateReport || !parts) return;
+    form.setValue("stateReport", {
+      ...stateReport,
+      planSituationOffline: parts.some((part) => part.stateReport.planSituationOffline),
+    });
+    form.setValue(
+      "stateReportIds",
+      parts.map((part) => part.stateReport.id),
+    );
+    form.setValue(
+      "rapportParts",
+      parts.map(({ stateReport: part }) => ({
+        id: part.id,
+        titre_edifice: part.titre_edifice,
+        up_intitule: part.up_intitule,
+        up_chemin: part.up_chemin,
+        created_by: part.created_by,
+        missingFields: getStateReportMissingFields(part),
+      })),
+    );
     if (userSettings.isLoading) return;
     if (form.getValues("recipients").length > 0) return;
 
     const defaultRecipients = userSettings?.userSettings.default_emails?.split(",").map((email) => email.trim());
 
     const emails = new Set<string>();
-    emails.add(stateReport.proprietaire_email ?? "");
-    emails.add(stateReport.proprietaire_representant_email ?? "");
+    for (const { stateReport: part } of parts) {
+      emails.add(part.proprietaire_email ?? "");
+      emails.add(part.proprietaire_representant_email ?? "");
+    }
     defaultRecipients?.forEach((email) => emails.add(email));
 
     const emailsArray = Array.from(emails).filter(Boolean);
@@ -164,7 +223,7 @@ const ConstatPdf = () => {
 
     const needValidation = userSettings?.userSettings.validation_enabled && userSettings?.userSettings.validation_email;
     form.setValue("needValidation", !!needValidation);
-  }, [stateReportQuery.data, userSettings, form]);
+  }, [stateReportQuery.data, parts, userSettings, form]);
 
   // sync alerts with form since they can be edited in the alert accordion
   useEffect(() => {
@@ -186,13 +245,8 @@ const ConstatPdf = () => {
 
   useEffect(() => {
     if (isSetRef.current) return;
-    if (!sections || !stateReport || !alerts) return;
-    const htmlString = getStateReportHtmlString({
-      stateReport: stateReport,
-      visitedSections: sections as any,
-      alerts,
-      user,
-    });
+    if (!parts) return;
+    const htmlString = getGroupedStateReportHtmlString({ parts: parts as any, user });
 
     form.setValue("htmlString", htmlString);
 
@@ -201,7 +255,7 @@ const ConstatPdf = () => {
     return () => {
       isSetRef.current = false;
     };
-  }, [sections, stateReport, alerts, user]);
+  }, [parts, user]);
 
   // propagate isDisabled to children
   useEffect(() => {
@@ -210,7 +264,21 @@ const ConstatPdf = () => {
     form.setValue("isStateReportDisabled", isStateReportDisabled);
   }, [stateReport]);
 
-  const isLoading = stateReportQuery.isLoading || sectionsQuery.isLoading || alertsQuery.isLoading;
+  const partLoadFailed = stateReportQuery.isError || partQueries.some((query) => query.isError);
+  const isLoading = stateReportQuery.isLoading || (!!stateReport && !parts && !partLoadFailed);
+
+  if (partLoadFailed) {
+    return (
+      <Center height="100%" mb="160px" px="16px">
+        <Alert
+          severity="error"
+          small={false}
+          title="Impossible de charger les pièces du constat"
+          description="Vérifiez votre connexion puis rechargez la page pour réessayer."
+        />
+      </Center>
+    );
+  }
 
   if (isLoading) {
     return (
@@ -242,6 +310,7 @@ const BannerAndContent = ({ mode }: { mode: PageMode }) => {
 
       {mode !== "sent" ? (
         <Box>
+          <RapportPartsNotice />
           <ViewConstatPdf step={mode} />
         </Box>
       ) : (
@@ -280,11 +349,9 @@ const ViewButtons = () => {
   const isDisabled = useIsSendConstatFormDisabled();
   const form = useSendConstatFormContext();
 
-  const [titreEdifice, upIntitule] = useWatch({
-    control: form.control,
-    name: ["stateReport.titre_edifice", "stateReport.up_intitule"],
-  });
-  const pdfName = getStateReportMailName({ titre_edifice: titreEdifice, up_intitule: upIntitule });
+  const rapportParts = useWatch({ control: form.control, name: "rapportParts" });
+  const pdfName = getGroupedStateReportMailName(rapportParts);
+  const hasIncompletePart = rapportParts.some((part) => part.missingFields.length > 0);
 
   const pdfBlob = useWatch({ control: form.control, name: "pdfBlob" });
   const pdfSize = useWatch({ control: form.control, name: "pdfSize" });
@@ -338,7 +405,7 @@ const ViewButtons = () => {
       {!isDisabled ? (
         <Button
           type="button"
-          disabled={isDisabled}
+          disabled={isDisabled || hasIncompletePart}
           onClick={() =>
             navigate({
               to: "/constat/$constatId/pdf",
@@ -444,6 +511,8 @@ const SendBannerContent = () => {
   };
 
   const hasNoRecipients = recipients.length === 0;
+  const rapportParts = useWatch({ control: form.control, name: "rapportParts" });
+  const hasIncompletePart = rapportParts.some((part) => part.missingFields.length > 0);
 
   return (
     <Flex
@@ -487,7 +556,7 @@ const SendBannerContent = () => {
         <Button
           type="submit"
           iconId="ri-send-plane-fill"
-          disabled={isPending || isDisabled || hasNoRecipients}
+          disabled={isPending || isDisabled || hasNoRecipients || hasIncompletePart}
           sx={{
             mt: { xs: "0", lg: "40px" },
 
@@ -523,7 +592,9 @@ const ViewBannerContent = () => {
           <Box mr="8px" display={{ xs: "block", lg: "none" }}>
             <GoBackButton />
           </Box>
-          <Box fontWeight="bold">Prévisualisation du constat</Box>
+          <Box fontWeight="bold">
+            <PreviewTitle />
+          </Box>
         </Flex>
         <Flex mt={{ xs: "16px", lg: "0" }} mb={{ xs: "8px", lg: "0" }}>
           <ViewButtons />
@@ -579,5 +650,65 @@ const ValidationToggle = () => {
         onChange={(checked) => form.setValue("needValidation", checked)}
       />
     </Box>
+  );
+};
+
+const PreviewTitle = () => {
+  const form = useSendConstatFormContext();
+  const rapportParts = useWatch({ control: form.control, name: "rapportParts" });
+  if (rapportParts.length <= 1) return <>Prévisualisation du constat</>;
+  return <>Prévisualisation du rapport ({rapportParts.length} constats)</>;
+};
+
+/** Rapport groupé: lists the constats sent together, and those still to be completed before sending. */
+const RapportPartsNotice = () => {
+  const form = useSendConstatFormContext();
+  const navigate = useNavigate();
+  const rapportParts = useWatch({ control: form.control, name: "rapportParts" });
+  const isDisabled = useIsSendConstatFormDisabled();
+  if (rapportParts.length <= 1) return null;
+
+  const incompleteParts = rapportParts.filter((part) => part.missingFields.length > 0);
+
+  const goToPart = (id: string) =>
+    navigate({ to: "/constat/$constatId", params: { constatId: id }, search: { step: "contexte-visite", mode: "view" } });
+
+  return (
+    <Center flexDirection="column">
+      <Box width={{ xs: "100%", lg: "944px" }} mt={{ xs: "16px", lg: "24px" }} px="8px">
+        <Alert
+          severity={incompleteParts.length && !isDisabled ? "warning" : "info"}
+          small={false}
+          title={isDisabled ? "Rapport groupé" : `Ces ${rapportParts.length} constats seront envoyés ensemble`}
+          description={
+            <>
+              <Box component="ul" mt="8px" mb="0">
+                {rapportParts.map((part, index) => (
+                  <li key={part.id}>
+                    Chapitre {index + 1} :{" "}
+                    <Box
+                      component="a"
+                      href=""
+                      onClick={(e: { preventDefault: () => void }) => {
+                        e.preventDefault();
+                        goToPart(part.id);
+                      }}
+                    >
+                      {getStateReportUpLabel(part)}
+                    </Box>
+                    {!isDisabled && part.missingFields.length ? (
+                      <Typography component="span" color={fr.colors.decisions.text.default.error.default}>
+                        {" "}
+                        — à compléter : {part.missingFields.map((f) => stateReportFieldLabels[f] ?? f).join(", ")}
+                      </Typography>
+                    ) : null}
+                  </li>
+                ))}
+              </Box>
+            </>
+          }
+        />
+      </Box>
+    </Center>
   );
 };

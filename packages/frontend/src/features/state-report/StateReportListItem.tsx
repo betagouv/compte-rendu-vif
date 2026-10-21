@@ -13,6 +13,7 @@ import { Flex } from "#components/ui/Flex.tsx";
 import { Divider } from "#components/ui/Divider.tsx";
 import { StateReportActions } from "./StateReportActions";
 import { MobileModalActions } from "#components/MobileModalActions.tsx";
+import { useRapportMembers } from "../up/rapportGroupe";
 
 export const getStateReportStatus = (report: StateReportWithUser) => {
   const isDraft = !report.attachment_id;
@@ -74,9 +75,10 @@ export const StateReportListItem = ({ report, isLast }: { report: StateReportWit
           <Box textOverflow="ellipsis" overflow="hidden" whiteSpace="nowrap">
             {byText}
           </Box>
-          <Box mt="8px" mb={whereText ? "0" : "24px"}>
+          <Flex mt="8px" mb={whereText ? "0" : "24px"} gap="8px" flexWrap="wrap" alignItems="center">
             <ReportBadge status={status} />
-          </Box>
+            {report.rapport_id ? <RapportGroupeBadge rapportId={report.rapport_id} isDraft={status === "draft"} /> : null}
+          </Flex>
         </Box>
       </Link>
       <Box position="absolute" top="10px" right="10px">
@@ -210,4 +212,21 @@ const colors: Record<ReportStatus, [string, string]> = {
   accepted: ["#18753C", "#D1F1D9"] as const,
   declined: ["#B00020", "#FFCDD2"] as const,
   published: ["#18753C", "#D1F1D9"] as const,
+};
+
+/** Rapport groupé (MH complexe): the constats of several UP sent together. */
+const RapportGroupeBadge = ({ rapportId, isDraft }: { rapportId: string; isDraft: boolean }) => {
+  const members = useRapportMembers(rapportId);
+  if (members.length <= 1) return null;
+  return (
+    <Typography
+      component="span"
+      fontSize="12px"
+      color={fr.colors.decisions.text.mention.grey.default}
+      className="ri-stack-line"
+      sx={{ "::before": { width: "12px !important", height: "12px !important", mr: "4px", verticalAlign: "middle" } }}
+    >
+      Rapport groupé : {members.length} constats{isDraft ? ", envoyés ensemble" : ""}
+    </Typography>
+  );
 };

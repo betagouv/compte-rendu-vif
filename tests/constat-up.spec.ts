@@ -2,6 +2,7 @@ import { test, expect, type Page } from "@playwright/test";
 import { mockUsers, signup, login } from "./utils";
 import { resetDatabase } from "./setup";
 import { db } from "../packages/backend/src/db/db";
+import { hasUpLeftForRapport } from "../packages/frontend/src/features/up/rapportGroupe.utils";
 
 // "Château complexe de Test" (TEST00002) is split into unités patrimoniales by the backend UP mock
 // (packages/backend/src/features/up/fixtures/up-mock.json):
@@ -48,6 +49,35 @@ const ensureLoggedIn = async (page: Page, { signupFirst }: { signupFirst: boolea
 
 const getConstatId = (page: Page) => new URL(page.url()).pathname.split("/")[2]!;
 
+const fillContexteVisite = async (page: Page) => {
+  await page.getByRole("button", { name: "Contexte de la visite" }).click();
+  await page.waitForURL((url) => url.search.includes("contexte-visite"));
+  await page.locator("input[id=nature-visite-0]").check({ force: true });
+  await page.getByLabel("Date de la visite").fill("2024-01-15");
+  await page.fill("input[name=redacted_by]", "Agent Test");
+  await page.fill("input[name=proprietaire]", "Jean Dupont");
+  await page.fill("input[name=proprietaire_email]", "jean.dupont@example.com");
+  await page.getByRole("button", { name: /Constat d'état/ }).click();
+  await page.waitForURL((url) => url.search.includes("constat-detaille"));
+};
+
+/** Constat détaillé (évaluation v2): « Niveau de dégradation » of the « Couverture » section. */
+const fillCouverture = async (page: Page, niveau = "Léger") => {
+  await page.getByRole("button", { name: "Couverture" }).click();
+  const dialog = page.getByRole("dialog");
+  await dialog.waitFor();
+  await dialog.getByRole("radio", { name: niveau }).check({ force: true });
+  await dialog.locator("textarea").fill(`Dégradation ${niveau.toLowerCase()} de la couverture.`);
+  await dialog.getByRole("button", { name: "Valider" }).click();
+  await dialog.waitFor({ state: "hidden" });
+};
+
+const fillConstatGeneral = async (page: Page) => {
+  await page.getByRole("button", { name: "Constat général" }).click();
+  await page.waitForURL((url) => url.search.includes("constat-general"));
+  await page.getByRole("radio", { name: "Bon" }).first().check({ force: true });
+};
+
 test.describe("Constat d'état sur un MH complexe", () => {
   // first sync after signup/login can be slow on the test stack
   test.describe.configure({ timeout: 240_000 });
@@ -60,6 +90,12 @@ test.describe("Constat d'état sur un MH complexe", () => {
   test.beforeEach(async ({ page }) => {
     await page.addInitScript(() => localStorage.setItem("crvif/version", "1"));
     page.setDefaultNavigationTimeout(20_000);
+  });
+
+  test("ne propose pas d'enchaînement quand toutes les parties sont déjà couvertes", () => {
+    const tree = { rootId: "monument", ups: [{ id: "monument" }, { id: "chapelle" }] } as any;
+    expect(hasUpLeftForRapport(tree, new Set([null, "chapelle"]))).toBe(false);
+    expect(hasUpLeftForRapport(tree, new Set(["chapelle"]))).toBe(true); // « Ensemble du monument » is still free
   });
 
   test("constat sur une UP de second niveau", async ({ page }) => {
@@ -187,6 +223,188 @@ test.describe("Constat d'état sur un MH complexe", () => {
     await expect(page.getByText("10/01/2025 - visite complète - Chapelle").first()).toBeVisible();
     await expect(page.getByText("10/02/2025")).toHaveCount(0);
     await expect(page.getByText("10/03/2025")).toHaveCount(0);
+  });
+
+  test("rapport groupé : deux UP enchaînées, envoyées dans un seul PDF et un seul courriel", async ({ page }) => {
+    await ensureLoggedIn(page, { signupFirst: false });
+    const mailpitPort = process.env.MAILPIT_WEB_PORT ?? "3018";
+    await page.request.delete(`http://localhost:${mailpitPort}/api/v1/messages`);
+
+    // 1st constat: Chapelle
+    const dialog = await startConstatOnComplexMonument(page);
+    await dialog.getByRole("radio", { name: "Chapelle" }).check({ force: true });
+    await dialog.getByRole("button", { name: "Créer un constat" }).click();
+    await dialog.waitFor({ state: "hidden" });
+    await expect(page.getByText("Château complexe de Test | Chapelle")).toBeVisible();
+    const chapelleId = getConstatId(page);
+
+    await fillContexteVisite(page);
+    await fillCouverture(page);
+    await fillConstatGeneral(page);
+    await page.getByRole("button", { name: "Finaliser le constat" }).click();
+
+    // « Finaliser le constat » offers the other UP of the monument (Chapelle, already done, is not listed)
+    const finaliser = page.getByRole("dialog");
+    await expect(finaliser.getByRole("heading", { name: "Finaliser le constat" })).toBeVisible();
+    await expect(finaliser.getByText("Vos observations seront réunies au sein d’un même document.")).toBeVisible();
+    await expect(finaliser.getByRole("radio", { name: "Chapelle" })).toHaveCount(0);
+    await expect(finaliser.getByRole("button", { name: "Commencer un nouveau constat" })).toBeDisabled();
+    await finaliser.getByRole("radio", { name: "Jardin" }).check({ force: true });
+    await finaliser.getByRole("button", { name: "Commencer un nouveau constat" }).click();
+
+    // 2nd constat: Jardin, same rapport, visit context prefilled
+    await page.waitForURL((url) => !url.pathname.includes(chapelleId) && url.search.includes("contexte-visite"));
+    const jardinId = getConstatId(page);
+    await expect(page.getByText("Château complexe de Test | Jardin")).toBeVisible();
+    await expect(page.getByText("Ce constat sera envoyé dans un même document avec : Chapelle")).toBeVisible();
+    await expect(page.locator("input[name=proprietaire]")).toHaveValue("Jean Dupont");
+    await expect(page.locator("input[name=redacted_by]")).toHaveValue("Agent Test");
+
+    await expect
+      .poll(async () => {
+        const reports = await db
+          .selectFrom("state_report")
+          .select(["id", "rapport_id", "up_id", "proprietaire_email"])
+          .where("id", "in", [chapelleId, jardinId])
+          .execute();
+        const chapelle = reports.find((r) => r.id === chapelleId);
+        const jardin = reports.find((r) => r.id === jardinId);
+        return {
+          sameRapport: !!chapelle?.rapport_id && chapelle.rapport_id === jardin?.rapport_id,
+          jardinUp: jardin?.up_id,
+          jardinEmail: jardin?.proprietaire_email,
+        };
+      })
+      .toEqual({ sameRapport: true, jardinUp: "mock-test-4", jardinEmail: "jean.dupont@example.com" });
+
+    await page.getByRole("button", { name: /Constat d'état/ }).click();
+    await page.waitForURL((url) => url.search.includes("constat-detaille"));
+    await fillCouverture(page, "Important");
+    await fillConstatGeneral(page);
+    await page.getByRole("button", { name: "Finaliser le constat" }).click();
+
+    const finaliserJardin = page.getByRole("dialog");
+    await expect(finaliserJardin.getByRole("heading", { name: "Finaliser le constat" })).toBeVisible();
+    await expect(finaliserJardin.getByRole("radio", { name: "Jardin" })).toHaveCount(0);
+    await expect(finaliserJardin.getByRole("radio", { name: "Chapelle" })).toHaveCount(0);
+    await finaliserJardin.getByRole("button", { name: "Passer et finaliser" }).click();
+
+    // one preview for both constats
+    await page.waitForURL((url) => url.pathname.includes("/pdf") && url.search.includes("mode=view"));
+    await expect(page.getByText("Prévisualisation du rapport (2 constats)")).toBeVisible({ timeout: 30_000 });
+    await expect(page.getByText("Ces 2 constats seront envoyés ensemble")).toBeVisible();
+    await expect(page.getByText("Chapitre 1 :")).toBeVisible();
+    await expect(page.getByText("Chapitre 2 :")).toBeVisible();
+
+    await page.getByRole("button", { name: "Continuer" }).click();
+    await page.waitForURL((url) => url.search.includes("mode=send"));
+    const recipient = `rapport+${Date.now()}@example.com`;
+    const emailInput = page.locator('input[type="text"]').first();
+    await emailInput.waitFor();
+    await emailInput.fill(recipient);
+    await emailInput.press("Enter");
+    await page.getByText(recipient).waitFor();
+    await page.getByRole("button", { name: "Envoyer" }).click();
+    await page.waitForURL((url) => url.search.includes("mode=sent"));
+    await expect(page.getByText("Votre constat d'état a bien été envoyé !")).toBeVisible();
+
+    // both constats share the same PDF
+    const [chapelle, jardin] = await Promise.all(
+      [chapelleId, jardinId].map((id) =>
+        db.selectFrom("state_report").select(["attachment_id"]).where("id", "=", id).executeTakeFirstOrThrow(),
+      ),
+    );
+    expect(chapelle.attachment_id).toBeTruthy();
+    expect(jardin.attachment_id).toBe(chapelle.attachment_id);
+
+    // a single email, naming the monument and its parts
+    await expect
+      .poll(
+        async () => {
+          const response = await page.request.get(`http://localhost:${mailpitPort}/api/v1/messages`);
+          const { messages } = await response.json();
+          return messages
+            .filter((m: any) => m.To.some((to: any) => to.Address === recipient))
+            .map((m: any) => m.Subject);
+        },
+        { timeout: 20_000 },
+      )
+      .toEqual(["Constat d'état  : Château complexe de Test (2 parties du monument)"]);
+
+    // the rapport is closed: its constats are read-only
+    await page.goto(`./constat/${chapelleId}?step=constat-general&mode=view`);
+    await expect(page.getByRole("button", { name: "Voir le constat" })).toBeVisible({ timeout: 30_000 });
+  });
+
+  test("rapport groupé : un constat incomplet bloque l'envoi", async ({ page }) => {
+    await ensureLoggedIn(page, { signupFirst: false });
+
+    const dialog = await startConstatOnComplexMonument(page);
+    await dialog.getByRole("radio", { name: "Ensemble du monument" }).check({ force: true });
+    await dialog.getByRole("button", { name: "Créer un constat" }).click();
+    await dialog.waitFor({ state: "hidden" });
+    const ensembleId = getConstatId(page);
+
+    await fillContexteVisite(page);
+    await fillCouverture(page);
+    await fillConstatGeneral(page);
+    await page.getByRole("button", { name: "Finaliser le constat" }).click();
+
+    const finaliser = page.getByRole("dialog");
+    await expect(finaliser.getByRole("radio", { name: "Ensemble du monument" })).toBeDisabled();
+    await finaliser.getByRole("button", { name: "Voir les UP de niveau inférieur de Corps de logis" }).click();
+    await finaliser.getByRole("radio", { name: "Aile nord" }).check({ force: true });
+    await finaliser.getByRole("button", { name: "Commencer un nouveau constat" }).click();
+    await page.waitForURL((url) => !url.pathname.includes(ensembleId) && url.search.includes("contexte-visite"));
+    await expect(page.getByText("Château complexe de Test | Aile nord")).toBeVisible();
+
+    // back to the first constat, without filling the second one
+    await page.getByRole("link", { name: "Ensemble du monument" }).click();
+    await page.waitForURL((url) => url.pathname.includes(ensembleId));
+    await page.goto(`./constat/${ensembleId}?step=constat-general&mode=view`);
+    await page.getByRole("button", { name: "Finaliser le constat" }).click();
+    await page.getByRole("dialog").getByRole("button", { name: "Passer et finaliser" }).click();
+
+    await page.waitForURL((url) => url.pathname.includes("/pdf") && url.search.includes("mode=view"));
+    await expect(page.getByText("Prévisualisation du rapport (2 constats)")).toBeVisible({ timeout: 30_000 });
+    await expect(page.getByText(/à compléter : .*État général/)).toBeVisible();
+    await expect(page.getByRole("button", { name: "Continuer" })).toBeDisabled();
+  });
+
+  test("un MH simple se finalise et s'envoie seul, sans fenêtre de rapport groupé", async ({ page }) => {
+    await ensureLoggedIn(page, { signupFirst: false });
+
+    await page.getByText("Créer un constat d'état").click();
+    await page.waitForURL((url) => url.pathname.startsWith("/constat/"));
+    await pickMonument(page, "Château de Test", /^Château de Test/);
+    await expect(page.getByRole("heading", { name: "Château de Test", exact: true })).toBeVisible();
+    const id = getConstatId(page);
+
+    await fillContexteVisite(page);
+    await fillCouverture(page);
+    await fillConstatGeneral(page);
+    await page.getByRole("button", { name: "Finaliser le constat" }).click();
+    await page.waitForURL((url) => url.pathname.includes("/pdf") && url.search.includes("mode=view"));
+    await expect(page.getByText("Prévisualisation du constat")).toBeVisible({ timeout: 30_000 });
+    await expect(page.getByText(/seront envoyés ensemble/)).toHaveCount(0);
+
+    await page.getByRole("button", { name: "Continuer" }).click();
+    await page.waitForURL((url) => url.search.includes("mode=send"));
+    const recipient = `simple+${Date.now()}@example.com`;
+    const emailInput = page.locator('input[type="text"]').first();
+    await emailInput.fill(recipient);
+    await emailInput.press("Enter");
+    await page.getByText(recipient).waitFor();
+    await page.getByRole("button", { name: "Envoyer" }).click();
+    await page.waitForURL((url) => url.search.includes("mode=sent"));
+
+    const report = await db
+      .selectFrom("state_report")
+      .select(["attachment_id", "rapport_id"])
+      .where("id", "=", id)
+      .executeTakeFirstOrThrow();
+    expect(report.attachment_id).toBeTruthy();
+    expect(report.rapport_id).toBeNull();
   });
 
   test("un MH simple ne propose pas d'UP", async ({ page }) => {

@@ -1,12 +1,13 @@
 import { Box, Dialog, DialogTitle, Typography } from "@mui/material";
 import { fr } from "@codegouvfr/react-dsfr";
-import { useEffect, useId, useMemo, useState } from "react";
+import { ReactNode, useEffect, useId, useMemo, useState } from "react";
 import { Alert, Button } from "#components/MUIDsfr.tsx";
 import { Flex } from "#components/ui/Flex.tsx";
 import { ModalBackButton, ModalCloseButton } from "../menu/MenuTitle";
 import { getUpLevel, getUpRoot, type UnitePatrimoniale, type UpLevel, type UpSelection, type UpTree } from "./upApi";
 
 const WHOLE = "__whole__";
+const ALREADY_IN_RAPPORT = "Déjà constatée dans ce rapport";
 
 type Selected = { up: UnitePatrimoniale | null; chemin: UpSelection["chemin"] };
 
@@ -23,6 +24,9 @@ export const UpSelectionModal = ({
   showIntro = true,
   title = "Créer un constat d’état",
   confirmLabel = "Créer un constat",
+  question,
+  excludedUpIds,
+  secondaryAction,
   onCancel,
   onConfirm,
 }: {
@@ -35,6 +39,12 @@ export const UpSelectionModal = ({
   showIntro?: boolean;
   title?: string;
   confirmLabel?: string;
+  /** replaces « Pour quelle partie du monument … souhaitez-vous réaliser un constat ? » */
+  question?: ReactNode;
+  /** UP that cannot be chosen (null = ensemble du monument), e.g. those already in the rapport groupé */
+  excludedUpIds?: Set<string | null>;
+  /** replaces the « Annuler » button */
+  secondaryAction?: { label: string; onClick: () => void };
   onCancel: () => void;
   onConfirm: (selection: UpSelection) => void;
 }) => {
@@ -48,7 +58,7 @@ export const UpSelectionModal = ({
     if (!open) return;
     setStack([rootLevel]);
     // null = whole monument; an UP below the root level is not pre-selected (it is not visible here)
-    if (initialUpId === null) setSelected({ up: null, chemin: [] });
+    if (initialUpId === null) setSelected(excludedUpIds?.has(null) ? undefined : { up: null, chemin: [] });
     else {
       const initial = initialUpId ? rootLevel.enfants.find((e) => e.id === initialUpId) : undefined;
       setSelected(initial ? { up: initial, chemin: [] } : undefined);
@@ -68,6 +78,9 @@ export const UpSelectionModal = ({
 
   const selectWhole = () => setSelected({ up: wholeUp, chemin: cheminToCurrent.slice(0, -1) });
   const selectChild = (up: UnitePatrimoniale) => setSelected({ up, chemin: cheminToCurrent });
+
+  // an UP already in the rapport is hidden, unless its sub-UP can still be chosen
+  const visibleEnfants = current.enfants.filter((up) => !excludedUpIds?.has(up.id) || up.enfantsIds.length > 0);
 
   const openChild = (up: UnitePatrimoniale) => setStack((st) => [...st, getUpLevel(tree, up.id)]);
 
@@ -119,7 +132,11 @@ export const UpSelectionModal = ({
               </Typography>
             ) : null}
             <Typography mb="24px">
-              Pour quelle partie du monument <b>{monumentTitle}</b> souhaitez-vous réaliser un constat ?
+              {question ?? (
+                <>
+                  Pour quelle partie du monument <b>{monumentTitle}</b> souhaitez-vous réaliser un constat ?
+                </>
+              )}
             </Typography>
           </>
         ) : (
@@ -141,6 +158,7 @@ export const UpSelectionModal = ({
             label={isRoot ? "Ensemble du monument" : "Ensemble de l’UP"}
             checked={wholeChecked}
             onSelect={selectWhole}
+            disabledHint={excludedUpIds?.has(wholeUp?.id ?? null) ? ALREADY_IN_RAPPORT : undefined}
           />
 
           <Typography mt="24px" mb="8px" color={fr.colors.decisions.text.mention.grey.default}>
@@ -148,7 +166,7 @@ export const UpSelectionModal = ({
           </Typography>
 
           <Box component="ul" p="0" m="0" sx={{ listStyle: "none" }}>
-            {current.enfants.map((up) => (
+            {visibleEnfants.map((up) => (
               <Box
                 component="li"
                 key={up.id}
@@ -164,6 +182,7 @@ export const UpSelectionModal = ({
                   checked={selectedValue === up.id}
                   onSelect={() => selectChild(up)}
                   onOpen={up.enfantsIds.length ? () => openChild(up) : undefined}
+                  disabledHint={excludedUpIds?.has(up.id) ? ALREADY_IN_RAPPORT : undefined}
                 />
               </Box>
             ))}
@@ -177,8 +196,8 @@ export const UpSelectionModal = ({
           flexDirection={{ xs: "column-reverse", lg: "row" }}
           sx={{ button: { justifyContent: "center", width: { xs: "100%", lg: "auto" } } }}
         >
-          <Button priority="secondary" type="button" onClick={onCancel}>
-            Annuler
+          <Button priority="secondary" type="button" onClick={secondaryAction?.onClick ?? onCancel}>
+            {secondaryAction?.label ?? "Annuler"}
           </Button>
           <Button type="button" disabled={!selected} onClick={confirm}>
             {confirmLabel}
@@ -196,6 +215,7 @@ const RadioRow = ({
   checked,
   onSelect,
   onOpen,
+  disabledHint,
 }: {
   name: string;
   id: string;
@@ -203,12 +223,22 @@ const RadioRow = ({
   checked: boolean;
   onSelect: () => void;
   onOpen?: () => void;
+  /** the option cannot be chosen; the hint says why */
+  disabledHint?: string;
 }) => (
   <Flex alignItems="center" justifyContent="space-between" gap="8px" py="12px" width="100%">
     <div className="fr-radio-group" style={{ flex: 1 }}>
-      <input type="radio" id={id} name={name} checked={checked} onChange={onSelect} />
+      <input
+        type="radio"
+        id={id}
+        name={name}
+        checked={checked && !disabledHint}
+        disabled={!!disabledHint}
+        onChange={onSelect}
+      />
       <label className="fr-label" htmlFor={id}>
         {label}
+        {disabledHint ? <span className="fr-hint-text">{disabledHint}</span> : null}
       </label>
     </div>
     {onOpen ? (

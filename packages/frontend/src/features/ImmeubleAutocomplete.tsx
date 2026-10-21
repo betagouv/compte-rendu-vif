@@ -29,6 +29,7 @@ import {
   type UpSelection,
 } from "./up/upApi";
 import { useIsOnline } from "../hooks/useIsOnline";
+import { RapportGroupeNotice } from "./up/RapportGroupeNotice";
 
 type FilterablePopImmeubles = Pick<
   PopImmeuble,
@@ -172,6 +173,8 @@ export const ImmeubleAutocomplete = () => {
         form.setValue(formField as keyof StateReportFormType, null);
       }
       applyUpSelection(form, null);
+      // another monument: the constat leaves its rapport groupé, which is about the previous monument
+      form.setValue("rapport_id", null);
       setInputValue("");
     }
   };
@@ -318,6 +321,7 @@ export const ImmeubleAutocomplete = () => {
           </IconLink>
         </Box>
         {upWarning ? <Alert severity="info" small sx={{ mt: "16px" }} description={upWarning} /> : null}
+        <RapportGroupeNotice />
       </Flex>
     );
 

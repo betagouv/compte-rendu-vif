@@ -313,6 +313,7 @@ export namespace Endpoints {
         pdfPath: string;
         pdfSize?: number | undefined;
         stateReportId: string;
+        stateReportIds?: Array<string> | undefined;
         recipients: string;
         alerts?:
           | Array<{

@@ -10,7 +10,7 @@ import { v4 } from "uuid";
 import { Selectable } from "kysely";
 import { getServices } from "../services/services";
 import { deserializeMandatoryEmails } from "@patrinotes/pdf/utils";
-import { getStateReportMailName } from "@patrinotes/pdf/constat";
+import { getGroupedStateReportMailName, getStateReportMailName } from "@patrinotes/pdf/constat";
 import { AppError } from "../features/errors";
 import { randomInt } from "crypto";
 import base62 from "base62";
@@ -231,25 +231,52 @@ export const pdfPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
       throw new AppError(404, "Constat d'état non trouvé");
     }
 
+    // rapport groupé (MH complexe): the PDF holds every constat of the rapport, all of them are sent with it
+    const groupedReports = await getGroupedStateReports({
+      principal: stateReportQuery,
+      stateReportIds: request.body.stateReportIds,
+      serviceId: user.service_id,
+    });
+    const isGrouped = groupedReports.length > 1;
+
     await db.transaction().execute(async (tx) => {
-      await tx
-        .insertInto("state_report_attachment")
-        .values({
-          id: pdfPath,
-          attachment_id: pdfPath,
-          is_deprecated: false,
-          state_report_id: stateReportId,
-          created_at: new Date().toISOString(),
-          service_id: user.service_id,
-        })
-        .execute();
+      for (const report of groupedReports) {
+        await tx
+          .insertInto("state_report_attachment")
+          .values({
+            id: report.id === stateReportId ? pdfPath : `${pdfPath}#${report.id}`,
+            attachment_id: pdfPath,
+            is_deprecated: false,
+            state_report_id: report.id,
+            created_at: new Date().toISOString(),
+            service_id: user.service_id,
+          })
+          .execute();
+      }
 
       await tx
         .updateTable("state_report")
-        .set({ attachment_id: pdfPath, pdf_size: request.body.pdfSize ?? null })
-        .where("id", "=", stateReportId)
-        .execute();
+        .set({
+          attachment_id: pdfPath,
+          pdf_size: request.body.pdfSize ?? null,
+          // A declined group may be sent again without validation; clear the old decline in either send path.
+          validation_status: null,
+        })
+        .where(
+          "id",
+          "in",
+          groupedReports.map((r) => r.id),
+        )
+        .where((eb) => eb.or([eb("attachment_id", "is", null), eb("validation_status", "=", "declined")]))
+        .executeTakeFirst()
+        .then((result) => {
+          if (Number(result.numUpdatedRows) !== groupedReports.length) {
+            throw new AppError(409, "Un ou plusieurs constats du rapport ont déjà été envoyés");
+          }
+        });
     });
+
+    const pdfName = getGroupedStateReportMailName(groupedReports);
 
     const userMail = user.email;
     const recipients = request.body.recipients
@@ -268,23 +295,44 @@ export const pdfPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
       .selectAll()
       .executeTakeFirst();
 
-    const alertsAlreadySent = !!stateReportQuery?.alerts_sent;
+    // a constat's alerts are sent once; in a rapport groupé, each alert is sent with its own constat
+    const reportsById = new Map(groupedReports.map((r) => [r.id, r]));
+    const alertsToSend = alerts?.length
+      ? await db
+          .selectFrom("state_report_alert")
+          .select(["id", "state_report_id"])
+          .where(
+            "id",
+            "in",
+            alerts.map((a) => a.id),
+          )
+          .execute()
+      : [];
+    const alertReportIds = new Map(alertsToSend.map((a) => [a.id, a.state_report_id]));
+    // an alert not uploaded yet by the client belongs to the constat being sent, as before rapports groupés
+    const getAlertReport = (alertId: string) =>
+      alertReportIds.has(alertId) ? (reportsById.get(alertReportIds.get(alertId)!) ?? null) : stateReportQuery;
+    const unsentAlerts = (alerts || []).filter((alert) => {
+      const report = getAlertReport(alert.id);
+      return !!report && !report.alerts_sent;
+    });
 
-    if (!alertsAlreadySent && alerts && alerts.length > 0) {
+    if (unsentAlerts.length > 0) {
       const alertsAttachmentsQuery = await db
         .selectFrom("state_report_alert_attachment")
         .selectAll()
         .where(
           "state_report_alert_id",
           "in",
-          alerts.map((a) => a.id),
+          unsentAlerts.map((a) => a.id),
         )
         .where("is_deprecated", "=", false)
         .where("is_ignored", "=", false)
         .execute();
 
-      for (const alert of alerts) {
+      for (const alert of unsentAlerts) {
         if (!alert.should_send) continue;
+        const alertStateReport = getAlertReport(alert.id)! as Selectable<Database["state_report"]>;
 
         try {
           const mandatoryEmails = deserializeMandatoryEmails(alert.mandatory_emails || "");
@@ -300,7 +348,7 @@ export const pdfPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
 
           await sendAlertEmail({
             to: alertRecipients.join(","),
-            stateReport: stateReport!,
+            stateReport: alertStateReport,
             alert: { ...alert, attachments: alertAttachments as any[], should_send: 1 },
             user,
           });
@@ -312,7 +360,15 @@ export const pdfPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
         }
       }
 
-      await db.updateTable("state_report").set({ alerts_sent: true }).where("id", "=", stateReportId).execute();
+      await db
+        .updateTable("state_report")
+        .set({ alerts_sent: true })
+        .where(
+          "id",
+          "in",
+          Array.from(new Set(unsentAlerts.map((a) => getAlertReport(a.id)!.id))),
+        )
+        .execute();
     }
 
     if (needValidation && userSettingsResult?.validation_enabled && userSettingsResult?.validation_email) {
@@ -336,12 +392,17 @@ export const pdfPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
       await db
         .updateTable("state_report")
         .set({ validation_status: "pending" })
-        .where("id", "=", stateReportId)
+        .where(
+          "id",
+          "in",
+          groupedReports.map((r) => r.id),
+        )
         .execute();
 
       await sendValidationRequestMail({
         validatorEmail: userSettingsResult.validation_email,
         stateReport,
+        groupedReports: isGrouped ? groupedReports : undefined,
         validationToken: token,
         creatorName: user.name,
       });
@@ -350,7 +411,7 @@ export const pdfPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
         s3Key: "attachment/" + pdfPath,
         createdBy: user.id,
         sentTo: userSettingsResult.validation_email,
-        name: getStateReportMailName(stateReportQuery),
+        name: pdfName,
       });
       return url;
     }
@@ -359,12 +420,13 @@ export const pdfPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
       s3Key: "attachment/" + pdfPath,
       createdBy: user.id,
       sentTo: recipients.join(","),
-      name: getStateReportMailName(stateReportQuery),
+      name: pdfName,
     });
     await sendStateReportMail({
       recipients: recipients.join(","),
       pdfUrl: pdfMailUrl,
       stateReport: stateReport!,
+      groupedReports: isGrouped ? groupedReports : undefined,
       user,
     });
 
@@ -384,16 +446,18 @@ export const pdfPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
     for (const recipient of recipients) {
       const id = v4();
 
-      await db
-        .insertInto("state_report_sent_email")
-        .values({
-          id,
-          state_report_id: stateReportId,
-          sent_to: recipient,
-          sent_at: new Date().toISOString(),
-          service_id: user.service_id,
-        })
-        .execute();
+      for (const report of groupedReports) {
+        await db
+          .insertInto("state_report_sent_email")
+          .values({
+            id: report.id === stateReportId ? id : v4(),
+            state_report_id: report.id,
+            sent_to: recipient,
+            sent_at: new Date().toISOString(),
+            service_id: user.service_id,
+          })
+          .execute();
+      }
 
       await db
         .insertInto("suggested_email")
@@ -406,10 +470,67 @@ export const pdfPlugin: FastifyPluginAsyncTypebox = async (fastify, _) => {
       s3Key: "attachment/" + pdfPath,
       createdBy: user.id,
       sentTo: recipients.join(","),
-      name: getStateReportMailName(stateReportQuery),
+      name: pdfName,
     });
     return url;
   });
+};
+
+type StateReportRow = Selectable<Database["state_report"]> & { createdByName?: string | null };
+
+/**
+ * Constats sent in one PDF: the principal one and every active member of its rapport.
+ * The client IDs define the chapter order only; membership and sendability are authoritative on the server.
+ */
+export const getGroupedStateReports = async ({
+  principal,
+  stateReportIds,
+  serviceId,
+}: {
+  principal: StateReportRow;
+  stateReportIds?: string[];
+  serviceId: string;
+}): Promise<StateReportRow[]> => {
+  if (principal.service_id !== serviceId) throw new AppError(403, "Vous ne pouvez pas envoyer ce constat");
+  if (principal.attachment_id && principal.validation_status !== "declined") {
+    throw new AppError(409, "Ce constat a déjà été envoyé");
+  }
+
+  if (!principal.rapport_id) {
+    if ((stateReportIds ?? []).some((id) => id !== principal.id)) {
+      throw new AppError(400, "Ce constat ne fait pas partie d'un rapport groupé");
+    }
+    return [principal];
+  }
+
+  const members = await db
+    .selectFrom("state_report")
+    .selectAll()
+    .where("rapport_id", "=", principal.rapport_id)
+    .where("service_id", "=", serviceId)
+    .where((eb) => eb.or([eb("disabled", "=", false), eb("disabled", "is", null)]))
+    .execute();
+
+  if (!members.some((member) => member.id === principal.id)) {
+    throw new AppError(400, "Le constat ne fait pas partie de ce rapport");
+  }
+
+  const requestedIds = Array.from(new Set(stateReportIds ?? []));
+  const memberIds = new Set(members.map((member) => member.id));
+  if (
+    requestedIds.length !== memberIds.size ||
+    requestedIds.some((id) => !memberIds.has(id)) ||
+    Array.from(memberIds).some((id) => !requestedIds.includes(id))
+  ) {
+    throw new AppError(409, "Le rapport a changé. Rechargez la page avant de l'envoyer.");
+  }
+
+  if (members.some((member) => !!member.attachment_id && member.validation_status !== "declined")) {
+    throw new AppError(409, "Un ou plusieurs constats du rapport ont déjà été envoyés");
+  }
+
+  const order = new Map(requestedIds.map((id, index) => [id, index]));
+  return members.sort((a, b) => (order.get(a.id) ?? 0) - (order.get(b.id) ?? 0));
 };
 
 export const reportPdfTSchema = {
@@ -441,6 +562,8 @@ export const stateReportPdfTSchema = {
     pdfPath: Type.String(),
     pdfSize: Type.Optional(Type.Number()),
     stateReportId: Type.String(),
+    /** rapport groupé: every constat in the PDF, in chapter order (stateReportId included) */
+    stateReportIds: Type.Optional(Type.Array(Type.String())),
     recipients: Type.String(),
     alerts: Type.Optional(Type.Array(AlertSchema)),
   }),

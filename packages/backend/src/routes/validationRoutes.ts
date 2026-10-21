@@ -122,9 +122,13 @@ export const validationPlugin: FastifyPluginAsyncTypebox = async (fastify, _) =>
         await trx
           .updateTable("state_report")
           .set({ validation_status: "accepted", attachment_id: validation.pdf_path })
-          .where("id", "=", validation.state_report_id!)
+          .where((eb) =>
+            eb.or([eb("id", "=", validation.state_report_id!), eb("attachment_id", "=", validation.pdf_path)]),
+          )
           .execute();
       });
+
+      const groupedReports = await getValidationReports(validation);
 
       const stateReport = await db
         .selectFrom("state_report")
@@ -141,26 +145,30 @@ export const validationPlugin: FastifyPluginAsyncTypebox = async (fastify, _) =>
           recipients: validation.recipients,
           pdfUrl,
           stateReport,
+          groupedReports,
           user: { name: stateReport.createdByName ?? "", email: stateReport.creatorEmail ?? "" } as any,
         });
 
         for (const recipient of validation.recipients.split(",").map((r) => r.trim())) {
-          await db
-            .insertInto("state_report_sent_email")
-            .values({
-              id: v4(),
-              state_report_id: stateReport.id,
-              sent_to: recipient,
-              sent_at: new Date().toISOString(),
-              service_id: validation.service_id ?? stateReport.service_id,
-            })
-            .execute();
+          for (const report of groupedReports ?? [stateReport]) {
+            await db
+              .insertInto("state_report_sent_email")
+              .values({
+                id: v4(),
+                state_report_id: report.id,
+                sent_to: recipient,
+                sent_at: new Date().toISOString(),
+                service_id: validation.service_id ?? stateReport.service_id,
+              })
+              .execute();
+          }
         }
 
         if (stateReport.creatorEmail) {
           await sendValidationResultMail({
             creatorEmail: stateReport.creatorEmail,
             stateReport,
+            groupedReports,
             accepted: true,
             comment,
             validatorEmail: validation.validator_email,
@@ -210,9 +218,13 @@ export const validationPlugin: FastifyPluginAsyncTypebox = async (fastify, _) =>
         await trx
           .updateTable("state_report")
           .set({ validation_status: "declined" })
-          .where("id", "=", validation.state_report_id!)
+          .where((eb) =>
+            eb.or([eb("id", "=", validation.state_report_id!), eb("attachment_id", "=", validation.pdf_path)]),
+          )
           .execute();
       });
+
+      const groupedReports = await getValidationReports(validation);
 
       const stateReport = await db
         .selectFrom("state_report")
@@ -226,6 +238,7 @@ export const validationPlugin: FastifyPluginAsyncTypebox = async (fastify, _) =>
         await sendValidationResultMail({
           creatorEmail: stateReport.creatorEmail,
           stateReport,
+          groupedReports,
           accepted: false,
           comment,
           validatorEmail: validation.validator_email,
@@ -235,4 +248,15 @@ export const validationPlugin: FastifyPluginAsyncTypebox = async (fastify, _) =>
       return { message: "Constat refusé" };
     },
   );
+};
+
+/** Rapport groupé: the constats sent in the validated PDF (undefined for a simple constat). */
+const getValidationReports = async (validation: { state_report_id: string | null; pdf_path: string }) => {
+  const reports = await db
+    .selectFrom("state_report")
+    .selectAll()
+    .where("attachment_id", "=", validation.pdf_path)
+    .orderBy("created_at", "asc")
+    .execute();
+  return reports.length > 1 ? reports : undefined;
 };

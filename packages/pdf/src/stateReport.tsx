@@ -60,6 +60,8 @@ export const StateReportPDFDocument = ({ service, htmlString, images }: StateRep
               </View>
             ),
             unbreakable: (props) => <View {...props} wrap={false} />,
+            // rapport groupé: each constat starts on a new page
+            pagebreak: () => <View break />,
             debug: (props) => <View {...props} debug />,
           }}
           style={{
@@ -306,31 +308,136 @@ export const getStateReportHtmlString = ({
   return buildHtml(
     <div style={{ fontSize: "10px" }}>
       <MainTitle stateReport={stateReport} />
-      <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
-        <StateReportInfos stateReport={stateReport} user={user} />
-        <hr />
-        <StateReportProtection stateReport={stateReport} />
-        <PlanSituation stateReport={stateReport} />
-        <PlanEdifice stateReport={stateReport} />
-        <VuesGenerales stateReport={stateReport} />
-        <ConstatGeneral stateReport={stateReport} sections={visitedSections} version={stateReportVersion} />
-        <ConstatDetaille stateReport={stateReport} sections={visitedSections} version={stateReportVersion} />
-        <PreconisationsGenerales stateReport={stateReport} />
-        <Alerts alerts={filteredAlerts} />
-      </div>
-      <div style={{ marginTop: "32px" }}>
-        <b id="date">
-          Document créé le{" "}
-          {new Date().toLocaleDateString("fr-FR", {
-            day: "numeric",
-            month: "long",
-            year: "numeric",
-          })}
-          .
-        </b>
-      </div>
+      <StateReportBody
+        stateReport={stateReport}
+        visitedSections={visitedSections}
+        alerts={filteredAlerts}
+        user={user}
+        version={stateReportVersion}
+      />
+      <DocumentDate />
     </div>,
   );
+};
+
+const StateReportBody = ({
+  stateReport,
+  visitedSections,
+  alerts,
+  user,
+  version,
+}: {
+  stateReport: StateReportWithUserAndAttachments;
+  visitedSections: SectionWithAttachments[];
+  alerts: MinimalAlert[];
+  user: { name: string; job: string };
+  version: number;
+}) => (
+  <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+    <StateReportInfos stateReport={stateReport} user={user} />
+    <hr />
+    <StateReportProtection stateReport={stateReport} />
+    <PlanSituation stateReport={stateReport} />
+    <PlanEdifice stateReport={stateReport} />
+    <VuesGenerales stateReport={stateReport} />
+    <ConstatGeneral stateReport={stateReport} sections={visitedSections} version={version} />
+    <ConstatDetaille stateReport={stateReport} sections={visitedSections} version={version} />
+    <PreconisationsGenerales stateReport={stateReport} />
+    <Alerts alerts={alerts as any} />
+  </div>
+);
+
+const DocumentDate = () => (
+  <div style={{ marginTop: "32px" }}>
+    <b id="date">
+      Document créé le{" "}
+      {new Date().toLocaleDateString("fr-FR", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      })}
+      .
+    </b>
+  </div>
+);
+
+export type GroupedStateReportPart = {
+  stateReport: StateReportWithUserAndAttachments;
+  visitedSections: SectionWithAttachments[];
+  alerts?: MinimalAlert[];
+};
+
+/**
+ * Rapport groupé (MH complexe) : the constats of several unités patrimoniales of one monument in one document.
+ * A cover lists the chapters, then each constat starts on a new page with its own title.
+ */
+export const getGroupedStateReportHtmlString = ({
+  parts,
+  user,
+}: {
+  parts: GroupedStateReportPart[];
+  user: { name: string; job: string };
+}) => {
+  if (parts.length === 1) {
+    const [part] = parts;
+    return getStateReportHtmlString({ ...part!, user });
+  }
+
+  const monument = parts[0]!.stateReport;
+
+  return buildHtml(
+    <div style={{ fontSize: "10px" }}>
+      <h1 style={{ marginTop: 0, lineHeight: "30pt", marginBottom: "0" }}>
+        <span style={{ fontSize: "20pt", fontWeight: "normal" }}>Constat d'état du monument historique</span>
+        <br />
+        <span style={{ fontSize: "20pt" }}>
+          <b>{monument.titre_edifice}</b>
+        </span>
+        <div style={{ fontSize: "10pt", fontWeight: "normal", marginTop: "8px" }}>
+          Référence POP : {monument.reference_pop || "Non renseignée"}
+          {monument.up_monument_identifiant ? ` — Identifiant agrégé : ${monument.up_monument_identifiant}` : ""}
+        </div>
+      </h1>
+      <div style={{ marginTop: "24px" }}>
+        <p>
+          Ce document réunit les constats d'état de {parts.length} parties du monument, chacune faisant l'objet d'un
+          chapitre :
+        </p>
+        <ol>
+          {parts.map(({ stateReport }) => (
+            <li key={stateReport.id}>{getStateReportUpLabel(stateReport)}</li>
+          ))}
+        </ol>
+      </div>
+      {parts.map(({ stateReport, visitedSections, alerts }, index) => (
+        <React.Fragment key={stateReport.id}>
+          {React.createElement("pagebreak")}
+          <div style={{ fontSize: "10pt", marginBottom: "4px" }}>
+            Chapitre {index + 1} / {parts.length}
+          </div>
+          <MainTitle stateReport={stateReport} />
+          <StateReportBody
+            stateReport={stateReport}
+            visitedSections={visitedSections.filter(getIsSectionVisited)}
+            alerts={(alerts || []).filter((alert) => alert.show_in_report).filter(getIsAlertVisited)}
+            user={user}
+            version={stateReport.version || 1}
+          />
+        </React.Fragment>
+      ))}
+      <DocumentDate />
+    </div>,
+  );
+};
+
+/** Name of the part of the monument a constat is about, as listed in a rapport groupé. */
+export const getStateReportUpLabel = (stateReport: { up_intitule?: string | null; up_chemin?: string | null }) => {
+  if (!stateReport.up_intitule) return "Ensemble du monument";
+  let parents: string[] = [];
+  try {
+    parents = JSON.parse(stateReport.up_chemin || "[]").map((c: { intitule: string }) => c.intitule);
+  } catch {}
+  return [...parents, stateReport.up_intitule].join(" › ");
 };
 
 export const defaultSections = [
@@ -452,6 +559,14 @@ export { getStateReportTitle, formatUpNiveau, formatUpProtection } from "./utils
 export const getStateReportMailName = (stateReport: { titre_edifice?: string | null; up_intitule?: string | null }) => {
   const title = getStateReportTitle(stateReport);
   return `constat-d-etat${title ? `-${cleanString(title)}` : ""}_${format(new Date(), "ddMMyyyy")}.pdf`;
+};
+
+/** A rapport groupé is named after the monument only, since it covers several of its UP. */
+export const getGroupedStateReportMailName = (
+  stateReports: { titre_edifice?: string | null; up_intitule?: string | null }[],
+) => {
+  if (stateReports.length <= 1) return getStateReportMailName(stateReports[0] ?? {});
+  return getStateReportMailName({ titre_edifice: stateReports[0]!.titre_edifice, up_intitule: null });
 };
 
 function cleanString(str: string): string {

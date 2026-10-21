@@ -72,7 +72,8 @@ const WithStateReport = () => {
 
   return (
     <Flex flexDirection="column" width="100%" height="100%">
-      <StateReportForm report={report} />
+      {/* keyed: going from one constat to another of the same rapport groupé must not reuse the form */}
+      <StateReportForm key={report.id} report={report} />
     </Flex>
   );
 };
